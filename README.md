@@ -1,53 +1,45 @@
-# CudaRL-Arena
+# CUDA Gridworld RL Demo
 
-CudaRL-Arena aims to build a GPU-accelerated reinforcement learning game. The
-project combines a high-performance C++/CUDA backend with Python based RL
-code so we can prototype algorithms quickly while still taking advantage of
-the GPU.
+This project is a real-time, CUDA-accelerated 2D gridworld game that demonstrates reinforcement learning (tabular Q-learning) with both human and AI agents. It is designed as an educational and benchmarking platform to showcase the power of GPU acceleration in AI, and to make machine learning concepts tangible and interactive.
 
-The repository currently contains prebuilt binaries (`vector_add.*`) generated
-from an early CUDA experiment. They serve as a proof-of-concept for running
-CUDA code but aren't needed for running Python experiments. They can be removed
-or replaced once a full game environment is available.
+## Features
 
-## Setup
+- Minimal 2D gridworld game (C++/SDL2)
+- Tabular Q-learning agent (Python)
+- CUDA-accelerated AI routines (C++/CUDA)
+- pybind11 bindings for Python/C++/CUDA integration
+- Real-time visualization and human-AI interaction
+- Modular, extensible architecture
 
-1. Install the [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) that
-   matches your GPU drivers.
-2. Make sure Python 3 is installed. We recommend using a virtual environment to
-   manage packages.
-3. Clone this repository:
+## Build System
 
-   ```bash
-   git clone <repo-url>
-   cd CudaRL-Arena
+- CMake-based build with targets for:
+  - C++ game engine (SDL2)
+  - CUDA-accelerated AI library
+  - Python bindings (pybind11)
+
+## Directory Structure
+
+- `src/game/` — C++ game engine and SDL2 rendering
+- `src/ai/` — CUDA-accelerated AI routines
+- `src/bindings/` — pybind11 bindings
+- `python/` — Python RL agent, training scripts, visualization
+- `tests/` — Unit and integration tests
+- `docs/` — Documentation and educational materials
+
+## Getting Started
+
+1. Install SDL2, CUDA Toolkit, and pybind11.
+2. Clone this repository.
+3. Build with CMake:
    ```
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
+4. Run the game or Python demos as described in the docs.
 
-## Building CUDA Components
+## License
 
-The game engine and any heavy numerical work will be implemented in C++ and
-CUDA. To compile a `.cu` file you can use `nvcc`:
-
-```bash
-nvcc -o my_program my_program.cu
-```
-
-This will produce a binary similar to the included `vector_add.exe`. On Linux
-use `-o my_program` (without `.exe`). Link against any additional libraries as
-needed.
-
-## Running Python Code
-
-Python scripts can interact with the compiled CUDA/C++ code via bindings or by
-calling executables. Install any Python dependencies listed in upcoming
-`requirements.txt` files, then run your scripts as usual:
-
-```bash
-python train.py
-```
-
-## Project Status
-
-Right now the repository only contains the demonstration binaries. Future
-commits will bring the full C++/CUDA game engine and the reinforcement learning
-logic written in Python.
+MIT License
