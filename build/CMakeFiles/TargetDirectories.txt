@@ -1,0 +1,3 @@
+C:/Users/aiand/Documents/programming/cuda_project/build/CMakeFiles/poc_app.dir
+C:/Users/aiand/Documents/programming/cuda_project/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/aiand/Documents/programming/cuda_project/build/CMakeFiles/ZERO_CHECK.dir
