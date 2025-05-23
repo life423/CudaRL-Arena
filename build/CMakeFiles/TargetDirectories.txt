@@ -1,3 +1,0 @@
-C:/Users/aiand/cuda_project/build/CMakeFiles/vector_add.dir
-C:/Users/aiand/cuda_project/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/aiand/cuda_project/build/CMakeFiles/ZERO_CHECK.dir
