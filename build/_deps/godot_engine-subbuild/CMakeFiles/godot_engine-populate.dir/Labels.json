@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/godot_engine-populate"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/ad9bc5ffb7cf2052a56812ad3da4375d/godot_engine-populate.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/86bc247f7190dbde8411a0beb8aa8727/godot_engine-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_engine-subbuild/CMakeFiles/f3e4954de2fe93b0266d953e7ca06bae/godot_engine-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"godot_engine-populate"
+		],
+		"name" : "godot_engine-populate"
+	}
+}

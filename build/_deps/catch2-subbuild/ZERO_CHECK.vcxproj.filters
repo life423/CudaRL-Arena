@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\catch2-subbuild\CMakeFiles\855d9bd69b638ac9b51b8f6baaf251d1\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{C14600E1-669C-34B2-8C39-D709489070F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

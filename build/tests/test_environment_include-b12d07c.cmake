@@ -1,0 +1,5 @@
+if(EXISTS "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/tests/test_environment_tests-b12d07c.cmake")
+  include("C:/Users/aiand/Documents/programming/CudaRL-Arena/build/tests/test_environment_tests-b12d07c.cmake")
+else()
+  add_test(test_environment_NOT_BUILT-b12d07c test_environment_NOT_BUILT-b12d07c)
+endif()

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-subbuild\CMakeFiles\ad9bc5ffb7cf2052a56812ad3da4375d\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{4A347A81-4800-358E-A4BF-FE0C5F8596F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

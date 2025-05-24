@@ -1,0 +1,129 @@
+cmake_minimum_required(VERSION 3.24)
+project(cuda_project LANGUAGES CXX CUDA)
+
+# ──────────────── C++ & CUDA ────────────────
+set(CMAKE_CXX_STANDARD        17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_STANDARD       17)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+
+find_package(CUDAToolkit REQUIRED)
+
+set(CMAKE_CUDA_ARCHITECTURES 75 80 86)
+set(CMAKE_CUDA_RUNTIME_LIBRARY MultiThreadedDebugDLL)
+
+# ──────────────── Python ────────────────
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+message(STATUS "Found Python3 ${Python3_VERSION} at ${Python3_EXECUTABLE}")
+
+add_executable(poc_app src/main.cu src/environment.cu)
+target_compile_options(poc_app PRIVATE
+  $<$<COMPILE_LANGUAGE:CUDA>:-Wno-deprecated-gpu-targets>
+)
+target_link_libraries(poc_app PRIVATE
+  CUDA::cudart
+  Python3::Python
+)
+target_include_directories(poc_app PRIVATE
+  ${Python3_INCLUDE_DIRS}
+)
+
+add_custom_target(run
+  COMMAND $<TARGET_FILE:poc_app>
+  DEPENDS poc_app
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Building and running poc_app"
+)
+
+# ──────────────── Godot GDExtension plugin ────────────────
+
+include(FetchContent)
+
+# Set the Godot executable path
+set(GODOT_EXECUTABLE "C:/Users/aiand/Godot/Godot.exe")
+
+# 1. Fetch the Godot Engine source for API headers first
+FetchContent_Declare(
+  godot_engine
+  GIT_REPOSITORY https://github.com/godotengine/godot.git
+  GIT_TAG        4.4.1-stable
+)
+# Use the old method to avoid the warning for now
+set(CMAKE_POLICY_DEFAULT_CMP0169 OLD)
+FetchContent_GetProperties(godot_engine)
+if(NOT godot_engine_POPULATED)
+  FetchContent_Populate(godot_engine)
+  set(GODOT_ENGINE_SOURCE_DIR ${godot_engine_SOURCE_DIR})
+endif(NOT godot_engine_POPULATED)
+
+# 2. Fetch and build godot-cpp
+FetchContent_Declare(
+  godot_cpp
+  GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
+  GIT_TAG        godot-4.4-stable
+)
+FetchContent_MakeAvailable(godot_cpp)
+set(GODOT_CPP_SOURCE_DIR  ${godot_cpp_SOURCE_DIR})
+set(GODOT_CPP_BINARY_DIR  ${godot_cpp_BINARY_DIR})
+
+# 3. Copy godot_engine headers to expected location for godot-cpp
+set(GODOT_CPP_EXPECTED_ENGINE_DIR ${GODOT_CPP_SOURCE_DIR}/../godot)
+add_custom_command(
+  OUTPUT ${GODOT_CPP_EXPECTED_ENGINE_DIR}/modules/gdextension/include/gdextension_interface.h
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${GODOT_CPP_EXPECTED_ENGINE_DIR}/modules/gdextension/include
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${GODOT_ENGINE_SOURCE_DIR}/core/extension ${GODOT_CPP_EXPECTED_ENGINE_DIR}/modules/gdextension/include
+  COMMENT "Copying Godot engine GDExtension headers for godot-cpp SCons build"
+)
+add_custom_target(copy_godot_headers ALL
+  DEPENDS ${GODOT_CPP_EXPECTED_ENGINE_DIR}/modules/gdextension/include/gdextension_interface.h
+)
+
+# 3. Auto-generate extension_api.json
+set(EXTENSION_API_FILE ${CMAKE_BINARY_DIR}/extension_api.json)
+add_custom_command(
+  OUTPUT ${EXTENSION_API_FILE}
+  COMMAND ${GODOT_EXECUTABLE} --dump-extension-api --headless
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Generating GDExtension API from Godot"
+)
+add_custom_target(generate_extension_api ALL DEPENDS ${EXTENSION_API_FILE})
+
+# 4. Build your GDExtension plugin
+add_library(gd_cudarl MODULE godot/gdextension/bindings.cpp)
+add_dependencies(gd_cudarl generate_extension_api copy_godot_headers)
+
+target_include_directories(gd_cudarl PRIVATE
+  ${GODOT_CPP_SOURCE_DIR}/include
+  ${GODOT_CPP_BINARY_DIR}/gen/include
+  ${GODOT_CPP_EXPECTED_ENGINE_DIR}/modules/gdextension/include
+  ${GODOT_ENGINE_SOURCE_DIR}/core
+  ${GODOT_ENGINE_SOURCE_DIR}/core/math
+  ${GODOT_ENGINE_SOURCE_DIR}/core/extension
+  src/
+)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(GODOT_CPP_LIB_NAME "libgodot-cpp.windows.template_debug.x86_64.lib")
+else()
+  set(GODOT_CPP_LIB_NAME "libgodot-cpp.windows.template_release.x86_64.lib")
+endif()
+
+target_link_libraries(gd_cudarl PRIVATE
+  "${GODOT_CPP_BINARY_DIR}/bin/${GODOT_CPP_LIB_NAME}"
+)
+
+set_target_properties(gd_cudarl PROPERTIES
+  PREFIX ""
+  SUFFIX ".gdextension"
+  POSITION_INDEPENDENT_CODE ON
+  CXX_STANDARD            17
+  CXX_STANDARD_REQUIRED   ON
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/godot/bin"
+)
+
+# Generate the .gdextension config file
+configure_file(
+  ${CMAKE_SOURCE_DIR}/godot/cudarl.gdextension.in
+  ${CMAKE_SOURCE_DIR}/godot/cudarl.gdextension
+  @ONLY
+)

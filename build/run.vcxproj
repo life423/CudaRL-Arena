@@ -107,13 +107,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\4d35ad660a684c80dfb2eed6dedbd478\run.rule">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building and running poc_app</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building and running cudarl_app</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 cd C:\Users\aiand\Documents\programming\CudaRL-Arena\build
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Debug\poc_app.exe
+C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\Debug\cudarl_app.exe
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -121,17 +121,17 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Debug\poc_app.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\Debug\cudarl_app.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\run</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building and running poc_app</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building and running cudarl_app</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
 cd C:\Users\aiand\Documents\programming\CudaRL-Arena\build
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\poc_app.exe
+C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\Release\cudarl_app.exe
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -139,17 +139,17 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\poc_app.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\Release\cudarl_app.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\run</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building and running poc_app</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building and running cudarl_app</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
 cd C:\Users\aiand\Documents\programming\CudaRL-Arena\build
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\aiand\Documents\programming\CudaRL-Arena\build\MinSizeRel\poc_app.exe
+C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\MinSizeRel\cudarl_app.exe
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -157,17 +157,17 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\MinSizeRel\poc_app.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\MinSizeRel\cudarl_app.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\run</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building and running poc_app</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building and running cudarl_app</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
 cd C:\Users\aiand\Documents\programming\CudaRL-Arena\build
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\aiand\Documents\programming\CudaRL-Arena\build\RelWithDebInfo\poc_app.exe
+C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\RelWithDebInfo\cudarl_app.exe
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -175,7 +175,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\RelWithDebInfo\poc_app.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\bin\RelWithDebInfo\cudarl_app.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\run</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>
@@ -250,9 +250,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\poc_app.vcxproj">
-      <Project>{7E98846F-2492-3F40-A59D-A9B3B0117E75}</Project>
-      <Name>poc_app</Name>
+    <ProjectReference Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\cudarl_app.vcxproj">
+      <Project>{3DFD072C-77AD-3400-A0F0-2AFA2603BF1E}</Project>
+      <Name>cudarl_app</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\940dff2277be357984d9107d8c87944b\godot_cpp-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\b3d071abd54462540d8e85f7c66a630f\godot_cpp-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\072ffb6676cc9186f305ecd60802c6e9\godot_cpp-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-subbuild\CMakeFiles\godot_cpp-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1EA46F0C-2165-3AC0-87A3-38C526E5054C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

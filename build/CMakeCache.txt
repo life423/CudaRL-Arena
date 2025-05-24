@@ -14,8 +14,175 @@
 # EXTERNAL cache entries
 ########################
 
+//Build the testing tree.
+BUILD_TESTING:BOOL=ON
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_ANDROID_LOGWRITE:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_BAZEL_SUPPORT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_COLOUR_WIN32:BOOL=OFF
+
+//Read docs/configuration.md for details. Must form a valid integer
+// literal.
+CATCH_CONFIG_CONSOLE_WIDTH:STRING=80
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_COUNTER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_CPP11_TO_STRING:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_CPP17_BYTE:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_CPP17_OPTIONAL:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_CPP17_STRING_VIEW:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_CPP17_UNCAUGHT_EXCEPTIONS:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_CPP17_VARIANT:BOOL=OFF
+
+//Read docs/configuration.md for details. The name of the reporter
+// should be without quotes.
+CATCH_CONFIG_DEFAULT_REPORTER:STRING=console
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_DISABLE:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_DISABLE_EXCEPTIONS:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_DISABLE_EXCEPTIONS_CUSTOM_HANDLER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_DISABLE_STRINGIFICATION:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_ENABLE_OPTIONAL_STRINGMAKER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_ENABLE_PAIR_STRINGMAKER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_ENABLE_TUPLE_STRINGMAKER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_ENABLE_VARIANT_STRINGMAKER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_EXPERIMENTAL_REDIRECT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_EXPERIMENTAL_STATIC_ANALYSIS_SUPPORT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_FAST_COMPILE:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_GETENV:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_GLOBAL_NEXTAFTER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NOSTDOUT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_ANDROID_LOGWRITE:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_BAZEL_SUPPORT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_COLOUR_WIN32:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_COUNTER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_CPP11_TO_STRING:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_CPP17_BYTE:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_CPP17_OPTIONAL:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_CPP17_STRING_VIEW:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_CPP17_UNCAUGHT_EXCEPTIONS:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_CPP17_VARIANT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_EXPERIMENTAL_STATIC_ANALYSIS_SUPPORT:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_GETENV:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_GLOBAL_NEXTAFTER:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_POSIX_SIGNALS:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_USE_ASYNC:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_WCHAR:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_NO_WINDOWS_SEH:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_POSIX_SIGNALS:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_PREFIX_ALL:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_USE_ASYNC:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_WCHAR:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_WINDOWS_CRTDBG:BOOL=OFF
+
+//Read docs/configuration.md for details
+CATCH_CONFIG_WINDOWS_SEH:BOOL=OFF
+
+//Build tests, enable warnings, enable Werror, etc
+CATCH_DEVELOPMENT_BUILD:BOOL=OFF
+
+//Install documentation alongside library
+CATCH_INSTALL_DOCS:BOOL=ON
+
+//Install extras (CMake scripts, debugger helpers) alongside library
+CATCH_INSTALL_EXTRAS:BOOL=ON
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
+
+//No help, variable specified on the command line.
+CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
 
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
@@ -79,8 +246,56 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/pkgRedirects
 
+//User executables (bin)
+CMAKE_INSTALL_BINDIR:PATH=bin
+
+//Read-only architecture-independent data (DATAROOTDIR)
+CMAKE_INSTALL_DATADIR:PATH=
+
+//Read-only architecture-independent data root (share)
+CMAKE_INSTALL_DATAROOTDIR:PATH=share
+
+//Documentation root (DATAROOTDIR/doc/PROJECT_NAME)
+CMAKE_INSTALL_DOCDIR:PATH=
+
+//C header files (include)
+CMAKE_INSTALL_INCLUDEDIR:PATH=include
+
+//Info documentation (DATAROOTDIR/info)
+CMAKE_INSTALL_INFODIR:PATH=
+
+//Object code libraries (lib)
+CMAKE_INSTALL_LIBDIR:PATH=lib
+
+//Program executables (libexec)
+CMAKE_INSTALL_LIBEXECDIR:PATH=libexec
+
+//Locale-dependent data (DATAROOTDIR/locale)
+CMAKE_INSTALL_LOCALEDIR:PATH=
+
+//Modifiable single-machine data (var)
+CMAKE_INSTALL_LOCALSTATEDIR:PATH=var
+
+//Man documentation (DATAROOTDIR/man)
+CMAKE_INSTALL_MANDIR:PATH=
+
+//C header files for non-gcc (/usr/include)
+CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
+
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/cuda_project
+
+//Run-time variable data (LOCALSTATEDIR/run)
+CMAKE_INSTALL_RUNSTATEDIR:PATH=
+
+//System admin executables (sbin)
+CMAKE_INSTALL_SBINDIR:PATH=sbin
+
+//Modifiable architecture-independent data (com)
+CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
+
+//Read-only single-machine data (etc)
+CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
@@ -105,6 +320,10 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 // RELWITHDEBINFO builds.
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 
+//Select the MSVC runtime library for use by compilers targeting
+// the MSVC ABI.
+CMAKE_MSVC_RUNTIME_LIBRARY:STRING=MultiThreaded$<IF:$<BOOL:OFF>,DebugDLL,$<$<NOT:$<BOOL:ON>>:DLL>>
+
 //Path to a program.
 CMAKE_MT:FILEPATH=CMAKE_MT-NOTFOUND
 
@@ -115,7 +334,22 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=cuda_project
+CMAKE_PROJECT_NAME:STATIC=CudaRL-Arena
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=0.1.0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //RC compiler
 CMAKE_RC_COMPILER:FILEPATH=rc
@@ -188,8 +422,21 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Path to the coverage program that CTest uses for performing coverage
+// inspection
+COVERAGE_COMMAND:FILEPATH=COVERAGE_COMMAND-NOTFOUND
+
+//Extra command line flags to pass to the coverage tool
+COVERAGE_EXTRA_FLAGS:STRING=-l
+
+//How many times to retry timed-out CTest submissions.
+CTEST_SUBMIT_RETRY_COUNT:STRING=3
+
+//How long to wait between timed-out CTest submissions.
+CTEST_SUBMIT_RETRY_DELAY:STRING=5
+
 //Path to a file.
-CUDAToolkit_CUPTI_INCLUDE_DIR:PATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include/../extras/CUPTI/include
+CUDAToolkit_CUPTI_INCLUDE_DIR:PATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/extras/CUPTI/include
 
 //Path to a library.
 CUDA_CUDART:FILEPATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/cudart.lib
@@ -413,6 +660,154 @@ CUDA_nvrtc_static_LIBRARY:FILEPATH=C:/Program Files/NVIDIA GPU Computing Toolkit
 //Path to a library.
 CUDA_pcsamplingutil_LIBRARY:FILEPATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/extras/CUPTI/lib64/pcsamplingutil.lib
 
+//Dependencies for the target
+Catch2WithMain_LIB_DEPENDS:STATIC=general;Catch2;
+
+//Value Computed by CMake
+Catch2_BINARY_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/catch2-build
+
+//Value Computed by CMake
+Catch2_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+Catch2_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/catch2-src
+
+//Value Computed by CMake
+CudaRL-Arena_BINARY_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build
+
+//Value Computed by CMake
+CudaRL-Arena_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+CudaRL-Arena_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena
+
+//Maximum time allowed before CTest will kill the test.
+DART_TESTING_TIMEOUT:STRING=1500
+
+//Directory under which to collect all populated content
+FETCHCONTENT_BASE_DIR:PATH=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps
+
+//Disables all attempts to download or update content and assumes
+// source dirs already exist
+FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
+
+//Enables QUIET option for all content population
+FETCHCONTENT_QUIET:BOOL=ON
+
+//When not empty, overrides where to find pre-populated content
+// for catch2
+FETCHCONTENT_SOURCE_DIR_CATCH2:PATH=
+
+//When not empty, overrides where to find pre-populated content
+// for godot_cpp
+FETCHCONTENT_SOURCE_DIR_GODOT_CPP:PATH=
+
+//When not empty, overrides where to find pre-populated content
+// for godot_engine
+FETCHCONTENT_SOURCE_DIR_GODOT_ENGINE:PATH=
+
+//When not empty, overrides where to find pre-populated content
+// for pybind11
+FETCHCONTENT_SOURCE_DIR_PYBIND11:PATH=
+
+//Enables UPDATE_DISCONNECTED behavior for all content population
+FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of catch2
+FETCHCONTENT_UPDATES_DISCONNECTED_CATCH2:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of godot_cpp
+FETCHCONTENT_UPDATES_DISCONNECTED_GODOT_CPP:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of godot_engine
+FETCHCONTENT_UPDATES_DISCONNECTED_GODOT_ENGINE:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of pybind11
+FETCHCONTENT_UPDATES_DISCONNECTED_PYBIND11:BOOL=OFF
+
+//Git command line client
+GIT_EXECUTABLE:FILEPATH=C:/Program Files/Git/cmd/git.exe
+
+//Path to a file containing a feature build profile
+GODOTCPP_BUILD_PROFILE:PATH=
+
+//Path to a custom GDExtension API JSON file (takes precedence
+// over `GODOTCPP_GDEXTENSION_DIR`) ( /path/to/custom_api_file
+// )
+GODOTCPP_CUSTOM_API_FILE:FILEPATH=
+
+//Compile with MSVC's debug CRT (/MDd)
+GODOTCPP_DEBUG_CRT:BOOL=OFF
+
+//Developer build with dev-only debugging code (DEV_ENABLED)
+GODOTCPP_DEV_BUILD:BOOL=OFF
+
+//Force disabling exception handling code (ON|OFF)
+GODOTCPP_DISABLE_EXCEPTIONS:BOOL=ON
+
+//Enable the godot-cpp.test.<target> integration testing targets
+GODOTCPP_ENABLE_TESTING:BOOL=OFF
+
+//Path to a custom directory containing GDExtension interface header
+// and API JSON file ( /path/to/gdextension_dir )
+GODOTCPP_GDEXTENSION_DIR:PATH=gdextension
+
+//Generate a template version of the Node class's get_node. (ON|OFF)
+GODOTCPP_GENERATE_TEMPLATE_GET_NODE:BOOL=ON
+
+//Set the floating-point precision level (single|double)
+GODOTCPP_PRECISION:STRING=single
+
+//Symbols visibility on GNU platforms. Use 'auto' to apply the
+// default value. (auto|visible|hidden)
+GODOTCPP_SYMBOL_VISIBILITY:STRING=hidden
+
+//Expose headers as SYSTEM.
+GODOTCPP_SYSTEM_HEADERS:BOOL=OFF
+
+//Enable threading support
+GODOTCPP_THREADS:BOOL=ON
+
+//Enable the extra accounting required to support hot reload. (ON|OFF)
+GODOTCPP_USE_HOT_RELOAD:BOOL=
+
+//Link MinGW/MSVC C++ runtime libraries statically
+GODOTCPP_USE_STATIC_CPP:BOOL=ON
+
+//Treat warnings as errors
+GODOTCPP_WARNING_AS_ERROR:BOOL=OFF
+
+//Command to build the project
+MAKECOMMAND:STRING="C:\Program Files\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
+
+//Path to the memory checking command, used for memory error detection.
+MEMORYCHECK_COMMAND:FILEPATH=MEMORYCHECK_COMMAND-NOTFOUND
+
+//File that contains suppressions for the memory checker
+MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=
+
+//Force new FindPython
+PYBIND11_FINDPYTHON:BOOL=OFF
+
+//Install pybind11 header files?
+PYBIND11_INSTALL:BOOL=OFF
+
+//Override the ABI version, may be used to enable the unstable
+// ABI.
+PYBIND11_INTERNALS_VERSION:STRING=
+
+//Disable search for Python
+PYBIND11_NOPYTHON:BOOL=OFF
+
+//Use simpler GIL management logic that does not support disassociation
+PYBIND11_SIMPLE_GIL_MANAGEMENT:BOOL=OFF
+
+//Build pybind11 test suite?
+PYBIND11_TEST:BOOL=OFF
+
+//Name of the computer/site where compile is being run
+SITE:STRING=windows
+
 //Value Computed by CMake
 cuda_project_BINARY_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build
 
@@ -421,6 +816,27 @@ cuda_project_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 cuda_project_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena
+
+//Value Computed by CMake
+godot-cpp_BINARY_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-build
+
+//Value Computed by CMake
+godot-cpp_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+godot-cpp_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src
+
+//Value Computed by CMake
+pybind11_BINARY_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/pybind11-build
+
+//The directory containing a CMake configuration file for pybind11.
+pybind11_DIR:PATH=pybind11_DIR-NOTFOUND
+
+//Value Computed by CMake
+pybind11_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+pybind11_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/pybind11-src
 
 
 ########################
@@ -492,6 +908,38 @@ CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=C:/Users/aiand/Documents/programming/CudaRL-Arena
+//ADVANCED property for variable: CMAKE_INSTALL_BINDIR
+CMAKE_INSTALL_BINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATADIR
+CMAKE_INSTALL_DATADIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATAROOTDIR
+CMAKE_INSTALL_DATAROOTDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DOCDIR
+CMAKE_INSTALL_DOCDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INCLUDEDIR
+CMAKE_INSTALL_INCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INFODIR
+CMAKE_INSTALL_INFODIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBDIR
+CMAKE_INSTALL_LIBDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBEXECDIR
+CMAKE_INSTALL_LIBEXECDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALEDIR
+CMAKE_INSTALL_LOCALEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALSTATEDIR
+CMAKE_INSTALL_LOCALSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_MANDIR
+CMAKE_INSTALL_MANDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_OLDINCLUDEDIR
+CMAKE_INSTALL_OLDINCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_RUNSTATEDIR
+CMAKE_INSTALL_RUNSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SBINDIR
+CMAKE_INSTALL_SBINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SHAREDSTATEDIR
+CMAKE_INSTALL_SHAREDSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SYSCONFDIR
+CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //Name of CMakeLists files to read
@@ -555,6 +1003,14 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: COVERAGE_COMMAND
+COVERAGE_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: COVERAGE_EXTRA_FLAGS
+COVERAGE_EXTRA_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CTEST_SUBMIT_RETRY_COUNT
+CTEST_SUBMIT_RETRY_COUNT-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CTEST_SUBMIT_RETRY_DELAY
+CTEST_SUBMIT_RETRY_DELAY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDAToolkit_CUPTI_INCLUDE_DIR
 CUDAToolkit_CUPTI_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_CUDART
@@ -705,17 +1161,47 @@ CUDA_nvrtc_builtins_static_LIBRARY-ADVANCED:INTERNAL=1
 CUDA_nvrtc_static_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_pcsamplingutil_LIBRARY
 CUDA_pcsamplingutil_LIBRARY-ADVANCED:INTERNAL=1
+//Project GUID
+Catch2WithMain_GUID_CMAKE:INTERNAL=8bd3552a-2cfb-4a59-ab15-2031b97ada1e
+//Project GUID
+Catch2_GUID_CMAKE:INTERNAL=8d538cbe-01bf-4a2e-a98a-6c368fdf13d7
+//ADVANCED property for variable: DART_TESTING_TIMEOUT
+DART_TESTING_TIMEOUT-ADVANCED:INTERNAL=1
 //Details about finding CUDAToolkit
 FIND_PACKAGE_MESSAGE_DETAILS_CUDAToolkit:INTERNAL=[C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/cudart.lib][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/bin][v12.9.41()]
 //Details about finding Python3
 FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe][C:/Users/aiand/AppData/Local/Programs/Python/Python313/libs/python313.lib][C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include][found components: Interpreter Development Development.Module Development.Embed ][v3.13.3()]
+//ADVANCED property for variable: GIT_EXECUTABLE
+GIT_EXECUTABLE-ADVANCED:INTERNAL=1
+//STRINGS property for variable: GODOTCPP_SYMBOL_VISIBILITY
+GODOTCPP_SYMBOL_VISIBILITY-STRINGS:INTERNAL=auto;visible;hidden
+//Test HAS_MSVC_GL_LTCG
+HAS_MSVC_GL_LTCG:INTERNAL=1
+//ADVANCED property for variable: MAKECOMMAND
+MAKECOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MEMORYCHECK_COMMAND
+MEMORYCHECK_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MEMORYCHECK_SUPPRESSIONS_FILE
+MEMORYCHECK_SUPPRESSIONS_FILE-ADVANCED:INTERNAL=1
+PYBIND11_INCLUDE_DIR:INTERNAL=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/pybind11-src/include
+//Python executable during the last CMake run
+PYBIND11_PYTHON_EXECUTABLE_LAST:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe
+//Python debug status
+PYTHON_IS_DEBUG:INTERNAL=0
+PYTHON_MODULE_EXTENSION:INTERNAL=.cp313-win_amd64.pyd
+//ADVANCED property for variable: SITE
+SITE-ADVANCED:INTERNAL=1
+//Catch2 full path to CatchAddTests.cmake helper file
+_CATCH_DISCOVER_TESTS_SCRIPT:INTERNAL=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/catch2-src/extras/CatchAddTests.cmake
+//CMAKE_INSTALL_PREFIX during last run
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/cuda_project
+_Python:INTERNAL=Python3
 //Compiler reason failure
 _Python3_Compiler_REASON_FAILURE:INTERNAL=
 _Python3_DEVELOPMENT_EMBED_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
 _Python3_DEVELOPMENT_MODULE_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
 //Development reason failure
 _Python3_Development_REASON_FAILURE:INTERNAL=
-//Path to a program.
 _Python3_EXECUTABLE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe
 //Path to a program.
 _Python3_EXECUTABLE_DEBUG:INTERNAL=_Python3_EXECUTABLE_DEBUG-NOTFOUND
@@ -734,4 +1220,10 @@ _Python3_LIBRARY_RELEASE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/P
 _Python3_NumPy_REASON_FAILURE:INTERNAL=
 //Path to a library.
 _Python3_RUNTIME_LIBRARY_RELEASE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python313.dll
+//True if pybind11 and all required components found on the system
+pybind11_FOUND:INTERNAL=TRUE
+//Directory where pybind11 headers are located
+pybind11_INCLUDE_DIR:INTERNAL=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/pybind11-src/include
+//Directories where pybind11 and possibly Python headers are located
+pybind11_INCLUDE_DIRS:INTERNAL=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/pybind11-src/include;C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include
 

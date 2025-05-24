@@ -1,4 +1,7 @@
-C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/poc_app.dir
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/cudarl_core.dir
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/cudarl_app.dir
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/cuda_test.dir
 C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/run.dir
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/run_cuda_test.dir
 C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/ALL_BUILD.dir
 C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/ZERO_CHECK.dir
