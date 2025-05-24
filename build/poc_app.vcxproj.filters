@@ -6,11 +6,11 @@
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\aiand\Documents\programming\cuda_project\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{7C2E32BF-580D-3574-AD25-51454EBA663A}</UniqueIdentifier>
+      <UniqueIdentifier>{24930522-F43A-3A90-92AD-708C5FC95337}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
