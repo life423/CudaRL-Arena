@@ -1,5 +1,7 @@
-# Build directories
+# Ignore entire build directory
 build/
+
+# Other ignores
 bin/
 lib/
 __pycache__/
@@ -56,6 +58,5 @@ results/
 *.png
 *.gif
 
-# Godot submodule (to be rebuilt later)
-build/_deps/godot_cpp-src/
+# Godot related
 godot/godot-cpp/
