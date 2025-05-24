@@ -16,6 +16,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "poc_app", "poc_app.vcxproj"
 		{54A18229-00AC-3A65-A8F3-EE3EE59D3212} = {54A18229-00AC-3A65-A8F3-EE3EE59D3212}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "run", "run.vcxproj", "{76074E5C-DD07-3F43-9F21-32DA7C9183A3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{54A18229-00AC-3A65-A8F3-EE3EE59D3212} = {54A18229-00AC-3A65-A8F3-EE3EE59D3212}
+		{4E95F576-42EF-3AE9-BAA7-7B9CFF3FD3D7} = {4E95F576-42EF-3AE9-BAA7-7B9CFF3FD3D7}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -44,6 +50,10 @@ Global
 		{4E95F576-42EF-3AE9-BAA7-7B9CFF3FD3D7}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
 		{4E95F576-42EF-3AE9-BAA7-7B9CFF3FD3D7}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{4E95F576-42EF-3AE9-BAA7-7B9CFF3FD3D7}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{76074E5C-DD07-3F43-9F21-32DA7C9183A3}.Debug|x64.ActiveCfg = Debug|x64
+		{76074E5C-DD07-3F43-9F21-32DA7C9183A3}.Release|x64.ActiveCfg = Release|x64
+		{76074E5C-DD07-3F43-9F21-32DA7C9183A3}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{76074E5C-DD07-3F43-9F21-32DA7C9183A3}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2DAB25BD-D9D1-3C60-AEB3-6033C66E8893}

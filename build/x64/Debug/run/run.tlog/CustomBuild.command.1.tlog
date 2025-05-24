@@ -1,0 +1,24 @@
+^C:\USERS\AIAND\DOCUMENTS\PROGRAMMING\CUDA_PROJECT\BUILD\CMAKEFILES\D052C3ECD3C3A17FDB0A5B7AE5F90C27\RUN.RULE
+setlocal
+cd C:\Users\aiand\Documents\programming\cuda_project\build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+C:\Users\aiand\Documents\programming\cuda_project\build\Debug\poc_app.exe
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\AIAND\DOCUMENTS\PROGRAMMING\CUDA_PROJECT\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/aiand/Documents/programming/cuda_project -BC:/Users/aiand/Documents/programming/cuda_project/build --check-stamp-file C:/Users/aiand/Documents/programming/cuda_project/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

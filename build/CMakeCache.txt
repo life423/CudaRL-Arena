@@ -707,4 +707,31 @@ CUDA_nvrtc_static_LIBRARY-ADVANCED:INTERNAL=1
 CUDA_pcsamplingutil_LIBRARY-ADVANCED:INTERNAL=1
 //Details about finding CUDAToolkit
 FIND_PACKAGE_MESSAGE_DETAILS_CUDAToolkit:INTERNAL=[C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/cudart.lib][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/bin][v12.9.41()]
+//Details about finding Python3
+FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe][C:/Users/aiand/AppData/Local/Programs/Python/Python313/libs/python313.lib][C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include][found components: Interpreter Development Development.Module Development.Embed ][v3.13.3()]
+//Compiler reason failure
+_Python3_Compiler_REASON_FAILURE:INTERNAL=
+_Python3_DEVELOPMENT_EMBED_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
+_Python3_DEVELOPMENT_MODULE_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
+//Development reason failure
+_Python3_Development_REASON_FAILURE:INTERNAL=
+//Path to a program.
+_Python3_EXECUTABLE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe
+//Path to a program.
+_Python3_EXECUTABLE_DEBUG:INTERNAL=_Python3_EXECUTABLE_DEBUG-NOTFOUND
+//Path to a file.
+_Python3_INCLUDE_DIR:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include
+//Python3 Properties
+_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;13;3;64;<none>;cp313-win_amd64;;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages
+_Python3_INTERPRETER_SIGNATURE:INTERNAL=11cc969c152a5c04af9eaabdf9a9e4b0
+//Interpreter reason failure
+_Python3_Interpreter_REASON_FAILURE:INTERNAL=
+//Path to a library.
+_Python3_LIBRARY_DEBUG:INTERNAL=_Python3_LIBRARY_DEBUG-NOTFOUND
+//Path to a library.
+_Python3_LIBRARY_RELEASE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/libs/python313.lib
+//NumPy reason failure
+_Python3_NumPy_REASON_FAILURE:INTERNAL=
+//Path to a library.
+_Python3_RUNTIME_LIBRARY_RELEASE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python313.dll
 
