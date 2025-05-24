@@ -13,7 +13,11 @@ C:/Program Files/CMake/share/cmake-4.0/Modules/Compiler/MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Compiler/MSVC.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Compiler/NVIDIA-CUDA.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Compiler/NVIDIA.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/ExternalProject/shared_internal_commands.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FetchContent.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FetchContent/CMakeLists.cmake.in
 C:/Program Files/CMake/share/cmake-4.0/Modules/FindCUDAToolkit.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FindGit.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/FindPackageHandleStandardArgs.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/FindPackageMessage.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/FindPython/Support.cmake
@@ -35,3 +39,5 @@ C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/4.0.2/CMakeCU
 C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/4.0.2/CMakeCXXCompiler.cmake
 C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/4.0.2/CMakeRCCompiler.cmake
 C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/4.0.2/CMakeSystem.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/cmake.verify_globs
+C:/Users/aiand/Documents/programming/CudaRL-Arena/godot/cudarl.gdextension.in

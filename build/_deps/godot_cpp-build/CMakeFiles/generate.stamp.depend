@@ -1,0 +1,18 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-4.0/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FindPython/Support.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FindPython3.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/ProcessorCount.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/cmake.verify_globs
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/CMakeLists.txt
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/GodotCPPModule.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/android.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/common_compiler_flags.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/emsdkHack.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/godotcpp.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/ios.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/linux.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/macos.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/web.cmake
+C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot_cpp-src/cmake/windows.cmake

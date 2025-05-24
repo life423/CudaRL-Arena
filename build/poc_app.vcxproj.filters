@@ -4,6 +4,9 @@
     <CudaCompile Include="..\src\main.cu">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="..\src\environment.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\CMakeLists.txt" />

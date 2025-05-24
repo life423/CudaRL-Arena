@@ -1,0 +1,70 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8y6p2xnx7q8v"]
+
+[ext_resource type="Script" path="res://Scenes/GridWorld.gd" id="1_jnvqw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u8r2v"]
+radius = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2xnvp"]
+bg_color = Color(0.141176, 0.141176, 0.141176, 0.752941)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="GridWorld" type="Node2D"]
+script = ExtResource("1_jnvqw")
+
+[node name="CudaRLEnvironment" type="CudaRLEnvironment" parent="."]
+
+[node name="GridContainer" type="Node2D" parent="."]
+
+[node name="AgentSprite" type="Area2D" parent="."]
+position = Vector2(275, 275)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AgentSprite"]
+shape = SubResource("CircleShape2D_u8r2v")
+
+[node name="ColorRect" type="ColorRect" parent="AgentSprite"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0, 0.6, 1.0, 1.0)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="UI"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 300.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_2xnvp")
+
+[node name="RewardLabel" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 290.0
+offset_bottom = 46.0
+text = "Reward: 0.000"
+
+[node name="StatusLabel" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 50.0
+offset_right = 290.0
+offset_bottom = 76.0
+text = "Use arrow keys to move"
+
+[node name="Instructions" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 560.0
+offset_right = 590.0
+offset_bottom = 586.0
+text = "Arrow keys: Move agent | R: Reset environment"

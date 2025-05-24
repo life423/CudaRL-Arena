@@ -1,16 +1,30 @@
-#include <cstdio>
-#include <cuda_runtime.h>
+#include <iostream>
+#include "environment.h"
 
-__global__ void hello_cuda() {
-    printf("Hello from GPU (thread %d)! \n", threadIdx.x);
-}
+// Macro for CUDA error checking (retained for future use)
+#define CHECK_CUDA(call) do { \
+    cudaError_t _err = call; \
+    if (_err != cudaSuccess) { \
+        std::fprintf(stderr, "CUDA Error %d: %s\n", _err, cudaGetErrorString(_err)); \
+        throw std::runtime_error("CUDA call failed"); \
+    } \
+} while(0)
 
+/*
+ * Main entry point for the CUDA RL Arena PoC.
+ * Demonstrates modular usage of the Environment class.
+ */
 int main() {
-    // launch 4 threads in one block
-    hello_cuda<<<1,4>>>();
-    cudaDeviceSynchronize();
+    std::cout << "Creating environment..." << std::endl;
+    Environment env(0);
 
-    std::puts("Back on the CPU, PoC complete!");
+    std::cout << "Resetting environment (should launch GPU kernel)..." << std::endl;
+    env.reset();
+
+    std::cout << "Stepping environment with action=1..." << std::endl;
+    env.step(1);
+
+    std::cout << "Back on the CPU, PoC complete!" << std::endl;
 
     // you can invoke Python here via the C API, e.g.:
     // Py_Initialize();

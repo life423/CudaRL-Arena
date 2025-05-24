@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\db33ae9b15dedd5ba34eb91f317fcf95\extension_api.json.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\4d35ad660a684c80dfb2eed6dedbd478\generate_extension_api.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\CMakeFiles\generate_extension_api" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{5950AC65-DD0B-303C-BF64-183FFB1E2CFF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
