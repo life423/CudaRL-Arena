@@ -55,3 +55,7 @@ results/
 *.npy
 *.png
 *.gif
+
+# Godot submodule (to be rebuilt later)
+build/_deps/godot_cpp-src/
+godot/godot-cpp/
