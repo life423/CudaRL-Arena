@@ -1,45 +1,153 @@
-# CudaRL-Arena
+# CudaRL-Arena Documentation
 
-A high-performance reinforcement learning environment using CUDA acceleration.
+Welcome to the CudaRL-Arena documentation. This directory contains detailed information about the project architecture, usage, and development.
 
-## Overview
+## Contents
 
-CudaRL-Arena provides a CUDA-accelerated environment for reinforcement learning research and experimentation. It features:
+- [Architecture](ARCHITECTURE.md) - Detailed description of the project architecture
+- [API Reference](#api-reference) - API documentation for the Python and C++ interfaces
+- [Examples](#examples) - Example usage of the framework
+- [Development Guide](#development-guide) - Guide for developers contributing to the project
 
-- CUDA-accelerated environment simulation
-- Python bindings for easy integration with ML frameworks
-- Godot integration for visualization
-- Modular architecture for extensibility
+## API Reference
 
-## Project Structure
+### Python API
 
+#### Environment
+
+```python
+# Create an environment
+env = cudarl_core.Environment(width=10, height=10)
+
+# Reset the environment
+observation = env.reset()
+
+# Take a step in the environment
+observation, reward, done, info = env.step(action)
+
+# Get the agent's position
+agent_x, agent_y = env.get_agent_position()
 ```
-CudaRL-Arena/
-├── src/                    # C++ and CUDA source code
-│   ├── core/               # Core C++ headers and implementation
-│   ├── gpu/                # CUDA kernels and GPU-specific code
-│   └── bindings/           # Language bindings (Python, Godot)
-├── python/                 # Python package
-│   ├── cudarl/             # Python module
-│   └── scripts/            # Training and utility scripts
-├── godot/                  # Godot integration
-│   ├── bin/                # Compiled GDExtension binaries
-│   ├── gdextension/        # GDExtension source
-│   └── Scenes/             # Godot scenes for visualization
-├── tests/                  # Unit and integration tests
-└── docs/                   # Documentation
+
+#### Q-Learning Agent
+
+```python
+# Create a Q-learning agent
+agent = QTableAgent(
+    width=10,
+    height=10,
+    learning_rate=0.1,
+    discount_factor=0.99,
+    exploration_rate=1.0,
+    exploration_decay=0.995
+)
+
+# Select an action
+action = agent.select_action(observation, agent_position)
+
+# Update the agent
+metrics = agent.update(
+    observation, action, reward, next_observation, done,
+    agent_position, next_agent_position
+)
 ```
 
-## Building
+#### Training
 
-### Prerequisites
+```python
+# Train an agent
+metrics = train(
+    env=env,
+    agent=agent,
+    num_episodes=1000,
+    max_steps=500
+)
 
-- CUDA Toolkit 11.0+
-- CMake 3.24+
-- Python 3.7+
-- Godot 4.4+ (optional, for visualization)
+# Evaluate an agent
+eval_metrics = evaluate(env, agent, num_episodes=10)
 
-### Build Instructions
+# Plot results
+plot_results(metrics)
+```
+
+### C++ API
+
+#### Environment
+
+```cpp
+// Create an environment
+Environment env(0, 10, 10);
+
+// Reset the environment
+env.reset();
+
+// Take a step in the environment
+env.step(action);
+
+// Get the agent's position
+int x = env.getAgentX();
+int y = env.getAgentY();
+```
+
+#### Q-Learning
+
+```cpp
+// Create a Q-learning instance
+CudaQLearning q_learning(10, 10, 4, 0.1f, 0.99f);
+
+// Update Q-values in batch
+q_learning.update_batch(states, actions, rewards, next_states, dones);
+
+// Get the best action for a state
+int action = q_learning.get_best_action(x, y);
+```
+
+## Examples
+
+### Basic Training
+
+```python
+import cudarl_core
+from train import QTableAgent, train, evaluate, plot_results
+
+# Create environment and agent
+env = cudarl_core.Environment(10, 10)
+agent = QTableAgent(10, 10)
+
+# Train the agent
+metrics = train(env, agent, num_episodes=1000)
+
+# Evaluate the agent
+eval_metrics = evaluate(env, agent)
+
+# Plot results
+plot_results(metrics)
+```
+
+### Custom Environment Setup
+
+```python
+import cudarl_core
+
+# Create environment
+env = cudarl_core.Environment(10, 10)
+
+# Add obstacles
+env.add_obstacle(2, 3)
+env.add_obstacle(3, 3)
+env.add_obstacle(4, 3)
+
+# Set goal
+env.set_goal(9, 0)
+
+# Add traps
+env.add_trap(5, 5, -0.5)
+env.add_trap(7, 3, -0.8)
+```
+
+## Development Guide
+
+### Building from Source
 
 ```bash
 # Clone the repository
@@ -47,40 +155,32 @@ git clone https://github.com/yourusername/CudaRL-Arena.git
 cd CudaRL-Arena
 
 # Create build directory
-mkdir build && cd build
+mkdir build
+cd build
 
 # Configure and build
 cmake ..
-cmake --build .
-
-# Install (optional)
-cmake --install .
+cmake --build . --config Debug
 ```
 
-## Python Usage
+### Running Tests
 
-```python
-from cudarl import Environment, Trainer
-from cudarl.agent import QTableAgent
+```bash
+# Run C++ tests
+./bin/Debug/cuda_test.exe
 
-# Create environment and agent
-env = Environment(width=10, height=10)
-agent = QTableAgent(action_space_size=4, observation_shape=(10, 10))
-
-# Create trainer and train
-trainer = Trainer(env, agent)
-metrics = trainer.train(num_episodes=1000)
-
-# Evaluate
-eval_metrics = trainer.evaluate(num_episodes=10, render=True)
+# Run Python tests
+python -m unittest discover tests
 ```
 
-## Godot Integration
+### Adding New Features
 
-1. Copy the compiled GDExtension from `godot/bin/` to your Godot project
-2. Add the `cudarl.gdextension` file to your Godot project
-3. Use the `CudaRLEnvironment` node in your scenes
+1. **New Environment Features**
+   - Extend the `Environment` class in `environment.h/cu`
+   - Add new CUDA kernels in `kernels.cuh/cu` if needed
+   - Update the `EnvironmentBridge` class to expose the new features to Python
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+2. **New RL Algorithms**
+   - Add new algorithm implementations in Python or C++/CUDA
+   - For CUDA-accelerated algorithms, follow the pattern in `q_learning.cuh/cu`
+   - Expose the new algorithms to Python through bindings if implemented in C++

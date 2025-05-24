@@ -24925,3 +24925,33 @@
 2025-05-24 02:24:17,592 - python.cudarl.environment - WARNING - C++ environment not initialized, returning dummy step result
 2025-05-24 02:24:17,592 - python.cudarl.environment - WARNING - C++ environment not initialized, returning dummy step result
 2025-05-24 02:24:17,593 - python.cudarl.environment - WARNING - C++ environment not initialized, returning dummy step result
+2025-05-24 02:56:18,705 - src.train - INFO - Successfully imported cudarl_core module
+2025-05-24 02:56:18,706 - src.train - INFO - Initialized Q-table agent with 10x10 states and 4 actions
+2025-05-24 02:56:18,706 - src.train - INFO - Starting training for 10 episodes
+2025-05-24 02:56:18,842 - src.train - INFO - Episode 1/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.082 | Time: 0.1s
+2025-05-24 02:56:18,844 - src.train - INFO - Episode 2/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.007 | Time: 0.1s
+2025-05-24 02:56:18,848 - src.train - INFO - Episode 3/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.001 | Time: 0.1s
+2025-05-24 02:56:18,852 - src.train - INFO - Episode 4/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.1s
+2025-05-24 02:56:18,854 - src.train - INFO - Episode 5/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.1s
+2025-05-24 02:56:18,857 - src.train - INFO - Episode 6/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.2s
+2025-05-24 02:56:18,860 - src.train - INFO - Episode 7/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.2s
+2025-05-24 02:56:18,863 - src.train - INFO - Episode 8/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.2s
+2025-05-24 02:56:18,865 - src.train - INFO - Episode 9/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.2s
+2025-05-24 02:56:18,868 - src.train - INFO - Episode 10/10 | Reward: -5.00 | Avg Reward: -5.00 | Avg Length: 500.0 | Epsilon: 0.000 | Time: 0.2s
+2025-05-24 02:56:18,868 - src.train - INFO - Training completed in 0.2 seconds
+2025-05-24 02:56:18,868 - src.train - INFO - Evaluating agent for 10 episodes
+2025-05-24 02:56:18,870 - src.train - INFO - Evaluation episode 1: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,873 - src.train - INFO - Evaluation episode 2: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,877 - src.train - INFO - Evaluation episode 3: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,882 - src.train - INFO - Evaluation episode 4: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,884 - src.train - INFO - Evaluation episode 5: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,886 - src.train - INFO - Evaluation episode 6: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,890 - src.train - INFO - Evaluation episode 7: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,893 - src.train - INFO - Evaluation episode 8: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,895 - src.train - INFO - Evaluation episode 9: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,897 - src.train - INFO - Evaluation episode 10: Reward = -10.00, Length = 1000
+2025-05-24 02:56:18,897 - src.train - INFO - Evaluation results: Avg Reward = -10.00, Avg Length = 1000.0
+2025-05-24 02:56:18,897 - src.train - INFO - Plotting training results
+2025-05-24 02:56:31,316 - src.train - INFO - Done!
+2025-05-24 03:21:08,902 - src.train - ERROR - Failed to import cudarl_core module. Make sure it's built and in your Python path.
+2025-05-24 03:21:08,902 - src.train - ERROR - You may need to run: cmake --build build --target cudarl_core

@@ -1,22 +1,37 @@
 #pragma once
 
-#include "../core/environment.h"
+#include <cuda_runtime.h>
 
 namespace cudarl {
 
-// CUDA kernel to reset the environment
-__global__ void reset_environment(EnvironmentState* state);
+// CUDA kernel for updating Q-values in batch
+__global__ void updateQValuesKernel(
+    float* q_table,           // Q-table [state_size * action_size]
+    const int* states,        // Current states [batch_size]
+    const int* actions,       // Actions taken [batch_size]
+    const float* rewards,     // Rewards received [batch_size]
+    const int* next_states,   // Next states [batch_size]
+    const bool* dones,        // Done flags [batch_size]
+    const int state_size,     // Total number of states
+    const int action_size,    // Total number of actions
+    const float learning_rate,// Alpha
+    const float discount,     // Gamma
+    const int batch_size      // Number of samples to process
+);
 
-// CUDA kernel to step the environment based on action
-__global__ void step_environment(EnvironmentState* state, int action);
-
-// Vector addition kernel (for testing)
-template<typename T>
-__global__ void vector_add(const T* A, const T* B, T* C, int numElements) {
-    int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i < numElements) {
-        C[i] = A[i] + B[i];
-    }
-}
+// Host function to launch the Q-value update kernel
+void updateQValuesBatch(
+    float* d_q_table,         // Device Q-table
+    const int* d_states,      // Device states
+    const int* d_actions,     // Device actions
+    const float* d_rewards,   // Device rewards
+    const int* d_next_states, // Device next states
+    const bool* d_dones,      // Device done flags
+    const int state_size,     // Total number of states
+    const int action_size,    // Total number of actions
+    const float learning_rate,// Alpha
+    const float discount,     // Gamma
+    const int batch_size      // Number of samples to process
+);
 
 } // namespace cudarl

@@ -1,111 +1,118 @@
 # CudaRL-Arena Architecture
 
-This document describes the architecture and design decisions of the CudaRL-Arena project.
+This document describes the architecture of the CudaRL-Arena project.
 
-## Core Components
+## Overview
 
-### Environment
+CudaRL-Arena is a CUDA-accelerated reinforcement learning framework designed to leverage GPU computing for training RL agents. The project uses a hybrid architecture with C++/CUDA for performance-critical operations and Python for high-level control and agent implementation.
 
-The `Environment` class is the central component of the system. It manages:
+## Components
 
-- Grid-based state representation
-- Agent position and movement
-- Reward calculation
-- CUDA-accelerated state updates
+### Core Components
 
-The environment uses a hybrid CPU/GPU approach:
-- State is maintained on both host and device
-- State transitions are computed on the GPU
-- Results are synchronized back to the host for API access
+1. **Environment (C++/CUDA)**
+   - Implements the grid-based environment logic
+   - Handles state transitions, rewards, and termination conditions
+   - Uses CUDA kernels for parallel processing
 
-### CUDA Memory Management
+2. **Q-Learning (C++/CUDA)**
+   - Implements Q-learning algorithm with GPU acceleration
+   - Supports batch updates for improved performance
+   - Manages Q-table storage and updates
 
-Memory management follows RAII principles using the `CudaMemory` template class:
+3. **Environment Bridge**
+   - Provides an interface between C++ and Python
+   - Exposes environment functionality to Python code
 
-- Automatic allocation and deallocation of GPU memory
-- Move semantics for ownership transfer
-- Error checking for all CUDA operations
-- Prevention of memory leaks
+4. **Python Bindings**
+   - Uses pybind11 to create Python bindings for C++ code
+   - Allows Python code to interact with CUDA-accelerated components
 
-### Python Integration
+5. **Training Loop (Python)**
+   - Implements the main training loop
+   - Handles episode management, agent updates, and evaluation
+   - Provides visualization and logging
 
-Python bindings are provided through pybind11, exposing:
+### Data Flow
 
-- Environment creation and manipulation
-- State observation and action execution
-- Grid data access as NumPy arrays
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Python    │     │ Environment │     │    CUDA     │
+│   Agent     │◄───►│   Bridge    │◄───►│   Kernels   │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                                       ▲
+       │                                       │
+       ▼                                       │
+┌─────────────┐                        ┌─────────────┐
+│  Training   │                        │  Q-Learning │
+│    Loop     │◄───────────────────────│    CUDA     │
+└─────────────┘                        └─────────────┘
+```
 
-The Python layer adds:
-- Gym-like interface for compatibility with RL frameworks
-- Agent implementations (Random, Q-Table)
-- Training and evaluation utilities
-- Visualization tools
+## CUDA Acceleration
 
-### Godot Integration
+The project leverages CUDA for several performance-critical components:
 
-Godot integration is provided through GDExtension, allowing:
+1. **Environment Simulation**
+   - Environment state updates are performed on the GPU
+   - Allows for potential parallel simulation of multiple environments
 
-- Real-time visualization of the environment
-- Interactive agent control
-- Signal-based communication for events
-- Custom rendering of the grid state
+2. **Q-Learning Updates**
+   - Q-table updates are performed in parallel on the GPU
+   - Batch processing of experience tuples for efficient learning
 
-## Data Flow
+3. **Future Extensions**
+   - Support for more complex neural network policies
+   - Parallel environment simulation for faster data collection
 
-1. **Initialization**:
-   - Environment is created with specified dimensions
-   - Grid is initialized with random values
-   - Agent is placed at the center
-   - State is copied to GPU memory
+## Python Integration
 
-2. **Step Execution**:
-   - Action is received from agent
-   - CUDA kernel processes the action and updates state
-   - Updated state is synchronized back to host
-   - Observation, reward, and done flag are returned
+Python is used for:
 
-3. **Training Loop**:
-   - Agent selects action based on observation
-   - Environment executes action
-   - Agent updates policy based on reward
-   - Process repeats until episode completion
+1. **Agent Implementation**
+   - Defining agent policies and learning algorithms
+   - Experiment configuration and hyperparameter tuning
 
-## Design Decisions
+2. **Training Management**
+   - Running the training loop
+   - Collecting and analyzing results
 
-### CUDA Acceleration
+3. **Visualization**
+   - Plotting training curves
+   - Visualizing agent behavior
 
-- Single-threaded kernels for simple grid environments
-- Potential for parallel processing in more complex environments
-- Memory transfers minimized to reduce overhead
-- Error checking for all CUDA operations
+## File Structure
 
-### C++ Modernization
+```
+CudaRL-Arena/
+├── src/                    # Core C++ and CUDA source files
+│   ├── environment.h/cu    # Environment implementation
+│   ├── environment_bridge.h/cu # Bridge between C++ and Python
+│   ├── kernels.cuh/cu      # CUDA kernels
+│   ├── q_learning.cuh/cu   # Q-learning implementation
+│   ├── python_bindings.cpp # Python bindings
+│   ├── main.cu             # C++ entry point
+│   └── train.py            # Python training script
+├── python/                 # Python package and scripts
+│   ├── cudarl/             # Python module
+│   └── scripts/            # Training and utility scripts
+├── docs/                   # Documentation
+└── tests/                  # Test files
+```
 
-- RAII for resource management
-- Smart pointers for ownership semantics
-- Move semantics for efficient transfers
-- Strong type safety with `enum class`
-- Exception-based error handling
+## Future Directions
 
-### Python API Design
+1. **Enhanced Environment Features**
+   - Procedural generation of environments
+   - More complex reward structures
+   - Multi-agent support
 
-- Gym-compatible interface for easy integration
-- NumPy arrays for efficient data transfer
-- Type hints for better IDE support
-- Logging for debugging and monitoring
-- Command-line interface for training scripts
+2. **Advanced RL Algorithms**
+   - Deep Q-Networks (DQN)
+   - Policy Gradient methods
+   - Actor-Critic architectures
 
-### Godot Integration
-
-- GDExtension for high-performance integration
-- Signal-based communication for event handling
-- Automatic build process with CMake
-- Clean separation between simulation and visualization
-
-## Future Extensions
-
-- Multi-agent support
-- Complex environment dynamics
-- Neural network agents with PyTorch/TensorFlow
-- Distributed training
-- Benchmark suite for performance testing
+3. **Visualization and Analysis**
+   - Real-time visualization of training
+   - Performance profiling and optimization
+   - Comparative analysis of algorithms
