@@ -1,6 +1,5 @@
 #include <iostream>
 #include "environment.h"
-#include "cuda_utils.h"
 
 using namespace cudarl;
 

@@ -60,25 +60,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\lib\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gd_cudarl.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gd_cudarl</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.gdextension</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\lib\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">gd_cudarl.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">gd_cudarl</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.gdextension</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\lib\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gd_cudarl.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gd_cudarl</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.gdextension</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\aiand\Documents\programming\CudaRL-Arena\build\lib\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gd_cudarl.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gd_cudarl</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.gdextension</TargetExt>
@@ -88,10 +88,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
@@ -102,14 +104,15 @@
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug";gd_cudarl_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <AdditionalUsingDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64</AdditionalUsingDirectories>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\";gd_cudarl_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -117,13 +120,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_release.x86_64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\Debug\cudarl_core.lib;_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_debug.x86_64.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Debug/gd_cudarl.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Debug/gd_cudarl.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/Debug/gd_cudarl.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/Debug/gd_cudarl.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -137,9 +140,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
@@ -152,14 +157,15 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <AdditionalUsingDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64</AdditionalUsingDirectories>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\";gd_cudarl_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -167,13 +173,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_release.x86_64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\Release\cudarl_core.lib;_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_debug.x86_64.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/gd_cudarl.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/gd_cudarl.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/Release/gd_cudarl.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/Release/gd_cudarl.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -187,9 +193,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
@@ -202,14 +210,15 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <AdditionalUsingDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64</AdditionalUsingDirectories>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\";gd_cudarl_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -217,13 +226,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_release.x86_64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\MinSizeRel\cudarl_core.lib;_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_debug.x86_64.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/MinSizeRel/gd_cudarl.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/MinSizeRel/gd_cudarl.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/MinSizeRel/gd_cudarl.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/MinSizeRel/gd_cudarl.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -237,10 +246,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
@@ -251,14 +262,15 @@
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo";gd_cudarl_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <AdditionalUsingDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64</AdditionalUsingDirectories>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\";gd_cudarl_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-build\gen\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_cpp-src\..\godot\modules\gdextension\include;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\math;C:\Users\aiand\Documents\programming\CudaRL-Arena\build\_deps\godot_engine-src\core\extension;C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -266,13 +278,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_release.x86_64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\RelWithDebInfo\cudarl_core.lib;_deps\godot_cpp-build\bin\libgodot-cpp.windows.template_debug.x86_64.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/RelWithDebInfo/gd_cudarl.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/RelWithDebInfo/gd_cudarl.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/RelWithDebInfo/gd_cudarl.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/aiand/Documents/programming/CudaRL-Arena/build/lib/RelWithDebInfo/gd_cudarl.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -341,7 +353,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\godot\gdextension\bindings.cpp" />
+    <ClCompile Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\bindings\godot_bindings.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -356,6 +368,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Name>copy_godot_headers</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\cudarl_core.vcxproj">
+      <Project>{AB20FE85-92AA-3EA8-A215-F160324B673E}</Project>
+      <Name>cudarl_core</Name>
     </ProjectReference>
     <ProjectReference Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\build\generate_extension_api.vcxproj">
       <Project>{23167BFB-EE10-3A26-807A-1794571C565E}</Project>

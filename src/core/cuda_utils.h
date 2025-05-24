@@ -3,6 +3,7 @@
 #include <cuda_runtime.h>
 #include <stdexcept>
 #include <string>
+#include <iostream>
 
 namespace cudarl {
 
