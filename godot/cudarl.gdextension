@@ -1,4 +1,0 @@
-[configuration]
-entry_symbol = "cudarl_library_init"
-library_path = "res://bin/$<TARGET_FILE_NAME:gd_cudarl>"
-depends = []
