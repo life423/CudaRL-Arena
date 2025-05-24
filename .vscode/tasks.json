@@ -1,20 +1,60 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "CMake: build & run poc_app",
-      "type": "shell",
-      "command": "cmake",
-      "args": [
-        "--build", "build",
-        "--target", "run",
-        "--config", "Debug"
-      ],
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    }
-  ]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S", "${workspaceFolder}",
+                "-B", "${workspaceFolder}/build"
+            ]
+        },
+        {
+            "label": "CMake: build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build", "${workspaceFolder}/build",
+                "--config", "Debug"
+            ],
+            "dependsOn": "CMake: configure"
+        },
+        {
+            "label": "Run C++ PoC",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/Debug/poc_app.exe",
+            "dependsOn": "CMake: build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Run Python MVP",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/src/mvp.py"
+            ],
+            "dependsOn": "Run C++ PoC",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "build and run all",
+            "dependsOn": [
+                "CMake: configure",
+                "CMake: build",
+                "Run C++ PoC",
+                "Run Python MVP"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
 }

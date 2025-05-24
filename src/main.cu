@@ -2,15 +2,20 @@
 #include <cuda_runtime.h>
 
 __global__ void hello_cuda() {
-  printf("🔥 Hello from GPU (thread %d)! 🔥\n", threadIdx.x);
+    printf("Hello from GPU (thread %d)! \n", threadIdx.x);
 }
 
 int main() {
-  // launch 4 threads in one block, just for demo
-  hello_cuda<<<1,4>>>();
-  // wait for GPU to finish and flush prints
-  cudaDeviceSynchronize();
+    // launch 4 threads in one block
+    hello_cuda<<<1,4>>>();
+    cudaDeviceSynchronize();
 
-  std::puts("✅ Back on the CPU, PoC complete!");
-  return 0;
+    std::puts("Back on the CPU, PoC complete!");
+
+    // you can invoke Python here via the C API, e.g.:
+    // Py_Initialize();
+    // PyRun_SimpleString("import mvp; mvp.main()");
+    // Py_Finalize();
+
+    return 0;
 }
