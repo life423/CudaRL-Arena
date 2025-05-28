@@ -5,8 +5,10 @@ var grid_size := Vector2i(10, 10)
 var cell_size := 50
 
 func _ready():
-    # Create CUDA environment
+    print("GameController ready")
+    # Create environment
     cuda_env = CudaRLEnvironment.new()
+    add_child(cuda_env)
     cuda_env.initialize(grid_size.x, grid_size.y)
     cuda_env.reset()
     
@@ -14,6 +16,8 @@ func _ready():
     cuda_env.environment_reset.connect(_on_environment_reset)
     cuda_env.environment_stepped.connect(_on_environment_stepped)
     cuda_env.environment_done.connect(_on_environment_done)
+    
+    print("Environment initialized")
 
 func _input(event):
     if event.is_action_pressed("ui_accept"):  # Space
@@ -28,6 +32,7 @@ func _input(event):
         cuda_env.step(3)
 
 func _on_environment_reset():
+    print("Environment reset")
     queue_redraw()
 
 func _on_environment_stepped(action: int, reward: float):
@@ -38,6 +43,9 @@ func _on_environment_done():
     print("Episode complete!")
 
 func _draw():
+    if not cuda_env:
+        return
+        
     # Draw grid
     var grid_data = cuda_env.get_grid_data()
     
@@ -48,10 +56,15 @@ func _draw():
             
             # Draw cell
             var rect = Rect2(x * cell_size, y * cell_size, cell_size, cell_size)
-            draw_rect(rect, Color(value, value, value))
+            var color = Color(value, value, value)
+            draw_rect(rect, color)
             draw_rect(rect, Color.WHITE, false, 2.0)
     
     # Draw agent
     var agent_pos = Vector2(cuda_env.get_agent_x(), cuda_env.get_agent_y())
-    var agent_rect = Rect2(agent_pos * cell_size, Vector2(cell_size, cell_size))
+    var agent_rect = Rect2(agent_pos * cell_size + Vector2(5, 5), Vector2(cell_size - 10, cell_size - 10))
     draw_rect(agent_rect, Color.RED)
+    
+    # Draw goal indicator (top-right)
+    var goal_rect = Rect2((grid_size.x - 1) * cell_size + 10, 10, cell_size - 20, cell_size - 20)
+    draw_rect(goal_rect, Color.GREEN, false, 3.0)
