@@ -51,7 +51,11 @@ __global__ void step_environment(EnvironmentState* state, int action) {
     }
 }
 
-Environment::Environment(int id, int width, int height) : m_envId(id) {
+Environment::Environment(int id, int width, int height) 
+    : m_envId(id)
+    , m_deviceState(1)
+    , m_deviceGrid(width * height) {
+    
     // Initialize host state
     m_state.width = width;
     m_state.height = height;
@@ -59,22 +63,12 @@ Environment::Environment(int id, int width, int height) : m_envId(id) {
     m_state.agent_y = height / 2;
     m_state.reward = 0.0f;
     m_state.done = false;
+    m_state.grid = nullptr; // We'll use device memory only
+      // Initialize grid on device
+    initializeGridOnDevice();
     
-    // Allocate host grid
-    m_state.grid = new float[width * height];
-    initializeGrid();
-    
-    // Allocate device state
-    m_deviceState.allocate(1);
-    
-    // Allocate device grid
-    m_deviceGrid.allocate(width * height);
-    m_deviceGrid.copyFromHost(m_state.grid, width * height);
-    
-    // Copy state to device (need to handle the grid pointer separately)
-    EnvironmentState temp_state = m_state;
-    temp_state.grid = m_deviceGrid.get();
-    CUDA_CHECK(cudaMemcpy(m_deviceState.get(), &temp_state, sizeof(EnvironmentState), cudaMemcpyHostToDevice));
+    // Copy state to device (grid pointer will be set on device)
+    syncStateToDevice();
     
     std::cout << "Environment " << m_envId << " constructed (" << width << "x" << height << ")." << std::endl;
 }
@@ -144,14 +138,17 @@ void Environment::step(int action) {
 }
 
 float Environment::getCellValue(int x, int y) const {
-    if (x >= 0 && x < m_state.width && y >= 0 && y < m_state.height) {
-        return m_state.grid[y * m_state.width + x];
+    if (x < 0 || x >= m_state.width || y < 0 || y >= m_state.height) {
+        return 0.0f;
     }
-    return 0.0f;
+    
+    // Get value from device grid
+    std::vector<float> hostGrid = m_deviceGrid.copyToHostAll();
+    return hostGrid[y * m_state.width + x];
 }
 
 std::vector<float> Environment::getGrid() const {
-    return std::vector<float>(m_state.grid, m_state.grid + (m_state.width * m_state.height));
+    return m_deviceGrid.copyToHostAll();
 }
 
 // GPU kernel to initialize grid with random values using cuRAND
@@ -174,7 +171,7 @@ __global__ void initializeGridKernel(float* grid, int width, int height, unsigne
     }
 }
 
-void Environment::initializeGrid() {
+void Environment::initializeGridOnDevice() {
     // Calculate grid size and launch configuration
     int totalSize = m_state.width * m_state.height;
     int blockSize = 256;
@@ -186,9 +183,13 @@ void Environment::initializeGrid() {
     // Launch GPU kernel to initialize grid
     initializeGridKernel<<<numBlocks, blockSize>>>(m_deviceGrid.get(), m_state.width, m_state.height, seed);
     CUDA_CHECK(cudaDeviceSynchronize());
-    
-    // Copy initialized grid back to host
-    m_deviceGrid.copyToHost(m_state.grid, totalSize);
+}
+
+void Environment::syncStateToDevice() {
+    // Copy state to device (grid pointer will be set correctly on device)
+    EnvironmentState temp_state = m_state;
+    temp_state.grid = m_deviceGrid.get();
+    CUDA_CHECK(cudaMemcpy(m_deviceState.get(), &temp_state, sizeof(EnvironmentState), cudaMemcpyHostToDevice));
 }
 
 void Environment::updateHostState() {
@@ -202,14 +203,10 @@ void Environment::updateHostState() {
     m_state.reward = temp_state.reward;
     m_state.done = temp_state.done;
     
-    // Copy grid data from device to host
-    m_deviceGrid.copyToHost(m_state.grid, m_state.width * m_state.height);
+    // Note: We don't copy grid data to host here since we use device memory directly
 }
 
 void Environment::syncToDevice() {
-    // Copy grid to device
-    m_deviceGrid.copyFromHost(m_state.grid, m_state.width * m_state.height);
-    
     // Copy state to device
     EnvironmentState temp_state = m_state;
     temp_state.grid = m_deviceGrid.get();

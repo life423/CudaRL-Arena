@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdexcept>
+#include <vector>
 
 // Error checking macro
 #define CUDA_CHECK(call) \

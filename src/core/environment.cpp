@@ -2,6 +2,8 @@
 #include "../gpu/kernels.cuh"
 #include <stdexcept>
 #include <algorithm>
+#include <string>
+#include <cstddef>
 
 namespace cudarl {
 
@@ -98,12 +100,28 @@ float Environment::getCellValue(int x, int y) const {
     }
     
     // Get value from device grid
-    std::vector<float> hostGrid = m_deviceGrid.copyToHost();
+    std::vector<float> hostGrid = m_deviceGrid.copyToHostAll();
     return hostGrid[y * m_state.width + x];
 }
 
 std::vector<float> Environment::getGrid() const {
-    return m_deviceGrid.copyToHost();
+    return m_deviceGrid.copyToHostAll();
+}
+
+void Environment::copyGridToBuffer(float* host_buffer, size_t num_elements) const {
+    if (!host_buffer) {
+        throw std::invalid_argument("Host buffer cannot be null");
+    }
+    
+    size_t expected_size = static_cast<size_t>(m_state.width) * m_state.height;
+    if (num_elements != expected_size) {
+        throw std::invalid_argument("Buffer size mismatch: expected " + 
+                                  std::to_string(expected_size) + " but got " + 
+                                  std::to_string(num_elements));
+    }
+    
+    // Copy from device grid to host buffer
+    m_deviceGrid.copyToHost(host_buffer, num_elements);
 }
 
 void Environment::initializeGrid() {
@@ -116,7 +134,7 @@ void Environment::initializeGrid() {
     hostGrid[m_state.agent_y * m_state.width + m_state.agent_x] = 0.5f;
     
     // Copy to device
-    m_deviceGrid.copyFromHost(hostGrid.data());
+    m_deviceGrid.copyFromHost(hostGrid.data(), hostGrid.size());
 }
 
 void Environment::updateHostState() {

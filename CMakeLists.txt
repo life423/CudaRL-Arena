@@ -110,16 +110,13 @@ message(STATUS "Base CUDA flags: ${CMAKE_CUDA_FLAGS}")
 add_library(cudarl_core STATIC
   # Core logic (environment-agnostic)
   src/core/environment.h
+  src/core/environment_cpu.cpp
   src/core/cuda_utils.h
   
   # GPU kernels and CUDA implementation
   src/gpu/environment.cu
   src/gpu/kernels.cu
   src/gpu/kernels.cuh
-  
-  # Bridge and remaining functionality
-  src/environment_bridge.h
-  src/environment_bridge.cu
 )
 
 target_include_directories(cudarl_core PUBLIC
@@ -233,10 +230,9 @@ if(BUILD_GODOT_EXTENSION)
         GIT_TAG 4.2
     )
     FetchContent_MakeAvailable(godot-cpp)
-    
-    # Create GDExtension library
+      # Create GDExtension library
     add_library(cudarl_godot SHARED
-        godot/src/godot_bindings.cpp
+        src/bindings/godot/godot_bindings.cpp
     )
     
     target_link_libraries(cudarl_godot PRIVATE

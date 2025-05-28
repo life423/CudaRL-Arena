@@ -48,22 +48,24 @@ public:
     
     // Get grid cell value at (x,y)
     float getCellValue(int x, int y) const;
-    
-    // Get the entire grid as a vector
+      // Get the entire grid as a vector
     std::vector<float> getGrid() const;
+    
+    // Copy grid data directly to a host buffer (for Python bindings)
+    void copyGridToBuffer(float* host_buffer, size_t num_elements) const;
 
 private:
     int m_envId;
     EnvironmentState m_state;
-    
-    // Device memory
-    CudaMemory<EnvironmentState> m_deviceState;
-    CudaMemory<float> m_deviceGrid;
-    
-    // Helper methods
+      // Device memory
+    DeviceBuffer<EnvironmentState> m_deviceState;
+    DeviceBuffer<float> m_deviceGrid;
+      // Helper methods
     void initializeGrid();
+    void initializeGridOnDevice();
     void updateHostState();
     void syncToDevice();
+    void syncStateToDevice();
 };
 
 } // namespace cudarl
