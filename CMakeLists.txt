@@ -21,7 +21,7 @@ if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
     add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
     
     # Auto-include compatibility header for all CUDA files
-    set(CUDA_WINDOWS_COMPAT_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/cuda_windows_fix.h")
+    set(CUDA_WINDOWS_COMPAT_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/gpu/cuda_windows_fix.h")
     if(EXISTS ${CUDA_WINDOWS_COMPAT_HEADER})
         message(STATUS "Using Windows CUDA compatibility header: ${CUDA_WINDOWS_COMPAT_HEADER}")
     endif()
@@ -111,20 +111,26 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ${CUDA_COMPILE_FLAGS}")
 message(STATUS "CUDA flags: ${CMAKE_CUDA_FLAGS}")
 
 # ──────────────── Core Library ────────────────
-# Create core library with CUDA functionality
+# Create core library with CUDA functionality - now modular structure
 add_library(cudarl_core STATIC
-  src/environment.h
-  src/environment.cu
+  # Core logic (environment-agnostic)
+  src/core/environment.h
+  src/core/cuda_utils.h
+  
+  # GPU kernels and CUDA implementation
+  src/gpu/environment.cu
+  src/gpu/kernels.cu
+  src/gpu/kernels.cuh
+  
+  # Bridge and remaining functionality
   src/environment_bridge.h
   src/environment_bridge.cu
-  src/kernels.cuh
-  src/kernels.cu
-  src/q_learning.cuh
-  src/q_learning.cu
 )
 
 target_include_directories(cudarl_core PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/gpu
 )
 
 target_link_libraries(cudarl_core PUBLIC

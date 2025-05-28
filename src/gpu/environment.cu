@@ -1,7 +1,6 @@
-#include "../core/environment.h"
-#include <cstdlib>
-#include <ctime>
-#include <random>
+#include "environment.h"
+#include <curand_kernel.h>
+#include <chrono>
 #include <iostream>
 
 namespace cudarl {
@@ -122,13 +121,13 @@ Environment& Environment::operator=(Environment&& other) noexcept {
 }
 
 void Environment::reset() {
-    // Reset on device
-    reset_environment<<<1, 1>>>(m_deviceState.get());
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // Reset on device - no unnecessary synchronization
+    reset_environment<<<1, 32>>>(m_deviceState.get());
     
-    // Update host state
+    // Update host state (sync happens here when needed)
     updateHostState();
     
+    std::cout << "Environment " << m_envId << " reset." << std::endl;
     std::cout << "Environment " << m_envId << " reset." << std::endl;
 }
 
@@ -157,18 +156,41 @@ std::vector<float> Environment::getGrid() const {
     return std::vector<float>(m_state.grid, m_state.grid + (m_state.width * m_state.height));
 }
 
-void Environment::initializeGrid() {
-    // Use modern C++ random number generation
-    std::mt19937 rng(std::time(nullptr) + m_envId);
-    std::uniform_real_distribution<float> dist(0.0f, 0.5f);
+// GPU kernel to initialize grid with random values using cuRAND
+__global__ void initializeGridKernel(float* grid, int width, int height, unsigned long long seed) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int totalSize = width * height;
     
-    // Initialize with random values
-    for (int i = 0; i < m_state.width * m_state.height; i++) {
-        m_state.grid[i] = dist(rng);
+    if (idx < totalSize) {
+        // Initialize cuRAND state for this thread
+        curandState state;
+        curand_init(seed + idx, idx, 0, &state);
+        
+        // Generate random value between 0.0f and 0.5f
+        grid[idx] = curand_uniform(&state) * 0.5f;
     }
     
     // Set goal (top-right corner) to a distinct value
-    m_state.grid[m_state.width - 1] = 1.0f;
+    if (idx == width - 1) {
+        grid[idx] = 1.0f;
+    }
+}
+
+void Environment::initializeGrid() {
+    // Calculate grid size and launch configuration
+    int totalSize = m_state.width * m_state.height;
+    int blockSize = 256;
+    int numBlocks = (totalSize + blockSize - 1) / blockSize;
+    
+    // Generate seed based on environment ID and current time
+    unsigned long long seed = static_cast<unsigned long long>(std::chrono::steady_clock::now().time_since_epoch().count()) + m_envId;
+    
+    // Launch GPU kernel to initialize grid
+    initializeGridKernel<<<numBlocks, blockSize>>>(m_deviceGrid.get(), m_state.width, m_state.height, seed);
+    CUDA_CHECK(cudaDeviceSynchronize());
+    
+    // Copy initialized grid back to host
+    m_deviceGrid.copyToHost(m_state.grid, totalSize);
 }
 
 void Environment::updateHostState() {

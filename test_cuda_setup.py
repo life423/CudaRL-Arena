@@ -17,14 +17,14 @@ def test_nvcc():
         if result.returncode == 0:
             print("NVCC Output:")
             print(result.stdout)
-            return True
+            assert True, "NVCC is available and working"
         else:
             print(f"NVCC failed with return code {result.returncode}")
             print(f"Error: {result.stderr}")
-            return False
+            assert False, f"NVCC failed with return code {result.returncode}"
     except FileNotFoundError:
         print("ERROR: nvcc not found in PATH")
-        return False
+        assert False, "nvcc not found in PATH"
 
 def test_cuda_compilation():
     """Test simple CUDA compilation with Windows SDK compatibility fixes."""
@@ -158,12 +158,12 @@ int main() {
                 print("Errors/warnings:")
                 print(run_result.stderr)
             
-            return run_result.returncode == 0
+            assert run_result.returncode == 0, f"CUDA test execution failed with code {run_result.returncode}"
         else:
             print("✗ Compilation failed:")
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
-            return False
+            assert False, "CUDA compilation failed"
 
 def test_cmake_build():
     """Test CMake build with Windows SDK fixes."""
@@ -171,7 +171,8 @@ def test_cmake_build():
     
     if not Path('CMakeLists.txt').exists():
         print("CMakeLists.txt not found, skipping CMake test")
-        return True
+        assert True, "CMakeLists.txt not found, test skipped"
+        return
     
     # Clean build directory
     build_dir = Path('tests')
@@ -179,7 +180,8 @@ def test_cmake_build():
         print("Using existing build directory")
     else:
         print("Build directory not found, would need to create")
-        return True
+        assert True, "Build directory test skipped"
+        return
     
     # Test if we can at least configure
     try:
@@ -190,13 +192,13 @@ def test_cmake_build():
         if result.returncode == 0:
             print("✓ CMake is available")
             print("CMake version:", result.stdout.split('\n')[0])
-            return True
+            assert True, "CMake is available and working"
         else:
             print("✗ CMake not available")
-            return False
+            assert False, "CMake not available"
     except FileNotFoundError:
         print("✗ CMake not found")
-        return False
+        assert False, "CMake not found"
 
 def main():
     """Main test runner."""
