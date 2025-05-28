@@ -95,20 +95,15 @@ endif()
 # Enhanced CUDA compilation flags for performance and compatibility
 set(CUDA_COMPILE_FLAGS "--use_fast_math --expt-relaxed-constexpr")
 
-# RTX 5070 specific optimizations
-if(CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.0")
-    set(CUDA_COMPILE_FLAGS "${CUDA_COMPILE_FLAGS} --maxrregcount=64")
-    message(STATUS "RTX 5070 optimizations enabled")
-endif()
-
 # Windows-specific CUDA flags
 if(WIN32)
     set(CUDA_COMPILE_FLAGS "${CUDA_COMPILE_FLAGS} -Xcompiler /MT")
     set(CUDA_COMPILE_FLAGS "${CUDA_COMPILE_FLAGS} -Wno-deprecated-gpu-targets")
 endif()
 
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ${CUDA_COMPILE_FLAGS}")
-message(STATUS "CUDA flags: ${CMAKE_CUDA_FLAGS}")
+# Set base CUDA flags (without maxrregcount to avoid conflicts)
+set(CMAKE_CUDA_FLAGS "${CUDA_COMPILE_FLAGS}")
+message(STATUS "Base CUDA flags: ${CMAKE_CUDA_FLAGS}")
 
 # ──────────────── Core Library ────────────────
 # Create core library with CUDA functionality - now modular structure
@@ -135,6 +130,7 @@ target_include_directories(cudarl_core PUBLIC
 
 target_link_libraries(cudarl_core PUBLIC
   CUDA::cudart
+  CUDA::curand
 )
 
 # Apply Windows SDK compatibility fixes
@@ -145,6 +141,14 @@ if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
         )
         message(STATUS "Auto-including Windows compatibility header for CUDA files")
     endif()
+endif()
+
+# RTX 5070 specific optimizations - set at target level to override CMake defaults
+if(CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.0")
+    target_compile_options(cudarl_core PRIVATE
+        $<$<COMPILE_LANGUAGE:CUDA>:--maxrregcount=64>
+    )
+    message(STATUS "RTX 5070 optimizations enabled (maxrregcount=64)")
 endif()
 
 # Standard CUDA compile options
@@ -164,7 +168,6 @@ endif()
 # ──────────────── Python Bindings ────────────────
 if(pybind11_FOUND)
     pybind11_add_module(cudarl_core_python src/python_bindings.cpp)
-    set_target_properties(cudarl_core_python PROPERTIES OUTPUT_NAME cudarl_core)
     target_link_libraries(cudarl_core_python PRIVATE cudarl_core)
     
     # Windows-specific Python binding settings
@@ -177,11 +180,11 @@ if(pybind11_FOUND)
 endif()
 
 # ──────────────── Main Application ────────────────
-add_executable(cudarl_app src/main.cu)
+add_executable(cudarl_app src/core/main.cu)
 target_link_libraries(cudarl_app PRIVATE cudarl_core)
 
 # ──────────────── CUDA Test ────────────────
-add_executable(cuda_test src/cuda_test.cu)
+add_executable(cuda_test src/gpu/cuda_test.cu)
 target_link_libraries(cuda_test PRIVATE cudarl_core)
 
 # ──────────────── Enhanced Test Targets ────────────────

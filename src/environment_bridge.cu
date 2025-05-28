@@ -4,11 +4,12 @@
 // Now safe to include CUDA headers
 #include "environment_bridge.h"
 #include <sstream>
+#include <iostream>
 
 EnvironmentBridge::EnvironmentBridge(int width, int height) 
     : width(width), height(height) {
     // Create the underlying environment
-    env = std::make_unique<Environment>(0, width, height);
+    env = std::make_unique<cudarl::Environment>(0, width, height);
 }
 
 std::vector<float> EnvironmentBridge::reset() {

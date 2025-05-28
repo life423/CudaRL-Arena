@@ -97,12 +97,12 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <CudaCompile>
-      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
+      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
       <Defines>%(Defines);_WINDOWS;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</Defines>
-      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/cuda_windows_compat.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Zi -Ob0"</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/gpu/cuda_windows_fix.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Zi -Ob0"</AdditionalOptions>
       <CodeGeneration></CodeGeneration>
       <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
       <FastMath>true</FastMath>
@@ -114,7 +114,7 @@
       <UseHostInclude>false</UseHostInclude>
     </CudaCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -149,12 +149,12 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <CudaCompile>
-      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
+      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
       <Defines>%(Defines);_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</Defines>
-      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/cuda_windows_compat.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Ob2"</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/gpu/cuda_windows_fix.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Ob2"</AdditionalOptions>
       <CodeGeneration></CodeGeneration>
       <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
       <FastMath>true</FastMath>
@@ -165,7 +165,7 @@
       <UseHostInclude>false</UseHostInclude>
     </CudaCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -200,12 +200,12 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <CudaCompile>
-      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
+      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
       <Defines>%(Defines);_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel"</Defines>
-      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/cuda_windows_compat.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Ob1"</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/gpu/cuda_windows_fix.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Ob1"</AdditionalOptions>
       <CodeGeneration></CodeGeneration>
       <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
       <FastMath>true</FastMath>
@@ -216,7 +216,7 @@
       <UseHostInclude>false</UseHostInclude>
     </CudaCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -251,12 +251,12 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <CudaCompile>
-      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
+      <Include>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(Include)</Include>
       <Defines>%(Defines);_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="RelWithDebInfo"</Defines>
-      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/cuda_windows_compat.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Zi -Ob1"</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) --expt-relaxed-constexpr --maxrregcount=64 -Wno-deprecated-gpu-targets -std=c++17 --generate-code=arch=compute_75,code=[compute_75,sm_75] --generate-code=arch=compute_80,code=[compute_80,sm_80] --generate-code=arch=compute_86,code=[compute_86,sm_86] --generate-code=arch=compute_89,code=[compute_89,sm_89] -include C:/Users/aiand/Documents/programming/CudaRL-Arena/src/gpu/cuda_windows_fix.h -Wno-deprecated-gpu-targets -Xcompiler="/EHsc -Zi -Ob1"</AdditionalOptions>
       <CodeGeneration></CodeGeneration>
       <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
       <FastMath>true</FastMath>
@@ -267,7 +267,7 @@
       <UseHostInclude>false</UseHostInclude>
     </CudaCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -340,16 +340,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\environment.h" />
-    <CudaCompile Include="..\src\environment.cu" />
+    <ClInclude Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core\environment.h" />
+    <ClInclude Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core\cuda_utils.h" />
+    <CudaCompile Include="..\src\gpu\environment.cu" />
+    <CudaCompile Include="..\src\gpu\kernels.cu" />
+    <None Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu\kernels.cuh">
+    </None>
     <ClInclude Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\environment_bridge.h" />
     <CudaCompile Include="..\src\environment_bridge.cu" />
-    <None Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\kernels.cuh">
-    </None>
-    <CudaCompile Include="..\src\kernels.cu" />
-    <None Include="C:\Users\aiand\Documents\programming\CudaRL-Arena\src\q_learning.cuh">
-    </None>
-    <CudaCompile Include="..\src\q_learning.cu" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -128,15 +128,13 @@ void Environment::reset() {
     updateHostState();
     
     std::cout << "Environment " << m_envId << " reset." << std::endl;
-    std::cout << "Environment " << m_envId << " reset." << std::endl;
 }
 
 void Environment::step(int action) {
-    // Step on device
-    step_environment<<<1, 1>>>(m_deviceState.get(), action);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // Step on device - no unnecessary synchronization
+    step_environment<<<1, 32>>>(m_deviceState.get(), action);
     
-    // Update host state
+    // Update host state (sync happens here when needed)
     updateHostState();
     
     std::cout << "Environment " << m_envId << " performed action " << action 

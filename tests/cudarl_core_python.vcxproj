@@ -87,7 +87,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include" /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/include" /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include" /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -109,10 +109,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;NOMINMAX;CMAKE_INTDIR=\"Debug\";cudarl_core_python_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -120,7 +120,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>lib\Debug\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>lib\Debug\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\curand.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -139,7 +139,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include" /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/include" /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include" /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -164,10 +164,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;CMAKE_INTDIR=\"Release\";cudarl_core_python_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -175,7 +175,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>lib\Release\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>lib\Release\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\curand.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -195,7 +195,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include" /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/include" /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include" /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -220,10 +220,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;CMAKE_INTDIR=\"MinSizeRel\";cudarl_core_python_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -231,7 +231,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>lib\MinSizeRel\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>lib\MinSizeRel\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\curand.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -251,7 +251,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include" /external:I "C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/include" /external:I "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include" /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -274,10 +274,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;NOMINMAX;CMAKE_INTDIR=\"RelWithDebInfo\";cudarl_core_python_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aiand\Documents\programming\CudaRL-Arena\src;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\core;C:\Users\aiand\Documents\programming\CudaRL-Arena\src\gpu;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Include;C:\Users\aiand\AppData\Local\Programs\Python\Python313\Lib\site-packages\pybind11\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -285,7 +285,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>lib\RelWithDebInfo\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>lib\RelWithDebInfo\cudarl_core.lib;C:\Users\aiand\AppData\Local\Programs\Python\Python313\libs\python313.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\cudart.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\curand.lib;C:\Users\aiand\vcpkg\installed\x64-windows\lib\*.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib;C:/Users/aiand/vcpkg/installed/x64-windows/lib/$(Configuration);C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link;C:/Users/aiand/vcpkg/installed/x64-windows/lib/manual-link/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>

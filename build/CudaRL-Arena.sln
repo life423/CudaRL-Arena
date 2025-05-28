@@ -49,6 +49,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "run_cuda_test", "run_cuda_t
 		{F2F8462C-FFB4-3BE3-A2B1-100981DB3FED} = {F2F8462C-FFB4-3BE3-A2B1-100981DB3FED}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "verify_cuda_compat", "verify_cuda_compat.vcxproj", "{8B4C53D5-653B-34C6-8DFC-FDA9EA9DAF79}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0A08A0E7-A092-3EF2-BA2A-4231C04A6C92} = {0A08A0E7-A092-3EF2-BA2A-4231C04A6C92}
+		{F2F8462C-FFB4-3BE3-A2B1-100981DB3FED} = {F2F8462C-FFB4-3BE3-A2B1-100981DB3FED}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -109,6 +115,10 @@ Global
 		{8EE9E91F-5CE2-3826-8DBD-2F36C46D8EE1}.Release|x64.ActiveCfg = Release|x64
 		{8EE9E91F-5CE2-3826-8DBD-2F36C46D8EE1}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
 		{8EE9E91F-5CE2-3826-8DBD-2F36C46D8EE1}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{8B4C53D5-653B-34C6-8DFC-FDA9EA9DAF79}.Debug|x64.ActiveCfg = Debug|x64
+		{8B4C53D5-653B-34C6-8DFC-FDA9EA9DAF79}.Release|x64.ActiveCfg = Release|x64
+		{8B4C53D5-653B-34C6-8DFC-FDA9EA9DAF79}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{8B4C53D5-653B-34C6-8DFC-FDA9EA9DAF79}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F1FBB01-C2C6-3327-91F2-B2CD42252C8D}

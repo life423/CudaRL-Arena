@@ -1,5 +1,5 @@
 #pragma once
-#include "environment.h"
+#include "core/environment.h"
 #include <vector>
 #include <memory>
 
@@ -74,7 +74,7 @@ public:
     void addTrap(int x, int y, float penalty = -1.0f);
     
 private:
-    std::unique_ptr<Environment> env;
+    std::unique_ptr<cudarl::Environment> env;
     int width;
     int height;
 };
