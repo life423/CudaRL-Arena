@@ -787,6 +787,142 @@ _**User**_
 
 _**Assistant**_
 
+Based on your codebase, here are all the available test scripts and commands you can use:
+
+## Python Test Scripts
+
+### 1. **Main Test Runner** - `run_tests.py`
+```bash
+# Run all tests
+python tests/run_tests.py
+
+# Run specific test categories
+python tests/run_tests.py --unit              # Unit tests only
+python tests/run_tests.py --integration       # Integration tests only
+python tests/run_tests.py --performance       # Performance tests only
+
+# GPU-specific tests
+python tests/run_tests.py --gpu-only          # GPU tests only
+python tests/run_tests.py --no-gpu            # Skip GPU tests
+
+# Performance options
+python tests/run_tests.py --benchmark         # Benchmark tests only
+python tests/run_tests.py --parallel 4        # Run with 4 workers
+python tests/run_tests.py --coverage          # Generate coverage report
+```
+
+### 2. **CUDA Setup Test** - `test_cuda_setup.py`
+```bash
+python test_cuda_setup.py
+```
+Tests NVCC availability, CUDA compilation, and CMake build.
+
+### 3. **GPU Smoke Test** - `test_gpu.py`
+```bash
+cd python
+python test_gpu.py
+```
+Tests your RTX 5070 GPU with Numba CUDA.
+
+### 4. **Individual Unit Tests**
+```bash
+# Environment tests
+python -m pytest tests/unit/test_environment.py -v
+
+# CUDA integration tests
+python -m pytest tests/integration/test_cuda_integration.py -v
+```
+
+### 5. **Binding Tests**
+```bash
+# Test Python bindings
+python binding_test.py
+python fix_binding_test.py
+```
+
+## C++/CUDA Test Scripts
+
+### 6. **Main CUDA Test** - `cuda_test.cu`
+```bash
+# Via CMake (recommended)
+cmake --build build --target run_cuda_test --config Release
+
+# Or compile manually in VS x64 Native Tools prompt
+cd src/gpu
+nvcc cuda_test.cu -I.. -o cuda_test.exe
+.\cuda_test.exe
+```
+
+### 7. **C++ Unit Tests** - `test_environment.cpp`
+```bash
+cmake --build build --target test_environment --config Release
+.\build\bin\Release\test_environment.exe
+```
+
+## PowerShell Integration Scripts
+
+### 8. **Main Run Script** - `run.ps1`
+```powershell
+# Test CUDA functionality
+.\run.ps1 -Mode test
+
+# Test Python bindings
+.\run.ps1 -Mode python
+
+# Run training demo
+.\run.ps1 -Mode train
+```
+
+## CMake Test Targets
+
+### 9. **Built-in CMake Targets**
+```bash
+# Run CUDA test
+cmake --build build --target run_cuda_test --config Release
+
+# Run main app
+cmake --build build --target run --config Release
+
+# Verify CUDA compatibility
+cmake --build build --target verify_cuda_compat --config Release
+
+# Run all C++ tests
+cmake --build build --target run_all_tests --config Release
+```
+
+## Quick Verification Commands
+
+### 10. **MVP Test** (You already confirmed this works)
+```bash
+cd src
+python mvp.py
+```
+
+### 11. **Training Test**
+```bash
+python run_training.py --episodes 100 --plot
+```
+
+## Recommended Testing Order
+
+1. **Start with Python GPU test**: `python python/test_gpu.py` (confirms RTX 5070 works)
+2. **Run CUDA setup test**: `python test_cuda_setup.py` (comprehensive CUDA check)
+3. **Test C++ CUDA**: `cmake --build build --target run_cuda_test --config Release`
+4. **Run Python integration**: `python `run_tests.py` --integration`
+5. **Full test suite**: `python `run_tests.py` --coverage`
+
+The **Python GPU test** (`test_gpu.py`) is probably your best bet for quickly confirming your RTX 5070 is working with CUDA, since you mentioned the Python tests are already functional.
+
+---
+
+_**User**_
+
+make a file tree that shows all the files in all the directories. that are important. nothing like node_modules
+
+---
+
+_**Assistant**_
+
 
 
 ---

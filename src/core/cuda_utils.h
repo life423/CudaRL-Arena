@@ -1,135 +1,149 @@
 #pragma once
 
 #include <cuda_runtime.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdexcept>
-#include <string>
-#include <iostream>
 
-namespace cudarl {
+// Error checking macro
+#define CUDA_CHECK(call) \
+do { \
+    cudaError_t error = call; \
+    if (error != cudaSuccess) { \
+        fprintf(stderr, "CUDA error at %s:%d code=%d(%s) \"%s\"\n", \
+                __FILE__, __LINE__, error, \
+                cudaGetErrorName(error), cudaGetErrorString(error)); \
+        throw std::runtime_error("CUDA error: " + std::string(cudaGetErrorString(error))); \
+    } \
+} while(0)
 
-// CUDA error checking helper
-inline void checkCudaError(cudaError_t error, const char* file, int line) {
-    if (error != cudaSuccess) {
-        throw std::runtime_error(
-            std::string("CUDA error in ") + file + " at line " + 
-            std::to_string(line) + ": " + cudaGetErrorString(error));
-    }
-}
+// Safe division macro
+#define DIVUP(n, d) (((n) + (d) - 1) / (d))
 
-#define CUDA_CHECK(call) checkCudaError(call, __FILE__, __LINE__)
-
-// RAII wrapper for CUDA memory
+// Memory management template for RAII
 template<typename T>
-class CudaMemory {
+class DeviceBuffer {
 private:
-    T* d_ptr = nullptr;
-    size_t elements = 0;
-
-public:
-    CudaMemory() = default;
+    T* ptr = nullptr;
+    size_t size = 0;
     
-    explicit CudaMemory(size_t count) : elements(count) {
-        if (count > 0) {
-            CUDA_CHECK(cudaMalloc(&d_ptr, count * sizeof(T)));
+public:
+    explicit DeviceBuffer(size_t n) : size(n) {
+        if (n > 0) {
+            CUDA_CHECK(cudaMalloc(&ptr, n * sizeof(T)));
         }
     }
     
-    ~CudaMemory() {
-        free();
+    ~DeviceBuffer() {
+        if (ptr) {
+            cudaFree(ptr);
+        }
     }
     
-    // Move semantics
-    CudaMemory(CudaMemory&& other) noexcept : d_ptr(other.d_ptr), elements(other.elements) {
-        other.d_ptr = nullptr;
-        other.elements = 0;
+    // Delete copy constructor and assignment
+    DeviceBuffer(const DeviceBuffer&) = delete;
+    DeviceBuffer& operator=(const DeviceBuffer&) = delete;
+    
+    // Move constructor
+    DeviceBuffer(DeviceBuffer&& other) noexcept 
+        : ptr(other.ptr), size(other.size) {
+        other.ptr = nullptr;
+        other.size = 0;
     }
     
-    CudaMemory& operator=(CudaMemory&& other) noexcept {
+    // Move assignment
+    DeviceBuffer& operator=(DeviceBuffer&& other) noexcept {
         if (this != &other) {
-            free();
-            d_ptr = other.d_ptr;
-            elements = other.elements;
-            other.d_ptr = nullptr;
-            other.elements = 0;
+            if (ptr) cudaFree(ptr);
+            ptr = other.ptr;
+            size = other.size;
+            other.ptr = nullptr;
+            other.size = 0;
         }
         return *this;
     }
     
-    // Disable copy
-    CudaMemory(const CudaMemory&) = delete;
-    CudaMemory& operator=(const CudaMemory&) = delete;
-    
-    // Allocate memory
-    void allocate(size_t count) {
-        free();
-        if (count > 0) {
-            elements = count;
-            CUDA_CHECK(cudaMalloc(&d_ptr, count * sizeof(T)));
-        }
-    }
-    
-    // Free memory
-    void free() {
-        if (d_ptr) {
-            CUDA_CHECK(cudaFree(d_ptr));
-            d_ptr = nullptr;
-        }
-        elements = 0;
-    }
-    
-    // Copy from host to device
-    void copyFromHost(const T* h_ptr, size_t count) {
-        if (count > elements || !d_ptr) {
-            throw std::runtime_error("Invalid CUDA memory operation in copyFromHost");
-        }
-        CUDA_CHECK(cudaMemcpy(d_ptr, h_ptr, count * sizeof(T), cudaMemcpyHostToDevice));
-    }
-    
-    // Copy from device to host
-    void copyToHost(T* h_ptr, size_t count) const {
-        if (count > elements || !d_ptr) {
-            throw std::runtime_error("Invalid CUDA memory operation in copyToHost");
-        }
-        CUDA_CHECK(cudaMemcpy(h_ptr, d_ptr, count * sizeof(T), cudaMemcpyDeviceToHost));
-    }
-    
-    // Get device pointer
-    T* get() const { return d_ptr; }
-    
-    // Get element count
-    size_t size() const { return elements; }
-    
-    // Check if allocated
-    bool isAllocated() const { return d_ptr != nullptr; }
-    
-    // Cast operator
-    operator T*() const { return d_ptr; }
+    T* get() { return ptr; }
+    const T* get() const { return ptr; }
+    size_t length() const { return size; }
+    bool valid() const { return ptr != nullptr; }
 };
 
-// Device information utility
-struct CudaDeviceInfo {
-    static void printDeviceInfo() {
-        int deviceCount = 0;
-        CUDA_CHECK(cudaGetDeviceCount(&deviceCount));
-        
-        if (deviceCount == 0) {
-            throw std::runtime_error("No CUDA devices found!");
-        }
-        
-        std::cout << "Found " << deviceCount << " CUDA device(s)" << std::endl;
-        
-        // Get properties for each device
-        for (int i = 0; i < deviceCount; i++) {
-            cudaDeviceProp deviceProp;
-            CUDA_CHECK(cudaGetDeviceProperties(&deviceProp, i));
-            
-            std::cout << "\nDevice " << i << ": " << deviceProp.name << std::endl;
-            std::cout << "  Compute capability: " << deviceProp.major << "." << deviceProp.minor << std::endl;
-            std::cout << "  Total global memory: " << deviceProp.totalGlobalMem / (1024 * 1024) << " MB" << std::endl;
-            std::cout << "  Memory Clock Rate: " << deviceProp.memoryClockRate / 1000 << " MHz" << std::endl;
-            std::cout << "  Memory Bus Width: " << deviceProp.memoryBusWidth << " bits" << std::endl;
-        }
+// GPU memory info utilities
+struct GpuMemoryInfo {
+    size_t free;
+    size_t total;
+    size_t used;
+    
+    void update() {
+        CUDA_CHECK(cudaMemGetInfo(&free, &total));
+        used = total - free;
+    }
+    
+    void print() const {
+        printf("GPU Memory: %.1f MB used / %.1f MB total (%.1f%% used)\n",
+               used / 1048576.0, total / 1048576.0, 
+               100.0 * used / total);
     }
 };
 
-} // namespace cudarl
+// Device info functions
+inline void checkCudaDevice() {
+    int deviceCount;
+    CUDA_CHECK(cudaGetDeviceCount(&deviceCount));
+    
+    if (deviceCount == 0) {
+        throw std::runtime_error("No CUDA devices found!");
+    }
+    
+    cudaDeviceProp prop;
+    CUDA_CHECK(cudaGetDeviceProperties(&prop, 0));
+    
+    printf("Using GPU: %s\n", prop.name);
+    printf("Compute Capability: %d.%d\n", prop.major, prop.minor);
+    printf("Streaming Multiprocessors: %d\n", prop.multiProcessorCount);
+    printf("Max threads per block: %d\n", prop.maxThreadsPerBlock);
+    printf("Max threads per SM: %d\n", prop.maxThreadsPerMultiProcessor);
+}
+
+// Timing utilities
+class CudaTimer {
+private:
+    cudaEvent_t start, stop;
+    
+public:
+    CudaTimer() {
+        CUDA_CHECK(cudaEventCreate(&start));
+        CUDA_CHECK(cudaEventCreate(&stop));
+    }
+    
+    ~CudaTimer() {
+        cudaEventDestroy(start);
+        cudaEventDestroy(stop);
+    }
+    
+    void startTimer() {
+        CUDA_CHECK(cudaEventRecord(start));
+    }
+    
+    float endTimer() {
+        CUDA_CHECK(cudaEventRecord(stop));
+        CUDA_CHECK(cudaEventSynchronize(stop));
+        float milliseconds = 0;
+        CUDA_CHECK(cudaEventElapsedTime(&milliseconds, start, stop));
+        return milliseconds;
+    }
+};
+
+// Optimal launch parameters for RTX 5070
+inline void getOptimalLaunchParams(int totalThreads, int& blockSize, int& gridSize) {
+    // RTX 5070 specific optimizations
+    blockSize = 256;  // Good balance for Ada Lovelace
+    gridSize = DIVUP(totalThreads, blockSize);
+    
+    // Don't exceed SM capacity (48 SMs on RTX 5070)
+    const int maxGridSize = 48 * 8;  // ~8 blocks per SM
+    if (gridSize > maxGridSize) {
+        gridSize = maxGridSize;
+    }
+}
