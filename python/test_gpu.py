@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-from numba import cuda
 import numpy as np
+from numba import cuda
+
 
 @cuda.jit
 def vec_mul2(in_arr, out_arr):
@@ -35,4 +36,4 @@ def main():
     print("first 5 results:", h_y[:5])
 
 if __name__ == "__main__":
-    main()
+    main()  
