@@ -1,3 +1,7 @@
+// MUST BE FIRST - Fix Windows/CUDA conflicts
+#include "cuda_windows_fix.h"
+
+// Now safe to include CUDA headers
 #include "kernels.cuh"
 
 __global__ void reset_environment_kernel(EnvironmentState* state) {

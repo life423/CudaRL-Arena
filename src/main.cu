@@ -1,3 +1,7 @@
+// MUST BE FIRST - Fix Windows/CUDA conflicts
+#include "cuda_windows_fix.h"
+
+// Now safe to include standard libraries and CUDA headers
 #include <iostream>
 #include <chrono>
 #include <thread>

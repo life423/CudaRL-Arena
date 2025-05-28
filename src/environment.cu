@@ -1,3 +1,7 @@
+// MUST BE FIRST - Fix Windows/CUDA conflicts
+#include "cuda_windows_fix.h"
+
+// Now safe to include CUDA headers
 #include "environment.h"
 #include <cstdlib>
 #include <ctime>

@@ -21,7 +21,7 @@ if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
     add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
     
     # Auto-include compatibility header for all CUDA files
-    set(CUDA_WINDOWS_COMPAT_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/cuda_windows_compat.h")
+    set(CUDA_WINDOWS_COMPAT_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/cuda_windows_fix.h")
     if(EXISTS ${CUDA_WINDOWS_COMPAT_HEADER})
         message(STATUS "Using Windows CUDA compatibility header: ${CUDA_WINDOWS_COMPAT_HEADER}")
     endif()

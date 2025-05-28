@@ -1,3 +1,7 @@
+// MUST BE FIRST - Fix Windows/CUDA conflicts
+#include "cuda_windows_fix.h"
+
+// Now safe to include CUDA headers
 #include "environment_bridge.h"
 #include <sstream>
 
