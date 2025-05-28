@@ -1,5 +1,5 @@
-# Ignore entire build directory
-build/
+# Ignore entire build directory completely
+build/**
 
 # Other ignores
 bin/
@@ -57,6 +57,3 @@ results/
 *.npy
 *.png
 *.gif
-
-# Godot related
-godot/godot-cpp/
