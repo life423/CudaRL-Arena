@@ -132,8 +132,20 @@ void Environment::updateHostState() {
 }
 
 void Environment::syncToDevice() {
-    // Copy host state to device
-    cudaMemcpy(m_deviceState.get(), &m_state, sizeof(EnvironmentState), cudaMemcpyHostToDevice);
+    // Copy scalar members of host state to device.
+    // The m_state.grid is nullptr and should not be used directly by the device state.
+    // Instead, the kernel will receive m_deviceGrid.get() as a separate argument.
+    // If the kernel *must* use d_state->grid, then that pointer needs to be set on the device.
+    CUDA_CHECK(cudaMemcpy(m_deviceState.get(), &m_state, sizeof(EnvironmentState), cudaMemcpyHostToDevice));
+
+    // If kernels are designed to use d_state->grid, explicitly set it on the device:
+    // This ensures the EnvironmentState struct on the device has a valid grid pointer.
+    float* device_grid_ptr = m_deviceGrid.get(); // Get the actual device pointer to the grid
+    CUDA_CHECK(cudaMemcpy(
+        reinterpret_cast<char*>(m_deviceState.get()) + offsetof(EnvironmentState, grid), // Address of 'grid' member in device state
+        &device_grid_ptr,                                                               // Address of the host variable holding the device grid pointer
+        sizeof(float*),
+        cudaMemcpyHostToDevice));
 }
 
 } // namespace cudarl

@@ -66,7 +66,46 @@ public:
     T* get() { return ptr; }
     const T* get() const { return ptr; }
     size_t length() const { return size; }
+    size_t bytes() const { return size * sizeof(T); }
     bool valid() const { return ptr != nullptr; }
+
+    void copyToHost(T* host_destination, size_t elements_to_copy) const {
+        if (!ptr && elements_to_copy > 0) {
+            throw std::runtime_error("DeviceBuffer: trying to copy from null device pointer.");
+        }
+        if (elements_to_copy == 0) return;
+        if (elements_to_copy > size) {
+            throw std::out_of_range("DeviceBuffer: elements_to_copy exceeds buffer size in copyToHost.");
+        }
+        CUDA_CHECK(cudaMemcpy(host_destination, ptr, elements_to_copy * sizeof(T), cudaMemcpyDeviceToHost));
+    }
+
+    std::vector<T> copyToHost(size_t elements_to_copy) const {
+        if (elements_to_copy > size) {
+            throw std::out_of_range("DeviceBuffer: elements_to_copy exceeds buffer size in copyToHost.");
+        }
+        std::vector<T> host_vector(elements_to_copy);
+        if (elements_to_copy > 0) {
+            copyToHost(host_vector.data(), elements_to_copy);
+        }
+        return host_vector;
+    }
+
+    // Convenience method to copy the entire buffer to a new std::vector
+    std::vector<T> copyToHostAll() const {
+        return copyToHost(size);
+    }
+
+    void copyFromHost(const T* host_source, size_t elements_to_copy) {
+        if (!ptr && elements_to_copy > 0) {
+            throw std::runtime_error("DeviceBuffer: trying to copy to null device pointer.");
+        }
+        if (elements_to_copy == 0) return;
+        if (elements_to_copy > size) {
+            throw std::out_of_range("DeviceBuffer: elements_to_copy exceeds buffer size in copyFromHost.");
+        }
+        CUDA_CHECK(cudaMemcpy(ptr, host_source, elements_to_copy * sizeof(T), cudaMemcpyHostToDevice));
+    }
 };
 
 // GPU memory info utilities
