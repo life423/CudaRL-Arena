@@ -35,7 +35,7 @@ __global__ void update_q_values_kernel(
     float* rewards,
     int* next_states_x,
     int* next_states_y,
-    bool* dones,
+    uint8_t* dones,
     int num_samples,
     int width,
     int height,

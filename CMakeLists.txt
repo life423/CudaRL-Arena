@@ -12,6 +12,21 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# ──────────────── Windows SDK CUDA 12.9 Compatibility ────────────────
+# Detect and apply fixes for Windows SDK + CUDA 12.9 conflicts
+if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
+    message(STATUS "Applying Windows SDK CUDA 12.9 compatibility fixes")
+    
+    # Add Windows SDK conflict prevention definitions
+    add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
+    
+    # Auto-include compatibility header for all CUDA files
+    set(CUDA_WINDOWS_COMPAT_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/src/cuda_windows_compat.h")
+    if(EXISTS ${CUDA_WINDOWS_COMPAT_HEADER})
+        message(STATUS "Using Windows CUDA compatibility header: ${CUDA_WINDOWS_COMPAT_HEADER}")
+    endif()
+endif()
+
 # ──────────────── Dependencies ────────────────
 find_package(CUDAToolkit REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
@@ -64,12 +79,36 @@ else()
 endif()
 
 # ──────────────── CUDA Settings ────────────────
-set(CMAKE_CUDA_ARCHITECTURES 75 80 86)
-set(CMAKE_CUDA_RUNTIME_LIBRARY MultiThreadedDebugDLL)
+# Enhanced architecture support including RTX 5070 (Ada Lovelace SM 8.9)
+set(CMAKE_CUDA_ARCHITECTURES 75 80 86 89)
+message(STATUS "CUDA Architectures: ${CMAKE_CUDA_ARCHITECTURES}")
 
-# CUDA compilation flags
-set(CUDA_COMPILE_FLAGS "--use_fast_math")
+# Runtime library configuration
+if(WIN32)
+    # Use static runtime for Windows to avoid DLL conflicts
+    set(CMAKE_CUDA_RUNTIME_LIBRARY MultiThreaded)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
+else()
+    set(CMAKE_CUDA_RUNTIME_LIBRARY MultiThreadedDebugDLL)
+endif()
+
+# Enhanced CUDA compilation flags for performance and compatibility
+set(CUDA_COMPILE_FLAGS "--use_fast_math --expt-relaxed-constexpr")
+
+# RTX 5070 specific optimizations
+if(CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.0")
+    set(CUDA_COMPILE_FLAGS "${CUDA_COMPILE_FLAGS} --maxrregcount=64")
+    message(STATUS "RTX 5070 optimizations enabled")
+endif()
+
+# Windows-specific CUDA flags
+if(WIN32)
+    set(CUDA_COMPILE_FLAGS "${CUDA_COMPILE_FLAGS} -Xcompiler /MT")
+    set(CUDA_COMPILE_FLAGS "${CUDA_COMPILE_FLAGS} -Wno-deprecated-gpu-targets")
+endif()
+
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ${CUDA_COMPILE_FLAGS}")
+message(STATUS "CUDA flags: ${CMAKE_CUDA_FLAGS}")
 
 # ──────────────── Core Library ────────────────
 # Create core library with CUDA functionality
@@ -92,15 +131,43 @@ target_link_libraries(cudarl_core PUBLIC
   CUDA::cudart
 )
 
+# Apply Windows SDK compatibility fixes
+if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
+    if(EXISTS ${CUDA_WINDOWS_COMPAT_HEADER})
+        target_compile_options(cudarl_core PRIVATE 
+            $<$<COMPILE_LANGUAGE:CUDA>:-include ${CUDA_WINDOWS_COMPAT_HEADER}>
+        )
+        message(STATUS "Auto-including Windows compatibility header for CUDA files")
+    endif()
+endif()
+
+# Standard CUDA compile options
 target_compile_options(cudarl_core PRIVATE
   $<$<COMPILE_LANGUAGE:CUDA>:-Wno-deprecated-gpu-targets>
 )
+
+# Windows-specific compile definitions
+if(WIN32)
+    target_compile_definitions(cudarl_core PRIVATE 
+        WIN32_LEAN_AND_MEAN 
+        NOMINMAX
+        _CRT_SECURE_NO_WARNINGS
+    )
+endif()
 
 # ──────────────── Python Bindings ────────────────
 if(pybind11_FOUND)
     pybind11_add_module(cudarl_core_python src/python_bindings.cpp)
     set_target_properties(cudarl_core_python PROPERTIES OUTPUT_NAME cudarl_core)
     target_link_libraries(cudarl_core_python PRIVATE cudarl_core)
+    
+    # Windows-specific Python binding settings
+    if(WIN32)
+        target_compile_definitions(cudarl_core_python PRIVATE 
+            WIN32_LEAN_AND_MEAN 
+            NOMINMAX
+        )
+    endif()
 endif()
 
 # ──────────────── Main Application ────────────────
@@ -111,7 +178,7 @@ target_link_libraries(cudarl_app PRIVATE cudarl_core)
 add_executable(cuda_test src/cuda_test.cu)
 target_link_libraries(cuda_test PRIVATE cudarl_core)
 
-# ──────────────── Custom Targets ────────────────
+# ──────────────── Enhanced Test Targets ────────────────
 add_custom_target(run
   COMMAND $<TARGET_FILE:cudarl_app>
   DEPENDS cudarl_app
@@ -125,3 +192,30 @@ add_custom_target(run_cuda_test
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Building and running CUDA functionality test"
 )
+
+# New verification target for Windows SDK compatibility
+add_custom_target(verify_cuda_compat
+  COMMAND ${CMAKE_COMMAND} -E echo "=== CUDA Compatibility Verification ==="
+  COMMAND ${CMAKE_COMMAND} -E echo "CUDA Version: ${CMAKE_CUDA_COMPILER_VERSION}"
+  COMMAND ${CMAKE_COMMAND} -E echo "Architectures: ${CMAKE_CUDA_ARCHITECTURES}"
+  COMMAND ${CMAKE_COMMAND} -E echo "Platform: ${CMAKE_SYSTEM_NAME}"
+  COMMAND ${CMAKE_COMMAND} -E echo "Windows SDK Fix: $<IF:$<BOOL:${WIN32}>,Enabled,Not Needed>"
+  COMMAND $<TARGET_FILE:cuda_test>
+  DEPENDS cuda_test
+  COMMENT "Verifying CUDA compatibility and Windows SDK fixes"
+)
+
+# ──────────────── Build Summary ────────────────
+message(STATUS "")
+message(STATUS "═══════════ CudaRL-Arena Build Configuration ═══════════")
+message(STATUS "CUDA Version: ${CMAKE_CUDA_COMPILER_VERSION}")
+message(STATUS "CUDA Architectures: ${CMAKE_CUDA_ARCHITECTURES}")
+message(STATUS "Python Version: ${Python3_VERSION}")
+message(STATUS "pybind11 Found: ${pybind11_FOUND}")
+if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
+    message(STATUS "Windows SDK CUDA 12.9 Fix: ENABLED")
+else()
+    message(STATUS "Windows SDK CUDA 12.9 Fix: Not needed")
+endif()
+message(STATUS "═══════════════════════════════════════════════════════")
+message(STATUS "")

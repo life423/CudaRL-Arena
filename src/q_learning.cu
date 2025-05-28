@@ -1,5 +1,6 @@
 #include "q_learning.cuh"
 #include "kernels.cuh"
+#include "cuda_utils.cuh"
 #include <stdexcept>
 #include <iostream>
 
@@ -77,7 +78,7 @@ CudaQLearning::CudaQLearning(int width, int height, int action_space_size,
         throw std::runtime_error("Failed to allocate device memory for next_states_y");
     }
     
-    error = cudaMalloc(&d_dones, max_batch_size * sizeof(bool));
+    error = cudaMalloc(&d_dones, max_batch_size * sizeof(uint8_t));
     if (error != cudaSuccess) {
         cudaFree(d_q_table);
         cudaFree(d_states_x);
@@ -110,7 +111,7 @@ void CudaQLearning::update_batch(
     const std::vector<int>& actions,
     const std::vector<float>& rewards,
     const std::vector<std::pair<int, int>>& next_states,
-    const std::vector<bool>& dones
+    const std::vector<uint8_t>& dones
 ) {
     int batch_size = states.size();
     
@@ -143,7 +144,7 @@ void CudaQLearning::update_batch(
     cudaMemcpy(d_rewards, rewards.data(), batch_size * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_next_states_x, h_next_states_x.data(), batch_size * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_next_states_y, h_next_states_y.data(), batch_size * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_dones, dones.data(), batch_size * sizeof(bool), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_dones, dones.data(), batch_size * sizeof(uint8_t), cudaMemcpyHostToDevice);
     
     // Launch kernel
     int threadsPerBlock = 256;

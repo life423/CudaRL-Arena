@@ -36,7 +36,7 @@ public:
         const std::vector<int>& actions,
         const std::vector<float>& rewards,
         const std::vector<std::pair<int, int>>& next_states,
-        const std::vector<bool>& dones
+        const std::vector<uint8_t>& dones
     );
     
     /**
@@ -88,7 +88,7 @@ private:
     float* d_rewards;
     int* d_next_states_x;
     int* d_next_states_y;
-    bool* d_dones;
+    uint8_t* d_dones;
     
     // Maximum batch size
     int max_batch_size;

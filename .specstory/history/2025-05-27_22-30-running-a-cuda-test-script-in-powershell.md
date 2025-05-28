@@ -592,3 +592,190 @@ means exactly that: the GPU correctly doubled the first five elements of your ar
 
 ---
 
+_**User**_
+
+@workspace what is the code I run to check that cuda is rwroking
+
+---
+
+_**Assistant**_
+
+Based on your codebase, you have several ways to test that CUDA is working. Here are the options in order of preference:
+
+## Option 1: Use the built-in CMake target (Recommended)
+
+Your `CMakeLists.txt` already defines a `run_cuda_test` target. In a **Visual Studio x64 Native Tools Command Prompt**:
+
+```bash
+cd C:\Users\aiand\Documents\programming\CudaRL-Arena
+cmake --build build --target run_cuda_test --config Release
+```
+
+This will:
+1. Compile `cuda_test.cu` 
+2. Link it with your core library
+3. Run the test automatically
+
+## Option 2: Python CUDA test (Already working)
+
+You already confirmed this works in `test_gpu.py`:
+
+```bash
+cd python
+python test_gpu.py
+```
+
+## Option 3: Alternative CUDA tests in your codebase
+
+You also have these test files:
+- `cuda_test.cu` - Uses your RAII CUDA utilities
+- `python_test.cu` - Tests Python integration with CUDA
+
+## Expected Output
+
+When the CUDA test works, you should see something like:
+
+```
+===== CUDA Functionality Test =====
+Found 1 CUDA device(s)
+
+Device 0: NVIDIA GeForce RTX 5070
+  Compute capability: 8.9
+  Total global memory: 12288 MB
+  CUDA cores: 6144
+  Memory Clock Rate: 10501 MHz
+  Memory Bus Width: 192 bits
+
+Launching CUDA kernel with 196 blocks of 256 threads
+Vector addition test PASSED!
+
+✓ CUDA core functionality is working correctly!
+```
+
+## Why Option 1 is best
+
+The CMake approach is recommended because:
+- It uses your actual project's CUDA code and kernels
+- It tests the full C++/CUDA compilation pipeline
+- It uses the same build system you'll use for development
+- It automatically handles linking with your `cudarl_core` library
+
+The Python test only verifies that Python can talk to CUDA, but doesn't test your C++ CUDA code compilation.
+
+---
+
+_**User**_
+
+cuda_test.cu - Uses your RAII CUDA utilities
+python_test.cu - Tests Python integration with CUDA - how do i run these test files?
+
+---
+
+_**Assistant**_
+
+Looking at your project structure, here's how to run those specific test files:
+
+## Option 1: `cuda_test.cu` (Main CUDA test)
+
+This is already set up in your CMake build system. Run it with:
+
+```bash
+# In Visual Studio x64 Native Tools Command Prompt
+cd C:\Users\aiand\Documents\programming\CudaRL-Arena
+cmake --build build --target run_cuda_test --config Release
+```
+
+## Option 2: `cuda_test.cu` (RAII utilities test)
+
+This file uses your RAII CUDA utilities but isn't automatically built by CMake. You'll need to either:
+
+**A) Add it to your CMakeLists.txt:**
+
+````cmake
+# ...existing code...
+
+# Add RAII CUDA test
+add_executable(gpu_cuda_test src/gpu/cuda_test.cu)
+target_link_libraries(gpu_cuda_test PRIVATE cudarl_core)
+
+add_custom_target(run_gpu_cuda_test
+    COMMAND $<TARGET_FILE:gpu_cuda_test>
+    DEPENDS gpu_cuda_test
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running RAII CUDA utilities test"
+)
+
+# ...existing code...
+````
+
+Then run:
+```bash
+cmake --build build --target run_gpu_cuda_test --config Release
+```
+
+**B) Compile manually:**
+```bash
+# In Visual Studio x64 Native Tools Command Prompt
+cd src\gpu
+nvcc cuda_test.cu -I.. -o gpu_cuda_test.exe
+.\gpu_cuda_test.exe
+```
+
+## Option 3: `python_test.cu` (Python integration test)
+
+This tests Python+CUDA integration. Similarly, you can either:
+
+**A) Add to CMakeLists.txt:**
+
+````cmake
+# ...existing code...
+
+# Add Python integration test
+if(pybind11_FOUND)
+    add_executable(python_cuda_test src/python_test.cu)
+    target_link_libraries(python_cuda_test PRIVATE cudarl_core)
+    
+    add_custom_target(run_python_cuda_test
+        COMMAND $<TARGET_FILE:python_cuda_test>
+        DEPENDS python_cuda_test
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Running Python+CUDA integration test"
+    )
+endif()
+
+# ...existing code...
+````
+
+**B) Compile manually:**
+```bash
+cd src
+nvcc python_test.cu -I. -o python_test.exe
+.\python_test.exe
+```
+
+## Quick Fix for the Current `std::vector<bool>` Issue
+
+Before running the CUDA tests, you need to fix the `std::vector<bool>` issue in `q_learning.cu`:
+
+````cuda
+// ...existing code...
+
+// Replace line 146:
+// cudaMemcpy(d_dones, dones.data(), batch_size * sizeof(bool), cudaMemcpyHostToDevice);
+
+// With:
+std::vector<uint8_t> h_dones(batch_size);
+for (int i = 0; i < batch_size; ++i) {
+    h_dones[i] = dones[i] ? 1u : 0u;
+}
+cudaMemcpy(d_dones, h_dones.data(), batch_size * sizeof(uint8_t), cudaMemcpyHostToDevice);
+
+// ...existing code...
+````
+
+Also update your device pointer type from `bool*` to `uint8_t*` in the header file.
+
+Then you can run the main CUDA test successfully.
+
+---
+

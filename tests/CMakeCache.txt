@@ -437,6 +437,9 @@ CudaRL-Arena_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 CudaRL-Arena_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena
 
+//The directory containing a CMake configuration file for pybind11.
+pybind11_DIR:PATH=C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/share/cmake/pybind11
+
 
 ########################
 # INTERNAL cache entries
@@ -724,6 +727,16 @@ CUDA_pcsamplingutil_LIBRARY-ADVANCED:INTERNAL=1
 FIND_PACKAGE_MESSAGE_DETAILS_CUDAToolkit:INTERNAL=[C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/cudart.lib][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/bin][v12.9.41()]
 //Details about finding Python3
 FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe][C:/Users/aiand/AppData/Local/Programs/Python/Python313/libs/python313.lib][C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include][found components: Interpreter Development Development.Module Development.Embed ][v3.13.3()]
+//Test HAS_MSVC_GL_LTCG
+HAS_MSVC_GL_LTCG:INTERNAL=1
+//Python executable during the last CMake run
+PYBIND11_PYTHON_EXECUTABLE_LAST:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe
+//Python debug status
+PYTHON_IS_DEBUG:INTERNAL=0
+PYTHON_MODULE_DEBUG_POSTFIX:INTERNAL=
+PYTHON_MODULE_EXTENSION:INTERNAL=.cp313-win_amd64.pyd
+_PYBIND11_CROSSCOMPILING:INTERNAL=OFF
+_Python:INTERNAL=Python3
 //Compiler reason failure
 _Python3_Compiler_REASON_FAILURE:INTERNAL=
 _Python3_DEVELOPMENT_EMBED_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
@@ -749,4 +762,6 @@ _Python3_LIBRARY_RELEASE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/P
 _Python3_NumPy_REASON_FAILURE:INTERNAL=
 //Path to a library.
 _Python3_RUNTIME_LIBRARY_RELEASE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python313.dll
+//Directories where pybind11 and possibly Python headers are located
+pybind11_INCLUDE_DIRS:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/include;C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include
 
