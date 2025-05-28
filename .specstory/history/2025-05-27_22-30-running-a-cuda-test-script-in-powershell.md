@@ -779,3 +779,15 @@ Then you can run the main CUDA test successfully.
 
 ---
 
+_**User**_
+
+@workspace what are all the test scripts I can use in this app?
+
+---
+
+_**Assistant**_
+
+
+
+---
+

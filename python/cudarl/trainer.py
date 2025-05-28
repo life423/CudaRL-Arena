@@ -6,11 +6,18 @@ This module provides training functionality for reinforcement learning agents.
 
 import logging
 import time
+from typing import Any, Dict, List, Optional, Tuple
+
+try:
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    plt = None
 import numpy as np
-from typing import Dict, List, Tuple, Any, Optional
-import matplotlib.pyplot as plt
-from .environment import Environment
+
 from .agent import Agent
+from .environment import Environment
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -177,6 +184,10 @@ class Trainer:
         Args:
             smoothing: Window size for smoothing the curves
         """
+        if not MATPLOTLIB_AVAILABLE:
+            logger.warning("Matplotlib not available, cannot plot results")
+            return
+            
         if not self.episode_rewards:
             logger.warning("No training data to plot")
             return
