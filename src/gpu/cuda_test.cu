@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>      // Add this for std::vector
+#include <random>      // Add this for std::mt19937 and std::uniform_real_distribution  
+#include <ctime>       // Add this for std::time
+#include <cmath>       // Add this for fabs
 #include "../core/cuda_utils.h"
 #include "kernels.cuh"
 
@@ -39,7 +43,7 @@ bool testCudaComputation() {
         
         std::cout << "Launching CUDA kernel with " << blocksPerGrid << " blocks of " << threadsPerBlock << " threads" << std::endl;
         
-        vector_add<<<blocksPerGrid, threadsPerBlock>>>(d_A.get(), d_B.get(), d_C.get(), numElements);
+        vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A.get(), d_B.get(), d_C.get(), numElements);
         CUDA_CHECK(cudaGetLastError());
         
         // Wait for GPU to finish

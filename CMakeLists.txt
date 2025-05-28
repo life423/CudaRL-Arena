@@ -170,11 +170,16 @@ if(pybind11_FOUND)
     pybind11_add_module(cudarl_core_python src/python_bindings.cpp)
     target_link_libraries(cudarl_core_python PRIVATE cudarl_core)
     
-    # Windows-specific Python binding settings
+    # Force static linking on Windows
     if(WIN32)
+        set_property(TARGET cudarl_core_python PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
         target_compile_definitions(cudarl_core_python PRIVATE 
             WIN32_LEAN_AND_MEAN 
             NOMINMAX
+        )
+        # Link CUDA libraries statically
+        target_link_libraries(cudarl_core_python PRIVATE 
+            CUDA::cudart_static
         )
     endif()
 endif()
@@ -213,6 +218,57 @@ add_custom_target(verify_cuda_compat
   DEPENDS cuda_test
   COMMENT "Verifying CUDA compatibility and Windows SDK fixes"
 )
+
+# ──────────────── Godot GDExtension ────────────────
+option(BUILD_GODOT_EXTENSION "Build Godot GDExtension" ON)
+
+if(BUILD_GODOT_EXTENSION)
+    message(STATUS "Building Godot GDExtension...")
+    
+    # Fetch godot-cpp if not already available
+    include(FetchContent)
+    FetchContent_Declare(
+        godot-cpp
+        GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
+        GIT_TAG 4.2
+    )
+    FetchContent_MakeAvailable(godot-cpp)
+    
+    # Create GDExtension library
+    add_library(cudarl_godot SHARED
+        godot/src/godot_bindings.cpp
+    )
+    
+    target_link_libraries(cudarl_godot PRIVATE
+        cudarl_core
+        godot-cpp
+    )
+    
+    # Windows-specific configuration
+    if(WIN32)
+        set_target_properties(cudarl_godot PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/godot/bin/windows"
+            RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/godot/bin/windows"
+            RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/godot/bin/windows"
+            OUTPUT_NAME_DEBUG "cudarl.debug"
+            OUTPUT_NAME_RELEASE "cudarl"
+        )
+        
+        # Static linking for Windows
+        set_property(TARGET cudarl_godot PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        target_compile_definitions(cudarl_godot PRIVATE 
+            WIN32_LEAN_AND_MEAN 
+            NOMINMAX
+        )
+    else()
+        set_target_properties(cudarl_godot PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/godot/bin/linux"
+            OUTPUT_NAME "cudarl"
+        )
+    endif()
+    
+    message(STATUS "Godot GDExtension will be built")
+endif()
 
 # ──────────────── Build Summary ────────────────
 message(STATUS "")

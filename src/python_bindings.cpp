@@ -5,7 +5,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(cudarl_core, m) {
+PYBIND11_MODULE(cudarl_core_python, m) {
     m.doc() = "CudaRL-Arena Python bindings";
     
     // Expose the EnvironmentBridge class to Python

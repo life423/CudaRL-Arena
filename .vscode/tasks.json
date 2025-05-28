@@ -8,52 +8,119 @@
             "args": [
                 "-S", "${workspaceFolder}",
                 "-B", "${workspaceFolder}/build"
-            ]
+            ],
+            "group": "build"
         },
         {
-            "label": "CMake: build",
+            "label": "Build CUDA Core",
             "type": "shell",
             "command": "cmake",
             "args": [
                 "--build", "${workspaceFolder}/build",
-                "--config", "Debug"
+                "--config", "Release",
+                "--target", "cudarl_core"
             ],
-            "dependsOn": "CMake: configure"
+            "dependsOn": "CMake: configure",
+            "group": "build"
         },
         {
-            "label": "Run C++ PoC",
+            "label": "Build Main App",
             "type": "shell",
-            "command": "${workspaceFolder}/build/Debug/poc_app.exe",
-            "dependsOn": "CMake: build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "Run Python MVP",
-            "type": "shell",
-            "command": "python",
+            "command": "cmake",
             "args": [
-                "${workspaceFolder}/src/mvp.py"
+                "--build", "${workspaceFolder}/build",
+                "--config", "Release",
+                "--target", "cudarl_app"
             ],
-            "dependsOn": "Run C++ PoC",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
+            "dependsOn": "Build CUDA Core",
+            "group": "build"
         },
         {
-            "label": "build and run all",
-            "dependsOn": [
-                "CMake: configure",
-                "CMake: build",
-                "Run C++ PoC",
-                "Run Python MVP"
+            "label": "Build Python Bindings",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build", "${workspaceFolder}/build",
+                "--config", "Release",
+                "--target", "cudarl_core_python"
             ],
+            "dependsOn": "Build CUDA Core",
+            "group": "build"
+        },
+        {
+            "label": "Build Godot Extension",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build", "${workspaceFolder}/build",
+                "--config", "Release",
+                "--target", "cudarl_godot"
+            ],
+            "dependsOn": "Build CUDA Core",
+            "group": "build"
+        },
+        {
+            "label": "Build Godot Project",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/godot/build_godot.ps1"
+            ],
+            "dependsOn": "Build Godot Extension",
+            "group": "build"
+        },
+        {
+            "label": "Run CudaRL-Arena",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/godot/run_game.ps1"
+            ],
+            "dependsOn": "Build Godot Project",
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test CUDA",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build", "${workspaceFolder}/build",
+                "--config", "Release",
+                "--target", "run_cuda_test"
+            ],
+            "dependsOn": "Build CUDA Core",
+            "group": "test"
+        },
+        {
+            "label": "Run Training (Python)",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/python/scripts/train.py",
+                "--episodes", "100",
+                "--render-every", "0"
+            ],
+            "dependsOn": "Build Python Bindings",
+            "group": "test"
+        },
+        {
+            "label": "Run Main App",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/bin/Release/cudarl_app.exe",
+            "dependsOn": "Build Main App",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
             }
         }
     ]

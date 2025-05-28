@@ -29,16 +29,20 @@ python run_training.py --episodes 100 --plot
 
 This uses a mock environment that simulates the behavior of the real CUDA environment.
 
-### Running the GUI
+### Running with Godot Visualization
 
-To run the interactive visualization:
+To run the interactive visualization using Godot:
 
 ```bash
-# From the project root directory
-python run_gui.py
+# Build the Godot extension first
+cmake --build build --target cudarl_godot --config Release
+
+# Open Godot and load the project from the godot/ directory
+# Or run Godot from command line:
+# godot --path godot/
 ```
 
-This will open a GUI that shows the environment, agent position, Q-values, and training metrics.
+This will open a modern GPU-accelerated visualization showing the environment, agent position, and training metrics.
 
 ### Building the Full Project
 
@@ -69,11 +73,12 @@ python src/train.py --episodes 1000
   - `kernels.cuh/cu` - CUDA kernels
   - `q_learning.cuh/cu` - Q-learning implementation
   - `main.cu` - C++ entry point
-  - `train.py` - Python training script
-  - `gui.py` - Visualization tools
 - `python/` - Python package and scripts
   - `cudarl/` - Python module
   - `scripts/` - Training and utility scripts
+- `godot/` - Godot visualization frontend
+  - `src/` - GDExtension C++ bindings
+  - `scripts/` - GDScript game logic
 - `docs/` - Documentation
 
 ## Command-line Options

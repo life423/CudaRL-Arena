@@ -11,7 +11,7 @@ git add python/cudarl/mock_env.py run_training.py
 git add src/environment_bridge.cu src/environment_bridge.h
 git add src/kernels.cu src/kernels.cuh
 git add src/python_bindings.cpp src/q_learning.cu src/q_learning.cuh
-git add src/train.py src/visualize.py
+git add godot/src/godot_bindings.cpp
 
 # Add modified files
 git add CMakeLists.txt README.md docs/ARCHITECTURE.md docs/README.md src/main.cu

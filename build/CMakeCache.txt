@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//Build Godot GDExtension
+BUILD_GODOT_EXTENSION:BOOL=ON
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
 
@@ -440,6 +443,68 @@ CudaRL-Arena_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 CudaRL-Arena_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena
 
+//Directory under which to collect all populated content
+FETCHCONTENT_BASE_DIR:PATH=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps
+
+//Disables all attempts to download or update content and assumes
+// source dirs already exist
+FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
+
+//Enables QUIET option for all content population
+FETCHCONTENT_QUIET:BOOL=ON
+
+//When not empty, overrides where to find pre-populated content
+// for godot-cpp
+FETCHCONTENT_SOURCE_DIR_GODOT-CPP:PATH=
+
+//Enables UPDATE_DISCONNECTED behavior for all content population
+FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of godot-cpp
+FETCHCONTENT_UPDATES_DISCONNECTED_GODOT-CPP:BOOL=OFF
+
+//Git command line client
+GIT_EXECUTABLE:FILEPATH=C:/Program Files/Git/cmd/git.exe
+
+//Path to a custom GDExtension API JSON file (takes precedence
+// over `gdextension_dir`) ( /path/to/custom_api_file )
+GODOT_CUSTOM_API_FILE:FILEPATH=
+
+//Force disabling exception handling code (ON|OFF)
+GODOT_DISABLE_EXCEPTIONS:BOOL=ON
+
+//Path to a custom directory containing GDExtension interface header
+// and API JSON file ( /path/to/gdextension_dir )
+GODOT_GDEXTENSION_DIR:PATH=gdextension
+
+//Generate a template version of the Node class's get_node. (ON|OFF)
+GODOT_GENERATE_TEMPLATE_GET_NODE:BOOL=ON
+
+//Set the floating-point precision level (single|double)
+GODOT_PRECISION:STRING=single
+
+//Symbols visibility on GNU platforms. Use 'auto' to apply the
+// default value. (auto|visible|hidden)
+GODOT_SYMBOL_VISIBILITY:STRING=hidden
+
+//Expose headers as SYSTEM.
+GODOT_SYSTEM_HEADERS:BOOL=ON
+
+//Enable the extra accounting required to support hot reload. (ON|OFF)
+GODOT_USE_HOT_RELOAD:BOOL=
+
+//Treat warnings as errors
+GODOT_WARNING_AS_ERROR:BOOL=OFF
+
+//Value Computed by CMake
+godot-cpp_BINARY_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot-cpp-build
+
+//Value Computed by CMake
+godot-cpp_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+godot-cpp_SOURCE_DIR:STATIC=C:/Users/aiand/Documents/programming/CudaRL-Arena/build/_deps/godot-cpp-src
+
 //The directory containing a CMake configuration file for pybind11.
 pybind11_DIR:PATH=C:/Users/aiand/AppData/Local/Programs/Python/Python313/Lib/site-packages/pybind11/share/cmake/pybind11
 
@@ -530,7 +595,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -729,7 +794,11 @@ CUDA_pcsamplingutil_LIBRARY-ADVANCED:INTERNAL=1
 //Details about finding CUDAToolkit
 FIND_PACKAGE_MESSAGE_DETAILS_CUDAToolkit:INTERNAL=[C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/include][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/lib/x64/cudart.lib][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.9/bin][v12.9.41()]
 //Details about finding Python3
-FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe][C:/Users/aiand/AppData/Local/Programs/Python/Python313/libs/python313.lib][C:/Users/aiand/AppData/Local/Programs/Python/Python313/Include][found components: Interpreter Development Development.Module Development.Embed ][v3.13.3()]
+FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe][found components: Interpreter ][v3.13.3(3.4)]
+//ADVANCED property for variable: GIT_EXECUTABLE
+GIT_EXECUTABLE-ADVANCED:INTERNAL=1
+//STRINGS property for variable: GODOT_SYMBOL_VISIBILITY
+GODOT_SYMBOL_VISIBILITY-STRINGS:INTERNAL=auto;visible;hidden
 //Test HAS_MSVC_GL_LTCG
 HAS_MSVC_GL_LTCG:INTERNAL=1
 //Python executable during the last CMake run
@@ -746,7 +815,6 @@ _Python3_DEVELOPMENT_EMBED_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
 _Python3_DEVELOPMENT_MODULE_SIGNATURE:INTERNAL=e72553961b849c1a9177284e1791f028
 //Development reason failure
 _Python3_Development_REASON_FAILURE:INTERNAL=
-//Path to a program.
 _Python3_EXECUTABLE:INTERNAL=C:/Users/aiand/AppData/Local/Programs/Python/Python313/python.exe
 //Path to a program.
 _Python3_EXECUTABLE_DEBUG:INTERNAL=_Python3_EXECUTABLE_DEBUG-NOTFOUND

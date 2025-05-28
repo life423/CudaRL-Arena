@@ -87,4 +87,12 @@ void updateQValuesBatch(
     cudaDeviceSynchronize();
 }
 
+// Simple vector addition kernel for testing
+__global__ void vectorAdd(const float* a, const float* b, float* c, int numElements) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < numElements) {
+        c[idx] = a[idx] + b[idx];
+    }
+}
+
 } // namespace cudarl

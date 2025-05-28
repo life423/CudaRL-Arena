@@ -34,4 +34,7 @@ void updateQValuesBatch(
     const int batch_size      // Number of samples to process
 );
 
+// Simple vector addition kernel for testing
+__global__ void vectorAdd(const float* a, const float* b, float* c, int numElements);
+
 } // namespace cudarl
