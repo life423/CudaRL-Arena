@@ -105,9 +105,15 @@ endif()
 set(CMAKE_CUDA_FLAGS "${CUDA_COMPILE_FLAGS}")
 message(STATUS "Base CUDA flags: ${CMAKE_CUDA_FLAGS}")
 
-# ──────────────── Core Library ────────────────
+# ──────────────── Modular Subdirectories ────────────────
+# Add modular subdirectories for cleaner build structure
+add_subdirectory(src/core)
+add_subdirectory(src/gpu)
+add_subdirectory(src/bindings)
+
+# ──────────────── Legacy Core Library ────────────────
 # Create core library with CUDA functionality - now modular structure
-add_library(cudarl_core STATIC
+add_library(cudarl_core_legacy STATIC
   # Core logic (environment-agnostic)
   src/core/environment.h
   src/core/environment_cpu.cpp
@@ -124,13 +130,13 @@ add_library(cudarl_core STATIC
   src/gpu/batch_kernels.cuh
 )
 
-target_include_directories(cudarl_core PUBLIC
+target_include_directories(cudarl_core_legacy PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core
   ${CMAKE_CURRENT_SOURCE_DIR}/src/gpu
 )
 
-target_link_libraries(cudarl_core PUBLIC
+target_link_libraries(cudarl_core_legacy PUBLIC
   CUDA::cudart
   CUDA::curand
 )
@@ -138,7 +144,7 @@ target_link_libraries(cudarl_core PUBLIC
 # Apply Windows SDK compatibility fixes
 if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
     if(EXISTS ${CUDA_WINDOWS_COMPAT_HEADER})
-        target_compile_options(cudarl_core PRIVATE 
+        target_compile_options(cudarl_core_legacy PRIVATE 
             $<$<COMPILE_LANGUAGE:CUDA>:-include ${CUDA_WINDOWS_COMPAT_HEADER}>
         )
         message(STATUS "Auto-including Windows compatibility header for CUDA files")
@@ -147,20 +153,20 @@ endif()
 
 # RTX 5070 specific optimizations - set at target level to override CMake defaults
 if(CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.0")
-    target_compile_options(cudarl_core PRIVATE
+    target_compile_options(cudarl_core_legacy PRIVATE
         $<$<COMPILE_LANGUAGE:CUDA>:--maxrregcount=64>
     )
     message(STATUS "RTX 5070 optimizations enabled (maxrregcount=64)")
 endif()
 
 # Standard CUDA compile options
-target_compile_options(cudarl_core PRIVATE
+target_compile_options(cudarl_core_legacy PRIVATE
   $<$<COMPILE_LANGUAGE:CUDA>:-Wno-deprecated-gpu-targets>
 )
 
 # Windows-specific compile definitions
 if(WIN32)
-    target_compile_definitions(cudarl_core PRIVATE 
+    target_compile_definitions(cudarl_core_legacy PRIVATE 
         WIN32_LEAN_AND_MEAN 
         NOMINMAX
         _CRT_SECURE_NO_WARNINGS
@@ -170,19 +176,19 @@ endif()
 # ──────────────── Python Bindings ────────────────
 if(pybind11_FOUND)
     # Original Python bindings
-    pybind11_add_module(cudarl_core_python src/python_bindings.cpp)
-    target_link_libraries(cudarl_core_python PRIVATE cudarl_core)
+    pybind11_add_module(cudarl_core_python_legacy src/python_bindings.cpp)
+    target_link_libraries(cudarl_core_python_legacy PRIVATE cudarl_core_legacy)
     
     # Enhanced Python bindings with vectorized environments
     pybind11_add_module(cudarl_vectorized_python src/python_bindings_vectorized.cpp)
-    target_link_libraries(cudarl_vectorized_python PRIVATE cudarl_core)
+    target_link_libraries(cudarl_vectorized_python PRIVATE cudarl_core_legacy)
     
     # Force static linking on Windows for both modules
     if(WIN32)
-        set_property(TARGET cudarl_core_python PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        set_property(TARGET cudarl_core_python_legacy PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
         set_property(TARGET cudarl_vectorized_python PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
         
-        target_compile_definitions(cudarl_core_python PRIVATE 
+        target_compile_definitions(cudarl_core_python_legacy PRIVATE 
             WIN32_LEAN_AND_MEAN 
             NOMINMAX
         )
@@ -192,7 +198,7 @@ if(pybind11_FOUND)
         )
         
         # Link CUDA libraries statically
-        target_link_libraries(cudarl_core_python PRIVATE 
+        target_link_libraries(cudarl_core_python_legacy PRIVATE 
             CUDA::cudart_static
         )
         target_link_libraries(cudarl_vectorized_python PRIVATE 
@@ -203,30 +209,30 @@ endif()
 
 # ──────────────── Main Application ────────────────
 add_executable(cudarl_app src/core/main.cu)
-target_link_libraries(cudarl_app PRIVATE cudarl_core)
+target_link_libraries(cudarl_app PRIVATE cudarl_core_legacy)
 
 # ──────────────── CUDA Test ────────────────
 add_executable(cuda_test src/gpu/cuda_test.cu)
-target_link_libraries(cuda_test PRIVATE cudarl_core)
+target_link_libraries(cuda_test PRIVATE cudarl_core_legacy)
 
 # ──────────────── Enhanced Component Tests ────────────────
 # Test for vectorized environments
 add_executable(vectorized_test 
   tests/test_vectorized_environment.cpp
 )
-target_link_libraries(vectorized_test PRIVATE cudarl_core)
+target_link_libraries(vectorized_test PRIVATE cudarl_core_legacy)
 
 # Test for enhanced environment features
 add_executable(enhanced_test
   tests/test_enhanced_environment.cpp
 )
-target_link_libraries(enhanced_test PRIVATE cudarl_core)
+target_link_libraries(enhanced_test PRIVATE cudarl_core_legacy)
 
 # Test for batch kernels
 add_executable(batch_kernels_test
   tests/test_batch_kernels.cu
 )
-target_link_libraries(batch_kernels_test PRIVATE cudarl_core)
+target_link_libraries(batch_kernels_test PRIVATE cudarl_core_legacy)
 
 # ──────────────── Enhanced Test Targets ────────────────
 add_custom_target(run
@@ -275,7 +281,7 @@ if(BUILD_GODOT_EXTENSION)
     )
     
     target_link_libraries(cudarl_godot PRIVATE
-        cudarl_core
+        cudarl_core_legacy
         godot-cpp
     )
     
@@ -317,5 +323,6 @@ if(WIN32 AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL "12.9")
 else()
     message(STATUS "Windows SDK CUDA 12.9 Fix: Not needed")
 endif()
+message(STATUS "Modular Build: ENABLED (src/core, src/gpu, src/bindings)")
 message(STATUS "═══════════════════════════════════════════════════════")
 message(STATUS "")

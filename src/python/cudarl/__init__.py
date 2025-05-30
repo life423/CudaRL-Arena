@@ -26,7 +26,8 @@ except ImportError as e:
 
 # Import other components
 from .environment import Environment
-from .agent import Agent, QTableAgent
+from .agent import BaseAgent, RandomAgent, QLearningAgent, DQNAgent, create_agent
+from .mock_env import Agent, QTableAgent
 from .trainer import Trainer
 
 # Export the CUDA/mock environment directly
