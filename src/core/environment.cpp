@@ -4,6 +4,12 @@
 #include <algorithm>
 #include <string>
 #include <cstddef>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <queue>
+#include <unordered_set>
+#include <random>
 
 namespace cudarl {
 
@@ -13,12 +19,12 @@ extern "C" {
     void launch_step_environment_kernel(EnvironmentState* d_state, float* d_grid, int action);
 }
 
-Environment::Environment(int id, int width, int height)
+Environment::Environment(int id, int width, int height, const EnvironmentConfig& config)
     : m_envId(id)
     , m_deviceState(1)
     , m_deviceGrid(width * height)
 {
-    // Initialize host state
+    // Initialize host state with enhanced configuration
     m_state.width = width;
     m_state.height = height;
     m_state.grid = nullptr; // Will be managed by device memory
@@ -26,6 +32,18 @@ Environment::Environment(int id, int width, int height)
     m_state.agent_y = 0;
     m_state.reward = 0.0f;
     m_state.done = false;
+    
+    // Initialize enhanced state tracking
+    m_state.episode_steps = 0;
+    m_state.total_rewards_collected = 0;
+    m_state.cumulative_reward = 0.0f;
+    m_state.goal_reached = false;
+    m_state.obstacles_hit = 0;
+    m_state.traps_triggered = 0;
+    
+    // Set configuration
+    m_state.config = config;
+    validateConfiguration();
     
     // Initialize grid data
     initializeGrid();

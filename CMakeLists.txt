@@ -111,12 +111,17 @@ add_library(cudarl_core STATIC
   # Core logic (environment-agnostic)
   src/core/environment.h
   src/core/environment_cpu.cpp
+  src/core/environment_enhanced.cpp
+  src/core/vectorized_environment.h
+  src/core/vectorized_environment.cpp
   src/core/cuda_utils.h
   
   # GPU kernels and CUDA implementation
   src/gpu/environment.cu
   src/gpu/kernels.cu
   src/gpu/kernels.cuh
+  src/gpu/batch_kernels.cu
+  src/gpu/batch_kernels.cuh
 )
 
 target_include_directories(cudarl_core PUBLIC
@@ -164,18 +169,33 @@ endif()
 
 # ──────────────── Python Bindings ────────────────
 if(pybind11_FOUND)
+    # Original Python bindings
     pybind11_add_module(cudarl_core_python src/python_bindings.cpp)
     target_link_libraries(cudarl_core_python PRIVATE cudarl_core)
     
-    # Force static linking on Windows
+    # Enhanced Python bindings with vectorized environments
+    pybind11_add_module(cudarl_vectorized_python src/python_bindings_vectorized.cpp)
+    target_link_libraries(cudarl_vectorized_python PRIVATE cudarl_core)
+    
+    # Force static linking on Windows for both modules
     if(WIN32)
         set_property(TARGET cudarl_core_python PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        set_property(TARGET cudarl_vectorized_python PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        
         target_compile_definitions(cudarl_core_python PRIVATE 
             WIN32_LEAN_AND_MEAN 
             NOMINMAX
         )
+        target_compile_definitions(cudarl_vectorized_python PRIVATE 
+            WIN32_LEAN_AND_MEAN 
+            NOMINMAX
+        )
+        
         # Link CUDA libraries statically
         target_link_libraries(cudarl_core_python PRIVATE 
+            CUDA::cudart_static
+        )
+        target_link_libraries(cudarl_vectorized_python PRIVATE 
             CUDA::cudart_static
         )
     endif()
@@ -188,6 +208,25 @@ target_link_libraries(cudarl_app PRIVATE cudarl_core)
 # ──────────────── CUDA Test ────────────────
 add_executable(cuda_test src/gpu/cuda_test.cu)
 target_link_libraries(cuda_test PRIVATE cudarl_core)
+
+# ──────────────── Enhanced Component Tests ────────────────
+# Test for vectorized environments
+add_executable(vectorized_test 
+  tests/test_vectorized_environment.cpp
+)
+target_link_libraries(vectorized_test PRIVATE cudarl_core)
+
+# Test for enhanced environment features
+add_executable(enhanced_test
+  tests/test_enhanced_environment.cpp
+)
+target_link_libraries(enhanced_test PRIVATE cudarl_core)
+
+# Test for batch kernels
+add_executable(batch_kernels_test
+  tests/test_batch_kernels.cu
+)
+target_link_libraries(batch_kernels_test PRIVATE cudarl_core)
 
 # ──────────────── Enhanced Test Targets ────────────────
 add_custom_target(run
