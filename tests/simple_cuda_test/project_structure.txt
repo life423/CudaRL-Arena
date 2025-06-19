@@ -1,0 +1,152 @@
+Folder PATH listing
+Volume serial number is 467B-F355
+C:\USERS\AIAND\DOCUMENTS\PROGRAMMING\CUDARL-ARENA\TESTS\SIMPLE_CUDA_TEST
+¦   CMakeLists.txt
+¦   main.cpp
+¦   project_structure.txt
+¦   
++---build
+    ¦   ALL_BUILD.vcxproj
+    ¦   ALL_BUILD.vcxproj.filters
+    ¦   CMakeCache.txt
+    ¦   cmake_install.cmake
+    ¦   project_structure.txt
+    ¦   SimpleCudaTest.sln
+    ¦   simple_cuda_test.vcxproj
+    ¦   simple_cuda_test.vcxproj.filters
+    ¦   ZERO_CHECK.vcxproj
+    ¦   ZERO_CHECK.vcxproj.filters
+    ¦   
+    +---CMakeFiles
+    ¦   ¦   cmake.check_cache
+    ¦   ¦   CMakeConfigureLog.yaml
+    ¦   ¦   generate.stamp
+    ¦   ¦   generate.stamp.depend
+    ¦   ¦   generate.stamp.list
+    ¦   ¦   InstallScripts.json
+    ¦   ¦   TargetDirectories.txt
+    ¦   ¦   
+    ¦   +---2f00e13df1a8445e408d40c9a234efe0
+    ¦   ¦       generate.stamp.rule
+    ¦   ¦       
+    ¦   +---4.0.2
+    ¦   ¦   ¦   CMakeCUDACompiler.cmake
+    ¦   ¦   ¦   CMakeCXXCompiler.cmake
+    ¦   ¦   ¦   CMakeDetermineCompilerABI_CUDA.bin
+    ¦   ¦   ¦   CMakeDetermineCompilerABI_CXX.bin
+    ¦   ¦   ¦   CMakeRCCompiler.cmake
+    ¦   ¦   ¦   CMakeSystem.cmake
+    ¦   ¦   ¦   VCTargetsPath.txt
+    ¦   ¦   ¦   VCTargetsPath.vcxproj
+    ¦   ¦   ¦   
+    ¦   ¦   +---CompilerIdCUDA
+    ¦   ¦   ¦   ¦   CMakeCUDACompilerId.cu
+    ¦   ¦   ¦   ¦   CompilerIdCUDA.exe
+    ¦   ¦   ¦   ¦   CompilerIdCUDA.exp
+    ¦   ¦   ¦   ¦   CompilerIdCUDA.lib
+    ¦   ¦   ¦   ¦   CompilerIdCUDA.vcxproj
+    ¦   ¦   ¦   ¦   
+    ¦   ¦   ¦   +---CompilerIdCUDA
+    ¦   ¦   ¦   ¦   +---x64
+    ¦   ¦   ¦   ¦       +---Debug
+    ¦   ¦   ¦   ¦               CMakeCUDACompilerId.cu.obj
+    ¦   ¦   ¦   ¦               
+    ¦   ¦   ¦   +---Debug
+    ¦   ¦   ¦   ¦   ¦   CMakeCUDACompilerId.cu.cache
+    ¦   ¦   ¦   ¦   ¦   CMakeCUDACompilerId.cu462064651.deps
+    ¦   ¦   ¦   ¦   ¦   CompilerIdCUDA.exe.recipe
+    ¦   ¦   ¦   ¦   ¦   vc143.pdb
+    ¦   ¦   ¦   ¦   ¦   vcpkg.applocal.log
+    ¦   ¦   ¦   ¦   ¦   
+    ¦   ¦   ¦   ¦   +---CompilerIdCUDA.tlog
+    ¦   ¦   ¦   ¦           CompilerIdCUDA.lastbuildstate
+    ¦   ¦   ¦   ¦           CudaCompile.read.1u.tlog
+    ¦   ¦   ¦   ¦           CudaCompile.write.1u.tlog
+    ¦   ¦   ¦   ¦           link.command.1.tlog
+    ¦   ¦   ¦   ¦           link.read.1.tlog
+    ¦   ¦   ¦   ¦           link.secondary.1.tlog
+    ¦   ¦   ¦   ¦           link.write.1.tlog
+    ¦   ¦   ¦   ¦           
+    ¦   ¦   ¦   +---tmp
+    ¦   ¦   +---CompilerIdCXX
+    ¦   ¦   ¦   ¦   CMakeCXXCompilerId.cpp
+    ¦   ¦   ¦   ¦   CompilerIdCXX.exe
+    ¦   ¦   ¦   ¦   CompilerIdCXX.vcxproj
+    ¦   ¦   ¦   ¦   
+    ¦   ¦   ¦   +---Debug
+    ¦   ¦   ¦   ¦   ¦   CMakeCXXCompilerId.obj
+    ¦   ¦   ¦   ¦   ¦   CompilerIdCXX.exe.recipe
+    ¦   ¦   ¦   ¦   ¦   vcpkg.applocal.log
+    ¦   ¦   ¦   ¦   ¦   
+    ¦   ¦   ¦   ¦   +---CompilerIdCXX.tlog
+    ¦   ¦   ¦   ¦           CL.command.1.tlog
+    ¦   ¦   ¦   ¦           Cl.items.tlog
+    ¦   ¦   ¦   ¦           CL.read.1.tlog
+    ¦   ¦   ¦   ¦           CL.write.1.tlog
+    ¦   ¦   ¦   ¦           CompilerIdCXX.lastbuildstate
+    ¦   ¦   ¦   ¦           link.command.1.tlog
+    ¦   ¦   ¦   ¦           link.read.1.tlog
+    ¦   ¦   ¦   ¦           link.secondary.1.tlog
+    ¦   ¦   ¦   ¦           link.write.1.tlog
+    ¦   ¦   ¦   ¦           
+    ¦   ¦   ¦   +---tmp
+    ¦   ¦   +---VCTargetsPath
+    ¦   ¦   ¦   +---x64
+    ¦   ¦   ¦       +---Debug
+    ¦   ¦   ¦           ¦   VCTargetsPath.recipe
+    ¦   ¦   ¦           ¦   
+    ¦   ¦   ¦           +---VCTargetsPath.tlog
+    ¦   ¦   ¦                   VCTargetsPath.lastbuildstate
+    ¦   ¦   ¦                   
+    ¦   ¦   +---x64
+    ¦   ¦       +---Debug
+    ¦   +---CMakeScratch
+    ¦   +---pkgRedirects
+    +---Release
+    ¦       simple_cuda_test.exe
+    ¦       
+    +---simple_cuda_test.dir
+    ¦   +---Release
+    ¦       ¦   kernels.cu-1251202922.deps
+    ¦       ¦   kernels.cu.cache
+    ¦       ¦   kernels.obj
+    ¦       ¦   main.obj
+    ¦       ¦   simple_cuda_test.exe.recipe
+    ¦       ¦   vcpkg.applocal.log
+    ¦       ¦   
+    ¦       +---simple_cuda_test.tlog
+    ¦               CL.command.1.tlog
+    ¦               Cl.items.tlog
+    ¦               CL.read.1.tlog
+    ¦               CL.write.1.tlog
+    ¦               CudaCompile.read.1u.tlog
+    ¦               CudaCompile.write.1u.tlog
+    ¦               CustomBuild.command.1.tlog
+    ¦               CustomBuild.read.1.tlog
+    ¦               CustomBuild.write.1.tlog
+    ¦               link.command.1.tlog
+    ¦               link.read.1.tlog
+    ¦               link.secondary.1.tlog
+    ¦               link.write.1.tlog
+    ¦               simple_cuda_test.lastbuildstate
+    ¦               
+    +---x64
+        +---Release
+            +---ALL_BUILD
+            ¦   ¦   ALL_BUILD.recipe
+            ¦   ¦   
+            ¦   +---ALL_BUILD.tlog
+            ¦           ALL_BUILD.lastbuildstate
+            ¦           CustomBuild.command.1.tlog
+            ¦           CustomBuild.read.1.tlog
+            ¦           CustomBuild.write.1.tlog
+            ¦           
+            +---ZERO_CHECK
+                ¦   ZERO_CHECK.recipe
+                ¦   
+                +---ZERO_CHECK.tlog
+                        CustomBuild.command.1.tlog
+                        CustomBuild.read.1.tlog
+                        CustomBuild.write.1.tlog
+                        ZERO_CHECK.lastbuildstate
+                        
