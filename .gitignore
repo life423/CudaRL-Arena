@@ -57,3 +57,24 @@ results/
 *.npy
 *.png
 *.gif
+
+# CMake/build
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+
+# Python
+/.venv/
+__pycache__/
+*.py[cod]
+
+# VSCode
+/.vscode/
+
+/build
+/build_*
+/src/python/cudarl/*.so  # built extension
+*.pyc
+__pycache__/
+.env/
+.vscode/

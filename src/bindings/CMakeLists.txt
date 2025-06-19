@@ -1,0 +1,3 @@
+find_package(pybind11 REQUIRED)
+pybind11_add_module(cudarl_core_python python_bindings.cpp)
+target_link_libraries(cudarl_core_python PRIVATE cudarl_core cudarl_gpu)

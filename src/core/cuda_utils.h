@@ -1,135 +1,55 @@
 #pragma once
 
-#include <cuda_runtime.h>
-#include <stdexcept>
-#include <string>
-#include <iostream>
+#include <memory>
+#include <vector>
 
 namespace cudarl {
 
-// CUDA error checking helper
-inline void checkCudaError(cudaError_t error, const char* file, int line) {
-    if (error != cudaSuccess) {
-        throw std::runtime_error(
-            std::string("CUDA error in ") + file + " at line " + 
-            std::to_string(line) + ": " + cudaGetErrorString(error));
-    }
-}
-
-#define CUDA_CHECK(call) checkCudaError(call, __FILE__, __LINE__)
-
-// RAII wrapper for CUDA memory
+// Simple DeviceBuffer template for CUDA memory management
+// This is a stub implementation - real version would use CUDA APIs
 template<typename T>
-class CudaMemory {
-private:
-    T* d_ptr = nullptr;
-    size_t elements = 0;
-
+class DeviceBuffer {
 public:
-    CudaMemory() = default;
+    explicit DeviceBuffer(size_t count = 0) : m_count(count), m_hostData(count) {}
     
-    explicit CudaMemory(size_t count) : elements(count) {
-        if (count > 0) {
-            CUDA_CHECK(cudaMalloc(&d_ptr, count * sizeof(T)));
-        }
+    // Move constructor
+    DeviceBuffer(DeviceBuffer&& other) noexcept 
+        : m_count(other.m_count), m_hostData(std::move(other.m_hostData)) {
+        other.m_count = 0;
     }
     
-    ~CudaMemory() {
-        free();
-    }
-    
-    // Move semantics
-    CudaMemory(CudaMemory&& other) noexcept : d_ptr(other.d_ptr), elements(other.elements) {
-        other.d_ptr = nullptr;
-        other.elements = 0;
-    }
-    
-    CudaMemory& operator=(CudaMemory&& other) noexcept {
+    // Move assignment
+    DeviceBuffer& operator=(DeviceBuffer&& other) noexcept {
         if (this != &other) {
-            free();
-            d_ptr = other.d_ptr;
-            elements = other.elements;
-            other.d_ptr = nullptr;
-            other.elements = 0;
+            m_count = other.m_count;
+            m_hostData = std::move(other.m_hostData);
+            other.m_count = 0;
         }
         return *this;
     }
     
     // Disable copy
-    CudaMemory(const CudaMemory&) = delete;
-    CudaMemory& operator=(const CudaMemory&) = delete;
+    DeviceBuffer(const DeviceBuffer&) = delete;
+    DeviceBuffer& operator=(const DeviceBuffer&) = delete;
     
-    // Allocate memory
-    void allocate(size_t count) {
-        free();
-        if (count > 0) {
-            elements = count;
-            CUDA_CHECK(cudaMalloc(&d_ptr, count * sizeof(T)));
-        }
+    ~DeviceBuffer() = default;
+    
+    // Resize buffer
+    void resize(size_t new_count) {
+        m_count = new_count;
+        m_hostData.resize(new_count);
     }
     
-    // Free memory
-    void free() {
-        if (d_ptr) {
-            CUDA_CHECK(cudaFree(d_ptr));
-            d_ptr = nullptr;
-        }
-        elements = 0;
-    }
+    // Get size
+    size_t size() const { return m_count; }
     
-    // Copy from host to device
-    void copyFromHost(const T* h_ptr, size_t count) {
-        if (count > elements || !d_ptr) {
-            throw std::runtime_error("Invalid CUDA memory operation in copyFromHost");
-        }
-        CUDA_CHECK(cudaMemcpy(d_ptr, h_ptr, count * sizeof(T), cudaMemcpyHostToDevice));
-    }
-    
-    // Copy from device to host
-    void copyToHost(T* h_ptr, size_t count) const {
-        if (count > elements || !d_ptr) {
-            throw std::runtime_error("Invalid CUDA memory operation in copyToHost");
-        }
-        CUDA_CHECK(cudaMemcpy(h_ptr, d_ptr, count * sizeof(T), cudaMemcpyDeviceToHost));
-    }
-    
-    // Get device pointer
-    T* get() const { return d_ptr; }
-    
-    // Get element count
-    size_t size() const { return elements; }
-    
-    // Check if allocated
-    bool isAllocated() const { return d_ptr != nullptr; }
-    
-    // Cast operator
-    operator T*() const { return d_ptr; }
-};
+    // Get raw pointer (stub)
+    T* data() { return m_hostData.data(); }
+    const T* data() const { return m_hostData.data(); }
 
-// Device information utility
-struct CudaDeviceInfo {
-    static void printDeviceInfo() {
-        int deviceCount = 0;
-        CUDA_CHECK(cudaGetDeviceCount(&deviceCount));
-        
-        if (deviceCount == 0) {
-            throw std::runtime_error("No CUDA devices found!");
-        }
-        
-        std::cout << "Found " << deviceCount << " CUDA device(s)" << std::endl;
-        
-        // Get properties for each device
-        for (int i = 0; i < deviceCount; i++) {
-            cudaDeviceProp deviceProp;
-            CUDA_CHECK(cudaGetDeviceProperties(&deviceProp, i));
-            
-            std::cout << "\nDevice " << i << ": " << deviceProp.name << std::endl;
-            std::cout << "  Compute capability: " << deviceProp.major << "." << deviceProp.minor << std::endl;
-            std::cout << "  Total global memory: " << deviceProp.totalGlobalMem / (1024 * 1024) << " MB" << std::endl;
-            std::cout << "  Memory Clock Rate: " << deviceProp.memoryClockRate / 1000 << " MHz" << std::endl;
-            std::cout << "  Memory Bus Width: " << deviceProp.memoryBusWidth << " bits" << std::endl;
-        }
-    }
+private:
+    size_t m_count;
+    std::vector<T> m_hostData; // Using host memory as stub
 };
 
 } // namespace cudarl
