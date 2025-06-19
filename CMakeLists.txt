@@ -1,18 +1,19 @@
-cmake_minimum_required(VERSION 3.22)
-project(CudaRL_Arena LANGUAGES CXX CUDA)
+cmake_minimum_required(VERSION 3.18)
+project(CudaRL LANGUAGES CXX CUDA)
 
-# ───── Build flags ────────────────────────────────────────────────────────────
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CUDA_STANDARD 17)
-set(CMAKE_CUDA_ARCHITECTURES 89)          # NVIDIA 5070 (Ada, SM 89)
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -lineinfo -O3 --use_fast_math")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ───── Include directories ─────────────────────────────────────────────────────
-include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/src/core)
-include_directories(${CMAKE_SOURCE_DIR}/src/gpu)
+# Find CUDA
+find_package(CUDAToolkit REQUIRED)
 
-# ───── Libraries ──────────────────────────────────────────────────────────────
+# Set CUDA architectures (adjust for your GPU)
+set(CMAKE_CUDA_ARCHITECTURES 89)
+
+# Include directories
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 # Core library
 add_library(cudarl_core STATIC
     src/core/environment.cpp
@@ -20,9 +21,10 @@ add_library(cudarl_core STATIC
 )
 target_include_directories(cudarl_core PUBLIC src/core)
 
-# GPU kernels library  
+# GPU kernels library
 add_library(cudarl_gpu STATIC
     src/gpu/kernels.cu
+    src/gpu/step_kernel.cu
 )
 target_include_directories(cudarl_gpu PUBLIC src/gpu)
 target_link_libraries(cudarl_gpu PRIVATE cuda cudart)
@@ -37,7 +39,7 @@ if(BUILD_PYTHON_BINDINGS)
     target_link_libraries(cudarl_core_python PRIVATE cudarl_core cudarl_gpu)
 endif()
 
-# ───── Tests ──────────────────────────────────────────────────────────────────
+# ------ Tests -----------------------------------------------
 # Main batch test
 add_executable(test_batch_step tests/test_batch_step.cu)
 target_link_libraries(test_batch_step PRIVATE cudarl_core cudarl_gpu cuda cudart)
@@ -46,7 +48,7 @@ target_link_libraries(test_batch_step PRIVATE cudarl_core cudarl_gpu cuda cudart
 add_executable(simple_cuda_test tests/simple_cuda_test/main.cpp)
 target_link_libraries(simple_cuda_test PRIVATE cudarl_gpu cuda cudart)
 
-# ───── Test configuration ─────────────────────────────────────────────────────
+# ------ Test configuration ----------------------------------
 enable_testing()
 add_test(NAME batch_step_test COMMAND test_batch_step)
 add_test(NAME simple_cuda_test COMMAND simple_cuda_test)
