@@ -7,9 +7,14 @@ A high-performance reinforcement learning environment using CUDA acceleration.
 import logging
 import warnings
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Module level logger
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
+
+
+def configure_logging(level: int = logging.INFO) -> None:
+    """Configure basic logging for CudaRL-Arena users."""
+    logging.basicConfig(level=level)
 
 # Smart import with CUDA fallback
 try:
@@ -39,6 +44,7 @@ __all__ = [
     'Agent',
     'QTableAgent',
     'Trainer',
+    'configure_logging',
     'CUDA_AVAILABLE',
 ]
 
