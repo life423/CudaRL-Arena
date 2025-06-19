@@ -21,9 +21,12 @@ public:
         env->reset();
         return getObservation();
     }
-    
-    py::tuple step(int action) {
+      py::tuple step(int action) {
+        printf("DEBUG: step() called\n");
+        fflush(stdout);
         env->step(action);
+        printf("DEBUG: step() completed\n");
+        fflush(stdout);
         auto obs = getObservation();
         float reward = env->getReward();
         bool done = env->isDone();
@@ -70,7 +73,7 @@ PYBIND11_MODULE(cudarl_core_python, m) {
              "Initialize CUDA-accelerated environment")
         .def("reset", &PyEnvironment::reset,
              "Reset environment and return initial observation")
-        .def("step", &PyEnvironment::step, py::arg("action"), py::call_guard<py::gil_scoped_release>(),
+        .def("step", &PyEnvironment::step, py::arg("action"),
              "Take action and return (observation, reward, done, info)")
         .def("get_observation", &PyEnvironment::getObservation,
              "Get current environment observation")

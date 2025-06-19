@@ -43,6 +43,9 @@ endif()
 # Main batch test
 add_executable(test_batch_step tests/test_batch_step.cu)
 target_link_libraries(test_batch_step PRIVATE cudarl_core cudarl_gpu cuda cudart)
+# Add this after the other tests
+add_subdirectory(tests/cpp_environment_test)
+add_test(NAME cpp_environment_test COMMAND cpp_environment_test)
 
 # Simple CUDA test
 add_executable(simple_cuda_test tests/simple_cuda_test/main.cpp)
