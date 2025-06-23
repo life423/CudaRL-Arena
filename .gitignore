@@ -1,80 +1,48 @@
-# Ignore entire build directory completely
-build/**
+# Build artifacts
+/build
+build/
 
-# Other ignores
-bin/
-lib/
+# Python environment
+.venv/
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Distribution / packaging
-dist/
 *.egg-info/
-*.egg
+dist/
 
-# IDE files
+# IDE directories
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Compiled files
-*.o
-*.obj
-*.so
-*.dll
-*.dylib
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Compiled binaries
 *.exe
 *.out
-*.app
+*.dll
+*.so
+*.obj
+*.lib
+*.exp
 *.pdb
 *.ilk
-*.exp
-*.lib
+*.dylib
 
-# CUDA specific
-*.i
-*.ii
-*.gpu
+# CUDA intermediate files
 *.ptx
 *.cubin
 *.fatbin
 *.cu.deps
 *.cu.cache
 
-# Logs and databases
+# Logs & Databases
 *.log
 *.sqlite
 *.db
 
-# OS specific
-.DS_Store
-Thumbs.db
-
-# Training outputs
+# Results & temporary outputs
 results/
 *.npy
 *.png
 *.gif
-
-# CMake/build
-/build/
-/CMakeFiles/
-/CMakeCache.txt
-
-# Python
-/.venv/
-__pycache__/
-*.py[cod]
-
-# VSCode
-/.vscode/
-
-/build
-/build_*
-/src/python/cudarl/*.so  # built extension
-*.pyc
-__pycache__/
-.env/
-.vscode/

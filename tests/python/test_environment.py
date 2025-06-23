@@ -1,109 +1,53 @@
-import sys
-import os
+import pytest
+import sys, os
 import numpy as np
 
-# Add build directory to path for the compiled module
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 
-                                '../../build/Release'))
-
-try:
-    import cudarl_core_python
-    print("✅ Successfully imported cudarl_core_python module")
-except ImportError as e:
-    print(f"❌ Failed to import: {e}")
-    sys.exit(1)
-
-
-def test_environment_state():
-    """Test if we can access environment state before step"""
-    print("\n=== Testing Environment State Access ===")
-    
+# Pytest fixture for importing the module
+@pytest.fixture(scope="module")
+def cudarl_env():
+    sys.path.insert(0, os.path.abspath(os.path.join(__file__, "../../../build/Release")))
     try:
-        env = cudarl_core_python.Environment(5, 5)
-        env.reset()
-        
-        # Test all getter methods
-        print("Testing getter methods:")
-        print(f"  get_width(): {env.get_width()}")
-        print(f"  get_height(): {env.get_height()}")
-        print(f"  get_agent_x(): {env.get_agent_x()}")
-        print(f"  get_agent_y(): {env.get_agent_y()}")
-        print(f"  get_reward(): {env.get_reward()}")
-        print(f"  is_done(): {env.is_done()}")
-        
-        # Test observation
-        obs = env.get_observation()
-        print(f"  get_observation(): shape={obs.shape}, dtype={obs.dtype}")
-        print("✓ All getters work correctly")
-        
-        # Now test if we can get obs AFTER reset
-        print("\nTesting observation from reset:")
-        obs2 = env.reset()
-        print(f"  Reset observation: shape={obs2.shape}")
-        print("✓ Reset returns observation correctly")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Exception: {type(e).__name__}: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
+        import cudarl_core_python
+        return cudarl_core_python
+    except ImportError as e:
+        pytest.fail(f"Failed to import cudarl_core_python module: {e}")
 
+# Pytest fixture for creating environment
+@pytest.fixture
+def env(cudarl_env):
+    env = cudarl_env.Environment(5, 5)
+    yield env  # this provides the environment instance to your tests
 
-def test_step_minimal():
-    """Absolute minimal step test"""
-    print("\n=== Minimal Step Test ===")
+def test_environment_state_access(env):
+    """Test getters and observation shape."""
+    obs = env.reset()
+
+    assert env.get_width() == 5, "Width should be 5"
+    assert env.get_height() == 5, "Height should be 5"
     
-    try:
-        env = cudarl_core_python.Environment(3, 3)
-        _ = env.reset()
-        
-        print("Environment state before step:")
-        print(f"  Position: ({env.get_agent_x()}, {env.get_agent_y()})")
-        print(f"  Reward: {env.get_reward()}")
-        print(f"  Done: {env.is_done()}")
-        
-        print("\nAttempting step with action=1...")
-        print("*** If it crashes here, the issue is in C++ Environment::step() ***")
-        
-        # The crash point
-        result = env.step(1)
-        
-        print("✓ Step completed without crash!")
-        print(f"  Result type: {type(result)}")
-        print(f"  Result length: {len(result)}")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Python exception: {type(e).__name__}: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-
-def main():
-    print("=== Python Environment Diagnostic Test ===\n")
+    assert isinstance(env.get_agent_x(), int), "Agent X should be integer"
+    assert isinstance(env.get_agent_y(), int), "Agent Y should be integer"
+    assert isinstance(env.get_reward(), (float, int)), "Reward should be numeric"
+    assert isinstance(env.is_done(), bool), "Done should be boolean"
     
-    # First test if all getters work
-    if not test_environment_state():
-        print("\n❌ Environment state test failed")
-        return 1
-    
-    # Then test the minimal step
-    if not test_step_minimal():
-        print("\n❌ Step test failed")
-        print("\nDIAGNOSIS: The crash occurs in the C++ Environment::step() function")
-        print("Check src/core/environment.cpp for issues like:")
-        print("  - Null pointer dereference")
-        print("  - Array out of bounds access")
-        print("  - Uninitialized member variables")
-        return 1
-    
-    print("\n🎉 All tests PASSED!")
-    return 0
+    obs_from_get = env.get_observation()
+    assert isinstance(obs_from_get, np.ndarray), "Observation should be numpy array"
+    assert obs_from_get.shape == obs.shape, "Observation shapes must match"
 
+def test_environment_reset(env):
+    """Test reset returns valid observation."""
+    obs = env.reset()
+    assert isinstance(obs, np.ndarray), "Reset observation must be numpy array"
 
-if __name__ == "__main__":
-    sys.exit(main())
+def test_minimal_step(env):
+    """Test single step."""
+    env.reset()
+
+    initial_pos = (env.get_agent_x(), env.get_agent_y())
+    result = env.step(1)  # perform an action (e.g., action=1)
+
+    new_pos = (env.get_agent_x(), env.get_agent_y())
+    
+    assert initial_pos != new_pos, "Position should change after step"
+    assert isinstance(result, tuple), "Step should return a tuple (obs, reward, done, info)"
+    assert len(result) == 4, "Step result must have exactly 4 elements"
