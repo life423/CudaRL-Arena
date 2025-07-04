@@ -1,2 +1,0 @@
-add_executable(cpp_environment_test main.cpp)
-target_link_libraries(cpp_environment_test PRIVATE cudarl_core cudarl_gpu)
