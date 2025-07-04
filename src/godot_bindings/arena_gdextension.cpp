@@ -7,6 +7,8 @@ namespace godot {
 void ArenaGDExtension::_bind_methods() {
     ClassDB::bind_method(D_METHOD("hello_cuda"), &ArenaGDExtension::hello_cuda);
     ClassDB::bind_method(D_METHOD("run_training", "episodes"), &ArenaGDExtension::run_training);
+    ClassDB::bind_method(D_METHOD("step_environment", "action"), &ArenaGDExtension::step_environment);
+    ClassDB::bind_method(D_METHOD("reset_environment"), &ArenaGDExtension::reset_environment);
 }
 
 ArenaGDExtension::ArenaGDExtension() {
@@ -45,6 +47,19 @@ void ArenaGDExtension::run_training(int episodes) {
     }
     
     UtilityFunctions::print("✅ Training complete: ", episodes, " episodes");
+}
+
+Dictionary ArenaGDExtension::step_environment(int action) {
+    Dictionary d;
+    // TODO: call your CUDA kernel here
+    d["state"] = Vector2(0, 0);   // placeholder
+    d["reward"] = 0.0;
+    d["done"] = false;
+    return d;
+}
+
+void ArenaGDExtension::reset_environment() {
+    // TODO: cudaMemset Q-table, reset state in GPU
 }
 
 } // namespace godot
