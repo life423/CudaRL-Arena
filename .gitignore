@@ -59,3 +59,6 @@ src/godot_bindings/build/
 # SCons files
 .sconsign.dblite
 *.pyc
+
+# Submodule detached HEAD (ignore)
+external/godot-cpp/.git/
