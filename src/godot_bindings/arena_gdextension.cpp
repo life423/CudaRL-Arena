@@ -10,10 +10,20 @@ void ArenaGDExtension::_bind_methods() {
     ClassDB::bind_method(D_METHOD("run_training", "episodes"), &ArenaGDExtension::run_training);
     ClassDB::bind_method(D_METHOD("step_environment", "actions"), &ArenaGDExtension::step_environment);
     ClassDB::bind_method(D_METHOD("reset_environment"), &ArenaGDExtension::reset_environment);
+    ClassDB::bind_method(D_METHOD("reset"), &ArenaGDExtension::reset);
+    ClassDB::bind_method(D_METHOD("set_maze", "cells"), &ArenaGDExtension::set_maze);
 }
 
 ArenaGDExtension::ArenaGDExtension() {
     cuda_arena = new CudaArena(1000);
+    
+    // Initialize empty maze
+    for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
+            maze[y][x] = 0;
+        }
+    }
+    
     UtilityFunctions::print("🚀 CUDA Arena Extension created");
 }
 
@@ -56,30 +66,49 @@ Array ArenaGDExtension::step_environment(Array actions) {
     int human_action = int(actions[0]);
     int ai_action    = int(actions[1]);
 
-    // --- 2. small helpers ---------------------------------------------------
-    auto apply = [](Vector2i &pos, int act) {
+    // --- 2. maze-aware movement helper -------------------------------------
+    auto apply = [this](Vector2i &pos, int act) -> float {
+        Vector2i new_pos = pos;
         switch (act) {
-            case 0: pos.x += 1; break;      // → right
-            case 1: pos.y += 1; break;      // ↓ down
-            case 2: pos.x -= 1; break;      // ← left
-            case 3: pos.y -= 1; break;      // ↑ up
+            case 0: new_pos.x += 1; break;      // → right
+            case 1: new_pos.y += 1; break;      // ↓ down
+            case 2: new_pos.x -= 1; break;      // ← left
+            case 3: new_pos.y -= 1; break;      // ↑ up
         }
-        pos.x = CLAMP(pos.x, 0, 9);
-        pos.y = CLAMP(pos.y, 0, 9);
+        
+        // Check wall collision
+        if (is_wall(new_pos.x, new_pos.y)) {
+            return -0.1f;  // penalty for hitting wall
+        } else {
+            pos = new_pos;
+            return 0.0f;   // neutral reward for valid move
+        }
     };
 
     // --- 3. update states ---------------------------------------------------
-    apply(human_state, human_action);
-
+    float human_reward = apply(human_state, human_action);
+    
     // crude proto‑AI: ignore ai_action & choose random move for now
     int random_move = rand() % 4;
-    apply(ai_state, random_move);
+    float ai_reward = apply(ai_state, random_move);
+    
+    // --- 4. check for goal reached (8,8) -----------------------------------
+    bool human_done = false, ai_done = false;
+    if (human_state.x == 8 && human_state.y == 8) {
+        human_reward += 1.0f;
+        ai_reward += -1.0f;
+        human_done = ai_done = true;
+    } else if (ai_state.x == 8 && ai_state.y == 8) {
+        human_reward += -1.0f;
+        ai_reward += 1.0f;
+        human_done = ai_done = true;
+    }
 
-    // --- 4. pack results ----------------------------------------------------
+    // --- 5. pack results ----------------------------------------------------
     Array out;
     Dictionary h, a;
-    h["state"]  = Vector2(human_state);   h["reward"] = 0.0; h["done"] = false;
-    a["state"]  = Vector2(ai_state);      a["reward"] = 0.0; a["done"] = false;
+    h["state"]  = Vector2(human_state);   h["reward"] = human_reward; h["done"] = human_done;
+    a["state"]  = Vector2(ai_state);      a["reward"] = ai_reward;    a["done"] = ai_done;
     out.push_back(h);
     out.push_back(a);
     return out;
@@ -87,6 +116,30 @@ Array ArenaGDExtension::step_environment(Array actions) {
 
 void ArenaGDExtension::reset_environment() {
     // TODO: cudaMemset Q-table, reset state in GPU
+}
+
+void ArenaGDExtension::reset() {
+    human_state = Vector2i(1, 1);
+    ai_state = Vector2i(8, 8);
+}
+
+void ArenaGDExtension::set_maze(PackedVector2Array cells) {
+    // Clear maze
+    for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
+            maze[y][x] = 0;
+        }
+    }
+    
+    // Set walls from TileMap
+    for (int i = 0; i < cells.size(); i++) {
+        Vector2 cell = cells[i];
+        int x = (int)cell.x;
+        int y = (int)cell.y;
+        if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+            maze[y][x] = 1;
+        }
+    }
 }
 
 } // namespace godot

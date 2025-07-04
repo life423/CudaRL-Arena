@@ -12,7 +12,7 @@ config_version=5
 
 config/name="CudaRL Arena"
 config/description="CUDA-accelerated Reinforcement Learning Visualization"
-run/main_scene="uid://bsj8x4dstegmc"
+run/main_scene="res://arena/MazeArena.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
