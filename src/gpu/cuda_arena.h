@@ -6,10 +6,16 @@
 
 class CudaArena {
 public:
-    CudaArena(int num_envs = 1000);
+    explicit CudaArena(int num_envs = 1000);
     ~CudaArena();
     
-    void reset_environments();
+    // Rule of Five - prevent accidental copying
+    CudaArena(const CudaArena&) = delete;
+    CudaArena& operator=(const CudaArena&) = delete;
+    CudaArena(CudaArena&&) = delete;
+    CudaArena& operator=(CudaArena&&) = delete;
+    
+    void reset_environments(uint32_t seed = 1234);
     void step_environments(const std::vector<int>& actions);
     
     std::vector<float> get_observations() const;
