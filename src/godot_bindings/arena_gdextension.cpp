@@ -7,7 +7,7 @@ namespace godot {
 void ArenaGDExtension::_bind_methods() {
     ClassDB::bind_method(D_METHOD("hello_cuda"), &ArenaGDExtension::hello_cuda);
     ClassDB::bind_method(D_METHOD("run_training", "episodes"), &ArenaGDExtension::run_training);
-    ClassDB::bind_method(D_METHOD("step_environment", "action"), &ArenaGDExtension::step_environment);
+    ClassDB::bind_method(D_METHOD("step_environment", "actions"), &ArenaGDExtension::step_environment);
     ClassDB::bind_method(D_METHOD("reset_environment"), &ArenaGDExtension::reset_environment);
 }
 
