@@ -46,3 +46,16 @@ results/
 *.npy
 *.png
 *.gif
+
+# Godot cache and generated files
+godot-project/.godot/
+**/*.uid
+**/.import/
+
+# Build directories (additional)
+src/godot_bindings/build/
+**/build/
+
+# SCons files
+.sconsign.dblite
+*.pyc

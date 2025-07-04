@@ -89,44 +89,85 @@ var performance = arena.get_steps_per_second()  # Live metrics
 
 ---
 
-## 🔧 Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
+- **Godot 4.4+** - Download from [godotengine.org](https://godotengine.org/)
+- **CUDA Toolkit 12.x** - Download from [NVIDIA](https://developer.nvidia.com/cuda-downloads)
+- **CMake 3.18+** - For building the extension
+- **Visual Studio 2022** (Windows) or **GCC 9+** (Linux)
 
-```bash
-# CUDA Toolkit 12.x
-# Godot Engine 4.4+
-# CMake 3.18+
-# Modern C++ compiler (MSVC 2022+, GCC 9+, Clang 10+)
-```
+### Build Instructions
 
-### Build
-
+1. **Clone and setup:**
 ```bash
 git clone https://github.com/yourusername/CudaRL-Arena.git
 cd CudaRL-Arena
-
-# Setup dependencies
 git submodule update --init --recursive
-cd external/godot-cpp && scons platform=linux target=template_release
-
-# Build CUDA extension
-mkdir build && cd build
-cmake .. -DBUILD_GODOT_EXTENSION=ON -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
-
-# Launch
-cd ../godot-project
-godot --path .
 ```
 
-### Smoke Test
-
+2. **Build the GDExtension:**
 ```bash
-# Verify GPU integration
-godot --headless --path . scenes/RL_Visualization.tscn
-# Expected output: "✅ CudaRL Plugin loaded and ready!"
+cd src/godot_bindings
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release
 ```
+
+3. **Test the extension:**
+```bash
+cd ../../../godot-project
+godot --headless --path . --script res://test_basic.gd
+```
+
+### Expected Output
+```
+=== CudaRL Arena Integration Test ===
+🚀 CUDA Arena Extension created
+Hello from GPU (thread 0-3)!
+✅ CUDA Ready: 1 devices, using NVIDIA GeForce RTX 5070
+Starting training for 10 episodes...
+Episode 0 completed
+✅ Training complete: 10 episodes
+✅ Integration test complete!
+```
+
+## 📁 Project Structure
+
+```
+CudaRL-Arena/
+├── external/godot-cpp/          # Godot C++ bindings (trimmed)
+├── godot-project/               # Godot project files
+│   ├── addons/cudarl_plugin/    # GDExtension plugin
+│   │   ├── Release/cudarl_godot.dll
+│   │   └── cudarl_plugin.gdextension
+│   └── test_basic.gd            # Test script
+├── src/
+│   ├── godot_bindings/          # GDExtension C++ code
+│   │   ├── arena_gdextension.h/.cpp
+│   │   ├── register_types.cpp
+│   │   └── CMakeLists.txt
+│   └── gpu/                     # CUDA implementation
+│       ├── cuda_arena.h/.cu
+└── README.md
+```
+
+## 🎯 Usage
+
+### In GDScript
+```gdscript
+extends Node
+
+func _ready():
+    var arena = ArenaGDExtension.new()
+    print(arena.hello_cuda())        # Check CUDA devices
+    arena.run_training(100)          # Run 100 training episodes
+```
+
+### In Godot Editor
+1. Open `godot-project/` in Godot 4.4+
+2. The extension loads automatically
+3. Create a script and use `ArenaGDExtension.new()`
 
 ---
 
