@@ -27,8 +27,8 @@ public:
     String hello_cuda();
     void run_training(int episodes);
     
-    // Advances the env by one action; returns { state, reward, done }
-    Dictionary step_environment(int action);
+    /// Steps both human and AI; input=[human_action, ai_action]
+    Array step_environment(Array actions);
     // Resets the env to its initial state
     void reset_environment();
 };

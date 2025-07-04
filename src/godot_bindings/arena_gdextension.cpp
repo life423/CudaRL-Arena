@@ -49,13 +49,29 @@ void ArenaGDExtension::run_training(int episodes) {
     UtilityFunctions::print("✅ Training complete: ", episodes, " episodes");
 }
 
-Dictionary ArenaGDExtension::step_environment(int action) {
-    Dictionary d;
-    // TODO: call your CUDA kernel here
-    d["state"] = Vector2(0, 0);   // placeholder
-    d["reward"] = 0.0;
-    d["done"] = false;
-    return d;
+Array ArenaGDExtension::step_environment(Array actions) {
+    // Expect exactly two elements: [human_action, ai_action]
+    int human_action = int(actions[0]);
+    int ai_action    = int(actions[1]);
+
+    // TODO: invoke your CUDA kernels here, passing both actions
+
+    // Build two result dictionaries (human & AI)
+    Dictionary human_res;
+    human_res["state"]  = Vector2(0, 0);  // placeholder
+    human_res["reward"] = 0.0;
+    human_res["done"]   = false;
+
+    Dictionary ai_res;
+    ai_res["state"]     = Vector2(9, 9);  // placeholder
+    ai_res["reward"]    = 0.0;
+    ai_res["done"]      = false;
+
+    // Return them in an Array
+    Array result;
+    result.append(human_res);
+    result.append(ai_res);
+    return result;
 }
 
 void ArenaGDExtension::reset_environment() {
