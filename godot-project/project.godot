@@ -1,26 +1,26 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; unless you know what you are doing.
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
 
 [application]
 
 config/name="CudaRL Arena"
 config/description="CUDA-accelerated Reinforcement Learning Visualization"
 run/main_scene="res://scenes/RL_Visualization.tscn"
-config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/resizable=true
 
 [physics]
 
 common/enable_pause_aware_picking=true
-
-[rendering]
-
-renderer/rendering_method="forward_plus"
-renderer/rendering_method.mobile="mobile"

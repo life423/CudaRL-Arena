@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cudarl_arena_smoke_test"]
+[gd_scene load_steps=2 format=3 uid="uid://dfeqgk4kqhepl"]
 
-[ext_resource type="Script" path="res://scripts/RLVisualization.gd" id="1_smoke_test"]
+[ext_resource type="Script" uid="uid://cdxau8srhl6dp" path="res://scripts/RLVisualization.gd" id="1_smoke_test"]
 
 [node name="RL_Visualization" type="Control"]
 layout_mode = 3

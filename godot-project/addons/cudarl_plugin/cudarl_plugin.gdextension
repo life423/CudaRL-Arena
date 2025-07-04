@@ -3,7 +3,7 @@ entry_symbol = "cudarl_gdextension_library_init"
 compatibility_minimum = "4.4"
 
 [libraries]
-windows.x86_64 = "res://addons/cudarl_plugin/cudarl_godot.dll"
+windows.x86_64 = "res://addons/cudarl_plugin/Release/cudarl_godot.dll"
 
 [dependencies]
 windows.x86_64 = {}
