@@ -1,6 +1,7 @@
 #include "arena_gdextension.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <cstdlib>
 
 namespace godot {
 
@@ -50,28 +51,38 @@ void ArenaGDExtension::run_training(int episodes) {
 }
 
 Array ArenaGDExtension::step_environment(Array actions) {
-    // Expect exactly two elements: [human_action, ai_action]
+    // --- 1. pull actions ----------------------------------------------------
+    ERR_FAIL_COND_V(actions.size() != 2, Array());        // safety
     int human_action = int(actions[0]);
     int ai_action    = int(actions[1]);
 
-    // TODO: invoke your CUDA kernels here, passing both actions
+    // --- 2. small helpers ---------------------------------------------------
+    auto apply = [](Vector2i &pos, int act) {
+        switch (act) {
+            case 0: pos.x += 1; break;      // → right
+            case 1: pos.y += 1; break;      // ↓ down
+            case 2: pos.x -= 1; break;      // ← left
+            case 3: pos.y -= 1; break;      // ↑ up
+        }
+        pos.x = CLAMP(pos.x, 0, 9);
+        pos.y = CLAMP(pos.y, 0, 9);
+    };
 
-    // Build two result dictionaries (human & AI)
-    Dictionary human_res;
-    human_res["state"]  = Vector2(0, 0);  // placeholder
-    human_res["reward"] = 0.0;
-    human_res["done"]   = false;
+    // --- 3. update states ---------------------------------------------------
+    apply(human_state, human_action);
 
-    Dictionary ai_res;
-    ai_res["state"]     = Vector2(9, 9);  // placeholder
-    ai_res["reward"]    = 0.0;
-    ai_res["done"]      = false;
+    // crude proto‑AI: ignore ai_action & choose random move for now
+    int random_move = rand() % 4;
+    apply(ai_state, random_move);
 
-    // Return them in an Array
-    Array result;
-    result.append(human_res);
-    result.append(ai_res);
-    return result;
+    // --- 4. pack results ----------------------------------------------------
+    Array out;
+    Dictionary h, a;
+    h["state"]  = Vector2(human_state);   h["reward"] = 0.0; h["done"] = false;
+    a["state"]  = Vector2(ai_state);      a["reward"] = 0.0; a["done"] = false;
+    out.push_back(h);
+    out.push_back(a);
+    return out;
 }
 
 void ArenaGDExtension::reset_environment() {
