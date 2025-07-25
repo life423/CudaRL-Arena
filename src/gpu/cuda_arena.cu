@@ -1,4 +1,5 @@
 #include "cuda_arena.h"
+#include "cuda_memory.h"
 #include <cuda_runtime.h>
 #include <cmath>
 #include <vector>
@@ -74,27 +75,32 @@ CudaArena::~CudaArena()
 
 void CudaArena::allocate_memory()
 {
-    const size_t obs_size    = m_num_envs * kObsLen * sizeof(float);
-    const size_t scalar_size = m_num_envs * sizeof(float);
-    const size_t int_size    = m_num_envs * sizeof(int);
+    try {
+        // Allocate device memory using RAII wrappers
+        d_observations.allocate(m_num_envs * kObsLen);
+        d_rewards.allocate(m_num_envs);
+        d_dones.allocate(m_num_envs);
+        d_actions.allocate(m_num_envs);
 
-    CUDA_CHECK(cudaMalloc(&d_observations, obs_size));
-    CUDA_CHECK(cudaMalloc(&d_rewards,      scalar_size));
-    CUDA_CHECK(cudaMalloc(&d_dones,        int_size));
-    CUDA_CHECK(cudaMalloc(&d_actions,      int_size));
-
-    h_observations.resize(m_num_envs * kObsLen);
-    h_rewards.resize(m_num_envs);
-    h_dones.resize(m_num_envs);
-    h_actions.resize(m_num_envs);
+        // Resize host vectors
+        h_observations.resize(m_num_envs * kObsLen);
+        h_rewards.resize(m_num_envs);
+        h_dones.resize(m_num_envs);
+        h_actions.resize(m_num_envs);
+    } catch (const cuda_error& e) {
+        fprintf(stderr, "Failed to allocate CUDA memory: %s\n", e.what());
+        throw;
+    }
 }
 
 void CudaArena::free_memory()
 {
-    CUDA_CHECK(cudaFree(d_observations));
-    CUDA_CHECK(cudaFree(d_rewards));
-    CUDA_CHECK(cudaFree(d_dones));
-    CUDA_CHECK(cudaFree(d_actions));
+    // RAII handles cleanup automatically when device_ptr objects are destroyed
+    // We can explicitly reset them if needed
+    d_observations.reset();
+    d_rewards.reset();
+    d_dones.reset();
+    d_actions.reset();
 }
 
 void CudaArena::reset_environments(uint32_t seed)
@@ -111,34 +117,34 @@ void CudaArena::reset_environments(uint32_t seed)
         h_dones  [i] = 0;
     }
 
-    const size_t obs_size = m_num_envs * kObsLen * sizeof(float);
-    CUDA_CHECK(cudaMemcpy(d_observations, h_observations.data(),
-                          obs_size, cudaMemcpyHostToDevice));
+    try {
+        d_observations.copy_from_host(h_observations.data(), m_num_envs * kObsLen);
+    } catch (const cuda_error& e) {
+        fprintf(stderr, "Failed to copy observations to device: %s\n", e.what());
+        throw;
+    }
 }
 
 void CudaArena::step_environments(const std::vector<int>& actions)
 {
-    h_actions = actions;
-    const size_t int_size = m_num_envs * sizeof(int);
-    CUDA_CHECK(cudaMemcpy(d_actions, h_actions.data(),
-                          int_size, cudaMemcpyHostToDevice));
+    try {
+        h_actions = actions;
+        d_actions.copy_from_host(h_actions.data(), m_num_envs);
 
-    const int block = 256;
-    const int grid  = (m_num_envs + block - 1) / block;
+        const int block = 256;
+        const int grid  = (m_num_envs + block - 1) / block;
 
-    step_environments_kernel<<<grid, block>>>(d_observations,
-        d_rewards, d_dones, d_actions, m_num_envs);
-    CUDA_CHECK(cudaDeviceSynchronize());
+        step_environments_kernel<<<grid, block>>>(d_observations.get(),
+            d_rewards.get(), d_dones.get(), d_actions.get(), m_num_envs);
+        CUDA_CHECK_THROW(cudaDeviceSynchronize());
 
-    const size_t obs_size    = m_num_envs * kObsLen * sizeof(float);
-    const size_t scalar_size = m_num_envs * sizeof(float);
-
-    CUDA_CHECK(cudaMemcpy(h_observations.data(), d_observations,
-                          obs_size, cudaMemcpyDeviceToHost));
-    CUDA_CHECK(cudaMemcpy(h_rewards.data(),      d_rewards,
-                          scalar_size, cudaMemcpyDeviceToHost));
-    CUDA_CHECK(cudaMemcpy(h_dones.data(),        d_dones,
-                          int_size, cudaMemcpyDeviceToHost));
+        d_observations.copy_to_host(h_observations.data(), m_num_envs * kObsLen);
+        d_rewards.copy_to_host(h_rewards.data(), m_num_envs);
+        d_dones.copy_to_host(h_dones.data(), m_num_envs);
+    } catch (const cuda_error& e) {
+        fprintf(stderr, "Failed in step_environments: %s\n", e.what());
+        throw;
+    }
 }
 
 void CudaArena::hello_cuda()

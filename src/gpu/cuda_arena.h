@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "cuda_memory.h"
 
 class CudaArena {
 public:
@@ -32,11 +33,11 @@ public:
 private:
     int m_num_envs;
     
-    // Device memory pointers
-    float* d_observations = nullptr;
-    float* d_rewards = nullptr;
-    int* d_dones = nullptr;
-    int* d_actions = nullptr;
+    // Device memory with RAII
+    device_ptr<float> d_observations;
+    device_ptr<float> d_rewards;
+    device_ptr<int> d_dones;
+    device_ptr<int> d_actions;
     
     // Host memory
     std::vector<float> h_observations;

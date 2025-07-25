@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(cmake:*)",
+      "Bash(where nvcc)",
+      "Bash(if exist build rmdir /s /q build)",
+      "Bash(nvcc:*)",
+      "Bash(where cl)",
+      "Bash(dir:*)"
+    ],
+    "deny": []
+  }
+}
