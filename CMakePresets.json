@@ -7,6 +7,15 @@
       "generator": "Visual Studio 17 2022",
       "architecture": "x64",
       "binaryDir": "${sourceDir}/build"
+    },
+    {
+      "name": "ci",
+      "inherits": "windows",
+      "displayName": "CI: core, tests and benchmark, without the Godot extension",
+      "binaryDir": "${sourceDir}/build/ci",
+      "cacheVariables": {
+        "CUDARL_BUILD_GODOT": "OFF"
+      }
     }
   ],
   "buildPresets": [
@@ -15,12 +24,23 @@
       "displayName": "Release",
       "configurePreset": "windows",
       "configuration": "Release"
+    },
+    {
+      "name": "ci",
+      "configurePreset": "ci",
+      "configuration": "Release"
     }
   ],
   "testPresets": [
     {
       "name": "release",
       "configurePreset": "windows",
+      "configuration": "Release",
+      "output": { "outputOnFailure": true, "verbosity": "verbose" }
+    },
+    {
+      "name": "ci",
+      "configurePreset": "ci",
       "configuration": "Release",
       "output": { "outputOnFailure": true, "verbosity": "verbose" }
     }
