@@ -5,6 +5,7 @@
 #include <cmath>
 #include <vector>
 
+#include "adam_config.h"
 #include "mlp_spec.h"
 
 // Plain-loop CPU reference for the MLP and Adam. It is written for obvious
@@ -102,16 +103,6 @@ private:
     int                         batch_ = 0;
 };
 
-struct AdamConfig {
-    float lr            = 3e-4f;
-    float beta1         = 0.9f;
-    float beta2         = 0.999f;
-    float eps           = 1e-8f;
-    float max_grad_norm = 0.f;   // <= 0 disables clipping
-};
-
-// Gradients are first scaled by min(1, max_grad_norm / (||g|| + 1e-6)), then
-// p -= lr * m_hat / (sqrt(v_hat) + eps) with bias-corrected moments.
 template <typename T>
 class CpuAdam {
 public:

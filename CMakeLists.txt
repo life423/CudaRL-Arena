@@ -36,6 +36,8 @@ add_library(cudarl_core STATIC
     src/envs/maze/maze_env.cpp
     src/nn/gemm.cu
     src/nn/mlp_gpu.cu
+    src/nn/adam.cu
+    src/nn/loss.cu
 )
 target_include_directories(cudarl_core PUBLIC src)
 target_link_libraries(cudarl_core PUBLIC CUDA::cudart_static)
@@ -63,6 +65,7 @@ add_executable(cudarl_tests
     tests/test_mlp_cpu.cpp
     tests/test_gemm.cpp
     tests/test_mlp_gpu.cpp
+    tests/test_adam.cpp
 )
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
