@@ -26,13 +26,17 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 |---|---|
 | Godot 4.4 loads the CUDA-linked GDExtension DLL | ✅ Working (Windows, RTX 5070, CUDA 13.2) |
 | GPU probe: device query plus a test kernel launch, so a missing driver or wrong architecture is reported instead of crashing | ✅ Working |
+| **Live training view in Godot:** watch a network trained on the GPU fit a curve in real time, with live loss and timing | ✅ Working (main scene) |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
-| Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working, 28 tests |
+| Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working, 34 tests |
 | Verification: fp64 finite-difference gradient checks, GPU vs. CPU reference, bit-identical determinism, end-to-end learning | ✅ Working |
 | Benchmark: roofline and cuBLAS comparison | ✅ Working (`nn_bench`) |
 | Tensor-core (bf16) GEMM | ⏳ Next |
-| PPO trained entirely on the GPU (CartPole first, then racing) | ⏳ Planned |
-| Live training view in Godot (steps/sec, learning curve) | ⏳ Planned |
+| PPO trained entirely on the GPU (CartPole first, then racing), watched live in Godot | ⏳ Planned |
+
+![Live training view: a 1→32→32→1 network learning sin(3x)(0.5 + 0.15x) on the GPU, 0.3 ms per step](docs/images/live-fit.png)
+
+*The live view: Godot calls the CUDA trainer every frame and draws the network's prediction (blue) over the target (gray), with the loss history below. Target function, activation, width, depth, learning rate, and training speed can all be changed while it runs.*
 
 The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA driver, with no CUDA DLLs shipped alongside it.
 
@@ -131,17 +135,17 @@ build/Release/nn_bench.exe
 
 **Without Godot:** configure with `-DCUDARL_BUILD_GODOT=OFF` (or use the `ci` preset) to build only the core library, tests, and benchmark. godot-cpp isn't needed then.
 
-### Continuous integration
-
-Every push and pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on a GitHub-hosted Windows runner. It installs the CUDA 13.2 compiler and runtime from NVIDIA's network installer, builds the core, tests, and benchmark with **warnings as errors**, and runs the test suite. Hosted runners have no GPU, so CI proves the build and the CPU reference, while the GPU tests (`SKIP` there) run locally on the RTX 5070. A self-hosted GPU runner is planned.
-
-**Run the demo:**
+**Run the live training view** (close Godot before rebuilding; a running game locks the DLL):
 
 ```bash
 godot --path godot-project
 ```
 
-The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`, then `Episode over: …` as rounds finish. Press Space to reset.
+The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The older maze demo is still there: `godot --path godot-project res://maze/maze.tscn`.
+
+### Continuous integration
+
+Every push and pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on a GitHub-hosted Windows runner. It installs the CUDA 13.2 compiler and runtime from NVIDIA's network installer, builds the core, tests, and benchmark with **warnings as errors**, and runs the test suite. Hosted runners have no GPU, so CI proves the build and the CPU reference, while the GPU tests (`SKIP` there) run locally on the RTX 5070. A self-hosted GPU runner is planned.
 
 ---
 
@@ -152,6 +156,12 @@ var device := CudaDevice.new()      # probes the GPU once
 device.is_available()               # bool
 device.describe()                   # one-line summary, or the reason CUDA is unavailable
 device.get_info()                   # { available, name, compute_capability, multiprocessors, memory_bytes, error }
+
+var trainer := NetworkTrainer.new()
+trainer.configure(target, width, depth, activation, learning_rate)   # false + get_error() without CUDA
+var s = trainer.train(steps)        # { step, loss, ms_per_step }, runs `steps` Adam steps on the GPU
+var ys = trainer.predict(xs)        # PackedFloat32Array in, PackedFloat32Array out
+trainer.get_target_names()          # the target functions configure() accepts, by index
 
 var maze := MazeArena.new()
 maze.set_walls(cells)               # PackedVector2Array of wall cells on the 10×10 board
@@ -172,11 +182,13 @@ CMakePresets.json     `windows`/`release` for local builds, `ci` for builds with
 src/core/             host/device shared code: counter-based RNG
 src/cuda/             CUDA runtime helpers: RAII device memory, errors, device probe
 src/nn/               MLP: GEMM kernels, GPU forward/backward, Adam, losses, CPU reference
+src/demos/            live-training demos driven from Godot (FunctionFit)
 src/envs/maze/        maze rules (plain C++)
 src/godot/            GDExtension classes and registration
 tests/                hand-written test harness and test suites (run via ctest)
 tools/nn_bench.cpp    roofline and cuBLAS benchmark
-godot-project/        Godot project: addons/cudarl/ (extension), maze/ (demo scene)
+godot-project/        Godot project: addons/cudarl/ (extension), fit/ (live training view), maze/
+docs/images/          screenshots
 external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ```
 

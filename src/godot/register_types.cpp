@@ -5,6 +5,7 @@
 
 #include "cuda_device.h"
 #include "maze_arena.h"
+#include "network_trainer.h"
 
 using namespace godot;
 
@@ -14,6 +15,7 @@ void initialize_cudarl_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
     ClassDB::register_class<CudaDevice>();
     ClassDB::register_class<MazeArena>();
+    ClassDB::register_class<NetworkTrainer>();
 }
 
 void uninitialize_cudarl_module(ModuleInitializationLevel) {}

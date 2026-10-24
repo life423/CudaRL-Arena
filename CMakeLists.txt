@@ -53,6 +53,7 @@ add_library(cudarl_core STATIC
     src/nn/mlp_gpu.cu
     src/nn/adam.cu
     src/nn/loss.cu
+    src/demos/function_fit.cpp
 )
 target_include_directories(cudarl_core PUBLIC src)
 target_link_libraries(cudarl_core PUBLIC CUDA::cudart_static)
@@ -78,6 +79,7 @@ if(CUDARL_BUILD_GODOT)
         src/godot/register_types.cpp
         src/godot/cuda_device.cpp
         src/godot/maze_arena.cpp
+        src/godot/network_trainer.cpp
     )
     target_link_libraries(cudarl PRIVATE cudarl_core godot-cpp)
     target_compile_definitions(cudarl PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED)
@@ -101,6 +103,7 @@ add_executable(cudarl_tests
     tests/test_gemm.cpp
     tests/test_mlp_gpu.cpp
     tests/test_adam.cpp
+    tests/test_function_fit.cpp
 )
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
