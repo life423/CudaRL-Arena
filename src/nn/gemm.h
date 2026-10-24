@@ -34,6 +34,20 @@ void gemm(GemmKernel kernel, Trans ta, Trans tb, int m, int n, int k,
           const float* A, int lda, const float* B, int ldb, float* C, int ldc,
           Epilogue epilogue = Epilogue::store(), cudaStream_t stream = nullptr);
 
+// Deterministic split-K for long, thin reductions (e.g. weight gradients summed
+// over a large batch, where m x n is a handful of tiles): K is cut into `splits`
+// slices computed in parallel into `workspace` [splits x m x n], which are then
+// summed in a fixed order into C with the epilogue. No atomics, so results are
+// bit-identical run to run. Tiled kernel only.
+constexpr int kMaxSplitK = 64;
+void gemm_split_k(Trans ta, Trans tb, int m, int n, int k,
+                  const float* A, int lda, const float* B, int ldb, float* C, int ldc,
+                  int splits, float* workspace, Epilogue epilogue = Epilogue::store(),
+                  cudaStream_t stream = nullptr);
+
+// A split count that gives roughly two blocks per SM without making slices too short.
+int split_k_count(int m, int n, int k, int num_sms);
+
 } // namespace cudarl::nn
 
 #endif // CUDARL_NN_GEMM_H

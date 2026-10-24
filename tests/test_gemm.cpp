@@ -102,6 +102,46 @@ TEST_CASE("gemm: naive, all transposes and epilogues") {
     check_all_transposes(GemmKernel::Naive, Epilogue::Kind::BiasActivation, Activation::Tanh);
 }
 
+TEST_CASE("gemm: split-K matches reference for any split count") {
+    // The dW shape: [64 x 48] = dZ^T [64 x 5000] * X [5000 x 48].
+    const Shape s{64, 48, 5000};
+    const auto A  = random_floats(static_cast<size_t>(s.k) * s.m, 7);   // stored [k x m] (ta = T)
+    const auto B  = random_floats(static_cast<size_t>(s.k) * s.n, 8);   // stored [k x n]
+    const auto C0 = random_floats(static_cast<size_t>(s.m) * s.n, 9);
+    auto dA = to_device(A), dB = to_device(B);
+    device_ptr<float> ws(static_cast<size_t>(kMaxSplitK) * s.m * s.n);
+
+    const auto want = reference(Trans::T, Trans::N, s, A, B, C0, Epilogue::accumulate(), {});
+    for (int splits : {1, 2, 3, 7, 16, 64}) {
+        auto dC = to_device(C0);
+        gemm_split_k(Trans::T, Trans::N, s.m, s.n, s.k, dA.get(), s.m, dB.get(), s.n, dC.get(), s.n,
+                     splits, ws.get(), Epilogue::accumulate());
+        CHECK_CLOSE(to_host(dC, C0.size()), want, 1e-5);
+    }
+}
+
+TEST_CASE("gemm: split-K is bit-identical run to run") {
+    const Shape s{64, 64, 20000};
+    auto dA = to_device(random_floats(static_cast<size_t>(s.k) * s.m, 17));
+    auto dB = to_device(random_floats(static_cast<size_t>(s.k) * s.n, 18));
+    device_ptr<float> ws(static_cast<size_t>(kMaxSplitK) * s.m * s.n);
+    std::vector<float> first;
+    for (int run = 0; run < 3; ++run) {
+        device_ptr<float> dC(static_cast<size_t>(s.m) * s.n);
+        gemm_split_k(Trans::T, Trans::N, s.m, s.n, s.k, dA.get(), s.m, dB.get(), s.n, dC.get(), s.n,
+                     32, ws.get());
+        const auto got = to_host(dC, static_cast<size_t>(s.m) * s.n);
+        if (run == 0) first = got;
+        else CHECK(got == first);
+    }
+}
+
+TEST_CASE("gemm: split_k_count heuristics") {
+    CHECK(split_k_count(64, 64, 65536, 48) == 64);        // one tile: split to the cap
+    CHECK(split_k_count(64, 64, 100, 48) == 1);           // too short to split
+    CHECK(split_k_count(4096, 4096, 4096, 48) == 1);      // plenty of tiles already
+}
+
 TEST_CASE("gemm: k = 0 gives zero product") {
     auto dC = to_device(std::vector<float>(6, 5.f));
     gemm(GemmKernel::Tiled, Trans::N, Trans::N, 2, 3, 0, nullptr, 1, nullptr, 3, dC.get(), 3);
