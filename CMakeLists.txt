@@ -34,6 +34,10 @@ set_target_properties(godot-cpp PROPERTIES
 add_library(cudarl_core STATIC
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
+    src/nn/gemm.cu
+    src/nn/mlp_gpu.cu
+    src/nn/adam.cu
+    src/nn/loss.cu
 )
 target_include_directories(cudarl_core PUBLIC src)
 target_link_libraries(cudarl_core PUBLIC CUDA::cudart_static)
@@ -53,3 +57,20 @@ set_target_properties(cudarl PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY         "${CUDARL_ADDON_BIN}"
     RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CUDARL_ADDON_BIN}"
 )
+
+# --- Tests (run with: ctest --preset release) ---------------------------------
+enable_testing()
+add_executable(cudarl_tests
+    tests/test_main.cpp
+    tests/test_mlp_cpu.cpp
+    tests/test_gemm.cpp
+    tests/test_mlp_gpu.cpp
+    tests/test_adam.cpp
+)
+target_include_directories(cudarl_tests PRIVATE tests)
+target_link_libraries(cudarl_tests PRIVATE cudarl_core)
+add_test(NAME cudarl_tests COMMAND cudarl_tests)
+
+# --- Benchmark (the only target that links cuBLAS, as a reference) ---------------
+add_executable(nn_bench tools/nn_bench.cpp)
+target_link_libraries(nn_bench PRIVATE cudarl_core CUDA::cublas)

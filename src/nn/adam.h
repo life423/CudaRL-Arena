@@ -1,0 +1,37 @@
+#ifndef CUDARL_NN_ADAM_H
+#define CUDARL_NN_ADAM_H
+
+#include <cuda_runtime.h>
+
+#include "adam_config.h"
+#include "cuda/cuda_memory.h"
+
+namespace cudarl::nn {
+
+// Adam on the GPU. The global gradient norm is computed on the device and read
+// by the update kernel directly, so a step never waits on the host. The norm
+// reduction uses a fixed grid, making results bit-identical across runs.
+class GpuAdam {
+public:
+    GpuAdam(int num_params, AdamConfig cfg);
+
+    void step(float* d_params, const float* d_grads, cudaStream_t stream = nullptr);
+
+    int steps() const { return t_; }
+    const AdamConfig& config() const { return cfg_; }
+    // Norm of the gradients seen by the last step (before clipping). Synchronizes;
+    // only computed when clipping is enabled.
+    float last_grad_norm() const;
+
+private:
+    AdamConfig        cfg_;
+    int               n_;
+    int               t_ = 0;
+    device_ptr<float> m_, v_;
+    device_ptr<float> norm_partial_;
+    device_ptr<float> norm_;
+};
+
+} // namespace cudarl::nn
+
+#endif // CUDARL_NN_ADAM_H

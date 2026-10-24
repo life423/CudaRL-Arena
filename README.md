@@ -4,7 +4,7 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Status: early prototype.** The Godot ↔ CUDA bridge works on real hardware. Learning and benchmarking are the next milestones. Everything below is marked as either **working** or **planned**, and any performance number in this README will come from a measurement you can reproduce from this repo.
+> **Status: neural network core done; PPO next.** Hand-written CUDA MLP kernels, backprop, and Adam are verified against finite differences and a CPU reference, and benchmarked against the hardware roofline and cuBLAS. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
 
 ---
 
@@ -14,9 +14,7 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 
 - **Environments are CUDA kernels.** Each GPU thread steps one environment.
 - **The game engine is the frontend.** Godot calls the kernels in-process through GDExtension and renders the results.
-- **Everything is from scratch.** There's no cuBLAS, cuDNN, PyTorch, NumPy, or Gymnasium. Neural networks, backpropagation, and RL algorithms are our own C++/CUDA.
-
-Performance gets measured against a **CPU C++ reference implementation of the same environment**, also in this repo, so the comparison is apples to apples.
+- **Everything is from scratch.** There's no cuBLAS, cuDNN, PyTorch, NumPy, or Gymnasium in the library. Neural networks, backpropagation, and RL algorithms are our own C++/CUDA. cuBLAS appears in exactly one place: the benchmark tool, as the yardstick our kernels are measured against.
 
 ---
 
@@ -27,12 +25,44 @@ Performance gets measured against a **CPU C++ reference implementation of the sa
 | Godot 4.4 loads the CUDA-linked GDExtension DLL | ✅ Working (Windows, RTX 5070, CUDA 13.2) |
 | GPU probe: device query plus a test kernel launch, so a missing driver or wrong architecture is reported instead of crashing | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
-| Hand-written neural network kernels, backprop, and Adam, verified by gradient checking | ⏳ Next |
+| Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working, 28 tests |
+| Verification: fp64 finite-difference gradient checks, GPU vs. CPU reference, bit-identical determinism, end-to-end learning | ✅ Working |
+| Benchmark: roofline and cuBLAS comparison | ✅ Working (`nn_bench`) |
+| Tensor-core (bf16) GEMM | ⏳ Next |
 | PPO trained entirely on the GPU (CartPole first, then racing) | ⏳ Planned |
-| Benchmark harness: GPU vs. CPU C++ reference | ⏳ Planned |
 | Live training view in Godot (steps/sec, learning curve) | ⏳ Planned |
 
 The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA driver, with no CUDA DLLs shipped alongside it.
+
+---
+
+## Results
+
+Measured on an RTX 5070 (48 SMs, driver 620.02, CUDA 13.2) with `nn_bench`. The fp32 peak is **33.0 TFLOP/s**, from SMs × fp32 lanes × clock. Memory bandwidth is **543 GB/s measured** (672 GB/s spec). cuBLAS runs in pedantic fp32 mode (no TF32 tensor cores), so both sides use the same arithmetic, and every result is checked against cuBLAS before it's timed.
+
+| GEMM | m × n × k | Ours (GFLOP/s) | % of roofline | cuBLAS | % of cuBLAS |
+|---|---|---|---|---|---|
+| Square | 4096 × 4096 × 4096 | 7,012 | 21% | 22,034 | 32% |
+| MLP forward, Y = XWᵀ | 65536 × 64 × 64 | 6,278 | 72% | 12,452 | 50% |
+| MLP backward, dX = dZ·W | 65536 × 64 × 64 | 5,841 | 67% | 11,379 | 51% |
+| MLP backward, dW = dZᵀX, split-K | 64 × 64 × 65536 | 3,138 | 36% | 13,866 | 23% |
+| … same, split-K off | 64 × 64 × 65536 | 52 | 1% | | |
+
+What these show:
+- **Split-K is a 60× win on the weight-gradient GEMM.** Without it, a 64×64 output is a single tile, so one thread block on one of 48 SMs loops over all 65,536 samples. Slicing the batch across SMs and summing the slices in a fixed order keeps results bit-identical.
+- **The MLP-shaped GEMMs reach 67–72% of the roofline.** At 16 FLOP/byte they're memory-bound, so bandwidth, not arithmetic, is the right yardstick.
+- **The large square GEMM is at 21% of fp32 peak and 32% of cuBLAS.** This is a straightforward 64×64-tile kernel without vectorized loads, double buffering, or tensor cores. Closing that gap is the next milestone.
+
+A full PPO-sized training step (8 → 64 → 64 → 2: forward, backward, Adam with clipping):
+
+| Batch | ms / step | Samples / s |
+|---|---|---|
+| 1,024 | 0.19 | 5.3 M |
+| 4,096 | 0.21 | 19.5 M |
+| 16,384 | 0.31 | 52.8 M |
+| 65,536 | 1.10 | 59.6 M |
+
+The flat 0.2 ms up to batch 4,096 is **kernel-launch overhead**: about two dozen small kernels per step. CUDA Graphs or kernel fusion would remove most of it. For scale, the plain-loop CPU reference, which is single-threaded and built for correctness rather than speed, takes 15.2 ms for one step at batch 4,096.
 
 ---
 
@@ -83,7 +113,19 @@ cmake --preset windows
 cmake --build --preset release
 ```
 
-This writes `godot-project/addons/cudarl/bin/cudarl.dll`. The CUDA architecture defaults to `120`; pass `-DCMAKE_CUDA_ARCHITECTURES=<yours>` to the configure step for other GPUs.
+This writes `godot-project/addons/cudarl/bin/cudarl.dll` and builds the tests and benchmark in `build/Release/`. The CUDA architecture defaults to `120`; pass `-DCMAKE_CUDA_ARCHITECTURES=<yours>` to the configure step for other GPUs. The benchmark also needs the toolkit's cuBLAS component.
+
+**Run the tests and the benchmark:**
+
+```bash
+ctest --preset release
+```
+
+```bash
+build/Release/nn_bench.exe
+```
+
+`cudarl_tests.exe <filter>` runs only the tests whose names contain `<filter>`, for example `gemm`.
 
 **Run the demo:**
 
@@ -117,10 +159,14 @@ maze.reset()
 
 ```
 CMakeLists.txt        one build for the core library and the Godot extension
-CMakePresets.json     `windows` configure preset, `release` build preset
+CMakePresets.json     `windows` configure, `release` build and test presets
+src/core/             host/device shared code: counter-based RNG
 src/cuda/             CUDA runtime helpers: RAII device memory, errors, device probe
+src/nn/               MLP: GEMM kernels, GPU forward/backward, Adam, losses, CPU reference
 src/envs/maze/        maze rules (plain C++)
 src/godot/            GDExtension classes and registration
+tests/                hand-written test harness and test suites (run via ctest)
+tools/nn_bench.cpp    roofline and cuBLAS benchmark
 godot-project/        Godot project: addons/cudarl/ (extension), maze/ (demo scene)
 external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ```
@@ -130,19 +176,21 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ## Known limitations
 
 - **Windows only for now.** The build links a Windows godot-cpp library directly, and the `.gdextension` file only lists `windows.x86_64`.
-- **No learning yet.** The maze agents act randomly. The maze is a placeholder demo for the engine bridge and gets replaced by the PPO environments.
+- **No RL yet.** The neural network core trains (see the sin(x) fit test), but PPO isn't built. The maze agents act randomly; the maze is a placeholder demo for the engine bridge and gets replaced by the PPO environments.
+- **The GEMM is fp32 SIMT only**, at 21–51% of cuBLAS depending on shape. Tensor cores, vectorized loads, and double buffering are the next milestone.
+- **Small batches are launch-bound.** A training step is about two dozen kernel launches; CUDA Graphs or fusion would cut the 0.2 ms floor.
 - **Building godot-cpp isn't scripted.** The prebuilt library isn't checked in, and building it runs Godot's own Python binding generator. That's a one-time upstream build tool, not part of this project's code or runtime.
-- **No automated tests yet.** They arrive with the neural network work, starting with gradient checks.
 
 ---
 
 ## Roadmap
 
-1. **Neural network core.** Hand-written CUDA kernels for MLP forward and backward passes and Adam. Verified against finite differences and a CPU reference.
-2. **PPO on CartPole.** GPU-resident rollouts, advantage estimation (GAE), and updates. CartPole has well-known solutions, so a bug can't hide behind the environment.
-3. **PPO on a racing track.** Raycast sensors and continuous control. The first demo worth recording, with lap progress as a clear learning curve.
-4. **Swarm with spatial hashing.** Thousands of agents in one world, using neighbour search with a hand-written GPU radix sort, trained with the same PPO.
-5. **Benchmarks and live view.** Steps/sec vs. the CPU reference, an Nsight Systems profile, and Godot rendering a few environments while the rest train.
+1. ~~**Neural network core.**~~ ✅ MLP forward and backward kernels and Adam, verified against finite differences and a CPU reference, benchmarked against the roofline and cuBLAS.
+2. **Tensor-core GEMM.** bf16 inputs with fp32 accumulation via `mma` intrinsics, measured as a percentage of cuBLAS.
+3. **PPO on CartPole.** GPU-resident rollouts, advantage estimation (GAE), and updates. CartPole has well-known solutions, so a bug can't hide behind the environment.
+4. **PPO on a racing track.** Raycast sensors and continuous control. The first demo worth recording, with lap progress as a clear learning curve.
+5. **Fused attention kernel**, then an attention-based policy.
+6. **Linux build and CI**, then a swarm with spatial hashing if there's time.
 
 ---
 
