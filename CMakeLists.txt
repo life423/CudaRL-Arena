@@ -50,6 +50,7 @@ add_library(cudarl_core STATIC
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
     src/nn/gemm.cu
+    src/nn/gemm_bf16.cu
     src/nn/mlp_gpu.cu
     src/nn/adam.cu
     src/nn/loss.cu
@@ -101,6 +102,7 @@ add_executable(cudarl_tests
     tests/test_main.cpp
     tests/test_mlp_cpu.cpp
     tests/test_gemm.cpp
+    tests/test_gemm_bf16.cpp
     tests/test_mlp_gpu.cpp
     tests/test_adam.cpp
     tests/test_function_fit.cpp
