@@ -70,3 +70,7 @@ add_executable(cudarl_tests
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
 add_test(NAME cudarl_tests COMMAND cudarl_tests)
+
+# --- Benchmark (the only target that links cuBLAS, as a reference) ---------------
+add_executable(nn_bench tools/nn_bench.cpp)
+target_link_libraries(nn_bench PRIVATE cudarl_core CUDA::cublas)
