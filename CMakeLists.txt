@@ -34,6 +34,7 @@ set_target_properties(godot-cpp PROPERTIES
 add_library(cudarl_core STATIC
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
+    src/nn/gemm.cu
 )
 target_include_directories(cudarl_core PUBLIC src)
 target_link_libraries(cudarl_core PUBLIC CUDA::cudart_static)
@@ -59,6 +60,7 @@ enable_testing()
 add_executable(cudarl_tests
     tests/test_main.cpp
     tests/test_mlp_cpu.cpp
+    tests/test_gemm.cpp
 )
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
