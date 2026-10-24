@@ -86,6 +86,45 @@ inline std::vector<float> init_params(const MlpSpec& spec, uint32_t seed) {
     return p;
 }
 
+// Orthogonal initialization (Saxe et al. 2014), the usual choice for PPO: each
+// weight matrix is a random orthonormal matrix scaled by gains[l] (orthonormal
+// columns when out >= in, orthonormal rows otherwise); biases zero. Uses
+// modified Gram-Schmidt with a second pass for numerical safety.
+inline std::vector<float> orthogonal_params(const MlpSpec& spec, uint32_t seed, const std::vector<float>& gains) {
+    if (static_cast<int>(gains.size()) != spec.num_layers()) {
+        throw std::invalid_argument("orthogonal_params: one gain per layer");
+    }
+    std::vector<float> p(static_cast<size_t>(spec.num_params()), 0.f);
+    for (int l = 0; l < spec.num_layers(); ++l) {
+        const int rows = spec.out(l), cols = spec.in(l);
+        const bool by_columns = rows >= cols;
+        const int count = by_columns ? cols : rows;   // vectors to orthonormalize
+        const int dim   = by_columns ? rows : cols;   // their length
+        std::vector<std::vector<double>> q(count, std::vector<double>(dim));
+        for (int v = 0; v < count; ++v)
+            for (int d = 0; d < dim; ++d) q[v][d] = rng::normal(seed, 1000u + l, static_cast<uint32_t>(v * dim + d));
+        for (int v = 0; v < count; ++v) {
+            for (int pass = 0; pass < 2; ++pass) {
+                for (int u = 0; u < v; ++u) {
+                    double dot = 0.0;
+                    for (int d = 0; d < dim; ++d) dot += q[u][d] * q[v][d];
+                    for (int d = 0; d < dim; ++d) q[v][d] -= dot * q[u][d];
+                }
+            }
+            double norm = 0.0;
+            for (int d = 0; d < dim; ++d) norm += q[v][d] * q[v][d];
+            norm = std::sqrt(norm);
+            for (int d = 0; d < dim; ++d) q[v][d] /= norm;
+        }
+        float* W = &p[spec.weight_offset(l)];
+        for (int r = 0; r < rows; ++r)
+            for (int c = 0; c < cols; ++c) {
+                W[r * cols + c] = gains[l] * static_cast<float>(by_columns ? q[c][r] : q[r][c]);
+            }
+    }
+    return p;
+}
+
 } // namespace cudarl::nn
 
 #endif // CUDARL_NN_MLP_SPEC_H

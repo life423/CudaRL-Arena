@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include <string>
 #include <vector>
 
 #include <cublas_v2.h>
@@ -24,6 +25,7 @@
 #include "nn/loss.h"
 #include "nn/mlp_cpu.h"
 #include "nn/mlp_gpu.h"
+#include "rl/ppo.h"
 
 using namespace cudarl::nn;
 
@@ -291,6 +293,70 @@ void tuning_section(cublasHandle_t handle) {
     std::printf("\n");
 }
 
+// --- Reinforcement learning ---------------------------------------------------
+
+// Trains PPO on CartPole until the mean episode length stays >= 475 (the
+// CartPole-v1 "solved" bar) for 3 consecutive updates, printing the curve.
+void ppo_curve(const cudarl::rl::PpoConfig& cfg, int max_updates, bool print_every) {
+    cudarl::rl::PpoTrainer trainer(cfg);
+    const auto start = std::chrono::steady_clock::now();
+    int streak = 0;
+    for (int u = 0; u < max_updates; ++u) {
+        const auto s = trainer.update();
+        streak = s.mean_episode_length >= 475.f ? streak + 1 : 0;
+        if (print_every && (u % 5 == 0 || streak == 3)) {
+            std::printf("| %4d | %8lld | %6.1f | %5.3f | %6.4f | %5.3f | %6.2f | %5.2f M |\n", s.update, s.env_steps,
+                        s.mean_episode_length, s.entropy, s.approx_kl, s.clip_fraction, s.update_ms,
+                        s.env_steps_per_second * 1e-6);
+        }
+        if (streak == 3) {
+            const double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+            // Keep training to check it stays solved (a too-high learning rate can collapse later).
+            float worst_after = 500.f;
+            for (int extra = 0; extra < 40; ++extra) worst_after = std::min(worst_after, trainer.update().mean_episode_length);
+            std::printf("\nseed %u: **solved** after %d updates, %lld env steps, %.2f s; worst mean length over the next 40 updates: %.1f\n",
+                        cfg.seed, s.update, s.env_steps, sec, worst_after);
+            return;
+        }
+    }
+    std::printf("\nseed %u: not solved within %d updates\n", cfg.seed, max_updates);
+}
+
+// key=value arguments override PpoConfig fields, e.g. `nn_bench rl lr=1e-3 minibatches=8`.
+cudarl::rl::PpoConfig ppo_config_from_args(int argc, char** argv) {
+    cudarl::rl::PpoConfig cfg;
+    for (int i = 1; i < argc; ++i) {
+        const char* eq = std::strchr(argv[i], '=');
+        if (!eq) continue;
+        const std::string key(argv[i], static_cast<size_t>(eq - argv[i])), value(eq + 1);
+        if (key == "lr") cfg.lr = std::stof(value);
+        else if (key == "envs") cfg.num_envs = std::stoi(value);
+        else if (key == "steps") cfg.rollout_steps = std::stoi(value);
+        else if (key == "epochs") cfg.epochs = std::stoi(value);
+        else if (key == "minibatches") cfg.minibatches = std::stoi(value);
+        else if (key == "updates") cfg.total_updates = std::stoi(value);
+        else if (key == "ent") cfg.ent_coef = std::stof(value);
+        else if (key == "anneal") cfg.anneal_lr = value != "0";
+        else std::printf("unknown option %s\n", key.c_str());
+    }
+    return cfg;
+}
+
+void rl_section(cudarl::rl::PpoConfig cfg) {
+    std::printf("### PPO on CartPole (GPU-resident)\n\n");
+    std::printf("%d envs x %d steps per update, %d epochs x %d minibatches, lr %.1e%s over %d updates\n\n",
+                cfg.num_envs, cfg.rollout_steps, cfg.epochs, cfg.minibatches, cfg.lr,
+                cfg.anneal_lr ? " (annealed)" : "", cfg.total_updates);
+    std::printf("| Update | Env steps | Mean length | Entropy | Approx KL | Clip frac | ms/update | Steps/s |\n");
+    std::printf("|---|---|---|---|---|---|---|---|\n");
+    ppo_curve(cfg, cfg.total_updates, true);
+    for (uint32_t seed : {2u, 3u, 4u, 5u}) {
+        cfg.seed = seed;
+        ppo_curve(cfg, cfg.total_updates, false);
+    }
+    std::printf("\n");
+}
+
 bool wants(int argc, char** argv, const char* section) {
     if (argc < 2) return true;
     for (int i = 1; i < argc; ++i)
@@ -339,8 +405,8 @@ void training_section(const Hardware& hw) {
 
 } // namespace
 
-// Usage: nn_bench [tc] [fp32] [train] [tune] [profile]
-// No arguments runs tc, fp32 and train; `tune` and `profile` only run when named.
+// Usage: nn_bench [tc] [fp32] [train] [rl] [tune] [profile]
+// No arguments runs tc, fp32, train and rl; `tune` and `profile` only run when named.
 int main(int argc, char** argv) {
     const Hardware hw = query_hardware();
     std::printf("## %s\n\n", hw.name.c_str());
@@ -369,6 +435,7 @@ int main(int argc, char** argv) {
     }
     if (wants(argc, argv, "fp32")) fp32_section(hw, handle);
     if (wants(argc, argv, "train")) training_section(hw);
+    if (wants(argc, argv, "rl")) rl_section(ppo_config_from_args(argc, argv));
     cublasDestroy(handle);
     return 0;
 }
