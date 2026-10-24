@@ -1,123 +1,154 @@
-# CudaRL‑Arena
+# CudaRL-Arena
 
-**Ultra‑High‑Throughput Reinforcement‑Learning Arena — CUDA Kernels Directly in Godot 4**
+Reinforcement learning environments written as hand-written CUDA kernels and driven directly from the Godot game engine, with no Python anywhere in the loop.
 
-[![CUDA 12.x](https://img.shields.io/badge/CUDA-12.x-green.svg)](https://developer.nvidia.com/cuda-zone)
-[![Godot 4.4+](https://img.shields.io/badge/Godot-4.4+-blue.svg)](https://godotengine.org/)
-[![C++17](https://img.shields.io/badge/C++-17-orange.svg)](https://isocpp.org/)
-[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Zero‑copy CUDA ↔ Godot integration.**  
-> Train & visualise **10 k+** RL environments **in‑engine** at < 1 ms latency.
+> **Status: early prototype.** The Godot ↔ CUDA bridge works on real hardware. Training and benchmarking aren't built yet. Everything below is marked as either **working** or **planned**, and any performance number in this README will come from a measurement you can reproduce from this repo.
 
 ---
 
-## 📌 Why CudaRL‑Arena?
+## Why no Python?
 
-Conventional RL pipelines bounce data through Python, IPC, and deep‑learning frameworks before finally touching the GPU. That adds 10–200 ms of overhead **per step**.
+The usual RL stack goes Python → framework → bindings → GPU, with the environment often on the CPU in a separate process. This project tests how far you get by deleting all of that:
 
-CudaRL‑Arena eliminates the detour: **CUDA kernels are exposed to Godot via GDExtension**, enabling sub‑millisecond batched environment stepping **while the engine keeps a rock‑solid 60 FPS**. Perfect for:
+- **Environments are CUDA kernels.** Each GPU thread steps one environment.
+- **The game engine is the frontend.** Godot calls the kernels in-process through GDExtension and renders the results.
+- **Everything is from scratch.** There's no cuBLAS, cuDNN, PyTorch, NumPy, or Gymnasium. Learning algorithms are written as our own C++/CUDA.
 
-* Real‑time algorithm research  
-* Live hyper‑parameter tuning  
-* Game‑AI prototyping (agents learn *inside* the game)  
-* Robotics & sim‑to‑real workflows
-
----
-
-## 🏗️ Architecture at a Glance
-
-┌─────────────── Godot 4 Engine ────────────────┐
-│ • Main loop & rendering (> 60 FPS) │
-│ • UI & live dashboards │
-│ • GDExtension calls (zero‑copy) │
-└────────▲──────────────────────────────▲───────┘
-│ │
-│ RAII C++ bridge layer │
-│ (type‑safe, cross‑platform) │
-┌────────┴──────────┐ ┌──────────┴──────────┐
-│ GPU kernels │ │ Host‑side helpers │
-│ (CUDA 12+) │ │ (C++17) │
-│ • Batched envs │ │ • Metrics/Timing │
-│ • Warp‑level ops │ │ • Async transfers │
-└───────────────────┘ └─────────────────────┘
-
-yaml
-Copy
+Performance gets measured against a **CPU C++ reference implementation of the same environment**, also in this repo, so the comparison is apples to apples.
 
 ---
 
-## 🚀 Key Features
+## What works today
 
-| Feature | Details |
-|---------|---------|
-| **Massively Parallel RL** | 10 k+ environments stepped per kernel launch |
-| **< 1 ms Step Latency** | Direct device‑memory access from GDExtension |
-| **Real‑Time Visualisation** | View agent behaviour and metrics *while training* |
-| **Cross‑Platform Builds** | CMake presets for Windows / Linux / macOS |
-| **Fail‑Safe Fallback** | Graceful CPU path if no compatible GPU detected |
-| **Profiler Hooks** | Built‑in timings for kernels & host/device copies |
+| | Status |
+|---|---|
+| Godot 4.4 loads the CUDA-linked GDExtension DLL | ✅ Working (Windows, RTX 5070, CUDA 13.2) |
+| GPU kernel stepping 1,000 grid-world environments in parallel | ✅ Working (toy dynamics, fixed actions) |
+| 2-agent maze game rendered in Godot, walls drawn from the same data used for collision | ✅ Working (CPU logic, random policies) |
+| Runs without a GPU: CUDA features turn off instead of crashing the editor | ✅ Working |
+| Shared action encoding between kernel and engine (`src/gpu/actions.h`) | ✅ Working |
+| From-scratch learning (Q-learning / neural policy) on the GPU | ⏳ Planned |
+| GPU-resident training loop (no per-step host copies) | ⏳ Planned |
+| Benchmark harness: GPU vs. CPU C++ reference | ⏳ Planned |
+| Live stats overlay (steps/sec, win rate) in Godot | ⏳ Planned |
 
----
-
-## ⚙️ Prerequisites
-
-| Tool | Min Version | Notes |
-|------|-------------|-------|
-| **CUDA Toolkit** | 12.x | Tested on 12.4 |
-| **Godot Engine** | 4.4 | GDExtension interface |
-| **CMake** | 3.18 | Presets file supplied |
-| **C++ Compiler** | MSVC 2022 / GCC 9 / Clang 10 | Must support C++17 |
+The DLL links the CUDA runtime statically and imports only `KERNEL32.dll`. It runs on any machine with an NVIDIA driver, with no CUDA DLLs shipped alongside it.
 
 ---
 
-## 🏃‍♂️ Quick Start  
+## Architecture
+
+```
+┌──────────────────────────────────────────┐
+│ Godot 4.4 (GDScript)                     │  rendering, input, scene
+│   arena/Arena2d.gd                       │
+└───────────────┬──────────────────────────┘
+                │ GDExtension — in-process C++ calls
+┌───────────────▼──────────────────────────┐
+│ ArenaGDExtension (C++)                   │  Godot types ↔ plain C++,
+│   src/godot_bindings/                    │  catches all exceptions
+└───────────────┬──────────────────────────┘
+                │ direct calls, same DLL
+┌───────────────▼──────────────────────────┐
+│ CudaArena (C++/CUDA)                     │  kernels, RAII device memory,
+│   src/gpu/                               │  typed CUDA errors
+└──────────────────────────────────────────┘
+```
+
+Some design points:
+- **`device_ptr<T>`** (`src/gpu/cuda_memory.h`) is a move-only RAII owner for device allocations. CUDA failures throw a `cuda_error` that carries the expression, file, and line.
+- **Exceptions stop at the binding layer.** Nothing escapes into Godot, so a CUDA failure becomes a Godot warning or error instead of a crashed editor.
+- **One source of truth.** Action encoding lives in `actions.h` (used by `__host__ __device__` code on both sides), and maze walls are defined once in GDScript for both collision and rendering.
+
+---
+
+## Build (Windows)
+
+**Requirements** (tested versions in parentheses)
+- NVIDIA GPU + driver (RTX 5070, driver 620.02)
+- CUDA Toolkit **12.8+** for Blackwell `sm_120` (13.2). The toolkit can't be newer than what your driver supports; check the `CUDA Version` shown in `nvidia-smi`.
+- Visual Studio 2022 Build Tools with the C++ workload (MSVC 19.44)
+- CMake 3.18+ (3.31, bundled with VS Build Tools)
+- Godot 4.4 (4.4.1)
+
+**godot-cpp:** the build expects godot-cpp 4.4-stable in `external/godot-cpp`, with a prebuilt `bin/libgodot-cpp.windows.template_release.x86_64.lib`. See Known limitations.
+
+**Build the extension** from the repo root:
 
 ```bash
-git clone --recurse-submodules https://github.com/life423/CudaRL-Arena.git
-cd CudaRL-Arena
+cmake -S src/godot_bindings -B src/godot_bindings/build -G "Visual Studio 17 2022" -A x64
+```
 
-# Build the GDExtension (Release)
-cmake -S src/godot_bindings -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
-Open godot-project/ in Godot 4.
+```bash
+cmake --build src/godot_bindings/build --config Release
+```
 
-Run the included scene or script:
+This writes `godot-project/addons/cudarl_plugin/Release/cudarl_godot.dll`. The CUDA architecture is set to `120` in `src/godot_bindings/CMakeLists.txt`; change it to match your GPU.
 
-gdscript
-Copy
+**Run the demo:**
+
+```bash
+godot --path godot-project
+```
+
+The console should print `CUDA Ready: 1 device, using <your GPU>`, then `Episode over: …` as rounds finish. Press Space to reset.
+
+---
+
+## GDScript API (current)
+
+```gdscript
 var arena := ArenaGDExtension.new()
-print(arena.hello_cuda())        # Lists detected GPUs
-arena.run_training(1000)         # 1 k batched episodes at < 1 ms/step
-📊 Performance Snapshot (RTX 4090)
-Envs/Batch	Steps / sec	Mean Latency (ms)	GPU Util
-1 k	12 k	0.85	37 %
-4 k	31 k	1.3	76 %
-8 k	52 k	1.8	97 %
 
-(Full benchmark script in benchmarks/.)
+arena.has_cuda()                  # bool, false if no usable GPU/driver
+arena.hello_cuda()                # String, device info (runs a test kernel)
+arena.run_training(200)           # steps the 1,000-env GPU batch (needs CUDA)
 
-🔭 Roadmap
-Milestone	Status
-v0.2 — Multi‑GPU support (NVLink split batches)	🔄 In progress
-Python‑free TensorBoard export via protobuf	🔄
-Atari & MuJoCo environment adapters	📝 Spec
-v1.0 — Distributed arena (MPI / gRPC)	⬜
+arena.set_maze(cells)             # PackedVector2Array of wall cells (10×10)
+arena.get_goal()                  # Vector2i
+var r = arena.step_environment([human_action, ai_action])  # 0 Up, 1 Right, 2 Down, 3 Left
+# r[i] = { "state": Vector2, "reward": float, "done": bool }
+arena.reset()
+```
 
-🤝 Contributing
-Fork & clone.
+---
 
-Install pre‑commit; run pre‑commit install.
+## Project layout
 
-Follow CONTRIBUTING.md (coding standards & GPU style guide).
+```
+src/gpu/              CUDA kernels, CudaArena, RAII memory, shared action encoding
+src/godot_bindings/   GDExtension class + registration, CMake build
+godot-project/        Godot project; arena/ holds the demo scene and script
+external/godot-cpp/   godot-cpp 4.4-stable
+```
 
-Submit a PR — CI runs unit tests + CUDA sanity checks on GitHub Actions.
+---
 
-📄 License
-Released under the MIT License. See LICENSE for details.
+## Known limitations
 
-💬 Contact
-Drew Clark — GPU & real‑time systems engineer
-GitHub: @life423
-Portfolio: https://drewclark.io
-Email: drew@drewclark.io
+- **Windows only for now.** The CMake build links a Windows godot-cpp library directly, and the `.gdextension` file only lists `windows.x86_64`.
+- **The maze game logic runs on the CPU.** The GPU batch is a separate toy grid world. Moving the playable environment onto the GPU is the next milestone.
+- **No learning yet.** Both agents act randomly.
+- **The godot-cpp setup isn't reproducible from a clean clone.** `external/godot-cpp` is recorded as a submodule commit without a `.gitmodules` entry, and the prebuilt library isn't checked in. Building godot-cpp uses Godot's own Python binding generator. That's a one-time build tool from upstream, not part of this project's code or runtime.
+- **Synchronous host ↔ device copies** on every step of the GPU batch.
+
+---
+
+## Roadmap
+
+1. **GPU-resident environments.** Environment state, resets, and RNG all stay on the device. Only the environments being rendered get copied back, asynchronously.
+2. **From-scratch learning on the GPU.** Start with tabular Q-learning, then hand-written neural network kernels for richer environments.
+3. **Benchmark harness.** Steps/sec and per-step latency for GPU vs. the CPU C++ reference, from 1 to 100K+ environments, with an Nsight Systems profile.
+4. **Live demo.** Godot renders a few environments while the rest train, with on-screen steps/sec and learning curves.
+5. **Reproducible build.** Proper submodule, scripted godot-cpp build, CI.
+
+---
+
+## Contact
+
+Drew Clark, GPU and real-time systems engineer
+- GitHub: [@life423](https://github.com/life423)
+- Portfolio: https://drewclark.io
+- Email: drew@drewclark.io

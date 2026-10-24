@@ -13,55 +13,12 @@ color = Color(0.9, 0.9, 0.9, 1)
 
 [node name="Walls" type="Node2D" parent="."]
 
-[node name="Wall1" type="ColorRect" parent="Walls"]
-offset_right = 320.0
-offset_bottom = 32.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall2" type="ColorRect" parent="Walls"]
-offset_top = 288.0
-offset_right = 320.0
-offset_bottom = 320.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall3" type="ColorRect" parent="Walls"]
-offset_right = 32.0
-offset_bottom = 320.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall4" type="ColorRect" parent="Walls"]
-offset_left = 288.0
-offset_right = 320.0
-offset_bottom = 320.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall5" type="ColorRect" parent="Walls"]
-offset_left = 64.0
-offset_top = 64.0
-offset_right = 96.0
-offset_bottom = 192.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall6" type="ColorRect" parent="Walls"]
-offset_left = 128.0
-offset_top = 64.0
-offset_right = 160.0
-offset_bottom = 128.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall7" type="ColorRect" parent="Walls"]
-offset_left = 192.0
-offset_top = 128.0
-offset_right = 256.0
-offset_bottom = 160.0
-color = Color(0.3, 0.3, 0.3, 1)
-
-[node name="Wall8" type="ColorRect" parent="Walls"]
-offset_left = 128.0
-offset_top = 192.0
-offset_right = 192.0
-offset_bottom = 224.0
-color = Color(0.3, 0.3, 0.3, 1)
+[node name="GoalRect" type="ColorRect" parent="."]
+offset_left = 32.0
+offset_top = 256.0
+offset_right = 64.0
+offset_bottom = 288.0
+color = Color(0.95, 0.75, 0.1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(160, 160)

@@ -8,7 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(CUDAToolkit REQUIRED)
 
 # Set CUDA architectures (adjust for your GPU)
-set(CMAKE_CUDA_ARCHITECTURES 89)
+# RTX 5070 has compute capability 12.0
+set(CMAKE_CUDA_ARCHITECTURES "120")
 
 # Path to godot-cpp
 set(GODOT_CPP_PATH "${CMAKE_SOURCE_DIR}/../../external/godot-cpp")
