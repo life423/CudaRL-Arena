@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="CudaRL Arena"
-config/description="CUDA-accelerated Reinforcement Learning Visualization"
-run/main_scene="res://arena/MazeArena.tscn"
+config/description="Hand-written CUDA reinforcement learning, driven from Godot"
+run/main_scene="res://maze/maze.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -20,11 +20,3 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/cudarl_plugin/plugin.cfg")
-
-[physics]
-
-common/enable_pause_aware_picking=true

@@ -1,64 +1,38 @@
-# Build artifacts
-/build
+# Build output
 build/
-
-# Python environment
-.venv/
-__pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-
-# IDE directories
-.vscode/
-.idea/
-
-# OS-generated files
-.DS_Store
-Thumbs.db
-
-# Compiled binaries
-*.exe
-*.out
-*.dll
-*.so
 *.obj
+*.o
+*.a
 *.lib
 *.exp
 *.pdb
 *.ilk
+*.exe
+*.dll
+*.so
 *.dylib
 
-# CUDA intermediate files
-*.ptx
+# CUDA intermediates
 *.cubin
 *.fatbin
-*.cu.deps
-*.cu.cache
+*.ptx
+*.cudafe*
+tmpxft_*
 
-# Logs & Databases
-*.log
-*.sqlite
-*.db
+# Built extension (rebuild with CMake; see README)
+godot-project/addons/cudarl/bin/
 
-# Results & temporary outputs
-results/
-*.npy
-*.png
-*.gif
+# Godot editor cache. Keep *.uid and *.import files: Godot 4.4 expects them in version control.
+.godot/
 
-# Godot cache and generated files
-godot-project/.godot/
-**/*.uid
-**/.import/
+# Editors and local tools
+.vs/
+.vscode/
+.idea/
+.claude/settings.local.json
 
-# Build directories (additional)
-src/godot_bindings/build/
-**/build/
-
-# SCons files
-.sconsign.dblite
-*.pyc
-
-# Submodule detached HEAD (ignore)
-external/godot-cpp/.git/
+# OS
+.DS_Store
+Thumbs.db
+*~
+*.swp
