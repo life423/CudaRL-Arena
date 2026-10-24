@@ -1,5 +1,7 @@
 # CudaRL-Arena
 
+[![CI](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml/badge.svg)](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml)
+
 Reinforcement learning environments written as hand-written CUDA kernels and driven directly from the Godot game engine, with no Python anywhere in the loop.
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
@@ -98,7 +100,7 @@ Some design points:
 - NVIDIA GPU + driver (RTX 5070, driver 620.02)
 - CUDA Toolkit **12.8+** for Blackwell `sm_120` (13.2). The toolkit can't be newer than what your driver supports; check the `CUDA Version` shown in `nvidia-smi`.
 - Visual Studio 2022 Build Tools with the C++ workload (MSVC 19.44)
-- CMake 3.21+ (3.31, bundled with VS Build Tools)
+- CMake 3.24+ (3.31, bundled with VS Build Tools)
 - Godot 4.4 (4.4.1)
 
 **godot-cpp:** fetch it with `git submodule update --init`. The build also needs its prebuilt `bin/libgodot-cpp.windows.template_release.x86_64.lib`. See Known limitations.
@@ -125,7 +127,13 @@ ctest --preset release
 build/Release/nn_bench.exe
 ```
 
-`cudarl_tests.exe <filter>` runs only the tests whose names contain `<filter>`, for example `gemm`.
+`cudarl_tests.exe <filter>` runs only the tests whose names contain `<filter>`, for example `gemm`. On a machine without an NVIDIA GPU, the GPU tests report `SKIP` and the CPU tests still run; set `CUDARL_REQUIRE_GPU=1` to make a missing GPU a failure instead.
+
+**Without Godot:** configure with `-DCUDARL_BUILD_GODOT=OFF` (or use the `ci` preset) to build only the core library, tests, and benchmark. godot-cpp isn't needed then.
+
+### Continuous integration
+
+Every push and pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on a GitHub-hosted Windows runner. It installs the CUDA 13.2 compiler and runtime from NVIDIA's network installer, builds the core, tests, and benchmark with **warnings as errors**, and runs the test suite. Hosted runners have no GPU, so CI proves the build and the CPU reference, while the GPU tests (`SKIP` there) run locally on the RTX 5070. A self-hosted GPU runner is planned.
 
 **Run the demo:**
 
@@ -159,7 +167,8 @@ maze.reset()
 
 ```
 CMakeLists.txt        one build for the core library and the Godot extension
-CMakePresets.json     `windows` configure, `release` build and test presets
+CMakePresets.json     `windows`/`release` for local builds, `ci` for builds without Godot
+.github/workflows/    CI: build with warnings as errors, run tests
 src/core/             host/device shared code: counter-based RNG
 src/cuda/             CUDA runtime helpers: RAII device memory, errors, device probe
 src/nn/               MLP: GEMM kernels, GPU forward/backward, Adam, losses, CPU reference

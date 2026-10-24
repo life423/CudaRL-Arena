@@ -83,26 +83,26 @@ void check_all_transposes(GemmKernel kernel, Epilogue::Kind kind, Activation act
 
 } // namespace
 
-TEST_CASE("gemm: tiled, store, all transposes") {
+GPU_TEST_CASE("gemm: tiled, store, all transposes") {
     check_all_transposes(GemmKernel::Tiled, Epilogue::Kind::Store);
 }
 
-TEST_CASE("gemm: tiled, accumulate, all transposes") {
+GPU_TEST_CASE("gemm: tiled, accumulate, all transposes") {
     check_all_transposes(GemmKernel::Tiled, Epilogue::Kind::Accumulate);
 }
 
-TEST_CASE("gemm: tiled, fused bias + tanh / relu") {
+GPU_TEST_CASE("gemm: tiled, fused bias + tanh / relu") {
     check_all_transposes(GemmKernel::Tiled, Epilogue::Kind::BiasActivation, Activation::Tanh);
     check_all_transposes(GemmKernel::Tiled, Epilogue::Kind::BiasActivation, Activation::ReLU);
 }
 
-TEST_CASE("gemm: naive, all transposes and epilogues") {
+GPU_TEST_CASE("gemm: naive, all transposes and epilogues") {
     check_all_transposes(GemmKernel::Naive, Epilogue::Kind::Store);
     check_all_transposes(GemmKernel::Naive, Epilogue::Kind::Accumulate);
     check_all_transposes(GemmKernel::Naive, Epilogue::Kind::BiasActivation, Activation::Tanh);
 }
 
-TEST_CASE("gemm: split-K matches reference for any split count") {
+GPU_TEST_CASE("gemm: split-K matches reference for any split count") {
     // The dW shape: [64 x 48] = dZ^T [64 x 5000] * X [5000 x 48].
     const Shape s{64, 48, 5000};
     const auto A  = random_floats(static_cast<size_t>(s.k) * s.m, 7);   // stored [k x m] (ta = T)
@@ -120,7 +120,7 @@ TEST_CASE("gemm: split-K matches reference for any split count") {
     }
 }
 
-TEST_CASE("gemm: split-K is bit-identical run to run") {
+GPU_TEST_CASE("gemm: split-K is bit-identical run to run") {
     const Shape s{64, 64, 20000};
     auto dA = to_device(random_floats(static_cast<size_t>(s.k) * s.m, 17));
     auto dB = to_device(random_floats(static_cast<size_t>(s.k) * s.n, 18));
@@ -142,7 +142,7 @@ TEST_CASE("gemm: split_k_count heuristics") {
     CHECK(split_k_count(4096, 4096, 4096, 48) == 1);      // plenty of tiles already
 }
 
-TEST_CASE("gemm: k = 0 gives zero product") {
+GPU_TEST_CASE("gemm: k = 0 gives zero product") {
     auto dC = to_device(std::vector<float>(6, 5.f));
     gemm(GemmKernel::Tiled, Trans::N, Trans::N, 2, 3, 0, nullptr, 1, nullptr, 3, dC.get(), 3);
     for (float v : to_host(dC, 6)) CHECK(v == 0.f);

@@ -63,28 +63,28 @@ void compare_with_cpu(const MlpSpec& spec, int batch, uint32_t seed, GemmKernel 
 
 } // namespace
 
-TEST_CASE("gpu_mlp: matches CPU, single unit") {
+GPU_TEST_CASE("gpu_mlp: matches CPU, single unit") {
     compare_with_cpu(MlpSpec({1, 1}, {Activation::Identity}), 1, 201);
 }
 
-TEST_CASE("gpu_mlp: matches CPU, odd sizes, mixed activations") {
+GPU_TEST_CASE("gpu_mlp: matches CPU, odd sizes, mixed activations") {
     compare_with_cpu(MlpSpec({7, 13, 5, 3}, {Activation::Tanh, Activation::ReLU, Activation::Identity}), 37, 211);
 }
 
-TEST_CASE("gpu_mlp: matches CPU, PPO-sized policy at batch 4096") {
+GPU_TEST_CASE("gpu_mlp: matches CPU, PPO-sized policy at batch 4096") {
     compare_with_cpu(MlpSpec({8, 64, 64, 2}, {Activation::Tanh, Activation::Tanh, Activation::Identity}), 4096, 221);
 }
 
-TEST_CASE("gpu_mlp: matches CPU, wide layers spanning several tiles") {
+GPU_TEST_CASE("gpu_mlp: matches CPU, wide layers spanning several tiles") {
     compare_with_cpu(MlpSpec({130, 200, 70}, {Activation::ReLU, Activation::Tanh}), 300, 231);
 }
 
-TEST_CASE("gpu_mlp: naive kernel gives the same answers") {
+GPU_TEST_CASE("gpu_mlp: naive kernel gives the same answers") {
     compare_with_cpu(MlpSpec({7, 13, 5, 3}, {Activation::Tanh, Activation::ReLU, Activation::Identity}), 37, 241,
                      GemmKernel::Naive);
 }
 
-TEST_CASE("gpu_mlp: bit-identical across runs and instances") {
+GPU_TEST_CASE("gpu_mlp: bit-identical across runs and instances") {
     const MlpSpec spec({8, 64, 64, 2}, {Activation::Tanh, Activation::Tanh, Activation::Identity});
     const int batch = 20000;   // large enough that dW uses split-K
     const auto params = realistic_params(spec, 301);
@@ -100,7 +100,7 @@ TEST_CASE("gpu_mlp: bit-identical across runs and instances") {
     }
 }
 
-TEST_CASE("gpu_mlp: gradients accumulate until zero_grad") {
+GPU_TEST_CASE("gpu_mlp: gradients accumulate until zero_grad") {
     const MlpSpec spec({4, 6, 3}, {Activation::Tanh, Activation::Identity});
     GpuMlp net(spec, 16, 5);
     auto x = to_device(random_floats(16 * 4, 311));
@@ -116,7 +116,7 @@ TEST_CASE("gpu_mlp: gradients accumulate until zero_grad") {
     CHECK_CLOSE(twice, doubled, 1e-6);
 }
 
-TEST_CASE("gpu_mlp: rejects bad batch sizes") {
+GPU_TEST_CASE("gpu_mlp: rejects bad batch sizes") {
     GpuMlp net(MlpSpec({2, 2}, {Activation::Identity}), 8, 1);
     auto x = to_device(random_floats(32, 1));
     bool threw = false;

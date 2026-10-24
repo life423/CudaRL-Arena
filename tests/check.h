@@ -1,7 +1,8 @@
 #ifndef CUDARL_TESTS_CHECK_H
 #define CUDARL_TESTS_CHECK_H
 
-// Minimal self-registering test harness. TEST_CASE(name) defines a test;
+// Minimal self-registering test harness. TEST_CASE(name) defines a test and
+// GPU_TEST_CASE(name) one that needs a CUDA device (skipped without one);
 // CHECK(...) records a failure and keeps going so one run reports everything.
 
 #include <cmath>
@@ -15,6 +16,7 @@ namespace cudarl::test {
 struct TestCase {
     const char*           name;
     std::function<void()> fn;
+    bool                  needs_gpu;
 };
 
 inline std::vector<TestCase>& registry() {
@@ -28,7 +30,9 @@ inline int& failures() {
 }
 
 struct Registrar {
-    Registrar(const char* name, std::function<void()> fn) { registry().push_back({name, std::move(fn)}); }
+    Registrar(const char* name, std::function<void()> fn, bool needs_gpu) {
+        registry().push_back({name, std::move(fn), needs_gpu});
+    }
 };
 
 inline void fail(const char* file, int line, const std::string& msg) {
@@ -53,11 +57,14 @@ double normalized_max_error(const A& a, const B& b) {
 #define CUDARL_CONCAT_INNER(a, b) a##b
 #define CUDARL_CONCAT(a, b) CUDARL_CONCAT_INNER(a, b)
 
-#define TEST_CASE(name)                                                              \
+#define CUDARL_REGISTER_TEST(name, needs_gpu)                                        \
     static void CUDARL_CONCAT(test_fn_, __LINE__)();                                 \
     static ::cudarl::test::Registrar CUDARL_CONCAT(test_reg_, __LINE__)(             \
-        name, CUDARL_CONCAT(test_fn_, __LINE__));                                    \
+        name, CUDARL_CONCAT(test_fn_, __LINE__), needs_gpu);                         \
     static void CUDARL_CONCAT(test_fn_, __LINE__)()
+
+#define TEST_CASE(name) CUDARL_REGISTER_TEST(name, false)
+#define GPU_TEST_CASE(name) CUDARL_REGISTER_TEST(name, true)
 
 #define CHECK(cond)                                                                  \
     do {                                                                             \

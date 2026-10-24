@@ -63,20 +63,20 @@ double sin_fit_mse(GpuMlp& net, GpuAdam& opt, const device_ptr<float>& x, const 
 
 } // namespace
 
-TEST_CASE("adam: matches CPU reference over 200 steps") {
+GPU_TEST_CASE("adam: matches CPU reference over 200 steps") {
     compare_adam(adam_config(1e-2f), 1.f, 1000, 200);
 }
 
-TEST_CASE("adam: clipping matches CPU when it triggers") {
+GPU_TEST_CASE("adam: clipping matches CPU when it triggers") {
     compare_adam(adam_config(1e-2f, 1.f), 10.f, 5000, 50);
 }
 
-TEST_CASE("adam: clipping is a no-op below the threshold") {
+GPU_TEST_CASE("adam: clipping is a no-op below the threshold") {
     // ||g|| ~ 0.01 * sqrt(1000) ~ 0.3, far below 100.
     compare_adam(adam_config(1e-2f, 100.f), 0.01f, 1000, 50);
 }
 
-TEST_CASE("adam: reports the pre-clip gradient norm") {
+GPU_TEST_CASE("adam: reports the pre-clip gradient norm") {
     const int n = 100000;
     const auto g = random_floats(n, 77, 3.f);
     double sq = 0.0;
@@ -88,7 +88,7 @@ TEST_CASE("adam: reports the pre-clip gradient norm") {
     CHECK(std::fabs(opt.last_grad_norm() - std::sqrt(sq)) / std::sqrt(sq) < 1e-5);
 }
 
-TEST_CASE("adam: fits sin(x) end to end on the GPU") {
+GPU_TEST_CASE("adam: fits sin(x) end to end on the GPU") {
     const MlpSpec spec({1, 32, 32, 1}, {Activation::Tanh, Activation::Tanh, Activation::Identity});
     const int batch = 256;
     std::vector<float> xs(batch), ts(batch);
@@ -107,7 +107,7 @@ TEST_CASE("adam: fits sin(x) end to end on the GPU") {
     CHECK_MSG(after < before / 100, "MSE only went from " + std::to_string(before) + " to " + std::to_string(after));
 }
 
-TEST_CASE("adam: training is bit-identical run to run") {
+GPU_TEST_CASE("adam: training is bit-identical run to run") {
     const MlpSpec spec({1, 32, 32, 1}, {Activation::Tanh, Activation::Tanh, Activation::Identity});
     const int batch = 256;
     auto x = to_device(random_floats(batch, 5)), target = to_device(random_floats(batch, 6));
