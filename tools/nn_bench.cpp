@@ -8,16 +8,19 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <string>
 #include <vector>
 
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 
+#include "core/bf16.h"
 #include "core/rng.h"
 #include "cuda/cuda_memory.h"
 #include "nn/adam.h"
 #include "nn/gemm.h"
+#include "nn/gemm_bf16.h"
 #include "nn/loss.h"
 #include "nn/mlp_cpu.h"
 #include "nn/mlp_gpu.h"
@@ -51,21 +54,29 @@ int fp32_lanes_per_sm(int major, int minor) {
     return 128;
 }
 
+// Mean time per call over `reps` calls, taking the best of 5 such trials: GPU
+// clocks and thermals drift between runs, and the minimum is the most
+// repeatable estimate of what the kernel itself costs.
 template <typename F>
 double time_ms(F&& fn, int reps) {
+    constexpr int kTrials = 5;
     for (int i = 0; i < 3; ++i) fn();   // warm up
     cudaEvent_t start, stop;
     CUDA_CHECK_THROW(cudaEventCreate(&start));
     CUDA_CHECK_THROW(cudaEventCreate(&stop));
-    CUDA_CHECK_THROW(cudaEventRecord(start));
-    for (int i = 0; i < reps; ++i) fn();
-    CUDA_CHECK_THROW(cudaEventRecord(stop));
-    CUDA_CHECK_THROW(cudaEventSynchronize(stop));
-    float ms = 0.f;
-    CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, start, stop));
+    double best = 0.0;
+    for (int trial = 0; trial < kTrials; ++trial) {
+        CUDA_CHECK_THROW(cudaEventRecord(start));
+        for (int i = 0; i < reps; ++i) fn();
+        CUDA_CHECK_THROW(cudaEventRecord(stop));
+        CUDA_CHECK_THROW(cudaEventSynchronize(stop));
+        float ms = 0.f;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, start, stop));
+        if (trial == 0 || ms / reps < best) best = ms / reps;
+    }
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
-    return ms / reps;
+    return best;
 }
 
 Hardware query_hardware() {
@@ -195,20 +206,111 @@ void bench_cpu_reference(int batch) {
     std::printf("| %6d | %7.3f | %9.2f |\n", batch, ms, batch / (ms * 1e-3) * 1e-6);
 }
 
-} // namespace
+// --- Tensor-core GEMM ---------------------------------------------------------
 
-int main() {
-    const Hardware hw = query_hardware();
-    std::printf("## %s\n\n", hw.name.c_str());
-    std::printf("- %d SMs x %d fp32 lanes @ %.2f GHz -> **fp32 peak %.1f TFLOP/s**\n", hw.sms, hw.fp32_lanes_per_sm,
-                hw.clock_ghz, hw.peak_gflops / 1000);
-    std::printf("- Memory bandwidth: %.0f GB/s spec, **%.0f GB/s measured** (device-to-device copy; used for the roofline)\n\n",
-                hw.spec_bandwidth_gbs, hw.copy_bandwidth_gbs);
+device_ptr<uint16_t> random_bf16(size_t n, uint32_t seed) {
+    std::vector<uint16_t> h(n);
+    for (size_t i = 0; i < n; ++i) h[i] = cudarl::bf16::from_float(cudarl::rng::normal(seed, 0, static_cast<uint32_t>(i)));
+    device_ptr<uint16_t> d(n);
+    d.copy_from_host(h.data(), n);
+    return d;
+}
 
-    cublasHandle_t handle;
-    CUBLAS_CHECK(cublasCreate(&handle));
+// Row-major C = A B^T (bf16 in, fp32 accumulate and out) through column-major cuBLAS.
+void cublas_bf16_nt(cublasHandle_t h, int m, int n, int k, const uint16_t* A, const uint16_t* B, float* C) {
+    const float one = 1.f, zero = 0.f;
+    CUBLAS_CHECK(cublasGemmEx(h, CUBLAS_OP_T, CUBLAS_OP_N, n, m, k, &one, B, CUDA_R_16BF, k, A, CUDA_R_16BF, k, &zero,
+                              C, CUDA_R_32F, n, CUBLAS_COMPUTE_32F, CUBLAS_GEMM_DEFAULT));
+}
+
+void bench_tensor_core(cublasHandle_t handle, double mma_peak_tflops, int m, int n, int k) {
+    auto A = random_bf16(size_t(m) * k, 11), B = random_bf16(size_t(n) * k, 12);
+    device_ptr<float> C(size_t(m) * n), C_ref(size_t(m) * n);
+    const double flops = 2.0 * m * n * k;
+    const int    reps  = std::clamp(static_cast<int>(5e11 / flops), 3, 200);
+    auto tf = [&](double ms) { return flops / (ms * 1e-3) * 1e-12; };
+
+    const double t_cublas = time_ms([&] { cublas_bf16_nt(handle, m, n, k, A.get(), B.get(), C_ref.get()); }, reps);
+    const auto ref = host_copy(C_ref);
+    std::printf("| %5d x %5d x %5d | cuBLAS bf16 | %6.1f | %4.0f%% | 100%% | |\n", m, n, k, tf(t_cublas),
+                100 * tf(t_cublas) / mma_peak_tflops);
+    for (int v = 0; v < kNumTcKernels; ++v) {
+        const auto kernel = static_cast<TcKernel>(v);
+        const double ms = time_ms([&] { gemm_bf16_nt(kernel, m, n, k, A.get(), k, B.get(), k, C.get(), n); }, reps);
+        const auto ours = host_copy(C);
+        double max_diff = 0, max_ref = 0;
+        for (size_t i = 0; i < ref.size(); ++i) {
+            max_diff = std::max(max_diff, double(std::fabs(ours[i] - ref[i])));
+            max_ref  = std::max(max_ref, double(std::fabs(ref[i])));
+        }
+        std::printf("| | %-24s | %6.1f | %4.0f%% | %3.0f%% | %s |\n", tc_kernel_name(kernel), tf(ms),
+                    100 * tf(ms) / mma_peak_tflops, 100 * t_cublas / ms, max_diff <= 1e-4 * max_ref ? "yes" : "NO");
+    }
+}
+
+// The v4 tuning sweep: every candidate configuration at several sizes.
+void tuning_section(cublasHandle_t handle) {
+    CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_DEFAULT_MATH));
+    std::printf("### Tensor-core tuning sweep (TFLOP/s, %% of cuBLAS)\n\n| Candidate |");
+    const int sizes[] = {2048, 4096, 8192};
+    for (int s : sizes) std::printf(" %d^3 |", s);
+    std::printf("\n|---|---|---|---|\n");
+
+    struct Size { int s; device_ptr<uint16_t> A, B; device_ptr<float> C, C_ref; double cublas_ms; std::vector<float> ref; };
+    std::vector<Size> runs;
+    for (int s : sizes) {
+        Size r{s, random_bf16(size_t(s) * s, 21), random_bf16(size_t(s) * s, 22), device_ptr<float>(size_t(s) * s),
+               device_ptr<float>(size_t(s) * s), 0.0, {}};
+        const int reps = std::clamp(static_cast<int>(5e11 / (2.0 * s * s * s)), 3, 50);
+        r.cublas_ms = time_ms([&] { cublas_bf16_nt(handle, s, s, s, r.A.get(), r.B.get(), r.C_ref.get()); }, reps);
+        r.ref = host_copy(r.C_ref);
+        runs.push_back(std::move(r));
+    }
+    std::printf("| cuBLAS bf16 |");
+    for (const auto& r : runs) std::printf(" %.1f |", 2.0 * r.s * r.s * r.s / (r.cublas_ms * 1e-3) * 1e-12);
+    std::printf("\n");
+    for (int c = 0; c < tuning_candidate_count(); ++c) {
+        std::printf("| %s |", tuning_candidate_name(c));
+        for (auto& r : runs) {
+            const int s = r.s;
+            const int reps = std::clamp(static_cast<int>(5e11 / (2.0 * s * s * s)), 3, 50);
+            const double ms = time_ms([&] {
+                gemm_bf16_nt_candidate(c, s, s, s, r.A.get(), s, r.B.get(), s, r.C.get(), s);
+            }, reps);
+            const auto ours = host_copy(r.C);
+            double max_diff = 0, max_ref = 0;
+            for (size_t i = 0; i < r.ref.size(); ++i) {
+                max_diff = std::max(max_diff, double(std::fabs(ours[i] - r.ref[i])));
+                max_ref  = std::max(max_ref, double(std::fabs(r.ref[i])));
+            }
+            std::printf(" %.1f (%.0f%%)%s |", 2.0 * s * s * s / (ms * 1e-3) * 1e-12, 100 * r.cublas_ms / ms,
+                        max_diff <= 1e-4 * max_ref ? "" : " WRONG");
+        }
+        std::printf("\n");
+    }
+    std::printf("\n");
+}
+
+bool wants(int argc, char** argv, const char* section) {
+    if (argc < 2) return true;
+    for (int i = 1; i < argc; ++i)
+        if (std::strcmp(argv[i], section) == 0 || std::strcmp(argv[i], "all") == 0) return true;
+    return false;
+}
+
+void tensor_core_section(cublasHandle_t handle) {
+    const double peak = measure_mma_peak_tflops();
+    std::printf("- Tensor cores (bf16 in, fp32 accumulate): **%.1f TFLOP/s measured** (register-only mma.sync loop)\n\n", peak);
+    CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_DEFAULT_MATH));
+    std::printf("### Tensor-core GEMM, bf16 x bf16 -> fp32 (C = A B^T)\n\n");
+    std::printf("| m x n x k | Kernel | TFLOP/s | %% of mma peak | %% of cuBLAS | matches cuBLAS |\n|---|---|---|---|---|---|\n");
+    for (int s : {1024, 2048, 4096, 8192}) bench_tensor_core(handle, peak, s, s, s);
+    bench_tensor_core(handle, peak, 65536, 64, 64);
+    std::printf("\n");
+}
+
+void fp32_section(const Hardware& hw, cublasHandle_t handle) {
     CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_PEDANTIC_MATH));   // true fp32: no TF32 tensor cores
-
     std::printf("### GEMM (fp32, GFLOP/s)\n\n");
     std::printf("| Case | m x n x k | FLOP/B | Naive | Tiled | %% peak | %% roof | cuBLAS | %% of cuBLAS | splits | matches cuBLAS |\n");
     std::printf("|---|---|---|---|---|---|---|---|---|---|---|\n");
@@ -223,15 +325,50 @@ int main() {
     };
     for (const auto& c : cases) bench_gemm(hw, handle, c);
     bench_gemm(hw, handle, {"dW, split-K off", Trans::T, Trans::N, 64, 64, 65536}, 1);
+    std::printf("\n");
+}
 
-    std::printf("\n### PPO-sized training step (8 -> 64 -> 64 -> 2, forward + backward + Adam)\n\n");
+void training_section(const Hardware& hw) {
+    std::printf("### PPO-sized training step (8 -> 64 -> 64 -> 2, forward + backward + Adam)\n\n");
     std::printf("| Batch | ms/step | M samples/s | GFLOP/s | %% peak |\n|---|---|---|---|---|\n");
     for (int batch : {1024, 4096, 16384, 65536}) bench_training_step(batch, hw);
-
     std::printf("\nCPU reference (plain loops, single thread; correctness baseline, not tuned):\n\n");
     std::printf("| Batch | ms/step | M samples/s |\n|---|---|---|\n");
     bench_cpu_reference(4096);
+}
 
+} // namespace
+
+// Usage: nn_bench [tc] [fp32] [train] [tune] [profile]
+// No arguments runs tc, fp32 and train; `tune` and `profile` only run when named.
+int main(int argc, char** argv) {
+    const Hardware hw = query_hardware();
+    std::printf("## %s\n\n", hw.name.c_str());
+    std::printf("- %d SMs x %d fp32 lanes @ %.2f GHz -> **fp32 peak %.1f TFLOP/s**\n", hw.sms, hw.fp32_lanes_per_sm,
+                hw.clock_ghz, hw.peak_gflops / 1000);
+    std::printf("- Memory bandwidth: %.0f GB/s spec, **%.0f GB/s measured** (device-to-device copy; used for the roofline)\n",
+                hw.spec_bandwidth_gbs, hw.copy_bandwidth_gbs);
+
+    cublasHandle_t handle;
+    CUBLAS_CHECK(cublasCreate(&handle));
+    if (wants(argc, argv, "tc")) tensor_core_section(handle);
+    else std::printf("\n");
+    // The sweep is slow, so it only runs when asked for by name. `profile` runs
+    // each tensor-core version once at 4096^3, for Nsight Compute.
+    for (int i = 1; i < argc; ++i) {
+        if (std::strcmp(argv[i], "tune") == 0) tuning_section(handle);
+        if (std::strcmp(argv[i], "profile") == 0) {
+            const int s = 4096;
+            auto A = random_bf16(size_t(s) * s, 31), B = random_bf16(size_t(s) * s, 32);
+            device_ptr<float> C(size_t(s) * s);
+            for (int v = 0; v < kNumTcKernels; ++v) {
+                gemm_bf16_nt(static_cast<TcKernel>(v), s, s, s, A.get(), s, B.get(), s, C.get(), s);
+            }
+            CUDA_CHECK_THROW(cudaDeviceSynchronize());
+        }
+    }
+    if (wants(argc, argv, "fp32")) fp32_section(hw, handle);
+    if (wants(argc, argv, "train")) training_section(hw);
     cublasDestroy(handle);
     return 0;
 }

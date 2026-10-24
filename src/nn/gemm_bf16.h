@@ -16,7 +16,7 @@ enum class TcKernel : int {
     MmaSync = 1,    // v1: mma.sync m16n8k16 + ldmatrix, 128x128x32 tiles, synchronous loads
     Pipelined = 2,  // v2: + 3-stage cp.async pipeline (loads overlap math)
     Swizzled = 3,   // v3: + XOR-swizzled shared memory (no ldmatrix bank conflicts)
-    Tuned = 4,      // v4: + tuned tile shape, deeper pipeline, L2-friendly block order
+    Tuned = 4,      // v4: tuning-sweep winner: 2-stage pipeline (more blocks per SM) + L2-friendly block order
 };
 constexpr int kNumTcKernels = 5;
 const char* tc_kernel_name(TcKernel kernel);
@@ -28,6 +28,13 @@ const char* tc_kernel_name(TcKernel kernel);
 // otherwise. Asynchronous on `stream`.
 void gemm_bf16_nt(TcKernel kernel, int m, int n, int k, const uint16_t* A, int lda, const uint16_t* B, int ldb,
                   float* C, int ldc, cudaStream_t stream = nullptr);
+
+// The configurations the v4 tuning sweep compares (tile shape, warps, pipeline
+// depth, block order). Same contract as gemm_bf16_nt; used by `nn_bench tune`.
+int         tuning_candidate_count();
+const char* tuning_candidate_name(int index);
+void        gemm_bf16_nt_candidate(int index, int m, int n, int k, const uint16_t* A, int lda, const uint16_t* B,
+                                   int ldb, float* C, int ldc, cudaStream_t stream = nullptr);
 
 // dst[i] = bf16(src[i]), round to nearest even, on the device.
 void convert_to_bf16(const float* src, uint16_t* dst, size_t count, cudaStream_t stream = nullptr);

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 
@@ -312,6 +313,30 @@ __global__ void mma_peak_kernel(float* out, int iterations) {
     out[blockIdx.x * blockDim.x + threadIdx.x] = sum;
 }
 
+// Candidate configurations for the v4 tuning sweep (all swizzled). Kept in the
+// library so `nn_bench tune` reproduces the numbers in docs/gemm_worklog.md.
+using LaunchFn = void (*)(int, int, int, const uint16_t*, int, const uint16_t*, int, float*, int, bool, cudaStream_t);
+struct TuningCandidate {
+    const char* name;
+    LaunchFn    launch;
+};
+constexpr TuningCandidate kTuningCandidates[] = {
+    {"128x128x32  4 warps (64x64)  3 stages",          launch_mma<128, 128, 32, 2, 2, 3, true, false>},
+    {"128x128x32  4 warps (64x64)  3 stages  raster",  launch_mma<128, 128, 32, 2, 2, 3, true, true>},
+    {"128x128x32  4 warps (64x64)  2 stages",          launch_mma<128, 128, 32, 2, 2, 2, true, false>},
+    {"128x128x32  4 warps (64x64)  2 stages  raster",  launch_mma<128, 128, 32, 2, 2, 2, true, true>},
+    {"128x128x32  4 warps (64x64)  4 stages  raster",  launch_mma<128, 128, 32, 2, 2, 4, true, true>},
+    {"128x128x32  8 warps (64x32)  2 stages  raster",  launch_mma<128, 128, 32, 2, 4, 2, true, true>},
+    {"128x128x32  8 warps (64x32)  3 stages  raster",  launch_mma<128, 128, 32, 2, 4, 3, true, true>},
+    {"128x256x32  8 warps (64x64)  2 stages  raster",  launch_mma<128, 256, 32, 2, 4, 2, true, true>},
+    {"128x256x32  8 warps (64x64)  3 stages  raster",  launch_mma<128, 256, 32, 2, 4, 3, true, true>},
+    {"256x128x32  8 warps (64x64)  2 stages  raster",  launch_mma<256, 128, 32, 4, 2, 2, true, true>},
+    {"256x128x32  8 warps (64x64)  3 stages  raster",  launch_mma<256, 128, 32, 4, 2, 3, true, true>},
+    {"128x128x64  4 warps (64x64)  2 stages  raster",  launch_mma<128, 128, 64, 2, 2, 2, true, true>},
+    {"128x128x64  8 warps (64x32)  2 stages  raster",  launch_mma<128, 128, 64, 2, 4, 2, true, true>},
+    {"128x64x32   4 warps (64x32)  4 stages  raster",  launch_mma<128, 64, 32, 2, 2, 4, true, true>},
+};
+
 void check_alignment(const void* p, const char* what) {
     if (reinterpret_cast<uintptr_t>(p) % 16 != 0) {
         throw std::invalid_argument(std::string("gemm_bf16_nt: ") + what + " must be 16-byte aligned");
@@ -331,16 +356,42 @@ const char* tc_kernel_name(TcKernel kernel) {
     return "?";
 }
 
-void gemm_bf16_nt(TcKernel kernel, int m, int n, int k, const uint16_t* A, int lda, const uint16_t* B, int ldb,
-                  float* C, int ldc, cudaStream_t stream) {
+namespace {
+
+// Shared argument checks; returns whether C allows 8-byte (float2) stores.
+bool validate(int m, int n, int k, const uint16_t* A, int lda, const uint16_t* B, int ldb, const float* C, int ldc) {
     if (m < 0 || n < 0 || k < 0) throw std::invalid_argument("gemm_bf16_nt: negative size");
     if (k % 8 != 0 || lda % 8 != 0 || ldb % 8 != 0) {
         throw std::invalid_argument("gemm_bf16_nt: k, lda and ldb must be multiples of 8");
     }
+    if (m > 0 && n > 0) {
+        check_alignment(A, "A");
+        check_alignment(B, "B");
+    }
+    return ldc % 2 == 0 && reinterpret_cast<uintptr_t>(C) % 8 == 0;
+}
+
+} // namespace
+
+int tuning_candidate_count() { return static_cast<int>(std::size(kTuningCandidates)); }
+
+const char* tuning_candidate_name(int index) {
+    return index >= 0 && index < tuning_candidate_count() ? kTuningCandidates[index].name : "?";
+}
+
+void gemm_bf16_nt_candidate(int index, int m, int n, int k, const uint16_t* A, int lda, const uint16_t* B, int ldb,
+                            float* C, int ldc, cudaStream_t stream) {
+    if (index < 0 || index >= tuning_candidate_count()) throw std::invalid_argument("gemm_bf16_nt_candidate: index");
+    const bool vector_store = validate(m, n, k, A, lda, B, ldb, C, ldc);
     if (m == 0 || n == 0) return;
-    check_alignment(A, "A");
-    check_alignment(B, "B");
-    const bool vector_store = ldc % 2 == 0 && reinterpret_cast<uintptr_t>(C) % 8 == 0;
+    kTuningCandidates[index].launch(m, n, k, A, lda, B, ldb, C, ldc, vector_store, stream);
+    CUDA_CHECK_THROW(cudaGetLastError());
+}
+
+void gemm_bf16_nt(TcKernel kernel, int m, int n, int k, const uint16_t* A, int lda, const uint16_t* B, int ldb,
+                  float* C, int ldc, cudaStream_t stream) {
+    const bool vector_store = validate(m, n, k, A, lda, B, ldb, C, ldc);
+    if (m == 0 || n == 0) return;
 
     switch (kernel) {
         case TcKernel::Wmma: {
@@ -352,7 +403,9 @@ void gemm_bf16_nt(TcKernel kernel, int m, int n, int k, const uint16_t* A, int l
         case TcKernel::MmaSync:   launch_mma<128, 128, 32, 2, 2, 1, false, false>(m, n, k, A, lda, B, ldb, C, ldc, vector_store, stream); break;
         case TcKernel::Pipelined: launch_mma<128, 128, 32, 2, 2, 3, false, false>(m, n, k, A, lda, B, ldb, C, ldc, vector_store, stream); break;
         case TcKernel::Swizzled:  launch_mma<128, 128, 32, 2, 2, 3, true,  false>(m, n, k, A, lda, B, ldb, C, ldc, vector_store, stream); break;
-        case TcKernel::Tuned:     launch_mma<128, 128, 32, 2, 2, 4, true,  true >(m, n, k, A, lda, B, ldb, C, ldc, vector_store, stream); break;
+        // v4 = the tuning sweep's winner: double buffering keeps shared memory at
+        // 32 KB per block, so 3 blocks fit per SM, and occupancy beats pipeline depth.
+        case TcKernel::Tuned:     launch_mma<128, 128, 32, 2, 2, 2, true,  true >(m, n, k, A, lda, B, ldb, C, ldc, vector_store, stream); break;
         default: throw std::invalid_argument("gemm_bf16_nt: unknown kernel");
     }
     CUDA_CHECK_THROW(cudaGetLastError());
@@ -369,26 +422,29 @@ double measure_mma_peak_tflops() {
     int device = 0, sms = 0;
     CUDA_CHECK_THROW(cudaGetDevice(&device));
     CUDA_CHECK_THROW(cudaDeviceGetAttribute(&sms, cudaDevAttrMultiProcessorCount, device));
-    const int blocks = sms * 8, threads = 128, iterations = 4096;
+    // 16 blocks x 8 warps per SM, best of several runs (the first ones also warm the clocks up).
+    const int blocks = sms * 16, threads = 256, iterations = 4096;
     device_ptr<float> out(static_cast<size_t>(blocks) * threads);
-
-    mma_peak_kernel<<<blocks, threads>>>(out.get(), 64);   // warm up
     cudaEvent_t start, stop;
     CUDA_CHECK_THROW(cudaEventCreate(&start));
     CUDA_CHECK_THROW(cudaEventCreate(&stop));
-    CUDA_CHECK_THROW(cudaEventRecord(start));
-    mma_peak_kernel<<<blocks, threads>>>(out.get(), iterations);
-    CUDA_CHECK_THROW(cudaEventRecord(stop));
-    CUDA_CHECK_THROW(cudaEventSynchronize(stop));
-    CUDA_CHECK_THROW(cudaGetLastError());
-    float ms = 0.f;
-    CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, start, stop));
+    float best_ms = 0.f;
+    for (int run = 0; run < 5; ++run) {
+        CUDA_CHECK_THROW(cudaEventRecord(start));
+        mma_peak_kernel<<<blocks, threads>>>(out.get(), iterations);
+        CUDA_CHECK_THROW(cudaEventRecord(stop));
+        CUDA_CHECK_THROW(cudaEventSynchronize(stop));
+        CUDA_CHECK_THROW(cudaGetLastError());
+        float ms = 0.f;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, start, stop));
+        if (run == 0 || ms < best_ms) best_ms = ms;
+    }
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
 
     const double warps = static_cast<double>(blocks) * threads / 32;
     const double flops = warps * iterations * kPeakChains * (2.0 * 16 * 8 * 16);
-    return flops / (ms * 1e-3) * 1e-12;
+    return flops / (best_ms * 1e-3) * 1e-12;
 }
 
 } // namespace cudarl::nn

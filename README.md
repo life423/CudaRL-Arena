@@ -6,7 +6,7 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Status: neural network core done; PPO next.** Hand-written CUDA MLP kernels, backprop, and Adam are verified against finite differences and a CPU reference, and benchmarked against the hardware roofline and cuBLAS. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
+> **Status: neural network core and tensor-core GEMM done; PPO next.** Hand-written CUDA MLP kernels, backprop, and Adam are verified against finite differences and a CPU reference. The hand-written bf16 tensor-core GEMM reaches **91–96% of cuBLAS** on large matrices. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
 
 ---
 
@@ -28,10 +28,10 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | GPU probe: device query plus a test kernel launch, so a missing driver or wrong architecture is reported instead of crashing | ✅ Working |
 | **Live training view in Godot:** watch a network trained on the GPU fit a curve in real time, with live loss and timing | ✅ Working (main scene) |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
-| Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working, 34 tests |
-| Verification: fp64 finite-difference gradient checks, GPU vs. CPU reference, bit-identical determinism, end-to-end learning | ✅ Working |
-| Benchmark: roofline and cuBLAS comparison | ✅ Working (`nn_bench`) |
-| Tensor-core (bf16) GEMM | ⏳ Next |
+| Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working |
+| **Tensor-core bf16 GEMM** (`mma.sync`, `ldmatrix`, `cp.async` pipeline, swizzled shared memory), five versions, each profiled | ✅ Working, 91–96% of cuBLAS ([worklog](docs/gemm_worklog.md)) |
+| Verification: fp64 finite-difference gradient checks, GPU vs. CPU reference, exact-arithmetic tensor-core checks, bit-identical determinism, end-to-end learning | ✅ Working, 45 tests |
+| Benchmark: roofline, cuBLAS comparison, tuning sweep | ✅ Working (`nn_bench`) |
 | PPO trained entirely on the GPU (CartPole first, then racing), watched live in Godot | ⏳ Planned |
 
 ![Live training view: a 1→32→32→1 network learning sin(3x)(0.5 + 0.15x) on the GPU, 0.3 ms per step](docs/images/live-fit.png)
@@ -44,7 +44,26 @@ The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA
 
 ## Results
 
-Measured on an RTX 5070 (48 SMs, driver 620.02, CUDA 13.2) with `nn_bench`. The fp32 peak is **33.0 TFLOP/s**, from SMs × fp32 lanes × clock. Memory bandwidth is **543 GB/s measured** (672 GB/s spec). cuBLAS runs in pedantic fp32 mode (no TF32 tensor cores), so both sides use the same arithmetic, and every result is checked against cuBLAS before it's timed.
+Measured on an RTX 5070 (48 SMs, driver 620.02, CUDA 13.2) with `nn_bench`, best of 5 timing trials. Every result is checked against cuBLAS before it's timed.
+
+### Tensor-core GEMM (bf16 × bf16 → fp32)
+
+Each version adds one optimization. The full story, with Nsight Compute evidence and the tuning sweep, is in the **[GEMM worklog](docs/gemm_worklog.md)**.
+
+| 4096³ | TFLOP/s | % of cuBLAS | Tensor pipe active (ncu) |
+|---|---|---|---|
+| cuBLAS (`cublasGemmEx`) | 69.6 | 100% | |
+| v0 WMMA | 23.6 | 34% | 38% |
+| v1 `mma.sync` + `ldmatrix` | 42.4 | 61% | 63% |
+| v2 + `cp.async` 3-stage pipeline | 52.5 | 75% | 77% |
+| v3 + XOR-swizzled shared memory | 58.2 | 84% | 85% |
+| **v4 tuned** (2 stages for occupancy, grouped block order) | **63.4** | **91%** | **94%** |
+
+At 8192³, v4 reaches **96% of cuBLAS**. The swizzle cuts shared-memory bank conflicts 600× (101 M → 0.17 M), exactly the 4-way conflict predicted from the address layout. The tensor-core ceiling, measured with a register-only `mma.sync` loop, is 70.0 TFLOP/s.
+
+### fp32 GEMM and training
+
+The fp32 peak is **33.0 TFLOP/s**, from SMs × fp32 lanes × clock. Memory bandwidth is **543 GB/s measured** (672 GB/s spec). Here cuBLAS runs in pedantic fp32 mode (no TF32 tensor cores), so both sides use the same arithmetic.
 
 | GEMM | m × n × k | Ours (GFLOP/s) | % of roofline | cuBLAS | % of cuBLAS |
 |---|---|---|---|---|---|
@@ -57,7 +76,7 @@ Measured on an RTX 5070 (48 SMs, driver 620.02, CUDA 13.2) with `nn_bench`. The 
 What these show:
 - **Split-K is a 60× win on the weight-gradient GEMM.** Without it, a 64×64 output is a single tile, so one thread block on one of 48 SMs loops over all 65,536 samples. Slicing the batch across SMs and summing the slices in a fixed order keeps results bit-identical.
 - **The MLP-shaped GEMMs reach 67–72% of the roofline.** At 16 FLOP/byte they're memory-bound, so bandwidth, not arithmetic, is the right yardstick.
-- **The large square GEMM is at 21% of fp32 peak and 32% of cuBLAS.** This is a straightforward 64×64-tile kernel without vectorized loads, double buffering, or tensor cores. Closing that gap is the next milestone.
+- **The large square fp32 GEMM is at 21% of fp32 peak and 32% of cuBLAS.** It's a straightforward 64×64-tile SIMT kernel; the tensor-core path above is where the optimization effort went.
 
 A full PPO-sized training step (8 → 64 → 64 → 2: forward, backward, Adam with clipping):
 
@@ -179,16 +198,16 @@ maze.reset()
 CMakeLists.txt        one build for the core library and the Godot extension
 CMakePresets.json     `windows`/`release` for local builds, `ci` for builds without Godot
 .github/workflows/    CI: build with warnings as errors, run tests
-src/core/             host/device shared code: counter-based RNG
+src/core/             host/device shared code: counter-based RNG, bf16 conversion
 src/cuda/             CUDA runtime helpers: RAII device memory, errors, device probe
-src/nn/               MLP: GEMM kernels, GPU forward/backward, Adam, losses, CPU reference
+src/nn/               MLP: fp32 and bf16 tensor-core GEMM kernels, GPU forward/backward, Adam, losses, CPU reference
 src/demos/            live-training demos driven from Godot (FunctionFit)
 src/envs/maze/        maze rules (plain C++)
 src/godot/            GDExtension classes and registration
 tests/                hand-written test harness and test suites (run via ctest)
-tools/nn_bench.cpp    roofline and cuBLAS benchmark
+tools/nn_bench.cpp    roofline and cuBLAS benchmark (`tc`, `fp32`, `train`, `tune`, `profile`)
 godot-project/        Godot project: addons/cudarl/ (extension), fit/ (live training view), maze/
-docs/images/          screenshots
+docs/                 GEMM worklog, screenshots
 external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ```
 
@@ -198,7 +217,7 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 
 - **Windows only for now.** The build links a Windows godot-cpp library directly, and the `.gdextension` file only lists `windows.x86_64`.
 - **No RL yet.** The neural network core trains (see the sin(x) fit test), but PPO isn't built. The maze agents act randomly; the maze is a placeholder demo for the engine bridge and gets replaced by the PPO environments.
-- **The GEMM is fp32 SIMT only**, at 21–51% of cuBLAS depending on shape. Tensor cores, vectorized loads, and double buffering are the next milestone.
+- **The MLP still trains in fp32.** The tensor-core GEMM is a standalone kernel for now (forward-pass layout only). The PPO-sized networks are memory- and launch-bound, so it wouldn't speed them up much; it goes into the MLP when bigger models need it. It's also at 65% of cuBLAS at 1024³, where too few blocks fill the GPU (see the worklog's next steps).
 - **Small batches are launch-bound.** A training step is about two dozen kernel launches; CUDA Graphs or fusion would cut the 0.2 ms floor.
 - **Building godot-cpp isn't scripted.** The prebuilt library isn't checked in, and building it runs Godot's own Python binding generator. That's a one-time upstream build tool, not part of this project's code or runtime.
 
@@ -207,7 +226,7 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ## Roadmap
 
 1. ~~**Neural network core.**~~ ✅ MLP forward and backward kernels and Adam, verified against finite differences and a CPU reference, benchmarked against the roofline and cuBLAS.
-2. **Tensor-core GEMM.** bf16 inputs with fp32 accumulation via `mma` intrinsics, measured as a percentage of cuBLAS.
+2. ~~**Tensor-core GEMM.**~~ ✅ bf16 `mma.sync` kernel at 91–96% of cuBLAS on large matrices, with a [worklog](docs/gemm_worklog.md) of every optimization and its profile.
 3. **PPO on CartPole.** GPU-resident rollouts, advantage estimation (GAE), and updates. CartPole has well-known solutions, so a bug can't hide behind the environment.
 4. **PPO on a racing track.** Raycast sensors and continuous control. The first demo worth recording, with lap progress as a clear learning curve.
 5. **Fused attention kernel**, then an attention-based policy.
