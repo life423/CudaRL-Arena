@@ -55,7 +55,7 @@ String ArenaGDExtension::hello_cuda() {
 
     int device_count = CudaArena::get_device_count();
     String device_name = String(CudaArena::get_device_name(0).c_str());
-    return String("✅ CUDA Ready: ") + String::num(device_count) + " devices, using " + device_name;
+    return String("✅ CUDA Ready: ") + String::num_int64(device_count) + (device_count == 1 ? " device" : " devices") + ", using " + device_name;
 }
 
 void ArenaGDExtension::run_training(int episodes) {
