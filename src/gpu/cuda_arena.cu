@@ -1,30 +1,19 @@
 #include "cuda_arena.h"
 #include "cuda_memory.h"
+#include "actions.h"
 #include <cuda_runtime.h>
 #include <cmath>
 #include <vector>
 #include <cstdio>
 #include <random>
+#include <stdexcept>
 
-#define CUDA_CHECK(expr) do {                                             \
-    cudaError_t _err = (expr);                                            \
-    if (_err != cudaSuccess) {                                            \
-        fprintf(stderr, "CUDA error %s in %s:%d : %s\n", #expr,           \
-                __FILE__, __LINE__, cudaGetErrorString(_err));            \
-        std::abort();                                                     \
-    }                                                                     \
-} while (0)
-
-enum class Action : int { Up = 0, Right = 1, Down = 2, Left = 3 };
 constexpr int   kObsLen        = 4;
 constexpr float kGridMin       = 0.f;
 constexpr float kGridMax       = 9.f;
 constexpr float kGoalRadius2   = 1.f;      // squared 1.0
 constexpr float kStepPenalty   = -0.1f;
 constexpr float kGoalReward    = 10.f;
-
-__device__ __constant__ float kDx[4] = {0.f, 1.f, 0.f,-1.f};
-__device__ __constant__ float kDy[4] = {1.f, 0.f,-1.f, 0.f};
 
 __global__ void step_environments_kernel(float* __restrict__ obs,
                                          float* __restrict__ rew,
@@ -39,9 +28,9 @@ __global__ void step_environments_kernel(float* __restrict__ obs,
     float ax = o[0], ay = o[1];
     const float gx = o[2], gy = o[3];
 
-    const int a = act[env];
-    ax += kDx[a];
-    ay += kDy[a];
+    const int a = act[env];             // invalid actions are a no-op
+    ax += static_cast<float>(cudarl::action_dx(a));
+    ay += static_cast<float>(cudarl::action_dy(a));
     ax = fminf(kGridMax, fmaxf(kGridMin, ax));
     ay = fminf(kGridMax, fmaxf(kGridMin, ay));
 
@@ -86,7 +75,6 @@ void CudaArena::allocate_memory()
         h_observations.resize(m_num_envs * kObsLen);
         h_rewards.resize(m_num_envs);
         h_dones.resize(m_num_envs);
-        h_actions.resize(m_num_envs);
     } catch (const cuda_error& e) {
         fprintf(stderr, "Failed to allocate CUDA memory: %s\n", e.what());
         throw;
@@ -128,14 +116,19 @@ void CudaArena::reset_environments(uint32_t seed)
 void CudaArena::step_environments(const std::vector<int>& actions)
 {
     try {
-        h_actions = actions;
-        d_actions.copy_from_host(h_actions.data(), m_num_envs);
+        if (static_cast<int>(actions.size()) != m_num_envs) {
+            throw std::invalid_argument(
+                "step_environments: expected " + std::to_string(m_num_envs) +
+                " actions, got " + std::to_string(actions.size()));
+        }
+        d_actions.copy_from_host(actions.data(), m_num_envs);
 
         const int block = 256;
         const int grid  = (m_num_envs + block - 1) / block;
 
         step_environments_kernel<<<grid, block>>>(d_observations.get(),
             d_rewards.get(), d_dones.get(), d_actions.get(), m_num_envs);
+        CUDA_CHECK_THROW(cudaGetLastError());
         CUDA_CHECK_THROW(cudaDeviceSynchronize());
 
         d_observations.copy_to_host(h_observations.data(), m_num_envs * kObsLen);
@@ -150,7 +143,8 @@ void CudaArena::step_environments(const std::vector<int>& actions)
 void CudaArena::hello_cuda()
 {
     hello_kernel<<<1, 4>>>();
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CUDA_CHECK_THROW(cudaGetLastError());
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }
 
 std::vector<float> CudaArena::get_observations() const {
@@ -165,14 +159,21 @@ std::vector<int> CudaArena::get_dones() const {
     return h_dones;
 }
 
+// Returns 0 (rather than aborting) when there is no GPU or driver.
 int CudaArena::get_device_count() {
-    int device_count;
-    CUDA_CHECK(cudaGetDeviceCount(&device_count));
+    int device_count = 0;
+    if (cudaGetDeviceCount(&device_count) != cudaSuccess) {
+        cudaGetLastError();  // clear the error so later calls aren't poisoned
+        return 0;
+    }
     return device_count;
 }
 
 std::string CudaArena::get_device_name(int device_id) {
     cudaDeviceProp prop;
-    CUDA_CHECK(cudaGetDeviceProperties(&prop, device_id));
+    if (cudaGetDeviceProperties(&prop, device_id) != cudaSuccess) {
+        cudaGetLastError();
+        return std::string();
+    }
     return std::string(prop.name);
 }

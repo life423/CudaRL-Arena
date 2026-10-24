@@ -9,6 +9,7 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 #include <godot_cpp/variant/vector2i.hpp>
+#include <memory>
 #include "../gpu/cuda_arena.h"
 
 namespace godot {
@@ -20,11 +21,17 @@ protected:
     static void _bind_methods();
 
 private:
-    CudaArena* cuda_arena;
-    
+    // Null when no usable CUDA device/driver is present; the maze game still works.
+    std::unique_ptr<CudaArena> cuda_arena;
+
+    // Spawns sit in opposite corners; the goal is equidistant (7 moves) from both.
+    static constexpr int kHumanStartX = 1, kHumanStartY = 1;
+    static constexpr int kAIStartX    = 8, kAIStartY    = 8;
+    static constexpr int kGoalX       = 1, kGoalY       = 8;
+
     // Current positions on a 10×10 board
-    Vector2i human_state = Vector2i(1, 1);
-    Vector2i ai_state    = Vector2i(8, 8);
+    Vector2i human_state = Vector2i(kHumanStartX, kHumanStartY);
+    Vector2i ai_state    = Vector2i(kAIStartX, kAIStartY);
     
     // Maze layout (1 = wall, 0 = empty)
     int maze[10][10];
@@ -39,7 +46,9 @@ public:
     ~ArenaGDExtension();
     
     String hello_cuda();
+    bool has_cuda() const { return cuda_arena != nullptr; }
     void run_training(int episodes);
+    Vector2i get_goal() const { return Vector2i(kGoalX, kGoalY); }
     
     /// Steps both human and AI; input=[human_action, ai_action]
     Array step_environment(Array actions);
