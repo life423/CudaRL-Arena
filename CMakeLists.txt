@@ -49,6 +49,7 @@ endfunction()
 add_library(cudarl_core STATIC
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
+    src/envs/cartpole/cartpole.cu
     src/nn/gemm.cu
     src/nn/gemm_bf16.cu
     src/nn/mlp_gpu.cu
@@ -106,6 +107,7 @@ add_executable(cudarl_tests
     tests/test_mlp_gpu.cpp
     tests/test_adam.cpp
     tests/test_function_fit.cpp
+    tests/test_cartpole.cpp
 )
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
