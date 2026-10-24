@@ -6,7 +6,9 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Status: neural network core and tensor-core GEMM done; PPO next.** Hand-written CUDA MLP kernels, backprop, and Adam are verified against finite differences and a CPU reference. The hand-written bf16 tensor-core GEMM reaches **91–96% of cuBLAS** on large matrices. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
+> **Status: PPO solves CartPole on the GPU in about 0.35 seconds, and you can watch it learn in Godot.** Under it: hand-written CUDA MLP kernels, backprop, and Adam verified against finite differences, and a bf16 tensor-core GEMM at **91–96% of cuBLAS**. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
+
+![PPO learning CartPole live in Godot: a dozen carts balancing with the newest policy, and the learning curve reaching the 475 "solved" line](docs/images/cartpole-solved.png)
 
 ---
 
@@ -26,17 +28,15 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 |---|---|
 | Godot 4.4 loads the CUDA-linked GDExtension DLL | ✅ Working (Windows, RTX 5070, CUDA 13.2) |
 | GPU probe: device query plus a test kernel launch, so a missing driver or wrong architecture is reported instead of crashing | ✅ Working |
-| **Live training view in Godot:** watch a network trained on the GPU fit a curve in real time, with live loss and timing | ✅ Working (main scene) |
+| **PPO on CartPole, entirely on the GPU:** batched environment kernel, rollouts, GAE with truncation bootstrapping, Feistel-shuffled minibatches, clipped-surrogate gradient, Adam | ✅ Solves in ~0.35 s on every seed tried ([write-up](docs/ppo_cartpole.md)) |
+| **Live PPO view in Godot** (main scene): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
+| Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
 | Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working |
 | **Tensor-core bf16 GEMM** (`mma.sync`, `ldmatrix`, `cp.async` pipeline, swizzled shared memory), five versions, each profiled | ✅ Working, 91–96% of cuBLAS ([worklog](docs/gemm_worklog.md)) |
-| Verification: fp64 finite-difference gradient checks, GPU vs. CPU reference, exact-arithmetic tensor-core checks, bit-identical determinism, end-to-end learning | ✅ Working, 45 tests |
-| Benchmark: roofline, cuBLAS comparison, tuning sweep | ✅ Working (`nn_bench`) |
-| PPO trained entirely on the GPU (CartPole first, then racing), watched live in Godot | ⏳ Planned |
-
-![Live training view: a 1→32→32→1 network learning sin(3x)(0.5 + 0.15x) on the GPU, 0.3 ms per step](docs/images/live-fit.png)
-
-*The live view: Godot calls the CUDA trainer every frame and draws the network's prediction (blue) over the target (gray), with the loss history below. Target function, activation, width, depth, learning rate, and training speed can all be changed while it runs.*
+| Verification: fp64 finite-difference gradient checks (network and PPO loss), GPU vs. CPU references, exact-arithmetic tensor-core checks, bit-identical determinism, end-to-end solves | ✅ Working, 66 tests |
+| Benchmark: roofline, cuBLAS comparison, tuning sweep, environment throughput, PPO solve time | ✅ Working (`nn_bench`) |
+| PPO on a racing track (continuous control, raycast sensors) | ⏳ Next |
 
 The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA driver, with no CUDA DLLs shipped alongside it.
 
@@ -44,7 +44,18 @@ The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA
 
 ## Results
 
-Measured on an RTX 5070 (48 SMs, driver 620.02, CUDA 13.2) with `nn_bench`, best of 5 timing trials. Every result is checked against cuBLAS before it's timed.
+Measured on an RTX 5070 (48 SMs, driver 620.02, CUDA 13.2) with `nn_bench`, best of 5 timing trials. Every GEMM result is checked against cuBLAS before it's timed.
+
+### PPO on CartPole
+
+Defaults: 1,024 environments × 32 steps per update, 4 epochs × 8 minibatches. The full design and tuning story is in the **[PPO write-up](docs/ppo_cartpole.md)**.
+
+| | |
+|---|---|
+| Time to solve (mean length ≥ 475), 5 seeds | **0.33–0.38 s**, 19–21 updates, ~650K env steps |
+| Stays solved afterwards (worst mean over the next 40 updates) | 457–489 |
+| Training throughput, rollout + optimization | ~2 M env steps/s |
+| Raw CartPole stepping, 262K environments | **15.9 G steps/s**, 143× a single-threaded CPU loop |
 
 ### Tensor-core GEMM (bf16 × bf16 → fp32)
 
@@ -154,13 +165,13 @@ build/Release/nn_bench.exe
 
 **Without Godot:** configure with `-DCUDARL_BUILD_GODOT=OFF` (or use the `ci` preset) to build only the core library, tests, and benchmark. godot-cpp isn't needed then.
 
-**Run the live training view** (close Godot before rebuilding; a running game locks the DLL):
+**Run the live PPO view** (close Godot before rebuilding; a running game locks the DLL):
 
 ```bash
 godot --path godot-project
 ```
 
-The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The older maze demo is still there: `godot --path godot-project res://maze/maze.tscn`.
+The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The other scenes are still there: the curve-fitting view (`godot --path godot-project res://fit/fit.tscn`) and the maze (`res://maze/maze.tscn`).
 
 ### Continuous integration
 
@@ -175,6 +186,13 @@ var device := CudaDevice.new()      # probes the GPU once
 device.is_available()               # bool
 device.describe()                   # one-line summary, or the reason CUDA is unavailable
 device.get_info()                   # { available, name, compute_capability, multiprocessors, memory_bytes, error }
+
+var lab := PpoLab.new()
+lab.start(num_envs, seed, showcase_count)   # PPO on a background thread; false + get_error() without CUDA
+lab.set_updates_per_second(2.0)     # throttle so learning is watchable (<= 0: full speed)
+var carts = lab.step_showcase(true) # call at 50 Hz: [x, theta, steps, failed] per showcase cart
+lab.get_stats()                     # latest update: mean episode length, entropy, KL, clip fraction, ...
+lab.get_learning_curve()            # PackedVector2Array of (env steps, mean episode length)
 
 var trainer := NetworkTrainer.new()
 trainer.configure(target, width, depth, activation, learning_rate)   # false + get_error() without CUDA
@@ -201,13 +219,15 @@ CMakePresets.json     `windows`/`release` for local builds, `ci` for builds with
 src/core/             host/device shared code: counter-based RNG, bf16 conversion
 src/cuda/             CUDA runtime helpers: RAII device memory, errors, device probe
 src/nn/               MLP: fp32 and bf16 tensor-core GEMM kernels, GPU forward/backward, Adam, losses, CPU reference
-src/demos/            live-training demos driven from Godot (FunctionFit)
+src/rl/               PPO: trainer, kernels (sampling, GAE, shuffle, loss gradient), shared math
+src/envs/cartpole/    CartPole-v1 as a batched CUDA environment (host/device physics)
+src/demos/            live demos driven from Godot (PPO session + showcase, FunctionFit)
 src/envs/maze/        maze rules (plain C++)
 src/godot/            GDExtension classes and registration
 tests/                hand-written test harness and test suites (run via ctest)
 tools/nn_bench.cpp    roofline and cuBLAS benchmark (`tc`, `fp32`, `train`, `tune`, `profile`)
-godot-project/        Godot project: addons/cudarl/ (extension), fit/ (live training view), maze/
-docs/                 GEMM worklog, screenshots
+godot-project/        Godot project: addons/cudarl/ (extension), cartpole/ (live PPO), fit/, maze/
+docs/                 GEMM worklog, PPO write-up, screenshots
 external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ```
 
@@ -216,7 +236,7 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ## Known limitations
 
 - **Windows only for now.** The build links a Windows godot-cpp library directly, and the `.gdextension` file only lists `windows.x86_64`.
-- **No RL yet.** The neural network core trains (see the sin(x) fit test), but PPO isn't built. The maze agents act randomly; the maze is a placeholder demo for the engine bridge and gets replaced by the PPO environments.
+- **One RL environment so far.** PPO currently has only CartPole, with discrete actions. Continuous control (a Gaussian policy) arrives with the racing environment. The maze agents still act randomly; it's a leftover bridge demo.
 - **The MLP still trains in fp32.** The tensor-core GEMM is a standalone kernel for now (forward-pass layout only). The PPO-sized networks are memory- and launch-bound, so it wouldn't speed them up much; it goes into the MLP when bigger models need it. It's also at 65% of cuBLAS at 1024³, where too few blocks fill the GPU (see the worklog's next steps).
 - **Small batches are launch-bound.** A training step is about two dozen kernel launches; CUDA Graphs or fusion would cut the 0.2 ms floor.
 - **Building godot-cpp isn't scripted.** The prebuilt library isn't checked in, and building it runs Godot's own Python binding generator. That's a one-time upstream build tool, not part of this project's code or runtime.
@@ -227,7 +247,7 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 
 1. ~~**Neural network core.**~~ ✅ MLP forward and backward kernels and Adam, verified against finite differences and a CPU reference, benchmarked against the roofline and cuBLAS.
 2. ~~**Tensor-core GEMM.**~~ ✅ bf16 `mma.sync` kernel at 91–96% of cuBLAS on large matrices, with a [worklog](docs/gemm_worklog.md) of every optimization and its profile.
-3. **PPO on CartPole.** GPU-resident rollouts, advantage estimation (GAE), and updates. CartPole has well-known solutions, so a bug can't hide behind the environment.
+3. ~~**PPO on CartPole.**~~ ✅ GPU-resident rollouts, GAE, and updates; solves in about 0.35 s and is watchable live in Godot ([write-up](docs/ppo_cartpole.md)).
 4. **PPO on a racing track.** Raycast sensors and continuous control. The first demo worth recording, with lap progress as a clear learning curve.
 5. **Fused attention kernel**, then an attention-based policy.
 6. **Linux build and CI**, then a swarm with spatial hashing if there's time.

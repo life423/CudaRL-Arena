@@ -58,6 +58,8 @@ add_library(cudarl_core STATIC
     src/nn/adam.cu
     src/nn/loss.cu
     src/demos/function_fit.cpp
+    src/demos/ppo_session.cpp
+    src/demos/cartpole_showcase.cpp
 )
 target_include_directories(cudarl_core PUBLIC src)
 target_link_libraries(cudarl_core PUBLIC CUDA::cudart_static)
@@ -84,6 +86,7 @@ if(CUDARL_BUILD_GODOT)
         src/godot/cuda_device.cpp
         src/godot/maze_arena.cpp
         src/godot/network_trainer.cpp
+        src/godot/ppo_lab.cpp
     )
     target_link_libraries(cudarl PRIVATE cudarl_core godot-cpp)
     target_compile_definitions(cudarl PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED)
@@ -111,6 +114,7 @@ add_executable(cudarl_tests
     tests/test_function_fit.cpp
     tests/test_cartpole.cpp
     tests/test_ppo.cpp
+    tests/test_ppo_demo.cpp
 )
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)

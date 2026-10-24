@@ -6,6 +6,7 @@
 #include "cuda_device.h"
 #include "maze_arena.h"
 #include "network_trainer.h"
+#include "ppo_lab.h"
 
 using namespace godot;
 
@@ -16,6 +17,7 @@ void initialize_cudarl_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<CudaDevice>();
     ClassDB::register_class<MazeArena>();
     ClassDB::register_class<NetworkTrainer>();
+    ClassDB::register_class<PpoLab>();
 }
 
 void uninitialize_cudarl_module(ModuleInitializationLevel) {}
