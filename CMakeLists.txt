@@ -53,3 +53,13 @@ set_target_properties(cudarl PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY         "${CUDARL_ADDON_BIN}"
     RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CUDARL_ADDON_BIN}"
 )
+
+# --- Tests (run with: ctest --preset release) ---------------------------------
+enable_testing()
+add_executable(cudarl_tests
+    tests/test_main.cpp
+    tests/test_mlp_cpu.cpp
+)
+target_include_directories(cudarl_tests PRIVATE tests)
+target_link_libraries(cudarl_tests PRIVATE cudarl_core)
+add_test(NAME cudarl_tests COMMAND cudarl_tests)

@@ -16,5 +16,13 @@
       "configurePreset": "windows",
       "configuration": "Release"
     }
+  ],
+  "testPresets": [
+    {
+      "name": "release",
+      "configurePreset": "windows",
+      "configuration": "Release",
+      "output": { "outputOnFailure": true, "verbosity": "verbose" }
+    }
   ]
 }
