@@ -19,6 +19,7 @@ public:
 
     int steps() const { return t_; }
     const AdamConfig& config() const { return cfg_; }
+    void set_learning_rate(float lr) { cfg_.lr = lr; }   // e.g. for annealing schedules
     // Norm of the gradients seen by the last step (before clipping). Synchronizes;
     // only computed when clipping is enabled.
     float last_grad_norm() const;
