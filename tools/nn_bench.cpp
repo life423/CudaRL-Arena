@@ -342,7 +342,38 @@ cudarl::rl::PpoConfig ppo_config_from_args(int argc, char** argv) {
     return cfg;
 }
 
+// Raw environment stepping: the batched CartPole kernel vs the same step
+// function in a single-threaded CPU loop (a baseline, not a tuned CPU simulator).
+void env_throughput() {
+    namespace cp = cudarl::cartpole;
+    std::printf("### CartPole environment stepping\n\n| Envs | GPU steps/s | CPU (1 thread) steps/s | Speedup |\n|---|---|---|---|\n");
+    for (int n : {1024, 16384, 262144, 1048576}) {
+        cp::CartPoleBatch batch(n, 1);
+        std::vector<int> h_actions(n);
+        for (int i = 0; i < n; ++i) h_actions[i] = static_cast<int>(cudarl::rng::bits(2, 0, i) & 1u);
+        device_ptr<int> actions(n);
+        actions.copy_from_host(h_actions.data(), n);
+        device_ptr<float> r(n), d(n), t(n), fo(size_t(n) * 4), len(n);
+        const cp::StepOutputs out{r.get(), d.get(), t.get(), fo.get(), len.get()};
+        const double gpu_ms = time_ms([&] { batch.step(actions.get(), out); }, 50);
+
+        std::vector<cp::State> states(n);
+        std::vector<uint32_t> episodes(n, 0);
+        for (int i = 0; i < n; ++i) states[i] = cp::initial_state(1, i, 0);
+        const int cpu_steps = std::max(1, 4'000'000 / n);
+        float final_obs[4];
+        const auto start = std::chrono::steady_clock::now();
+        for (int s = 0; s < cpu_steps; ++s)
+            for (int i = 0; i < n; ++i) cp::step(states[i], h_actions[i], 1, i, episodes[i], final_obs);
+        const double cpu_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start).count() / cpu_steps;
+        std::printf("| %7d | %8.2f G | %6.1f M | %5.0fx |\n", n, n / (gpu_ms * 1e-3) * 1e-9, n / (cpu_ms * 1e-3) * 1e-6,
+                    cpu_ms / gpu_ms);
+    }
+    std::printf("\n");
+}
+
 void rl_section(cudarl::rl::PpoConfig cfg) {
+    env_throughput();
     std::printf("### PPO on CartPole (GPU-resident)\n\n");
     std::printf("%d envs x %d steps per update, %d epochs x %d minibatches, lr %.1e%s over %d updates\n\n",
                 cfg.num_envs, cfg.rollout_steps, cfg.epochs, cfg.minibatches, cfg.lr,
