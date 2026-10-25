@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+#include "core/bf16.h"
 #include "cuda/cuda_memory.h"
 
 namespace {
@@ -54,7 +55,32 @@ __global__ void softmax_backward_rows_kernel(const float* P, float* dP, int rows
     for (int c = lane; c < cols; c += 32) g[c] = scale * p[c] * (g[c] - dot);
 }
 
+// Three passes over the row: the max, then the sum of exponentials, then the normalized
+// values, which are rounded to bf16 on the way out.
+__global__ void softmax_rows_to_bf16_kernel(const float* S, uint16_t* P, int rows, int cols, float scale) {
+    const int row = blockIdx.x * kWarpsPerBlock + threadIdx.x / 32;
+    const int lane = threadIdx.x % 32;
+    if (row >= rows) return;
+    const float* x = S + static_cast<size_t>(row) * cols;
+    uint16_t* y = P + static_cast<size_t>(row) * cols;
+
+    float mx = neg_inf();
+    for (int c = lane; c < cols; c += 32) mx = fmaxf(mx, scale * x[c]);
+    mx = warp_max(mx);
+
+    float sum = 0.f;
+    for (int c = lane; c < cols; c += 32) sum += expf(scale * x[c] - mx);
+    const float inv = 1.f / warp_sum(sum);
+    for (int c = lane; c < cols; c += 32) y[c] = cudarl::bf16::from_float(expf(scale * x[c] - mx) * inv);
+}
+
 } // namespace
+
+void unfused_softmax_rows_to_bf16(const float* S, uint16_t* P, int rows, int cols, float scale, cudaStream_t stream) {
+    const int blocks = (rows + kWarpsPerBlock - 1) / kWarpsPerBlock;
+    softmax_rows_to_bf16_kernel<<<blocks, kWarpsPerBlock * 32, 0, stream>>>(S, P, rows, cols, scale);
+    CUDA_CHECK_THROW(cudaGetLastError());
+}
 
 void unfused_softmax_rows(float* S, int rows, int cols, float scale, cudaStream_t stream) {
     const int blocks = (rows + kWarpsPerBlock - 1) / kWarpsPerBlock;

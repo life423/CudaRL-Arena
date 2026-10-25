@@ -22,6 +22,7 @@
 #include "cuda/cuda_memory.h"
 #include "nn/adam.h"
 #include "nn/attention.h"
+#include "nn/attention_bf16.h"
 #include "nn/gemm.h"
 #include "nn/gemm_bf16.h"
 #include "nn/loss.h"
@@ -498,6 +499,117 @@ void attention_section(const Hardware& hw, cublasHandle_t handle) {
     std::printf("\n");
 }
 
+// --- Attention, bf16 tensor cores -----------------------------------------------
+
+// Values rounded to bf16, so the fp32 and bf16 kernels see the same inputs.
+std::vector<float> rounded_random(size_t n, uint32_t seed) {
+    std::vector<float> h(n);
+    for (size_t i = 0; i < n; ++i)
+        h[i] = cudarl::bf16::round_trip(cudarl::rng::normal(seed, 0, static_cast<uint32_t>(i)));
+    return h;
+}
+
+std::vector<uint16_t> to_bf16_bits(const std::vector<float>& h) {
+    std::vector<uint16_t> bits(h.size());
+    for (size_t i = 0; i < h.size(); ++i) bits[i] = cudarl::bf16::from_float(h[i]);
+    return bits;
+}
+
+device_ptr<float> upload(const std::vector<float>& h) {
+    device_ptr<float> d(h.size());
+    d.copy_from_host(h.data(), h.size());
+    return d;
+}
+
+device_ptr<uint16_t> upload_bits(const std::vector<uint16_t>& h) {
+    device_ptr<uint16_t> d(h.size());
+    d.copy_from_host(h.data(), h.size());
+    return d;
+}
+
+// Row-major C[b] = op(A[b]) op(B[b]) with bf16 inputs and fp32 output, through cuBLAS.
+void cublas_bf16_gemm_batched(cublasHandle_t h, Trans ta, Trans tb, int m, int n, int k, const uint16_t* A, int lda,
+                              long long strideA, const uint16_t* B, int ldb, long long strideB, float* C, int ldc,
+                              long long strideC, int batch) {
+    const float one = 1.f, zero = 0.f;
+    CUBLAS_CHECK(cublasGemmStridedBatchedEx(h, tb == Trans::N ? CUBLAS_OP_N : CUBLAS_OP_T,
+                                            ta == Trans::N ? CUBLAS_OP_N : CUBLAS_OP_T, n, m, k, &one, B, CUDA_R_16BF,
+                                            ldb, strideB, A, CUDA_R_16BF, lda, strideA, &zero, C, CUDA_R_32F, ldc,
+                                            strideC, batch, CUBLAS_COMPUTE_32F, CUBLAS_GEMM_DEFAULT_TENSOR_OP));
+}
+
+// The fused tensor-core forward against the unfused bf16 path: cuBLAS bf16 GEMMs with
+// the softmax in between, so the fp32 scores go through global memory. Both are timed
+// without the fp32 -> bf16 conversion of Q, K and V, which they share. The unfused
+// path is skipped where its scores would not fit (8192 needs 8 GiB for them).
+void bench_attention_bf16(cublasHandle_t handle, double peak_tflops, int seq, bool run_unfused) {
+    constexpr int H = 32, D = 64;
+    const size_t n = size_t(H) * seq * D, r = size_t(H) * seq, s = size_t(H) * seq * seq;
+    const long long nd = static_cast<long long>(seq) * D, ss = static_cast<long long>(seq) * seq;
+    const int rows = H * seq;
+    const AttentionShape shape{H, seq, D};
+    const float scale = 1.f / std::sqrt(float(D));
+    const int reps = seq >= 8192 ? 3 : seq >= 2048 ? 5 : seq >= 512 ? 20 : 100;
+
+    const auto qh = rounded_random(n, 71), kh = rounded_random(n, 72), vh = rounded_random(n, 73);
+    auto Q32 = upload(qh), K32 = upload(kh), V32 = upload(vh);
+    auto Qb = upload_bits(to_bf16_bits(qh)), Kb = upload_bits(to_bf16_bits(kh)), Vb = upload_bits(to_bf16_bits(vh));
+    device_ptr<float> Of(n), Lf(r), Ob(n), Lb(r);
+    device_ptr<float> S(run_unfused ? s : 0), uO(run_unfused ? n : 0);
+    device_ptr<uint16_t> P(run_unfused ? s : 0);
+
+    const auto fused_fp32 = [&] { attention_forward(shape, Q32.get(), K32.get(), V32.get(), Of.get(), Lf.get()); };
+    const auto fused_bf16 = [&] { attention_forward_bf16(shape, Qb.get(), Kb.get(), Vb.get(), Ob.get(), Lb.get()); };
+    const auto unfused_bf16 = [&] {
+        cublas_bf16_gemm_batched(handle, Trans::N, Trans::T, seq, seq, D, Qb.get(), D, nd, Kb.get(), D, nd, S.get(),
+                                 seq, ss, H);
+        unfused_softmax_rows_to_bf16(S.get(), P.get(), rows, seq, scale);
+        cublas_bf16_gemm_batched(handle, Trans::N, Trans::N, seq, D, seq, P.get(), seq, ss, Vb.get(), D, nd, uO.get(),
+                                 D, nd, H);
+    };
+
+    fused_fp32();
+    fused_bf16();
+    if (run_unfused) unfused_bf16();
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    const double err = max_rel_error(host_copy(Ob), host_copy(Of));
+    const double err_unfused = run_unfused ? max_rel_error(host_copy(uO), host_copy(Of)) : 0.0;
+
+    const auto convert_all = [&] {
+        convert_to_bf16(Q32.get(), Qb.get(), n);
+        convert_to_bf16(K32.get(), Kb.get(), n);
+        convert_to_bf16(V32.get(), Vb.get(), n);
+    };
+    const double t_fused = time_ms(fused_bf16, reps);
+    const double t_fp32 = time_ms(fused_fp32, reps);
+    const double t_convert = time_ms(convert_all, reps);
+    const double flops = 4.0 * H * seq * double(seq) * D;   // QK^T and PV, per head
+    const double tflops = flops / (t_fused * 1e-3) * 1e-12;
+    if (run_unfused) {
+        const double t_unfused = time_ms(unfused_bf16, reps);
+        std::printf("| %5d | %7.3f | %6.1f | %4.1f%% | %7.3f | %5.2fx | %7.3f | %7.3f | %.1e | %.1e |\n", seq, t_fused,
+                    tflops, 100 * tflops / peak_tflops, t_unfused, t_unfused / t_fused, t_fp32, t_convert, err,
+                    err_unfused);
+    } else {
+        std::printf("| %5d | %7.3f | %6.1f | %4.1f%% | n/a | n/a | %7.3f | %7.3f | %.1e | n/a |\n", seq, t_fused, tflops,
+                    100 * tflops / peak_tflops, t_fp32, t_convert, err);
+    }
+}
+
+void attention_bf16_section(cublasHandle_t handle) {
+    const double peak = measure_mma_peak_tflops();
+    CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_DEFAULT_MATH));   // tensor cores on for the bf16 GEMMs
+    std::printf("### Attention, bf16 tensor cores (32 heads, head dim 64): fused vs unfused bf16 cuBLAS + softmax\n\n");
+    std::printf("Tensor-core ceiling: %.1f TFLOP/s measured. Attention times exclude the fp32 -> bf16 conversion of Q, K and V, "
+                "which is timed separately.\n\n",
+                peak);
+    std::printf("| Seq | Fused bf16 ms | TFLOP/s | %% of ceiling | Unfused bf16 ms | Speedup | Fused fp32 ms | Convert Q,K,V ms | Error vs fp32 (fused bf16) | Error vs fp32 (unfused bf16) |\n");
+    std::printf("|---|---|---|---|---|---|---|---|---|---|\n");
+    for (int seq : {128, 512, 2048}) bench_attention_bf16(handle, peak, seq, true);
+    bench_attention_bf16(handle, peak, 8192, false);
+    std::printf("\n");
+}
+
 void fp32_section(const Hardware& hw, cublasHandle_t handle) {
     CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_PEDANTIC_MATH));   // true fp32: no TF32 tensor cores
     std::printf("### GEMM (fp32, GFLOP/s)\n\n");
@@ -558,6 +670,7 @@ int main(int argc, char** argv) {
     }
     if (wants(argc, argv, "fp32")) fp32_section(hw, handle);
     if (wants(argc, argv, "attn")) attention_section(hw, handle);
+    if (wants(argc, argv, "attn")) attention_bf16_section(handle);
     if (wants(argc, argv, "train")) training_section(hw);
     if (wants(argc, argv, "rl")) rl_section(ppo_config_from_args(argc, argv));
     cublasDestroy(handle);
