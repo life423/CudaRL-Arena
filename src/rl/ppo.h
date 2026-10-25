@@ -55,6 +55,9 @@ struct PpoStats {
 
 class PpoTrainer {
 public:
+    using Config = PpoConfig;
+    using Stats  = PpoStats;
+
     explicit PpoTrainer(const PpoConfig& config);
     ~PpoTrainer();
     PpoTrainer(const PpoTrainer&) = delete;

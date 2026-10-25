@@ -6,7 +6,7 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Status: PPO solves CartPole on the GPU in about 0.35 seconds, and you can watch it learn in Godot.** Under it: hand-written CUDA MLP kernels, backprop, and Adam verified against finite differences, and a bf16 tensor-core GEMM at **91–96% of cuBLAS**. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
+> **Status: PPO solves CartPole on the GPU in about 0.35 seconds, and a Gaussian PPO policy learns to drive a racing track from raycasts in about 3 seconds. You can watch both learn in Godot.** Under it: hand-written CUDA MLP kernels, backprop, and Adam verified against finite differences, and a bf16 tensor-core GEMM at **91–96% of cuBLAS**. Everything below is marked as either **working** or **planned**, and every number comes from a measurement you can reproduce from this repo.
 
 ![PPO learning CartPole live in Godot: a dozen carts balancing with the newest policy, and the learning curve reaching the 475 "solved" line](docs/images/cartpole-solved.png)
 
@@ -30,13 +30,14 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | GPU probe: device query plus a test kernel launch, so a missing driver or wrong architecture is reported instead of crashing | ✅ Working |
 | **PPO on CartPole, entirely on the GPU:** batched environment kernel, rollouts, GAE with truncation bootstrapping, Feistel-shuffled minibatches, clipped-surrogate gradient, Adam | ✅ Solves in ~0.35 s on every seed tried ([write-up](docs/ppo_cartpole.md)) |
 | **Live PPO view in Godot** (main scene): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
+| **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
+| **Live racing view in Godot** (`racing/racing.tscn`): showcase cars with their raycasts, the track, laps-per-episode curve | ✅ Working |
 | Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
 | Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working |
 | **Tensor-core bf16 GEMM** (`mma.sync`, `ldmatrix`, `cp.async` pipeline, swizzled shared memory), five versions, each profiled | ✅ Working, 91–96% of cuBLAS ([worklog](docs/gemm_worklog.md)) |
-| Verification: fp64 finite-difference gradient checks (network and PPO loss), GPU vs. CPU references, exact-arithmetic tensor-core checks, bit-identical determinism, end-to-end solves | ✅ Working, 66 tests |
+| Verification: fp64 finite-difference gradient checks (network, PPO loss, Gaussian loss), GPU vs. CPU references, exact-arithmetic tensor-core checks, bit-identical determinism, end-to-end solves | ✅ Working, 82 tests |
 | Benchmark: roofline, cuBLAS comparison, tuning sweep, environment throughput, PPO solve time | ✅ Working (`nn_bench`) |
-| PPO on a racing track (continuous control, raycast sensors) | ⏳ Next |
 
 The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA driver, with no CUDA DLLs shipped alongside it.
 
@@ -99,6 +100,20 @@ A full PPO-sized training step (8 → 64 → 64 → 2: forward, backward, Adam w
 | 65,536 | 1.10 | 59.6 M |
 
 The flat 0.2 ms up to batch 4,096 is **kernel-launch overhead**: about two dozen small kernels per step. CUDA Graphs or kernel fusion would remove most of it. For scale, the plain-loop CPU reference, which is single-threaded and built for correctness rather than speed, takes 15.2 ms for one step at batch 4,096.
+
+### PPO on a racing track
+
+Defaults: 2,048 cars × 64 steps per update, 4 epochs × 8 minibatches, 100 updates. The car has steering and throttle outputs and sees nine raycasts plus its speed. The full design, verification, and limits are in the **[racing write-up](docs/ppo_racing.md)**.
+
+| Seed | Laps per episode, update 1 | Laps per episode, update 100 | Share of final episodes that crashed |
+|---|---|---|---|
+| 1 | 0.03 | 3.91 | 0.0% |
+| 2 | 0.03 | 3.81 | 8.3% |
+| 3 | 0.03 | 3.91 | 0.8% |
+
+Episodes end at 50 s, and about four laps is the most a car can cover at top speed. The learning is to avoid crashing until the time limit. Training runs at 3.2–3.6 M environment steps per second, about 38 ms per update.
+
+![Racing: showcase cars driving the newest policy, and the laps-per-episode curve](docs/images/racing-learning.png)
 
 ---
 
@@ -171,7 +186,7 @@ build/Release/nn_bench.exe
 godot --path godot-project
 ```
 
-The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The other scenes are still there: the curve-fitting view (`godot --path godot-project res://fit/fit.tscn`) and the maze (`res://maze/maze.tscn`).
+The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The other scenes are still there: the racing track (`godot --path godot-project res://racing/racing.tscn`), the curve-fitting view (`res://fit/fit.tscn`), and the maze (`res://maze/maze.tscn`).
 
 ### Continuous integration
 
@@ -219,15 +234,16 @@ CMakePresets.json     `windows`/`release` for local builds, `ci` for builds with
 src/core/             host/device shared code: counter-based RNG, bf16 conversion
 src/cuda/             CUDA runtime helpers: RAII device memory, errors, device probe
 src/nn/               MLP: fp32 and bf16 tensor-core GEMM kernels, GPU forward/backward, Adam, losses, CPU reference
-src/rl/               PPO: trainer, kernels (sampling, GAE, shuffle, loss gradient), shared math
+src/rl/               PPO: trainers (discrete and Gaussian), kernels (sampling, GAE, shuffle, losses), shared math
 src/envs/cartpole/    CartPole-v1 as a batched CUDA environment (host/device physics)
-src/demos/            live demos driven from Godot (PPO session + showcase, FunctionFit)
+src/envs/racing/      racing track: bicycle-model car, raycasts, fixed track, as a batched CUDA environment
+src/demos/            live demos driven from Godot (PPO sessions + showcases, FunctionFit)
 src/envs/maze/        maze rules (plain C++)
 src/godot/            GDExtension classes and registration
 tests/                hand-written test harness and test suites (run via ctest)
 tools/nn_bench.cpp    roofline and cuBLAS benchmark (`tc`, `fp32`, `train`, `tune`, `profile`)
-godot-project/        Godot project: addons/cudarl/ (extension), cartpole/ (live PPO), fit/, maze/
-docs/                 GEMM worklog, PPO write-up, screenshots
+godot-project/        Godot project: addons/cudarl/ (extension), cartpole/ (live PPO), racing/ (live driving), fit/, maze/
+docs/                 GEMM worklog, PPO write-ups (CartPole, racing), screenshots
 external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ```
 
@@ -236,7 +252,7 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ## Known limitations
 
 - **Windows only for now.** The build links a Windows godot-cpp library directly, and the `.gdextension` file only lists `windows.x86_64`.
-- **One RL environment so far.** PPO currently has only CartPole, with discrete actions. Continuous control (a Gaussian policy) arrives with the racing environment. The maze agents still act randomly; it's a leftover bridge demo.
+- **One track, and no heading in the racing observation.** The racing environment is one fixed circuit, and its nine raycasts and speed don't include the car's heading relative to the track. The policy has to infer its direction from the walls. The maze agents still act randomly; they're a leftover bridge demo.
 - **The MLP still trains in fp32.** The tensor-core GEMM is a standalone kernel for now (forward-pass layout only). The PPO-sized networks are memory- and launch-bound, so it wouldn't speed them up much; it goes into the MLP when bigger models need it. It's also at 65% of cuBLAS at 1024³, where too few blocks fill the GPU (see the worklog's next steps).
 - **Small batches are launch-bound.** A training step is about two dozen kernel launches; CUDA Graphs or fusion would cut the 0.2 ms floor.
 - **Building godot-cpp isn't scripted.** The prebuilt library isn't checked in, and building it runs Godot's own Python binding generator. That's a one-time upstream build tool, not part of this project's code or runtime.
@@ -248,7 +264,7 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 1. ~~**Neural network core.**~~ ✅ MLP forward and backward kernels and Adam, verified against finite differences and a CPU reference, benchmarked against the roofline and cuBLAS.
 2. ~~**Tensor-core GEMM.**~~ ✅ bf16 `mma.sync` kernel at 91–96% of cuBLAS on large matrices, with a [worklog](docs/gemm_worklog.md) of every optimization and its profile.
 3. ~~**PPO on CartPole.**~~ ✅ GPU-resident rollouts, GAE, and updates; solves in about 0.35 s and is watchable live in Godot ([write-up](docs/ppo_cartpole.md)).
-4. **PPO on a racing track.** Raycast sensors and continuous control. The first demo worth recording, with lap progress as a clear learning curve.
+4. ~~**PPO on a racing track.**~~ ✅ Gaussian policy for continuous steering and throttle, nine raycasts, a live Godot view, and a laps-per-episode learning curve ([write-up](docs/ppo_racing.md)).
 5. **Fused attention kernel**, then an attention-based policy.
 6. **Linux build and CI**, then a swarm with spatial hashing if there's time.
 
