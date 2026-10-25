@@ -16,10 +16,12 @@
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 
+#include "attention_baseline.h"
 #include "core/bf16.h"
 #include "core/rng.h"
 #include "cuda/cuda_memory.h"
 #include "nn/adam.h"
+#include "nn/attention.h"
 #include "nn/gemm.h"
 #include "nn/gemm_bf16.h"
 #include "nn/loss.h"
@@ -406,6 +408,96 @@ void tensor_core_section(cublasHandle_t handle) {
     std::printf("\n");
 }
 
+// --- Attention ----------------------------------------------------------------
+
+// Row-major C[b] = op(A[b]) op(B[b]) for every batch entry b, through column-major cuBLAS as in cublas_gemm.
+void cublas_gemm_batched(cublasHandle_t h, Trans ta, Trans tb, int m, int n, int k, const float* A, int lda,
+                         long long strideA, const float* B, int ldb, long long strideB, float* C, int ldc,
+                         long long strideC, int batch) {
+    const float one = 1.f, zero = 0.f;
+    CUBLAS_CHECK(cublasSgemmStridedBatched(h, tb == Trans::N ? CUBLAS_OP_N : CUBLAS_OP_T,
+                                           ta == Trans::N ? CUBLAS_OP_N : CUBLAS_OP_T, n, m, k, &one, B, ldb,
+                                           strideB, A, lda, strideA, &zero, C, ldc, strideC, batch));
+}
+
+// Largest |got - want|, relative to the largest |want|.
+double max_rel_error(const std::vector<float>& got, const std::vector<float>& want) {
+    double diff = 0.0, ref = 0.0;
+    for (size_t i = 0; i < want.size(); ++i) {
+        diff = std::max(diff, std::fabs(double(got[i]) - want[i]));
+        ref  = std::max(ref, std::fabs(double(want[i])));
+    }
+    return ref > 0.0 ? diff / ref : diff;
+}
+
+// The fused kernels against the unfused equivalent (tools/attention_baseline.h) at
+// 32 heads of head dim 64. Each side is timed on the work it does. The forward is
+// 4 N^2 D FLOPs per head for both. The fused backward recomputes the scores and
+// does 14 N^2 D; the unfused one keeps them and does 8 N^2 D.
+void bench_attention(const Hardware& hw, cublasHandle_t handle, int seq) {
+    constexpr int H = 32, D = 64;
+    const size_t n = size_t(H) * seq * D, r = size_t(H) * seq, s = size_t(H) * seq * seq;
+    const long long nd = static_cast<long long>(seq) * D, ss = static_cast<long long>(seq) * seq;
+    const int rows = H * seq;
+    const AttentionShape shape{H, seq, D};
+    const float scale = 1.f / std::sqrt(float(D));
+    const int reps = seq >= 2048 ? 5 : seq >= 512 ? 20 : 100;
+
+    auto Q = random_device(n, 61), K = random_device(n, 62), V = random_device(n, 63), dO = random_device(n, 64);
+    device_ptr<float> O(n), lse(r), delta(r), dQ(n), dK(n), dV(n);
+    device_ptr<float> S(s), dP(s), uO(n), uDQ(n), uDK(n), uDV(n);
+
+    const auto fused_forward = [&] { attention_forward(shape, Q.get(), K.get(), V.get(), O.get(), lse.get()); };
+    const auto fused_backward = [&] {
+        attention_backward(shape, Q.get(), K.get(), V.get(), O.get(), lse.get(), dO.get(), dQ.get(), dK.get(),
+                           dV.get(), delta.get());
+    };
+    // S holds the scores, then the probabilities in place, as an unfused framework would.
+    const auto unfused_forward = [&] {
+        cublas_gemm_batched(handle, Trans::N, Trans::T, seq, seq, D, Q.get(), D, nd, K.get(), D, nd, S.get(), seq, ss, H);
+        unfused_softmax_rows(S.get(), rows, seq, scale);
+        cublas_gemm_batched(handle, Trans::N, Trans::N, seq, D, seq, S.get(), seq, ss, V.get(), D, nd, uO.get(), D, nd, H);
+    };
+    // Needs the probabilities in S from unfused_forward().
+    const auto unfused_backward = [&] {
+        cublas_gemm_batched(handle, Trans::N, Trans::T, seq, seq, D, dO.get(), D, nd, V.get(), D, nd, dP.get(), seq, ss, H);
+        unfused_softmax_backward_rows(S.get(), dP.get(), rows, seq, scale);
+        cublas_gemm_batched(handle, Trans::T, Trans::N, seq, D, seq, S.get(), seq, ss, dO.get(), D, nd, uDV.get(), D, nd, H);
+        cublas_gemm_batched(handle, Trans::T, Trans::N, seq, D, seq, dP.get(), seq, ss, Q.get(), D, nd, uDK.get(), D, nd, H);
+        cublas_gemm_batched(handle, Trans::N, Trans::N, seq, D, seq, dP.get(), seq, ss, K.get(), D, nd, uDQ.get(), D, nd, H);
+    };
+
+    fused_forward();
+    fused_backward();
+    unfused_forward();
+    unfused_backward();
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    const double err = std::max({max_rel_error(host_copy(O), host_copy(uO)),
+                                 max_rel_error(host_copy(dQ), host_copy(uDQ)),
+                                 max_rel_error(host_copy(dK), host_copy(uDK)),
+                                 max_rel_error(host_copy(dV), host_copy(uDV))});
+
+    const double t_fwd = time_ms(fused_forward, reps), u_fwd = time_ms(unfused_forward, reps);
+    const double t_bwd = time_ms(fused_backward, reps), u_bwd = time_ms(unfused_backward, reps);
+    const double fwd_flops = 4.0 * H * seq * double(seq) * D;
+    const double bwd_flops = 14.0 * H * seq * double(seq) * D;
+    const auto tflops = [](double flops, double ms) { return flops / (ms * 1e-3) * 1e-12; };
+    std::printf("| %5d | %6.0f | %7.3f | %5.2f | %4.1f%% | %7.3f | %5.2fx | %7.3f | %5.2f | %4.1f%% | %7.3f | %5.2fx | %.1e |\n",
+                seq, double(s) * sizeof(float) / (1 << 20), t_fwd, tflops(fwd_flops, t_fwd),
+                100 * tflops(fwd_flops, t_fwd) / (hw.peak_gflops * 1e-3), u_fwd, u_fwd / t_fwd, t_bwd,
+                tflops(bwd_flops, t_bwd), 100 * tflops(bwd_flops, t_bwd) / (hw.peak_gflops * 1e-3), u_bwd,
+                u_bwd / t_bwd, err);
+}
+
+void attention_section(const Hardware& hw, cublasHandle_t handle) {
+    CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_PEDANTIC_MATH));   // true fp32 on both sides
+    std::printf("### Attention (fp32, 32 heads, head dim 64): fused kernels vs unfused cuBLAS + softmax\n\n");
+    std::printf("| Seq | Unfused scores (MiB) | Fused fwd ms | TFLOP/s | %% peak | Unfused fwd ms | Fwd speedup | Fused bwd ms | TFLOP/s | %% peak | Unfused bwd ms | Bwd speedup | Max error vs unfused |\n");
+    std::printf("|---|---|---|---|---|---|---|---|---|---|---|---|---|\n");
+    for (int seq : {128, 512, 2048}) bench_attention(hw, handle, seq);
+    std::printf("\n");
+}
+
 void fp32_section(const Hardware& hw, cublasHandle_t handle) {
     CUBLAS_CHECK(cublasSetMathMode(handle, CUBLAS_PEDANTIC_MATH));   // true fp32: no TF32 tensor cores
     std::printf("### GEMM (fp32, GFLOP/s)\n\n");
@@ -436,8 +528,8 @@ void training_section(const Hardware& hw) {
 
 } // namespace
 
-// Usage: nn_bench [tc] [fp32] [train] [rl] [tune] [profile]
-// No arguments runs tc, fp32, train and rl; `tune` and `profile` only run when named.
+// Usage: nn_bench [tc] [fp32] [attn] [train] [rl] [tune] [profile]
+// No arguments runs tc, fp32, attn, train and rl; `tune` and `profile` only run when named.
 int main(int argc, char** argv) {
     const Hardware hw = query_hardware();
     std::printf("## %s\n\n", hw.name.c_str());
@@ -465,6 +557,7 @@ int main(int argc, char** argv) {
         }
     }
     if (wants(argc, argv, "fp32")) fp32_section(hw, handle);
+    if (wants(argc, argv, "attn")) attention_section(hw, handle);
     if (wants(argc, argv, "train")) training_section(hw);
     if (wants(argc, argv, "rl")) rl_section(ppo_config_from_args(argc, argv));
     cublasDestroy(handle);

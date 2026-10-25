@@ -57,6 +57,7 @@ add_library(cudarl_core STATIC
     src/rl/racing_ppo.cpp
     src/nn/gemm.cu
     src/nn/gemm_bf16.cu
+    src/nn/attention.cu
     src/nn/mlp_gpu.cu
     src/nn/adam.cu
     src/nn/loss.cu
@@ -113,6 +114,7 @@ add_executable(cudarl_tests
     tests/test_mlp_cpu.cpp
     tests/test_gemm.cpp
     tests/test_gemm_bf16.cpp
+    tests/test_attention.cpp
     tests/test_mlp_gpu.cpp
     tests/test_adam.cpp
     tests/test_function_fit.cpp
@@ -129,7 +131,7 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmark (the only target that links cuBLAS, as a reference) ---------------
 if(CUDARL_BUILD_BENCH)
-    add_executable(nn_bench tools/nn_bench.cpp)
+    add_executable(nn_bench tools/nn_bench.cpp tools/attention_baseline.cu)
     target_link_libraries(nn_bench PRIVATE cudarl_core CUDA::cublas)
     cudarl_strict_warnings(nn_bench)
 endif()
