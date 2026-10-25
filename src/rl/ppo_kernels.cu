@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "cuda/block_reduce.h"
 #include "cuda/cuda_memory.h"
 
 namespace cudarl::rl {
@@ -12,20 +13,6 @@ constexpr int kThreads       = 256;
 constexpr int kReduceThreads = 1024;
 
 int blocks_for(int n) { return std::max(1, (n + kThreads - 1) / kThreads); }
-
-// Tree reduction in shared memory: the same order every run.
-template <int N>
-__device__ float block_reduce_sum(float v, float* scratch) {
-    scratch[threadIdx.x] = v;
-    __syncthreads();
-    for (int stride = N / 2; stride > 0; stride >>= 1) {
-        if (threadIdx.x < stride) scratch[threadIdx.x] += scratch[threadIdx.x + stride];
-        __syncthreads();
-    }
-    const float total = scratch[0];
-    __syncthreads();
-    return total;
-}
 
 __global__ void sample_kernel(const float* __restrict__ logits, int n, int k, uint32_t seed, uint32_t stream_id,
                               bool greedy, int* __restrict__ actions, float* __restrict__ logp_out) {
