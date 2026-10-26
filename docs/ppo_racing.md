@@ -1,5 +1,10 @@
 # PPO on a racing track, entirely on the GPU
 
+> Historical single-car results. The current default is the harder eight-car
+> circuit described in [Eight-car racing](racing_traffic.md). The original track
+> remains a regression mode; its observations now share the enlarged input
+> layout. Numbers below describe the earlier 10-input implementation.
+
 A car on a closed track learns to drive from nine raycasts and its own speed. It outputs two continuous actions, steering and throttle, from a Gaussian policy with a learned standard deviation. The critic, GAE, the clipped PPO objective, backprop and Adam all run as our own kernels, and only a few statistics are copied to the host each update. Godot draws the cars, their rays and the learning curve.
 
 ![racing: the showcase cars driving the newest policy, and the laps curve](images/racing-learning.png)

@@ -124,6 +124,7 @@ add_executable(cudarl_tests
     tests/test_ppo.cpp
     tests/test_ppo_demo.cpp
     tests/test_racing.cpp
+    tests/test_race.cpp
     tests/test_racing_ppo.cpp
 )
 target_include_directories(cudarl_tests PRIVATE tests)

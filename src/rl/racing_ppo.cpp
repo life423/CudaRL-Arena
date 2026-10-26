@@ -14,7 +14,7 @@ namespace cudarl::rl {
 namespace {
 
 constexpr int kObs = racing::kObsDim, kAct = racing::kActionDim;
-constexpr int kStatEpisodes = 0, kStatLosses = 4, kNumStats = kStatLosses + kGaussianStats;
+constexpr int kStatEpisodes = 0, kStatLosses = 4, kStatRace = kStatLosses+kGaussianStats, kNumStats = kStatRace+4;
 
 nn::MlpSpec net_spec(int hidden, int outputs) {
     return nn::MlpSpec({kObs, hidden, hidden, outputs},
@@ -50,7 +50,7 @@ RacingPpoTrainer::RacingPpoTrainer(const RacingPpoConfig& config) : cfg_(config)
     // showcase, say) never serializes with training.
     CUDA_CHECK_THROW(cudaStreamCreateWithFlags(&stream_, cudaStreamNonBlocking));
 
-    env_ = std::make_unique<racing::RacingBatch>(cfg_.num_envs, cfg_.seed);
+    env_ = std::make_unique<racing::RacingBatch>(cfg_.num_envs, cfg_.seed, cfg_.traffic);
     const float root2 = std::sqrt(2.f);
     actor_  = std::make_unique<nn::GpuMlp>(net_spec(cfg_.hidden, kAct), std::max(cfg_.num_envs, minibatch_), cfg_.seed);
     critic_ = std::make_unique<nn::GpuMlp>(net_spec(cfg_.hidden, 1), std::max(batch_, minibatch_), cfg_.seed + 1);
@@ -67,6 +67,7 @@ RacingPpoTrainer::RacingPpoTrainer(const RacingPpoConfig& config) : cfg_(config)
 
     const size_t b = static_cast<size_t>(batch_), mb = static_cast<size_t>(minibatch_);
     obs_.allocate(b * kObs);
+    race_metrics_.allocate(b*4);
     final_obs_.allocate(b * kObs);
     CUDA_CHECK_THROW(cudaMemset(final_obs_.get(), 0, final_obs_.size_bytes()));
     actions_.allocate(b * kAct);
@@ -106,7 +107,8 @@ void RacingPpoTrainer::rollout() {
         copy_async(values_.get() + row, critic_->output(), n, stream_);
         const racing::StepOutputs out{rewards_.get() + row,         dones_.get() + row,
                                       truncated_.get() + row,       final_obs_.get() + row * kObs,
-                                      finished_len_.get() + row,    finished_laps_.get() + row};
+                                      finished_len_.get() + row,    finished_laps_.get() + row,
+                                      race_metrics_.get()+row*4};
         env_->step(actions_.get() + row * kAct, out, stream_);
     }
     // Bootstrap values: V(next obs) after the last step, and V(final obs) for truncated episodes.
@@ -169,6 +171,7 @@ RacingStats RacingPpoTrainer::update() {
     rollout();
     episode_totals(finished_len_.get(), finished_laps_.get(), dones_.get(), truncated_.get(), batch_,
                    stats_.get() + kStatEpisodes, stream_);
+    sum_columns(race_metrics_.get(),batch_,4,stats_.get()+kStatRace,stream_);
     optimize(stats_.get());
 
     float host[kNumStats];
@@ -178,6 +181,10 @@ RacingStats RacingPpoTrainer::update() {
     ++update_;
     env_steps_ += batch_;
     RacingStats s;
+    s.contact_cars=static_cast<int>(host[kStatRace]);
+    s.clean_laps=static_cast<int>(host[kStatRace+1]);
+    s.mean_lap_seconds=s.clean_laps>0 ? host[kStatRace+2]/s.clean_laps:0.f;
+    s.wall_crashes=static_cast<int>(host[kStatRace+3]);
     s.update    = update_;
     s.env_steps = env_steps_;
     s.episodes  = static_cast<int>(host[kStatEpisodes + 2]);

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "envs/racing/racing.h"
+#include "envs/racing/race.h"
 #include "nn/mlp_cpu.h"
 
 // A handful of cars driven in real time by a copy of the policy being trained.
@@ -26,8 +27,13 @@ public:
     const racing::State& state(int i) const { return states_[i]; }
     // The car's raycast distances in metres, kRays of them.
     float ray(int i, int r) const { return obs_[i * racing::kObsDim + r] * racing::kRayRange; }
+    float car_ray(int i, int r) const { return obs_[i*racing::kObsDim+racing::kRays+1+r]*racing::kRayRange; }
     bool  just_crashed(int i) const { return crash_frames_[i] > 0; }     // the car hit a wall within the last few frames
     const racing::Track& track() const { return track_; }
+    int clean_laps() const { return clean_laps_; }
+    int contacts() const { return contacts_; }
+    int wall_crashes() const { return wall_crashes_; }
+    float best_lap() const { return best_lap_; }
 
 private:
     void observe(int i);
@@ -39,6 +45,8 @@ private:
     std::vector<uint32_t>      episodes_;
     std::vector<float>         obs_;       // [count x kObsDim], for the policy and for drawing the rays
     std::vector<int>           crash_frames_;
+    int clean_laps_=0, contacts_=0, wall_crashes_=0;
+    float best_lap_=0.f;
 };
 
 } // namespace cudarl::demos

@@ -6,16 +6,13 @@ extends Control
 # the track with each car's raycasts, and plots laps per episode. The physics
 # step is the environment's own step (50 ms), so the cars drive in real time.
 
-const PANEL_WIDTH := 340
+const PANEL_WIDTH := 300
 const SHOWCASE_CARS := 8
 const ENV_CHOICES := [512, 2048, 8192]
-const TIME_LIMIT_LAPS := 4.0   # 50 s at top speed (15 m/s) around a lap of about 188 m
 const MAX_LAPS := 4.5
-const TRACK_EXTENT := 44.0     # metres from the origin that the track view must show
 const CAR_LENGTH := 4.0
 const CAR_WIDTH := 2.0
 const STEP_HZ := 20           # racing::kDt = 0.05 s
-const TARGET_LAPS := 1.0
 
 const BG := Color(0.09, 0.10, 0.12)
 const GRASS := Color(0.12, 0.16, 0.13)
@@ -31,7 +28,7 @@ const GRID := Color(0.22, 0.24, 0.28)
 var lab := RacingLab.new()
 var run_seed := 1
 var cars := PackedFloat32Array()
-var car_stride := 16
+var car_stride := 25
 var track_outer := PackedVector2Array()
 var track_inner := PackedVector2Array()
 var curve := PackedVector2Array()
@@ -47,6 +44,13 @@ var stats_label: Label
 var status_label: Label
 var track_view: Control
 var curve_view: Control
+var show_sensors := false
+var inspected_car := 0
+var layout: BoxContainer
+var panel_scroll: ScrollContainer
+var previous_speeds := PackedFloat32Array()
+var braking := PackedByteArray()
+var evaluation_started := false
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = STEP_HZ
@@ -54,6 +58,8 @@ func _ready() -> void:
 	track_outer = lab.get_track_outer()
 	track_inner = lab.get_track_inner()
 	_build_ui()
+	resized.connect(_fit_layout)
+	_fit_layout()
 	print(CudaDevice.new().describe())
 	_restart()
 
@@ -62,6 +68,15 @@ func _exit_tree() -> void:
 
 func _physics_process(_delta: float) -> void:
 	cars = lab.step_showcase()
+	braking.resize(SHOWCASE_CARS)
+	for i in SHOWCASE_CARS:
+		if cars.size() >= (i + 1) * car_stride:
+			var speed: float = cars[i * car_stride + 3]
+			braking[i] = 1 if previous_speeds.size() > i and speed < previous_speeds[i] - 0.08 else 0
+	previous_speeds.resize(SHOWCASE_CARS)
+	for i in SHOWCASE_CARS:
+		if cars.size() >= (i + 1) * car_stride:
+			previous_speeds[i] = cars[i * car_stride + 3]
 	track_view.queue_redraw()
 
 func _process(_delta: float) -> void:
@@ -71,13 +86,17 @@ func _process(_delta: float) -> void:
 	if not err.is_empty():
 		status_label.text = err
 	elif lab.is_finished():
-		status_label.text = "Training finished (all updates done)."
+		if not evaluation_started:
+			lab.reset_showcase()
+			evaluation_started = true
+		status_label.text = "Training complete. Racing the final policy. Live counters start fresh."
 	_update_stats()
 	curve_view.queue_redraw()
 
 func _restart() -> void:
+	evaluation_started = false
 	paused = false
-	pause_button.text = "Pause"
+	pause_button.text = "Pause training"
 	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, SHOWCASE_CARS)
 	status_label.text = ("Training with seed %d" % run_seed) if ok else lab.get_error()
 	_apply_speed()
@@ -85,6 +104,7 @@ func _restart() -> void:
 func _apply_speed() -> void:
 	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
 	lab.set_updates_per_second(ups)
+	speed_slider.editable = not full_speed.button_pressed
 	speed_label.text = "  = full speed" if full_speed.button_pressed else "  = %.1f updates per second" % ups
 
 func _restart_with_new_seed() -> void:
@@ -94,17 +114,20 @@ func _restart_with_new_seed() -> void:
 func _toggle_pause() -> void:
 	paused = not paused
 	lab.set_paused(paused)
-	pause_button.text = "Resume" if paused else "Pause"
+	pause_button.text = "Resume training" if paused else "Pause training"
 
 # --- UI ---------------------------------------------------------------------
 
 func _build_ui() -> void:
-	var root := HBoxContainer.new()
+	var root := BoxContainer.new()
+	layout = root
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(root)
 
 	# The panel scrolls, so the row keeps the window's height on small screens.
 	var scroll := ScrollContainer.new()
+	panel_scroll = scroll
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.custom_minimum_size.x = PANEL_WIDTH
 	root.add_child(scroll)
 	var panel := PanelContainer.new()
@@ -119,10 +142,10 @@ func _build_ui() -> void:
 	margin.add_child(controls)
 
 	var title := Label.new()
-	title.text = "PPO driving a track, live"
+	title.text = "CUDA / RACE LAB"
 	title.add_theme_font_size_override("font_size", 18)
 	controls.add_child(title)
-	controls.add_child(_note("A Gaussian policy outputs steering and throttle from 9 raycasts and its speed. Rollouts, GAE, the loss, backprop and Adam all run on the GPU as hand-written CUDA."))
+	controls.add_child(_note("Shared physics. Learned steering and braking. Red tail lights = braking."))
 
 	speed_slider = HSlider.new()
 	speed_slider.min_value = log(0.5) / log(10.0)
@@ -134,16 +157,17 @@ func _build_ui() -> void:
 	speed_label = Label.new()
 	controls.add_child(speed_label)
 	full_speed = CheckBox.new()
-	full_speed.text = "Full speed (plateau in about 3 s)"
+	full_speed.text = "Train at full speed"
+	full_speed.button_pressed = true
 	full_speed.toggled.connect(func(_on): _apply_speed())
 	controls.add_child(full_speed)
 
 	envs_option = OptionButton.new()
 	for n in ENV_CHOICES:
-		envs_option.add_item("%d cars" % n)
+		envs_option.add_item("%d races / %d cars" % [n / 8, n])
 	envs_option.select(1)
 	envs_option.item_selected.connect(func(_i): _restart())
-	controls.add_child(_labeled("Parallel cars in training (restarts)", envs_option))
+	controls.add_child(_labeled("Parallel training (restarts)", envs_option))
 
 	var buttons := HBoxContainer.new()
 	var restart := Button.new()
@@ -151,7 +175,7 @@ func _build_ui() -> void:
 	restart.pressed.connect(_restart_with_new_seed)
 	buttons.add_child(restart)
 	pause_button = Button.new()
-	pause_button.text = "Pause"
+	pause_button.text = "Pause training"
 	pause_button.pressed.connect(_toggle_pause)
 	buttons.add_child(pause_button)
 	controls.add_child(buttons)
@@ -159,24 +183,40 @@ func _build_ui() -> void:
 	reset_cars.text = "Reset showcase cars"
 	reset_cars.pressed.connect(func(): lab.reset_showcase())
 	controls.add_child(reset_cars)
+	var sensors := CheckBox.new()
+	sensors.text = "Show selected car's sensors"
+	sensors.toggled.connect(func(on): show_sensors = on)
+	controls.add_child(sensors)
+	var inspect := Button.new()
+	inspect.text = "Inspect car 1"
+	inspect.pressed.connect(func():
+		inspected_car = (inspected_car + 1) % SHOWCASE_CARS
+		inspect.text = "Inspect car %d" % (inspected_car + 1))
+	controls.add_child(inspect)
+	for button in [restart, pause_button, reset_cars, inspect, sensors, full_speed, envs_option]:
+		button.custom_minimum_size.y = 44
 
 	controls.add_child(HSeparator.new())
 	stats_label = Label.new()
 	controls.add_child(stats_label)
+	controls.move_child(stats_label, 2)
 	status_label = _note("")
 	controls.add_child(status_label)
 
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(right)
 	track_view = Control.new()
+	track_view.clip_contents = true
 	track_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	track_view.size_flags_stretch_ratio = 3.0
+	track_view.size_flags_stretch_ratio = 4.0
 	track_view.draw.connect(_draw_track)
 	right.add_child(track_view)
 	curve_view = Control.new()
+	curve_view.clip_contents = true
 	curve_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	curve_view.size_flags_stretch_ratio = 2.0
+	curve_view.size_flags_stretch_ratio = 1.0
 	curve_view.draw.connect(_draw_curve)
 	right.add_child(curve_view)
 
@@ -184,10 +224,21 @@ func _update_stats() -> void:
 	if not stats.has("update"):
 		stats_label.text = "Waiting for the first update..."
 		return
-	stats_label.text = "Update  %d\nEnv steps  %s\nLaps per episode  %.2f\nCrashed episodes  %.0f%%\nAction std dev  %.3f\nEntropy  %.2f\nApprox KL  %.4f\nClip fraction  %.3f\nLearning rate  %s\nGPU throughput  %.2f M steps/s" % [
-			stats["update"], _thousands(stats["env_steps"]), stats["mean_laps"], 100.0 * stats["crash_fraction"],
-			stats["mean_std"], stats["entropy"], stats["approx_kl"], stats["clip_fraction"],
-			_scientific(stats["learning_rate"]), stats["env_steps_per_second"] / 1e6]
+	var best: float = stats.get("showcase_best_lap", 0.0)
+	var best_text := "—" if best <= 0 else "%.2f s" % best
+	stats_label.text = "LIVE RACE\nClean laps   %d\nVehicle contacts   %d\nWall hits   %d\nBest clean lap   %s\n\nGPU TRAINING · update %d\n%s car steps\n%.2f M car steps/s\n%.1f ms / update\nLaps / episode   %.2f\nClean laps this update   %d" % [
+		stats.get("showcase_clean_laps", 0), stats.get("showcase_contacts", 0),
+		stats.get("showcase_walls", 0), best_text, stats["update"], _thousands(stats["env_steps"]),
+		stats["env_steps_per_second"] / 1e6, stats["update_ms"], stats["mean_laps"], stats.get("clean_laps", 0)]
+	stats_label.add_theme_font_size_override("font_size", 14)
+
+func _fit_layout() -> void:
+	if layout == null:
+		return
+	var compact := size.x < 850
+	layout.vertical = compact
+	panel_scroll.custom_minimum_size = Vector2(0, 180) if compact else Vector2(PANEL_WIDTH, 0)
+	panel_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 
 # GDScript's % formatting has no %e.
 func _scientific(v: float) -> String:
@@ -208,7 +259,7 @@ func _thousands(n: int) -> String:
 func _note(text: String) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.modulate = Color(1, 1, 1, 0.65)
+	l.modulate = Color(0.82, 0.84, 0.87)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD
 	return l
 
@@ -229,7 +280,7 @@ func _to_screen(p: Vector2, origin: Vector2, px_per_m: float) -> Vector2:
 func _draw_track() -> void:
 	var area := track_view.size
 	track_view.draw_rect(Rect2(Vector2.ZERO, area), GRASS)
-	var px_per_m := minf(area.x, area.y) / (2.0 * TRACK_EXTENT)
+	var px_per_m := minf((area.x - 32.0) / 100.0, (area.y - 72.0) / 84.0)
 	var origin := area * 0.5
 	var outer := PackedVector2Array()
 	var inner := PackedVector2Array()
@@ -242,6 +293,11 @@ func _draw_track() -> void:
 	track_view.draw_colored_polygon(inner, GRASS)
 	track_view.draw_polyline(outer, WALL, 2.0, true)
 	track_view.draw_polyline(inner, WALL, 2.0, true)
+	var centre := PackedVector2Array()
+	for k in outer.size():
+		centre.append((outer[k] + inner[k]) * 0.5)
+	for k in range(0, centre.size() - 1, 2):
+		track_view.draw_line(centre[k], centre[k + 1], Color(0.65, 0.66, 0.58, 0.4), 1.0, true)
 	# The start line sits on the centreline at angle zero.
 	var start_a := _to_screen(track_inner[0], origin, px_per_m)
 	var start_b := _to_screen(track_outer[0], origin, px_per_m)
@@ -252,8 +308,12 @@ func _draw_track() -> void:
 		_draw_car(i, origin, px_per_m)
 
 	var font := ThemeDB.fallback_font
-	track_view.draw_string(font, Vector2(12, 22), "Showcase cars, driven by the newest policy (mean action)",
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.6))
+	var caption := "8-CAR RACE / final policy" if evaluation_started else "8-CAR RACE / learning live"
+	track_view.draw_string(font, Vector2(12, 22), caption,
+			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
+	if cars.size() >= (inspected_car + 1) * car_stride:
+		track_view.draw_string(font, Vector2(12, 42), "CAR %d / %.0f km/h" % [inspected_car + 1, cars[inspected_car * car_stride + 3] * 3.6],
+			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
 
 func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 	var base := i * car_stride
@@ -265,11 +325,11 @@ func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 	var side := Vector2(-dir.y, dir.x)
 
 	# Raycasts: ray r sits at heading + (r - 4) * PI / 8, from -90 to +90 degrees.
-	var rays := car_stride - 7
+	var rays := 9 if show_sensors and i == inspected_car else 0
 	for r in rays:
 		var angle := heading + (float(r) - 0.5 * float(rays - 1)) * PI / float(rays - 1)
 		var ray_dir := Vector2(cos(angle), sin(angle))
-		var dist: float = cars[base + 7 + r]
+		var dist: float = minf(cars[base + 7 + r], cars[base + 16 + r])
 		var near := clampf(dist / 40.0, 0.0, 1.0)
 		var a := _to_screen(pos, origin, px_per_m)
 		var b := _to_screen(pos + ray_dir * dist, origin, px_per_m)
@@ -281,6 +341,12 @@ func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 		corners.append(_to_screen(pos + local, origin, px_per_m))
 	var body := CRASH if crashed else color
 	track_view.draw_colored_polygon(corners, body)
+	var rear := _to_screen(pos - dir * CAR_LENGTH * 0.45, origin, px_per_m)
+	if braking.size() > i and braking[i] > 0:
+		track_view.draw_line(rear - side * px_per_m * 0.65, rear + side * px_per_m * 0.65, Color(1.0, 0.12, 0.07), 3.0, true)
+	if i == inspected_car:
+		track_view.draw_arc(_to_screen(pos, origin, px_per_m), 3.0 * px_per_m, 0, TAU, 24, Color(1, 1, 1, 0.7), 1.0, true)
+	track_view.draw_string(ThemeDB.fallback_font, _to_screen(pos, origin, px_per_m) + Vector2(7, -7), str(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
 	# The nose marks the heading.
 	var nose := _to_screen(pos + dir * CAR_LENGTH * 0.5, origin, px_per_m)
 	track_view.draw_circle(nose, 0.5 * px_per_m, Color.WHITE)
@@ -294,10 +360,6 @@ func _draw_curve() -> void:
 		var y := remap(v, 0.0, MAX_LAPS, plot.end.y, plot.position.y)
 		curve_view.draw_line(Vector2(plot.position.x, y), Vector2(plot.end.x, y), GRID)
 		curve_view.draw_string(font, Vector2(r.position.x, y + 5), "%d" % int(v), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, GRID.lightened(0.4))
-	var limit_y := remap(TIME_LIMIT_LAPS, 0.0, MAX_LAPS, plot.end.y, plot.position.y)
-	curve_view.draw_dashed_line(Vector2(plot.position.x, limit_y), Vector2(plot.end.x, limit_y), RAY_FAR, 1.5, 6.0)
-	curve_view.draw_string(font, Vector2(plot.position.x + 6, limit_y + 16),
-			"time limit at top speed (about 4 laps)", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, RAY_FAR)
 	curve_view.draw_string(font, r.position + Vector2(40, 16), "laps per episode vs. environment steps",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, CURVE)
 	if curve.size() < 2:
