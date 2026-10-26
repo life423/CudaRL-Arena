@@ -41,6 +41,15 @@ void RacingShowcase::observe(int i) {
     racing::observe_race(states_.data(),i,track_,&obs_[static_cast<size_t>(i)*racing::kObsDim]);
 }
 
+void RacingShowcase::begin_evaluation() {
+    clean_laps_=contacts_=wall_crashes_=0;
+    best_lap_=0.f;
+    for(auto& state:states_) {
+        state.progress=0.f;
+        state.lap_step=state.steps;
+    }
+}
+
 void RacingShowcase::step() {
     const int n = count();
     policy_.forward(obs_.data(), n);
@@ -52,6 +61,9 @@ void RacingShowcase::step() {
         // The policy's mean action; racing::step clamps it to the valid range.
         const float action[racing::kActionDim] = {mean[i * racing::kActionDim + 0], mean[i * racing::kActionDim + 1]};
         results[i]=racing::advance_race(states_[i],action,track_);
+        // The 50 s limit bounds training episodes, not a reason to tow
+        // a safe showcase car to another part of the track.
+        results[i].truncated=false;
     }
     racing::resolve_race(states_.data(),previous.data(),results,episodes_.data(),track_,seed_,0,final_obs);
     for (int i=0;i<n;++i) {

@@ -23,6 +23,7 @@ const MAX_LAPS := 2.0
 const CAR_LENGTH := 4.0
 const CAR_WIDTH := 2.0
 const CAR_SHEET: Texture2D = preload("res://racing/assets/cars_topdown.png")
+const RESPAWN_FADE_SECONDS := 0.5
 const STEP_HZ := 20           # racing::kDt = 0.05 s
 
 const BG := Color(0.09, 0.10, 0.12)
@@ -76,6 +77,9 @@ var diagnostics_label: Label
 var inspect_option: OptionButton
 var reset_button: Button
 var car_sprites: Array[AtlasTexture] = []
+var previous_cars := PackedFloat32Array()
+var respawn_remaining := PackedFloat32Array()
+var respawn_poses := PackedVector3Array()
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = STEP_HZ
@@ -93,10 +97,23 @@ func _exit_tree() -> void:
 	lab.stop()   # join the training thread before the scene goes away
 
 func _physics_process(_delta: float) -> void:
+	previous_cars = cars
 	cars = lab.step_showcase()
 	braking.resize(SHOWCASE_CARS)
 	for i in SHOWCASE_CARS:
 		if cars.size() >= (i + 1) * car_stride:
+			if previous_cars.size() == cars.size():
+				var base := i * car_stride
+				var before := Vector2(previous_cars[base], previous_cars[base + 1])
+				var after := Vector2(cars[base], cars[base + 1])
+				if cars[base + 5] < previous_cars[base + 5] or before.distance_to(after) > 1.5:
+					if respawn_remaining[i] <= 0:
+						respawn_remaining[i] = RESPAWN_FADE_SECONDS
+						respawn_poses[i] = Vector3(before.x, before.y, previous_cars[base + 2])
+					elif respawn_remaining[i] <= RESPAWN_FADE_SECONDS * 0.5:
+						# A second quick crash must not reveal the next spawn at
+						# partial opacity before its fade-in has restarted.
+						respawn_remaining[i] = RESPAWN_FADE_SECONDS * 0.5
 			var speed: float = cars[i * car_stride + 3]
 			braking[i] = 1 if previous_speeds.size() > i and speed < previous_speeds[i] - 0.08 else 0
 	previous_speeds.resize(SHOWCASE_CARS)
@@ -105,7 +122,9 @@ func _physics_process(_delta: float) -> void:
 			previous_speeds[i] = cars[i * car_stride + 3]
 	track_view.queue_redraw()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	for i in respawn_remaining.size():
+		respawn_remaining[i] = maxf(0.0, respawn_remaining[i] - delta)
 	stats = lab.get_stats()
 	curve = lab.get_learning_curve()
 	var err: String = lab.get_error()
@@ -114,7 +133,7 @@ func _process(_delta: float) -> void:
 		status_label.visible = true
 	elif lab.is_finished():
 		if not evaluation_started and not untrained_view:
-			lab.reset_showcase()
+			lab.begin_evaluation()
 			evaluation_started = true
 	_update_stats()
 	curve_view.queue_redraw()
@@ -123,10 +142,9 @@ func _restart() -> void:
 	evaluation_started = false
 	untrained_view = false
 	baseline_checkbox.set_pressed_no_signal(false)
-	cars.clear()
+	_clear_race_presentation()
 	stats.clear()
 	curve.clear()
-	previous_speeds.clear()
 	paused = true
 	pause_button.text = "Start learning"
 	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
@@ -151,6 +169,19 @@ func _toggle_pause() -> void:
 	paused = not paused
 	lab.set_paused(paused)
 	pause_button.text = ("Start learning" if stats.get("update", 0) == 0 else "Resume training") if paused else "Pause training"
+
+func _clear_race_presentation() -> void:
+	cars.clear()
+	previous_cars.clear()
+	previous_speeds.clear()
+	respawn_remaining.resize(SHOWCASE_CARS)
+	respawn_remaining.fill(0.0)
+	respawn_poses.resize(SHOWCASE_CARS)
+	respawn_poses.fill(Vector3.ZERO)
+
+func _reset_showcase_view() -> void:
+	lab.reset_showcase()
+	_clear_race_presentation()
 
 # --- UI ---------------------------------------------------------------------
 
@@ -291,7 +322,7 @@ func _build_ui() -> void:
 	restart.tooltip_text = "Restart learning from scratch with a new random seed."
 	restart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	race_actions.add_child(restart)
-	reset_button = _button("Reset cars", func(): lab.reset_showcase())
+	reset_button = _button("Reset cars", _reset_showcase_view)
 	reset_button.tooltip_text = "Reset the visible race and its results. Keep the model and training progress."
 	reset_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	race_actions.add_child(reset_button)
@@ -305,8 +336,7 @@ func _build_ui() -> void:
 		untrained_view = on
 		evaluation_started = false
 		lab.set_untrained(on)
-		cars.clear()
-		previous_speeds.clear())
+		_clear_race_presentation())
 	controls.add_child(baseline_checkbox)
 	controls.add_child(_divider())
 
@@ -559,19 +589,34 @@ func _draw_track() -> void:
 	track_view.draw_string(font, Vector2(12, 22), caption,
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
 	if cars.size() >= (inspected_car + 1) * car_stride:
-		track_view.draw_string(font, Vector2(12, 42), "Car %d · %.0f km/h" % [inspected_car + 1, cars[inspected_car * car_stride + 3] * 3.6],
+		var readout := "Car %d · respawning" % (inspected_car + 1) if respawn_remaining[inspected_car] > 0 else "Car %d · %.0f km/h" % [inspected_car + 1, cars[inspected_car * car_stride + 3] * 3.6]
+		track_view.draw_string(font, Vector2(12, 42), readout,
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
+
+func _car_pose(i: int) -> Vector3:
+	var base := i * car_stride
+	var pose := Vector3(cars[base], cars[base + 1], cars[base + 2])
+	if previous_cars.size() != cars.size():
+		return pose
+	var previous := Vector3(previous_cars[base], previous_cars[base + 1], previous_cars[base + 2])
+	if Vector2(previous.x, previous.y).distance_to(Vector2(pose.x, pose.y)) > 1.5:
+		return pose # never interpolate a respawn across the road
+	var fraction := Engine.get_physics_interpolation_fraction()
+	return Vector3(lerpf(previous.x, pose.x, fraction), lerpf(previous.y, pose.y, fraction), lerp_angle(previous.z, pose.z, fraction))
 
 func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 	var base := i * car_stride
-	var pos := Vector2(cars[base + 0], cars[base + 1])
-	var heading: float = cars[base + 2]
-	var crashed: bool = cars[base + 6] > 0.5
+	var remaining: float = respawn_remaining[i]
+	var ghost := remaining > RESPAWN_FADE_SECONDS * 0.5
+	var visual := _car_visual_state(i)
+	var pos := Vector2(visual.x, visual.y)
+	var heading := visual.z
+	var opacity := visual.w
 	var dir := Vector2(cos(heading), sin(heading))
 	var side := Vector2(-dir.y, dir.x)
 
 	# Raycasts: ray r sits at heading + (r - 4) * PI / 8, from -90 to +90 degrees.
-	var rays := 9 if show_sensors and i == inspected_car else 0
+	var rays := 9 if show_sensors and i == inspected_car and remaining <= 0 else 0
 	for r in rays:
 		var angle := heading + (float(r) - 0.5 * float(rays - 1)) * PI / float(rays - 1)
 		var ray_dir := Vector2(cos(angle), sin(angle))
@@ -586,15 +631,27 @@ func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 	var sprite_size := Vector2(CAR_WIDTH, CAR_LENGTH) * px_per_m
 	track_view.draw_set_transform(_to_screen(pos, origin, px_per_m), PI * 0.5 - heading)
 	track_view.draw_texture_rect(car_sprites[i], Rect2(-sprite_size * 0.5, sprite_size), false,
-			Color(1.0, 0.6, 0.6) if crashed else Color.WHITE)
+			Color(1.0, 0.6, 0.6, opacity) if ghost else Color(1, 1, 1, opacity))
 	track_view.draw_set_transform(Vector2.ZERO)
-	if braking.size() > i and braking[i] > 0:
+	if braking.size() > i and braking[i] > 0 and remaining <= 0:
 		for flank in [-1.0, 1.0]:
 			var lamp: Vector2 = pos - dir * CAR_LENGTH * 0.43 + side * CAR_WIDTH * 0.32 * float(flank)
 			track_view.draw_circle(_to_screen(lamp, origin, px_per_m), maxf(1.2, 0.13 * px_per_m), Color(1.0, 0.12, 0.07))
 	if i == inspected_car:
-		track_view.draw_arc(_to_screen(pos, origin, px_per_m), 3.0 * px_per_m, 0, TAU, 24, Color(1, 1, 1, 0.7), 1.0, true)
-	track_view.draw_string(ThemeDB.fallback_font, _to_screen(pos, origin, px_per_m) + Vector2(7, -7), str(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
+		track_view.draw_arc(_to_screen(pos, origin, px_per_m), 3.0 * px_per_m, 0, TAU, 24, Color(1, 1, 1, 0.7 * opacity), 1.0, true)
+	track_view.draw_string(ThemeDB.fallback_font, _to_screen(pos, origin, px_per_m) + Vector2(7, -7), str(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1,1,1,opacity))
+	if remaining > 0:
+		track_view.draw_string(ThemeDB.fallback_font, _to_screen(pos, origin, px_per_m) + Vector2(7, 15), "Respawn", HORIZONTAL_ALIGNMENT_LEFT, -1, TYPE_CAPTION, Color(CURVE, opacity))
+
+func _car_visual_state(i: int) -> Vector4:
+	var half_fade := RESPAWN_FADE_SECONDS * 0.5
+	var remaining: float = respawn_remaining[i]
+	if remaining > half_fade:
+		var old := respawn_poses[i]
+		return Vector4(old.x, old.y, old.z, clampf((remaining - half_fade) / half_fade, 0.0, 1.0))
+	var pose := _car_pose(i)
+	var opacity := 1.0 - remaining / half_fade if remaining > 0 else 1.0
+	return Vector4(pose.x, pose.y, pose.z, opacity)
 
 func _draw_curve() -> void:
 	var r := Rect2(Vector2.ZERO, curve_view.size).grow(-16)

@@ -261,3 +261,43 @@ GPU_TEST_CASE("race comparison: trained policy visibly outperforms its own froze
     CHECK(learned.clean_laps()>0);
     CHECK(trainer.actor_params()!=initial);
 }
+
+TEST_CASE("race showcase: safe cars continue past the training episode time limit") {
+    demos::RacingShowcase demo(kRaceCars,64,55);
+    nn::MlpSpec spec({kObsDim,64,64,kActionDim},
+        {nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity});
+    std::vector<float> parked_policy(static_cast<size_t>(spec.num_params()),0.f);
+    parked_policy.back()=-1.f; // full braking parks safely; isolate the episode clock
+    demo.set_policy(parked_policy);
+    int continued=0;
+    for(int tick=0;tick<kMaxSteps+100;++tick) {
+        State before[kRaceCars];
+        for(int i=0;i<kRaceCars;++i)before[i]=demo.state(i);
+        demo.step();
+        for(int i=0;i<kRaceCars;++i) {
+            const State& after=demo.state(i);
+            if(before[i].steps>=kMaxSteps-1 && !demo.just_crashed(i)) {
+                CHECK(after.steps==before[i].steps+1);
+                CHECK(hypotf(after.x-before[i].x,after.y-before[i].y)<=kMaxSpeed*kDt+1e-4f);
+                ++continued;
+            }
+        }
+    }
+    CHECK(continued>0);
+}
+
+TEST_CASE("race showcase: starting final evaluation clears metrics without moving cars") {
+    demos::RacingShowcase demo(kRaceCars,64,55);
+    for(int tick=0;tick<100;++tick)demo.step();
+    State before[kRaceCars];
+    for(int i=0;i<kRaceCars;++i)before[i]=demo.state(i);
+    demo.begin_evaluation();
+    CHECK(demo.contacts()==0 && demo.wall_crashes()==0 && demo.clean_laps()==0 && demo.best_lap()==0.f);
+    for(int i=0;i<kRaceCars;++i) {
+        const State& after=demo.state(i);
+        CHECK(after.x==before[i].x && after.y==before[i].y);
+        CHECK(after.heading==before[i].heading && after.speed==before[i].speed);
+        CHECK(after.steps==before[i].steps && after.last_angle==before[i].last_angle);
+        CHECK(after.progress==0.f && after.lap_step==after.steps);
+    }
+}

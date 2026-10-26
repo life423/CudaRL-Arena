@@ -54,6 +54,7 @@ public:
     PackedFloat32Array step_showcase();
     int                get_car_stride() const;
     void               reset_showcase();
+    void               begin_evaluation();
 
 private:
     void sync_history();

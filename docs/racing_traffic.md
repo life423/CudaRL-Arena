@@ -187,12 +187,22 @@ fills its height. Narrow/portrait layouts move controls above the race; rendered
 layouts were checked at desktop, tablet and phone-sized windows. Prioritize the
 simulation and engineering evidence over further visual polish.
 
-Cars currently appear to teleport because crash and 50-second time-limit
-terminations immediately respawn them into clear space. Reset cars, New seed,
-policy comparison switches and the final-policy evaluation reset can also move
-them instantly. This is episode/reset behaviour, not evidence that the learned
-policy can move discontinuously. A clearer reset presentation can be considered
-later; no change to the simulation or reset timing was approved here.
+The user approved the eight-color car sprites and the continuity fix on October
+26. Safe showcase cars now continue past the 50-second training episode limit;
+starting final-policy evaluation clears metrics and lap clocks without moving
+them. Training retains its episode limit. Normal drawing interpolates between
+physics ticks, while crash respawns fade out at the old position and in at the
+new one over half a second, with a temporary Respawn label. Repeated crashes
+restart the fade-in without drawing a car travelling across the road. Reset
+cars, New seed and policy comparison remain explicit resets and clear the
+presentation history.
+
+Native regressions cover safe driving beyond the episode limit and evaluation
+counter resets that preserve each car's pose, speed and step count. The earlier
+full GPU regression run stalled before the computer crashed; that incomplete
+run is not a passing result or evidence of the crash's cause. The user accepted
+the rendered desktop race after restarting. Earlier phone/tablet layout checks
+predate the continuity change.
 
 ### Driving challenges
 

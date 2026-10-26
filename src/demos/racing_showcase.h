@@ -21,6 +21,8 @@ public:
     int count() const { return static_cast<int>(states_.size()); }
     void set_policy(const std::vector<float>& actor_params);
     void reset();
+    // Clear evaluation counters/lap clocks while preserving every car's pose.
+    void begin_evaluation();
     // One physics step (racing::kDt) for every car.
     void step();
 

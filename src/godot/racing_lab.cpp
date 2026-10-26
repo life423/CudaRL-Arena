@@ -40,6 +40,7 @@ void RacingLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("step_showcase"), &RacingLab::step_showcase);
     ClassDB::bind_method(D_METHOD("get_car_stride"), &RacingLab::get_car_stride);
     ClassDB::bind_method(D_METHOD("reset_showcase"), &RacingLab::reset_showcase);
+    ClassDB::bind_method(D_METHOD("begin_evaluation"), &RacingLab::begin_evaluation);
 }
 
 bool RacingLab::start(int num_envs, int seed, int showcase_count, double updates_per_second) {
@@ -189,6 +190,10 @@ int RacingLab::get_car_stride() const {
 
 void RacingLab::reset_showcase() {
     if (showcase_) showcase_->reset();
+}
+
+void RacingLab::begin_evaluation() {
+    if(showcase_) showcase_->begin_evaluation();
 }
 
 } // namespace godot
