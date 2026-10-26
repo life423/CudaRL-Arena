@@ -12,9 +12,13 @@ config_version=5
 
 config/name="CudaRL Arena"
 config/description="Hand-written CUDA reinforcement learning, driven from Godot"
-run/main_scene="res://racing/racing.tscn"
+run/main_scene="res://launcher/launcher.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+DemoLaunch="*res://launcher/demo_launch.gd"
 
 [display]
 

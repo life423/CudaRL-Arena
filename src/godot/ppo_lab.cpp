@@ -1,6 +1,8 @@
 #include "ppo_lab.h"
 
 #include <exception>
+#include <cmath>
+#include <stdexcept>
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/vector2.hpp>
@@ -10,7 +12,8 @@
 namespace godot {
 
 void PpoLab::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("start", "num_envs", "seed", "showcase_count"), &PpoLab::start);
+    ClassDB::bind_method(D_METHOD("start", "num_envs", "seed", "showcase_count", "updates_per_second"), &PpoLab::start, DEFVAL(2.0));
+    ClassDB::bind_method(D_METHOD("watch_policy", "parameters"), &PpoLab::watch_policy);
     ClassDB::bind_method(D_METHOD("stop"), &PpoLab::stop);
     ClassDB::bind_method(D_METHOD("get_error"), &PpoLab::get_error);
     ClassDB::bind_method(D_METHOD("set_updates_per_second", "ups"), &PpoLab::set_updates_per_second);
@@ -22,7 +25,7 @@ void PpoLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("reset_showcase"), &PpoLab::reset_showcase);
 }
 
-bool PpoLab::start(int num_envs, int seed, int showcase_count) {
+bool PpoLab::start(int num_envs, int seed, int showcase_count, double updates_per_second) {
     stop();
     error_ = String();
     const cudarl::DeviceInfo device = cudarl::probe_device();
@@ -35,10 +38,28 @@ bool PpoLab::start(int num_envs, int seed, int showcase_count) {
         cfg.num_envs = num_envs;
         cfg.seed     = static_cast<uint32_t>(seed);
         showcase_ = std::make_unique<cudarl::demos::CartPoleShowcase>(showcase_count, cfg.hidden, cfg.seed + 7);
-        session_  = std::make_unique<cudarl::demos::PpoSession>(cfg);
+        session_  = std::make_unique<cudarl::demos::PpoSession>(cfg, updates_per_second, true);
     } catch (const std::exception& e) {
         error_ = e.what();
         stop();
+        return false;
+    }
+    return true;
+}
+
+bool PpoLab::watch_policy(const PackedFloat32Array& parameters) {
+    stop();
+    error_ = String();
+    try {
+        constexpr int expected = 64*(cudarl::cartpole::kObsDim+1)+64*65+cudarl::cartpole::kNumActions*65;
+        if (parameters.size()!=expected) throw std::invalid_argument("CartPole policy architecture does not match");
+        const std::vector<float> weights(parameters.ptr(), parameters.ptr() + parameters.size());
+        for (float weight : weights) if (!std::isfinite(weight)) throw std::invalid_argument("Policy contains a non-finite weight");
+        showcase_ = std::make_unique<cudarl::demos::CartPoleShowcase>(12, 64, 8);
+        showcase_->set_policy(weights);
+    } catch (const std::exception& e) {
+        stop();
+        error_ = e.what();
         return false;
     }
     return true;
@@ -75,8 +96,9 @@ void PpoLab::sync_history() {
 Dictionary PpoLab::get_stats() {
     sync_history();
     Dictionary d;
-    if (history_.empty()) return d;
-    const auto& s = history_.back();
+    d["playback"] = showcase_ && !session_;
+    d["policy_ready"] = showcase_ && (!session_ || policy_version_>0);
+    const auto s = history_.empty() ? cudarl::rl::PpoStats{} : history_.back();
     d["update"]               = s.update;
     d["env_steps"]            = static_cast<int64_t>(s.env_steps);
     d["mean_episode_length"]  = s.mean_episode_length;
@@ -100,8 +122,11 @@ PackedVector2Array PpoLab::get_learning_curve() {
 
 PackedFloat32Array PpoLab::step_showcase(bool greedy) {
     PackedFloat32Array out;
-    if (!showcase_ || !session_) return out;
-    if (session_->latest_policy(policy_version_, policy_)) showcase_->set_policy(policy_);
+    if (!showcase_) return out;
+    if (session_) {
+        if (session_->latest_policy(policy_version_, policy_)) showcase_->set_policy(policy_);
+        if (policy_version_==0) return out;
+    }
     showcase_->step(greedy);
     out.resize(static_cast<int64_t>(showcase_->count()) * 4);
     for (int i = 0; i < showcase_->count(); ++i) {

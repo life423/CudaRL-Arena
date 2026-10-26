@@ -134,6 +134,9 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(export_demo_policies tools/export_demo_policies.cpp)
+    target_link_libraries(export_demo_policies PRIVATE cudarl_core)
+    cudarl_strict_warnings(export_demo_policies)
     # End-to-end racing benchmark uses only our core and the CUDA runtime.
     add_executable(racing_bench tools/racing_bench.cpp)
     target_link_libraries(racing_bench PRIVATE cudarl_core)
