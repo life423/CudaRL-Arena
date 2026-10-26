@@ -28,6 +28,9 @@ func input_action(action: String) -> void:
 	root.push_input(event)
 
 func _run() -> void:
+	create_timer(30.0).timeout.connect(func():
+		push_error("Demo menu checks timed out")
+		quit(1))
 	var router := root.get_node("DemoLaunch")
 	check(ProjectSettings.get_setting("application/run/main_scene") == "res://launcher/launcher.tscn", "Menu must be the startup scene")
 	change_scene_to_file("res://launcher/launcher.tscn")
@@ -40,7 +43,10 @@ func _run() -> void:
 	input_action("ui_accept")
 	await settle()
 	check(current_scene.watch_mode, "Keyboard activation did not open playback")
-	input_action("ui_cancel")
+	var escape := InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	root.push_input(escape)
 	await settle()
 	check(current_scene.name == "DemoMenu", "Escape did not return to menu")
 	var cp := PpoLab.new()
@@ -64,6 +70,9 @@ func _run() -> void:
 		var watch: bool = spec[1]
 		var action: Button = current_scene.find_child("%s_%s" % [demo, "watch" if watch else "train"], true, false)
 		check(action != null, "Menu action missing")
+		if action == null:
+			quit(1)
+			return
 		action.pressed.emit()
 		await settle()
 		var scene := current_scene

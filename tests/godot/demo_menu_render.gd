@@ -32,9 +32,11 @@ func _run() -> void:
 	scene.queue_free()
 	await process_frame
 	var router := root.get_node("DemoLaunch")
-	for demo in ["cartpole", "racing"]:
+	for spec in [["cartpole", "watch"], ["racing", "watch"], ["cartpole", "train"], ["racing", "train"]]:
+		var demo: String = spec[0]
+		var mode: String = spec[1]
 		router.active_demo = demo
-		router.mode = "watch"
+		router.mode = mode
 		var showcase: Control = load(router.SCENES[demo]).instantiate()
 		viewport.add_child(showcase)
 		for dimensions in [Vector2i(1280, 720), Vector2i(768, 1024), Vector2i(390, 844)]:
@@ -42,8 +44,11 @@ func _run() -> void:
 			for frame in 12:
 				await process_frame
 			await RenderingServer.frame_post_draw
-			viewport.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../build/menu-checks/%s-%dx%d.png" % [demo, dimensions.x, dimensions.y]))
-			print("DEMO_RENDER %s %dx%d" % [demo, dimensions.x, dimensions.y])
+			viewport.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../build/menu-checks/%s-%s-%dx%d.png" % [demo, mode, dimensions.x, dimensions.y]))
+			print("DEMO_RENDER %s %s %dx%d" % [demo, mode, dimensions.x, dimensions.y])
+			if demo == "cartpole":
+				assert(showcase.cart_view.size.y >= dimensions.y * 0.3, "CartPole arena has collapsed")
+				assert(showcase.cart_view.get_global_rect().position.y >= showcase.panel_scroll.get_global_rect().end.y or dimensions.x >= 850, "CartPole arena overlaps its controls")
 		showcase.queue_free()
 		await process_frame
 	print("MENU_RENDER_DONE")

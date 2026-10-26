@@ -187,6 +187,7 @@ func _build_ui() -> void:
 	controls = outer_controls
 	var reset_carts := Button.new()
 	reset_carts.text = "Reset showcase carts"
+	reset_carts.custom_minimum_size.y = 44
 	reset_carts.pressed.connect(func(): lab.reset_showcase())
 	controls.add_child(reset_carts)
 
@@ -199,6 +200,7 @@ func _build_ui() -> void:
 
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(right)
 	cart_view = Control.new()
 	cart_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -227,7 +229,7 @@ func _update_stats() -> void:
 func _fit_layout() -> void:
 	var compact := size.x < 850 or size.y > size.x * 1.2
 	layout.vertical = compact
-	panel_scroll.custom_minimum_size = Vector2(0, 168 if watch_mode else 272) if compact else Vector2(PANEL_WIDTH, 0)
+	panel_scroll.custom_minimum_size = Vector2(0, 208 if watch_mode else 272) if compact else Vector2(PANEL_WIDTH, 0)
 	panel_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	panel_scroll.size_flags_vertical = Control.SIZE_FILL if compact else Control.SIZE_EXPAND_FILL
 

@@ -31,7 +31,8 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | **PPO on CartPole, entirely on the GPU:** batched environment kernel, rollouts, GAE with truncation bootstrapping, Feistel-shuffled minibatches, clipped-surrogate gradient, Adam | ✅ Solves in ~0.35 s on every seed tried ([write-up](docs/ppo_cartpole.md)) |
 | **Live CartPole view in Godot** (`cartpole/cartpole.tscn`): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
 | **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
-| **Eight-car racing in Godot** (default scene): harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
+| **Eight-car racing in Godot**: harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
+| **Startup demo menu:** CartPole and Racing, with saved policy playback or fresh training | ✅ Working ([validation](docs/demo_menu.md)) |
 | **End-to-end racing performance:** C++/CUDA benchmark, phase timing and retained reference paths | ✅ Two measured passes at 2,048 agents on RTX 5070: [traffic execution](docs/racing_performance.md) +12.7%, then [optimization graphs](docs/racing_optimizer.md) +14.2%, each with exact reference checks |
 | Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
@@ -206,7 +207,7 @@ earlier traffic-only comparison.
 godot --path godot-project
 ```
 
-The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The default is the eight-car race. Other scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
+The default scene is the CartPole/Racing menu. **Watch trained** loads a bundled actor policy and runs the showcase on the CPU without starting training. **Train from scratch** opens a paused, untrained run; press **Start learning** to train on CUDA. **Back to demos** or Escape returns to the menu and stops that session. See [menu validation and policy regeneration](docs/demo_menu.md). Other scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
 
 ### Continuous integration
 
@@ -223,7 +224,8 @@ device.describe()                   # one-line summary, or the reason CUDA is un
 device.get_info()                   # { available, name, compute_capability, multiprocessors, memory_bytes, error }
 
 var lab := PpoLab.new()
-lab.start(num_envs, seed, showcase_count)   # PPO on a background thread; false + get_error() without CUDA
+lab.start(num_envs, seed, showcase_count)   # initializes paused; false + get_error() without CUDA
+lab.set_paused(false)              # start learning on the background GPU thread
 lab.set_updates_per_second(2.0)     # throttle so learning is watchable (<= 0: full speed)
 var carts = lab.step_showcase(true) # call at 50 Hz: [x, theta, steps, failed] per showcase cart
 lab.get_stats()                     # latest update: mean episode length, entropy, KL, clip fraction, ...
