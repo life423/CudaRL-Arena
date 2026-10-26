@@ -128,29 +128,8 @@ CUDARL_HD inline StepResult advance_race(State &s, const float *action, const Tr
     return result;
 }
 
-// Deterministic race resolution shared by CUDA and the CPU showcase. Each car's
-// own terminal flag/penalty is independent; safe cars keep driving.
-CUDARL_HD inline void resolve_race(State *cars, const State *old, StepResult *results, uint32_t *episodes,
-                                   const Track &track, uint32_t seed, uint32_t race, float *final_obs) {
-    bool contacts[kRaceCars] = {};
-    for (int i = 0; i < kRaceCars; ++i)
-        for (int j = i + 1; j < kRaceCars; ++j) {
-            if (swept_contact(old[i], cars[i], old[j], cars[j]))
-                contacts[i] = contacts[j] = true;
-        }
-    for (int i = 0; i < kRaceCars; ++i) {
-        if (contacts[i]) {
-            if (!results[i].terminated)
-                results[i].reward -= kCrashPenalty;
-            results[i].terminated = true;
-            results[i].truncated = false;
-            results[i].contact = true;
-            results[i].clean_lap = false;
-            results[i].lap_seconds = 0.f;
-        }
-        if (results[i].terminated || results[i].truncated)
-            observe_race(cars, i, track, final_obs + i * kObsDim);
-    }
+CUDARL_HD inline void respawn_race(State *cars, const StepResult *results, uint32_t *episodes,
+                                  const Track &track, uint32_t seed, uint32_t race) {
     // Remove all ended cars before reinserting any of them; every respawn sees
     // the final survivor positions and previously inserted respawns.
     bool ended[kRaceCars];
@@ -179,6 +158,32 @@ CUDARL_HD inline void resolve_race(State *cars, const State *old, StepResult *re
                 }
             }
         }
+}
+
+// Deterministic race resolution shared by CUDA and the CPU showcase. Each car's
+// own terminal flag/penalty is independent; safe cars keep driving.
+CUDARL_HD inline void resolve_race(State *cars, const State *old, StepResult *results, uint32_t *episodes,
+                                   const Track &track, uint32_t seed, uint32_t race, float *final_obs) {
+    bool contacts[kRaceCars] = {};
+    for (int i = 0; i < kRaceCars; ++i)
+        for (int j = i + 1; j < kRaceCars; ++j) {
+            if (swept_contact(old[i], cars[i], old[j], cars[j]))
+                contacts[i] = contacts[j] = true;
+        }
+    for (int i = 0; i < kRaceCars; ++i) {
+        if (contacts[i]) {
+            if (!results[i].terminated)
+                results[i].reward -= kCrashPenalty;
+            results[i].terminated = true;
+            results[i].truncated = false;
+            results[i].contact = true;
+            results[i].clean_lap = false;
+            results[i].lap_seconds = 0.f;
+        }
+        if (results[i].terminated || results[i].truncated)
+            observe_race(cars, i, track, final_obs + i * kObsDim);
+    }
+    respawn_race(cars, results, episodes, track, seed, race);
 }
 
 CUDARL_HD inline void reset_race(State *cars, uint32_t *episodes, const Track &t, uint32_t seed, uint32_t race) {

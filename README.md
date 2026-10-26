@@ -32,6 +32,7 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | **Live CartPole view in Godot** (`cartpole/cartpole.tscn`): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
 | **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
 | **Eight-car racing in Godot** (default scene): harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
+| **End-to-end racing performance:** C++/CUDA benchmark, phase timing and retained reference path | ✅ 12.7% higher trainer throughput at 2,048 agents on RTX 5070, with exact reference checks ([study and raw data](docs/racing_performance.md)) |
 | Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
 | Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working |
@@ -176,6 +177,21 @@ ctest --preset release
 build/Release/nn_bench.exe
 ```
 
+**Measure the complete eight-car training pipeline** without the renderer or
+display throttle:
+
+```powershell
+build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare=1
+```
+
+This alternates the original and distributed traffic execution paths on the
+same seed and training budget. It reports wall-clock update distributions and
+agent-steps/s. The separate `profile=1` mode records CUDA event phase spans;
+`simulation=1` drives both paths with an identical fixed action tape, and
+`evaluate=1` measures a 60-second showcase after training. This tool links only
+the project's core and the CUDA runtime. See the [performance study](docs/racing_performance.md)
+for methodology, numerical checks, measurements and limitations.
+
 `cudarl_tests.exe <filter>` runs only the tests whose names contain `<filter>`, for example `gemm`. On a machine without an NVIDIA GPU, the GPU tests report `SKIP` and the CPU tests still run; set `CUDARL_REQUIRE_GPU=1` to make a missing GPU a failure instead.
 
 **Without Godot:** configure with `-DCUDARL_BUILD_GODOT=OFF` (or use the `ci` preset) to build only the core library, tests, and benchmark. godot-cpp isn't needed then.
@@ -265,8 +281,12 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 2. ~~**Tensor-core GEMM.**~~ ✅ bf16 `mma.sync` kernel at 91–96% of cuBLAS on large matrices, with a [worklog](docs/gemm_worklog.md) of every optimization and its profile.
 3. ~~**PPO on CartPole.**~~ ✅ GPU-resident rollouts, GAE, and updates; solves in about 0.35 s and is watchable live in Godot ([write-up](docs/ppo_cartpole.md)).
 4. ~~**PPO on a racing track.**~~ ✅ Gaussian policy for continuous steering and throttle, nine raycasts, a live Godot view, and a laps-per-episode learning curve ([write-up](docs/ppo_racing.md)).
-5. **Fused attention kernel**, then an attention-based policy.
-6. **Linux build and CI**, then a swarm with spatial hashing if there's time.
+5. **Measure and accelerate the complete training loop.** Current focus: reproducible
+   racing benchmarks and optimizations that preserve the reference training results.
+6. **Attention-based policy.** Connect the existing fused attention kernels to a
+   trainable policy and compare it fairly with the current MLP.
+7. **Linux build and GPU CI.** Linux work is deferred at the user's request;
+   Windows/CUDA performance takes priority. A swarm with spatial hashing remains optional.
 
 ---
 

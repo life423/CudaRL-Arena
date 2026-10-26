@@ -1,6 +1,7 @@
 #include "racing_ppo.h"
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cmath>
 #include <stdexcept>
@@ -10,6 +11,37 @@
 #include "rl/ppo_math.h"
 
 namespace cudarl::rl {
+
+struct RacingPhaseTimer {
+    std::array<cudaEvent_t, 6> events{};
+    std::vector<racing::RacingStepEvents> simulation;
+    explicit RacingPhaseTimer(int rollout_steps) : simulation(rollout_steps) {
+        try {
+            for (auto& event : events) CUDA_CHECK_THROW(cudaEventCreate(&event));
+            for (auto& step : simulation)
+                for (auto* event : {&step.start, &step.advanced, &step.resolved, &step.observed})
+                    CUDA_CHECK_THROW(cudaEventCreate(event));
+        } catch (...) {
+            destroy();
+            throw;
+        }
+    }
+    void destroy() {
+        for (auto event : events) if (event) cudaEventDestroy(event);
+        for (auto& step : simulation)
+            for (auto event : {step.start, step.advanced, step.resolved, step.observed})
+                if (event) cudaEventDestroy(event);
+    }
+    ~RacingPhaseTimer() { destroy(); }
+    static double span(cudaEvent_t first, cudaEvent_t last) {
+        float ms = 0.f;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, first, last));
+        return ms;
+    }
+    double elapsed(int first, int last) const {
+        return span(events[first], events[last]);
+    }
+};
 
 namespace {
 
@@ -50,7 +82,7 @@ RacingPpoTrainer::RacingPpoTrainer(const RacingPpoConfig& config) : cfg_(config)
     // showcase, say) never serializes with training.
     CUDA_CHECK_THROW(cudaStreamCreateWithFlags(&stream_, cudaStreamNonBlocking));
 
-    env_ = std::make_unique<racing::RacingBatch>(cfg_.num_envs, cfg_.seed, cfg_.traffic);
+    env_ = std::make_unique<racing::RacingBatch>(cfg_.num_envs, cfg_.seed, cfg_.traffic, cfg_.distributed_traffic);
     const float root2 = std::sqrt(2.f);
     actor_  = std::make_unique<nn::GpuMlp>(net_spec(cfg_.hidden, kAct), std::max(cfg_.num_envs, minibatch_), cfg_.seed);
     critic_ = std::make_unique<nn::GpuMlp>(net_spec(cfg_.hidden, 1), std::max(batch_, minibatch_), cfg_.seed + 1);
@@ -84,6 +116,7 @@ RacingPpoTrainer::RacingPpoTrainer(const RacingPpoConfig& config) : cfg_(config)
     row_stats_.allocate(mb * kGaussianStats);
     adv_stats_.allocate(2);
     stats_.allocate(kNumStats);
+    if (cfg_.profile_phases) phase_timer_ = std::make_unique<RacingPhaseTimer>(cfg_.rollout_steps);
     CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }
 
@@ -92,6 +125,10 @@ RacingPpoTrainer::~RacingPpoTrainer() {
         cudaStreamSynchronize(stream_);
         cudaStreamDestroy(stream_);
     }
+}
+
+void RacingPpoTrainer::timing_mark(int index) {
+    if (phase_timer_) CUDA_CHECK_THROW(cudaEventRecord(phase_timer_->events[index], stream_));
 }
 
 void RacingPpoTrainer::rollout() {
@@ -108,9 +145,10 @@ void RacingPpoTrainer::rollout() {
         const racing::StepOutputs out{rewards_.get() + row,         dones_.get() + row,
                                       truncated_.get() + row,       final_obs_.get() + row * kObs,
                                       finished_len_.get() + row,    finished_laps_.get() + row,
-                                      race_metrics_.get()+row*4};
-        env_->step(actions_.get() + row * kAct, out, stream_);
+                                      race_metrics_.get()+row*4, cfg_.distributed_traffic};
+        env_->step(actions_.get() + row * kAct, out, stream_, phase_timer_ ? &phase_timer_->simulation[t] : nullptr);
     }
+    timing_mark(1);
     // Bootstrap values: V(next obs) after the last step, and V(final obs) for truncated episodes.
     critic_->forward(env_->obs(), n, stream_);
     copy_async(last_values_.get(), critic_->output(), n, stream_);
@@ -168,14 +206,19 @@ RacingStats RacingPpoTrainer::update() {
     log_std_opt_->set_learning_rate(lr);
 
     CUDA_CHECK_THROW(cudaMemsetAsync(stats_.get(), 0, stats_.size_bytes(), stream_));
+    timing_mark(0);
     rollout();
+    timing_mark(2);
     episode_totals(finished_len_.get(), finished_laps_.get(), dones_.get(), truncated_.get(), batch_,
                    stats_.get() + kStatEpisodes, stream_);
     sum_columns(race_metrics_.get(),batch_,4,stats_.get()+kStatRace,stream_);
+    timing_mark(3);
     optimize(stats_.get());
+    timing_mark(4);
 
     float host[kNumStats];
     CUDA_CHECK_THROW(cudaMemcpyAsync(host, stats_.get(), sizeof host, cudaMemcpyDeviceToHost, stream_));
+    timing_mark(5);
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream_));
 
     ++update_;
@@ -205,6 +248,18 @@ RacingStats RacingPpoTrainer::update() {
     s.learning_rate = lr;
     s.update_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start).count();
     s.env_steps_per_second = batch_ / (s.update_ms * 1e-3);
+    if (phase_timer_) {
+        s.rollout_ms = phase_timer_->elapsed(0, 1);
+        s.bootstrap_gae_ms = phase_timer_->elapsed(1, 2);
+        s.metrics_ms = phase_timer_->elapsed(2, 3);
+        s.optimize_ms = phase_timer_->elapsed(3, 4);
+        s.readback_ms = phase_timer_->elapsed(4, 5);
+        if (cfg_.traffic) for (const auto& step : phase_timer_->simulation) {
+            s.advance_ms += RacingPhaseTimer::span(step.start, step.advanced);
+            s.resolve_ms += RacingPhaseTimer::span(step.advanced, step.resolved);
+            s.observe_ms += RacingPhaseTimer::span(step.resolved, step.observed);
+        }
+    }
     return s;
 }
 

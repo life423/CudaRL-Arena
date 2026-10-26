@@ -10,7 +10,7 @@ project(CudaRL-Arena LANGUAGES CXX CUDA)
 # Godot is the real-time frontend and is built by default. CI turns it off to
 # build and test the core without the prebuilt godot-cpp library.
 option(CUDARL_BUILD_GODOT "Build the Godot extension (needs a prebuilt godot-cpp)" ON)
-option(CUDARL_BUILD_BENCH "Build nn_bench (needs the toolkit's cuBLAS component)" ON)
+option(CUDARL_BUILD_BENCH "Build benchmarks (nn_bench needs the toolkit's cuBLAS component)" ON)
 option(CUDARL_WARNINGS_AS_ERRORS "Treat warnings in this project's code as errors" ON)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -132,8 +132,12 @@ target_link_libraries(cudarl_tests PRIVATE cudarl_core)
 cudarl_strict_warnings(cudarl_tests)
 add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
-# --- Benchmark (the only target that links cuBLAS, as a reference) ---------------
+# --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    # End-to-end racing benchmark uses only our core and the CUDA runtime.
+    add_executable(racing_bench tools/racing_bench.cpp)
+    target_link_libraries(racing_bench PRIVATE cudarl_core)
+    cudarl_strict_warnings(racing_bench)
     add_executable(nn_bench tools/nn_bench.cpp tools/attention_baseline.cu)
     target_link_libraries(nn_bench PRIVATE cudarl_core CUDA::cublas)
     cudarl_strict_warnings(nn_bench)
