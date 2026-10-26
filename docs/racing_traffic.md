@@ -126,7 +126,14 @@ restarts training. Compact windows put the scrollable controls above the race.
 
 ### Making learning visible
 
-Training defaults to **two updates per second**. Previously the demo started at
+The app and Restart now initialize at **update zero** and wait for the highlighted
+**Start learning** button. The worker's paused state is set before its thread
+starts, so even enabling full speed cannot silently train the model during
+startup. The cars already move under the initial policy while training is
+paused. Startup and the frozen comparison were checked for identical per-car
+outputs over 60 simulated seconds from the same seed/grid.
+
+After Start learning, training defaults to **two updates per second**. Previously the demo started at
 full speed, so the visible cars received many optimized checkpoints before they
 had driven far in real time. The throttle now applies when the worker starts as
 well as when its speed control changes. Full speed remains available to measure
@@ -152,7 +159,9 @@ seconds per policy produced:
 This compares the deterministic mean actions of both policies. It does not add
 action noise to the initial policy or change its vehicle physics. The session
 test checks the saved initial checkpoint against a freshly constructed trainer
-and verifies that training does not overwrite it. The comparison test is
+and verifies that training does not overwrite it. A paused-start regression also
+checks that initialization publishes a policy without executing an optimizer
+step, then that unpausing starts training. The comparison test is
 `cudarl_tests.exe "race comparison"`; session regressions use the `ppo_demo:`
 filter.
 

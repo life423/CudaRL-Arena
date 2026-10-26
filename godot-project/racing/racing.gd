@@ -103,11 +103,11 @@ func _restart() -> void:
 	stats.clear()
 	curve.clear()
 	previous_speeds.clear()
-	paused = false
-	pause_button.text = "Pause training"
+	paused = true
+	pause_button.text = "Start learning"
 	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
 	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, SHOWCASE_CARS, ups)
-	status_label.text = ("Training with seed %d" % run_seed) if ok else lab.get_error()
+	status_label.text = ("Seed %d · untrained. Press Start learning when ready." % run_seed) if ok else lab.get_error()
 	_apply_speed()
 
 func _apply_speed() -> void:
@@ -123,7 +123,8 @@ func _restart_with_new_seed() -> void:
 func _toggle_pause() -> void:
 	paused = not paused
 	lab.set_paused(paused)
-	pause_button.text = "Resume training" if paused else "Pause training"
+	pause_button.text = ("Start learning" if stats.get("update", 0) == 0 else "Resume training") if paused else "Pause training"
+	status_label.text = "Training paused." if paused else "Learning from seed %d." % run_seed
 
 # --- UI ---------------------------------------------------------------------
 
@@ -195,8 +196,16 @@ func _build_ui() -> void:
 	restart.pressed.connect(_restart_with_new_seed)
 	buttons.add_child(restart)
 	pause_button = Button.new()
-	pause_button.text = "Pause training"
+	pause_button.text = "Start learning"
 	pause_button.pressed.connect(_toggle_pause)
+	for state in ["normal", "hover", "pressed"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = CURVE.lightened(0.08) if state == "hover" else CURVE
+		if state == "pressed":
+			style.bg_color = CURVE.darkened(0.1)
+		pause_button.add_theme_stylebox_override(state, style)
+	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		pause_button.add_theme_color_override(state, Color(0.07, 0.08, 0.09))
 	buttons.add_child(pause_button)
 	controls.add_child(buttons)
 	var reset_cars := Button.new()
@@ -220,6 +229,7 @@ func _build_ui() -> void:
 	stats_label = Label.new()
 	controls.add_child(stats_label)
 	controls.move_child(stats_label, 3)
+	controls.move_child(buttons, 2) # keep Start learning reachable above the scrolling metrics
 	status_label = _note("")
 	controls.add_child(status_label)
 
@@ -241,12 +251,12 @@ func _build_ui() -> void:
 	right.add_child(curve_view)
 
 func _update_stats() -> void:
-	if not stats.has("update"):
-		stats_label.text = "Waiting for the first update..."
+	if not stats.get("policy_ready", false):
+		stats_label.text = "Preparing the untrained policy..."
 		return
 	var best: float = stats.get("showcase_best_lap", 0.0)
 	var best_text := "—" if best <= 0 else "%.2f s" % best
-	stats_label.text = ("UNTRAINED · UPDATE 0\n" if untrained_view else "LIVE POLICY\n") + "Clean laps   %d\nVehicle contacts   %d\nWall hits   %d\nBest clean lap   %s\n\nGPU TRAINING · update %d\n%s car steps\n%.2f M steps/s while active\n%.1f ms / update\nLaps / episode   %.2f\nClean laps this update   %d" % [
+	stats_label.text = ("UNTRAINED · UPDATE 0\n" if untrained_view or stats.get("update", 0) == 0 else "LIVE POLICY\n") + "Clean laps   %d\nVehicle contacts   %d\nWall hits   %d\nBest clean lap   %s\n\nGPU TRAINING · update %d\n%s car steps\n%.2f M steps/s while active\n%.1f ms / update\nLaps / episode   %.2f\nClean laps this update   %d" % [
 		stats.get("showcase_clean_laps", 0), stats.get("showcase_contacts", 0),
 		stats.get("showcase_walls", 0), best_text, stats["update"], _thousands(stats["env_steps"]),
 		stats["env_steps_per_second"] / 1e6, stats["update_ms"], stats["mean_laps"], stats.get("clean_laps", 0)]
@@ -329,7 +339,7 @@ func _draw_track() -> void:
 
 	var font := ThemeDB.fallback_font
 	var caption := "8-CAR RACE / final policy" if evaluation_started else "8-CAR RACE / learning live"
-	if untrained_view:
+	if untrained_view or stats.get("update", 0) == 0:
 		caption = "8-CAR RACE / UNTRAINED / frozen update 0"
 	track_view.draw_string(font, Vector2(12, 22), caption,
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))

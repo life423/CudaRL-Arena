@@ -56,7 +56,7 @@ bool RacingLab::start(int num_envs, int seed, int showcase_count, double updates
         cfg.total_updates = 1200;
         cfg.seed     = static_cast<uint32_t>(seed);
         showcase_ = std::make_unique<cudarl::demos::RacingShowcase>(showcase_count, cfg.hidden, cfg.seed + 7);
-        session_  = std::make_unique<cudarl::demos::TrainingSession<cudarl::rl::RacingPpoTrainer>>(cfg, updates_per_second);
+        session_  = std::make_unique<cudarl::demos::TrainingSession<cudarl::rl::RacingPpoTrainer>>(cfg, updates_per_second, true);
     } catch (const std::exception& e) {
         error_ = e.what();
         stop();
@@ -113,8 +113,8 @@ Dictionary RacingLab::get_stats() {
         d["showcase_walls"]=showcase_->wall_crashes();
         d["showcase_best_lap"]=showcase_->best_lap();
     }
-    if (history_.empty()) return d;
-    const auto& s = history_.back();
+    d["policy_ready"] = !initial_policy_.empty();
+    const auto s = history_.empty() ? cudarl::rl::RacingStats{} : history_.back();
     d["update"]               = s.update;
     d["contact_cars"] = s.contact_cars;
     d["clean_laps"] = s.clean_laps;

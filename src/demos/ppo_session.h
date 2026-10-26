@@ -26,8 +26,8 @@ public:
     using Config = typename Trainer::Config;
     using Stats  = typename Trainer::Stats;
 
-    explicit TrainingSession(const Config& config, double updates_per_second = 2.0)
-        : cfg_(config), ups_(updates_per_second), thread_([this] { run(); }) {}
+    explicit TrainingSession(const Config& config, double updates_per_second = 2.0, bool initially_paused = false)
+        : cfg_(config), ups_(updates_per_second), paused_(initially_paused), thread_([this] { run(); }) {}
     ~TrainingSession() {   // stops and joins the training thread
         stop_.store(true);
         if (thread_.joinable()) thread_.join();
