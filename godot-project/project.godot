@@ -12,7 +12,7 @@ config_version=5
 
 config/name="CudaRL Arena"
 config/description="Hand-written CUDA reinforcement learning, driven from Godot"
-run/main_scene="res://cartpole/cartpole.tscn"
+run/main_scene="res://racing/racing.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -12,7 +12,7 @@
 
 // A car on a closed track, steered and throttled continuously. The dynamics are
 // a kinematic bicycle model, integrated with Euler steps. The car senses the
-// walls with a fan of raycasts. Reward is progress around the track, minus a
+// walls and other cars with a fan of raycasts. Reward is progress around the track, minus a
 // small penalty per steering input and a larger one for crashing. The track is
 // one fixed circuit, built on the host and shared by the GPU batch, the CPU
 // showcase and the Godot view.
@@ -21,7 +21,9 @@ namespace cudarl::racing {
 constexpr float kPi         = 3.14159265358979f;
 constexpr float kTwoPi      = 2.f * kPi;
 constexpr int   kRays       = 9;              // raycasts over the front 180 degrees
-constexpr int   kObsDim     = kRays + 1;      // ray distances, then speed
+constexpr int   kObsDim     = 3 * kRays + 3;  // wall rays, speed, car rays, closing speeds, sin/cos road heading
+constexpr int   kRaceCars   = 8;
+constexpr float kTrafficRadius = 2.25f;      // encloses the rendered 4 x 2 m body
 constexpr int   kActionDim  = 2;              // steer, throttle; raw actions are clamped to [-1, 1]
 constexpr int   kWallPoints = 64;             // points per wall; each wall is a closed loop
 constexpr int   kMaxSteps   = 1000;           // time limit: 50 s of driving
@@ -52,6 +54,9 @@ struct Vec2 {
 struct Track {
     Vec2 outer[kWallPoints];
     Vec2 inner[kWallPoints];
+    Vec2 centre[kWallPoints];
+    float arc[kWallPoints + 1];
+    bool traffic = false;
 };
 
 // The centreline is r = R(theta) in polar coordinates about the origin. Because
@@ -62,11 +67,42 @@ CUDARL_HD inline float centre_radius(float theta) {
 }
 CUDARL_HD inline float centre_radius_slope(float theta) { return 12.f * cosf(2.f * theta) - 7.5f * sinf(3.f * theta); }
 
-inline Track make_track() {
+inline Track make_track(bool traffic = false) {
     Track t{};
+    t.traffic = traffic;
+    if (traffic) {
+        // A straight, an infield hairpin, and a left/right chicane. Catmull-Rom
+        // interpolates the anchors; wall offsets follow the local normal.
+        const Vec2 anchors[] = {{42,-24},{42,0},{42,24},{36,32},{24,32},{18,26},
+            {18,18},{15.657f,12.343f},{10,10},{4.343f,12.343f},{2,18},{2,26},
+            {-5,32},{-28,32},{-40,24},{-40,12},{-36,2},{-40,-10},
+            {-40,-24},{-30,-32},{0,-32},{32,-32}};
+        constexpr int count = 22;
+        for (int k = 0; k < kWallPoints; ++k) {
+            const float u = static_cast<float>(k) * count / kWallPoints;
+            const int i = static_cast<int>(u);
+            const float a = u - i, b = a*a, c = b*a;
+            const Vec2 p = anchors[(i+count-1)%count], q = anchors[i%count];
+            const Vec2 r = anchors[(i+1)%count], s = anchors[(i+2)%count];
+            t.centre[k] = {0.5f*(2*q.x+(-p.x+r.x)*a+(2*p.x-5*q.x+4*r.x-s.x)*b+(-p.x+3*q.x-3*r.x+s.x)*c),
+                           0.5f*(2*q.y+(-p.y+r.y)*a+(2*p.y-5*q.y+4*r.y-s.y)*b+(-p.y+3*q.y-3*r.y+s.y)*c)};
+        }
+        for (int k = 0; k < kWallPoints; ++k) {
+            const Vec2 p = t.centre[(k+kWallPoints-1)%kWallPoints], q = t.centre[(k+1)%kWallPoints];
+            const float dx = q.x-p.x, dy = q.y-p.y, len = sqrtf(dx*dx+dy*dy);
+            // Six metres wide at the hairpin/chicane, eight on the straight.
+            const float half = (k >= 14 && k <= 31) || (k >= 42 && k <= 50) ? 3.2f : 4.f;
+            t.outer[k] = {t.centre[k].x + half*dy/len, t.centre[k].y - half*dx/len};
+            t.inner[k] = {t.centre[k].x - half*dy/len, t.centre[k].y + half*dx/len};
+            const Vec2 next = t.centre[(k+1)%kWallPoints];
+            t.arc[k+1] = t.arc[k]+hypotf(next.x-t.centre[k].x,next.y-t.centre[k].y);
+        }
+        return t;
+    }
     for (int k = 0; k < kWallPoints; ++k) {
         const float theta = kTwoPi * static_cast<float>(k) / static_cast<float>(kWallPoints);
         const float r     = centre_radius(theta);
+        t.centre[k] = {r*cosf(theta),r*sinf(theta)};
         t.outer[k] = Vec2{(r + kHalfWidth) * cosf(theta), (r + kHalfWidth) * sinf(theta)};
         t.inner[k] = Vec2{(r - kHalfWidth) * cosf(theta), (r - kHalfWidth) * sinf(theta)};
     }
@@ -116,6 +152,7 @@ struct State {
     float last_angle;  // polar angle about the origin at the previous step
     float progress;    // rad travelled around the origin since the episode started
     int   steps;       // steps taken in the current episode
+    int   lap_step = 0;
 };
 
 // Angle of ray r relative to the heading: the fan spans -90 to +90 degrees.
@@ -140,6 +177,12 @@ CUDARL_HD inline void write_obs(const State& s, const Track& track, float* obs) 
         obs[r] = dist / kRayRange;
     }
     obs[kRays] = s.speed / kMaxSpeed;
+    for (int r = 0; r < kRays; ++r) {
+        obs[kRays + 1 + r] = 1.f;
+        obs[2*kRays + 1 + r] = 0.f;
+    }
+    obs[kObsDim-2]=0.f;
+    obs[kObsDim-1]=1.f;
 }
 
 CUDARL_HD inline float wrap_angle(float a) {
@@ -180,6 +223,9 @@ struct StepResult {
     bool  terminated;   // the car hit a wall
     bool  truncated;    // the time limit was reached
     float laps;         // laps covered when the episode ends (meaningful only then)
+    bool contact = false;
+    bool clean_lap = false;
+    float lap_seconds = 0.f;
 };
 
 // Advances one car. When the episode ends, the final observation goes to
@@ -220,22 +266,29 @@ struct StepOutputs {
     float* final_obs;
     float* finished_length;
     float* finished_laps;
+    float* metrics = nullptr; // [num_envs x 4]: contact cars, clean laps, lap seconds, wall crashes
 };
 
-// num_envs cars stepped in parallel, one GPU thread each, on the shared track.
+// Traffic groups contain eight cars. Integration/observations run per car;
+// resolution runs per race in a fixed order, without atomics.
 class RacingBatch {
 public:
-    RacingBatch(int num_envs, uint32_t seed);
+    RacingBatch(int num_envs, uint32_t seed, bool traffic = false);
 
     int num_envs() const { return n_; }
     void reset(cudaStream_t stream = nullptr);
     // d_actions: raw [num_envs x kActionDim] actions, clamped inside step().
     void step(const float* d_actions, const StepOutputs& out, cudaStream_t stream = nullptr);
     const float* obs() const { return obs_.get(); }   // device [num_envs x kObsDim]
+    const State* states() const { return states_.get(); }
 
 private:
     int                  n_;
     uint32_t             seed_;
+    bool                 traffic_;
+    device_ptr<Track>    track_;
+    device_ptr<State>    previous_;
+    device_ptr<StepResult> results_;
     device_ptr<State>    states_;
     device_ptr<uint32_t> episodes_;
     device_ptr<float>    obs_;

@@ -16,9 +16,9 @@ nn::MlpSpec actor_spec(int hidden) {
 } // namespace
 
 RacingShowcase::RacingShowcase(int count, int hidden, uint32_t seed)
-    : policy_(actor_spec(hidden)), seed_(seed), track_(racing::make_track()), states_(count), episodes_(count, 0),
+    : policy_(actor_spec(hidden)), seed_(seed), track_(racing::make_track(true)), states_(count), episodes_(count, 0),
       obs_(static_cast<size_t>(count) * racing::kObsDim, 0.f), crash_frames_(count, 0) {
-    if (count <= 0) throw std::invalid_argument("RacingShowcase: count must be positive");
+    if (count != racing::kRaceCars) throw std::invalid_argument("RacingShowcase: requires eight cars");
     reset();
 }
 
@@ -28,28 +28,52 @@ void RacingShowcase::set_policy(const std::vector<float>& actor_params) {
 }
 
 void RacingShowcase::reset() {
+    racing::reset_race(states_.data(),episodes_.data(),track_,seed_,0);
+    clean_laps_=contacts_=wall_crashes_=0;
+    best_lap_=0.f;
     for (int i = 0; i < count(); ++i) {
-        episodes_[i]     = 0;
-        states_[i]       = racing::initial_state(seed_, static_cast<uint32_t>(i), 0);
         crash_frames_[i] = 0;
         observe(i);
     }
 }
 
 void RacingShowcase::observe(int i) {
-    racing::write_obs(states_[i], track_, &obs_[static_cast<size_t>(i) * racing::kObsDim]);
+    racing::observe_race(states_.data(),i,track_,&obs_[static_cast<size_t>(i)*racing::kObsDim]);
+}
+
+void RacingShowcase::begin_evaluation() {
+    clean_laps_=contacts_=wall_crashes_=0;
+    best_lap_=0.f;
+    for(auto& state:states_) {
+        state.progress=0.f;
+        state.lap_step=state.steps;
+    }
 }
 
 void RacingShowcase::step() {
     const int n = count();
     policy_.forward(obs_.data(), n);
     const float* mean = policy_.output();
+    const auto previous=states_;
+    racing::StepResult results[racing::kRaceCars];
+    float final_obs[racing::kRaceCars*racing::kObsDim];
     for (int i = 0; i < n; ++i) {
         // The policy's mean action; racing::step clamps it to the valid range.
         const float action[racing::kActionDim] = {mean[i * racing::kActionDim + 0], mean[i * racing::kActionDim + 1]};
-        float       final_obs[racing::kObsDim];
-        const auto  r = racing::step(states_[i], action, track_, seed_, static_cast<uint32_t>(i), episodes_[i],
-                                     final_obs);
+        results[i]=racing::advance_race(states_[i],action,track_);
+        // The 50 s limit bounds training episodes, not a reason to tow
+        // a safe showcase car to another part of the track.
+        results[i].truncated=false;
+    }
+    racing::resolve_race(states_.data(),previous.data(),results,episodes_.data(),track_,seed_,0,final_obs);
+    for (int i=0;i<n;++i) {
+        const auto& r=results[i];
+        if (r.contact) ++contacts_;
+        if (r.terminated && !r.contact) ++wall_crashes_;
+        if (r.clean_lap) {
+            ++clean_laps_;
+            if (best_lap_==0.f || r.lap_seconds<best_lap_) best_lap_=r.lap_seconds;
+        }
         if (r.terminated) crash_frames_[i] = kCrashFlashFrames;
         else if (crash_frames_[i] > 0) --crash_frames_[i];
         observe(i);

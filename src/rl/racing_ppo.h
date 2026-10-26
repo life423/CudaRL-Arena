@@ -20,6 +20,7 @@
 namespace cudarl::rl {
 
 struct RacingPpoConfig {
+    bool     traffic       = true;  // eight interacting cars per race; false keeps the original circuit
     int      num_envs      = 2048;
     int      rollout_steps = 64;     // per environment, per update
     int      epochs        = 4;
@@ -39,6 +40,10 @@ struct RacingPpoConfig {
 };
 
 struct RacingStats {
+    int       contact_cars = 0;
+    int       clean_laps = 0;
+    int       wall_crashes = 0;
+    float     mean_lap_seconds = 0.f;
     int       update               = 0;
     long long env_steps            = 0;     // total so far
     int       episodes             = 0;     // ended during this update's rollout
@@ -96,6 +101,7 @@ private:
     device_ptr<float> mb_obs_, mb_actions_, mb_logp_, mb_adv_, mb_ret_, dmean_, dlog_std_rows_, dvalues_;
     device_ptr<float> row_stats_, adv_stats_;
     device_ptr<float> stats_;   // [4 episode totals, 5 loss sums]
+    device_ptr<float> race_metrics_;
 };
 
 } // namespace cudarl::rl

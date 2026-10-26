@@ -26,7 +26,8 @@ public:
     using Config = typename Trainer::Config;
     using Stats  = typename Trainer::Stats;
 
-    explicit TrainingSession(const Config& config) : cfg_(config), thread_([this] { run(); }) {}
+    explicit TrainingSession(const Config& config, double updates_per_second = 2.0, bool initially_paused = false)
+        : cfg_(config), ups_(updates_per_second), paused_(initially_paused), thread_([this] { run(); }) {}
     ~TrainingSession() {   // stops and joins the training thread
         stop_.store(true);
         if (thread_.joinable()) thread_.join();
@@ -61,6 +62,14 @@ public:
         return true;
     }
 
+    // Immutable update-zero checkpoint, published before any optimizer step.
+    bool initial_policy(std::vector<float>& params) const {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (initial_policy_.empty()) return false;
+        params = initial_policy_;
+        return true;
+    }
+
 private:
     void run() {
         using clock = std::chrono::steady_clock;
@@ -69,6 +78,7 @@ private:
             {
                 std::lock_guard<std::mutex> lock(mutex_);
                 policy_         = trainer.actor_params();
+                initial_policy_ = policy_;
                 policy_version_ = 1;
             }
             auto next = clock::now();
@@ -101,6 +111,7 @@ private:
     mutable std::mutex      mutex_;
     std::vector<Stats>      history_;
     std::vector<float>      policy_;
+    std::vector<float>      initial_policy_;
     uint64_t                policy_version_ = 0;
     std::string             error_;
     std::thread             thread_;   // last: starts after every member above is initialized

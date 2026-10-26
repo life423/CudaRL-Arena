@@ -289,6 +289,7 @@ GPU_TEST_CASE("racing ppo: the cars learn to drive on 3 seeds (laps rise, crashe
     // laps on average, with most episodes ending on the time limit, not in a crash.
     for (uint32_t seed : {1u, 2u, 3u}) {
         RacingPpoConfig cfg;
+        cfg.traffic = false; // original isolated circuit remains a learning regression
         cfg.seed = seed;
         cfg.total_updates = 100;
         RacingPpoTrainer trainer(cfg);

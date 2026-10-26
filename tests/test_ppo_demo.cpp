@@ -40,6 +40,12 @@ GPU_TEST_CASE("ppo_demo: session trains in the background and publishes the poli
     std::vector<float> params;
     CHECK(session.latest_policy(version, params) && version == 9 && !params.empty());
     CHECK(!session.latest_policy(version, params));   // nothing new since
+    std::vector<float> initial, initial_again;
+    CHECK(session.initial_policy(initial));
+    rl::PpoTrainer reference(cfg);
+    CHECK(initial == reference.actor_params()); // actual initialized weights, before any update
+    CHECK(initial != params);                  // training must not overwrite the checkpoint
+    CHECK(session.initial_policy(initial_again) && initial_again == initial);
 }
 
 GPU_TEST_CASE("ppo_demo: throttle and pause limit the update rate") {
@@ -55,6 +61,29 @@ GPU_TEST_CASE("ppo_demo: throttle and pause limit the update rate") {
     const size_t paused_at = session.history_since(0, h);
     std::this_thread::sleep_for(std::chrono::milliseconds(600));
     CHECK(session.history_since(0, h) == paused_at);
+}
+
+GPU_TEST_CASE("ppo_demo: a paused start publishes update zero without taking an optimizer step") {
+    rl::PpoConfig cfg;
+    cfg.num_envs=128;
+    cfg.rollout_steps=16;
+    cfg.total_updates=2;
+    PpoSession session(cfg,0.0,true);
+    std::vector<float> initial;
+    CHECK(wait_for([&] { return session.initial_policy(initial) || !session.error().empty(); },10));
+    CHECK(session.error().empty());
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::vector<rl::PpoStats> history;
+    CHECK(session.history_since(0,history)==0);
+    uint64_t version=0;
+    std::vector<float> current;
+    CHECK(session.latest_policy(version,current));
+    CHECK(version==1 && current==initial);
+    session.set_paused(false);
+    CHECK(wait_for([&] {return session.finished() || !session.error().empty();},10));
+    CHECK(session.error().empty());
+    CHECK(session.history_since(0,history)==2);
+    CHECK(session.latest_policy(version,current) && current!=initial);
 }
 
 GPU_TEST_CASE("ppo_demo: a trained policy balances every showcase cart for 500 steps") {

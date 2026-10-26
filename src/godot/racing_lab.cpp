@@ -12,7 +12,7 @@ namespace godot {
 namespace {
 
 // x, y, heading, speed, laps, steps, crashed, then the raycast distances.
-constexpr int kCarStride = 7 + cudarl::racing::kRays;
+constexpr int kCarStride = 7 + 2*cudarl::racing::kRays;
 
 PackedVector2Array closed_polyline(const cudarl::racing::Vec2* points, int count) {
     PackedVector2Array out;
@@ -26,7 +26,8 @@ PackedVector2Array closed_polyline(const cudarl::racing::Vec2* points, int count
 } // namespace
 
 void RacingLab::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("start", "num_envs", "seed", "showcase_count"), &RacingLab::start);
+    ClassDB::bind_method(D_METHOD("start", "num_envs", "seed", "showcase_count", "updates_per_second"), &RacingLab::start, DEFVAL(2.0));
+    ClassDB::bind_method(D_METHOD("set_untrained", "enabled"), &RacingLab::set_untrained);
     ClassDB::bind_method(D_METHOD("stop"), &RacingLab::stop);
     ClassDB::bind_method(D_METHOD("get_error"), &RacingLab::get_error);
     ClassDB::bind_method(D_METHOD("set_updates_per_second", "ups"), &RacingLab::set_updates_per_second);
@@ -39,9 +40,10 @@ void RacingLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("step_showcase"), &RacingLab::step_showcase);
     ClassDB::bind_method(D_METHOD("get_car_stride"), &RacingLab::get_car_stride);
     ClassDB::bind_method(D_METHOD("reset_showcase"), &RacingLab::reset_showcase);
+    ClassDB::bind_method(D_METHOD("begin_evaluation"), &RacingLab::begin_evaluation);
 }
 
-bool RacingLab::start(int num_envs, int seed, int showcase_count) {
+bool RacingLab::start(int num_envs, int seed, int showcase_count, double updates_per_second) {
     stop();
     error_ = String();
     const cudarl::DeviceInfo device = cudarl::probe_device();
@@ -52,9 +54,10 @@ bool RacingLab::start(int num_envs, int seed, int showcase_count) {
     try {
         cudarl::rl::RacingPpoConfig cfg;
         cfg.num_envs = num_envs;
+        cfg.total_updates = 1200;
         cfg.seed     = static_cast<uint32_t>(seed);
         showcase_ = std::make_unique<cudarl::demos::RacingShowcase>(showcase_count, cfg.hidden, cfg.seed + 7);
-        session_  = std::make_unique<cudarl::demos::TrainingSession<cudarl::rl::RacingPpoTrainer>>(cfg);
+        session_  = std::make_unique<cudarl::demos::TrainingSession<cudarl::rl::RacingPpoTrainer>>(cfg, updates_per_second, true);
     } catch (const std::exception& e) {
         error_ = e.what();
         stop();
@@ -69,6 +72,15 @@ void RacingLab::stop() {
     history_.clear();
     policy_version_ = 0;
     policy_.clear();
+    initial_policy_.clear();
+    untrained_ = false;
+}
+
+void RacingLab::set_untrained(bool enabled) {
+    if (untrained_ == enabled) return;
+    untrained_ = enabled;
+    policy_version_ = 0; // switching back must apply the latest checkpoint, even after training finished
+    if (showcase_) showcase_->reset();
 }
 
 String RacingLab::get_error() const {
@@ -95,9 +107,20 @@ void RacingLab::sync_history() {
 Dictionary RacingLab::get_stats() {
     sync_history();
     Dictionary d;
-    if (history_.empty()) return d;
-    const auto& s = history_.back();
+    d["showcase_untrained"] = untrained_;
+    if (showcase_) {
+        d["showcase_clean_laps"]=showcase_->clean_laps();
+        d["showcase_contacts"]=showcase_->contacts();
+        d["showcase_walls"]=showcase_->wall_crashes();
+        d["showcase_best_lap"]=showcase_->best_lap();
+    }
+    d["policy_ready"] = !initial_policy_.empty();
+    const auto s = history_.empty() ? cudarl::rl::RacingStats{} : history_.back();
     d["update"]               = s.update;
+    d["contact_cars"] = s.contact_cars;
+    d["clean_laps"] = s.clean_laps;
+    d["wall_crashes"] = s.wall_crashes;
+    d["mean_lap_seconds"] = s.mean_lap_seconds;
     d["env_steps"]            = static_cast<int64_t>(s.env_steps);
     d["mean_episode_length"]  = s.mean_episode_length;
     d["mean_laps"]            = s.mean_laps;
@@ -122,19 +145,25 @@ PackedVector2Array RacingLab::get_learning_curve() {
 }
 
 PackedVector2Array RacingLab::get_track_outer() const {
-    const auto track = cudarl::racing::make_track();
+    const auto track = cudarl::racing::make_track(true);
     return closed_polyline(track.outer, cudarl::racing::kWallPoints);
 }
 
 PackedVector2Array RacingLab::get_track_inner() const {
-    const auto track = cudarl::racing::make_track();
+    const auto track = cudarl::racing::make_track(true);
     return closed_polyline(track.inner, cudarl::racing::kWallPoints);
 }
 
 PackedFloat32Array RacingLab::step_showcase() {
     PackedFloat32Array out;
     if (!showcase_ || !session_) return out;
-    if (session_->latest_policy(policy_version_, policy_)) showcase_->set_policy(policy_);
+    if (initial_policy_.empty() && !session_->initial_policy(initial_policy_)) return out;
+    if (untrained_) {
+        if (policy_version_ == 0) {
+            showcase_->set_policy(initial_policy_);
+            policy_version_ = 1;
+        }
+    } else if (session_->latest_policy(policy_version_, policy_)) showcase_->set_policy(policy_);
     showcase_->step();
     const int n = showcase_->count();
     out.resize(static_cast<int64_t>(n) * kCarStride);
@@ -149,6 +178,8 @@ PackedFloat32Array RacingLab::step_showcase() {
         out.set(base + 5, static_cast<float>(s.steps));
         out.set(base + 6, showcase_->just_crashed(i) ? 1.f : 0.f);
         for (int r = 0; r < cudarl::racing::kRays; ++r) out.set(base + 7 + r, showcase_->ray(i, r));
+        for (int r=0;r<cudarl::racing::kRays;++r)
+            out.set(base+7+cudarl::racing::kRays+r,showcase_->car_ray(i,r));
     }
     return out;
 }
@@ -159,6 +190,10 @@ int RacingLab::get_car_stride() const {
 
 void RacingLab::reset_showcase() {
     if (showcase_) showcase_->reset();
+}
+
+void RacingLab::begin_evaluation() {
+    if(showcase_) showcase_->begin_evaluation();
 }
 
 } // namespace godot

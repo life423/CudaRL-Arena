@@ -28,7 +28,8 @@ protected:
 
 public:
     // Starts (or restarts) training with num_envs cars and a seed.
-    bool   start(int num_envs, int seed, int showcase_count);
+    bool   start(int num_envs, int seed, int showcase_count, double updates_per_second = 2.0);
+    void   set_untrained(bool enabled);
     void   stop();
     String get_error() const;
 
@@ -48,11 +49,12 @@ public:
     PackedVector2Array get_track_inner() const;
 
     // Steps every showcase car once (call at the physics rate) with the newest policy.
-    // Returns get_car_stride() floats per car: x, y, heading, speed, laps, steps,
-    // crashed (0 or 1), then the raycast distances in metres.
+    // Returns 25 floats per car: x, y, heading, speed, laps, steps, crashed,
+    // nine wall-ray distances, then nine car-ray distances (metres).
     PackedFloat32Array step_showcase();
     int                get_car_stride() const;
     void               reset_showcase();
+    void               begin_evaluation();
 
 private:
     void sync_history();
@@ -62,6 +64,8 @@ private:
     std::vector<cudarl::rl::RacingStats>                                          history_;
     uint64_t                                                                      policy_version_ = 0;
     std::vector<float>                                                            policy_;
+    std::vector<float>                                                            initial_policy_;
+    bool untrained_ = false;
     String                                                                        error_;
 };
 
