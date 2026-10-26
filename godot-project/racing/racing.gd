@@ -22,6 +22,7 @@ const ENV_CHOICES := [512, 2048, 8192]
 const MAX_LAPS := 2.0
 const CAR_LENGTH := 4.0
 const CAR_WIDTH := 2.0
+const CAR_SHEET: Texture2D = preload("res://racing/assets/cars_topdown.png")
 const STEP_HZ := 20           # racing::kDt = 0.05 s
 
 const BG := Color(0.09, 0.10, 0.12)
@@ -74,9 +75,11 @@ var settings_panel: VBoxContainer
 var diagnostics_label: Label
 var inspect_option: OptionButton
 var reset_button: Button
+var car_sprites: Array[AtlasTexture] = []
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = STEP_HZ
+	_load_car_sprites()
 	car_stride = lab.get_car_stride()
 	track_outer = lab.get_track_outer()
 	track_inner = lab.get_track_inner()
@@ -406,6 +409,7 @@ func _build_ui() -> void:
 	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	layout.add_child(right)
 	track_view = Control.new()
+	track_view.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	track_view.clip_contents = true
 	track_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	track_view.draw.connect(_draw_track)
@@ -480,6 +484,40 @@ func _note(text: String) -> Label:
 
 # --- Drawing ----------------------------------------------------------------
 
+func _load_car_sprites() -> void:
+	# The user-supplied sheet is 4 x 2. Derive cell boundaries from its actual
+	# resolution, including odd sizes, and trim padding without editing the asset.
+	car_sprites.clear()
+	var image := CAR_SHEET.get_image()
+	for i in SHOWCASE_CARS:
+		var col := i % 4
+		var row := i / 4
+		var x0 := roundi(float(col) * image.get_width() / 4.0)
+		var x1 := roundi(float(col + 1) * image.get_width() / 4.0)
+		var y0 := roundi(float(row) * image.get_height() / 2.0)
+		var y1 := roundi(float(row + 1) * image.get_height() / 2.0)
+		var cell := Rect2i(x0, y0, x1 - x0, y1 - y0)
+		# Generated sheets can contain almost-transparent stray pixels outside
+		# the car. Ignore those when finding the crop; preserve the source PNG.
+		var left := x1
+		var right := x0
+		var top := y1
+		var bottom := y0
+		for y in range(y0, y1):
+			for x in range(x0, x1):
+				if image.get_pixel(x, y).a < 0.25:
+					continue
+				left = mini(left, x)
+				right = maxi(right, x)
+				top = mini(top, y)
+				bottom = maxi(bottom, y)
+		var bounds := Rect2i(left, top, right - left + 1, bottom - top + 1).grow(2).intersection(cell)
+		var sprite := AtlasTexture.new()
+		sprite.atlas = CAR_SHEET
+		sprite.region = Rect2(bounds)
+		sprite.filter_clip = true
+		car_sprites.append(sprite)
+
 # Track coordinates have y up; the screen has y down, so flip y.
 func _to_screen(p: Vector2, origin: Vector2, px_per_m: float) -> Vector2:
 	return origin + Vector2(p.x, -p.y) * px_per_m
@@ -529,7 +567,6 @@ func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 	var pos := Vector2(cars[base + 0], cars[base + 1])
 	var heading: float = cars[base + 2]
 	var crashed: bool = cars[base + 6] > 0.5
-	var color := Color.from_hsv(float(i) / float(SHOWCASE_CARS), 0.55, 0.95)
 	var dir := Vector2(cos(heading), sin(heading))
 	var side := Vector2(-dir.y, dir.x)
 
@@ -544,21 +581,20 @@ func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
 		var b := _to_screen(pos + ray_dir * dist, origin, px_per_m)
 		track_view.draw_line(a, b, RAY_NEAR.lerp(RAY_FAR, near).darkened(0.1), 1.0, true)
 
-	var corners := PackedVector2Array()
-	for c in [Vector2(1, 1), Vector2(1, -1), Vector2(-1, -1), Vector2(-1, 1)]:
-		var local: Vector2 = dir * (c.x * CAR_LENGTH * 0.5) + side * (c.y * CAR_WIDTH * 0.5)
-		corners.append(_to_screen(pos + local, origin, px_per_m))
-	var body := CRASH if crashed else color
-	track_view.draw_colored_polygon(corners, body)
-	var rear := _to_screen(pos - dir * CAR_LENGTH * 0.45, origin, px_per_m)
+	# Sprites face up. Screen y points down, so the local rotation is PI/2-heading.
+	# The cropped sprite fills exactly the existing 2 x 4 metre car footprint.
+	var sprite_size := Vector2(CAR_WIDTH, CAR_LENGTH) * px_per_m
+	track_view.draw_set_transform(_to_screen(pos, origin, px_per_m), PI * 0.5 - heading)
+	track_view.draw_texture_rect(car_sprites[i], Rect2(-sprite_size * 0.5, sprite_size), false,
+			Color(1.0, 0.6, 0.6) if crashed else Color.WHITE)
+	track_view.draw_set_transform(Vector2.ZERO)
 	if braking.size() > i and braking[i] > 0:
-		track_view.draw_line(rear - side * px_per_m * 0.65, rear + side * px_per_m * 0.65, Color(1.0, 0.12, 0.07), 3.0, true)
+		for flank in [-1.0, 1.0]:
+			var lamp: Vector2 = pos - dir * CAR_LENGTH * 0.43 + side * CAR_WIDTH * 0.32 * float(flank)
+			track_view.draw_circle(_to_screen(lamp, origin, px_per_m), maxf(1.2, 0.13 * px_per_m), Color(1.0, 0.12, 0.07))
 	if i == inspected_car:
 		track_view.draw_arc(_to_screen(pos, origin, px_per_m), 3.0 * px_per_m, 0, TAU, 24, Color(1, 1, 1, 0.7), 1.0, true)
 	track_view.draw_string(ThemeDB.fallback_font, _to_screen(pos, origin, px_per_m) + Vector2(7, -7), str(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
-	# The nose marks the heading.
-	var nose := _to_screen(pos + dir * CAR_LENGTH * 0.5, origin, px_per_m)
-	track_view.draw_circle(nose, 0.5 * px_per_m, Color.WHITE)
 
 func _draw_curve() -> void:
 	var r := Rect2(Vector2.ZERO, curve_view.size).grow(-16)
