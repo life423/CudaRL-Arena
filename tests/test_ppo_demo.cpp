@@ -40,6 +40,12 @@ GPU_TEST_CASE("ppo_demo: session trains in the background and publishes the poli
     std::vector<float> params;
     CHECK(session.latest_policy(version, params) && version == 9 && !params.empty());
     CHECK(!session.latest_policy(version, params));   // nothing new since
+    std::vector<float> initial, initial_again;
+    CHECK(session.initial_policy(initial));
+    rl::PpoTrainer reference(cfg);
+    CHECK(initial == reference.actor_params()); // actual initialized weights, before any update
+    CHECK(initial != params);                  // training must not overwrite the checkpoint
+    CHECK(session.initial_policy(initial_again) && initial_again == initial);
 }
 
 GPU_TEST_CASE("ppo_demo: throttle and pause limit the update rate") {

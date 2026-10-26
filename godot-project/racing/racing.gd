@@ -9,7 +9,7 @@ extends Control
 const PANEL_WIDTH := 300
 const SHOWCASE_CARS := 8
 const ENV_CHOICES := [512, 2048, 8192]
-const MAX_LAPS := 4.5
+const MAX_LAPS := 2.0
 const CAR_LENGTH := 4.0
 const CAR_WIDTH := 2.0
 const STEP_HZ := 20           # racing::kDt = 0.05 s
@@ -51,6 +51,8 @@ var panel_scroll: ScrollContainer
 var previous_speeds := PackedFloat32Array()
 var braking := PackedByteArray()
 var evaluation_started := false
+var untrained_view := false
+var baseline_checkbox: CheckBox
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = STEP_HZ
@@ -86,18 +88,25 @@ func _process(_delta: float) -> void:
 	if not err.is_empty():
 		status_label.text = err
 	elif lab.is_finished():
-		if not evaluation_started:
+		if not evaluation_started and not untrained_view:
 			lab.reset_showcase()
 			evaluation_started = true
-		status_label.text = "Training complete. Racing the final policy. Live counters start fresh."
+		status_label.text = "Training complete. Racing the final policy." if not untrained_view else "Frozen update-0 policy. Switch back to compare."
 	_update_stats()
 	curve_view.queue_redraw()
 
 func _restart() -> void:
 	evaluation_started = false
+	untrained_view = false
+	baseline_checkbox.set_pressed_no_signal(false)
+	cars.clear()
+	stats.clear()
+	curve.clear()
+	previous_speeds.clear()
 	paused = false
 	pause_button.text = "Pause training"
-	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, SHOWCASE_CARS)
+	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
+	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, SHOWCASE_CARS, ups)
 	status_label.text = ("Training with seed %d" % run_seed) if ok else lab.get_error()
 	_apply_speed()
 
@@ -146,19 +155,30 @@ func _build_ui() -> void:
 	title.add_theme_font_size_override("font_size", 18)
 	controls.add_child(title)
 	controls.add_child(_note("Shared physics. Learned steering and braking. Red tail lights = braking."))
+	baseline_checkbox = CheckBox.new()
+	baseline_checkbox.text = "Compare: untrained policy"
+	baseline_checkbox.custom_minimum_size.y = 44
+	baseline_checkbox.tooltip_text = "Show this seed's frozen update-0 weights. Training continues. Switching resets the visible race for comparison."
+	baseline_checkbox.toggled.connect(func(on):
+		untrained_view = on
+		evaluation_started = false
+		lab.set_untrained(on)
+		cars.clear()
+		previous_speeds.clear())
+	controls.add_child(baseline_checkbox)
 
 	speed_slider = HSlider.new()
 	speed_slider.min_value = log(0.5) / log(10.0)
 	speed_slider.max_value = log(50.0) / log(10.0)
 	speed_slider.step = 0.01
-	speed_slider.value = log(5.0) / log(10.0)
+	speed_slider.value = log(2.0) / log(10.0)
 	speed_slider.value_changed.connect(func(_v): _apply_speed())
-	controls.add_child(_labeled("Training speed (log scale)", speed_slider))
+	controls.add_child(_labeled("Training updates per second", speed_slider))
 	speed_label = Label.new()
 	controls.add_child(speed_label)
 	full_speed = CheckBox.new()
 	full_speed.text = "Train at full speed"
-	full_speed.button_pressed = true
+	full_speed.button_pressed = false
 	full_speed.toggled.connect(func(_on): _apply_speed())
 	controls.add_child(full_speed)
 
@@ -199,7 +219,7 @@ func _build_ui() -> void:
 	controls.add_child(HSeparator.new())
 	stats_label = Label.new()
 	controls.add_child(stats_label)
-	controls.move_child(stats_label, 2)
+	controls.move_child(stats_label, 3)
 	status_label = _note("")
 	controls.add_child(status_label)
 
@@ -226,7 +246,7 @@ func _update_stats() -> void:
 		return
 	var best: float = stats.get("showcase_best_lap", 0.0)
 	var best_text := "—" if best <= 0 else "%.2f s" % best
-	stats_label.text = "LIVE RACE\nClean laps   %d\nVehicle contacts   %d\nWall hits   %d\nBest clean lap   %s\n\nGPU TRAINING · update %d\n%s car steps\n%.2f M car steps/s\n%.1f ms / update\nLaps / episode   %.2f\nClean laps this update   %d" % [
+	stats_label.text = ("UNTRAINED · UPDATE 0\n" if untrained_view else "LIVE POLICY\n") + "Clean laps   %d\nVehicle contacts   %d\nWall hits   %d\nBest clean lap   %s\n\nGPU TRAINING · update %d\n%s car steps\n%.2f M steps/s while active\n%.1f ms / update\nLaps / episode   %.2f\nClean laps this update   %d" % [
 		stats.get("showcase_clean_laps", 0), stats.get("showcase_contacts", 0),
 		stats.get("showcase_walls", 0), best_text, stats["update"], _thousands(stats["env_steps"]),
 		stats["env_steps_per_second"] / 1e6, stats["update_ms"], stats["mean_laps"], stats.get("clean_laps", 0)]
@@ -309,6 +329,8 @@ func _draw_track() -> void:
 
 	var font := ThemeDB.fallback_font
 	var caption := "8-CAR RACE / final policy" if evaluation_started else "8-CAR RACE / learning live"
+	if untrained_view:
+		caption = "8-CAR RACE / UNTRAINED / frozen update 0"
 	track_view.draw_string(font, Vector2(12, 22), caption,
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
 	if cars.size() >= (inspected_car + 1) * car_stride:
@@ -356,10 +378,14 @@ func _draw_curve() -> void:
 	curve_view.draw_rect(Rect2(Vector2.ZERO, curve_view.size), BG.darkened(0.2))
 	var font := ThemeDB.fallback_font
 	var plot := Rect2(r.position + Vector2(40, 28), r.size - Vector2(48, 44))
-	for v in [0.0, 1.0, 2.0, 3.0, 4.0]:
-		var y := remap(v, 0.0, MAX_LAPS, plot.end.y, plot.position.y)
+	var chart_max := MAX_LAPS
+	for p in curve:
+		chart_max = maxf(chart_max, ceilf(p.y * 2.0) / 2.0)
+	for tick in 5:
+		var v := chart_max * float(tick) / 4.0
+		var y := remap(v, 0.0, chart_max, plot.end.y, plot.position.y)
 		curve_view.draw_line(Vector2(plot.position.x, y), Vector2(plot.end.x, y), GRID)
-		curve_view.draw_string(font, Vector2(r.position.x, y + 5), "%d" % int(v), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, GRID.lightened(0.4))
+		curve_view.draw_string(font, Vector2(r.position.x, y + 5), "%.1f" % v, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, GRID.lightened(0.4))
 	curve_view.draw_string(font, r.position + Vector2(40, 16), "laps per episode vs. environment steps",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, CURVE)
 	if curve.size() < 2:
@@ -368,7 +394,7 @@ func _draw_curve() -> void:
 	var pts := PackedVector2Array()
 	for p in curve:
 		pts.append(Vector2(remap(p.x, 0.0, max_steps, plot.position.x, plot.end.x),
-				remap(p.y, 0.0, MAX_LAPS, plot.end.y, plot.position.y)))
+				remap(p.y, 0.0, chart_max, plot.end.y, plot.position.y)))
 	curve_view.draw_polyline(pts, CURVE, 2.5, true)
 	curve_view.draw_string(font, Vector2(plot.end.x - 90, plot.end.y + 16), "%.1fM steps" % (max_steps / 1e6),
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 12, GRID.lightened(0.4))

@@ -242,3 +242,22 @@ GPU_TEST_CASE("race learning: traffic policy improves and completes clean laps")
                 demo.contacts(), demo.wall_crashes(), demo.best_lap());
     CHECK(demo.clean_laps() > 0);
 }
+
+GPU_TEST_CASE("race comparison: trained policy visibly outperforms its own frozen initial policy") {
+    rl::RacingPpoConfig cfg;
+    cfg.total_updates=1200;
+    rl::RacingPpoTrainer trainer(cfg);
+    const auto initial=trainer.actor_params();
+    demos::RacingShowcase untrained(kRaceCars,cfg.hidden,55);
+    untrained.set_policy(initial);
+    for(int step_i=0;step_i<1200;++step_i)untrained.step();
+    for(int u=0;u<200;++u)trainer.update();
+    demos::RacingShowcase learned(kRaceCars,cfg.hidden,55);
+    learned.set_policy(trainer.actor_params());
+    for(int step_i=0;step_i<1200;++step_i)learned.step();
+    std::printf("    Same grid/seed, 60 s: initial %d clean laps / %d wall hits; update 200 %d clean laps / %d wall hits\n",
+        untrained.clean_laps(),untrained.wall_crashes(),learned.clean_laps(),learned.wall_crashes());
+    CHECK(learned.clean_laps()>untrained.clean_laps());
+    CHECK(learned.clean_laps()>0);
+    CHECK(trainer.actor_params()!=initial);
+}

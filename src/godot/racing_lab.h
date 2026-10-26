@@ -28,7 +28,8 @@ protected:
 
 public:
     // Starts (or restarts) training with num_envs cars and a seed.
-    bool   start(int num_envs, int seed, int showcase_count);
+    bool   start(int num_envs, int seed, int showcase_count, double updates_per_second = 2.0);
+    void   set_untrained(bool enabled);
     void   stop();
     String get_error() const;
 
@@ -62,6 +63,8 @@ private:
     std::vector<cudarl::rl::RacingStats>                                          history_;
     uint64_t                                                                      policy_version_ = 0;
     std::vector<float>                                                            policy_;
+    std::vector<float>                                                            initial_policy_;
+    bool untrained_ = false;
     String                                                                        error_;
 };
 

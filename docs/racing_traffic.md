@@ -124,6 +124,38 @@ without restarting training. Pause training leaves the real-time race running.
 Training-speed and car-count controls apply to the worker; choosing a car count
 restarts training. Compact windows put the scrollable controls above the race.
 
+### Making learning visible
+
+Training defaults to **two updates per second**. Previously the demo started at
+full speed, so the visible cars received many optimized checkpoints before they
+had driven far in real time. The throttle now applies when the worker starts as
+well as when its speed control changes. Full speed remains available to measure
+or demonstrate throughput. The steps/s readout measures active update time,
+including optimization; it excludes the deliberate wait between updates.
+
+**Compare: untrained policy** displays this run's exact initialization weights,
+captured before any update. The checkpoint stays immutable while training
+continues. Switching either way resets the visible race to the same grid and
+clears its counters. The caption and sidebar explicitly label the frozen
+update-zero view. Switching back applies the latest checkpoint, including after
+training has finished. Restart creates a new model/initial checkpoint for the
+new seed and clears the comparison state and previous curves.
+
+A direct comparison on seed 1, identical showcase grid/seed 55, and 60 simulated
+seconds per policy produced:
+
+| Policy | Clean laps | Wall hits |
+|---|---:|---:|
+| Actual update-zero weights | 0 | 29 |
+| Learned weights after 200 updates | 8 | 0 |
+
+This compares the deterministic mean actions of both policies. It does not add
+action noise to the initial policy or change its vehicle physics. The session
+test checks the saved initial checkpoint against a freshly constructed trainer
+and verifies that training does not overwrite it. The comparison test is
+`cudarl_tests.exe "race comparison"`; session regressions use the `ppo_demo:`
+filter.
+
 The training throughput includes optimization and differs from kernel-only
 benchmark throughput. Simultaneous trainers or other GPU applications can lower
 it substantially. Lap times while training are produced by a changing policy.
@@ -133,3 +165,22 @@ Further evidence needed: harder-track learning across multiple seeds, long
 contact-free racing evaluations, measured overtaking behaviour, held-out
 circuits and randomized conditions. A short clean run does not establish all
 of those properties.
+
+## Possible future ideas
+
+Saved at the user's request on October 26, 2026. These are proposals to design
+and evaluate later, not approved implementation tasks:
+
+- **Traffic lights:** recognize signal states, stop before the line on red, and
+  proceed on green when the junction is clear.
+- **Crosswalks with pedestrians:** detect people approaching or occupying a
+  crossing, yield, and resume only when the crossing is clear.
+- **Stop signs:** make a full stop at the line, then check for conflicts and
+  take turns through the intersection.
+
+Together these suggest an intersection/urban-driving challenge alongside the
+racing circuit. The simulation, observations, collision rules and evaluation
+would need an explicit design. Rule compliance, safe yielding and successful
+crossings should be measured separately from lap speed. In particular, legally
+waiting at a red light or pedestrian crossing must not receive the current
+racing idle penalty, and progress rewards must not encourage running a signal.
