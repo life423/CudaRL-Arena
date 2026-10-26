@@ -1,5 +1,9 @@
 # Racing training performance
 
+This records the traffic execution pass at `63f5256`, with optimization graphs
+disabled. The [subsequent optimizer study](racing_optimizer.md) measures the
+additional graph submission improvement independently.
+
 This portfolio milestone measures and improves the system beneath an ML
 framework: memory ownership, CUDA kernels, work distribution, streams, rollout
 collection and learning updates are implemented in C++/CUDA. Neither training
@@ -74,7 +78,7 @@ ended observations; callers explicitly opt into `bootstrap_only` when only
 truncation values are consumed. The final-observation buffer is initialized,
 and unused rows cannot feed the advantage calculation.
 
-This pass does not introduce CUDA Graphs, change the model, alter physics or
+The traffic execution pass did not introduce CUDA Graphs, change the model, alter physics or
 rewards, or change the number of training steps. Graphs and optimization-phase
 launch overhead remain candidates for a subsequent measured experiment.
 
@@ -158,10 +162,10 @@ From the repository root in PowerShell:
 ```powershell
 cmake --build --preset release
 build/Release/racing_bench.exe --help
-build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare=1
-build/Release/racing_bench.exe envs=2048 warmup=10 updates=30 repeats=2 compare=1 profile=1
+build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare=1 graphs=0
+build/Release/racing_bench.exe envs=2048 warmup=10 updates=30 repeats=2 compare=1 profile=1 graphs=0
 build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare=1 simulation=1
-build/Release/racing_bench.exe seed=1 envs=2048 warmup=10 updates=190 repeats=1 compare=1 evaluate=1
+build/Release/racing_bench.exe seed=1 envs=2048 warmup=10 updates=190 repeats=1 compare=1 evaluate=1 graphs=0
 $env:CUDARL_REQUIRE_GPU='1'
 build/Release/cudarl_tests.exe
 ```
@@ -179,7 +183,7 @@ Unknown options, malformed numeric values and invalid sizes fail with a nonzero
 exit code. `profile=1` and `evaluate=1` add diagnostic work and should be kept
 separate from ordinary performance comparisons.
 
-Validation of the retained implementation: Release build with warnings as
+Validation of the traffic execution pass at `63f5256`: Release build with warnings as
 errors; **111/111 local CPU/GPU tests passed, zero skipped**, with
 `CUDARL_REQUIRE_GPU=1`. The 1,200-update traffic regression completed 16 clean
 showcase laps with zero contacts/wall hits and a 27.95 s best lap. This is

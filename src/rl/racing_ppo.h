@@ -20,6 +20,7 @@
 namespace cudarl::rl {
 
 struct RacingPpoConfig {
+    bool     graph_optimization = true; // capture/update the optimization workflow before executing once
     bool     distributed_traffic = true; // retained original launch layout is the benchmark reference
     bool     profile_phases = false; // opt-in CUDA event spans; benchmark separately from normal timing
     bool     traffic       = true;  // eight interacting cars per race; false keeps the original circuit
@@ -65,9 +66,14 @@ struct RacingStats {
     double    rollout_ms = 0.0, bootstrap_gae_ms = 0.0, metrics_ms = 0.0;
     double    optimize_ms = 0.0, readback_ms = 0.0;
     double    advance_ms = 0.0, resolve_ms = 0.0, observe_ms = 0.0;
+    double    gather_ms = 0.0, forward_loss_ms = 0.0, actor_update_ms = 0.0, critic_update_ms = 0.0;
+    double    optimization_submit_ms = 0.0;
+    double    optimization_graph_setup_ms = 0.0;
+    int       optimization_graph_nodes = 0;
 };
 
 struct RacingPhaseTimer;
+struct RacingOptimizationGraph;
 
 class RacingPpoTrainer {
 public:
@@ -92,10 +98,12 @@ private:
     void timing_mark(int index);
     void rollout();
     void optimize(float* stats);
+    void submit_optimization(float* stats);
 
     RacingPpoConfig                              cfg_;
     cudaStream_t                                 stream_ = nullptr;
     std::unique_ptr<RacingPhaseTimer>             phase_timer_;
+    std::unique_ptr<RacingOptimizationGraph>      optimization_graph_;
     int                                          batch_, minibatch_;
     int                                          update_ = 0;
     long long                                    env_steps_ = 0;

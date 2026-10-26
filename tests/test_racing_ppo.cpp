@@ -313,6 +313,38 @@ GPU_TEST_CASE("racing execution: distributed training preserves parameters and l
     }
 }
 
+GPU_TEST_CASE("racing graphs: updates match stream execution through annealing and changing Adam steps") {
+    for (int agents : {128, 2048})
+        for (uint32_t seed : {1u, 2u, 3u}) {
+            RacingPpoConfig cfg;
+            cfg.num_envs = agents;
+            cfg.seed = seed;
+            cfg.total_updates = 8;
+            if (seed == 3)
+                cfg.max_grad_norm = 0.f;
+            cfg.graph_optimization = false;
+            RacingPpoTrainer reference(cfg);
+            cfg.graph_optimization = true;
+            cfg.profile_phases = true;
+            RacingPpoTrainer graphed(cfg);
+            for (int update = 0; update < 12; ++update) {
+                const auto a = reference.update(), b = graphed.update();
+                CHECK(a.mean_laps == b.mean_laps && a.mean_episode_length == b.mean_episode_length &&
+                      a.crash_fraction == b.crash_fraction);
+                CHECK(a.pg_loss == b.pg_loss && a.value_loss == b.value_loss && a.approx_kl == b.approx_kl);
+                CHECK(a.entropy == b.entropy && a.clip_fraction == b.clip_fraction &&
+                      a.mean_std == b.mean_std);
+                CHECK(a.clean_laps == b.clean_laps && a.contact_cars == b.contact_cars &&
+                      a.wall_crashes == b.wall_crashes);
+                CHECK(a.learning_rate == b.learning_rate && a.env_steps == b.env_steps);
+                CHECK(b.optimization_graph_nodes > 0);
+                CHECK(reference.actor_params() == graphed.actor_params());
+                CHECK(reference.critic_params() == graphed.critic_params());
+                CHECK(reference.log_std() == graphed.log_std());
+            }
+        }
+}
+
 GPU_TEST_CASE("racing ppo: the cars learn to drive on 3 seeds (laps rise, crashes fall)") {
     // Episodes end at the 50 s time limit (about four laps at top speed), so the
     // laps curve saturates there. Each seed should reach more than two and a half

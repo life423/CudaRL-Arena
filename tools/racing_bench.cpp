@@ -14,7 +14,7 @@
 #include "core/rng.h"
 
 namespace {
-int option(int argc, char **argv, const char *key, int fallback) {
+int option(int argc, char** argv, const char* key, int fallback) {
     const std::string prefix = std::string(key) + "=";
     for (int i = 1; i < argc; ++i) {
         const std::string arg(argv[i]);
@@ -38,7 +38,7 @@ double percentile(std::vector<double> values, double fraction) {
     return values[low] + (values[high] - values[low]) * (index - static_cast<double>(low));
 }
 
-void simulation_benchmark(const cudarl::rl::RacingPpoConfig &cfg, int warmup, int updates, int trial) {
+void simulation_benchmark(const cudarl::rl::RacingPpoConfig& cfg, int warmup, int updates, int trial) {
     const int n = cfg.num_envs, steps = cfg.rollout_steps;
     cudarl::racing::RacingBatch batch(n, cfg.seed, true, cfg.distributed_traffic);
     // The identical fixed action tape drives both implementations, independently
@@ -83,17 +83,18 @@ void simulation_benchmark(const cudarl::rl::RacingPpoConfig &cfg, int warmup, in
 }
 } // namespace
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     try {
-        const std::set<std::string> supported{"envs",        "seed",    "total_updates", "profile",
-                                              "distributed", "compare", "evaluate",      "warmup",
-                                              "updates",     "repeats", "simulation"};
+        const std::set<std::string> supported{
+            "envs",   "seed",    "total_updates", "profile",    "distributed", "compare",       "evaluate",
+            "warmup", "updates", "repeats",       "simulation", "graphs",      "compare_graphs"};
         for (int i = 1; i < argc; ++i) {
             const std::string argument(argv[i]);
             if (argument == "--help") {
                 std::puts("racing_bench [envs=2048] [seed=1] [warmup=10] [updates=50] [repeats=3] "
                           "[total_updates=1200] [compare=0|1] [distributed=0|1] [profile=0|1] [evaluate=0|1] "
-                          "[simulation=0|1]\ncompare alternates retained-reference/distributed order. "
+                          "[simulation=0|1] [graphs=0|1, default 1] [compare_graphs=0|1]\ncompare alternates "
+                          "retained-reference/distributed order. "
                           "profile adds diagnostic events. evaluate runs a 60 s CPU showcase after training. "
                           "simulation uses an identical fixed action tape without training.");
                 return 0;
@@ -108,7 +109,11 @@ int main(int argc, char **argv) {
         cfg.total_updates = option(argc, argv, "total_updates", 1200);
         cfg.profile_phases = option(argc, argv, "profile", 0) != 0;
         cfg.distributed_traffic = option(argc, argv, "distributed", 1) != 0;
+        cfg.graph_optimization = option(argc, argv, "graphs", 1) != 0;
         const bool compare = option(argc, argv, "compare", 0) != 0;
+        const bool compare_graphs = option(argc, argv, "compare_graphs", 0) != 0;
+        if (compare && compare_graphs)
+            throw std::invalid_argument("choose compare or compare_graphs, not both");
         const bool evaluate = option(argc, argv, "evaluate", 0) != 0;
         const bool simulation = option(argc, argv, "simulation", 0) != 0;
         const int warmup = option(argc, argv, "warmup", 10);
@@ -122,18 +127,21 @@ int main(int argc, char **argv) {
             cfg.num_envs > std::numeric_limits<int>::max() / (cfg.rollout_steps * cudarl::racing::kObsDim))
             throw std::invalid_argument(
                 "envs must be a positive multiple of eight within supported indexing limits");
-        if (simulation && (evaluate || cfg.profile_phases))
-            throw std::invalid_argument("simulation cannot be combined with evaluate/profile");
+        if (simulation &&
+            (evaluate || cfg.profile_phases || compare_graphs || option(argc, argv, "graphs", 0) != 0))
+            throw std::invalid_argument("simulation cannot be combined with evaluate/profile/graphs");
+        if (simulation)
+            cfg.graph_optimization = false;
         cudaDeviceProp device{};
         CUDA_CHECK_THROW(cudaGetDeviceProperties(&device, 0));
         int driver = 0, runtime = 0;
         CUDA_CHECK_THROW(cudaDriverGetVersion(&driver));
         CUDA_CHECK_THROW(cudaRuntimeGetVersion(&runtime));
         std::printf("# %s; SMs=%d; CUDA driver/runtime=%d/%d; seed=%u; horizon=%d; epochs=%d; "
-                    "minibatches=%d; anneal_total=%d; profile=%d; distributed=%d; simulation=%d\n",
+                    "minibatches=%d; anneal_total=%d; profile=%d; distributed=%d; simulation=%d; graphs=%d\n",
                     device.name, device.multiProcessorCount, driver, runtime, cfg.seed, cfg.rollout_steps,
                     cfg.epochs, cfg.minibatches, cfg.total_updates, cfg.profile_phases ? 1 : 0,
-                    cfg.distributed_traffic ? 1 : 0, simulation ? 1 : 0);
+                    cfg.distributed_traffic ? 1 : 0, simulation ? 1 : 0, cfg.graph_optimization ? 1 : 0);
         if (simulation)
             std::printf("trial,distributed,agents,races,warmup,updates,mean_ms,p10_ms,p50_ms,p90_ms,M_agent_"
                         "steps_s\n");
@@ -141,13 +149,16 @@ int main(int argc, char **argv) {
             std::printf("trial,distributed,agents,races,warmup,updates,mean_ms,p10_ms,p50_ms,p90_ms,M_agent_"
                         "steps_s,rollout_ms,bootstrap_gae_ms,metrics_ms,optimize_ms,readback_ms,advance_ms,"
                         "resolve_ms,observe_ms,last_laps,clean_laps,contacts,walls,eval_clean,eval_contacts,"
-                        "eval_walls,eval_best_s\n");
+                        "eval_walls,eval_best_s,gather_ms,forward_loss_ms,actor_update_ms,critic_update_ms,"
+                        "optimization_submit_ms,graphs,graph_setup_ms,graph_nodes\n");
         for (int trial = 0; trial < repeats; ++trial) {
             // Alternate order to reduce the effect of clock/temperature drift.
-            const int modes = compare ? 2 : 1;
+            const int modes = (compare || compare_graphs) ? 2 : 1;
             for (int mode = 0; mode < modes; ++mode) {
                 if (compare)
                     cfg.distributed_traffic = ((mode + trial) % 2) != 0;
+                if (compare_graphs)
+                    cfg.graph_optimization = ((mode + trial) % 2) != 0;
                 if (simulation) {
                     simulation_benchmark(cfg, warmup, updates, trial);
                     continue;
@@ -174,6 +185,12 @@ int main(int argc, char **argv) {
                     sum.advance_ms += last.advance_ms;
                     sum.resolve_ms += last.resolve_ms;
                     sum.observe_ms += last.observe_ms;
+                    sum.gather_ms += last.gather_ms;
+                    sum.forward_loss_ms += last.forward_loss_ms;
+                    sum.actor_update_ms += last.actor_update_ms;
+                    sum.critic_update_ms += last.critic_update_ms;
+                    sum.optimization_submit_ms += last.optimization_submit_ms;
+                    sum.optimization_graph_setup_ms += last.optimization_graph_setup_ms;
                     sum.clean_laps += last.clean_laps;
                     sum.contact_cars += last.contact_cars;
                     sum.wall_crashes += last.wall_crashes;
@@ -192,7 +209,7 @@ int main(int argc, char **argv) {
                     eval_best = demo.best_lap();
                 }
                 std::printf("%d,%d,%d,%d,%d,%d,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%."
-                            "4f,%.5f,%d,%d,%d,%d,%d,%d,%.4f\n",
+                            "4f,%.5f,%d,%d,%d,%d,%d,%d,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%d,%.4f,%d\n",
                             trial + 1, cfg.distributed_traffic ? 1 : 0, cfg.num_envs,
                             cfg.num_envs / cudarl::racing::kRaceCars, warmup, updates, mean,
                             percentile(times, .1), percentile(times, .5), percentile(times, .9),
@@ -201,12 +218,16 @@ int main(int argc, char **argv) {
                             sum.metrics_ms / updates, sum.optimize_ms / updates, sum.readback_ms / updates,
                             sum.advance_ms / updates, sum.resolve_ms / updates, sum.observe_ms / updates,
                             last.mean_laps, sum.clean_laps, sum.contact_cars, sum.wall_crashes, eval_clean,
-                            eval_contacts, eval_walls, eval_best);
+                            eval_contacts, eval_walls, eval_best, sum.gather_ms / updates,
+                            sum.forward_loss_ms / updates, sum.actor_update_ms / updates,
+                            sum.critic_update_ms / updates, sum.optimization_submit_ms / updates,
+                            cfg.graph_optimization ? 1 : 0, sum.optimization_graph_setup_ms / updates,
+                            last.optimization_graph_nodes);
                 std::fflush(stdout);
             }
         }
         return 0;
-    } catch (const std::exception &error) {
+    } catch (const std::exception& error) {
         std::fprintf(stderr, "racing_bench: %s\n", error.what());
         return 1;
     }

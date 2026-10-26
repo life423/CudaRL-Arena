@@ -32,7 +32,7 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | **Live CartPole view in Godot** (`cartpole/cartpole.tscn`): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
 | **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
 | **Eight-car racing in Godot** (default scene): harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
-| **End-to-end racing performance:** C++/CUDA benchmark, phase timing and retained reference path | ✅ 12.7% higher trainer throughput at 2,048 agents on RTX 5070, with exact reference checks ([study and raw data](docs/racing_performance.md)) |
+| **End-to-end racing performance:** C++/CUDA benchmark, phase timing and retained reference paths | ✅ Two measured passes at 2,048 agents on RTX 5070: [traffic execution](docs/racing_performance.md) +12.7%, then [optimization graphs](docs/racing_optimizer.md) +14.2%, each with exact reference checks |
 | Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
 | Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working |
@@ -181,16 +181,20 @@ build/Release/nn_bench.exe
 display throttle:
 
 ```powershell
-build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare=1
+build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare_graphs=1
 ```
 
-This alternates the original and distributed traffic execution paths on the
-same seed and training budget. It reports wall-clock update distributions and
+This alternates stream and CUDA graph optimization on the
+same seed and training budget, with distributed traffic in both paths.
+It reports wall-clock update distributions and
 agent-steps/s. The separate `profile=1` mode records CUDA event phase spans;
 `simulation=1` drives both paths with an identical fixed action tape, and
 `evaluate=1` measures a 60-second showcase after training. This tool links only
 the project's core and the CUDA runtime. See the [performance study](docs/racing_performance.md)
-for methodology, numerical checks, measurements and limitations.
+and [optimizer study](docs/racing_optimizer.md) for methodology, numerical
+checks, measurements and limitations. Graph optimization is enabled by default;
+`graphs=0` retains stream execution. Use `compare=1 graphs=0` to reproduce the
+earlier traffic-only comparison.
 
 `cudarl_tests.exe <filter>` runs only the tests whose names contain `<filter>`, for example `gemm`. On a machine without an NVIDIA GPU, the GPU tests report `SKIP` and the CPU tests still run; set `CUDARL_REQUIRE_GPU=1` to make a missing GPU a failure instead.
 

@@ -1,0 +1,4 @@
+# NVIDIA GeForce RTX 5070; SMs=48; CUDA driver/runtime=13050/13020; seed=1; horizon=64; epochs=4; minibatches=8; anneal_total=1200; profile=0; distributed=1; simulation=0; graphs=1
+trial,distributed,agents,races,warmup,updates,mean_ms,p10_ms,p50_ms,p90_ms,M_agent_steps_s,rollout_ms,bootstrap_gae_ms,metrics_ms,optimize_ms,readback_ms,advance_ms,resolve_ms,observe_ms,last_laps,clean_laps,contacts,walls,eval_clean,eval_contacts,eval_walls,eval_best_s,gather_ms,forward_loss_ms,actor_update_ms,critic_update_ms,optimization_submit_ms,graphs,graph_setup_ms,graph_nodes
+1,1,2048,256,10,190,48.1342,46.4539,48.1882,50.0149,2.7231,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.51867,21285,2470,4524,16,0,0,28.2000,0.0000,0.0000,0.0000,0.0000,0.0000,0,0.0000,0
+1,1,2048,256,10,190,42.0790,40.2260,42.1068,44.0749,3.1149,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.51867,21285,2470,4524,16,0,0,28.2000,0.0000,0.0000,0.0000,0.0000,0.0000,1,1.5120,1888
