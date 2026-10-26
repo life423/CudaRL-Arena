@@ -6,7 +6,17 @@ extends Control
 # the track with each car's raycasts, and plots laps per episode. The physics
 # step is the environment's own step (50 ms), so the cars drive in real time.
 
-const PANEL_WIDTH := 300
+const PANEL_WIDTH := 288
+const SPACE := 8
+const TYPE_CAPTION := 12
+const TYPE_BODY := 14
+const TYPE_SECTION := 16
+const TYPE_TITLE := 24
+const SURFACE := Color("1b2028")
+const SURFACE_RAISED := Color("272f3a")
+const BORDER := Color("394454")
+const TEXT := Color("edf1f7")
+const TEXT_MUTED := Color("abb8c9")
 const SHOWCASE_CARS := 8
 const ENV_CHOICES := [512, 2048, 8192]
 const MAX_LAPS := 2.0
@@ -53,6 +63,17 @@ var braking := PackedByteArray()
 var evaluation_started := false
 var untrained_view := false
 var baseline_checkbox: CheckBox
+var side_panel: PanelContainer
+var phase_label: Label
+var seed_label: Label
+var metric_values := {}
+var training_readout: VBoxContainer
+var training_summary: Label
+var settings_button: Button
+var settings_panel: VBoxContainer
+var diagnostics_label: Label
+var inspect_option: OptionButton
+var reset_button: Button
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = STEP_HZ
@@ -87,11 +108,11 @@ func _process(_delta: float) -> void:
 	var err: String = lab.get_error()
 	if not err.is_empty():
 		status_label.text = err
+		status_label.visible = true
 	elif lab.is_finished():
 		if not evaluation_started and not untrained_view:
 			lab.reset_showcase()
 			evaluation_started = true
-		status_label.text = "Training complete. Racing the final policy." if not untrained_view else "Frozen update-0 policy. Switch back to compare."
 	_update_stats()
 	curve_view.queue_redraw()
 
@@ -107,59 +128,176 @@ func _restart() -> void:
 	pause_button.text = "Start learning"
 	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
 	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, SHOWCASE_CARS, ups)
-	status_label.text = ("Seed %d · untrained. Press Start learning when ready." % run_seed) if ok else lab.get_error()
+	status_label.text = "" if ok else lab.get_error()
+	status_label.visible = not ok
 	_apply_speed()
 
 func _apply_speed() -> void:
 	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
 	lab.set_updates_per_second(ups)
 	speed_slider.editable = not full_speed.button_pressed
-	speed_label.text = "  = full speed" if full_speed.button_pressed else "  = %.1f updates per second" % ups
+	speed_label.text = "Maximum" if full_speed.button_pressed else "%.1f updates / second" % ups
 
 func _restart_with_new_seed() -> void:
 	run_seed += 1
 	_restart()
 
 func _toggle_pause() -> void:
+	if lab.is_finished():
+		return
 	paused = not paused
 	lab.set_paused(paused)
 	pause_button.text = ("Start learning" if stats.get("update", 0) == 0 else "Resume training") if paused else "Pause training"
-	status_label.text = "Training paused." if paused else "Learning from seed %d." % run_seed
 
 # --- UI ---------------------------------------------------------------------
 
+func _surface(color: Color, outlined := false) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.set_corner_radius_all(6)
+	style.content_margin_left = 12
+	style.content_margin_right = 12
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	if outlined:
+		style.set_border_width_all(1)
+		style.border_color = BORDER
+	return style
+
+func _configure_theme() -> void:
+	var ui_theme := Theme.new()
+	ui_theme.default_font_size = TYPE_BODY
+	for kind in ["Label", "Button", "CheckBox", "OptionButton"]:
+		ui_theme.set_color("font_color", kind, TEXT)
+		ui_theme.set_color("font_hover_color", kind, TEXT)
+		ui_theme.set_color("font_pressed_color", kind, TEXT)
+		ui_theme.set_color("font_focus_color", kind, TEXT)
+		ui_theme.set_color("font_disabled_color", kind, TEXT_MUTED)
+	for kind in ["Button", "OptionButton"]:
+		ui_theme.set_stylebox("normal", kind, _surface(SURFACE_RAISED, true))
+		ui_theme.set_stylebox("hover", kind, _surface(Color("333e4c"), true))
+		ui_theme.set_stylebox("pressed", kind, _surface(Color("202833"), true))
+		ui_theme.set_stylebox("disabled", kind, _surface(SURFACE, true))
+		var focus := _surface(Color.TRANSPARENT)
+		focus.draw_center = false
+		focus.set_border_width_all(2)
+		focus.border_color = CURVE
+		ui_theme.set_stylebox("focus", kind, focus)
+	for state in ["normal", "hover", "pressed"]:
+		var check_style := _surface(Color.TRANSPARENT if state == "normal" else SURFACE_RAISED)
+		check_style.content_margin_left = 0
+		check_style.content_margin_right = 0
+		ui_theme.set_stylebox(state, "CheckBox", check_style)
+	ui_theme.set_constant("h_separation", "CheckBox", SPACE)
+	for checked in [false, true]:
+		var svg := '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect x="2" y="2" width="16" height="16" rx="3" fill="%s" stroke="#abb8c9" stroke-width="1.5"/>%s</svg>' % ["#faa640" if checked else "none", '<path d="M6 10l3 3 5-6" fill="none" stroke="#151a21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' if checked else ""]
+		var icon := Image.new()
+		icon.load_svg_from_string(svg)
+		ui_theme.set_icon("checked" if checked else "unchecked", "CheckBox", ImageTexture.create_from_image(icon))
+	theme = ui_theme
+	RenderingServer.set_default_clear_color(BG)
+
+func _text(value: String, font_size := TYPE_BODY, color := TEXT) -> Label:
+	var label := Label.new()
+	label.text = value
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	return label
+
+func _column(gap := SPACE) -> VBoxContainer:
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", gap)
+	return column
+
+func _button(value: String, action: Callable) -> Button:
+	var button := Button.new()
+	button.text = value
+	button.custom_minimum_size.y = 44
+	button.pressed.connect(action)
+	return button
+
+func _divider() -> ColorRect:
+	var line := ColorRect.new()
+	line.color = BORDER
+	line.custom_minimum_size.y = 1
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return line
+
+func _draw() -> void:
+	draw_rect(Rect2(Vector2.ZERO, size), BG)
+
 func _build_ui() -> void:
-	var root := BoxContainer.new()
-	layout = root
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(root)
+	_configure_theme()
+	layout = BoxContainer.new()
+	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layout.add_theme_constant_override("separation", 1)
+	add_child(layout)
 
-	# The panel scrolls, so the row keeps the window's height on small screens.
-	var scroll := ScrollContainer.new()
-	panel_scroll = scroll
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.custom_minimum_size.x = PANEL_WIDTH
-	root.add_child(scroll)
-	var panel := PanelContainer.new()
-	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(panel)
-	var margin := MarginContainer.new()
-	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 14)
-	panel.add_child(margin)
-	var controls := VBoxContainer.new()
-	controls.add_theme_constant_override("separation", 8)
-	margin.add_child(controls)
+	panel_scroll = ScrollContainer.new()
+	panel_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	layout.add_child(panel_scroll)
+	side_panel = PanelContainer.new()
+	side_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	side_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var panel_style := _surface(SURFACE)
+	panel_style.set_corner_radius_all(0)
+	panel_style.content_margin_left = 20
+	panel_style.content_margin_right = 20
+	panel_style.content_margin_top = 20
+	panel_style.content_margin_bottom = 20
+	side_panel.add_theme_stylebox_override("panel", panel_style)
+	panel_scroll.add_child(side_panel)
+	var controls := _column(12)
+	side_panel.add_child(controls)
 
-	var title := Label.new()
-	title.text = "CUDA / RACE LAB"
-	title.add_theme_font_size_override("font_size", 18)
-	controls.add_child(title)
-	controls.add_child(_note("Shared physics. Learned steering and braking. Red tail lights = braking."))
+	var header := _column(4)
+	var title_row := HBoxContainer.new()
+	var title := _text("Race Lab", TYPE_TITLE)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_row.add_child(title)
+	seed_label = _text("Seed 1", TYPE_CAPTION, TEXT_MUTED)
+	seed_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title_row.add_child(seed_label)
+	header.add_child(title_row)
+	phase_label = _text("Preparing policy…", TYPE_CAPTION, TEXT_MUTED)
+	header.add_child(phase_label)
+	controls.add_child(header)
+
+	pause_button = _button("Start learning", _toggle_pause)
+	for state in ["normal", "hover", "pressed"]:
+		var fill := CURVE.lightened(0.08) if state == "hover" else CURVE
+		if state == "pressed":
+			fill = CURVE.darkened(0.1)
+		pause_button.add_theme_stylebox_override(state, _surface(fill))
+	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		pause_button.add_theme_color_override(state, Color("151a21"))
+	var primary_focus := _surface(Color.TRANSPARENT)
+	primary_focus.draw_center = false
+	primary_focus.set_border_width_all(2)
+	primary_focus.border_color = TEXT
+	primary_focus.expand_margin_left = 3
+	primary_focus.expand_margin_right = 3
+	primary_focus.expand_margin_top = 3
+	primary_focus.expand_margin_bottom = 3
+	pause_button.add_theme_stylebox_override("focus", primary_focus)
+	controls.add_child(pause_button)
+	var race_actions := HBoxContainer.new()
+	race_actions.add_theme_constant_override("separation", SPACE)
+	var restart := _button("New seed", _restart_with_new_seed)
+	restart.tooltip_text = "Restart learning from scratch with a new random seed."
+	restart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	race_actions.add_child(restart)
+	reset_button = _button("Reset cars", func(): lab.reset_showcase())
+	reset_button.tooltip_text = "Reset the visible race and its results. Keep the model and training progress."
+	reset_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	race_actions.add_child(reset_button)
+	controls.add_child(race_actions)
+
 	baseline_checkbox = CheckBox.new()
-	baseline_checkbox.text = "Compare: untrained policy"
+	baseline_checkbox.text = "Show untrained policy"
 	baseline_checkbox.custom_minimum_size.y = 44
-	baseline_checkbox.tooltip_text = "Show this seed's frozen update-0 weights. Training continues. Switching resets the visible race for comparison."
+	baseline_checkbox.tooltip_text = "Compare against this seed's frozen update-zero weights. Training continues; switching resets the visible race."
 	baseline_checkbox.toggled.connect(func(on):
 		untrained_view = on
 		evaluation_started = false
@@ -167,115 +305,164 @@ func _build_ui() -> void:
 		cars.clear()
 		previous_speeds.clear())
 	controls.add_child(baseline_checkbox)
+	controls.add_child(_divider())
 
+	var results_header := HBoxContainer.new()
+	var results_title := _text("Race results", TYPE_SECTION)
+	results_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	results_header.add_child(results_title)
+	results_header.add_child(_text("Since reset", TYPE_CAPTION, TEXT_MUTED))
+	controls.add_child(results_header)
+	var metrics := GridContainer.new()
+	metrics.columns = 2
+	metrics.add_theme_constant_override("h_separation", 16)
+	metrics.add_theme_constant_override("v_separation", 16)
+	for spec in [["laps", "Clean laps"], ["best", "Best lap"], ["contacts", "Car contacts"], ["walls", "Wall hits"]]:
+		var cell := _column(4)
+		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cell.add_child(_text(spec[1], TYPE_CAPTION, TEXT_MUTED))
+		var value := _text("—" if spec[0] == "best" else "0", TYPE_TITLE)
+		metric_values[spec[0]] = value
+		cell.add_child(value)
+		metrics.add_child(cell)
+	controls.add_child(metrics)
+
+	training_readout = _column(4)
+	training_summary = _text("", TYPE_BODY)
+	training_readout.add_child(training_summary)
+	stats_label = _text("", TYPE_CAPTION, TEXT_MUTED)
+	training_readout.add_child(stats_label)
+	controls.add_child(training_readout)
+	controls.add_child(_divider())
+
+	var inspection := HBoxContainer.new()
+	inspection.add_theme_constant_override("separation", SPACE)
+	inspect_option = OptionButton.new()
+	inspect_option.custom_minimum_size = Vector2(96, 44)
+	inspect_option.tooltip_text = "Choose a car to follow in the speed readout and sensor view."
+	for i in SHOWCASE_CARS:
+		inspect_option.add_item("Car %d" % (i + 1))
+	inspect_option.item_selected.connect(func(i): inspected_car = i)
+	inspection.add_child(inspect_option)
+	var sensors := CheckBox.new()
+	sensors.text = "Show sensors"
+	sensors.custom_minimum_size.y = 44
+	sensors.toggled.connect(func(on): show_sensors = on)
+	inspection.add_child(sensors)
+	controls.add_child(inspection)
+
+	settings_button = _button("Training settings ▸", func():
+		settings_panel.visible = settings_button.button_pressed
+		settings_button.text = "Training settings ▾" if settings_panel.visible else "Training settings ▸")
+	settings_button.toggle_mode = true
+	settings_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	controls.add_child(settings_button)
+	settings_panel = _column(12)
+	settings_panel.visible = false
+	controls.add_child(settings_panel)
+
+	var speed_box := _column(4)
+	speed_box.add_child(_text("Training speed", TYPE_CAPTION, TEXT_MUTED))
+	speed_label = _text("2.0 updates / second")
+	speed_box.add_child(speed_label)
 	speed_slider = HSlider.new()
+	speed_slider.custom_minimum_size.y = 44
 	speed_slider.min_value = log(0.5) / log(10.0)
 	speed_slider.max_value = log(50.0) / log(10.0)
 	speed_slider.step = 0.01
 	speed_slider.value = log(2.0) / log(10.0)
 	speed_slider.value_changed.connect(func(_v): _apply_speed())
-	controls.add_child(_labeled("Training updates per second", speed_slider))
-	speed_label = Label.new()
-	controls.add_child(speed_label)
+	speed_box.add_child(speed_slider)
+	settings_panel.add_child(speed_box)
 	full_speed = CheckBox.new()
-	full_speed.text = "Train at full speed"
-	full_speed.button_pressed = false
+	full_speed.text = "Maximum training speed"
+	full_speed.custom_minimum_size.y = 44
+	full_speed.tooltip_text = "Remove the display throttle. Learning may become too fast to observe."
 	full_speed.toggled.connect(func(_on): _apply_speed())
-	controls.add_child(full_speed)
+	settings_panel.add_child(full_speed)
 
+	var batch_box := _column(4)
+	batch_box.add_child(_text("Training batch", TYPE_CAPTION, TEXT_MUTED))
 	envs_option = OptionButton.new()
+	envs_option.custom_minimum_size.y = 44
 	for n in ENV_CHOICES:
-		envs_option.add_item("%d races / %d cars" % [n / 8, n])
+		envs_option.add_item("%d races / %s cars" % [n / 8, _thousands(n)])
 	envs_option.select(1)
 	envs_option.item_selected.connect(func(_i): _restart())
-	controls.add_child(_labeled("Parallel training (restarts)", envs_option))
+	batch_box.add_child(envs_option)
+	var batch_hint := _note("Changing the batch restarts learning.")
+	batch_box.add_child(batch_hint)
+	settings_panel.add_child(batch_box)
+	diagnostics_label = _note("")
+	settings_panel.add_child(diagnostics_label)
 
-	var buttons := HBoxContainer.new()
-	var restart := Button.new()
-	restart.text = "Restart (new seed)"
-	restart.pressed.connect(_restart_with_new_seed)
-	buttons.add_child(restart)
-	pause_button = Button.new()
-	pause_button.text = "Start learning"
-	pause_button.pressed.connect(_toggle_pause)
-	for state in ["normal", "hover", "pressed"]:
-		var style := StyleBoxFlat.new()
-		style.bg_color = CURVE.lightened(0.08) if state == "hover" else CURVE
-		if state == "pressed":
-			style.bg_color = CURVE.darkened(0.1)
-		pause_button.add_theme_stylebox_override(state, style)
-	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		pause_button.add_theme_color_override(state, Color(0.07, 0.08, 0.09))
-	buttons.add_child(pause_button)
-	controls.add_child(buttons)
-	var reset_cars := Button.new()
-	reset_cars.text = "Reset showcase cars"
-	reset_cars.pressed.connect(func(): lab.reset_showcase())
-	controls.add_child(reset_cars)
-	var sensors := CheckBox.new()
-	sensors.text = "Show selected car's sensors"
-	sensors.toggled.connect(func(on): show_sensors = on)
-	controls.add_child(sensors)
-	var inspect := Button.new()
-	inspect.text = "Inspect car 1"
-	inspect.pressed.connect(func():
-		inspected_car = (inspected_car + 1) % SHOWCASE_CARS
-		inspect.text = "Inspect car %d" % (inspected_car + 1))
-	controls.add_child(inspect)
-	for button in [restart, pause_button, reset_cars, inspect, sensors, full_speed, envs_option]:
-		button.custom_minimum_size.y = 44
-
-	controls.add_child(HSeparator.new())
-	stats_label = Label.new()
-	controls.add_child(stats_label)
-	controls.move_child(stats_label, 3)
-	controls.move_child(buttons, 2) # keep Start learning reachable above the scrolling metrics
 	status_label = _note("")
+	status_label.add_theme_color_override("font_color", Color("ffb2a9"))
+	status_label.visible = false
 	controls.add_child(status_label)
 
-	var right := VBoxContainer.new()
+	var right := _column(1)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root.add_child(right)
+	layout.add_child(right)
 	track_view = Control.new()
 	track_view.clip_contents = true
 	track_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	track_view.size_flags_stretch_ratio = 4.0
 	track_view.draw.connect(_draw_track)
 	right.add_child(track_view)
 	curve_view = Control.new()
 	curve_view.clip_contents = true
-	curve_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	curve_view.size_flags_stretch_ratio = 1.0
+	curve_view.size_flags_vertical = Control.SIZE_FILL
 	curve_view.draw.connect(_draw_curve)
 	right.add_child(curve_view)
 
 func _update_stats() -> void:
-	if not stats.get("policy_ready", false):
-		stats_label.text = "Preparing the untrained policy..."
-		return
+	var ready: bool = stats.get("policy_ready", false)
+	var update: int = stats.get("update", 0)
+	var finished := lab.is_finished()
+	var error := lab.get_error()
+	seed_label.text = "Seed %d" % run_seed
+	pause_button.disabled = not ready or finished or not error.is_empty()
+	reset_button.disabled = not ready
+	baseline_checkbox.disabled = not ready
+	phase_label.add_theme_color_override("font_color", TEXT_MUTED)
+	if not error.is_empty():
+		phase_label.text = "Training unavailable"
+		phase_label.add_theme_color_override("font_color", Color("ffb2a9"))
+	elif not ready:
+		phase_label.text = "Preparing policy…"
+	elif untrained_view:
+		phase_label.text = "Untrained reference · update 0"
+	elif update == 0:
+		phase_label.text = "Untrained · update 0"
+	elif finished:
+		phase_label.text = "Training complete · update %d" % update
+	elif paused:
+		phase_label.text = "Paused · update %d" % update
+	else:
+		phase_label.text = "Learning · update %d" % update
+	pause_button.text = "Training complete" if finished else ("Start learning" if update == 0 and paused else ("Resume learning" if paused else "Pause learning"))
+
+	metric_values["laps"].text = str(stats.get("showcase_clean_laps", 0))
 	var best: float = stats.get("showcase_best_lap", 0.0)
-	var best_text := "—" if best <= 0 else "%.2f s" % best
-	stats_label.text = ("UNTRAINED · UPDATE 0\n" if untrained_view or stats.get("update", 0) == 0 else "LIVE POLICY\n") + "Clean laps   %d\nVehicle contacts   %d\nWall hits   %d\nBest clean lap   %s\n\nGPU TRAINING · update %d\n%s car steps\n%.2f M steps/s while active\n%.1f ms / update\nLaps / episode   %.2f\nClean laps this update   %d" % [
-		stats.get("showcase_clean_laps", 0), stats.get("showcase_contacts", 0),
-		stats.get("showcase_walls", 0), best_text, stats["update"], _thousands(stats["env_steps"]),
-		stats["env_steps_per_second"] / 1e6, stats["update_ms"], stats["mean_laps"], stats.get("clean_laps", 0)]
-	stats_label.add_theme_font_size_override("font_size", 14)
+	metric_values["best"].text = "—" if best <= 0 else "%.2f s" % best
+	metric_values["contacts"].text = str(stats.get("showcase_contacts", 0))
+	metric_values["walls"].text = str(stats.get("showcase_walls", 0))
+	training_readout.visible = update > 0
+	training_summary.text = "%.2f laps / training episode" % stats.get("mean_laps", 0.0)
+	stats_label.text = "GPU · %.2fM car steps/s active" % (stats.get("env_steps_per_second", 0.0) / 1e6)
+	diagnostics_label.text = "Update %d · %s car steps\n%.1f ms / update\n%d clean training laps this update" % [update, _thousands(stats.get("env_steps", 0)), stats.get("update_ms", 0.0), stats.get("clean_laps", 0)]
 
 func _fit_layout() -> void:
 	if layout == null:
 		return
-	var compact := size.x < 850
+	var compact := size.x < 850 or size.y > size.x * 1.2
 	layout.vertical = compact
-	panel_scroll.custom_minimum_size = Vector2(0, 180) if compact else Vector2(PANEL_WIDTH, 0)
+	panel_scroll.custom_minimum_size = Vector2(0, 272) if compact else Vector2(PANEL_WIDTH, 0)
 	panel_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
-
-# GDScript's % formatting has no %e.
-func _scientific(v: float) -> String:
-	if v <= 0.0:
-		return "0"
-	var exponent := floori(log(v) / log(10.0))
-	return "%.1fe%d" % [v / pow(10.0, exponent), exponent]
+	panel_scroll.size_flags_vertical = Control.SIZE_FILL if compact else Control.SIZE_EXPAND_FILL
+	curve_view.custom_minimum_size.y = 128 if compact else clampf(size.y * 0.22, 144, 220)
+	queue_redraw()
 
 func _thousands(n: int) -> String:
 	var s := str(n)
@@ -287,19 +474,9 @@ func _thousands(n: int) -> String:
 	return out
 
 func _note(text: String) -> Label:
-	var l := Label.new()
-	l.text = text
-	l.modulate = Color(0.82, 0.84, 0.87)
+	var l := _text(text, TYPE_CAPTION, TEXT_MUTED)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD
 	return l
-
-func _labeled(text: String, control: Control) -> VBoxContainer:
-	var box := VBoxContainer.new()
-	var l := Label.new()
-	l.text = text
-	box.add_child(l)
-	box.add_child(control)
-	return box
 
 # --- Drawing ----------------------------------------------------------------
 
@@ -338,13 +515,13 @@ func _draw_track() -> void:
 		_draw_car(i, origin, px_per_m)
 
 	var font := ThemeDB.fallback_font
-	var caption := "8-CAR RACE / final policy" if evaluation_started else "8-CAR RACE / learning live"
+	var caption := "8-car race · trained policy" if evaluation_started else "8-car race · learning"
 	if untrained_view or stats.get("update", 0) == 0:
-		caption = "8-CAR RACE / UNTRAINED / frozen update 0"
+		caption = "8-car race · untrained policy"
 	track_view.draw_string(font, Vector2(12, 22), caption,
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
 	if cars.size() >= (inspected_car + 1) * car_stride:
-		track_view.draw_string(font, Vector2(12, 42), "CAR %d / %.0f km/h" % [inspected_car + 1, cars[inspected_car * car_stride + 3] * 3.6],
+		track_view.draw_string(font, Vector2(12, 42), "Car %d · %.0f km/h" % [inspected_car + 1, cars[inspected_car * car_stride + 3] * 3.6],
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))
 
 func _draw_car(i: int, origin: Vector2, px_per_m: float) -> void:
@@ -388,6 +565,12 @@ func _draw_curve() -> void:
 	curve_view.draw_rect(Rect2(Vector2.ZERO, curve_view.size), BG.darkened(0.2))
 	var font := ThemeDB.fallback_font
 	var plot := Rect2(r.position + Vector2(40, 28), r.size - Vector2(48, 44))
+	curve_view.draw_string(font, r.position + Vector2(40, 16), "Learning progress · average laps",
+			HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 48, TYPE_BODY, TEXT)
+	if curve.is_empty():
+		curve_view.draw_string(font, r.position + Vector2(40, 56), "Start learning to build the curve.",
+				HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 48, TYPE_BODY, TEXT_MUTED)
+		return
 	var chart_max := MAX_LAPS
 	for p in curve:
 		chart_max = maxf(chart_max, ceilf(p.y * 2.0) / 2.0)
@@ -396,8 +579,6 @@ func _draw_curve() -> void:
 		var y := remap(v, 0.0, chart_max, plot.end.y, plot.position.y)
 		curve_view.draw_line(Vector2(plot.position.x, y), Vector2(plot.end.x, y), GRID)
 		curve_view.draw_string(font, Vector2(r.position.x, y + 5), "%.1f" % v, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, GRID.lightened(0.4))
-	curve_view.draw_string(font, r.position + Vector2(40, 16), "laps per episode vs. environment steps",
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, CURVE)
 	if curve.size() < 2:
 		return
 	var max_steps := maxf(curve[curve.size() - 1].x, 1.0e6)

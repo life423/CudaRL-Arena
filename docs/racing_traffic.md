@@ -177,6 +177,25 @@ of those properties.
 
 ## Possible future ideas
 
+### Presentation checkpoint — October 26
+
+The user approved the cleaned-up UI and asked to stop further UI/UX refinement.
+The panel uses a 12/14/16/24 type scale, consistent spacing, a single primary
+learning action, a two-column results grid and expandable training settings.
+Technical throughput remains visible after updates begin. The panel background
+fills its height. Narrow/portrait layouts move controls above the race; rendered
+layouts were checked at desktop, tablet and phone-sized windows. Prioritize the
+simulation and engineering evidence over further visual polish.
+
+Cars currently appear to teleport because crash and 50-second time-limit
+terminations immediately respawn them into clear space. Reset cars, New seed,
+policy comparison switches and the final-policy evaluation reset can also move
+them instantly. This is episode/reset behaviour, not evidence that the learned
+policy can move discontinuously. A clearer reset presentation can be considered
+later; no change to the simulation or reset timing was approved here.
+
+### Driving challenges
+
 Saved at the user's request on October 26, 2026. These are proposals to design
 and evaluate later, not approved implementation tasks:
 
