@@ -4,6 +4,7 @@ const SCENES := {
 	"cartpole": "res://cartpole/cartpole.tscn",
 	"racing": "res://racing/racing.tscn",
 	"pond": "res://pond/pond.tscn",
+	"pond_shuffle": "res://pond/shuffle_compare.tscn",
 }
 
 var active_demo := ""

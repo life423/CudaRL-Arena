@@ -10,6 +10,52 @@
 namespace fg=cudarl::foraging;
 namespace sw=cudarl::swimmer;
 
+GPU_TEST_CASE("foraging: shuffled observations preserve pairs, body and PPO rollout likelihood inputs") {
+    constexpr int n=128,rows=256;
+    std::vector<float> original(rows*13),actual(original.size()),expected(original.size());
+    for(int i=0;i<rows;++i) for(int j=0;j<13;++j) original[i*13+j]=static_cast<float>(i*100+j);
+    expected=original;int coverage[6]{};
+    for(int i=0;i<rows;++i) {
+        const int order=cudarl::rng::bits(17u^0xA6F029B3u,static_cast<uint32_t>(i%n),73u+static_cast<uint32_t>(i/n))%6u;
+        ++coverage[order];fg::permute_food_inputs(expected.data()+i*13,order);
+    }
+    for(int count:coverage) CHECK(count>20);
+    device_ptr<float> observations(original.size());observations.copy_from_host(original.data(),original.size());
+    fg::shuffle_food_inputs(observations.get(),rows,n,17,73,nullptr);
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());observations.copy_to_host(actual.data(),actual.size());
+    CHECK(actual==expected);
+    for(int i=0;i<rows;++i) for(int j=6;j<13;++j) CHECK(actual[i*13+j]==original[i*13+j]);
+
+    cudarl::rl::SwimmerConfig cfg;cfg.num_envs=n;cfg.seed=17;cfg.body=sw::body_preset(8);cfg.shuffle_food_inputs=true;
+    cudarl::rl::ForagingTrainer a(cfg),b(cfg);a.update();b.update();
+    CHECK(a.actor_params()==b.actor_params()); // Independent shuffle stream is repeatable.
+    std::vector<float> collected(a.obs.size()),stored_logp(a.logp.size());
+    a.obs.copy_to_host(collected.data(),collected.size());a.logp.copy_to_host(stored_logp.data(),stored_logp.size());
+    // Tick zero is known before any action. The tape must keep the permutation
+    // used for the behavior policy, rather than canonical observations.
+    std::vector<float> sampled_actions(a.actions.size());a.actions.copy_to_host(sampled_actions.data(),sampled_actions.size());
+    cudarl::nn::CpuMlp<float> behavior(cudarl::rl::swimmer_specification(2,13));
+    behavior.params()=cudarl::rl::ForagingTrainer::initial_actor_params(17);
+    for(int i=0;i<n;++i) {
+        float observation[13];fg::observe(fg::initial(17,static_cast<uint32_t>(i)),observation);
+        fg::permute_food_inputs(observation,cudarl::rng::bits(17u^0xA6F029B3u,static_cast<uint32_t>(i),0)%6u);
+        for(int j=0;j<13;++j) CHECK(std::fabs(collected[i*13+j]-observation[j])<1e-5f);
+        behavior.forward(observation,1);float log_probability=0;
+        for(int j=0;j<2;++j) {
+            const float residual=sampled_actions[i*2+j]-behavior.output()[j];
+            log_probability+=-0.5f*residual*residual*std::exp(1.f)+0.5f-0.9189385332f;
+        }
+        CHECK(std::fabs(stored_logp[i]-log_probability)<0.0001f);
+    }
+    for(float v:stored_logp) CHECK(std::isfinite(v));
+    for(float v:a.actor_params()) CHECK(std::isfinite(v));
+    // Evaluation still consumes canonical observations and tags the exact actor.
+    a.evaluate();CHECK(a.best_policy().shuffled_inputs);
+    for(int i=0;i<19;++i) a.update(); // Cross the real 1,200-step timeout boundary.
+    std::vector<float> terminal_values(a.final_values.size());a.final_values.copy_to_host(terminal_values.data(),terminal_values.size());
+    for(float value:terminal_values) CHECK(std::isfinite(value));
+}
+
 TEST_CASE("foraging: initial and replacement food cover the pond without clumping") {
     int outside_old_area=0,total=0,quadrants[4]{};
     float min_x=100,max_x=-100,min_y=100,max_y=-100;
@@ -180,4 +226,9 @@ GPU_TEST_CASE("foraging: evaluation preserves the 13-input learner and optimizer
         CHECK(stats.evaluation_count==64 && std::fabs(stats.evaluation_seconds-60)<0.001);
         CHECK(reference.actor_params()==measured.actor_params());
     }
+    const auto best=measured.best_policy();
+    CHECK(best.valid() && best.evaluation_seed==0x51A7E123u);
+    CHECK(best.update==0 && best.parameters==cudarl::rl::ForagingTrainer::initial_actor_params(cfg.seed));
+    measured.evaluate(0xB738019Du);
+    CHECK(measured.best_policy().parameters==best.parameters && measured.best_policy().foods==best.foods);
 }

@@ -125,6 +125,7 @@ func _build() -> void:
 		row.add_child(actions)
 		if spec[0] == "pond":
 			actions.add_child(_button("Watch it learn", spec[0], false, true))
+			actions.add_child(_button("Compare shuffled", "pond_shuffle", false))
 		else:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))

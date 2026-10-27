@@ -47,6 +47,7 @@ endfunction()
 
 # --- Core: CUDA code and environments, no Godot dependency --------------------
 add_library(cudarl_core STATIC
+    src/core/checkpoint.cpp
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
     src/envs/cartpole/cartpole.cu
@@ -130,6 +131,7 @@ add_executable(cudarl_tests
     tests/test_swimmer.cpp
     tests/test_swimmer_inertial.cpp
     tests/test_foraging.cpp
+    tests/test_training_resume.cpp
     tests/test_race.cpp
     tests/test_racing_ppo.cpp
 )
@@ -149,6 +151,15 @@ if(CUDARL_BUILD_BENCH)
     add_executable(foraging_experiment tools/foraging_experiment.cpp)
     target_link_libraries(foraging_experiment PRIVATE cudarl_core)
     cudarl_strict_warnings(foraging_experiment)
+    add_executable(food_order_bias tools/food_order_bias.cpp)
+    target_link_libraries(food_order_bias PRIVATE cudarl_core)
+    cudarl_strict_warnings(food_order_bias)
+    add_executable(shuffle_experiment tools/shuffle_experiment.cpp)
+    target_link_libraries(shuffle_experiment PRIVATE cudarl_core)
+    cudarl_strict_warnings(shuffle_experiment)
+    add_executable(paired_pond_eval tools/paired_pond_eval.cpp)
+    target_link_libraries(paired_pond_eval PRIVATE cudarl_core)
+    cudarl_strict_warnings(paired_pond_eval)
     add_executable(export_demo_policies tools/export_demo_policies.cpp)
     target_link_libraries(export_demo_policies PRIVATE cudarl_core)
     cudarl_strict_warnings(export_demo_policies)

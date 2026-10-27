@@ -1,0 +1,12 @@
+{
+  "checkpoint_sha256": "485313119C27F159A5F61FCF6AF978541B80B7C039A08BC26B89FB87D53B1F54",
+  "update": 14125,
+  "stored_comparison_food_per_minute": 13.609375,
+  "training_seed": 1,
+  "saved_at_utc": "2026-10-27 01:51:13",
+  "protocol": "three-food-regional-inertial-v1",
+  "evaluation": "Frozen deterministic mean actor; input order only; no training or policy overwrite",
+  "comparison_worlds": 64,
+  "held_out_worlds": 256,
+  "simulated_seconds_per_world": 60
+}

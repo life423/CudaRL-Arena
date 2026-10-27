@@ -10,6 +10,7 @@ func _run() -> void:
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
 	var scene: Node3D = load("res://pond/pond.tscn").instantiate()
+	scene.best_policy_path = ""
 	viewport.add_child(scene)
 	for frame in 8:
 		await process_frame

@@ -1,0 +1,3 @@
+comparison worlds=64 first_physical_choice_changed=58 first_choice_or_success_changed=60
+held_out worlds=256 first_physical_choice_changed=225 first_choice_or_success_changed=242
+identity_repeats_passed=8 body_observation_scalar_checks=13440 no_training=true no_policy_overwrite=true food_permutation_only=true

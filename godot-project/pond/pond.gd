@@ -10,6 +10,10 @@ const MUTED := Color("b8cbc4")
 const ACCENT := Color("faa640")
 @export var live_learning := true
 @export var training_updates_per_second := 10.0
+@export var best_policy_path := "user://pond-policies/regional-v1/best.json"
+@export var shuffle_food_inputs := false
+@export var embedded_view := false
+@export var playback_checkpoint := ""
 var lab := TadpoleLab.new()
 var current: Dictionary = {}
 var previous: Dictionary = {}
@@ -61,9 +65,11 @@ var settings_panel: VBoxContainer
 var settings_open := false
 var pond_actions: BoxContainer
 var back_button: Button
+var training_save: Label
 
 func _ready() -> void:
-	get_window().title = "CudaRL · Tadpole pond"
+	if not embedded_view:
+		get_window().title = "CudaRL · Tadpole pond"
 	old_tick_rate = Engine.physics_ticks_per_second
 	Engine.physics_ticks_per_second = 20
 	get_viewport().msaa_3d = Viewport.MSAA_4X
@@ -80,7 +86,8 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	lab.stop()
-	Engine.physics_ticks_per_second = old_tick_rate
+	if not embedded_view:
+		Engine.physics_ticks_per_second = old_tick_rate
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -206,7 +213,7 @@ func _build_world() -> void:
 			stalk.radial_segments = 6
 			var reed := _mesh(stalk, _material(Color("436d48")), self, center + Vector3(rng.randf_range(-0.2, 0.2), height * 0.5, rng.randf_range(-0.16, 0.16)))
 			reed.rotation.z = rng.randf_range(-0.16, 0.16)
-	for i in (3 if live_learning else 1):
+	for i in (3 if live_learning or not playback_checkpoint.is_empty() else 1):
 		var piece := _sphere(0.09, Color("ffc25c"), self)
 		var food_material := piece.material_override as StandardMaterial3D
 		food_material.emission_enabled = true
@@ -395,6 +402,10 @@ func _build_ui() -> void:
 	status = _label("Preparing a fresh learner…" if live_learning else "Trained controller · shallow water", 14, MUTED)
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.add_child(status)
+	training_save = _label("Preparing training save…", 12, MUTED)
+	training_save.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	training_save.visible = live_learning
+	text.add_child(training_save)
 	var navigation := HBoxContainer.new()
 	navigation.add_theme_constant_override("separation", 8)
 	text.add_child(navigation)
@@ -442,9 +453,9 @@ func _build_ui() -> void:
 	pond_actions = actions
 	actions.add_theme_constant_override("separation", 8)
 	visible_group.add_child(actions)
-	restart_button = _button("Start over" if live_learning else "Restart")
+	restart_button = _button("Start new run" if live_learning else "Restart")
 	restart_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	restart_button.tooltip_text = "Restart from random weights with 1,024 background swimmers." if live_learning else "Reset the pond."
+	restart_button.tooltip_text = "Replace the current training run with random weights. The separate best policy is kept." if live_learning else "Reset the pond."
 	restart_button.pressed.connect(_restart)
 	actions.add_child(restart_button)
 	move_button = _button("Move food")
@@ -507,40 +518,63 @@ func _build_ui() -> void:
 	pond_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	main.add_child(pond_container)
 	pond_viewport = SubViewport.new()
+	pond_viewport.size = Vector2i(640, 360)
 	pond_viewport.world_3d = get_world_3d()
 	pond_viewport.msaa_3d = Viewport.MSAA_4X
 	pond_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	pond_container.add_child(pond_viewport)
-	camera.reparent(pond_viewport)
+	if embedded_view:
+		# The comparison already owns a world/viewport for each pond. Render into
+		# that directly rather than stacking two independent 3D render targets.
+		pond_container.hide()
+		pond_viewport.disable_3d = true
+		pond_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		camera.reparent(get_viewport())
+	else:
+		camera.reparent(pond_viewport)
 	camera.current = true
 	pond_viewport.size_changed.connect(_fit_camera)
 	curve_view = preload("res://pond/pond_curve.gd").new()
+	curve_view.live_mode = live_learning
 	curve_view.tooltip_text = "The same 64 separate three-food ponds are tested for 60 simulated seconds every 25 updates. The score is average food collected per minute. Trials never train the policy."
 	if not live_learning:
 		curve_view.empty_message = "Live evaluation is available while learning."
 	main.add_child(curve_view)
+	curve_view.watch_button.toggled.connect(_watch_best)
 	_fit_layout()
 	get_viewport().size_changed.connect(_fit_layout)
 	_set_training_speed(speed_slider.value)
 
 func _fit_layout() -> void:
+	if embedded_view:
+		side_panel.hide()
+		curve_view.hide()
+		pond_container.custom_minimum_size = Vector2.ZERO
+		_fit_camera()
+		return
 	var dimensions := get_viewport().get_visible_rect().size
 	var compact := dimensions.x < 900 and dimensions.y > dimensions.x
 	ui_layout.vertical = compact
 	metric_layout.vertical = not compact
 	pond_actions.vertical = compact
-	side_panel.custom_minimum_size = Vector2(0, 372) if compact else Vector2(264, 0)
+	side_panel.custom_minimum_size = Vector2(0, 400) if compact else Vector2(264, 0)
 	side_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	side_panel.size_flags_vertical = Control.SIZE_FILL if compact else Control.SIZE_EXPAND_FILL
 	settings_button.visible = compact and live_learning
 	settings_panel.visible = (not compact or settings_open) and live_learning
-	curve_view.custom_minimum_size.y = 136 if dimensions.y < 600 else 168
+	curve_view.custom_minimum_size.y = 180 if dimensions.y < 600 else 212
+	pond_container.custom_minimum_size.y = 180 if dimensions.y < 600 else 220
 	_fit_camera()
 
 func _toggle_pause() -> void:
 	user_paused = not user_paused
 	warmup_timer.stop()
 	lab.set_paused(user_paused)
+	_update_learning_status()
+
+func _watch_best(enabled: bool) -> void:
+	if not lab.set_watch_best(enabled):
+		curve_view.watch_button.set_pressed_no_signal(false)
 	_update_learning_status()
 
 func _set_training_speed(value: float) -> void:
@@ -552,25 +586,35 @@ func _set_training_speed(value: float) -> void:
 	lab.set_updates_per_second(training_updates_per_second)
 
 func _start_pond() -> void:
-	if live_learning:
+	if not playback_checkpoint.is_empty():
+		ready_policy = lab.watch_foraging_checkpoint(playback_checkpoint, 1)
+		if not ready_policy:
+			status.text = lab.get_error()
+			return
+		current = lab.get_state()
+		previous = current.duplicate()
+		_apply_pose(current)
+		_place_food_visual(false)
+	elif live_learning:
 		_begin_learning()
 	else:
 		_load_saved_policy()
 
-func _begin_learning() -> void:
+func _begin_learning(resume_saved := true) -> void:
 	last_reported_update = -50
 	user_paused = false
 	evaluation_points = 0
 	curve_view.points.clear()
+	curve_view.best_points.clear()
 	curve_view.queue_redraw()
 	rate_timestamp = Time.get_ticks_msec()
-	rate_steps = 0
+	rate_steps = -1
 	food_times.clear()
 	food_rate_value.text = "Food / min  —"
 	throughput_value.text = "0 steps / second"
 	ready_policy = false
-	status.text = "Preparing a fresh learner…"
-	ready_policy = lab.start_training(1024, 1, training_updates_per_second)
+	status.text = "Restoring training…" if resume_saved else "Preparing a fresh learner…"
+	ready_policy = lab.start_training(1024, 1, training_updates_per_second, best_policy_path, shuffle_food_inputs, resume_saved)
 	if not ready_policy:
 		status.text = lab.get_error()
 		return
@@ -609,7 +653,7 @@ func _load_saved_policy() -> void:
 
 func _restart() -> void:
 	if live_learning:
-		_begin_learning()
+		_begin_learning(false)
 		return
 	if not ready_policy:
 		return
@@ -643,6 +687,14 @@ func _place_food_visual(animate: bool, changed_slot := -1) -> void:
 func _physics_process(_delta: float) -> void:
 	if not ready_policy:
 		return
+	if live_learning and not lab.get_stats().training_ready:
+		var startup_error: String = lab.get_error()
+		if not startup_error.is_empty():
+			status.text = startup_error
+			training_save.text = "Saved progress was kept. Start new run to reset deliberately."
+		else:
+			_update_learning_status()
+		return
 	previous = current.duplicate()
 	current = lab.step()
 	var error := lab.get_error()
@@ -671,12 +723,32 @@ func _update_learning_status() -> void:
 		status.text = "Try another food position" if move_button.visible else "Trained controller · shallow water"
 		return
 	var training := lab.get_stats()
-	var update := int(training.get("policy_update", 0))
-	var phase := "Paused" if user_paused else ("Untrained" if training.get("paused", true) else "Learning")
+	if not training.training_ready:
+		status.text = "Restoring training…"
+		return
+	var update := int(training.get("update", 0))
+	var phase := "Paused" if user_paused or (training.paused and update > 0) else ("Untrained" if training.paused else "Learning")
 	status.text = "%s · update %d" % [phase, update]
+	if training.resumed_training:
+		status.text = "%s · resumed · update %d" % [phase, update]
+	if training.watching_best:
+		status.text = "Best view · %s %d" % ["paused" if training.paused else "learning", update]
+	curve_view.update_status(training)
+	var saved_update := int(training.training_saved_update)
+	training_save.text = "Training saved · update %s" % _format_count(saved_update) if saved_update >= 0 else "Training has not been saved yet"
+	training_save.tooltip_text = "Full training saves every 30 seconds and when closing.\n" + str(training.training_save_path)
+	training_save.add_theme_color_override("font_color", MUTED if str(training.training_save_error).is_empty() else Color("ffb2a9"))
+	if training.imported_best:
+		training_save.tooltip_text += "\nOne-time recovery: learned actor kept; optimizer and worlds restarted."
+	if not str(training.training_save_error).is_empty():
+		training_save.text = "Training save failed · keep this window open"
+		training_save.tooltip_text += "\n" + str(training.training_save_error)
 	pause_button.text = "Resume learning" if user_paused else "Pause learning"
 	steps_value.text = ("%s steps" if ui_layout.vertical else "%s simulation steps") % _format_count(int(training.env_steps))
 	var now := Time.get_ticks_msec()
+	if rate_steps < 0:
+		rate_steps = int(training.env_steps)
+		rate_timestamp = now
 	if now - rate_timestamp >= 1000:
 		var rate := float(int(training.env_steps) - rate_steps) * 1000.0 / float(now - rate_timestamp)
 		throughput_value.text = ("%.2fM steps / second" % (rate / 1000000.0)) if rate >= 1000000 else ("%.0f steps / second" % rate)
@@ -685,10 +757,11 @@ func _update_learning_status() -> void:
 	var samples := lab.get_evaluation_history(evaluation_points)
 	for sample in samples:
 		curve_view.points.append(Vector2(int(sample.update), float(sample.food_per_minute)))
+		curve_view.best_points.append(Vector2(int(sample.update), float(sample.best_food_per_minute)))
 		evaluation_points += 1
 	if not samples.is_empty():
 		curve_view.queue_redraw()
-	status.tooltip_text = "Actual CUDA training continues until you close the scene. Start over begins fresh learning. More updates do not guarantee better swimming."
+	status.tooltip_text = "Actual CUDA training continues until you close the scene. Reopening resumes the saved learner. Start new run resets learning."
 	if update >= last_reported_update + 50:
 		last_reported_update = update
 		print("POND_LIVE update=%d background=%d food=%d finished=%s" % [update, int(training.background_swimmers), int(current.get("eaten", 0)), str(training.finished)])
@@ -730,6 +803,6 @@ func _apply_pose(pose: Dictionary) -> void:
 		pupils[i].position = look * 0.045
 
 func _fit_camera() -> void:
-	var dimensions := Vector2(pond_viewport.size) if pond_viewport != null else get_viewport().get_visible_rect().size
+	var dimensions := Vector2(pond_viewport.size) if pond_viewport != null and not embedded_view else get_viewport().get_visible_rect().size
 	var aspect := dimensions.x / maxf(1, dimensions.y)
 	camera.size = maxf(8.2, 12.5 / maxf(0.1, aspect))
