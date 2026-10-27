@@ -73,7 +73,7 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 	if demo == "pond":
 		button.tooltip_text = "Watch the three-food shallow pond learn. Saved training resumes automatically."
 	elif demo == "deep_water":
-		button.tooltip_text = "Watch the trained 3D swimmer continue learning in the pond with three foods at different depths."
+		button.tooltip_text = "Watch the 3D swimmer choose food at different depths in the deep pond."
 	if demo not in ["guide", "headless"]:
 		button.pressed.connect(func(): _open(demo, watch))
 		buttons.append(button)
@@ -198,18 +198,27 @@ func _fit_layout() -> void:
 		guide.position = (Vector2i(size) - guide.size) / 2
 
 func _headless_command() -> String:
+	var bundled := ProjectSettings.globalize_path("res://pond/policies/deep_selector.bin")
+	if FileAccess.file_exists(bundled):
+		var runner := ProjectSettings.globalize_path("res://../build/Release/pond_selector_train.exe")
+		var folder := ProjectSettings.globalize_path("user://pond-policies/deep-pond-selector-v1")
+		var command := "& '%s' --motor-policy '%s' --checkpoint '%s/training.bin' --policy '%s/candidate-best.bin' --updates 0 --recovery" % [runner.replace("'", "''"), bundled.replace("'", "''"), folder.replace("'", "''"), folder.replace("'", "''")]
+		var fixture := ProjectSettings.globalize_path("res://pond/policies/deep_selector_recovery.bin")
+		if FileAccess.file_exists(fixture):
+			command += " --fixture '%s'" % fixture.replace("'", "''")
+		return command
 	var executable := ProjectSettings.globalize_path("res://../build/Release/deep_swimmer_train.exe")
 	var checkpoint := ProjectSettings.globalize_path("user://pond-policies/deep-pond-v1/training.bin")
 	return "& '%s' --pond --checkpoint '%s'" % [executable.replace("'", "''"), checkpoint.replace("'", "''")]
 
 func _start_headless() -> void:
-	var executable := ProjectSettings.globalize_path("res://../build/Release/deep_swimmer_train.exe")
+	var executable := ProjectSettings.globalize_path("res://../build/Release/pond_selector_train.exe" if FileAccess.file_exists("res://pond/policies/deep_selector.bin") else "res://../build/Release/deep_swimmer_train.exe")
 	if not FileAccess.file_exists(executable):
-		status.text = "The native headless runner is missing. Build deep_swimmer_train first."
+		status.text = "The native headless runner is missing. Build the project first."
 		status.visible = true
 		return
 	var pid := OS.create_process("powershell.exe", PackedStringArray(["-NoExit", "-Command", _headless_command()]), true)
-	status.text = "Headless console opened. Keep it open to train; Ctrl+C saves and stops. Then choose Deep water." if pid > 0 else "Could not open the training console. Copy the command from the guide."
+	status.text = "Headless console opened. Ctrl+C saves and stops. Deep water shows the validated controller." if pid > 0 else "Could not open the training console. Copy the command from the guide."
 	status.visible = true
 	if guide:
 		guide.hide()
@@ -228,10 +237,10 @@ func _show_guide() -> void:
 		body.add_theme_constant_override("separation", 12)
 		scroll.add_child(body)
 		for item in [
-			["Watch and learn", "Watch trained plays the saved CartPole or Racing controller. Train from scratch opens their learning controls. Watch it learn opens the shallow pond; Deep water opens the deeper pond with three foods at different depths, retaining the learned 3D swimmer."],
-			["Pause, save and resume", "In Deep water, Pause learning stops policy updates while the swimmer keeps demonstrating its controller. Maximum training speed accelerates background learning. The graph measures 64 fixed one-minute trials. Training autosaves every 30 seconds and on normal exit; reopening resumes it. A crash may lose progress since the last save."],
-			["Accelerate without graphics", "Return to this menu, then open the headless console below. It runs the same deep-water PPO trainer as fast as hardware allows, with unchanged physics timesteps. The console reports simulation speed per world. Stop with Ctrl+C and wait for ‘Saved full training’ before opening Deep water. Only one trainer can own the save."],
-			["Your earlier work", "Shallow pond policies, the one-food 3D swimmer and the archived shuffled comparison are preserved. The deeper three-food pond transfers swimming weights and optimizer state once, then resumes its own save. Its graph measures the new task."]
+			["Choose a demonstration", "Watch trained plays saved CartPole or Racing policies. Train from scratch opens their learning controls. Watch it learn opens the shallow pond. Deep water plays the validated food selector and its retained swimming network in the deeper three-food pond."],
+			["What the deep pond shows", "The trained controller runs without background learning. Its validation score comes from separate trials. The camera controls and depth markers work as before. Your original swimming and training checkpoints are preserved."],
+			["Train without graphics", "The console below continues PPO food-selector training at fixed physics timesteps. An existing full save resumes; a new installation starts from the packaged networks with a fresh optimizer. Ctrl+C saves and stops. Every 25 updates saves a full checkpoint; a crash can lose progress since that save. Only one trainer can own each save."],
+			["Keep the demonstration validated", "Further training saves a separate candidate controller. Deep water keeps showing the tested version until a candidate passes fresh evaluation and is installed. Earlier shallow, shuffled and one-food experiments remain preserved."]
 		]:
 			body.add_child(_label(item[0], 20))
 			var paragraph := _label(item[1], 15, MUTED)

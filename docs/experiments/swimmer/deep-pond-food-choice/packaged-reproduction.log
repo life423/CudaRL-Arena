@@ -1,0 +1,8 @@
+POND_CHOICE mode=canonical seed=1098742313 n=256 fpm=15.335938 low_speed=0.050 no_food_10=0.022 switches=0.000 slots=3922,2,2 max_food_gap=12.50 max_low_run=0.15
+POND_CHOICE mode=nearest seed=1098742313 n=256 fpm=16.812500 low_speed=0.302 no_food_10=0.225 switches=1.754 slots=1442,1491,1371 max_food_gap=57.55 max_low_run=51.10
+POND_CHOICE mode=held_nearest seed=1098742313 n=256 fpm=15.687500 low_speed=0.320 no_food_10=0.303 switches=10.785 slots=1352,1356,1308 max_food_gap=53.55 max_low_run=46.30
+POND_CHOICE mode=learned_selector seed=1098742313 n=256 fpm=17.621094 low_speed=0.064 no_food_10=0.041 switches=9.637 slots=1571,1460,1480 max_food_gap=14.80 max_low_run=0.20
+PAIRED_DELTA 1.476562 approximate95=[1.233993,1.719132] wins=181 ties=42 losses=33 best_update=64350
+SELECTOR_VS_canonical delta=2.285156 approximate95=[2.079003,2.491309]
+SELECTOR_VS_nearest delta=0.808594 approximate95=[0.572197,1.044990]
+SELECTOR_VS_held_nearest delta=1.933594 approximate95=[1.716636,2.150552]

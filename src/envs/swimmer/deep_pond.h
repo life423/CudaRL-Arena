@@ -92,7 +92,7 @@ CUDARL_HD inline void permute(float* o,int order) {
 class Batch {
 public:
     Batch(int n,uint32_t seed,swimmer::Body unused={});
-    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true);
+    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true,int evaluation_steps=kEpisodeSteps);
     const float* obs() const {return obs_.get();}
     const State* states() const {return states_.get();}
     void save(checkpoint::Writer& out) const;

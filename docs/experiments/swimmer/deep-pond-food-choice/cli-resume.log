@@ -1,0 +1,3 @@
+SELECTOR update=800 current=17.656250 best=17.812500 best_update=250 motor_update=64350 seed=47 recovery=5.30s elapsed=0.4s
+SELECTOR update=801 current=17.781250 best=17.812500 best_update=250 motor_update=64350 seed=47 recovery=5.30s elapsed=1.1s
+SAVED selector_update=801 best=17.812500 motor_unchanged=true checkpoint=build/pond-choice-study/cli-resume/training.bin

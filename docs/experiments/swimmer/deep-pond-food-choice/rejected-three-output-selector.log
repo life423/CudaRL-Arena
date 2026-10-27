@@ -1,0 +1,18 @@
+SELECTOR update=0 current=7.156250 best=7.156250 best_update=0 motor_update=64350 seed=11 elapsed=0.4s
+SELECTOR update=25 current=15.281250 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=7.8s
+SELECTOR update=50 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=15.3s
+SELECTOR update=75 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=22.8s
+SELECTOR update=100 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=30.3s
+SELECTOR update=125 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=37.8s
+SELECTOR update=150 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=45.3s
+SELECTOR update=175 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=52.8s
+SELECTOR update=200 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=60.2s
+SELECTOR update=225 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=67.7s
+SELECTOR update=250 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=75.2s
+SELECTOR update=275 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=82.7s
+SELECTOR update=300 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=90.2s
+SELECTOR update=325 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=97.8s
+SELECTOR update=350 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=105.2s
+SELECTOR update=375 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=112.7s
+SELECTOR update=400 current=15.265625 best=15.281250 best_update=25 motor_update=64350 seed=11 elapsed=120.3s
+SAVED selector_update=400 best=15.281250 motor_unchanged=true checkpoint=build/pond-choice-study/selector-seed11/training.bin

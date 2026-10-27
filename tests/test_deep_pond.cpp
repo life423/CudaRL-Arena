@@ -5,8 +5,32 @@
 #include "envs/swimmer/deep_pond.h"
 #include "rl/swimmer_ppo.h"
 #include "nn/mlp_cpu.h"
+#include "demos/pond_target.h"
 namespace dp=cudarl::deep_pond;
 namespace dw=cudarl::deep;
+TEST_CASE("deep pond: target promotion preserves body inputs and physical state") {
+    const auto world=dp::initial(9,3);float original[33];dp::observe(world,original);
+    for(int selected=0;selected<3;++selected) {
+        float o[33];std::copy(original,original+33,o);cudarl::demos::primary_pond_food(o,selected);
+        for(int k=0;k<3;++k) CHECK(o[k]==original[selected*3+k]);
+        for(int k=9;k<33;++k) CHECK(o[k]==original[k]);
+        int slot=1;for(int f=0;f<3;++f) if(f!=selected) {
+            for(int k=0;k<3;++k) CHECK(o[slot*3+k]==original[f*3+k]);++slot;
+        }
+    }
+    float distances[33]{};distances[0]=3;distances[3]=2;distances[6]=1;
+    CHECK(cudarl::demos::nearest_pond_food(distances)==2);distances[0]=.5f;
+    CHECK(cudarl::demos::nearest_pond_food(distances)==0);distances[3]=.5f;
+    CHECK(cudarl::demos::nearest_pond_food(distances)==0); // Stable ties.
+    float unchanged[33];dp::observe(world,unchanged);for(int k=0;k<33;++k) CHECK(unchanged[k]==original[k]);
+}
+GPU_TEST_CASE("deep pond: extended evaluation continues without resetting the trained episode") {
+    dp::Batch normal(1,73),extended(1,73);device_ptr<float> torque(4);const float zero[4]{};torque.copy_from_host(zero,4);
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    for(int tick=0;tick<1201;++tick) {normal.step(torque.get(),{},nullptr,false);extended.step(torque.get(),{},nullptr,false,1201);}
+    dp::State a,b;CUDA_CHECK_THROW(cudaMemcpy(&a,normal.states(),sizeof(a),cudaMemcpyDeviceToHost));CUDA_CHECK_THROW(cudaMemcpy(&b,extended.states(),sizeof(b),cudaMemcpyDeviceToHost));
+    CHECK(a.steps==1200);CHECK(b.steps==1201);CHECK(a.episode==0 && b.episode==0);CHECK(std::isfinite(dw::norm(b.body.position)));
+}
 TEST_CASE("deep pond: three separated depths, relocation and consumed-only replacement") {
     float minimum_depth=99,maximum_depth=-99;int quadrants[4]{};float shortest=100;
     for(uint32_t i=0;i<350;++i) {

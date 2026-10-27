@@ -8,6 +8,7 @@
 #include "demos/ppo_session.h"
 #include "rl/swimmer_ppo.h"
 #include "nn/mlp_cpu.h"
+#include "rl/pond_selector_ppo.h"
 namespace godot {
 class DeepPondLab:public RefCounted {
     GDCLASS(DeepPondLab,RefCounted);
@@ -18,6 +19,7 @@ public:
     bool start_training(int environments=1024,int seed=7,String checkpoint="user://pond-policies/deep-pond-v1/training.bin",
         String source="user://pond-policies/deep-v1/training.bin");
     void stop();
+    bool watch_controller(String path);
     void set_paused(bool paused);
     void set_updates_per_second(double speed);
     void save_training_now();
@@ -30,6 +32,10 @@ public:
 private:
     std::unique_ptr<cudarl::demos::TrainingSession<cudarl::rl::DeepPondTrainer>> session_;
     std::unique_ptr<cudarl::nn::CpuMlp<float>> actor_;
+    std::unique_ptr<cudarl::nn::CpuMlp<float>> selector_actor_;
+    cudarl::rl::SelectorPolicy controller_;
+    String controller_path_;
+    int selected_food_=-1;
     cudarl::deep_pond::State state_;
     uint64_t policy_version_=0,best_version_=0;
     int policy_update_=0;

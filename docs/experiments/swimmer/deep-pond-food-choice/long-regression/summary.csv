@@ -1,0 +1,5 @@
+mode,seed,trials,seconds,food_per_minute,mean_low_speed_seconds,mean_no_food_10_seconds,mean_uncollected_target_switches,slot0,slot1,slot2,max_food_gap_seconds,max_low_speed_run_seconds
+canonical,3481762059,64,300,15.69375,0.071875,0.3171875,0,5015,5,2,18.45,0.25
+nearest,3481762059,64,300,17.090625,0.36640625,0.865625,8.5,1814,1784,1871,21.15,4
+held_nearest,3481762059,64,300,15.9875,0.30625,0.32890625,54.46875,1727,1698,1691,16.7,0.25
+learned_selector,3481762059,64,300,17.81875,0.115625,0.08203125,47.890625,1978,1886,1838,13,0.4
