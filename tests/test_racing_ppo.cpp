@@ -264,12 +264,19 @@ GPU_TEST_CASE("racing ppo: training is bit-identical for the same seed") {
     std::vector<float> first_params, first_log_std;
     std::vector<float> first_curve;
     for (int run = 0; run < 2; ++run) {
+        cfg.profile_phases = run == 1; // diagnostic events must not change the policy or results
         RacingPpoTrainer trainer(cfg);
         std::vector<float> curve;
         for (int u = 0; u < 4; ++u) {
             const auto s = trainer.update();
             curve.push_back(s.mean_laps);
             curve.push_back(s.approx_kl);
+            if (cfg.profile_phases) {
+                CHECK(s.rollout_ms > 0.0 && s.optimize_ms > 0.0);
+                CHECK(std::isfinite(s.advance_ms + s.resolve_ms + s.observe_ms));
+            } else {
+                CHECK(s.rollout_ms == 0.0 && s.optimize_ms == 0.0);
+            }
         }
         if (run == 0) {
             first_params  = trainer.actor_params();
@@ -281,6 +288,61 @@ GPU_TEST_CASE("racing ppo: training is bit-identical for the same seed") {
             CHECK(curve == first_curve);
         }
     }
+}
+
+GPU_TEST_CASE("racing execution: distributed training preserves parameters and learning metrics exactly") {
+    for (int agents : {128,2048}) for (uint32_t seed : {1u,2u,3u}) {
+        RacingPpoConfig cfg;
+        cfg.num_envs=agents; cfg.seed=seed; cfg.total_updates=12;
+        cfg.distributed_traffic=false;
+        RacingPpoTrainer reference(cfg);
+        cfg.distributed_traffic=true;
+        cfg.profile_phases=true;
+        RacingPpoTrainer distributed(cfg);
+        for (int update=0;update<12;++update) {
+            const auto a=reference.update(),b=distributed.update();
+            CHECK(a.mean_laps==b.mean_laps && a.mean_episode_length==b.mean_episode_length && a.crash_fraction==b.crash_fraction);
+            CHECK(a.pg_loss==b.pg_loss && a.value_loss==b.value_loss && a.approx_kl==b.approx_kl);
+            CHECK(a.entropy==b.entropy && a.clip_fraction==b.clip_fraction && a.mean_std==b.mean_std);
+            CHECK(a.clean_laps==b.clean_laps && a.contact_cars==b.contact_cars && a.wall_crashes==b.wall_crashes);
+            CHECK(a.learning_rate==b.learning_rate && a.env_steps==b.env_steps);
+            CHECK(reference.actor_params()==distributed.actor_params());
+            CHECK(reference.critic_params()==distributed.critic_params());
+            CHECK(reference.log_std()==distributed.log_std());
+        }
+    }
+}
+
+GPU_TEST_CASE("racing graphs: updates match stream execution through annealing and changing Adam steps") {
+    for (int agents : {128, 2048})
+        for (uint32_t seed : {1u, 2u, 3u}) {
+            RacingPpoConfig cfg;
+            cfg.num_envs = agents;
+            cfg.seed = seed;
+            cfg.total_updates = 8;
+            if (seed == 3)
+                cfg.max_grad_norm = 0.f;
+            cfg.graph_optimization = false;
+            RacingPpoTrainer reference(cfg);
+            cfg.graph_optimization = true;
+            cfg.profile_phases = true;
+            RacingPpoTrainer graphed(cfg);
+            for (int update = 0; update < 12; ++update) {
+                const auto a = reference.update(), b = graphed.update();
+                CHECK(a.mean_laps == b.mean_laps && a.mean_episode_length == b.mean_episode_length &&
+                      a.crash_fraction == b.crash_fraction);
+                CHECK(a.pg_loss == b.pg_loss && a.value_loss == b.value_loss && a.approx_kl == b.approx_kl);
+                CHECK(a.entropy == b.entropy && a.clip_fraction == b.clip_fraction &&
+                      a.mean_std == b.mean_std);
+                CHECK(a.clean_laps == b.clean_laps && a.contact_cars == b.contact_cars &&
+                      a.wall_crashes == b.wall_crashes);
+                CHECK(a.learning_rate == b.learning_rate && a.env_steps == b.env_steps);
+                CHECK(b.optimization_graph_nodes > 0);
+                CHECK(reference.actor_params() == graphed.actor_params());
+                CHECK(reference.critic_params() == graphed.critic_params());
+                CHECK(reference.log_std() == graphed.log_std());
+            }
+        }
 }
 
 GPU_TEST_CASE("racing ppo: the cars learn to drive on 3 seeds (laps rise, crashes fall)") {

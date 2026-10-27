@@ -35,12 +35,64 @@ __global__ void observe_races_kernel(const State* states, const Track* track, fl
     if (i<n) observe_race(states+(i/kRaceCars)*kRaceCars,i%kRaceCars,*track,obs+i*kObsDim);
 }
 
+__global__ void observe_terminal_races_kernel(const State* states, const StepResult* results,
+                                             const Track* track, float* obs, int n, bool bootstrap_only) {
+    const int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < n && (results[i].truncated || (!bootstrap_only && results[i].terminated)))
+        observe_race(states + (i / kRaceCars) * kRaceCars, i % kRaceCars, *track, obs + i * kObsDim);
+}
+
 __global__ void advance_races_kernel(State* states, State* previous, StepResult* results, const Track* track,
                                     const float* actions, int n) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;
     if (i>=n) return;
     previous[i]=states[i];
     results[i]=advance_race(states[i],actions+i*kActionDim,*track);
+}
+
+// All contacts read immutable pre-respawn states. The subsequent observation
+// kernel finishes final observations before the ordered respawn kernel runs.
+__global__ void contact_outcomes_kernel(const State* states, const State* previous, StepResult* results,
+                                       StepOutputs out, int n) {
+    const int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i >= n) return;
+    const int base = (i / kRaceCars) * kRaceCars;
+    StepResult r = results[i];
+    bool contact = false;
+    for (int j = base; j < base + kRaceCars; ++j) if (j != i) {
+        // Preserve the reference's pair orientation as well as its arithmetic.
+        const int a = min(i, j), b = max(i, j);
+        if (swept_contact(previous[a], states[a], previous[b], states[b])) contact = true;
+    }
+    if (contact) {
+        if (!r.terminated) r.reward -= kCrashPenalty;
+        r.terminated = true;
+        r.truncated = false;
+        r.contact = true;
+        r.clean_lap = false;
+        r.lap_seconds = 0.f;
+    }
+    results[i] = r;
+    const bool done = r.terminated || r.truncated;
+    out.reward[i] = r.reward;
+    out.done[i] = done ? 1.f : 0.f;
+    out.truncated[i] = r.truncated ? 1.f : 0.f;
+    out.finished_length[i] = done ? static_cast<float>(previous[i].steps + 1) : 0.f;
+    out.finished_laps[i] = done ? r.laps : 0.f;
+    if (out.metrics) {
+        out.metrics[4*i] = r.contact ? 1.f : 0.f;
+        out.metrics[4*i+1] = r.clean_lap ? 1.f : 0.f;
+        out.metrics[4*i+2] = r.lap_seconds;
+        out.metrics[4*i+3] = r.terminated && !r.contact ? 1.f : 0.f;
+    }
+}
+
+__global__ void respawn_races_kernel(State* states, const StepResult* results, uint32_t* episodes,
+                                    const Track* track, int races, uint32_t seed) {
+    const int race = blockIdx.x * blockDim.x + threadIdx.x;
+    if (race >= races) return;
+    const int base = race * kRaceCars;
+    respawn_race(states + base, results + base, episodes + base, *track, seed, static_cast<uint32_t>(race));
 }
 
 __global__ void resolve_races_kernel(State* states, const State* previous, StepResult* results, uint32_t* episodes,
@@ -90,8 +142,8 @@ __global__ void step_kernel(State* __restrict__ states, uint32_t* __restrict__ e
 
 } // namespace
 
-RacingBatch::RacingBatch(int num_envs, uint32_t seed, bool traffic)
-    : n_(num_envs), seed_(seed), traffic_(traffic), track_(1),
+RacingBatch::RacingBatch(int num_envs, uint32_t seed, bool traffic, bool distributed_traffic)
+    : n_(num_envs), seed_(seed), traffic_(traffic), distributed_traffic_(distributed_traffic), track_(1),
       previous_(static_cast<size_t>(std::max(num_envs,1))), results_(static_cast<size_t>(std::max(num_envs,1))),
       states_(static_cast<size_t>(std::max(num_envs, 1))),
       episodes_(static_cast<size_t>(std::max(num_envs, 1))),
@@ -116,15 +168,30 @@ void RacingBatch::reset(cudaStream_t stream) {
     CUDA_CHECK_THROW(cudaGetLastError());
 }
 
-void RacingBatch::step(const float* d_actions, const StepOutputs& out, cudaStream_t stream) {
+void RacingBatch::step(const float* d_actions, const StepOutputs& out, cudaStream_t stream,
+                       const RacingStepEvents* events) {
     if (traffic_) {
-        advance_races_kernel<<<blocks_for(n_),kThreads,0,stream>>>(states_.get(),previous_.get(),results_.get(),track_.get(),d_actions,n_);
+        if (events) CUDA_CHECK_THROW(cudaEventRecord(events->start, stream));
+        const int car_threads = distributed_traffic_ ? 64 : kThreads;
+        const int race_threads = distributed_traffic_ ? 32 : kThreads;
+        advance_races_kernel<<<(n_+car_threads-1)/car_threads,car_threads,0,stream>>>(states_.get(),previous_.get(),results_.get(),track_.get(),d_actions,n_);
         CUDA_CHECK_THROW(cudaGetLastError());
+        if (events) CUDA_CHECK_THROW(cudaEventRecord(events->advanced, stream));
         const int races=n_/kRaceCars;
-        resolve_races_kernel<<<blocks_for(races),kThreads,0,stream>>>(states_.get(),previous_.get(),results_.get(),episodes_.get(),track_.get(),out,races,seed_);
+        if (distributed_traffic_) {
+            contact_outcomes_kernel<<<(n_+127)/128,128,0,stream>>>(states_.get(),previous_.get(),results_.get(),out,n_);
+            CUDA_CHECK_THROW(cudaGetLastError());
+            observe_terminal_races_kernel<<<(n_+car_threads-1)/car_threads,car_threads,0,stream>>>(states_.get(),results_.get(),track_.get(),out.final_obs,n_,out.bootstrap_only);
+            CUDA_CHECK_THROW(cudaGetLastError());
+            respawn_races_kernel<<<(races+race_threads-1)/race_threads,race_threads,0,stream>>>(states_.get(),results_.get(),episodes_.get(),track_.get(),races,seed_);
+        } else {
+            resolve_races_kernel<<<blocks_for(races),kThreads,0,stream>>>(states_.get(),previous_.get(),results_.get(),episodes_.get(),track_.get(),out,races,seed_);
+        }
         CUDA_CHECK_THROW(cudaGetLastError());
-        observe_races_kernel<<<blocks_for(n_),kThreads,0,stream>>>(states_.get(),track_.get(),obs_.get(),n_);
+        if (events) CUDA_CHECK_THROW(cudaEventRecord(events->resolved, stream));
+        observe_races_kernel<<<(n_+car_threads-1)/car_threads,car_threads,0,stream>>>(states_.get(),track_.get(),obs_.get(),n_);
         CUDA_CHECK_THROW(cudaGetLastError());
+        if (events) CUDA_CHECK_THROW(cudaEventRecord(events->observed, stream));
         return;
     }
     step_kernel<<<blocks_for(n_), kThreads, 0, stream>>>(states_.get(), episodes_.get(), obs_.get(), d_actions, out,

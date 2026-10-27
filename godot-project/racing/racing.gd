@@ -80,9 +80,11 @@ var car_sprites: Array[AtlasTexture] = []
 var previous_cars := PackedFloat32Array()
 var respawn_remaining := PackedFloat32Array()
 var respawn_poses := PackedVector3Array()
+var watch_mode := false
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = STEP_HZ
+	watch_mode = DemoLaunch.watching("racing")
 	_load_car_sprites()
 	car_stride = lab.get_car_stride()
 	track_outer = lab.get_track_outer()
@@ -90,11 +92,23 @@ func _ready() -> void:
 	_build_ui()
 	resized.connect(_fit_layout)
 	_fit_layout()
-	print(CudaDevice.new().describe())
-	_restart()
+	if watch_mode:
+		_clear_race_presentation()
+		var weights := DemoLaunch.read_policy("racing")
+		var ok := not weights.is_empty() and lab.watch_policy(weights)
+		status_label.text = "" if ok else (DemoLaunch.last_error if not DemoLaunch.last_error.is_empty() else lab.get_error())
+		status_label.visible = not ok
+	else:
+		print(CudaDevice.new().describe())
+		_restart()
 
 func _exit_tree() -> void:
 	lab.stop()   # join the training thread before the scene goes away
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		DemoLaunch.show_menu()
 
 func _physics_process(_delta: float) -> void:
 	previous_cars = cars
@@ -284,6 +298,9 @@ func _build_ui() -> void:
 	panel_scroll.add_child(side_panel)
 	var controls := _column(12)
 	side_panel.add_child(controls)
+	var back := _button("Back to demos", DemoLaunch.show_menu)
+	back.name = "BackToDemos"
+	controls.add_child(back)
 
 	var header := _column(4)
 	var title_row := HBoxContainer.new()
@@ -299,6 +316,7 @@ func _build_ui() -> void:
 	controls.add_child(header)
 
 	pause_button = _button("Start learning", _toggle_pause)
+	pause_button.visible = not watch_mode
 	for state in ["normal", "hover", "pressed"]:
 		var fill := CURVE.lightened(0.08) if state == "hover" else CURVE
 		if state == "pressed":
@@ -319,6 +337,7 @@ func _build_ui() -> void:
 	var race_actions := HBoxContainer.new()
 	race_actions.add_theme_constant_override("separation", SPACE)
 	var restart := _button("New seed", _restart_with_new_seed)
+	restart.visible = not watch_mode
 	restart.tooltip_text = "Restart learning from scratch with a new random seed."
 	restart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	race_actions.add_child(restart)
@@ -329,6 +348,7 @@ func _build_ui() -> void:
 	controls.add_child(race_actions)
 
 	baseline_checkbox = CheckBox.new()
+	baseline_checkbox.visible = not watch_mode
 	baseline_checkbox.text = "Show untrained policy"
 	baseline_checkbox.custom_minimum_size.y = 44
 	baseline_checkbox.tooltip_text = "Compare against this seed's frozen update-zero weights. Training continues; switching resets the visible race."
@@ -388,6 +408,7 @@ func _build_ui() -> void:
 		settings_panel.visible = settings_button.button_pressed
 		settings_button.text = "Training settings ▾" if settings_panel.visible else "Training settings ▸")
 	settings_button.toggle_mode = true
+	settings_button.visible = not watch_mode
 	settings_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	controls.add_child(settings_button)
 	settings_panel = _column(12)
@@ -445,6 +466,7 @@ func _build_ui() -> void:
 	track_view.draw.connect(_draw_track)
 	right.add_child(track_view)
 	curve_view = Control.new()
+	curve_view.visible = not watch_mode
 	curve_view.clip_contents = true
 	curve_view.size_flags_vertical = Control.SIZE_FILL
 	curve_view.draw.connect(_draw_curve)
@@ -463,6 +485,10 @@ func _update_stats() -> void:
 	if not error.is_empty():
 		phase_label.text = "Training unavailable"
 		phase_label.add_theme_color_override("font_color", Color("ffb2a9"))
+	elif watch_mode and not ready:
+		phase_label.text = "Playback unavailable"
+	elif watch_mode:
+		phase_label.text = "Saved policy · 200 training updates"
 	elif not ready:
 		phase_label.text = "Preparing policy…"
 	elif untrained_view:
@@ -482,7 +508,7 @@ func _update_stats() -> void:
 	metric_values["best"].text = "—" if best <= 0 else "%.2f s" % best
 	metric_values["contacts"].text = str(stats.get("showcase_contacts", 0))
 	metric_values["walls"].text = str(stats.get("showcase_walls", 0))
-	training_readout.visible = update > 0
+	training_readout.visible = update > 0 and not watch_mode
 	training_summary.text = "%.2f laps / training episode" % stats.get("mean_laps", 0.0)
 	stats_label.text = "GPU · %.2fM car steps/s active" % (stats.get("env_steps_per_second", 0.0) / 1e6)
 	diagnostics_label.text = "Update %d · %s car steps\n%.1f ms / update\n%d clean training laps this update" % [update, _thousands(stats.get("env_steps", 0)), stats.get("update_ms", 0.0), stats.get("clean_laps", 0)]
@@ -584,7 +610,9 @@ func _draw_track() -> void:
 
 	var font := ThemeDB.fallback_font
 	var caption := "8-car race · trained policy" if evaluation_started else "8-car race · learning"
-	if untrained_view or stats.get("update", 0) == 0:
+	if watch_mode:
+		caption = "8-car race · saved policy"
+	elif untrained_view or stats.get("update", 0) == 0:
 		caption = "8-car race · untrained policy"
 	track_view.draw_string(font, Vector2(12, 22), caption,
 			HORIZONTAL_ALIGNMENT_LEFT, area.x - 24, 13, Color(0.82, 0.84, 0.87))

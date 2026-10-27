@@ -1,0 +1,141 @@
+CUDA device: present
+
+PASS  cpu_mlp: gradient check, single unit                          0.0 ms
+PASS  cpu_mlp: gradient check, tanh hidden layer                    0.0 ms
+PASS  cpu_mlp: gradient check, mixed activations, odd sizes         0.1 ms
+PASS  cpu_mlp: gradient check, wider tanh network                   1.4 ms
+PASS  cpu_mlp: gradients accumulate across backward calls           0.0 ms
+PASS  cpu_mlp: parameter layout and init                            0.0 ms
+PASS  gemm: tiled, store, all transposes                          118.4 ms
+PASS  gemm: tiled, accumulate, all transposes                      32.0 ms
+PASS  gemm: tiled, fused bias + tanh / relu                        67.9 ms
+PASS  gemm: naive, all transposes and epilogues                    97.0 ms
+PASS  gemm: split-K matches reference for any split count          22.4 ms
+PASS  gemm: split-K is bit-identical run to run                    46.5 ms
+PASS  gemm: split_k_count heuristics                                0.0 ms
+PASS  gemm: k = 0 gives zero product                                0.3 ms
+PASS  bf16: conversion rounds to nearest even                       0.0 ms
+PASS  bf16: device conversion matches host bit for bit              5.8 ms
+PASS  gemm_bf16: v0 WMMA exact vs bf16 reference                  154.3 ms
+PASS  gemm_bf16: v1 mma.sync exact vs bf16 reference              154.8 ms
+PASS  gemm_bf16: v2 pipelined exact vs bf16 reference             156.1 ms
+PASS  gemm_bf16: v3 swizzled exact vs bf16 reference              155.0 ms
+PASS  gemm_bf16: v4 tuned exact vs bf16 reference                 154.7 ms
+PASS  gemm_bf16: padded leading dimensions, odd ldc                 4.0 ms
+PASS  gemm_bf16: bit-identical run to run                          16.9 ms
+    bf16 input quantization error vs fp32 inputs: 2.63e-03 (normalized max)
+PASS  gemm_bf16: quantization error vs fp32 inputs is bf16-sized     10.7 ms
+PASS  gemm_bf16: rejects k, lda, ldb not multiples of 8             0.1 ms
+PASS  attention: reference gradients match finite differences       0.2 ms
+PASS  attention: matches fp64 reference for every head size and ragged tile     21.2 ms
+PASS  attention: stable for large logits                            2.4 ms
+PASS  attention: identical keys give the mean of the values         0.7 ms
+PASS  attention: forward and backward are bit-identical run to run      3.4 ms
+PASS  attention: rejects invalid shapes and null pointers           0.0 ms
+PASS  attention bf16: matches the fp64 reference on bf16 inputs      8.3 ms
+PASS  attention bf16: agrees with the fp32 kernel                   7.2 ms
+PASS  attention bf16: a single key returns its value exactly        0.3 ms
+PASS  attention bf16: stable for large logits                       1.0 ms
+PASS  attention bf16: identical keys give the mean of the values      0.5 ms
+PASS  attention bf16: bit-identical run to run                      2.5 ms
+PASS  attention bf16: rejects invalid shapes and null pointers      0.0 ms
+PASS  gpu_mlp: matches CPU, single unit                             1.2 ms
+PASS  gpu_mlp: matches CPU, odd sizes, mixed activations            0.5 ms
+PASS  gpu_mlp: matches CPU, PPO-sized policy at batch 4096         23.9 ms
+PASS  gpu_mlp: matches CPU, wide layers spanning several tiles     15.2 ms
+PASS  gpu_mlp: naive kernel gives the same answers                  0.6 ms
+PASS  gpu_mlp: bit-identical across runs and instances             13.6 ms
+PASS  gpu_mlp: gradients accumulate until zero_grad                 0.8 ms
+PASS  gpu_mlp: rejects bad batch sizes                              0.4 ms
+PASS  adam: matches CPU reference over 200 steps                    7.1 ms
+PASS  adam: clipping matches CPU when it triggers                   6.1 ms
+PASS  adam: clipping is a no-op below the threshold                 3.2 ms
+PASS  adam: reports the pre-clip gradient norm                      2.6 ms
+PASS  adam: fits sin(x) end to end on the GPU                     362.5 ms
+PASS  adam: training is bit-identical run to run                   35.9 ms
+PASS  function_fit: sine is learned to MSE < 1e-3                 267.6 ms
+PASS  function_fit: every target improves at least 10x           1306.1 ms
+PASS  function_fit: ReLU network learns the V shape               255.5 ms
+PASS  function_fit: predictions agree with the reported loss      272.0 ms
+PASS  function_fit: rejects invalid configs                         0.0 ms
+PASS  function_fit: targets stay in a drawable range                0.0 ms
+PASS  cartpole: dynamics match the reference equations              0.0 ms
+PASS  cartpole: termination thresholds                              0.0 ms
+PASS  cartpole: truncation at 500 steps resets the episode          0.0 ms
+PASS  cartpole: termination wins over truncation on the last step      0.0 ms
+PASS  cartpole: initial states are small, deterministic, and vary      0.0 ms
+PASS  cartpole: GPU batch matches the host step, including resets     22.5 ms
+PASS  ppo: Feistel shuffle is a permutation for any size            3.6 ms
+PASS  ppo: Feistel shuffle depends on the seed and actually shuffles      0.1 ms
+PASS  ppo: sampled action frequencies match the policy              3.4 ms
+PASS  ppo: GAE on a hand-computed example                           0.0 ms
+PASS  ppo: GAE bootstraps truncated episodes from the final value      0.0 ms
+PASS  ppo: GPU GAE matches the reference with random episode ends      4.2 ms
+PASS  ppo: loss gradient matches finite differences in every regime      0.0 ms
+PASS  ppo: GPU loss gradient kernel matches the host math           1.2 ms
+PASS  ppo: orthogonal init gives scaled orthonormal weights         0.4 ms
+    seed 1 solved after 20 updates (655360 env steps)
+    seed 2 solved after 20 updates (655360 env steps)
+    seed 3 solved after 20 updates (655360 env steps)
+PASS  ppo: solves CartPole (mean episode length >= 475) on 3 seeds   1007.8 ms
+PASS  ppo: training is bit-identical for the same seed            144.2 ms
+PASS  ppo_demo: session trains in the background and publishes the policy    147.7 ms
+PASS  ppo_demo: throttle and pause limit the update rate         1958.6 ms
+PASS  ppo_demo: a paused start publishes update zero without taking an optimizer step    249.4 ms
+PASS  ppo_demo: a trained policy balances every showcase cart for 500 steps    519.2 ms
+PASS  ppo_demo: an untrained policy drops the poles                 2.4 ms
+PASS  racing: the track is a band around the centreline             0.0 ms
+PASS  racing: raycasts on a circle read its radius in every direction      0.0 ms
+PASS  racing: an off-centre car sees the nearer wall shorter        0.0 ms
+PASS  racing: one bicycle step matches the hand computation         0.0 ms
+PASS  racing: crashing ends the episode with the crash penalty and restarts the car      0.0 ms
+PASS  racing: the time limit truncates an episode without a crash      0.3 ms
+PASS  racing: progress is the polar angle travelled, and reward pays for it      0.0 ms
+PASS  racing: a car steered into the wall crashes on the real track      0.0 ms
+PASS  racing: GPU batch matches the host step on the same actions     26.5 ms
+PASS  race: staggered grid is on track and separated for many seeds      0.4 ms
+PASS  race: swept contact catches crossing paths even when endpoints are clear      0.0 ms
+PASS  race: the hard circuit walls never cross themselves or each other      0.2 ms
+PASS  race: car rays see a slower leader and respect wall occlusion      0.0 ms
+PASS  race: cornering at high speed is limited and braking increases steering authority      0.0 ms
+PASS  race: contact terminates involved cars and respawns with clear space      0.0 ms
+PASS  race: time limit preserves final traffic observation and clean laps record their duration      0.1 ms
+PASS  race: grouped CUDA steps match CPU including collisions and safe respawns     28.1 ms
+    8 agents: maximum sensor difference 0
+    40 agents: maximum sensor difference 0
+    2048 agents: maximum sensor difference 0
+PASS  race execution: distributed traffic matches the retained GPU reference exactly    432.0 ms
+PASS  race execution: distributed timeout preserves final observations before ordered respawn      4.0 ms
+    traffic update 1: laps 0.019, contacts 66, walls 761, clean 0, 3.10 M steps/s
+    traffic update 101: laps 1.572, contacts 2, walls 6, clean 92, 3.15 M steps/s
+    traffic update 201: laps 1.540, contacts 16, walls 7, clean 201, 3.04 M steps/s
+    traffic update 301: laps 1.553, contacts 24, walls 6, clean 107, 3.10 M steps/s
+    traffic update 401: laps 1.394, contacts 16, walls 28, clean 180, 3.20 M steps/s
+    traffic update 501: laps 1.406, contacts 30, walls 22, clean 99, 3.04 M steps/s
+    traffic update 601: laps 1.491, contacts 10, walls 13, clean 136, 3.16 M steps/s
+    traffic update 701: laps 1.428, contacts 20, walls 21, clean 143, 3.02 M steps/s
+    traffic update 801: laps 0.962, contacts 36, walls 113, clean 135, 3.08 M steps/s
+    traffic update 901: laps 1.003, contacts 44, walls 89, clean 92, 3.11 M steps/s
+    traffic update 1001: laps 1.516, contacts 14, walls 8, clean 140, 3.11 M steps/s
+    traffic update 1101: laps 1.530, contacts 14, walls 14, clean 141, 3.01 M steps/s
+    traffic update 1200: laps 1.499, contacts 12, walls 10, clean 150, 3.06 M steps/s
+    showcase: 16 clean laps, 0 contact cars, 0 walls, best 27.95 s
+PASS  race learning: traffic policy improves and completes clean laps  51172.7 ms
+    Same grid/seed, 60 s: initial 0 clean laps / 29 wall hits; update 200 16 clean laps / 0 wall hits
+PASS  race comparison: trained policy visibly outperforms its own frozen initial policy   8792.7 ms
+PASS  race showcase: safe cars continue past the training episode time limit     39.9 ms
+PASS  race showcase: starting final evaluation clears metrics without moving cars      4.1 ms
+PASS  gaussian: log-probability and entropy match the closed forms      0.0 ms
+PASS  gaussian: loss gradient matches finite differences in every regime      0.0 ms
+PASS  gaussian: sampled actions have the policy's mean and spread      2.7 ms
+PASS  gaussian: GPU loss gradient matches the host math             1.5 ms
+PASS  gaussian: gather_rows follows the permutation and episode_totals sums correctly      0.5 ms
+PASS  racing ppo: training is bit-identical for the same seed      54.7 ms
+PASS  racing execution: distributed training preserves parameters and learning metrics exactly   5337.1 ms
+PASS  racing graphs: updates match stream execution through annealing and changing Adam steps   5071.4 ms
+    seed 1: laps 0.03 -> 3.89, crashed 0.7% of final episodes
+    seed 2: laps 0.03 -> 3.86, crashed 0.0% of final episodes
+    seed 3: laps 0.03 -> 3.85, crashed 0.0% of final episodes
+PASS  racing ppo: the cars learn to drive on 3 seeds (laps rise, crashes fall)  10479.8 ms
+
+112/112 tests passed, 0 skipped

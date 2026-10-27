@@ -175,6 +175,17 @@ contact-free racing evaluations, measured overtaking behaviour, held-out
 circuits and randomized conditions. A short clean run does not establish all
 of those properties.
 
+## Training performance — October 26
+
+The current performance branch adds a C++/CUDA benchmark and distributed
+traffic execution while preserving the original sensor calculations and
+ordered respawns. It omits only true-terminal sensor readings that training
+does not consume; time-limit bootstrapping remains intact. Paired measurements,
+exact reference checks and the retained/rejected experiments are recorded in
+[the performance study](racing_performance.md). Linux work remains deferred;
+the next priority is measured hardware efficiency and then a trainable
+attention policy, rather than additional race UI features.
+
 ## Possible future ideas
 
 ### Presentation checkpoint — October 26

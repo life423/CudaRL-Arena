@@ -1,6 +1,8 @@
 #include "racing_lab.h"
 
 #include <exception>
+#include <cmath>
+#include <stdexcept>
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/vector2.hpp>
@@ -27,6 +29,7 @@ PackedVector2Array closed_polyline(const cudarl::racing::Vec2* points, int count
 
 void RacingLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("start", "num_envs", "seed", "showcase_count", "updates_per_second"), &RacingLab::start, DEFVAL(2.0));
+    ClassDB::bind_method(D_METHOD("watch_policy", "parameters"), &RacingLab::watch_policy);
     ClassDB::bind_method(D_METHOD("set_untrained", "enabled"), &RacingLab::set_untrained);
     ClassDB::bind_method(D_METHOD("stop"), &RacingLab::stop);
     ClassDB::bind_method(D_METHOD("get_error"), &RacingLab::get_error);
@@ -61,6 +64,24 @@ bool RacingLab::start(int num_envs, int seed, int showcase_count, double updates
     } catch (const std::exception& e) {
         error_ = e.what();
         stop();
+        return false;
+    }
+    return true;
+}
+
+bool RacingLab::watch_policy(const PackedFloat32Array& parameters) {
+    stop();
+    error_ = String();
+    try {
+        constexpr int expected = 64*(cudarl::racing::kObsDim+1)+64*65+cudarl::racing::kActionDim*65;
+        if (parameters.size()!=expected) throw std::invalid_argument("Racing policy architecture does not match");
+        const std::vector<float> weights(parameters.ptr(), parameters.ptr() + parameters.size());
+        for (float weight : weights) if (!std::isfinite(weight)) throw std::invalid_argument("Policy contains a non-finite weight");
+        showcase_ = std::make_unique<cudarl::demos::RacingShowcase>(8, 64, 55);
+        showcase_->set_policy(weights);
+    } catch (const std::exception& e) {
+        stop();
+        error_ = e.what();
         return false;
     }
     return true;
@@ -114,7 +135,8 @@ Dictionary RacingLab::get_stats() {
         d["showcase_walls"]=showcase_->wall_crashes();
         d["showcase_best_lap"]=showcase_->best_lap();
     }
-    d["policy_ready"] = !initial_policy_.empty();
+    d["playback"] = showcase_ && !session_;
+    d["policy_ready"] = (showcase_ && !session_) || !initial_policy_.empty();
     const auto s = history_.empty() ? cudarl::rl::RacingStats{} : history_.back();
     d["update"]               = s.update;
     d["contact_cars"] = s.contact_cars;
@@ -156,14 +178,14 @@ PackedVector2Array RacingLab::get_track_inner() const {
 
 PackedFloat32Array RacingLab::step_showcase() {
     PackedFloat32Array out;
-    if (!showcase_ || !session_) return out;
-    if (initial_policy_.empty() && !session_->initial_policy(initial_policy_)) return out;
-    if (untrained_) {
+    if (!showcase_) return out;
+    if (session_ && initial_policy_.empty() && !session_->initial_policy(initial_policy_)) return out;
+    if (session_ && untrained_) {
         if (policy_version_ == 0) {
             showcase_->set_policy(initial_policy_);
             policy_version_ = 1;
         }
-    } else if (session_->latest_policy(policy_version_, policy_)) showcase_->set_policy(policy_);
+    } else if (session_ && session_->latest_policy(policy_version_, policy_)) showcase_->set_policy(policy_);
     showcase_->step();
     const int n = showcase_->count();
     out.resize(static_cast<int64_t>(n) * kCarStride);

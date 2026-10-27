@@ -209,6 +209,96 @@ GPU_TEST_CASE("race: grouped CUDA steps match CPU including collisions and safe 
         check_separation(gpu.data() + g * kRaceCars);
 }
 
+GPU_TEST_CASE("race execution: distributed traffic matches the retained GPU reference exactly") {
+    for (int n : {8, 40, 2048}) {
+        RacingBatch reference(n, 123, true, false), distributed(n, 123, true, true);
+        device_ptr<float> actions(n * kActionDim);
+        device_ptr<float> rewards_a(n), done_a(n), trunc_a(n), final_a(n*kObsDim), len_a(n), laps_a(n), metrics_a(n*4);
+        device_ptr<float> rewards_b(n), done_b(n), trunc_b(n), final_b(n*kObsDim), len_b(n), laps_b(n), metrics_b(n*4);
+        CUDA_CHECK_THROW(cudaMemset(final_a.get(), 0, final_a.size_bytes()));
+        CUDA_CHECK_THROW(cudaMemset(final_b.get(), 0, final_b.size_bytes()));
+        const StepOutputs out_a{rewards_a.get(),done_a.get(),trunc_a.get(),final_a.get(),len_a.get(),laps_a.get(),metrics_a.get()};
+        const StepOutputs out_b{rewards_b.get(),done_b.get(),trunc_b.get(),final_b.get(),len_b.get(),laps_b.get(),metrics_b.get()};
+        double max_difference = 0;
+        for (int tick = 0; tick < 140; ++tick) {
+            const auto input = test::random_floats(static_cast<size_t>(n)*kActionDim, tick+79, 0.8f);
+            actions.copy_from_host(input.data(), input.size());
+            reference.step(actions.get(),out_a);
+            distributed.step(actions.get(),out_b);
+            CHECK(test::to_host(rewards_a,n)==test::to_host(rewards_b,n));
+            CHECK(test::to_host(done_a,n)==test::to_host(done_b,n));
+            CHECK(test::to_host(trunc_a,n)==test::to_host(trunc_b,n));
+            CHECK(test::to_host(len_a,n)==test::to_host(len_b,n));
+            CHECK(test::to_host(laps_a,n)==test::to_host(laps_b,n));
+            CHECK(test::to_host(metrics_a,n*4)==test::to_host(metrics_b,n*4));
+            const auto a = test::to_host(reference.obs(),static_cast<size_t>(n)*kObsDim);
+            const auto b = test::to_host(distributed.obs(),static_cast<size_t>(n)*kObsDim);
+            for (size_t i=0;i<a.size();++i) {
+                CHECK(std::isfinite(b[i]));
+                max_difference=std::max(max_difference,static_cast<double>(std::fabs(a[i]-b[i])));
+            }
+            CHECK(b==a);
+            CHECK(test::to_host(final_b,static_cast<size_t>(n)*kObsDim)==
+                  test::to_host(final_a,static_cast<size_t>(n)*kObsDim));
+            if (tick % 20 == 0 || tick == 139) {
+                std::vector<State> states_a(n),states_b(n);
+                CUDA_CHECK_THROW(cudaMemcpy(states_a.data(),reference.states(),n*sizeof(State),cudaMemcpyDeviceToHost));
+                CUDA_CHECK_THROW(cudaMemcpy(states_b.data(),distributed.states(),n*sizeof(State),cudaMemcpyDeviceToHost));
+                for (int i=0;i<n;++i) {
+                    const auto& x=states_a[i]; const auto& y=states_b[i];
+                    CHECK(x.x==y.x && x.y==y.y && x.heading==y.heading && x.speed==y.speed);
+                    CHECK(x.last_angle==y.last_angle && x.progress==y.progress && x.steps==y.steps && x.lap_step==y.lap_step);
+                }
+            }
+        }
+        std::printf("    %d agents: maximum sensor difference %.9g\n",n,max_difference);
+    }
+}
+
+GPU_TEST_CASE("race execution: distributed timeout preserves final observations before ordered respawn") {
+    constexpr int n = 40;
+    RacingBatch reference(n, 123, true, false), distributed(n, 123, true, true);
+    std::vector<State> parked(n);
+    CUDA_CHECK_THROW(cudaMemcpy(parked.data(), reference.states(), n*sizeof(State), cudaMemcpyDeviceToHost));
+    for (auto& state : parked) { state.speed = 0.f; state.steps = kMaxSteps-1; }
+    CUDA_CHECK_THROW(cudaMemcpy(const_cast<State*>(reference.states()), parked.data(), n*sizeof(State), cudaMemcpyHostToDevice));
+    CUDA_CHECK_THROW(cudaMemcpy(const_cast<State*>(distributed.states()), parked.data(), n*sizeof(State), cudaMemcpyHostToDevice));
+    device_ptr<float> actions(n*kActionDim);
+    CUDA_CHECK_THROW(cudaMemset(actions.get(),0,actions.size_bytes()));
+    device_ptr<float> rewards_a(n), done_a(n), trunc_a(n), final_a(n*kObsDim), len_a(n), laps_a(n);
+    device_ptr<float> rewards_b(n), done_b(n), trunc_b(n), final_b(n*kObsDim), len_b(n), laps_b(n);
+    reference.step(actions.get(),{rewards_a.get(),done_a.get(),trunc_a.get(),final_a.get(),len_a.get(),laps_a.get()});
+    distributed.step(actions.get(),{rewards_b.get(),done_b.get(),trunc_b.get(),final_b.get(),len_b.get(),laps_b.get(),nullptr,true});
+    CHECK(test::to_host(done_b,n)==std::vector<float>(n,1.f));
+    CHECK(test::to_host(trunc_b,n)==std::vector<float>(n,1.f));
+    CHECK(test::to_host(len_b,n)==std::vector<float>(n,static_cast<float>(kMaxSteps)));
+    CHECK(test::to_host(final_b,n*kObsDim)==test::to_host(final_a,n*kObsDim));
+    CHECK(test::to_host(distributed.obs(),n*kObsDim)==test::to_host(reference.obs(),n*kObsDim));
+    for (auto* batch : {&reference,&distributed}) {
+        std::vector<State> states(n);
+        CUDA_CHECK_THROW(cudaMemcpy(states.data(),batch->states(),n*sizeof(State),cudaMemcpyDeviceToHost));
+        for (int group=0;group<n/kRaceCars;++group) check_separation(states.data()+group*kRaceCars);
+        for (const auto& state : states) CHECK(state.steps==0);
+    }
+    // A wall crash must leave its optional final-observation buffer untouched,
+    // while the normal post-respawn observation and all physical outcomes agree.
+    const Track track=make_track(true);
+    for (auto& state : parked) state.steps=0;
+    parked[0].x=track.outer[0].x; parked[0].y=track.outer[0].y;
+    const std::vector<float> sentinel(n*kObsDim,12345.f);
+    final_a.copy_from_host(sentinel.data(),sentinel.size());
+    final_b.copy_from_host(sentinel.data(),sentinel.size());
+    CUDA_CHECK_THROW(cudaMemcpy(const_cast<State*>(reference.states()),parked.data(),n*sizeof(State),cudaMemcpyHostToDevice));
+    CUDA_CHECK_THROW(cudaMemcpy(const_cast<State*>(distributed.states()),parked.data(),n*sizeof(State),cudaMemcpyHostToDevice));
+    reference.step(actions.get(),{rewards_a.get(),done_a.get(),trunc_a.get(),final_a.get(),len_a.get(),laps_a.get()});
+    distributed.step(actions.get(),{rewards_b.get(),done_b.get(),trunc_b.get(),final_b.get(),len_b.get(),laps_b.get(),nullptr,true});
+    CHECK(test::to_host(done_b,n)[0]==1.f && test::to_host(trunc_b,n)[0]==0.f);
+    const auto skipped=test::to_host(final_b,n*kObsDim);
+    for (int k=0;k<kObsDim;++k) CHECK(skipped[k]==12345.f);
+    CHECK(test::to_host(rewards_a,n)==test::to_host(rewards_b,n));
+    CHECK(test::to_host(distributed.obs(),n*kObsDim)==test::to_host(reference.obs(),n*kObsDim));
+}
+
 GPU_TEST_CASE("race learning: traffic policy improves and completes clean laps") {
     rl::RacingPpoConfig cfg;
     cfg.total_updates = 1200;

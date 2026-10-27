@@ -29,6 +29,9 @@ var carts := PackedFloat32Array()
 var curve := PackedVector2Array()
 var stats := {}
 var paused := false
+var watch_mode := false
+var layout: BoxContainer
+var panel_scroll: ScrollContainer
 
 var envs_option: OptionButton
 var speed_slider: HSlider
@@ -43,12 +46,25 @@ var curve_view: Control
 
 func _ready() -> void:
 	Engine.physics_ticks_per_second = 50   # CartPole's own time step is 20 ms: real time
+	watch_mode = DemoLaunch.watching("cartpole")
 	_build_ui()
-	print(CudaDevice.new().describe())
-	_restart()
+	resized.connect(_fit_layout)
+	_fit_layout()
+	if watch_mode:
+		var weights := DemoLaunch.read_policy("cartpole")
+		var ok := not weights.is_empty() and lab.watch_policy(weights)
+		status_label.text = "Saved policy · seed 1 · 20 training updates" if ok else (DemoLaunch.last_error if not DemoLaunch.last_error.is_empty() else lab.get_error())
+	else:
+		print(CudaDevice.new().describe())
+		_restart()
 
 func _exit_tree() -> void:
 	lab.stop()   # join the training thread before the scene goes away
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		DemoLaunch.show_menu()
 
 func _physics_process(_delta: float) -> void:
 	carts = lab.step_showcase(greedy.button_pressed)
@@ -66,10 +82,14 @@ func _process(_delta: float) -> void:
 	curve_view.queue_redraw()
 
 func _restart() -> void:
-	paused = false
-	pause_button.text = "Pause"
-	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, COLS * ROWS)
-	status_label.text = ("Training with seed %d" % run_seed) if ok else lab.get_error()
+	paused = true
+	carts.clear()
+	curve.clear()
+	stats.clear()
+	pause_button.text = "Start learning"
+	var ups := 0.0 if full_speed.button_pressed else pow(10.0, speed_slider.value)
+	var ok := lab.start(ENV_CHOICES[envs_option.selected], run_seed, COLS * ROWS, ups)
+	status_label.text = ("Untrained · seed %d" % run_seed) if ok else lab.get_error()
 	_apply_speed()
 
 func _apply_speed() -> void:
@@ -84,18 +104,23 @@ func _restart_with_new_seed() -> void:
 func _toggle_pause() -> void:
 	paused = not paused
 	lab.set_paused(paused)
-	pause_button.text = "Resume" if paused else "Pause"
+	pause_button.text = ("Start learning" if stats.get("update", 0) == 0 else "Resume") if paused else "Pause"
 
 # --- UI ---------------------------------------------------------------------
 
 func _build_ui() -> void:
-	var root := HBoxContainer.new()
+	var root := BoxContainer.new()
+	layout = root
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(root)
 
+	panel_scroll = ScrollContainer.new()
+	panel_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	root.add_child(panel_scroll)
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size.x = PANEL_WIDTH
-	root.add_child(panel)
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel_scroll.add_child(panel)
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, 14)
@@ -103,12 +128,25 @@ func _build_ui() -> void:
 	var controls := VBoxContainer.new()
 	controls.add_theme_constant_override("separation", 8)
 	margin.add_child(controls)
+	var back := Button.new()
+	back.name = "BackToDemos"
+	back.text = "Back to demos"
+	back.custom_minimum_size.y = 44
+	back.pressed.connect(DemoLaunch.show_menu)
+	controls.add_child(back)
 
 	var title := Label.new()
-	title.text = "PPO learning CartPole, live"
+	title.text = "CartPole" if watch_mode else "PPO learning CartPole, live"
 	title.add_theme_font_size_override("font_size", 18)
 	controls.add_child(title)
-	controls.add_child(_note("Rollouts, GAE, the PPO loss, backprop and Adam all run on the GPU as hand-written CUDA."))
+	if not watch_mode:
+		controls.add_child(_note("Rollouts, GAE, the PPO loss, backprop and Adam all run on the GPU as hand-written CUDA."))
+	var outer_controls := controls
+	var training_options := VBoxContainer.new()
+	training_options.add_theme_constant_override("separation", 8)
+	training_options.visible = not watch_mode
+	controls.add_child(training_options)
+	controls = training_options
 
 	speed_slider = HSlider.new()
 	speed_slider.min_value = log(0.5) / log(10.0)
@@ -146,19 +184,23 @@ func _build_ui() -> void:
 	pause_button.pressed.connect(_toggle_pause)
 	buttons.add_child(pause_button)
 	controls.add_child(buttons)
+	controls = outer_controls
 	var reset_carts := Button.new()
 	reset_carts.text = "Reset showcase carts"
+	reset_carts.custom_minimum_size.y = 44
 	reset_carts.pressed.connect(func(): lab.reset_showcase())
 	controls.add_child(reset_carts)
 
 	controls.add_child(HSeparator.new())
 	stats_label = Label.new()
+	stats_label.visible = not watch_mode
 	controls.add_child(stats_label)
 	status_label = _note("")
 	controls.add_child(status_label)
 
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(right)
 	cart_view = Control.new()
 	cart_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -166,12 +208,16 @@ func _build_ui() -> void:
 	cart_view.draw.connect(_draw_carts)
 	right.add_child(cart_view)
 	curve_view = Control.new()
+	curve_view.visible = not watch_mode
 	curve_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	curve_view.size_flags_stretch_ratio = 2.0
 	curve_view.draw.connect(_draw_curve)
 	right.add_child(curve_view)
 
 func _update_stats() -> void:
+	if watch_mode:
+		return
+	pause_button.disabled = not stats.get("policy_ready", false)
 	if not stats.has("update"):
 		stats_label.text = "Waiting for the first update..."
 		return
@@ -179,6 +225,13 @@ func _update_stats() -> void:
 			stats["update"], _thousands(stats["env_steps"]), stats["mean_episode_length"], stats["entropy"],
 			stats["approx_kl"], stats["clip_fraction"], _scientific(stats["learning_rate"]),
 			stats["env_steps_per_second"] / 1e6]
+
+func _fit_layout() -> void:
+	var compact := size.x < 850 or size.y > size.x * 1.2
+	layout.vertical = compact
+	panel_scroll.custom_minimum_size = Vector2(0, 208 if watch_mode else 272) if compact else Vector2(PANEL_WIDTH, 0)
+	panel_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
+	panel_scroll.size_flags_vertical = Control.SIZE_FILL if compact else Control.SIZE_EXPAND_FILL
 
 # GDScript's % formatting has no %e.
 func _scientific(v: float) -> String:

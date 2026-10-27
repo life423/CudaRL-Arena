@@ -6,7 +6,9 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Status: live eight-car racing in Godot, trained with hand-written CUDA PPO.** The default circuit has a hairpin, chicane, braking limits and real traffic interactions. CartPole, the original single-car racing regression, and the standalone bf16 attention kernels are also available. The [eight-car write-up](docs/racing_traffic.md) records the current rules, validation and limitations.
+> **Status: three demonstrations in Godot—CartPole, eight-car racing and a 3D tadpole pond—with hand-written C++/CUDA reinforcement learning.** In the pond, 1,024 background swimmers train a fresh neural controller to collect food while one visible tadpole uses the latest policy. Food changes regions after collection, and the graph measures food per minute on separate fixed trials. See the [foraging results and limitations](docs/three_food_learning.md), [shared physics](docs/pond_physics.md) and [eight-car write-up](docs/racing_traffic.md).
+
+![Three-food tadpole pond with native CUDA training statistics and a measured food-per-minute learning curve](docs/images/tadpole-learning.png)
 
 ![Eight cars on a shared circuit: clean laps, contact counters and measured GPU training throughput](docs/images/racing-traffic.png)
 
@@ -31,7 +33,10 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | **PPO on CartPole, entirely on the GPU:** batched environment kernel, rollouts, GAE with truncation bootstrapping, Feistel-shuffled minibatches, clipped-surrogate gradient, Adam | ✅ Solves in ~0.35 s on every seed tried ([write-up](docs/ppo_cartpole.md)) |
 | **Live CartPole view in Godot** (`cartpole/cartpole.tscn`): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
 | **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
-| **Eight-car racing in Godot** (default scene): harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
+| **Eight-car racing in Godot**: harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
+| **Startup demo menu:** CartPole and Racing with playback/fresh training; Tadpole Pond with live learning | ✅ Working; Back to demos/Escape returns cleanly ([menu](docs/demo_menu.md), [pond](docs/three_food_learning.md)) |
+| **Three-food tadpole pond:** 1,024 CUDA swimmers, continuous PPO, shared articulated C++/CUDA physics and a 3D Godot view | ✅ Working; policy sees all three foods and commands two tail torques. Fixed-trial food/min graph, regional respawns and folded-pose recovery checks ([evidence and limits](docs/three_food_learning.md)) |
+| **End-to-end racing performance:** C++/CUDA benchmark, phase timing and retained reference paths | ✅ Two measured passes at 2,048 agents on RTX 5070: [traffic execution](docs/racing_performance.md) +12.7%, then [optimization graphs](docs/racing_optimizer.md) +14.2%, each with exact reference checks |
 | Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
 | Hand-written MLP kernels (tiled GEMM, fused bias + activation, deterministic split-K), backprop, Adam with gradient clipping | ✅ Working |
@@ -176,6 +181,25 @@ ctest --preset release
 build/Release/nn_bench.exe
 ```
 
+**Measure the complete eight-car training pipeline** without the renderer or
+display throttle:
+
+```powershell
+build/Release/racing_bench.exe envs=2048 warmup=10 updates=40 repeats=5 compare_graphs=1
+```
+
+This alternates stream and CUDA graph optimization on the
+same seed and training budget, with distributed traffic in both paths.
+It reports wall-clock update distributions and
+agent-steps/s. The separate `profile=1` mode records CUDA event phase spans;
+`simulation=1` drives both paths with an identical fixed action tape, and
+`evaluate=1` measures a 60-second showcase after training. This tool links only
+the project's core and the CUDA runtime. See the [performance study](docs/racing_performance.md)
+and [optimizer study](docs/racing_optimizer.md) for methodology, numerical
+checks, measurements and limitations. Graph optimization is enabled by default;
+`graphs=0` retains stream execution. Use `compare=1 graphs=0` to reproduce the
+earlier traffic-only comparison.
+
 `cudarl_tests.exe <filter>` runs only the tests whose names contain `<filter>`, for example `gemm`. On a machine without an NVIDIA GPU, the GPU tests report `SKIP` and the CPU tests still run; set `CUDARL_REQUIRE_GPU=1` to make a missing GPU a failure instead.
 
 **Without Godot:** configure with `-DCUDARL_BUILD_GODOT=OFF` (or use the `ci` preset) to build only the core library, tests, and benchmark. godot-cpp isn't needed then.
@@ -186,7 +210,7 @@ build/Release/nn_bench.exe
 godot --path godot-project
 ```
 
-The console prints something like `CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)`. The default is the eight-car race. Other scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
+The default scene is the three-demo menu. For CartPole and Racing, **Watch trained** loads a bundled actor policy and runs the showcase on the CPU without starting training. **Train from scratch** opens a paused, untrained run; press **Start learning** to train on CUDA. For **Tadpole Pond**, choose **Watch it learn**: a fresh 1,024-swimmer run begins automatically after a short untrained view and keeps learning until the scene closes. Its controls include Pause/Resume, paced/maximum training speed and Start over. **Back to demos** or Escape returns to the menu and stops that session. See [menu validation and policy regeneration](docs/demo_menu.md) and [three-food learning](docs/three_food_learning.md). Direct scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://pond/pond.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
 
 ### Continuous integration
 
@@ -203,7 +227,8 @@ device.describe()                   # one-line summary, or the reason CUDA is un
 device.get_info()                   # { available, name, compute_capability, multiprocessors, memory_bytes, error }
 
 var lab := PpoLab.new()
-lab.start(num_envs, seed, showcase_count)   # PPO on a background thread; false + get_error() without CUDA
+lab.start(num_envs, seed, showcase_count)   # initializes paused; false + get_error() without CUDA
+lab.set_paused(false)              # start learning on the background GPU thread
 lab.set_updates_per_second(2.0)     # throttle so learning is watchable (<= 0: full speed)
 var carts = lab.step_showcase(true) # call at 50 Hz: [x, theta, steps, failed] per showcase cart
 lab.get_stats()                     # latest update: mean episode length, entropy, KL, clip fraction, ...
@@ -265,8 +290,12 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 2. ~~**Tensor-core GEMM.**~~ ✅ bf16 `mma.sync` kernel at 91–96% of cuBLAS on large matrices, with a [worklog](docs/gemm_worklog.md) of every optimization and its profile.
 3. ~~**PPO on CartPole.**~~ ✅ GPU-resident rollouts, GAE, and updates; solves in about 0.35 s and is watchable live in Godot ([write-up](docs/ppo_cartpole.md)).
 4. ~~**PPO on a racing track.**~~ ✅ Gaussian policy for continuous steering and throttle, nine raycasts, a live Godot view, and a laps-per-episode learning curve ([write-up](docs/ppo_racing.md)).
-5. **Fused attention kernel**, then an attention-based policy.
-6. **Linux build and CI**, then a swarm with spatial hashing if there's time.
+5. **Measure and accelerate the complete training loop.** Current focus: reproducible
+   racing benchmarks and optimizations that preserve the reference training results.
+6. **Attention-based policy.** Connect the existing fused attention kernels to a
+   trainable policy and compare it fairly with the current MLP.
+7. **Linux build and GPU CI.** Linux work is deferred at the user's request;
+   Windows/CUDA performance takes priority. A swarm with spatial hashing remains optional.
 
 ---
 

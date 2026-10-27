@@ -267,18 +267,27 @@ struct StepOutputs {
     float* finished_length;
     float* finished_laps;
     float* metrics = nullptr; // [num_envs x 4]: contact cars, clean laps, lap seconds, wall crashes
+    // A true terminal bootstraps from zero, so training can omit its unused
+    // final sensor reading. Time-limit observations must always be preserved.
+    bool bootstrap_only = false;
+};
+
+// Optional diagnostic events; recording spans is separate from benchmark timing.
+struct RacingStepEvents {
+    cudaEvent_t start, advanced, resolved, observed;
 };
 
 // Traffic groups contain eight cars. Integration/observations run per car;
 // resolution runs per race in a fixed order, without atomics.
 class RacingBatch {
 public:
-    RacingBatch(int num_envs, uint32_t seed, bool traffic = false);
+    RacingBatch(int num_envs, uint32_t seed, bool traffic = false, bool distributed_traffic = true);
 
     int num_envs() const { return n_; }
     void reset(cudaStream_t stream = nullptr);
     // d_actions: raw [num_envs x kActionDim] actions, clamped inside step().
-    void step(const float* d_actions, const StepOutputs& out, cudaStream_t stream = nullptr);
+    void step(const float* d_actions, const StepOutputs& out, cudaStream_t stream = nullptr,
+              const RacingStepEvents* events = nullptr);
     const float* obs() const { return obs_.get(); }   // device [num_envs x kObsDim]
     const State* states() const { return states_.get(); }
 
@@ -286,6 +295,7 @@ private:
     int                  n_;
     uint32_t             seed_;
     bool                 traffic_;
+    bool                 distributed_traffic_;
     device_ptr<Track>    track_;
     device_ptr<State>    previous_;
     device_ptr<StepResult> results_;

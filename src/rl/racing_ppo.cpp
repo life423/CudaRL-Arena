@@ -1,6 +1,7 @@
 #include "racing_ppo.h"
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cmath>
 #include <stdexcept>
@@ -11,10 +12,63 @@
 
 namespace cudarl::rl {
 
+struct RacingOptimizationGraph {
+    cudaGraphExec_t executable = nullptr;
+    int nodes = 0;
+    double setup_ms = 0.0;
+    ~RacingOptimizationGraph() {
+        if (executable)
+            cudaGraphExecDestroy(executable);
+    }
+};
+
+struct RacingPhaseTimer {
+    std::array<cudaEvent_t, 6> events{};
+    std::vector<racing::RacingStepEvents> simulation;
+    std::vector<std::array<cudaEvent_t, 5>> optimization;
+    RacingPhaseTimer(int rollout_steps, int minibatches)
+        : simulation(rollout_steps), optimization(minibatches) {
+        try {
+            for (auto& event : events)
+                CUDA_CHECK_THROW(cudaEventCreate(&event));
+            for (auto& step : simulation)
+                for (auto* event : {&step.start, &step.advanced, &step.resolved, &step.observed})
+                    CUDA_CHECK_THROW(cudaEventCreate(event));
+            for (auto& minibatch : optimization)
+                for (auto& event : minibatch)
+                    CUDA_CHECK_THROW(cudaEventCreate(&event));
+        } catch (...) {
+            destroy();
+            throw;
+        }
+    }
+    void destroy() {
+        for (auto event : events)
+            if (event)
+                cudaEventDestroy(event);
+        for (auto& step : simulation)
+            for (auto event : {step.start, step.advanced, step.resolved, step.observed})
+                if (event)
+                    cudaEventDestroy(event);
+        for (auto& minibatch : optimization)
+            for (auto event : minibatch)
+                if (event)
+                    cudaEventDestroy(event);
+    }
+    ~RacingPhaseTimer() { destroy(); }
+    static double span(cudaEvent_t first, cudaEvent_t last) {
+        float ms = 0.f;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, first, last));
+        return ms;
+    }
+    double elapsed(int first, int last) const { return span(events[first], events[last]); }
+};
+
 namespace {
 
 constexpr int kObs = racing::kObsDim, kAct = racing::kActionDim;
-constexpr int kStatEpisodes = 0, kStatLosses = 4, kStatRace = kStatLosses+kGaussianStats, kNumStats = kStatRace+4;
+constexpr int kStatEpisodes = 0, kStatLosses = 4, kStatRace = kStatLosses + kGaussianStats,
+              kNumStats = kStatRace + 4;
 
 nn::MlpSpec net_spec(int hidden, int outputs) {
     return nn::MlpSpec({kObs, hidden, hidden, outputs},
@@ -50,7 +104,7 @@ RacingPpoTrainer::RacingPpoTrainer(const RacingPpoConfig& config) : cfg_(config)
     // showcase, say) never serializes with training.
     CUDA_CHECK_THROW(cudaStreamCreateWithFlags(&stream_, cudaStreamNonBlocking));
 
-    env_ = std::make_unique<racing::RacingBatch>(cfg_.num_envs, cfg_.seed, cfg_.traffic);
+    env_ = std::make_unique<racing::RacingBatch>(cfg_.num_envs, cfg_.seed, cfg_.traffic, cfg_.distributed_traffic);
     const float root2 = std::sqrt(2.f);
     actor_  = std::make_unique<nn::GpuMlp>(net_spec(cfg_.hidden, kAct), std::max(cfg_.num_envs, minibatch_), cfg_.seed);
     critic_ = std::make_unique<nn::GpuMlp>(net_spec(cfg_.hidden, 1), std::max(batch_, minibatch_), cfg_.seed + 1);
@@ -84,6 +138,8 @@ RacingPpoTrainer::RacingPpoTrainer(const RacingPpoConfig& config) : cfg_(config)
     row_stats_.allocate(mb * kGaussianStats);
     adv_stats_.allocate(2);
     stats_.allocate(kNumStats);
+    if (cfg_.profile_phases) phase_timer_ = std::make_unique<RacingPhaseTimer>(cfg_.rollout_steps,cfg_.epochs*cfg_.minibatches);
+    if (cfg_.graph_optimization) optimization_graph_=std::make_unique<RacingOptimizationGraph>();
     CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }
 
@@ -92,6 +148,10 @@ RacingPpoTrainer::~RacingPpoTrainer() {
         cudaStreamSynchronize(stream_);
         cudaStreamDestroy(stream_);
     }
+}
+
+void RacingPpoTrainer::timing_mark(int index) {
+    if (phase_timer_) CUDA_CHECK_THROW(cudaEventRecord(phase_timer_->events[index], stream_));
 }
 
 void RacingPpoTrainer::rollout() {
@@ -108,9 +168,10 @@ void RacingPpoTrainer::rollout() {
         const racing::StepOutputs out{rewards_.get() + row,         dones_.get() + row,
                                       truncated_.get() + row,       final_obs_.get() + row * kObs,
                                       finished_len_.get() + row,    finished_laps_.get() + row,
-                                      race_metrics_.get()+row*4};
-        env_->step(actions_.get() + row * kAct, out, stream_);
+                                      race_metrics_.get()+row*4, cfg_.distributed_traffic};
+        env_->step(actions_.get() + row * kAct, out, stream_, phase_timer_ ? &phase_timer_->simulation[t] : nullptr);
     }
+    timing_mark(1);
     // Bootstrap values: V(next obs) after the last step, and V(final obs) for truncated episodes.
     critic_->forward(env_->obs(), n, stream_);
     copy_async(last_values_.get(), critic_->output(), n, stream_);
@@ -125,9 +186,17 @@ void RacingPpoTrainer::rollout() {
 void RacingPpoTrainer::optimize(float* stats) {
     const PpoCoefficients coeffs{cfg_.clip, cfg_.ent_coef, cfg_.vf_coef};
     for (int epoch = 0; epoch < cfg_.epochs; ++epoch) {
-        const uint32_t perm_seed = rng::bits(cfg_.seed, static_cast<uint32_t>(update_), static_cast<uint32_t>(epoch));
+        const uint32_t perm_seed =
+            rng::bits(cfg_.seed, static_cast<uint32_t>(update_), static_cast<uint32_t>(epoch));
         const Permutation perm = make_permutation(static_cast<uint32_t>(batch_), perm_seed);
         for (int mb = 0; mb < cfg_.minibatches; ++mb) {
+            const auto mark = [&](int stage) {
+                if (phase_timer_)
+                    CUDA_CHECK_THROW(cudaEventRecordWithFlags(
+                        phase_timer_->optimization[epoch * cfg_.minibatches + mb][stage], stream_,
+                        cfg_.graph_optimization ? cudaEventRecordExternal : cudaEventRecordDefault));
+            };
+            mark(0);
             const int first = mb * minibatch_;
             gather_rows(perm, first, minibatch_, kObs, obs_.get(), mb_obs_.get(), stream_);
             gather_rows(perm, first, minibatch_, kAct, actions_.get(), mb_actions_.get(), stream_);
@@ -135,13 +204,15 @@ void RacingPpoTrainer::optimize(float* stats) {
             gather_rows(perm, first, minibatch_, 1, advantages_.get(), mb_adv_.get(), stream_);
             gather_rows(perm, first, minibatch_, 1, returns_.get(), mb_ret_.get(), stream_);
             mean_std(mb_adv_.get(), minibatch_, adv_stats_.get(), stream_);
+            mark(1);
 
             actor_->forward(mb_obs_.get(), minibatch_, stream_);
             critic_->forward(mb_obs_.get(), minibatch_, stream_);
             gaussian_ppo_loss_grad(actor_->output(), log_std_.get(), critic_->output(), minibatch_, kAct,
-                                   mb_actions_.get(), mb_logp_.get(), mb_adv_.get(), mb_ret_.get(), adv_stats_.get(),
-                                   coeffs, dmean_.get(), dlog_std_rows_.get(), dvalues_.get(), row_stats_.get(),
-                                   stats + kStatLosses, stream_);
+                                   mb_actions_.get(), mb_logp_.get(), mb_adv_.get(), mb_ret_.get(),
+                                   adv_stats_.get(), coeffs, dmean_.get(), dlog_std_rows_.get(),
+                                   dvalues_.get(), row_stats_.get(), stats + kStatLosses, stream_);
+            mark(2);
 
             actor_->zero_grad(stream_);
             actor_->backward(dmean_.get(), minibatch_, nullptr, stream_);
@@ -150,32 +221,87 @@ void RacingPpoTrainer::optimize(float* stats) {
             CUDA_CHECK_THROW(cudaMemsetAsync(log_std_grad_.get(), 0, log_std_grad_.size_bytes(), stream_));
             sum_columns(dlog_std_rows_.get(), minibatch_, kAct, log_std_grad_.get(), stream_);
             log_std_opt_->step(log_std_.get(), log_std_grad_.get(), stream_);
+            mark(3);
 
             critic_->zero_grad(stream_);
             critic_->backward(dvalues_.get(), minibatch_, nullptr, stream_);
             critic_opt_->step(critic_->params(), critic_->grads(), stream_);
+            mark(4);
         }
+    }
+}
+
+void RacingPpoTrainer::submit_optimization(float* stats) {
+    if (!optimization_graph_) {
+        optimize(stats);
+        return;
+    }
+    const auto setup_start = std::chrono::steady_clock::now();
+    // Re-capture host-derived parameters every update. In particular, Adam's
+    // host counters advance once here, and its fresh double-precision bias
+    // corrections are recorded. Capture submits no kernels for execution.
+    CUDA_CHECK_THROW(cudaStreamBeginCapture(stream_, cudaStreamCaptureModeThreadLocal));
+    try {
+        optimize(stats);
+    } catch (...) {
+        cudaGraph_t abandoned = nullptr;
+        cudaStreamEndCapture(stream_, &abandoned);
+        if (abandoned)
+            cudaGraphDestroy(abandoned);
+        throw;
+    }
+    cudaGraph_t definition = nullptr;
+    CUDA_CHECK_THROW(cudaStreamEndCapture(stream_, &definition));
+    try {
+        if (!optimization_graph_->executable) {
+            CUDA_CHECK_THROW(cudaGraphInstantiate(&optimization_graph_->executable, definition, 0));
+            size_t nodes = 0;
+            CUDA_CHECK_THROW(cudaGraphGetNodes(definition, nullptr, &nodes));
+            optimization_graph_->nodes = static_cast<int>(nodes);
+        } else {
+            cudaGraphExecUpdateResultInfo result{};
+            CUDA_CHECK_THROW(cudaGraphExecUpdate(optimization_graph_->executable, definition, &result));
+            if (result.result != cudaGraphExecUpdateSuccess)
+                throw std::runtime_error("RacingPpoTrainer: optimization graph topology changed");
+        }
+        CUDA_CHECK_THROW(cudaGraphDestroy(definition));
+        definition = nullptr;
+        optimization_graph_->setup_ms =
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - setup_start).count();
+        CUDA_CHECK_THROW(cudaGraphLaunch(optimization_graph_->executable, stream_));
+    } catch (...) {
+        if (definition)
+            cudaGraphDestroy(definition);
+        throw;
     }
 }
 
 RacingStats RacingPpoTrainer::update() {
     const auto start = std::chrono::steady_clock::now();
     const float lr = cfg_.anneal_lr
-                         ? cfg_.lr * std::max(0.f, 1.f - static_cast<float>(update_) / static_cast<float>(cfg_.total_updates))
+                         ? cfg_.lr * std::max(0.f, 1.f - static_cast<float>(update_) /
+                                                             static_cast<float>(cfg_.total_updates))
                          : cfg_.lr;
     actor_opt_->set_learning_rate(lr);
     critic_opt_->set_learning_rate(lr);
     log_std_opt_->set_learning_rate(lr);
 
     CUDA_CHECK_THROW(cudaMemsetAsync(stats_.get(), 0, stats_.size_bytes(), stream_));
+    timing_mark(0);
     rollout();
+    timing_mark(2);
     episode_totals(finished_len_.get(), finished_laps_.get(), dones_.get(), truncated_.get(), batch_,
                    stats_.get() + kStatEpisodes, stream_);
     sum_columns(race_metrics_.get(),batch_,4,stats_.get()+kStatRace,stream_);
-    optimize(stats_.get());
+    timing_mark(3);
+    const auto optimization_start=std::chrono::steady_clock::now();
+    submit_optimization(stats_.get());
+    const double optimization_submit_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-optimization_start).count();
+    timing_mark(4);
 
     float host[kNumStats];
     CUDA_CHECK_THROW(cudaMemcpyAsync(host, stats_.get(), sizeof host, cudaMemcpyDeviceToHost, stream_));
+    timing_mark(5);
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream_));
 
     ++update_;
@@ -205,6 +331,29 @@ RacingStats RacingPpoTrainer::update() {
     s.learning_rate = lr;
     s.update_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start).count();
     s.env_steps_per_second = batch_ / (s.update_ms * 1e-3);
+    if (optimization_graph_) {
+        s.optimization_graph_setup_ms=optimization_graph_->setup_ms;
+        s.optimization_graph_nodes=optimization_graph_->nodes;
+    }
+    if (phase_timer_) {
+        s.optimization_submit_ms=optimization_submit_ms;
+        s.rollout_ms = phase_timer_->elapsed(0, 1);
+        s.bootstrap_gae_ms = phase_timer_->elapsed(1, 2);
+        s.metrics_ms = phase_timer_->elapsed(2, 3);
+        s.optimize_ms = phase_timer_->elapsed(3, 4);
+        s.readback_ms = phase_timer_->elapsed(4, 5);
+        if (cfg_.traffic) for (const auto& step : phase_timer_->simulation) {
+            s.advance_ms += RacingPhaseTimer::span(step.start, step.advanced);
+            s.resolve_ms += RacingPhaseTimer::span(step.advanced, step.resolved);
+            s.observe_ms += RacingPhaseTimer::span(step.resolved, step.observed);
+        }
+        for (const auto& minibatch : phase_timer_->optimization) {
+            s.gather_ms+=RacingPhaseTimer::span(minibatch[0],minibatch[1]);
+            s.forward_loss_ms+=RacingPhaseTimer::span(minibatch[1],minibatch[2]);
+            s.actor_update_ms+=RacingPhaseTimer::span(minibatch[2],minibatch[3]);
+            s.critic_update_ms+=RacingPhaseTimer::span(minibatch[3],minibatch[4]);
+        }
+    }
     return s;
 }
 
