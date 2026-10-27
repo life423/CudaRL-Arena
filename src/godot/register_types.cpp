@@ -9,6 +9,8 @@
 #include "ppo_lab.h"
 #include "racing_lab.h"
 #include "tadpole_lab.h"
+#include "deep_water_lab.h"
+#include "deep_pond_lab.h"
 
 using namespace godot;
 
@@ -22,6 +24,8 @@ void initialize_cudarl_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<PpoLab>();
     ClassDB::register_class<RacingLab>();
     ClassDB::register_class<TadpoleLab>();
+    ClassDB::register_class<DeepWaterLab>();
+    ClassDB::register_class<DeepPondLab>();
 }
 
 void uninitialize_cudarl_module(ModuleInitializationLevel) {}

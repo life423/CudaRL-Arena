@@ -48,6 +48,7 @@ func _run() -> void:
 	root.add_child(viewport)
 	var scene: Node3D = load("res://pond/pond.tscn").instantiate()
 	scene.live_learning = false
+	scene.close_camera = false # Whole-pond visibility belongs to overview mode.
 	viewport.add_child(scene)
 	for frame in 4:
 		await process_frame

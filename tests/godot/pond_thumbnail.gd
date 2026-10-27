@@ -10,6 +10,7 @@ func _run() -> void:
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
 	var scene: Node3D = load("res://pond/pond.tscn").instantiate()
+	scene.best_policy_path = ""
 	viewport.add_child(scene)
 	for frame in 8:
 		await process_frame
@@ -18,6 +19,7 @@ func _run() -> void:
 	scene.set_physics_process(false)
 	scene.pond_container.stretch = false
 	scene.pond_viewport.size = Vector2i(960, 280)
+	scene.set_camera_close(false)
 	scene.camera.position = Vector3(0, 5, 11)
 	scene.camera.look_at(Vector3.ZERO)
 	scene.camera.size = 4.2

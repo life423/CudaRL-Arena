@@ -26,6 +26,37 @@ bool wait_for(Pred pred, double seconds) {
 
 } // namespace
 
+namespace {
+struct ScoredPublicationTrainer {
+    struct Config {int total_updates=4;};
+    struct Stats {int update;};
+    explicit ScoredPublicationTrainer(const Config&) {}
+    int update_id=0;
+    rl::EvaluatedPolicy best{0,0,64,1200,0x51A7E123u,1,{0.f}};
+    Stats update() {
+        ++update_id;
+        if(update_id==1) best={1,10,64,1200,0x51A7E123u,1,{1.f}};
+        // Updates 2--4 represent a decline, a tied result, then another decline.
+        return {update_id};
+    }
+    std::vector<float> actor_params() const {return {static_cast<float>(update_id)};}
+    const rl::EvaluatedPolicy& best_policy() const {return best;}
+};
+}
+TEST_CASE("ppo_demo: best publication keeps the evaluated actor rather than newer weights") {
+    TrainingSession<ScoredPublicationTrainer> session({},0.0);
+    CHECK(wait_for([&] {return session.finished();},5));
+    uint64_t version=0;rl::EvaluatedPolicy best;
+    CHECK(session.latest_best_policy(version,best));
+    CHECK(best.update==1 && best.foods==10 && best.parameters==std::vector<float>{1.f});
+    uint64_t latest_version=0;std::vector<float> latest;
+    CHECK(session.latest_policy(latest_version,latest) && latest==std::vector<float>{4.f});
+    session.stop();
+    CHECK(!session.latest_best_policy(version,best));
+    std::vector<ScoredPublicationTrainer::Stats> history;
+    CHECK(session.history_since(0,history)==4);
+}
+
 GPU_TEST_CASE("ppo_demo: session trains in the background and publishes the policy") {
     rl::PpoConfig cfg;
     cfg.total_updates = 8;

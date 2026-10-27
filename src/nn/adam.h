@@ -5,6 +5,7 @@
 
 #include "adam_config.h"
 #include "cuda/cuda_memory.h"
+#include "core/checkpoint.h"
 
 namespace cudarl::nn {
 
@@ -23,6 +24,8 @@ public:
     // Norm of the gradients seen by the last step (before clipping). Synchronizes;
     // only computed when clipping is enabled.
     float last_grad_norm() const;
+    void save(checkpoint::Writer& out) const;
+    void load(checkpoint::Reader& in);
 
 private:
     AdamConfig        cfg_;

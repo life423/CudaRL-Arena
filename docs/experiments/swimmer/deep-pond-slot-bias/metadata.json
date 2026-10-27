@@ -1,0 +1,13 @@
+{
+  "task": "deep-pond-v1",
+  "checkpoint_magic": 1146111795,
+  "format_version": 1,
+  "population": 1024,
+  "training_seed": 7,
+  "checkpoint_update": 74285,
+  "best_update": 64350,
+  "evaluation_seed": 201745921,
+  "trials": 64,
+  "seconds_per_trial": 60,
+  "checkpoint_sha256": "1AD13F591364A7242A0827D20267DE361848BDA4245D2EA4DEBAD2AD9B727667"
+}

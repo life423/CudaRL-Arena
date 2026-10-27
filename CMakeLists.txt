@@ -47,12 +47,15 @@ endfunction()
 
 # --- Core: CUDA code and environments, no Godot dependency --------------------
 add_library(cudarl_core STATIC
+    src/core/checkpoint.cpp
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
     src/envs/cartpole/cartpole.cu
     src/envs/racing/racing.cu
     src/envs/swimmer/swimmer.cu
     src/envs/swimmer/foraging.cu
+    src/envs/swimmer/deep.cu
+    src/envs/swimmer/deep_pond.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
@@ -96,6 +99,8 @@ if(CUDARL_BUILD_GODOT)
         src/godot/ppo_lab.cpp
         src/godot/racing_lab.cpp
         src/godot/tadpole_lab.cpp
+        src/godot/deep_water_lab.cpp
+        src/godot/deep_pond_lab.cpp
     )
     target_link_libraries(cudarl PRIVATE cudarl_core godot-cpp)
     target_compile_definitions(cudarl PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED)
@@ -130,6 +135,9 @@ add_executable(cudarl_tests
     tests/test_swimmer.cpp
     tests/test_swimmer_inertial.cpp
     tests/test_foraging.cpp
+    tests/test_deep_water.cpp
+    tests/test_deep_pond.cpp
+    tests/test_training_resume.cpp
     tests/test_race.cpp
     tests/test_racing_ppo.cpp
 )
@@ -140,6 +148,9 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(deep_swimmer_train tools/deep_swimmer_train.cpp)
+    target_link_libraries(deep_swimmer_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(deep_swimmer_train)
     add_executable(pond_probe tools/pond_probe.cpp)
     target_link_libraries(pond_probe PRIVATE cudarl_core)
     cudarl_strict_warnings(pond_probe)
@@ -149,6 +160,15 @@ if(CUDARL_BUILD_BENCH)
     add_executable(foraging_experiment tools/foraging_experiment.cpp)
     target_link_libraries(foraging_experiment PRIVATE cudarl_core)
     cudarl_strict_warnings(foraging_experiment)
+    add_executable(food_order_bias tools/food_order_bias.cpp)
+    target_link_libraries(food_order_bias PRIVATE cudarl_core)
+    cudarl_strict_warnings(food_order_bias)
+    add_executable(shuffle_experiment tools/shuffle_experiment.cpp)
+    target_link_libraries(shuffle_experiment PRIVATE cudarl_core)
+    cudarl_strict_warnings(shuffle_experiment)
+    add_executable(paired_pond_eval tools/paired_pond_eval.cpp)
+    target_link_libraries(paired_pond_eval PRIVATE cudarl_core)
+    cudarl_strict_warnings(paired_pond_eval)
     add_executable(export_demo_policies tools/export_demo_policies.cpp)
     target_link_libraries(export_demo_policies PRIVATE cudarl_core)
     cudarl_strict_warnings(export_demo_policies)

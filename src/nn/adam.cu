@@ -84,5 +84,19 @@ float GpuAdam::last_grad_norm() const {
     norm_.copy_to_host(&norm, 1);
     return norm;
 }
+void GpuAdam::save(checkpoint::Writer& out) const {
+    out.value(cfg_);out.value(t_);
+    std::vector<float> m(n_),v(n_);m_.copy_to_host(m.data(),m.size());v_.copy_to_host(v.data(),v.size());
+    out.array(m);out.array(v);
+}
+void GpuAdam::load(checkpoint::Reader& in) {
+    const auto cfg=in.value<AdamConfig>();const int steps=in.value<int>();
+    auto m=in.array<float>(n_),v=in.array<float>(n_);
+    if(m.size()!=static_cast<size_t>(n_) || v.size()!=m.size() || steps<0 || !std::isfinite(cfg.lr) || cfg.lr<=0 ||
+       cfg.beta1!=cfg_.beta1 || cfg.beta2!=cfg_.beta2 || cfg.eps!=cfg_.eps || cfg.max_grad_norm!=cfg_.max_grad_norm)
+        throw std::runtime_error("Incompatible Adam checkpoint");
+    for(size_t i=0;i<m.size();++i) if(!std::isfinite(m[i]) || !std::isfinite(v[i]) || v[i]<0) throw std::runtime_error("Invalid Adam moments");
+    cfg_=cfg;t_=steps;m_.copy_from_host(m.data(),m.size());v_.copy_from_host(v.data(),v.size());
+}
 
 } // namespace cudarl::nn

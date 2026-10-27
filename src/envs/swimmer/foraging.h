@@ -1,6 +1,7 @@
 #ifndef CUDARL_ENVS_FORAGING_H
 #define CUDARL_ENVS_FORAGING_H
 #include "swimmer.h"
+#include "core/checkpoint.h"
 
 namespace cudarl::foraging {
 constexpr int kFoods=3,kObs=13,kEpisodeSteps=1200;
@@ -135,9 +136,19 @@ public:
     void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true);
     const float* obs() const {return obs_.get();}
     const State* states() const {return states_.get();}
+    void save(checkpoint::Writer& out) const;
+    void load(checkpoint::Reader& in);
 private:
     int n_;uint32_t seed_;
     device_ptr<State> states_;device_ptr<uint32_t> episodes_;device_ptr<float> obs_;
 };
+// Observation-only augmentation. Physical food IDs, dynamics and RNG state are
+// never changed. One counter-based permutation per environment/control tick.
+CUDARL_HD inline void permute_food_inputs(float* obs,int order) {
+    const int orders[6][3]={{0,1,2},{0,2,1},{1,0,2},{1,2,0},{2,0,1},{2,1,0}};
+    float food[6];for(int i=0;i<6;++i) food[i]=obs[i];
+    for(int i=0;i<3;++i) for(int j=0;j<2;++j) obs[2*i+j]=food[2*orders[order][i]+j];
+}
+void shuffle_food_inputs(float* observations,int rows,int environments,uint32_t seed,uint32_t first_tick,cudaStream_t stream);
 }
 #endif

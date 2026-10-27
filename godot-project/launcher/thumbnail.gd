@@ -9,9 +9,7 @@ var texture: Texture2D
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if demo == "pond":
-		var image := Image.load_from_file("res://launcher/assets/tadpole-pond.png")
-		if image != null:
-			texture = ImageTexture.create_from_image(image)
+		texture = preload("res://launcher/assets/tadpole-pond.png")
 	else:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = SOURCE

@@ -1,6 +1,6 @@
 # Three-food foraging — October 26, 2026
 
-The user approved three simultaneous food pieces and explicitly made increasing food collected per minute the goal. The live 3D pond starts a fresh policy and trains continuously with 1,024 background CUDA swimmers. It does not load the benchmark weights. CartPole, Racing and the archived one-food swimmer remain available in their existing scenes/tools.
+The user approved three simultaneous food pieces and explicitly made increasing food collected per minute the goal. The live 3D pond resumes its saved learner and trains continuously with 1,024 background CUDA swimmers. It does not load the benchmark weights. CartPole, Racing and the archived one-food swimmer remain available in their existing scenes/tools.
 
 ## Learned control and shared dynamics
 
@@ -29,6 +29,10 @@ PPO optimizes discounted return; the external comparison measures actual sustain
 The graph now reports **mean food per minute**, with an adaptive numeric axis rather than a percentage. At update zero and every 25 updates, the frozen current policy runs for a full simulated minute in 64 separate ponds, always using the same comparison seed `0x51A7E123` and placement rules. Collection continues throughout each trial. The score counts all food eaten and divides by 64; it does not report only successful trips. Evaluation uses deterministic mean actions, sends no experience to PPO and does not move the visible animal. The baseline is delivered with the first optimizer update. The graph connects actual measurements without smoothing.
 
 The left sidebar distinguishes that population evaluation from the visible animal. Its Food / min is a rolling count over the previous 60 simulated seconds, with a dash until the first full minute. Pause learning preserves the optimizer while the animal keeps swimming. Speed controls retain the learner, and only Start over clears learning and the graph.
+
+The subsequent user-approved step adds [best-policy persistence and comparison](best_policy.md). The chart now shows Current versus Best, automatically retains the strongest matching evaluation across sessions, and offers Watch best while background training continues. Start over retains the saved best. The file preserves the evaluated playback actor, not resumable optimizer state.
+
+A subsequent approved [six-order bias test](experiments/swimmer/food-order-bias/README.md) used the frozen saved-best snapshot at update 14,125. Across 256 fresh physical starts per order, only 0.79% of collections came from the first neural food entry; the neglected physical piece followed that entry when inputs were permuted. Mean food/minute remained close across orders (13.34–13.41). This confirms order-dependent selection in that model while leaving the performance benefit of a training/architecture fix unproven. Shuffled-input training was subsequently approved and evaluated; see the later shuffled-input section below.
 
 ## Validation and limitations
 
@@ -75,3 +79,6 @@ C:/Users/aiand/Godot/Godot.exe --path godot-project res://pond/pond.tscn
 ```
 
 Training, inference, physics and evaluation remain native C++/CUDA. No Python, PyTorch or external RL framework is used.
+## Shuffled-input comparison
+
+The October 26 experiment adds a separate Godot **Compare shuffled** view, freezes the current update-29,125 reference, and changes only training observation ordering. PPO and physics remain the same. Controlled two-seed results reduce first-slot neglect but do not show a consistent food-rate improvement; the original best remains preserved. See [the experiment protocol and results](experiments/swimmer/shuffled-input/README.md).

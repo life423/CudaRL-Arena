@@ -15,6 +15,10 @@ var buttons: Array[Button] = []
 var status: Label
 var opening := false
 var content: VBoxContainer
+var guide: AcceptDialog
+var guide_button: Button
+var header: VBoxContainer
+var header_spacer: Control
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(BG)
@@ -67,9 +71,12 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 	button.add_theme_stylebox_override("focus", focus)
 	button.tooltip_text = "Play the saved policy without training." if watch else "Open a fresh, untrained run."
 	if demo == "pond":
-		button.tooltip_text = "Open the three-food pond and watch 1,024 background swimmers learn from scratch."
-	button.pressed.connect(func(): _open(demo, watch))
-	buttons.append(button)
+		button.tooltip_text = "Watch the three-food shallow pond learn. Saved training resumes automatically."
+	elif demo == "deep_water":
+		button.tooltip_text = "Watch the trained 3D swimmer continue learning in the pond with three foods at different depths."
+	if demo not in ["guide", "headless"]:
+		button.pressed.connect(func(): _open(demo, watch))
+		buttons.append(button)
 	return button
 
 func _build() -> void:
@@ -84,7 +91,7 @@ func _build() -> void:
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 24)
 	scroll.add_child(content)
-	var header := VBoxContainer.new()
+	header = VBoxContainer.new()
 	header.add_theme_constant_override("separation", 8)
 	title_row = HBoxContainer.new()
 	title_row.add_theme_constant_override("separation", 0)
@@ -99,7 +106,15 @@ func _build() -> void:
 	header.add_child(title_row)
 	header.add_child(_label("Choose a demonstration", 22, MUTED))
 	content.add_child(header)
-	for spec in [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "Learn to forage in a three-food pond."]]:
+	guide_button = _button("Training guide", "guide", false)
+	# This control opens help, not a demonstration.
+	guide_button.pressed.connect(_show_guide)
+	guide_button.tooltip_text = "How to watch, save, resume and train faster without rendering."
+	header_spacer = Control.new()
+	header_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_row.add_child(header_spacer)
+	title_row.add_child(guide_button)
+	for spec in [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "Forage in the pond or learn to swim at depth."]]:
 		var row := BoxContainer.new()
 		row.name = spec[0] + "_row"
 		row.add_theme_constant_override("separation", 28)
@@ -125,6 +140,7 @@ func _build() -> void:
 		row.add_child(actions)
 		if spec[0] == "pond":
 			actions.add_child(_button("Watch it learn", spec[0], false, true))
+			actions.add_child(_button("Deep water", "deep_water", false))
 		else:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))
@@ -138,8 +154,21 @@ func _build() -> void:
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.visible = false
 	content.add_child(status)
+	# Follow the demo actions in keyboard order, despite the guide's header position.
+	buttons[-1].focus_next = guide_button.get_path()
+	guide_button.focus_previous = buttons[-1].get_path()
+	guide_button.focus_next = buttons[0].get_path()
+	buttons[0].focus_previous = guide_button.get_path()
 
 func _fit_layout() -> void:
+	var guide_parent: Node = title_row if size.x >= 700 else header
+	if guide_button.get_parent() != guide_parent:
+		guide_button.reparent(guide_parent)
+	header_spacer.visible = size.x >= 700
+	buttons[-1].focus_next = guide_button.get_path()
+	guide_button.focus_previous = buttons[-1].get_path()
+	guide_button.focus_next = buttons[0].get_path()
+	buttons[0].focus_previous = guide_button.get_path()
 	var padding := 48 if size.x >= 1440 else (32 if size.x >= 700 else 24)
 	for side in ["left", "right", "top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, padding)
@@ -164,6 +193,59 @@ func _fit_layout() -> void:
 		for button: Button in actions.get_children():
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	queue_redraw()
+	if guide and guide.visible:
+		guide.size = Vector2i(mini(650, int(size.x) - 24), mini(640, int(size.y) - 24))
+		guide.position = (Vector2i(size) - guide.size) / 2
+
+func _headless_command() -> String:
+	var executable := ProjectSettings.globalize_path("res://../build/Release/deep_swimmer_train.exe")
+	var checkpoint := ProjectSettings.globalize_path("user://pond-policies/deep-pond-v1/training.bin")
+	return "& '%s' --pond --checkpoint '%s'" % [executable.replace("'", "''"), checkpoint.replace("'", "''")]
+
+func _start_headless() -> void:
+	var executable := ProjectSettings.globalize_path("res://../build/Release/deep_swimmer_train.exe")
+	if not FileAccess.file_exists(executable):
+		status.text = "The native headless runner is missing. Build deep_swimmer_train first."
+		status.visible = true
+		return
+	var pid := OS.create_process("powershell.exe", PackedStringArray(["-NoExit", "-Command", _headless_command()]), true)
+	status.text = "Headless console opened. Keep it open to train; Ctrl+C saves and stops. Then choose Deep water." if pid > 0 else "Could not open the training console. Copy the command from the guide."
+	status.visible = true
+	if guide:
+		guide.hide()
+
+func _show_guide() -> void:
+	if guide == null:
+		guide = AcceptDialog.new()
+		guide.title = "Training guide"
+		guide.ok_button_text = "Done"
+		add_child(guide)
+		var scroll := ScrollContainer.new()
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		guide.add_child(scroll)
+		var body := VBoxContainer.new()
+		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		body.add_theme_constant_override("separation", 12)
+		scroll.add_child(body)
+		for item in [
+			["Watch and learn", "Watch trained plays the saved CartPole or Racing controller. Train from scratch opens their learning controls. Watch it learn opens the shallow pond; Deep water opens the deeper pond with three foods at different depths, retaining the learned 3D swimmer."],
+			["Pause, save and resume", "In Deep water, Pause learning stops policy updates while the swimmer keeps demonstrating its controller. Maximum training speed accelerates background learning. The graph measures 64 fixed one-minute trials. Training autosaves every 30 seconds and on normal exit; reopening resumes it. A crash may lose progress since the last save."],
+			["Accelerate without graphics", "Return to this menu, then open the headless console below. It runs the same deep-water PPO trainer as fast as hardware allows, with unchanged physics timesteps. The console reports simulation speed per world. Stop with Ctrl+C and wait for ‘Saved full training’ before opening Deep water. Only one trainer can own the save."],
+			["Your earlier work", "Shallow pond policies, the one-food 3D swimmer and the archived shuffled comparison are preserved. The deeper three-food pond transfers swimming weights and optimizer state once, then resumes its own save. Its graph measures the new task."]
+		]:
+			body.add_child(_label(item[0], 20))
+			var paragraph := _label(item[1], 15, MUTED)
+			paragraph.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			body.add_child(paragraph)
+		var run := _button("Open headless training console", "headless", false, true)
+		run.pressed.connect(_start_headless)
+		body.add_child(run)
+		var copy := Button.new()
+		copy.text = "Copy PowerShell command"
+		copy.custom_minimum_size.y = 44
+		copy.pressed.connect(func(): DisplayServer.clipboard_set(_headless_command()); copy.text = "Command copied")
+		body.add_child(copy)
+	guide.popup_centered(Vector2i(mini(650, int(size.x) - 24), mini(640, int(size.y) - 24)))
 
 func _open(demo: String, watch: bool) -> void:
 	if opening:
@@ -171,7 +253,7 @@ func _open(demo: String, watch: bool) -> void:
 	opening = true
 	for button in buttons:
 		button.disabled = true
-	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Tadpole Pond"}.get(demo, demo)
+	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Tadpole Pond", "deep_water": "Deep water"}.get(demo, demo)
 	status.add_theme_color_override("font_color", MUTED)
 	status.visible = true
 	await get_tree().process_frame

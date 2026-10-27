@@ -28,6 +28,10 @@ func input_action(action: String) -> void:
 	root.push_input(event)
 
 func _run() -> void:
+	var test_checkpoint := "user://tests/menu-best-%d-%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
+	node_added.connect(func(node: Node):
+		if node.name == "TadpolePond":
+			node.best_policy_path = test_checkpoint)
 	create_timer(30.0).timeout.connect(func():
 		push_error("Demo menu checks timed out")
 		quit(1))
@@ -35,8 +39,8 @@ func _run() -> void:
 	check(ProjectSettings.get_setting("application/run/main_scene") == "res://launcher/launcher.tscn", "Menu must be the startup scene")
 	change_scene_to_file("res://launcher/launcher.tscn")
 	await settle()
-	check(current_scene.rows.size() == 3 and current_scene.buttons.size() == 5, "Menu must contain three demos and five actions")
-	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train", "pond_train"]:
+	check(current_scene.rows.size() == 3 and current_scene.buttons.size() == 6, "Menu must contain three demos and six actions")
+	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train", "pond_train", "deep_water_train", "guide_train"]:
 		check(root.gui_get_focus_owner().name == expected, "Keyboard focus order is incorrect")
 		input_action("ui_focus_next")
 		await settle()
