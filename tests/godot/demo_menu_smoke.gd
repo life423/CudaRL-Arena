@@ -35,8 +35,8 @@ func _run() -> void:
 	check(ProjectSettings.get_setting("application/run/main_scene") == "res://launcher/launcher.tscn", "Menu must be the startup scene")
 	change_scene_to_file("res://launcher/launcher.tscn")
 	await settle()
-	check(current_scene.rows.size() == 2 and current_scene.buttons.size() == 4, "Menu must contain exactly two demos and four actions")
-	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train"]:
+	check(current_scene.rows.size() == 3 and current_scene.buttons.size() == 5, "Menu must contain three demos and five actions")
+	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train", "pond_train"]:
 		check(root.gui_get_focus_owner().name == expected, "Keyboard focus order is incorrect")
 		input_action("ui_focus_next")
 		await settle()
@@ -102,6 +102,48 @@ func _run() -> void:
 		await settle()
 		check(current_scene.name == "DemoMenu", "Back did not return to menu")
 		check(not lab.get_stats().get("policy_ready", false), "Leaving a demo must stop its session")
+	var pond_action: Button = current_scene.find_child("pond_train", true, false)
+	check(pond_action != null and pond_action.text == "Watch it learn", "Tadpole Pond learning action is missing")
+	pond_action.pressed.emit()
+	await settle()
+	check(current_scene.name == "TadpolePond" and current_scene.live_learning, "Menu did not open the live pond")
+	var pond_lab: Object = current_scene.lab
+	check(current_scene.foods.size() == 3 and pond_lab.get_stats().policy_inputs == 13, "Menu opened the wrong pond task")
+	var started := Time.get_ticks_msec()
+	while pond_lab.get_stats().update < 2 and Time.get_ticks_msec() - started < 10000:
+		await create_timer(0.025).timeout
+	check(pond_lab.get_stats().update >= 2 and pond_lab.get_error().is_empty(), "Menu pond did not train automatically")
+	var pond_back: Button = current_scene.find_child("BackToDemos", true, false)
+	check(pond_back != null and pond_back.size.y >= 44, "Pond is missing its usable Back to demos control")
+	pond_back.pressed.emit()
+	await settle()
+	check(current_scene.name == "DemoMenu" and not pond_lab.get_stats().training, "Back from pond did not stop training and return to menu")
+	current_scene.find_child("pond_train", true, false).pressed.emit()
+	await settle()
+	pond_lab = current_scene.lab
+	escape = InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	root.push_input(escape)
+	await settle()
+	check(current_scene.name == "DemoMenu" and not pond_lab.get_stats().training, "Escape from pond failed to stop training")
+	check(router.open_demo("pond", true) == ERR_INVALID_PARAMETER, "Pond falsely offers a saved-policy playback mode")
+	for dimensions in [Vector2i(1280, 720), Vector2i(768, 1024), Vector2i(390, 844), Vector2i(844, 390)]:
+		root.size = dimensions
+		await settle()
+		var scroll: ScrollContainer = current_scene.find_child("DemoScroll", true, false)
+		pond_action = current_scene.find_child("pond_train", true, false)
+		scroll.ensure_control_visible(pond_action)
+		await settle()
+		check(pond_action.get_global_rect().end.x <= dimensions.x and pond_action.get_global_rect().end.y <= dimensions.y, "Pond action is not reachable within the menu viewport")
+		check(pond_action.size.y >= 44, "Pond menu action is too small")
+		for data in current_scene.rows:
+			check(data.row.get_global_rect().end.x <= dimensions.x, "Menu row overflows horizontally")
+		if dimensions.x >= 1280:
+			check(scroll.scroll_vertical == 0, "All three demo rows should fit on the desktop menu")
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../build/pond-learning-checks/menu-%dx%d.png" % [dimensions.x, dimensions.y]))
 	var invalid := PackedFloat32Array([1.0])
 	for name in ["PpoLab", "RacingLab"]:
 		var lab: Object = ClassDB.instantiate(name)

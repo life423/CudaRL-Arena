@@ -3,6 +3,7 @@ extends Node
 const SCENES := {
 	"cartpole": "res://cartpole/cartpole.tscn",
 	"racing": "res://racing/racing.tscn",
+	"pond": "res://pond/pond.tscn",
 }
 
 var active_demo := ""
@@ -13,7 +14,7 @@ func watching(demo: String) -> bool:
 	return active_demo == demo and mode == "watch"
 
 func open_demo(demo: String, watch: bool) -> Error:
-	if not SCENES.has(demo):
+	if not SCENES.has(demo) or (demo == "pond" and watch):
 		return ERR_INVALID_PARAMETER
 	active_demo = demo
 	mode = "watch" if watch else "train"

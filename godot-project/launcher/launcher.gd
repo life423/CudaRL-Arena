@@ -14,6 +14,7 @@ var rows: Array[Dictionary] = []
 var buttons: Array[Button] = []
 var status: Label
 var opening := false
+var content: VBoxContainer
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(BG)
@@ -42,28 +43,31 @@ func _style(fill: Color, border: Color, thickness := 1) -> StyleBoxFlat:
 	style.content_margin_right = 20
 	return style
 
-func _button(value: String, demo: String, watch: bool) -> Button:
+func _button(value: String, demo: String, watch: bool, primary := false) -> Button:
 	var button := Button.new()
 	button.name = "%s_%s" % [demo, "watch" if watch else "train"]
 	button.text = value
 	button.custom_minimum_size = Vector2(156 if watch else 188, 48)
 	button.add_theme_font_size_override("font_size", 16)
+	var filled := watch or primary
 	for state in ["normal", "hover", "pressed", "disabled"]:
-		var fill := ACCENT if watch else BG
+		var fill := ACCENT if filled else BG
 		if state == "hover":
-			fill = ACCENT.lightened(0.1) if watch else Color("2b3034")
+			fill = ACCENT.lightened(0.1) if filled else Color("2b3034")
 		elif state == "pressed":
-			fill = ACCENT.darkened(0.12) if watch else Color("343b43")
+			fill = ACCENT.darkened(0.12) if filled else Color("343b43")
 		elif state == "disabled":
 			fill = Color("343b43")
 		button.add_theme_stylebox_override(state, _style(fill, ACCENT))
 	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		button.add_theme_color_override(state, Color("151a21") if watch else ACCENT)
+		button.add_theme_color_override(state, Color("151a21") if filled else ACCENT)
 	button.add_theme_color_override("font_disabled_color", MUTED)
 	var focus := _style(Color.TRANSPARENT, TEXT, 2)
 	focus.draw_center = false
 	button.add_theme_stylebox_override("focus", focus)
 	button.tooltip_text = "Play the saved policy without training." if watch else "Open a fresh, untrained run."
+	if demo == "pond":
+		button.tooltip_text = "Open the three-food pond and watch 1,024 background swimmers learn from scratch."
 	button.pressed.connect(func(): _open(demo, watch))
 	buttons.append(button)
 	return button
@@ -73,9 +77,10 @@ func _build() -> void:
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(margin)
 	var scroll := ScrollContainer.new()
+	scroll.name = "DemoScroll"
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	margin.add_child(scroll)
-	var content := VBoxContainer.new()
+	content = VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 24)
 	scroll.add_child(content)
@@ -94,7 +99,7 @@ func _build() -> void:
 	header.add_child(title_row)
 	header.add_child(_label("Choose a demonstration", 22, MUTED))
 	content.add_child(header)
-	for spec in [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."]]:
+	for spec in [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "Learn to forage in a three-food pond."]]:
 		var row := BoxContainer.new()
 		row.name = spec[0] + "_row"
 		row.add_theme_constant_override("separation", 28)
@@ -118,8 +123,11 @@ func _build() -> void:
 		actions.alignment = BoxContainer.ALIGNMENT_CENTER
 		actions.add_theme_constant_override("separation", 12)
 		row.add_child(actions)
-		actions.add_child(_button("Watch trained", spec[0], true))
-		actions.add_child(_button("Train from scratch", spec[0], false))
+		if spec[0] == "pond":
+			actions.add_child(_button("Watch it learn", spec[0], false, true))
+		else:
+			actions.add_child(_button("Watch trained", spec[0], true))
+			actions.add_child(_button("Train from scratch", spec[0], false))
 		rows.append({"row": row, "preview": preview, "details": details, "actions": actions})
 		var line := ColorRect.new()
 		line.color = BORDER
@@ -139,12 +147,14 @@ func _fit_layout() -> void:
 		label.add_theme_font_size_override("font_size", 52 if size.x >= 1440 else (44 if size.x >= 700 else 30))
 	var width := size.x - padding * 2
 	var wide := width >= 1000
+	content.add_theme_constant_override("separation", 16 if wide else 24)
+	var preview_height := clampf((size.y - padding * 2 - 240) / 3.0, 112, 184)
 	for data in rows:
 		var row: BoxContainer = data.row
 		row.vertical = not wide
 		row.add_theme_constant_override("separation", 28 if wide else 16)
 		var preview: Control = data.preview
-		preview.custom_minimum_size = Vector2(clampf(width * 0.39, 320, 560), 184) if wide else Vector2(0, clampf(width / 2.8, 130, 216))
+		preview.custom_minimum_size = Vector2(clampf(width * 0.39, 320, 560), preview_height) if wide else Vector2(0, clampf(width / 2.8, 130, 216))
 		preview.size_flags_horizontal = Control.SIZE_FILL if wide else Control.SIZE_EXPAND_FILL
 		var details: VBoxContainer = data.details
 		details.custom_minimum_size.x = 180 if wide else 0
@@ -161,7 +171,7 @@ func _open(demo: String, watch: bool) -> void:
 	opening = true
 	for button in buttons:
 		button.disabled = true
-	status.text = "Opening %s…" % ("CartPole" if demo == "cartpole" else "Racing")
+	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Tadpole Pond"}.get(demo, demo)
 	status.add_theme_color_override("font_color", MUTED)
 	status.visible = true
 	await get_tree().process_frame

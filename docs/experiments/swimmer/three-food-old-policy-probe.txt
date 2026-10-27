@@ -1,0 +1,11 @@
+RECOVERY folded_starts=64 released_and_traveled=58 seconds=12 distance_required=0.5
+seed=1 food/min=1 longest_wait=215.75 slots=4,0,1
+seed=2 food/min=1.6 longest_wait=179.75 slots=8,0,0
+seed=3 food/min=0.4 longest_wait=289.3 slots=2,0,0
+seed=4 food/min=7.4 longest_wait=42.45 slots=36,0,1
+seed=5 food/min=0.2 longest_wait=285.2 slots=1,0,0
+seed=6 food/min=8.4 longest_wait=27.45 slots=41,0,1
+seed=7 food/min=7.4 longest_wait=17.8 slots=36,1,0
+seed=8 food/min=8.6 longest_wait=8.85 slots=43,0,0
+seed=9 food/min=0.2 longest_wait=289.45 slots=1,0,0
+seed=10 food/min=0.4 longest_wait=281.85 slots=2,0,0

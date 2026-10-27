@@ -1,8 +1,8 @@
-# CartPole and Racing startup menu
+# Demo menu: CartPole, Racing and Tadpole Pond
 
-The approved scope is two demonstrations: CartPole and Racing. Navigation Lab is deferred. The menu follows the supplied charcoal/orange reference. Its preview illustrations come from atlas regions of the user's supplied concept screenshot; they are conceptual artwork, not screenshots of newly implemented 3D scenes. The actual demonstrations retain their existing 2D rendering.
+The startup menu contains CartPole, Racing and Tadpole Pond. Navigation Lab remains deferred. The menu follows the supplied charcoal/orange reference. CartPole/Racing previews preserve atlas regions of the user's concept screenshot; those two demonstrations retain their existing 2D rendering. Tadpole Pond has a thumbnail captured from the implemented 3D scene.
 
-Watch trained loads bundled actor-only JSON weights into the C++ CPU showcase. It does not construct a trainer or probe CUDA. Train from scratch initializes a new CUDA training session, paused at update zero until Start learning is pressed. Back to demos and Escape stop the session before returning. Saved actors are playback snapshots, not resumable optimizer checkpoints.
+For CartPole and Racing, Watch trained loads bundled actor-only JSON weights into the C++ CPU showcase. It does not construct a trainer or probe CUDA. Train from scratch initializes a new CUDA training session, paused at update zero until Start learning is pressed. Tadpole Pond offers Watch it learn: a fresh three-food task trains continuously with 1,024 CUDA swimmers after a short untrained view. It does not offer saved-policy playback. Back to demos and Escape stop the active session before returning. Saved actors are playback snapshots, not resumable optimizer checkpoints.
 
 The source project requires the built GDExtension DLL. Training requires a supported NVIDIA GPU/driver. CPU playback has been tested on the RTX 5070 Windows machine, not on hardware without an NVIDIA driver. A distributable Godot export, including JSON export filters, has not been validated.
 
@@ -19,6 +19,9 @@ This uses the project's C++/CUDA PPO trainers: seed 1, 20 CartPole updates, and 
 
 ## Validation — October 26, 2026
 
+- Current three-demo menu: `tests/godot/demo_menu_smoke.gd` passes 101 checks with zero failures, covering all five actions, keyboard focus and activation, CartPole/Racing playback and learning, automatic pond training, Back/Escape cleanup, and rejection of unsupported pond playback. Vulkan renders at 1280×720, 768×1024, 390×844 and 844×390 were inspected. All three rows fit the desktop; on narrow screens the pond action is reachable through the existing scroll container. See [pond validation](three_food_learning.md) for physical/learning tests.
+- Pre-merge regression: `ctest --preset release --output-on-failure` passed all **134 native cases**, including CUDA tests with none skipped, the 1,200-update traffic-learning regression, retained-reference execution checks and three-seed original racing learning. The running pond stayed open during the suite; this run is correctness evidence, not an isolated performance benchmark.
+- The evidence below records the original two-demo menu pass; its behavior remains covered by the expanded smoke test.
 - Release extension, native test executable, and policy exporter built successfully.
 - `cudarl_tests.exe ppo_demo:`: 5/5 passed, including paused initialization, background training, and trained CartPole playback.
 - `cudarl_tests.exe racing:`: 9/9 passed, including CPU/GPU environment agreement.
@@ -35,7 +38,7 @@ Scores are conservative internal heuristics, not measured user outcomes.
 
 | Dimension | Menu | Demo views | Evidence / next recommendation |
 |---|---:|---:|---|
-| Usability | 9 | 8 | Four clear menu actions; compact training controls require scrolling. If compact training becomes a priority, put Start learning before advanced CartPole settings. |
+| Usability | 9 | 8 | Five clear menu actions; compact training controls require scrolling. If compact training becomes a priority, put Start learning before advanced CartPole settings. |
 | Hierarchy | 9 | 8 | Menu titles/actions are distinct. CartPole's older training panel still gives technical settings substantial prominence; simplify only in a separately agreed pass. |
 | Accessibility | 8 | 8 | Focus order, key activation, Escape and menu target sizes pass. Test assistive technology and text enlargement before claiming full accessibility compliance. |
 | Consistency | 9 | 8 | Launcher uses one palette and component style; CartPole retains its older controls. Harmonize these only if requested. |

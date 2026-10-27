@@ -39,7 +39,7 @@ public:
     void set_updates_per_second(double ups) { ups_.store(ups); }   // <= 0: as fast as possible
     void set_paused(bool paused) { paused_.store(paused); }
     bool paused() const { return paused_.load(); }
-    bool finished() const { return finished_.load(); }   // ran all config().total_updates updates
+    bool finished() const { return finished_.load(); }   // exhausted a finite update budget
 
     std::string error() const {   // non-empty if training failed
         std::lock_guard<std::mutex> lock(mutex_);
@@ -82,7 +82,10 @@ private:
                 policy_version_ = 1;
             }
             auto next = clock::now();
-            for (int u = 0; u < cfg_.total_updates && !stop_.load(); ++u) {
+            // Zero means continuous learning; stopping joins this same trainer,
+            // preserving its policy and optimizer state throughout the session.
+            for (uint64_t u = 0; !stop_.load() &&
+                 (cfg_.total_updates == 0 || u < static_cast<uint64_t>(cfg_.total_updates)); ++u) {
                 // Wait while paused, or until the throttle allows the next update.
                 while (!stop_.load() && (paused_.load() || clock::now() < next)) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(5));

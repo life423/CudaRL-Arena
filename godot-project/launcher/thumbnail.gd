@@ -1,17 +1,23 @@
 extends Control
 
-# Keep the approved preview artwork byte-for-byte and select only its two
-# illustrations with atlas regions. The menu text and buttons are native UI.
+# Preserve the approved CartPole/Racing illustrations with atlas regions.
+# Tadpole Pond uses a render captured from the actual scene. Text/buttons are native UI.
 const SOURCE: Texture2D = preload("res://launcher/assets/demo-preview-source.png")
 var demo := "cartpole"
-var texture: AtlasTexture
+var texture: Texture2D
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texture = AtlasTexture.new()
-	texture.atlas = SOURCE
-	texture.region = Rect2(45, 194, 667, 185) if demo == "cartpole" else Rect2(45, 413, 667, 204)
-	texture.filter_clip = true
+	if demo == "pond":
+		var image := Image.load_from_file("res://launcher/assets/tadpole-pond.png")
+		if image != null:
+			texture = ImageTexture.create_from_image(image)
+	else:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = SOURCE
+		atlas.region = Rect2(45, 194, 667, 185) if demo == "cartpole" else Rect2(45, 413, 667, 204)
+		atlas.filter_clip = true
+		texture = atlas
 	resized.connect(queue_redraw)
 
 func _draw() -> void:

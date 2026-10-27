@@ -6,7 +6,9 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
-> **Status: live eight-car racing in Godot, trained with hand-written CUDA PPO.** The default circuit has a hairpin, chicane, braking limits and real traffic interactions. CartPole, the original single-car racing regression, and the standalone bf16 attention kernels are also available. The [eight-car write-up](docs/racing_traffic.md) records the current rules, validation and limitations.
+> **Status: three demonstrations in Godot—CartPole, eight-car racing and a 3D tadpole pond—with hand-written C++/CUDA reinforcement learning.** In the pond, 1,024 background swimmers train a fresh neural controller to collect food while one visible tadpole uses the latest policy. Food changes regions after collection, and the graph measures food per minute on separate fixed trials. See the [foraging results and limitations](docs/three_food_learning.md), [shared physics](docs/pond_physics.md) and [eight-car write-up](docs/racing_traffic.md).
+
+![Three-food tadpole pond with native CUDA training statistics and a measured food-per-minute learning curve](docs/images/tadpole-learning.png)
 
 ![Eight cars on a shared circuit: clean laps, contact counters and measured GPU training throughput](docs/images/racing-traffic.png)
 
@@ -32,7 +34,8 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | **Live CartPole view in Godot** (`cartpole/cartpole.tscn`): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
 | **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
 | **Eight-car racing in Godot**: harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
-| **Startup demo menu:** CartPole and Racing, with saved policy playback or fresh training | ✅ Working ([validation](docs/demo_menu.md)) |
+| **Startup demo menu:** CartPole and Racing with playback/fresh training; Tadpole Pond with live learning | ✅ Working; Back to demos/Escape returns cleanly ([menu](docs/demo_menu.md), [pond](docs/three_food_learning.md)) |
+| **Three-food tadpole pond:** 1,024 CUDA swimmers, continuous PPO, shared articulated C++/CUDA physics and a 3D Godot view | ✅ Working; policy sees all three foods and commands two tail torques. Fixed-trial food/min graph, regional respawns and folded-pose recovery checks ([evidence and limits](docs/three_food_learning.md)) |
 | **End-to-end racing performance:** C++/CUDA benchmark, phase timing and retained reference paths | ✅ Two measured passes at 2,048 agents on RTX 5070: [traffic execution](docs/racing_performance.md) +12.7%, then [optimization graphs](docs/racing_optimizer.md) +14.2%, each with exact reference checks |
 | Live curve-fitting view: watch a network trained on the GPU fit a function in real time | ✅ Working |
 | 2-agent maze game in Godot; rules in plain C++, walls drawn from the same data used for collision | ✅ Working (CPU, random agents) |
@@ -207,7 +210,7 @@ earlier traffic-only comparison.
 godot --path godot-project
 ```
 
-The default scene is the CartPole/Racing menu. **Watch trained** loads a bundled actor policy and runs the showcase on the CPU without starting training. **Train from scratch** opens a paused, untrained run; press **Start learning** to train on CUDA. **Back to demos** or Escape returns to the menu and stops that session. See [menu validation and policy regeneration](docs/demo_menu.md). Other scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
+The default scene is the three-demo menu. For CartPole and Racing, **Watch trained** loads a bundled actor policy and runs the showcase on the CPU without starting training. **Train from scratch** opens a paused, untrained run; press **Start learning** to train on CUDA. For **Tadpole Pond**, choose **Watch it learn**: a fresh 1,024-swimmer run begins automatically after a short untrained view and keeps learning until the scene closes. Its controls include Pause/Resume, paced/maximum training speed and Start over. **Back to demos** or Escape returns to the menu and stops that session. See [menu validation and policy regeneration](docs/demo_menu.md) and [three-food learning](docs/three_food_learning.md). Direct scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://pond/pond.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
 
 ### Continuous integration
 
