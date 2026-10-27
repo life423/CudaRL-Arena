@@ -1,6 +1,7 @@
 extends "res://pond/deep_water.gd"
 
 @export var swimming_checkpoint := "user://pond-policies/deep-v1/training.bin"
+@export var controller_policy_path := "res://pond/policies/deep_selector.bin"
 var foods: Array[MeshInstance3D] = []
 var markers: Array[MeshInstance3D] = []
 var lines: Array[MeshInstance3D] = []
@@ -42,11 +43,15 @@ func _ready() -> void:
 	curve.watch_button.text = "Watch latest"
 	curve.watch_button.tooltip_text = "The pond shows the strongest evaluated controller while training continues. Switch to inspect the latest learner."
 	curve.watch_button.toggled.connect(func(enabled: bool): lab.set_watch_best(enabled))
+	_poll()
 
 func _create_lab() -> RefCounted:
 	return DeepPondLab.new()
 
 func _start_lab() -> bool:
+	if checkpoint_path == "user://pond-policies/deep-pond-v1/training.bin" and not controller_policy_path.is_empty() and FileAccess.file_exists(controller_policy_path):
+		paused = true
+		return lab.watch_controller(controller_policy_path)
 	return lab.start_training(population, training_seed, checkpoint_path, swimming_checkpoint)
 
 func _floor_y(radius: float) -> float:
@@ -266,6 +271,21 @@ func _update_camera(delta: float) -> void:
 
 func _poll() -> void:
 	super._poll()
+	if stats.get("validated_controller", false):
+		title_status.text = "Trained PPO food selector"
+		pause_button.visible = false
+		speed_button.visible = false
+		find_child("SaveTrainingNow", true, false).visible = false
+		training_heading.text = "Saved controller"
+		training_stats.text = "Selector update %d\nSwimming retained from %d\nFood choice every %.1f s" % [stats.selector_update, stats.policy_update, stats.decision_steps * 0.05]
+		save_status.text = "Validated controller loaded.\nFull training checkpoints preserved."
+		curve.watch_button.visible = false
+		curve.plot_title = "Saved controller validation"
+		curve.score_label = "Validation"
+		curve.axis_label = "Selector update"
+		curve.tooltip_text = "Frozen controller evaluated on 64 fixed one-minute trials. This view runs inference; further PPO training runs headlessly."
+		curve.queue_redraw()
+		return
 	if curve.watch_button:
 		curve.watch_button.set_pressed_no_signal(stats.get("watching_best", true))
 		curve.watch_button.text = "Watch latest" if stats.get("watching_best", true) else "Watch best"

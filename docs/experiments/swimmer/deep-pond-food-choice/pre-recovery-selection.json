@@ -1,0 +1,15 @@
+{
+  "selected_seed": 11,
+  "selected_update": 675,
+  "fixed_food_per_minute": 17.875,
+  "motor_update": 64350,
+  "selection_rule": "Highest fixed-suite score; seed 11 wins ties",
+  "seed29_best_food_per_minute": 17.875,
+  "source_checkpoint_sha256": "2669A58E17ADA8A44A41DFF0524D374E7E7367A4848A19C8D15076145C718B37",
+  "policy_sha256": "6D70335EEC1CA55F9E12F0C663356509067412D5CD79947D98242C421408E396",
+  "final_holdout_seeds": [
+    2839471051,
+    917362409,
+    3481762059
+  ]
+}

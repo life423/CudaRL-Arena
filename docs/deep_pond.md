@@ -1,5 +1,7 @@
 # Three-food deep pond — October 26, 2026
 
+Latest AI update: **Deep water now plays a validated PPO food selector with the retained swimming network.** Experiments run headlessly; the normal pond identifies saved-controller inference and hides training controls. Collection improved from 15.36 to 17.56 food/minute over 512 fresh one-minute trials, with separate five-minute/recovery checks. See [food-choice results](experiments/swimmer/deep-pond-food-choice/README.md) and [training/resume commands](pond_food_selection.md). Original motor-training saves and the earlier live training route remain preserved.
+
 Latest presentation update: [the natural setting](pond_presentation.md) replaces the exposed bowl/cutaway with continuous ground, clustered shoreline detail and a local occlusion aid. Overview is stationary and higher; Closer view tracks the interpolated world position with a fixed horizon/zoom. The learned swimmer and native physics are preserved.
 
 Presentation update, October 27: [the revised water/camera pass](pond_presentation.md) replaces the ghostly slope with a defined cutaway and water volume. After the user rejected an underwater close-up, the pond now starts with a stationary overview and offers a stable, wider Closer view. Native training and physics remain unchanged.
@@ -8,13 +10,15 @@ The user approved bringing the learned three-dimensional swimmer into the establ
 
 ## Watch and continue training
 
-Choose **Tadpole Pond → Deep water** from the launcher. The first opening transfers the saved 3D swimmer; later openings resume the new pond's full training save. The foreground demonstrates the strongest evaluated controller while 1,024 CUDA worlds continue PPO training. **Watch latest** switches to the current learner; **Watch best** restores best-controller viewing without resetting the animal or food. Pause stops learning while the demonstration continues.
+Choose **Tadpole Pond → Deep water** from the launcher to watch the packaged trained selector. This view runs inference without background learning. Its validation point describes 64 separate fixed one-minute trials, not the visible tadpole's recent rate. Back to demos and camera controls remain available. The menu's Training guide opens separate headless selector training, which resumes its full local save and writes candidates for later evaluation. See [the current workflow](pond_food_selection.md).
+
+The remaining live-training details in this section describe the preserved original motor-adaptation route. Clearing `controller_policy_path` in the deep pond scene restores that route: the first opening transfers the saved 3D swimmer; later openings resume `deep-pond-v1`. It shows best/latest policies while 1,024 worlds train, with pause, speed and save controls. Its headless runner remains `deep_swimmer_train --pond`; it is separate from the new food-selector trainer.
 
 The overview keeps all three foods visible. **Follow swimmer** moves in closer. Each food shows its depth; the sidebar also lists all three depths. The foreground bank fades as a visual cutaway to reveal the water column. This does not remove its physical slope. Terrain, food markers and physics use the same analytic basin profile.
 
 Training autosaves every 30 seconds, on normal app/scene exit, or through **Save training now**. Save failures are displayed. The graph starts a new evaluation history for the new task while retaining the inherited update number. One-food and three-food scores describe different tasks and must not be spliced together or compared as direct regressions.
 
-The menu's **Training guide → Open headless training console** now runs:
+The **original motor-training** runner is:
 
 ```powershell
 .\build\Release\deep_swimmer_train.exe --pond

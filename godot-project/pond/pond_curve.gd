@@ -15,6 +15,10 @@ var best_saved := false
 var live_mode := true
 var save_error := ""
 var watch_button: Button
+var plot_title := "Learning progress"
+var score_label := "Current"
+var plot_caption := "Food / minute · 64 fixed 60 s trials"
+var axis_label := "Training update"
 
 func _ready() -> void:
 	custom_minimum_size.y = 212
@@ -57,18 +61,18 @@ func update_status(stats: Dictionary) -> void:
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("101c1b"))
 	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(20, 25), "Learning progress", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, TEXT)
+	draw_string(font, Vector2(20, 25), plot_title, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, TEXT)
 	var saved_text := "Measuring baseline…"
 	if best_score >= 0:
 		saved_text = "Best saved · update %d" % best_update if best_saved else "Best this run"
 	if not save_error.is_empty():
 		saved_text = "Best policy save failed"
 	draw_string(font, Vector2(20, 45), saved_text, HORIZONTAL_ALIGNMENT_LEFT, maxf(1, size.x - 164), 12, MUTED if save_error.is_empty() else Color("ffb2a9"))
-	var current_text := "Current  %.1f / min" % current_score if current_score >= 0 else "Current  —"
+	var current_text := "%s  %.1f / min" % [score_label, current_score] if current_score >= 0 else "%s  —" % score_label
 	var best_text := "Best  %.1f / min" % best_score if best_score >= 0 else "Best  —"
 	draw_string(font, Vector2(20, 72), current_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, ACCENT)
 	draw_string(font, Vector2(size.x - 20 - font.get_string_size(best_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x, 72), best_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, BEST)
-	draw_string(font, Vector2(20, 91), "Food / minute · 64 fixed 60 s trials", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, MUTED)
+	draw_string(font, Vector2(20, 91), plot_caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, MUTED)
 	var plot := Rect2(44, 108, maxf(1, size.x - 64), maxf(1, size.y - 132))
 	var chart_max := 10.0
 	for point in points:
@@ -103,4 +107,4 @@ func _draw() -> void:
 			draw_polyline(line, ACCENT, 2.0, true)
 		draw_circle(line[-1], 3.0, ACCENT, true, -1, true)
 		draw_string(font, Vector2(plot.end.x - 64, size.y - 6), str(int(points[-1].x)), HORIZONTAL_ALIGNMENT_RIGHT, 64, 11, MUTED)
-	draw_string(font, Vector2(plot.position.x, size.y - 6), "Training update", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, MUTED)
+	draw_string(font, Vector2(plot.position.x, size.y - 6), axis_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, MUTED)

@@ -28,6 +28,7 @@ var curve: Control
 var title_status: Label
 var swimmer_stats: Label
 var training_stats: Label
+var training_heading: Label
 var save_status: Label
 var pause_button: Button
 var camera_button: Button
@@ -143,7 +144,8 @@ func _build_ui() -> void:
 	camera_button.pressed.connect(func(): overview = not overview; camera_button.text = "Follow swimmer" if overview else "Whole tank view")
 	controls.add_child(camera_button)
 	controls.add_child(HSeparator.new())
-	controls.add_child(_label("Background training", 18))
+	training_heading = _label("Background training", 18)
+	controls.add_child(training_heading)
 	training_stats = _label("1,024 swimmers · native CUDA", 14, MUTED)
 	controls.add_child(training_stats)
 	speed_button = CheckButton.new()
@@ -153,6 +155,7 @@ func _build_ui() -> void:
 	speed_button.toggled.connect(func(enabled: bool): lab.set_updates_per_second(0 if enabled else 5))
 	controls.add_child(speed_button)
 	var save := _button("Save training now")
+	save.name = "SaveTrainingNow"
 	save.pressed.connect(func(): lab.save_training_now(); save_status.text = "Saving after this update…")
 	controls.add_child(save)
 	save_status = _label("Autosaves every 30 seconds and on exit.", 13, MUTED)
