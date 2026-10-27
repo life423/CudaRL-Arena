@@ -10,7 +10,12 @@ void fragment() {
     NORMAL = normalize((VIEW_MATRIX * vec4(world_normal, 0.0)).xyz);
     float fresnel = pow(1.0 - abs(dot(NORMAL, VIEW)), 4.0);
     float depth = textureLod(depth_texture, SCREEN_UV, 0.0).r;
-    vec4 scene = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0 - 1.0, depth, 1.0);
+#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+    vec3 ndc = vec3(SCREEN_UV, depth) * 2.0 - 1.0;
+#else
+    vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, depth);
+#endif
+    vec4 scene = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
     scene.xyz /= scene.w;
     float thickness = clamp(length(scene.xyz - VERTEX), 0.0, 5.0);
     float absorption = 1.0 - exp(-thickness * 0.28);

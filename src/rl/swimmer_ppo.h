@@ -15,16 +15,13 @@
 #include "rl/gaussian_kernels.h"
 #include "rl/ppo_kernels.h"
 #include "rl/evaluated_policy.h"
+#include "rl/swimmer_spec.h"
 // Shared, unchanged PPO update path used by the CLI experiment and the live
 // background session. No Godot dependency and no saved policy initialization.
 namespace cudarl::rl {
 namespace sw=cudarl::swimmer;
 using Clock=std::chrono::steady_clock;
-constexpr int hidden=32,rollout=64,epochs=4,minibatches=8;
-inline nn::MlpSpec swimmer_specification(int outputs,int inputs=sw::kObs) {
-    return nn::MlpSpec({inputs,hidden,hidden,outputs},
-        {nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity});
-}
+constexpr int rollout=64,epochs=4,minibatches=8;
 struct SwimmerStream {
     cudaStream_t value=nullptr;
     SwimmerStream() { CUDA_CHECK_THROW(cudaStreamCreateWithFlags(&value,cudaStreamNonBlocking)); }

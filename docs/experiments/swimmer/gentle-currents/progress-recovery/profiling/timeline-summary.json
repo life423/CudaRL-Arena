@@ -1,0 +1,26 @@
+{
+  "source": "build/pond-profile/training-8192.sqlite",
+  "capture_ms": 2527.887773,
+  "gpu_busy_union_ms": 2492.433439,
+  "gpu_busy_fraction": 0.9859747199307333,
+  "gpu_idle_fraction": 0.014025280069266732,
+  "kernel_count": 15189,
+  "kernel_time_sum_ms": 2492.118559,
+  "physics_kernel_count": 1920,
+  "physics_time_ms": 2230.375667,
+  "physics_fraction_of_kernel_time": 0.894971733565907,
+  "physics_fraction_of_capture": 0.8823080244393429,
+  "memory_operation_time_ms": 0.31488,
+  "cuda_launch_calls": 15189,
+  "launch_api_median_us": 3.84,
+  "launch_api_p95_us": 10.426,
+  "launch_api_max_ms": 16.114618,
+  "queued_kernel_median_ms": 206.910807,
+  "queued_kernel_p95_ms": 222.059881,
+  "kernel_time_by_submission_phase_ms": {
+    "rollout": 2310.9698869999597,
+    "bootstrap_gae": 1.8341759999999998,
+    "ppo_optimization": 179.31449599999945
+  },
+  "note": "API call time overlaps GPU work and can include launch-queue backpressure; it is not additive pure CPU overhead. CUDA event/phase spans include idle gaps. No hardware utilization metric implies peak arithmetic efficiency."
+}

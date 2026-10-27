@@ -69,8 +69,9 @@ CUDARL_HD inline float potential(const State& s) {
     float sum=0;for(float d:distances) sum+=expf(-4.f*(d-minimum));return -minimum+logf(sum)/4.f;
 }
 struct Result {float reward=0;int eaten_slot=-1;bool timeout=false;};
-CUDARL_HD inline Result advance(State& s,const float* action) {
+CUDARL_HD inline Result advance(State& s,const float* action,V water_velocity={}) {
     const float before=potential(s);deep::Physics physics;physics.pond=true;
+    physics.water_velocity=water_velocity;
     deep::advance_physics(s.body,action,physics);++s.steps;++s.since_food;s.last_eaten=-1;
     Result result;result.reward=3.f*(potential(s)-before)-.005f;
     for(int j=0;j<4;++j) {
@@ -89,10 +90,11 @@ CUDARL_HD inline void permute(float* o,int order) {
     float previous[9];for(int i=0;i<9;++i) previous[i]=o[i];
     for(int f=0;f<3;++f) for(int k=0;k<3;++k) o[f*3+k]=previous[orders[order][f]*3+k];
 }
+#if CUDARL_WITH_CUDA
 class Batch {
 public:
     Batch(int n,uint32_t seed,swimmer::Body unused={});
-    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true,int evaluation_steps=kEpisodeSteps);
+    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true,int evaluation_steps=kEpisodeSteps,V water_velocity={});
     const float* obs() const {return obs_.get();}
     const State* states() const {return states_.get();}
     void save(checkpoint::Writer& out) const;
@@ -102,5 +104,6 @@ private:
     device_ptr<State> states_;device_ptr<uint32_t> episodes_;device_ptr<float> obs_;
 };
 void shuffle_food_inputs(float* obs,int rows,int environments,uint32_t seed,uint32_t first_tick,cudaStream_t stream);
+#endif
 }
 #endif

@@ -1,0 +1,4 @@
+environments,updates,wall_seconds,simulation_steps_per_second
+1024,3,0.90938,2.162e+06
+4096,3,1.70739,4.60604e+06
+8192,3,2.50811,6.27112e+06

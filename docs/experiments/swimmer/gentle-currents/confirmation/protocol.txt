@@ -1,0 +1,13 @@
+device=NVIDIA GeForce RTX 5070
+selector_update=250
+motor_update=64350
+seconds=300
+trials_per_seed=64
+seeds=3228672513,
+Same initial layouts for each seed/environment. Subsequent food placements depend on collection history.
+Uniform imposed horizontal water velocity acts through relative distributed drag. Food stays fixed until collection.
+Reduced-order fluid model, not CFD or a mass-conserving closed-pond circulation solver.
+Observations, model dimensions, weights, decision cadence, geometry, food rules and 5ms substeps unchanged.
+No gradients, optimizer, training save access, autoreset, rescue or scripted propulsion.
+Paired approximate 95% intervals are per condition, not corrected for testing multiple directions.
+Ground speed and water-relative speed are separate: passive drift is not learned propulsion.

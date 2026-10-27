@@ -6,6 +6,10 @@ Reinforcement learning environments written as hand-written CUDA kernels and dri
 
 Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
 
+The new [portable Windows pond preview](docs/portable_pond.md) also builds without CUDA. Its optional CUDA module runs the saved AI and physics on a compatible NVIDIA GPU after a real device-and-kernel check; otherwise it uses the same C++ equations and trained weights on the CPU. Godot still renders on the available graphics hardware. This preview provides pond playback; live CPU training and other portable demos remain follow-ups.
+
+[Frozen-policy current tests](docs/experiments/swimmer/gentle-currents/README.md) now measure robustness before adaptation: 0.5 cm/s currents reduce collection by 3.05% on the tested layouts; 1.0 cm/s reduces it by 18.48% and exposes a prolonged stall in a five-minute trial. The original controller and training saves are preserved; no robustness-training improvement is claimed.
+
 > **Status: three demonstrations in Godot—CartPole, eight-car racing and a 3D tadpole pond—with hand-written C++/CUDA reinforcement learning.** The deep pond plays a validated PPO food selector paired with a retained swimming network. Headless training runs across 1,024 worlds with full resume; fresh evaluation measures 17.56 versus 15.36 food/minute for the original controller. The shallow pond still offers live learning. See the [food-selection experiment](docs/experiments/swimmer/deep-pond-food-choice/README.md), [deep pond guide](docs/deep_pond.md) and [eight-car write-up](docs/racing_traffic.md).
 
 ![Three-food tadpole pond with native CUDA training statistics and a measured food-per-minute learning curve](docs/images/tadpole-learning.png)
@@ -46,7 +50,7 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | Verification: fp64 finite-difference gradient checks, CPU/GPU references, tensor-core checks, bit-identical determinism, end-to-end learning | ✅ Working; see the test executable for the current count |
 | Benchmark: roofline, cuBLAS comparison, tuning sweep, environment throughput, PPO solve time | ✅ Working (`nn_bench`) |
 
-The DLL links the CUDA runtime statically. It runs on any machine with an NVIDIA driver, with no CUDA DLLs shipped alongside it.
+The developer extension links the CUDA runtime statically and requires a compatible NVIDIA driver and GPU. The portable pond extension has no CUDA dependency; its separately loaded optional CUDA module also links the runtime statically. Neither build requires the user to install the CUDA toolkit.
 
 ---
 

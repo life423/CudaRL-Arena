@@ -1,0 +1,16 @@
+{
+  "Environments": 8192,
+  "MeasuredUpdatesPerVariant": 18,
+  "WarmupUpdatesPerRun": 3,
+  "RunsPerVariant": 3,
+  "BaselineMeanMilliseconds": 835.4443222222221,
+  "ReuseMeanMilliseconds": 801.0627722222222,
+  "ThroughputGainPercent": 4.291991987671873,
+  "UpdateTimeReductionPercent": 4.1153610223297115,
+  "BaselineStepsPerSecond": 6275558.838025632,
+  "ReuseStepsPerSecond": 6544905.320535325,
+  "BaselineStackBytes": 3536,
+  "ReuseStackBytes": 3136,
+  "StackReductionPercent": 11.312217194570136,
+  "RegistersPerThread": 255
+}

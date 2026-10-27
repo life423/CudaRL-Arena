@@ -2,6 +2,14 @@
   "version": 3,
   "configurePresets": [
     {
+      "name": "portable",
+      "displayName": "Portable pond (C++ only, no CUDA toolkit)",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/portable",
+      "cacheVariables": {"CUDARL_ENABLE_CUDA": "OFF", "CUDARL_BUILD_BENCH": "OFF"}
+    },
+    {
       "name": "windows",
       "displayName": "Windows x64 (Visual Studio 2022)",
       "generator": "Visual Studio 17 2022",
@@ -19,6 +27,7 @@
     }
   ],
   "buildPresets": [
+    {"name": "portable", "configurePreset": "portable", "configuration": "Release"},
     {
       "name": "release",
       "displayName": "Release",
@@ -32,6 +41,7 @@
     }
   ],
   "testPresets": [
+    {"name": "portable", "configurePreset": "portable", "configuration": "Release", "output": {"outputOnFailure": true}},
     {
       "name": "release",
       "configurePreset": "windows",

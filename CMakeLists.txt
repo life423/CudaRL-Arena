@@ -5,7 +5,11 @@ if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
     set(CMAKE_CUDA_ARCHITECTURES 120)
 endif()
 
-project(CudaRL-Arena LANGUAGES CXX CUDA)
+project(CudaRL-Arena LANGUAGES CXX)
+option(CUDARL_ENABLE_CUDA "Build NVIDIA training and optional CUDA playback" ON)
+if(CUDARL_ENABLE_CUDA)
+    enable_language(CUDA)
+endif()
 
 # Godot is the real-time frontend and is built by default. CI turns it off to
 # build and test the core without the prebuilt godot-cpp library.
@@ -24,7 +28,9 @@ set(CMAKE_CUDA_RUNTIME_LIBRARY Static)
 # Our warning level is set per target below; drop the default host level for CUDA files.
 string(REPLACE "/W1" "" CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS}")
 
-find_package(CUDAToolkit REQUIRED)
+if(CUDARL_ENABLE_CUDA)
+    find_package(CUDAToolkit REQUIRED)
+endif()
 
 # Strict warnings for this project's own code. Third-party headers (CUDA, godot-cpp)
 # come in as SYSTEM includes, so they're exempt.
@@ -45,9 +51,21 @@ function(cudarl_strict_warnings target)
     endif()
 endfunction()
 
+# Portable runtime: the exact saved networks and shared physical equations,
+# without a CUDA compiler, headers, driver or runtime dependency.
+add_library(cudarl_runtime STATIC src/core/checkpoint.cpp src/demos/pond_playback.cpp)
+set_target_properties(cudarl_runtime PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_include_directories(cudarl_runtime PUBLIC src)
+target_compile_definitions(cudarl_runtime PRIVATE CUDARL_WITH_CUDA=0)
+target_link_libraries(cudarl_runtime PRIVATE ${CMAKE_DL_LIBS})
+cudarl_strict_warnings(cudarl_runtime)
+if(NOT CUDARL_ENABLE_CUDA)
+    include(cmake/PortablePond.cmake)
+    return()
+endif()
+
 # --- Core: CUDA code and environments, no Godot dependency --------------------
 add_library(cudarl_core STATIC
-    src/core/checkpoint.cpp
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
     src/envs/cartpole/cartpole.cu
@@ -57,6 +75,7 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/deep.cu
     src/envs/swimmer/deep_pond.cu
     src/envs/swimmer/pond_selector.cu
+    src/envs/swimmer/progress_selector.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
@@ -73,8 +92,15 @@ add_library(cudarl_core STATIC
     src/demos/racing_showcase.cpp
 )
 target_include_directories(cudarl_core PUBLIC src)
-target_link_libraries(cudarl_core PUBLIC CUDA::cudart_static)
+target_link_libraries(cudarl_core PUBLIC cudarl_runtime CUDA::cudart_static)
+target_compile_definitions(cudarl_core PUBLIC CUDARL_WITH_CUDA=1)
 cudarl_strict_warnings(cudarl_core)
+
+add_library(cudarl_pond_cuda SHARED src/demos/pond_playback_cuda.cu)
+target_link_libraries(cudarl_pond_cuda PRIVATE cudarl_core)
+cudarl_strict_warnings(cudarl_pond_cuda)
+set_target_properties(cudarl_pond_cuda PROPERTIES PREFIX ""
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/cudarl/bin")
 
 # --- Godot extension ------------------------------------------------------------
 if(CUDARL_BUILD_GODOT)
@@ -103,6 +129,7 @@ if(CUDARL_BUILD_GODOT)
         src/godot/deep_water_lab.cpp
         src/godot/deep_pond_lab.cpp
     )
+    add_dependencies(cudarl cudarl_pond_cuda)
     target_link_libraries(cudarl PRIVATE cudarl_core godot-cpp)
     target_compile_definitions(cudarl PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED)
     cudarl_strict_warnings(cudarl)
@@ -137,7 +164,10 @@ add_executable(cudarl_tests
     tests/test_swimmer_inertial.cpp
     tests/test_foraging.cpp
     tests/test_deep_water.cpp
+    tests/test_deep_solver.cu
     tests/test_deep_pond.cpp
+    tests/test_pond_current.cpp
+    tests/test_progress_selector.cpp
     tests/test_pond_selector.cpp
     tests/test_training_resume.cpp
     tests/test_race.cpp
@@ -150,6 +180,20 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(pond_progress_profile tools/pond_progress_profile.cpp)
+    target_link_libraries(pond_progress_profile PRIVATE cudarl_core)
+    set(CUDARL_NVTX_INCLUDE_DIR "" CACHE PATH "Optional NVTX headers for profiling-only phase labels")
+    if(EXISTS "${CUDARL_NVTX_INCLUDE_DIR}/nvtx3/nvToolsExt.h")
+        target_include_directories(pond_progress_profile SYSTEM PRIVATE "${CUDARL_NVTX_INCLUDE_DIR}")
+        target_compile_definitions(pond_progress_profile PRIVATE CUDARL_PROFILE_NVTX=1)
+    endif()
+    cudarl_strict_warnings(pond_progress_profile)
+    add_executable(pond_progress_train tools/pond_progress_train.cpp)
+    target_link_libraries(pond_progress_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(pond_progress_train)
+    add_executable(pond_current_eval tools/pond_current_eval.cu)
+    target_link_libraries(pond_current_eval PRIVATE cudarl_core)
+    cudarl_strict_warnings(pond_current_eval)
     add_executable(pond_recovery_probe tools/pond_recovery_probe.cpp)
     target_link_libraries(pond_recovery_probe PRIVATE cudarl_core)
     cudarl_strict_warnings(pond_recovery_probe)

@@ -5,7 +5,9 @@
 #include <cstdint>
 #include "core/hd.h"
 #include "core/rng.h"
+#if CUDARL_WITH_CUDA
 #include "cuda/cuda_memory.h"
+#endif
 #include "inertial.h"
 
 // Shared planar three-link swimmer. Historical bodies 0-7 retain the original
@@ -156,6 +158,7 @@ CUDARL_HD inline Result advance(State& s,const float* action) {
     return {reward,success,timeout};
 }
 struct Outputs { float *reward,*done,*truncated,*final_obs; };
+#if CUDARL_WITH_CUDA
 class Batch {
 public:
     Batch(int n,uint32_t seed,Body body={});
@@ -166,5 +169,6 @@ private:
     int n_; uint32_t seed_; Body body_;
     device_ptr<State> states_; device_ptr<uint32_t> episodes_; device_ptr<float> obs_;
 };
+#endif
 } // namespace cudarl::swimmer
 #endif

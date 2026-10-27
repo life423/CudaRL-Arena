@@ -38,7 +38,11 @@ struct BodyState {
     float angle[4]{},velocity[dofs]{}; // world m/s, world rad/s, relative rad/s
     float work=0,travel=0;
 };
-struct Physics {float density=1000,viscosity=.001f,gravity=9.81f;bool boundaries=true,pond=false;};
+struct Physics {
+    float density=1000,viscosity=.001f,gravity=9.81f;
+    bool boundaries=true,pond=false;
+    V water_velocity{}; // imposed uniform fluid velocity in world m/s
+};
 // Shared analytic basin, also sampled by Godot for its visible terrain.
 CUDARL_HD inline float pond_floor(float x,float z) {
     const float r2=fminf(1.f,x*x/(4.6f*4.6f)+z*z/(3.5f*3.5f));
@@ -150,10 +154,16 @@ CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
             const V r=axis[0]*((sample-1)*l.length/3.f);V J[dofs];
             for(int i=0;i<dofs;++i) J[i]=l.linear[i]+cross(l.angular[i],r);
             const V v=multiply(J,s.velocity);
+            const V relative=v-physics.water_velocity;
             for(int direction=0;direction<3;++direction) {
                 const float viscous=6.f*3.14159265f*physics.viscosity*(b==0?.008f:.004f);
-                const float coefficient=submersion*(viscous+.5f*physics.density*area[direction]*fabsf(dot(v,axis[direction])))/3.f;
+                const float coefficient=submersion*(viscous+.5f*physics.density*area[direction]*fabsf(dot(relative,axis[direction])))/3.f;
                 resist(a,J,axis[direction],coefficient);
+                // Semi-implicit drag is -R*(v_new-u). The coefficient is
+                // evaluated from the previous water-relative point velocity.
+                // Keep the zero-current force path unchanged.
+                if(physics.water_velocity.x!=0 || physics.water_velocity.y!=0 || physics.water_velocity.z!=0)
+                    load(a,J,axis[direction]*(coefficient*dot(physics.water_velocity,axis[direction])));
             }
             if(physics.boundaries) contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.pond);
         }
@@ -172,7 +182,11 @@ CUDARL_HD inline void substep(BodyState& s,const float* action,float h,Physics p
         a.force[6+j]+=torque*clamp(action[j],-1,1)-1e-4f*displacement;
         a.R[6+j][6+j]+=torque/12.f+(displacement!=0?3e-6f:0.f);
     }
-    float L[dofs][dofs]{},rhs[dofs]{},v[dofs]{};
+    // Each lower R entry is consumed once to form M+hR, then becomes the
+    // corresponding Cholesky factor entry. Later rows only need that factor;
+    // no subsequent operation needs the overwritten resistance coefficient.
+    // Reuse removes a separate 100-float per-thread factor workspace.
+    auto& L=a.R;float rhs[dofs]{},v[dofs]{};
     for(int i=0;i<dofs;++i) {
         rhs[i]=h*(a.force[i]-a.C[i]);for(int j=0;j<dofs;++j) rhs[i]+=a.M[i][j]*s.velocity[j];
         for(int j=0;j<=i;++j) {
