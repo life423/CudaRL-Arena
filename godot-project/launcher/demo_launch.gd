@@ -5,6 +5,7 @@ const SCENES := {
 	"racing": "res://racing/racing.tscn",
 	"pond": "res://pond/pond.tscn",
 	"pond_shuffle": "res://pond/shuffle_compare.tscn",
+	"deep_water": "res://pond/deep_pond.tscn",
 }
 
 var active_demo := ""

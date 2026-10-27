@@ -180,6 +180,7 @@ func _run() -> void:
 	check(scene.food_rate_value.text == "Food / min  %d" % scene.food_times.size(), "Visible food rate is not the actual rolling-minute count")
 	check(not scene.move_button.visible, "Three-food learning exposes an automatic target-moving shortcut")
 	scene.set_physics_process(true)
+	scene.set_camera_close(false)
 	for dimensions in [Vector2i(1280, 720), Vector2i(768, 1024), Vector2i(390, 844), Vector2i(844, 390)]:
 		viewport.size = dimensions
 		for frame in 8:

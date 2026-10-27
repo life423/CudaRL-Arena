@@ -54,6 +54,8 @@ add_library(cudarl_core STATIC
     src/envs/racing/racing.cu
     src/envs/swimmer/swimmer.cu
     src/envs/swimmer/foraging.cu
+    src/envs/swimmer/deep.cu
+    src/envs/swimmer/deep_pond.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
@@ -97,6 +99,8 @@ if(CUDARL_BUILD_GODOT)
         src/godot/ppo_lab.cpp
         src/godot/racing_lab.cpp
         src/godot/tadpole_lab.cpp
+        src/godot/deep_water_lab.cpp
+        src/godot/deep_pond_lab.cpp
     )
     target_link_libraries(cudarl PRIVATE cudarl_core godot-cpp)
     target_compile_definitions(cudarl PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED)
@@ -131,6 +135,8 @@ add_executable(cudarl_tests
     tests/test_swimmer.cpp
     tests/test_swimmer_inertial.cpp
     tests/test_foraging.cpp
+    tests/test_deep_water.cpp
+    tests/test_deep_pond.cpp
     tests/test_training_resume.cpp
     tests/test_race.cpp
     tests/test_racing_ppo.cpp
@@ -142,6 +148,9 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(deep_swimmer_train tools/deep_swimmer_train.cpp)
+    target_link_libraries(deep_swimmer_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(deep_swimmer_train)
     add_executable(pond_probe tools/pond_probe.cpp)
     target_link_libraries(pond_probe PRIVATE cudarl_core)
     cudarl_strict_warnings(pond_probe)

@@ -40,7 +40,7 @@ func _run() -> void:
 	change_scene_to_file("res://launcher/launcher.tscn")
 	await settle()
 	check(current_scene.rows.size() == 3 and current_scene.buttons.size() == 6, "Menu must contain three demos and six actions")
-	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train", "pond_train", "pond_shuffle_train"]:
+	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train", "pond_train", "deep_water_train", "guide_train"]:
 		check(root.gui_get_focus_owner().name == expected, "Keyboard focus order is incorrect")
 		input_action("ui_focus_next")
 		await settle()

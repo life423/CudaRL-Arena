@@ -1,0 +1,59 @@
+{
+  "camera": "follow",
+  "frame_cap": 60,
+  "rows": [
+    {
+      "disturbances": false,
+      "end_update": 166167,
+      "frames": 361,
+      "learner_active": 0,
+      "mean_frame_interval_ms": 16.6640470914127,
+      "p95_frame_interval_ms": 17.028,
+      "reference_active": 0,
+      "seconds": 6.015721,
+      "start_update": 165920,
+      "steps_per_second": 2690848.19591866
+    },
+    {
+      "disturbances": true,
+      "end_update": 166474,
+      "frames": 361,
+      "learner_active": 16,
+      "mean_frame_interval_ms": 16.6586509695291,
+      "p95_frame_interval_ms": 17.028,
+      "reference_active": 17,
+      "seconds": 6.013773,
+      "start_update": 166227,
+      "steps_per_second": 2691719.82381111
+    },
+    {
+      "disturbances": true,
+      "end_update": 166780,
+      "frames": 361,
+      "learner_active": 16,
+      "mean_frame_interval_ms": 16.6632686980609,
+      "p95_frame_interval_ms": 17.053,
+      "reference_active": 16,
+      "seconds": 6.01544,
+      "start_update": 166535,
+      "steps_per_second": 2669184.63154815
+    },
+    {
+      "disturbances": false,
+      "end_update": 167087,
+      "frames": 361,
+      "learner_active": 0,
+      "mean_frame_interval_ms": 16.6642077562327,
+      "p95_frame_interval_ms": 18.032,
+      "reference_active": 0,
+      "seconds": 6.015779,
+      "start_update": 166844,
+      "steps_per_second": 2647246.18374445
+    }
+  ],
+  "sequence": "off,on,on,off",
+  "viewport": [
+    1280,
+    720
+  ]
+}

@@ -54,6 +54,9 @@ func _run() -> void:
 	check(learner.get_state().x == before.x and learner.get_state().foods == before.foods, "Policy switch teleported the pond")
 	scene.watch_button.button_pressed = false
 	check(not learner.get_stats().watching_best, "Latest learner playback did not restore")
+	scene.camera_selector.select(1)
+	scene.camera_selector.item_selected.emit(1)
+	check(not scene.learner_pond.close_camera and not scene.reference_pond.close_camera, "Overview selection did not apply to both ponds")
 	for dimensions in [Vector2i(1280, 720), Vector2i(768, 1024), Vector2i(390, 844), Vector2i(844, 390)]:
 		root.size = dimensions
 		await settle()

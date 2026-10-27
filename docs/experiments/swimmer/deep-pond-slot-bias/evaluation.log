@@ -1,0 +1,5 @@
+DEEP_WATER_PPO checkpoint=build/pond-learning-checks/ai-return/training.bin
+Ctrl+C saves and stops. Keep this console open while training.
+POND_HOLDOUT untrained seed=201745921 food_per_minute=0.000000 successful=0 slots=0,0,0 ascending=0 descending=0
+POND_HOLDOUT latest seed=201745921 food_per_minute=15.234375 successful=64 slots=975,0,0 ascending=494 descending=481
+POND_HOLDOUT best seed=201745921 food_per_minute=15.406250 successful=64 slots=986,0,0 ascending=504 descending=482

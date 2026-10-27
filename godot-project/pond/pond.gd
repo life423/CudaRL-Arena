@@ -1,5 +1,8 @@
 extends Node3D
 
+const PondCamera = preload("res://pond/pond_camera.gd")
+const PondRipples = preload("res://pond/pond_ripples.gd")
+
 const RX := 4.6
 const RZ := 3.5
 const WATER_Y := 0.48
@@ -14,11 +17,17 @@ const ACCENT := Color("faa640")
 @export var shuffle_food_inputs := false
 @export var embedded_view := false
 @export var playback_checkpoint := ""
+@export var close_camera := true
+@export var water_disturbances := true
+var ripples: PondRipples
 var lab := TadpoleLab.new()
 var current: Dictionary = {}
 var previous: Dictionary = {}
 var blend := 1.0
-var camera: Camera3D
+var camera: PondCamera
+var camera_selector: OptionButton
+var heading_row: HBoxContainer
+var sidebar_content: VBoxContainer
 var creature: Node3D
 var tail: MeshInstance3D
 var membrane: MeshInstance3D
@@ -192,6 +201,11 @@ func _build_world() -> void:
 	water_material.shader = preload("res://pond/water.gdshader")
 	var water := _mesh(_radial_mesh(12, 96, 1.0, true), water_material, self)
 	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	ripples = PondRipples.new()
+	ripples.position.y = WATER_Y + 0.012
+	ripples.water_radii = Vector2(RX, RZ)
+	ripples.enabled = water_disturbances
+	add_child(ripples)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 182
 	for i in 28:
@@ -232,13 +246,11 @@ func _build_world() -> void:
 		spark.visible = false
 		spark.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		sparks.append(spark)
-	camera = Camera3D.new()
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.position = Vector3(0, 8.3, 8.7)
+	camera = PondCamera.new()
+	camera.close_up = close_camera
 	camera.near = 0.1
 	camera.far = 40.0
 	add_child(camera)
-	camera.look_at(Vector3(0, 0.1, 0))
 	camera.current = true
 
 func _head_radius(t: float) -> float:
@@ -376,6 +388,9 @@ func _build_ui() -> void:
 	theme.set_stylebox("focus", "Button", focus)
 	theme.set_stylebox("focus", "CheckBox", focus)
 	theme.set_stylebox("focus", "HSlider", focus)
+	for state in ["normal", "hover", "pressed", "focus"]:
+		theme.set_stylebox(state, "OptionButton", theme.get_stylebox(state, "Button"))
+	theme.set_color("font_color", "OptionButton", TEXT)
 	root_ui.theme = theme
 	ui_layout = BoxContainer.new()
 	ui_layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -395,10 +410,16 @@ func _build_ui() -> void:
 		margin.add_theme_constant_override("margin_" + side, 16)
 	panel_scroll.add_child(margin)
 	var text := VBoxContainer.new()
+	sidebar_content = text
 	text.add_theme_constant_override("separation", 10)
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	margin.add_child(text)
-	text.add_child(_label("Tadpole lab", 23))
+	heading_row = HBoxContainer.new()
+	heading_row.add_theme_constant_override("separation", 8)
+	text.add_child(heading_row)
+	var title := _label("Tadpole lab", 23)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading_row.add_child(title)
 	status = _label("Preparing a fresh learner…" if live_learning else "Trained controller · shallow water", 14, MUTED)
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.add_child(status)
@@ -429,6 +450,10 @@ func _build_ui() -> void:
 	pause_button.pressed.connect(_toggle_pause)
 	pause_button.visible = live_learning
 	navigation.add_child(pause_button)
+	camera_selector = PondCamera.selector(close_camera)
+	camera_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	camera_selector.item_selected.connect(func(index: int): set_camera_close(index == 0))
+	text.add_child(camera_selector)
 	text.add_child(HSeparator.new())
 	metric_layout = BoxContainer.new()
 	metric_layout.add_theme_constant_override("separation", 16)
@@ -558,6 +583,12 @@ func _fit_layout() -> void:
 	metric_layout.vertical = not compact
 	pond_actions.vertical = compact
 	side_panel.custom_minimum_size = Vector2(0, 400) if compact else Vector2(264, 0)
+	var selector_parent: Node = heading_row if compact else sidebar_content
+	if camera_selector.get_parent() != selector_parent:
+		camera_selector.reparent(selector_parent)
+		if not compact:
+			sidebar_content.move_child(camera_selector, 4)
+	camera_selector.size_flags_horizontal = Control.SIZE_FILL if compact else Control.SIZE_EXPAND_FILL
 	side_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	side_panel.size_flags_vertical = Control.SIZE_FILL if compact else Control.SIZE_EXPAND_FILL
 	settings_button.visible = compact and live_learning
@@ -601,6 +632,8 @@ func _start_pond() -> void:
 		_load_saved_policy()
 
 func _begin_learning(resume_saved := true) -> void:
+	camera.reset_subject()
+	ripples.clear()
 	last_reported_update = -50
 	user_paused = false
 	evaluation_points = 0
@@ -652,6 +685,8 @@ func _load_saved_policy() -> void:
 	_place_food_visual(false)
 
 func _restart() -> void:
+	camera.reset_subject()
+	ripples.clear()
 	if live_learning:
 		_begin_learning(false)
 		return
@@ -703,6 +738,7 @@ func _physics_process(_delta: float) -> void:
 		status.text = error
 		return
 	blend = 0.0
+	_observe_water(current)
 	if current.get("ate", false):
 		var slot := maxi(0, int(current.get("eaten_slot", 0)))
 		spark_origin = foods[slot].position
@@ -784,6 +820,8 @@ func _process(delta: float) -> void:
 		pose[key] = lerpf(float(previous[key]), float(current[key]), blend)
 	pose.heading = lerp_angle(float(previous.heading), float(current.heading), blend)
 	_apply_pose(pose)
+	_update_camera(delta, pose)
+	ripples.render_at(lerpf(float(previous.elapsed), float(current.elapsed), blend))
 	spark_age += delta
 	for i in sparks.size():
 		var spark := sparks[i]
@@ -804,5 +842,34 @@ func _apply_pose(pose: Dictionary) -> void:
 
 func _fit_camera() -> void:
 	var dimensions := Vector2(pond_viewport.size) if pond_viewport != null and not embedded_view else get_viewport().get_visible_rect().size
-	var aspect := dimensions.x / maxf(1, dimensions.y)
-	camera.size = maxf(8.2, 12.5 / maxf(0.1, aspect))
+	camera.fit(dimensions)
+
+func set_camera_close(enabled: bool) -> void:
+	close_camera = enabled
+	camera_selector.select(0 if enabled else 1)
+	_update_camera(0)
+	camera.set_close_up(enabled)
+
+func _update_camera(delta: float, pose: Dictionary = {}) -> void:
+	# Frame the head and both actual joint pivots, including the tail tip. This
+	# never selects food or changes the simulated pose, policy or training.
+	var low := Vector3(0.25, 0, 0)
+	var high := low
+	if pose.is_empty():
+		pose = current
+	for t in [0.0, 0.5, 1.0]:
+		var point := _tail_point(t, float(pose.get("joint0", 0)), float(pose.get("joint1", 0)))
+		low = low.min(point)
+		high = high.max(point)
+	var center := creature.to_global((low + high) * 0.5)
+	camera.follow(center, delta)
+
+func set_water_disturbances(enabled: bool) -> void:
+	water_disturbances = enabled
+	ripples.set_enabled(enabled)
+
+func _observe_water(pose: Dictionary) -> void:
+	var head := Vector3(float(pose.x), SWIM_Y, float(pose.y))
+	var rotation := Basis(Vector3.UP, -float(pose.heading))
+	var tip := head + rotation * _tail_point(1.0, float(pose.joint0), float(pose.joint1))
+	ripples.observe(head, tip, Vector2(float(pose.joint0), float(pose.joint1)), float(pose.heading), float(pose.elapsed))

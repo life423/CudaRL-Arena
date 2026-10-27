@@ -1,5 +1,9 @@
 # Pond physics and live learning — October 26, 2026
 
+The planar physics below describes the preserved shallow pond. The separate [deep-water environment](deep_water.md) now adds free 3D articulated dynamics, one food at varying depths and an accelerated native headless runner. It has its own network and save format.
+
+Current presentation/persistence updates: the pond now [resumes full saved training](training_resume.md) and provides [close follow plus stationary overview cameras](pond_graphics.md). The original startup/evidence notes below describe earlier prototype stages; the physical model remains unchanged.
+
 The user requires physically grounded movement and objected to calling a fixed 300-update budget “training complete” when swimming still looked awkward. They subsequently requested continuous live learning: the pond has no update cap. No food-reaching score, update count or elapsed time is presented as proof of graceful or biologically accurate swimming.
 
 ## Current model

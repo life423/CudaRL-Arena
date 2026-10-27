@@ -19,6 +19,7 @@ func _run() -> void:
 	scene.set_physics_process(false)
 	scene.pond_container.stretch = false
 	scene.pond_viewport.size = Vector2i(960, 280)
+	scene.set_camera_close(false)
 	scene.camera.position = Vector3(0, 5, 11)
 	scene.camera.look_at(Vector3.ZERO)
 	scene.camera.size = 4.2

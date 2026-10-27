@@ -1,6 +1,7 @@
 extends Control
 
 const Pond = preload("res://pond/pond.tscn")
+const PondCamera = preload("res://pond/pond_camera.gd")
 const REFERENCE_PATH := "res://pond/policies/shuffle_reference.json"
 const CHECKPOINT_PATH := "user://pond-policies/shuffle-v1/best.json"
 const TEXT := Color("eef4e9")
@@ -27,6 +28,8 @@ var paused := false
 var controls: HFlowContainer
 var page_scroll: ScrollContainer
 var training_save: Label
+var camera_selector: OptionButton
+var tab_row: HBoxContainer
 
 func label(value: String, font_size := 14, color := TEXT) -> Label:
 	var item := Label.new()
@@ -49,7 +52,7 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color("0b2826"))
 	var theme := Theme.new()
 	theme.default_font_size = 14
-	for kind in ["Button", "CheckBox", "TabBar"]:
+	for kind in ["Button", "CheckBox", "TabBar", "OptionButton"]:
 		theme.set_color("font_color", kind, TEXT)
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color("263631")
@@ -64,7 +67,7 @@ func _ready() -> void:
 	focus.bg_color = Color.TRANSPARENT
 	focus.border_color = ACCENT
 	focus.set_border_width_all(2)
-	for kind in ["Button", "CheckBox", "TabBar"]:
+	for kind in ["Button", "CheckBox", "TabBar", "OptionButton"]:
 		theme.set_stylebox("normal", kind, normal)
 		theme.set_stylebox("hover", kind, hover)
 		theme.set_stylebox("pressed", kind, hover)
@@ -113,13 +116,22 @@ func _ready() -> void:
 	maximum.toggled.connect(func(enabled: bool):
 		learner_pond.maximum_speed.button_pressed = enabled)
 	controls.add_child(maximum)
+	camera_selector = PondCamera.selector(true)
+	camera_selector.item_selected.connect(func(index: int):
+		reference_pond.set_camera_close(index == 0)
+		learner_pond.set_camera_close(index == 0))
+	controls.add_child(camera_selector)
 	tabs = TabBar.new()
 	tabs.add_tab("Saved best")
 	tabs.add_tab("Shuffled learner")
 	tabs.current_tab = 1
 	tabs.custom_minimum_size.y = 44
 	tabs.tab_changed.connect(func(_index: int): _fit())
-	column.add_child(tabs)
+	tab_row = HBoxContainer.new()
+	tab_row.add_theme_constant_override("separation", 4)
+	column.add_child(tab_row)
+	tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tab_row.add_child(tabs)
 	views = HBoxContainer.new()
 	views.custom_minimum_size.y = 240
 	views.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -172,6 +184,13 @@ func _fit() -> void:
 		return
 	var narrow := size.x < 900
 	tabs.visible = narrow
+	tab_row.visible = narrow
+	var selector_parent: Node = tab_row if narrow else controls
+	if camera_selector.get_parent() != selector_parent:
+		camera_selector.reparent(selector_parent)
+	camera_selector.custom_minimum_size.x = 124 if narrow else 164
+	camera_selector.set_item_text(0, "Close-up" if narrow else "Follow tadpole")
+	camera_selector.set_item_text(1, "Overview" if narrow else "Pond overview")
 	for i in panels.size():
 		panels[i].visible = not narrow or tabs.current_tab == i
 		viewports[i].render_target_update_mode = SubViewport.UPDATE_ALWAYS if panels[i].visible else SubViewport.UPDATE_DISABLED
