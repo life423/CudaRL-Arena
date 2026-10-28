@@ -62,7 +62,7 @@ func _ready() -> void:
 	_apply_pose(1.0)
 
 func _create_lab() -> RefCounted:
-	return DeepWaterLab.new()
+	return ClassDB.instantiate("DeepWaterLab")
 
 func _start_lab() -> bool:
 	return lab.start_training(population, training_seed, checkpoint_path)

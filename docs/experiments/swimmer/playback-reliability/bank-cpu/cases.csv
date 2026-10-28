@@ -1,0 +1,5 @@
+seed,environment,backend,minutes,foods,food_per_minute,max_food_gap_s,immobility_events,max_immobility_s,invalid_states,invalid_foods,nonsequential_steps,passes
+7,0,CPU,30,540,18,12.3,0,0,0,0,0,1
+3235803393,0,CPU,30,535,17.8333,7.6,0,0,0,0,0,1
+3235803394,0,CPU,30,545,18.1667,9.3,0,0,0,0,0,1
+3235803395,0,CPU,30,530,17.6667,6.9,0,0,0,0,0,1

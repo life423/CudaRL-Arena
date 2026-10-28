@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-27",
+  "device": "NVIDIA GeForce RTX 5070",
+  "policy_sha256": "D9730ED4FB2A05904E09ACAB45C43BE47FF7B80B768AA5379C463A11B8D9611D",
+  "selector_update": 250,
+  "motor_update": 64350,
+  "gradients": false,
+  "optimizer_updates": 0,
+  "original_policy_unchanged": true,
+  "full_training_saves_unchanged": true,
+  "calm_reference_foods": 18,
+  "calm_reference_matched": true,
+  "current_physics_tests_passed": 3,
+  "sweep_trials": 2176,
+  "confirmation_trials": 192,
+  "native_tests_passed": 157,
+  "native_tests_skipped": 0,
+  "portable_calm_reference_passed": true,
+  "strong_current_replay_identical": true
+}

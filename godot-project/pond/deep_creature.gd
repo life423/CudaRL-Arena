@@ -7,10 +7,8 @@ var membrane: MeshInstance3D
 func _ready() -> void:
 	head = Node3D.new()
 	add_child(head)
-	var reference = preload("res://pond/pond.gd").new()
 	var body := MeshInstance3D.new()
-	body.mesh = reference._head_mesh()
-	reference.free()
+	body.mesh = preload("res://pond/pond_geometry.gd").head_mesh()
 	var skin := ShaderMaterial.new()
 	skin.shader = preload("res://pond/deep_skin.gdshader")
 	body.material_override = skin

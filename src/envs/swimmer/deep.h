@@ -59,6 +59,7 @@ CUDARL_HD inline Result advance(State& s,const float* action) {
     if(norm(s.food-s.body.position)<.24f) {r.reward+=5;++s.eaten;s.since_food=0;r.ate=true;place_food(s);}
     r.timeout=s.steps>=kEpisodeSteps;return r;
 }
+#if CUDARL_WITH_CUDA
 class Batch {
 public:
     Batch(int n,uint32_t seed,swimmer::Body unused={});
@@ -71,5 +72,6 @@ private:
     int n_;uint32_t seed_;
     device_ptr<State> states_;device_ptr<uint32_t> episodes_;device_ptr<float> obs_;
 };
+#endif
 }
 #endif

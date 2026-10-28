@@ -1,0 +1,6 @@
+CUDA device: present
+
+PASS  progress selector: zero-column transfer preserves learned scores and progress is food-specific      0.6 ms
+PASS  progress selector: finite PPO, frozen motor and exact full-state continuation    744.0 ms
+
+2/2 tests passed, 0 skipped

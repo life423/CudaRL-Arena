@@ -1,0 +1,8 @@
+CUDA device: present
+
+  PASSIVE_CURRENT x_model=0.193094 speed_m_s=0.002674
+PASS  pond currents: drag uses relative water velocity and advects a passive body     14.1 ms
+PASS  pond currents: explicit calm water preserves the default trajectory     11.5 ms
+PASS  pond currents: CPU CUDA share current forces and physical food rules     78.2 ms
+
+3/3 tests passed, 0 skipped

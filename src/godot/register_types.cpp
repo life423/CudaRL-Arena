@@ -3,6 +3,7 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
+#if CUDARL_WITH_CUDA
 #include "cuda_device.h"
 #include "maze_arena.h"
 #include "network_trainer.h"
@@ -10,6 +11,7 @@
 #include "racing_lab.h"
 #include "tadpole_lab.h"
 #include "deep_water_lab.h"
+#endif
 #include "deep_pond_lab.h"
 
 using namespace godot;
@@ -18,6 +20,7 @@ namespace {
 
 void initialize_cudarl_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
+#if CUDARL_WITH_CUDA
     ClassDB::register_class<CudaDevice>();
     ClassDB::register_class<MazeArena>();
     ClassDB::register_class<NetworkTrainer>();
@@ -25,6 +28,7 @@ void initialize_cudarl_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<RacingLab>();
     ClassDB::register_class<TadpoleLab>();
     ClassDB::register_class<DeepWaterLab>();
+#endif
     ClassDB::register_class<DeepPondLab>();
 }
 

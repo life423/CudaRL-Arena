@@ -1,0 +1,50 @@
+[
+  {
+    "Kind": "baseline",
+    "File": "baseline-0.csv",
+    "Samples": 6,
+    "MeanMs": 830.7666166666667,
+    "MeanRolloutMs": 767.1477050833333,
+    "MeanPpoMs": 62.93225606166667
+  },
+  {
+    "Kind": "baseline",
+    "File": "baseline-3.csv",
+    "Samples": 6,
+    "MeanMs": 837.0927666666668,
+    "MeanRolloutMs": 774.0342000333334,
+    "MeanPpoMs": 62.315670651666665
+  },
+  {
+    "Kind": "baseline",
+    "File": "baseline-4.csv",
+    "Samples": 6,
+    "MeanMs": 838.4735833333334,
+    "MeanRolloutMs": 775.1918029833333,
+    "MeanPpoMs": 62.57009633333334
+  },
+  {
+    "Kind": "reuse",
+    "File": "reuse-1.csv",
+    "Samples": 6,
+    "MeanMs": 800.6867166666667,
+    "MeanRolloutMs": 737.806427,
+    "MeanPpoMs": 62.17046356166667
+  },
+  {
+    "Kind": "reuse",
+    "File": "reuse-2.csv",
+    "Samples": 6,
+    "MeanMs": 801.6076833333333,
+    "MeanRolloutMs": 738.7985534499999,
+    "MeanPpoMs": 62.075962703333325
+  },
+  {
+    "Kind": "reuse",
+    "File": "reuse-5.csv",
+    "Samples": 6,
+    "MeanMs": 800.8939166666665,
+    "MeanRolloutMs": 736.9516601500001,
+    "MeanPpoMs": 63.244885126666674
+  }
+]

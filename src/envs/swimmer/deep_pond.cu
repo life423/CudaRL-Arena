@@ -12,10 +12,10 @@ __global__ void reset_kernel(State* states,uint32_t* episodes,float* observation
     episodes[i]=0;states[i]=deep_pond::initial(seed,static_cast<uint32_t>(i));observe(states[i],observations+i*kObs);
 }
 __global__ void step_kernel(State* states,uint32_t* episodes,float* observations,const float* actions,
-                            swimmer::Outputs out,int n,uint32_t seed,bool autoreset,int evaluation_steps) {
+                            swimmer::Outputs out,int n,uint32_t seed,bool autoreset,int evaluation_steps,V water_velocity) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=n) return;
     State s=states[i];Result result;
-    if(autoreset || s.steps<evaluation_steps) result=advance(s,actions+i*kAct);
+    if(autoreset || s.steps<evaluation_steps) result=advance(s,actions+i*kAct,water_velocity);
     if(out.reward) out.reward[i]=result.reward;
     if(out.done) out.done[i]=result.timeout?1.f:0.f;
     if(out.truncated) out.truncated[i]=result.timeout?1.f:0.f;
@@ -32,9 +32,9 @@ Batch::Batch(int n,uint32_t seed,swimmer::Body unused):n_(n),seed_(seed) {
     states_.allocate(n);episodes_.allocate(n);obs_.allocate(static_cast<size_t>(n)*kObs);
     reset_kernel<<<(n+63)/64,64>>>(states_.get(),episodes_.get(),obs_.get(),n,seed_);CUDA_CHECK_THROW(cudaGetLastError());
 }
-void Batch::step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset,int evaluation_steps) {
+void Batch::step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset,int evaluation_steps,V water_velocity) {
     if(evaluation_steps<1) throw std::invalid_argument("Evaluation duration must be positive");
-    step_kernel<<<(n_+63)/64,64,0,stream>>>(states_.get(),episodes_.get(),obs_.get(),actions,out,n_,seed_,autoreset,evaluation_steps);CUDA_CHECK_THROW(cudaGetLastError());
+    step_kernel<<<(n_+63)/64,64,0,stream>>>(states_.get(),episodes_.get(),obs_.get(),actions,out,n_,seed_,autoreset,evaluation_steps,water_velocity);CUDA_CHECK_THROW(cudaGetLastError());
 }
 void Batch::save(checkpoint::Writer& out) const {
     std::vector<State> states(n_);std::vector<uint32_t> episodes(n_);std::vector<float> obs(static_cast<size_t>(n_)*kObs);

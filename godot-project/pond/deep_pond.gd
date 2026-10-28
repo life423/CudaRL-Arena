@@ -7,6 +7,7 @@ var markers: Array[MeshInstance3D] = []
 var lines: Array[MeshInstance3D] = []
 var depth_labels: Array[Label3D] = []
 var water_surface: MeshInstance3D
+var untrained_button: CheckBox
 var terrain_material: ShaderMaterial
 var visibility_focus := Vector3(0, -2, 0)
 var rendered_swimmer_position := Vector3(0, -2, 0)
@@ -48,10 +49,58 @@ func _ready() -> void:
 func _create_lab() -> RefCounted:
 	return DeepPondLab.new()
 
+func _build_ui() -> void:
+	super._build_ui()
+	untrained_button = CheckBox.new()
+	untrained_button.name = "ShowUntrainedPolicy"
+	untrained_button.text = "Show untrained policy"
+	untrained_button.custom_minimum_size.y = 44
+	untrained_button.add_theme_font_size_override("font_size", 14)
+	untrained_button.add_theme_color_override("font_color", TEXT)
+	untrained_button.add_theme_stylebox_override("focus", camera_button.get_theme_stylebox("focus"))
+	untrained_button.tooltip_text = "Use random initial weights for swimming and food choice, with the same physics. Each switch restarts the same pond layout. No learning or saved weights change."
+	untrained_button.toggled.connect(_toggle_untrained)
+	var controls := camera_button.get_parent()
+	controls.add_child(untrained_button)
+	controls.move_child(untrained_button, 3)
+	if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"):
+		var latest := _button("Latest trained agent")
+		latest.name = "WatchLatestAgent"
+		latest.tooltip_text = "Run the latest saved bank-trained selector in the live pond. No recording or training updates."
+		latest.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/latest_agent.tscn"))
+		controls.add_child(latest)
+	if FileAccess.file_exists("res://../build/pond-reliability-study/bank-preview/replay.json"):
+		var recovery := _button("Recovery comparison")
+		recovery.name = "WatchBankRecovery"
+		recovery.tooltip_text = "Compare recorded original and bank-trained food selection from the same held-out starting state."
+		recovery.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/bank_preview.tscn"))
+		controls.add_child(recovery)
+	if FileAccess.file_exists("res://../build/pond-current-study/diagnosis/replay.json"):
+		var replay := _button("Watch current test")
+		replay.name = "WatchCurrentTest"
+		replay.tooltip_text = "Watch the recorded stronger-current stall and frozen-controller diagnostic comparisons."
+		replay.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/current_replay.tscn"))
+		controls.add_child(replay)
+		controls.move_child(replay, 4)
+
+func _toggle_untrained(enabled: bool) -> void:
+	if not lab or not lab.set_untrained(enabled):
+		untrained_button.set_pressed_no_signal(not enabled)
+		return
+	state = lab.get_state()
+	previous = state.duplicate(true)
+	accumulator = 0.0
+	_poll()
+	_apply_pose(1.0)
+
 func _start_lab() -> bool:
 	if checkpoint_path == "user://pond-policies/deep-pond-v1/training.bin" and not controller_policy_path.is_empty() and FileAccess.file_exists(controller_policy_path):
 		paused = true
-		return lab.watch_controller(controller_policy_path)
+		var backend := "auto"
+		for argument in OS.get_cmdline_user_args():
+			if argument.begins_with("--pond-backend="):
+				backend = argument.get_slice("=", 1)
+		return lab.watch_controller(controller_policy_path, backend)
 	return lab.start_training(population, training_seed, checkpoint_path, swimming_checkpoint)
 
 func _floor_y(radius: float) -> float:
@@ -102,7 +151,7 @@ func _build_world() -> void:
 	environment.sky = sky
 	environment.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
-	environment.ssao_enabled = true
+	environment.ssao_enabled = RenderingServer.get_current_rendering_method() == "forward_plus"
 	var settings := WorldEnvironment.new()
 	settings.environment = environment
 	world.add_child(settings)
@@ -271,19 +320,25 @@ func _update_camera(delta: float) -> void:
 
 func _poll() -> void:
 	super._poll()
-	if stats.get("validated_controller", false):
-		title_status.text = "Trained PPO food selector"
+	if untrained_button:
+		untrained_button.visible = stats.get("playback_mode", false)
+		untrained_button.set_pressed_no_signal(stats.get("showcase_untrained", false))
+	if stats.get("playback_mode", false):
+		var untrained: bool = stats.get("showcase_untrained", false)
+		title_status.text = "Untrained · random weights" if untrained else "Trained PPO food selector"
 		pause_button.visible = false
 		speed_button.visible = false
 		find_child("SaveTrainingNow", true, false).visible = false
-		training_heading.text = "Saved controller"
-		training_stats.text = "Selector update %d\nSwimming retained from %d\nFood choice every %.1f s" % [stats.selector_update, stats.policy_update, stats.decision_steps * 0.05]
-		save_status.text = "Validated controller loaded.\nFull training checkpoints preserved."
+		training_heading.text = "Untrained controller" if untrained else "Saved controller"
+		training_stats.text = "AI and physics · %s\nRandom swimming + food choice\nNo learning updates" % stats.get("compute_backend", "CPU") if untrained else "AI and physics · %s\nSelector update %d\nSwimming retained from %d\nFood choice every %.1f s" % [stats.get("compute_backend", "CPU"), stats.selector_update, stats.policy_update, stats.decision_steps * 0.05]
+		training_stats.tooltip_text = stats.get("compute_detail", "")
+		save_status.text = "Both networks use random initial weights.\nSwitching restarts the same pond layout." if untrained else "Validated controller loaded.\nFull training checkpoints preserved."
 		curve.watch_button.visible = false
-		curve.plot_title = "Saved controller validation"
+		curve.plot_title = "Trained controller reference" if untrained else "Saved controller validation"
+		curve.plot_caption = "Trained policy only · not the untrained swimmer" if untrained else "Food / minute · 64 fixed 60 s trials"
 		curve.score_label = "Validation"
 		curve.axis_label = "Selector update"
-		curve.tooltip_text = "Frozen controller evaluated on 64 fixed one-minute trials. This view runs inference; further PPO training runs headlessly."
+		curve.tooltip_text = "This saved validation belongs to the trained controller. It does not measure the random-weight swimmer." if untrained else "Frozen controller evaluated on 64 fixed one-minute trials. This view runs inference; further PPO training runs headlessly."
 		curve.queue_redraw()
 		return
 	if curve.watch_button:

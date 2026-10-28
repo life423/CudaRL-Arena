@@ -16,11 +16,14 @@ CUDARL_HD inline void features(const float* o,int food,float* x) {
     }
     x[29]=sqrtf(minimum);x[30]=sqrtf(maximum);x[31]=sqrtf(other_nearest);
 }
+#if CUDARL_WITH_CUDA
 void make_features(const float* observations,float* output,int n,cudaStream_t stream);
+#endif
 CUDARL_HD inline void observe(const deep_pond::State& state,int target,float* output) {
     deep_pond::observe(state,output);
     for(int j=0;j<3;++j) output[33+j]=j==target?1.f:0.f;
 }
+#if CUDARL_WITH_CUDA
 class Batch {
 public:
     Batch(int n,uint32_t seed,int decision_steps,bool recovery=false);
@@ -36,5 +39,6 @@ private:
     device_ptr<deep_pond::State> states_;device_ptr<uint32_t> episodes_;
     device_ptr<int> targets_;device_ptr<float> observations_,motor_inputs_;
 };
+#endif
 }
 #endif

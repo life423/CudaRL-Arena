@@ -106,7 +106,8 @@ func _build() -> void:
 	header.add_child(title_row)
 	header.add_child(_label("Choose a demonstration", 22, MUTED))
 	content.add_child(header)
-	guide_button = _button("Training guide", "guide", false)
+	var portable: bool = ProjectSettings.get_setting("cudarl/portable_player", false)
+	guide_button = _button("About this build" if portable else "Training guide", "guide", false)
 	# This control opens help, not a demonstration.
 	guide_button.pressed.connect(_show_guide)
 	guide_button.tooltip_text = "How to watch, save, resume and train faster without rendering."
@@ -114,7 +115,10 @@ func _build() -> void:
 	header_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_row.add_child(header_spacer)
 	title_row.add_child(guide_button)
-	for spec in [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "Forage in the pond or learn to swim at depth."]]:
+	var demos := [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "Forage in the pond or learn to swim at depth."]]
+	if portable:
+		demos = [["pond", "Tadpole Pond", "The trained creature, with automatic CUDA or CPU playback."]]
+	for spec in demos:
 		var row := BoxContainer.new()
 		row.name = spec[0] + "_row"
 		row.add_theme_constant_override("separation", 28)
@@ -139,8 +143,11 @@ func _build() -> void:
 		actions.add_theme_constant_override("separation", 12)
 		row.add_child(actions)
 		if spec[0] == "pond":
-			actions.add_child(_button("Watch it learn", spec[0], false, true))
-			actions.add_child(_button("Deep water", "deep_water", false))
+			if portable:
+				actions.add_child(_button("Open pond", "deep_water", false, true))
+			else:
+				actions.add_child(_button("Watch it learn", spec[0], false, true))
+				actions.add_child(_button("Deep water", "deep_water", false))
 		else:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))
@@ -224,6 +231,15 @@ func _start_headless() -> void:
 		guide.hide()
 
 func _show_guide() -> void:
+	if ProjectSettings.get_setting("cudarl/portable_player", false):
+		if guide == null:
+			guide = AcceptDialog.new()
+			guide.title = "Portable pond"
+			guide.dialog_autowrap = true
+			guide.dialog_text = "The trained AI and pond physics prefer CUDA when its device-and-kernel check passes, with CPU fallback. Graphics use your available graphics hardware.\n\nUse Closer view or Pond overview to change the camera.\n\nThis first portable build plays the saved tadpole controller. Live CPU training, CartPole, Racing and creature growth are planned separately."
+			add_child(guide)
+		guide.popup_centered(Vector2i(mini(610, int(size.x) - 24), mini(320, int(size.y) - 24)))
+		return
 	if guide == null:
 		guide = AcceptDialog.new()
 		guide.title = "Training guide"

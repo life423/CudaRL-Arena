@@ -21,6 +21,17 @@ env:
   CUDA_INSTALLER: https://developer.download.nvidia.com/compute/cuda/13.2.1/network_installers/cuda_13.2.1_windows_network.exe
 
 jobs:
+  portable-cpu:
+    name: Portable pond, C++ only (no CUDA toolkit)
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure without CUDA or Godot build dependencies
+        run: cmake -S . -B build/portable-ci -DCUDARL_ENABLE_CUDA=OFF -DCUDARL_BUILD_GODOT=OFF -DCUDARL_BUILD_BENCH=OFF
+      - name: Build the portable runtime and tests
+        run: cmake --build build/portable-ci --config Release --parallel
+      - name: Test saved AI and unchanged CPU physics
+        run: ctest --test-dir build/portable-ci -C Release --output-on-failure
   build-and-test:
     name: Windows, CUDA 13.2 (no GPU)
     runs-on: windows-2022

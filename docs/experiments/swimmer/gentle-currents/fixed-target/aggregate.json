@@ -1,0 +1,13 @@
+{
+  "LearnedTrials": 4608,
+  "LearnedArrivals": 4608,
+  "PassiveTrials": 4608,
+  "PassiveArrivals": 140,
+  "LongestLearnedArrivalSeconds": 30.35,
+  "LearnedLowSpeedTenSecondTrials": 1,
+  "LearnedNoProgressTenSecondTrials": 10,
+  "MaximumLearnedLowSpeedSeconds": 13.5,
+  "MaximumLearnedNoProgressSeconds": 27.3,
+  "UniqueLayouts": 256,
+  "RepeatedConditionTrialsAreNotIndependent": true
+}

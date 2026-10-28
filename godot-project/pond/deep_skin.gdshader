@@ -17,5 +17,7 @@ void fragment() {
     RIM = 0.18;
     RIM_TINT = 0.6;
     EMISSION = vec3(0.13, 0.42, 0.40) * edge * 0.055;
+#if CURRENT_RENDERER == RENDERER_FORWARD_PLUS
     SSS_STRENGTH = 0.08;
+#endif
 }

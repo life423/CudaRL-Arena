@@ -1,0 +1,6 @@
+CUDA device: present
+
+PASS  fixed target: paired poses, bearing-relative currents and original motor inputs      0.1 ms
+PASS  fixed target: shared physics, passive torque and selected-only stopping      0.5 ms
+
+2/2 tests passed, 0 skipped
