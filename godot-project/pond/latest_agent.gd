@@ -1,7 +1,6 @@
 extends "res://pond/deep_pond.gd"
 
 const LATEST_POLICY := "res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"
-var last_session_time := -1.0
 var current_switch: CheckButton
 var water_status: Label
 
@@ -45,16 +44,15 @@ func _start_lab() -> bool:
 func _ready() -> void:
 	super._ready()
 	get_window().title = "CudaRL · Latest trained swimmer · live"
-	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Live swimmer"
-	var self_link := find_child("WatchLatestAgent", true, false)
-	if self_link:
-		self_link.hide()
+	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Tadpole pond"
 	_poll()
 	if "--gentle-current" in OS.get_cmdline_user_args():
 		current_switch.button_pressed = true
 
 func _fit() -> void:
 	super._fit()
+	if not layout.vertical and size.y < 500:
+		curve.custom_minimum_size.y = 148
 	if layout.vertical:
 		sidebar.custom_minimum_size.y = 242
 		sidebar_scroll.custom_minimum_size.y = 206
@@ -65,7 +63,7 @@ func _poll() -> void:
 		title_status.text = "Live agent could not start"
 		return
 	var untrained: bool = stats.get("showcase_untrained", false)
-	title_status.text = "Live · random initial weights" if untrained else "Live · latest saved PPO agent"
+	title_status.text = "Live · random initial weights" if untrained else "Live · latest trained agent"
 	training_heading.text = "Live inference"
 	var flowing: bool = stats.get("water_current_cm_s", 0.0) > 0
 	current_switch.set_pressed_no_signal(flowing)
@@ -73,23 +71,3 @@ func _poll() -> void:
 	water_status.tooltip_text = "Uniform flow along the pond's horizontal X axis; food stays at its existing underwater locations." if flowing else "No imposed water current."
 	training_stats.text = "AI and physics · %s\nSelector update %d\nSwimming retained from %d\nThree underwater foods" % [stats.compute_backend, 0 if untrained else stats.selector_update, 0 if untrained else stats.policy_update]
 	save_status.text = "Random initial networks · no training updates." if untrained else "Bank-trained candidate · weights fixed.\nPhysical simulation runs live.\nOriginal policy and saves preserved."
-	var elapsed: float = state.elapsed
-	if elapsed < last_session_time:
-		curve.points.clear()
-	curve.best_points.clear()
-	curve.best_score = -1
-	curve.show_best_score = false
-	curve.plot_title = "Live collection rate"
-	curve.status_caption = "Random weights · no learning updates" if untrained else "Saved PPO weights · no learning updates"
-	curve.plot_caption = "This session · cumulative food / minute"
-	curve.axis_label = "Elapsed seconds"
-	curve.score_label = "Session"
-	curve.empty_message = "Watching the live swimmer…"
-	curve.tooltip_text = "Measured from food actually collected in this live session. This is not a training curve or a fixed validation score."
-	curve.current_score = state.eaten * 60.0 / elapsed if elapsed >= 1 else -1
-	if elapsed >= 1 and (curve.points.is_empty() or floori(elapsed / 5) > floori(curve.points[-1].x / 5)):
-		curve.points.append(Vector2(elapsed, curve.current_score))
-		if curve.points.size() > 360:
-			curve.points.remove_at(0)
-	last_session_time = elapsed
-	curve.queue_redraw()

@@ -30,8 +30,8 @@ func _run() -> void:
 	check(scene.state.elapsed > 0, "The saved controller did not begin swimming")
 	check(not scene.pause_button.visible and not scene.speed_button.visible, "Playback offers misleading training controls")
 	check(not scene.find_child("SaveTrainingNow", true, false).visible and not scene.curve.watch_button.visible, "Playback offers misleading save/latest controls")
-	check(scene.title_status.text == "Trained PPO food selector" and scene.training_heading.text == "Saved controller", "Playback status is misleading")
-	check(scene.curve.points.size() == 1 and scene.curve.plot_title == "Saved controller validation", "Playback fabricated a learning curve")
+	check(scene.title_status.text == "Live · original saved agent" and scene.training_heading.text == "Saved controller", "Playback status is misleading")
+	check(scene.curve.plot_title == "Live collection rate" and not scene.curve.show_best_score and scene.curve.status_caption.contains("no learning"), "Playback graph implies learning or uses a validation score")
 	scene.set_physics_process(false)
 	var slots := {}
 	var targets := {}

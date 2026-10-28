@@ -1,5 +1,6 @@
 extends "res://pond/deep_water.gd"
 
+const PondExperiments = preload("res://launcher/pond_experiments.gd")
 @export var swimming_checkpoint := "user://pond-policies/deep-v1/training.bin"
 @export var controller_policy_path := "res://pond/policies/deep_selector.bin"
 var foods: Array[MeshInstance3D] = []
@@ -7,7 +8,7 @@ var markers: Array[MeshInstance3D] = []
 var lines: Array[MeshInstance3D] = []
 var depth_labels: Array[Label3D] = []
 var water_surface: MeshInstance3D
-var untrained_button: CheckBox
+var untrained_button: CheckButton
 var terrain_material: ShaderMaterial
 var visibility_focus := Vector3(0, -2, 0)
 var rendered_swimmer_position := Vector3(0, -2, 0)
@@ -19,6 +20,11 @@ var camera_mode_initialized := false
 var previous_camera_overview := true
 var fitted_viewport_size := Vector2i.ZERO
 var fitted_overview_distance := 13.8
+var experiments: AcceptDialog
+var details_button: Button
+var details_group: VBoxContainer
+var details_expanded := false
+var last_session_time := -1.0
 const RX := 4.6
 const RZ := 3.5
 const NATURAL_OVERVIEW_DIRECTION := Vector3(0.20, 0.87, 0.45)
@@ -31,7 +37,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	super._ready()
-	get_window().title = "CudaRL · Deep pond"
+	get_window().title = "CudaRL · Original swimmer · live" if stats.get("playback_mode", false) else "CudaRL · Deep pond · training"
 	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Tadpole pond"
 	camera_button.text = "Closer view"
 	camera_button.pressed.disconnect(camera_button.pressed.get_connections()[0].callable)
@@ -51,7 +57,7 @@ func _create_lab() -> RefCounted:
 
 func _build_ui() -> void:
 	super._build_ui()
-	untrained_button = CheckBox.new()
+	untrained_button = CheckButton.new()
 	untrained_button.name = "ShowUntrainedPolicy"
 	untrained_button.text = "Show untrained policy"
 	untrained_button.custom_minimum_size.y = 44
@@ -62,26 +68,34 @@ func _build_ui() -> void:
 	untrained_button.toggled.connect(_toggle_untrained)
 	var controls := camera_button.get_parent()
 	controls.add_child(untrained_button)
-	controls.move_child(untrained_button, 3)
-	if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"):
-		var latest := _button("Latest trained agent")
-		latest.name = "WatchLatestAgent"
-		latest.tooltip_text = "Run the latest saved bank-trained selector in the live pond. No recording or training updates."
-		latest.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/latest_agent.tscn"))
-		controls.add_child(latest)
-	if FileAccess.file_exists("res://../build/pond-reliability-study/bank-preview/replay.json"):
-		var recovery := _button("Recovery comparison")
-		recovery.name = "WatchBankRecovery"
-		recovery.tooltip_text = "Compare recorded original and bank-trained food selection from the same held-out starting state."
-		recovery.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/bank_preview.tscn"))
-		controls.add_child(recovery)
-	if FileAccess.file_exists("res://../build/pond-current-study/diagnosis/replay.json"):
-		var replay := _button("Watch current test")
-		replay.name = "WatchCurrentTest"
-		replay.tooltip_text = "Watch the recorded stronger-current stall and frozen-controller diagnostic comparisons."
-		replay.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/current_replay.tscn"))
-		controls.add_child(replay)
-		controls.move_child(replay, 4)
+	controls.move_child(camera_button, 3)
+	controls.move_child(untrained_button, 4)
+	swimmer_stats.tooltip_text = "Live physical measurements. Food depth markers appear in the pond overview."
+	details_button = _button("AI details")
+	details_button.name = "PondDetails"
+	details_button.toggle_mode = true
+	details_button.toggled.connect(func(enabled: bool):
+		details_expanded = enabled
+		details_button.text = "Hide AI details" if enabled else "AI details"
+		details_group.visible = enabled)
+	controls.add_child(details_button)
+	details_group = VBoxContainer.new()
+	details_group.add_theme_constant_override("separation", 8)
+	controls.add_child(details_group)
+	for item in [training_heading, training_stats, save_status]:
+		item.reparent(details_group)
+	details_group.hide()
+	var more := _button("Experiments")
+	more.name = "PondExperiments"
+	more.tooltip_text = "Other live agents, the learning lab and recorded diagnostics."
+	more.pressed.connect(_show_experiments)
+	controls.add_child(more)
+
+func _show_experiments() -> void:
+	if experiments == null:
+		experiments = PondExperiments.new()
+		add_child(experiments)
+	experiments.open()
 
 func _toggle_untrained(enabled: bool) -> void:
 	if not lab or not lab.set_untrained(enabled):
@@ -259,7 +273,7 @@ func _apply_pose(alpha: float) -> void:
 		depth_labels[i].visible = overview
 
 func _swimmer_text() -> String:
-	return "Three foods · deep pond\n\nFood eaten  %d\nDepth  %.1f cm\nSpeed  %.1f cm/s\nFood depths  %.1f / %.1f / %.1f cm" % [state.eaten, state.depth_cm, state.speed_cm_s, -state.foods[0].y * 4, -state.foods[1].y * 4, -state.foods[2].y * 4]
+	return "Food collected  %d\nDepth  %.1f cm\nSpeed  %.1f cm/s\nSince food  %.1f s" % [state.eaten, state.depth_cm, state.speed_cm_s, state.seconds_since_food]
 
 func _camera_target() -> Vector3:
 	return Vector3(0, -1.4, 0) if overview else state.position
@@ -320,12 +334,14 @@ func _update_camera(delta: float) -> void:
 
 func _poll() -> void:
 	super._poll()
+	details_button.visible = stats.get("playback_mode", false)
+	details_group.visible = details_expanded or not stats.get("playback_mode", false)
 	if untrained_button:
 		untrained_button.visible = stats.get("playback_mode", false)
 		untrained_button.set_pressed_no_signal(stats.get("showcase_untrained", false))
 	if stats.get("playback_mode", false):
 		var untrained: bool = stats.get("showcase_untrained", false)
-		title_status.text = "Untrained · random weights" if untrained else "Trained PPO food selector"
+		title_status.text = "Live · random initial weights" if untrained else "Live · original saved agent"
 		pause_button.visible = false
 		speed_button.visible = false
 		find_child("SaveTrainingNow", true, false).visible = false
@@ -334,15 +350,32 @@ func _poll() -> void:
 		training_stats.tooltip_text = stats.get("compute_detail", "")
 		save_status.text = "Both networks use random initial weights.\nSwitching restarts the same pond layout." if untrained else "Validated controller loaded.\nFull training checkpoints preserved."
 		curve.watch_button.visible = false
-		curve.plot_title = "Trained controller reference" if untrained else "Saved controller validation"
-		curve.plot_caption = "Trained policy only · not the untrained swimmer" if untrained else "Food / minute · 64 fixed 60 s trials"
-		curve.score_label = "Validation"
-		curve.axis_label = "Selector update"
-		curve.tooltip_text = "This saved validation belongs to the trained controller. It does not measure the random-weight swimmer." if untrained else "Frozen controller evaluated on 64 fixed one-minute trials. This view runs inference; further PPO training runs headlessly."
-		curve.queue_redraw()
+		_update_session_curve(untrained)
 		return
 	if curve.watch_button:
 		curve.watch_button.set_pressed_no_signal(stats.get("watching_best", true))
 		curve.watch_button.text = "Watch latest" if stats.get("watching_best", true) else "Watch best"
 	if stats.get("transferred", false):
 		save_status.text = "Swimming retained from %d\nSaved at %d · autosaves every 30 s." % [stats.loaded_update, stats.saved_update]
+
+func _update_session_curve(untrained: bool) -> void:
+	var elapsed: float = state.get("elapsed", 0)
+	if last_session_time < 0 or elapsed < last_session_time:
+		curve.points.clear()
+	curve.best_points.clear()
+	curve.best_score = -1
+	curve.show_best_score = false
+	curve.plot_title = "Live collection rate"
+	curve.status_caption = "Random weights · no learning updates" if untrained else "Saved PPO weights · no learning updates"
+	curve.plot_caption = "This session · cumulative food / minute"
+	curve.axis_label = "Elapsed seconds"
+	curve.score_label = "Session"
+	curve.empty_message = "Watching the live swimmer…"
+	curve.tooltip_text = "Measured from food actually collected in this live session. This is not a training curve or a fixed validation score."
+	curve.current_score = state.eaten * 60.0 / elapsed if elapsed >= 1 else -1
+	if elapsed >= 1 and (curve.points.is_empty() or floori(elapsed / 5) > floori(curve.points[-1].x / 5)):
+		curve.points.append(Vector2(elapsed, curve.current_score))
+		if curve.points.size() > 360:
+			curve.points.remove_at(0)
+	last_session_time = elapsed
+	curve.queue_redraw()
