@@ -21,7 +21,7 @@ func _start_lab() -> bool:
 
 func _ready() -> void:
 	super._ready()
-	get_window().title = "CudaRL · Current stall replay"
+	get_window().title = "CudaRL · Current stall · recording"
 	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Current replay"
 	curve.hide()
 	if not state.is_empty():
@@ -126,6 +126,7 @@ func _poll() -> void:
 	if state.is_empty():
 		return
 	title_status.text = "Recorded trial · no training"
+	details_button.text = "Hide details" if details_expanded else "About this recording"
 	training_heading.text = "Frozen controller"
 	training_stats.text = "Original GPU test · world 24\nSame trained swimming + selector\nCurrent  %.1f cm/s" % lab.data.cases[lab.case_index].current_cm_s
 	training_stats.tooltip_text = "This is recorded simulation output. The GPU is not running a training workload while you watch."

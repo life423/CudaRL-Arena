@@ -23,5 +23,11 @@ struct PondCudaCurrentApi {
     int (*set_current)(void* handle,deep::V current,char* error,size_t error_size);
 };
 using GetPondCudaCurrentApi=const PondCudaCurrentApi* (*)();
+struct PondCudaFoodApi {
+    uint32_t version;
+    uint32_t api_size;
+    int (*set_food_drift)(void* handle,int enabled,char* error,size_t error_size);
+};
+using GetPondCudaFoodApi=const PondCudaFoodApi* (*)();
 }
 #endif

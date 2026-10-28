@@ -65,3 +65,26 @@ GPU_TEST_CASE("playback currents: optional CUDA module preserves continuity and 
         CHECK(cudarl::deep::norm(cpu->current()-gpu->current())==0);
     }
 }
+TEST_CASE("playback food drift: opt-in preserves state, advances targets and switches back without resets") {
+    const auto policy=cudarl::rl::initial_pond_policy();auto player=dm::create_pond_playback(policy,"cpu");
+    const auto before=player->frame();player->set_food_drift(true);player->set_current({.005f,0,0});
+    CHECK(player->frame().food_drift);CHECK(player->frame().state.steps==before.state.steps);
+    for(int f=0;f<3;++f) CHECK(cudarl::deep::norm(player->frame().state.food[f]-before.state.food[f])==0);
+    const auto next=player->step();
+    for(int f=0;f<3;++f) {CHECK(cudarl::deep::norm(next.state.food[f]-before.state.food[f])>0);CHECK(cudarl::deep_pond::water(next.state.food[f]));}
+    player->set_current({});const auto calm=player->frame();player->step();
+    for(int f=0;f<3;++f) CHECK(cudarl::deep::norm(player->frame().state.food[f]-calm.state.food[f])==0);
+    player->set_food_drift(false);CHECK(!player->frame().food_drift);
+}
+GPU_TEST_CASE("playback food drift: CUDA and CPU agree on opt-in targets and live toggles") {
+    const auto policy=cudarl::rl::initial_pond_policy();
+    auto cpu=dm::create_pond_playback(policy,"cpu"),gpu=dm::create_pond_playback(policy,"cuda",CUDARL_POND_MODULE);
+    cpu->set_food_drift(true);gpu->set_food_drift(true);
+    for(int tick=0;tick<80;++tick) {
+        if(tick==0 || tick==40) {const cudarl::deep::V flow=tick==0?cudarl::deep::V{.005f,0,0}:cudarl::deep::V{};cpu->set_current(flow);gpu->set_current(flow);}
+        const auto& a=cpu->step();const auto& b=gpu->step();
+        CHECK(a.food_drift && b.food_drift);CHECK(a.selected==b.selected);
+        CHECK(cudarl::deep::norm(a.state.body.position-b.state.body.position)<.003f);
+        for(int f=0;f<3;++f) CHECK(cudarl::deep::norm(a.state.food[f]-b.state.food[f])<2e-5f);
+    }
+}

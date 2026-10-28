@@ -1,6 +1,7 @@
 extends Control
 
 const Preview = preload("res://launcher/thumbnail.gd")
+const PondExperiments = preload("res://launcher/pond_experiments.gd")
 const BG := Color("171c21")
 const TEXT := Color("f1f2ee")
 const MUTED := Color("b4bac2")
@@ -19,8 +20,10 @@ var guide: AcceptDialog
 var guide_button: Button
 var header: VBoxContainer
 var header_spacer: Control
+var experiments: AcceptDialog
 
 func _ready() -> void:
+	get_window().title = "CudaRL Arena · Demos"
 	RenderingServer.set_default_clear_color(BG)
 	_build()
 	resized.connect(_fit_layout)
@@ -72,10 +75,11 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 	button.tooltip_text = "Play the saved policy without training." if watch else "Open a fresh, untrained run."
 	if demo == "pond":
 		button.tooltip_text = "Watch the three-food shallow pond learn. Saved training resumes automatically."
-	elif demo == "deep_water":
-		button.tooltip_text = "Watch the 3D swimmer choose food at different depths in the deep pond."
+	elif demo in ["deep_water", "pond_live"]:
+		button.tooltip_text = "Open a live physical simulation controlled by the saved neural networks."
 	if demo not in ["guide", "headless"]:
-		button.pressed.connect(func(): _open(demo, watch))
+		if demo != "pond_experiments":
+			button.pressed.connect(func(): _open(demo, watch))
 		buttons.append(button)
 	return button
 
@@ -107,7 +111,7 @@ func _build() -> void:
 	header.add_child(_label("Choose a demonstration", 22, MUTED))
 	content.add_child(header)
 	var portable: bool = ProjectSettings.get_setting("cudarl/portable_player", false)
-	guide_button = _button("About this build" if portable else "Training guide", "guide", false)
+	guide_button = _button("About this build" if portable else "Help & training", "guide", false)
 	# This control opens help, not a demonstration.
 	guide_button.pressed.connect(_show_guide)
 	guide_button.tooltip_text = "How to watch, save, resume and train faster without rendering."
@@ -115,7 +119,7 @@ func _build() -> void:
 	header_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_row.add_child(header_spacer)
 	title_row.add_child(guide_button)
-	var demos := [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "Forage in the pond or learn to swim at depth."]]
+	var demos := [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "A trained swimmer in a live 3D pond. Change the current or compare untrained behavior."]]
 	if portable:
 		demos = [["pond", "Tadpole Pond", "The trained creature, with automatic CUDA or CPU playback."]]
 	for spec in demos:
@@ -146,8 +150,12 @@ func _build() -> void:
 			if portable:
 				actions.add_child(_button("Open pond", "deep_water", false, true))
 			else:
-				actions.add_child(_button("Watch it learn", spec[0], false, true))
-				actions.add_child(_button("Deep water", "deep_water", false))
+				var live_demo := "pond_live" if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin") else "deep_water"
+				actions.add_child(_button("Open pond", live_demo, true, true))
+				var more := _button("Experiments", "pond_experiments", false)
+				more.tooltip_text = "Separate learning labs, older agents and clearly labeled recordings."
+				more.pressed.connect(_show_experiments)
+				actions.add_child(more)
 		else:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))
@@ -201,7 +209,7 @@ func _fit_layout() -> void:
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	queue_redraw()
 	if guide and guide.visible:
-		guide.size = Vector2i(mini(650, int(size.x) - 24), mini(640, int(size.y) - 24))
+		guide.size = Vector2i(mini(650, int(size.x) - 24), mini(640, int(size.y) - 80))
 		guide.position = (Vector2i(size) - guide.size) / 2
 
 func _headless_command() -> String:
@@ -217,6 +225,12 @@ func _headless_command() -> String:
 	var executable := ProjectSettings.globalize_path("res://../build/Release/deep_swimmer_train.exe")
 	var checkpoint := ProjectSettings.globalize_path("user://pond-policies/deep-pond-v1/training.bin")
 	return "& '%s' --pond --checkpoint '%s'" % [executable.replace("'", "''"), checkpoint.replace("'", "''")]
+
+func _show_experiments() -> void:
+	if experiments == null:
+		experiments = PondExperiments.new()
+		add_child(experiments)
+	experiments.open()
 
 func _start_headless() -> void:
 	var executable := ProjectSettings.globalize_path("res://../build/Release/pond_selector_train.exe" if FileAccess.file_exists("res://pond/policies/deep_selector.bin") else "res://../build/Release/deep_swimmer_train.exe")
@@ -236,14 +250,16 @@ func _show_guide() -> void:
 			guide = AcceptDialog.new()
 			guide.title = "Portable pond"
 			guide.dialog_autowrap = true
+			PondExperiments.style_dialog(guide)
 			guide.dialog_text = "The trained AI and pond physics prefer CUDA when its device-and-kernel check passes, with CPU fallback. Graphics use your available graphics hardware.\n\nUse Closer view or Pond overview to change the camera.\n\nThis first portable build plays the saved tadpole controller. Live CPU training, CartPole, Racing and creature growth are planned separately."
 			add_child(guide)
-		guide.popup_centered(Vector2i(mini(610, int(size.x) - 24), mini(320, int(size.y) - 24)))
+		guide.popup_centered(Vector2i(mini(610, int(size.x) - 24), mini(320, int(size.y) - 80)))
 		return
 	if guide == null:
 		guide = AcceptDialog.new()
-		guide.title = "Training guide"
+		guide.title = "Help & training"
 		guide.ok_button_text = "Done"
+		PondExperiments.style_dialog(guide)
 		add_child(guide)
 		var scroll := ScrollContainer.new()
 		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -253,10 +269,10 @@ func _show_guide() -> void:
 		body.add_theme_constant_override("separation", 12)
 		scroll.add_child(body)
 		for item in [
-			["Choose a demonstration", "Watch trained plays saved CartPole or Racing policies. Train from scratch opens their learning controls. Watch it learn opens the shallow pond. Deep water plays the validated food selector and its retained swimming network in the deeper three-food pond."],
-			["What the deep pond shows", "The trained controller runs without background learning. Its validation score comes from separate trials. The camera controls and depth markers work as before. Your original swimming and training checkpoints are preserved."],
+			["Watch or learn", "CartPole and Racing offer saved-policy playback or a fresh training run. Open pond runs the latest saved swimmer live. Experiments contains the shallow learning lab, the original agent and recorded diagnostics."],
+			["Interact with the live pond", "Gentle current changes water forces, moves suspended food and reveals visible flow. Closer view changes the camera. Show untrained policy compares random initial networks and restarts the same layout. The graph measures this session's food collection. Live inference does not update the saved weights."],
 			["Train without graphics", "The console below continues PPO food-selector training at fixed physics timesteps. An existing full save resumes; a new installation starts from the packaged networks with a fresh optimizer. Ctrl+C saves and stops. Every 25 updates saves a full checkpoint; a crash can lose progress since that save. Only one trainer can own each save."],
-			["Keep the demonstration validated", "Further training saves a separate candidate controller. Deep water keeps showing the tested version until a candidate passes fresh evaluation and is installed. Earlier shallow, shuffled and one-food experiments remain preserved."]
+			["Keep learned skills safe", "Headless training saves a separate candidate. Watching the pond keeps its tested saved agent until a replacement is evaluated. Your original networks and full training saves are preserved. Recordings are always labeled; they are not live simulation."]
 		]:
 			body.add_child(_label(item[0], 20))
 			var paragraph := _label(item[1], 15, MUTED)
@@ -270,7 +286,7 @@ func _show_guide() -> void:
 		copy.custom_minimum_size.y = 44
 		copy.pressed.connect(func(): DisplayServer.clipboard_set(_headless_command()); copy.text = "Command copied")
 		body.add_child(copy)
-	guide.popup_centered(Vector2i(mini(650, int(size.x) - 24), mini(640, int(size.y) - 24)))
+	guide.popup_centered(Vector2i(mini(650, int(size.x) - 24), mini(640, int(size.y) - 80)))
 
 func _open(demo: String, watch: bool) -> void:
 	if opening:
@@ -278,7 +294,7 @@ func _open(demo: String, watch: bool) -> void:
 	opening = true
 	for button in buttons:
 		button.disabled = true
-	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Tadpole Pond", "deep_water": "Deep water"}.get(demo, demo)
+	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Shallow-water learning", "pond_live": "Live pond", "deep_water": "Original swimmer"}.get(demo, demo)
 	status.add_theme_color_override("font_color", MUTED)
 	status.visible = true
 	await get_tree().process_frame

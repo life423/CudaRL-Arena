@@ -17,7 +17,7 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("watch_controller","path","backend"),&DeepPondLab::watch_controller,DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("watch_progress_controller","path","backend"),&DeepPondLab::watch_progress_controller,DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("set_untrained","enabled"),&DeepPondLab::set_untrained);
-    ClassDB::bind_method(D_METHOD("set_gentle_current","enabled"),&DeepPondLab::set_gentle_current);
+    ClassDB::bind_method(D_METHOD("set_gentle_current","enabled","drifting_food"),&DeepPondLab::set_gentle_current,DEFVAL(false));
     ClassDB::bind_method(D_METHOD("set_paused","paused"),&DeepPondLab::set_paused);
     ClassDB::bind_method(D_METHOD("set_updates_per_second","speed"),&DeepPondLab::set_updates_per_second);
     ClassDB::bind_method(D_METHOD("save_training_now"),&DeepPondLab::save_training_now);
@@ -88,6 +88,7 @@ bool DeepPondLab::set_untrained(bool enabled) {
             next=cudarl::demos::create_pond_playback(policy,controller_backend_.utf8().get_data(),module.get_data());
         } else next=cudarl::demos::create_pond_playback(enabled?cudarl::rl::initial_pond_policy():controller_,
             controller_backend_.utf8().get_data(),module.get_data());
+        next->set_food_drift(playback_->frame().food_drift);
         next->set_current(playback_->current());
         playback_=std::move(next);showcase_untrained_=enabled;error_=String();
         state_=playback_->frame().state;selected_food_=playback_->frame().selected;
@@ -107,10 +108,17 @@ bool DeepPondLab::watch_progress_controller(String path,String backend) {
         return true;
     } catch(const std::exception& e) {stop();error_=e.what();return false;}
 }
-bool DeepPondLab::set_gentle_current(bool enabled) {
+bool DeepPondLab::set_gentle_current(bool enabled,bool drifting_food) {
     if(!playback_) return false;
-    try {playback_->set_current(enabled?cudarl::deep::V{.005f,0,0}:cudarl::deep::V{});error_=String();return true;}
-    catch(const std::exception& e) {error_=e.what();return false;}
+    const auto previous_current=playback_->current();const bool previous_drift=playback_->frame().food_drift;
+    try {
+        playback_->set_food_drift(enabled && drifting_food);
+        playback_->set_current(enabled?cudarl::deep::V{.005f,0,0}:cudarl::deep::V{});error_=String();return true;
+    } catch(const std::exception& e) {
+        error_=e.what();
+        try {playback_->set_food_drift(previous_drift);playback_->set_current(previous_current);} catch(const std::exception&) {}
+        return false;
+    }
 }
 void DeepPondLab::set_paused(bool paused) {
 #if CUDARL_WITH_CUDA
@@ -204,6 +212,7 @@ Dictionary DeepPondLab::get_stats() {
         const auto current=playback_->current();
         d["water_current_cm_s"]=100.*cudarl::deep::norm(current);
         d["water_current"]=Vector3(current.x,current.y,current.z);
+        d["food_drifting"]=playback_->frame().food_drift;
         d["compute_backend"]=playback_->backend();d["compute_detail"]=playback_->detail().c_str();
         d["training_ready"]=true;d["paused"]=true;d["resumed"]=false;d["loaded_update"]=controller_.update;d["saved_update"]=controller_.update;
         d["transferred"]=false;d["food_count"]=3;d["policy_inputs"]=33;d["watching_best"]=true;d["save_error"]=String();

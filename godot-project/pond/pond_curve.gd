@@ -77,14 +77,18 @@ func _draw() -> void:
 	draw_string(font, Vector2(20, 72), current_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, ACCENT)
 	if show_best_score:
 		draw_string(font, Vector2(size.x - 20 - font.get_string_size(best_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x, 72), best_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, BEST)
-	draw_string(font, Vector2(20, 91), plot_caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, MUTED)
-	var plot := Rect2(44, 108, maxf(1, size.x - 64), maxf(1, size.y - 132))
+	var compact := size.y < 170
+	if not compact:
+		draw_string(font, Vector2(20, 91), plot_caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, MUTED)
+	var plot_top := 88 if compact else 108
+	var plot := Rect2(44, plot_top, maxf(1, size.x - 64), maxf(1, size.y - plot_top - 24))
 	var chart_max := 10.0
 	for point in points:
 		chart_max = maxf(chart_max, ceilf(point.y / 10.0) * 10.0)
 	for point in best_points:
 		chart_max = maxf(chart_max, ceilf(point.y / 10.0) * 10.0)
-	for value in [0.0, chart_max / 2.0, chart_max]:
+	var ticks := [0.0, chart_max] if plot.size.y < 40 else [0.0, chart_max / 2.0, chart_max]
+	for value in ticks:
 		var y: float = plot.end.y - plot.size.y * float(value) / chart_max
 		draw_line(Vector2(plot.position.x, y), Vector2(plot.end.x, y), GRID)
 		draw_string(font, Vector2(10, y + 4), str(value), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, MUTED)

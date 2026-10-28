@@ -1,0 +1,113 @@
+CMake is re-running because C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/generate.stamp is out-of-date.
+  the file 'C:/Users/aiand/Documents/programming/CudaRL-Arena/CMakeLists.txt'
+  is newer than 'C:/Users/aiand/Documents/programming/CudaRL-Arena/build/CMakeFiles/generate.stamp.depend'
+  result='-1'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26340.
+-- Configuring done (1.4s)
+-- Generating done (0.7s)
+-- Build files have been written to: C:/Users/aiand/Documents/programming/CudaRL-Arena/build
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  pond_playback.cpp
+  cudarl_runtime.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_runtime.lib
+  Compiling CUDA source file ..\src\envs\swimmer\deep_pond.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir cudarl_core\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/FdC:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_core.pdb" -o cudarl_core.dir\Release\deep_pond.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\src\envs\swimmer\deep_pond.cu" 
+  deep_pond.cu
+  tmpxft_0000845c_00000000-7_deep_pond.cudafe1.cpp
+  Compiling CUDA source file ..\src\envs\swimmer\pond_selector.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir cudarl_core\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/FdC:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_core.pdb" -o cudarl_core.dir\Release\pond_selector.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\src\envs\swimmer\pond_selector.cu" 
+  pond_selector.cu
+  tmpxft_00007768_00000000-7_pond_selector.cudafe1.cpp
+  Compiling CUDA source file ..\src\envs\swimmer\progress_selector.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir cudarl_core\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/FdC:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_core.pdb" -o cudarl_core.dir\Release\progress_selector.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\src\envs\swimmer\progress_selector.cu" 
+  progress_selector.cu
+  tmpxft_000072a4_00000000-7_progress_selector.cudafe1.cpp
+  cudarl_core.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_core.lib
+  Compiling CUDA source file ..\src\demos\pond_playback_cuda.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir cudarl_pond_cuda\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Dcudarl_pond_cuda_EXPORTS -D_WINDLL -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Dcudarl_pond_cuda_EXPORTS -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/Fdcudarl_pond_cuda.dir\Release\vc143.pdb" -o cudarl_pond_cuda.dir\Release\pond_playback_cuda.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\src\demos\pond_playback_cuda.cu" 
+  pond_playback_cuda.cu
+  tmpxft_00007c74_00000000-7_pond_playback_cuda.cudafe1.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl_pond_cuda.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl_pond_cuda.exp
+  cudarl_pond_cuda.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\godot-project\addons\cudarl\bin\cudarl_pond_cuda.dll
+  deep_pond_lab.cpp
+  deep_water_lab.cpp
+  register_types.cpp
+  tadpole_lab.cpp
+  Generating Code...
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl.exp
+  cudarl.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\godot-project\addons\cudarl\bin\cudarl.dll
+  test_deep_pond.cpp
+  test_deep_water.cpp
+  test_fixed_target.cpp
+  test_foraging.cpp
+  test_pond_current.cpp
+  test_pond_playback_reliability.cpp
+  test_pond_selector.cpp
+  test_progress_selector.cpp
+  test_swimmer_inertial.cpp
+  test_training_resume.cpp
+  Generating Code...
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl_tests.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl_tests.exp
+  cudarl_tests.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_tests.exe
+  deep_swimmer_train.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/deep_swimmer_train.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/deep_swimmer_train.exp
+  deep_swimmer_train.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\deep_swimmer_train.exe
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/export_demo_policies.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/export_demo_policies.exp
+  export_demo_policies.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\export_demo_policies.exe
+  food_order_bias.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\food_order_bias.exe
+  foraging_experiment.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/foraging_experiment.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/foraging_experiment.exp
+  foraging_experiment.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\foraging_experiment.exe
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/nn_bench.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/nn_bench.exp
+  nn_bench.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\nn_bench.exe
+  paired_pond_eval.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\paired_pond_eval.exe
+  Compiling CUDA source file ..\tools\pond_bank_study.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir pond_bank_study\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/Fdpond_bank_study.dir\Release\vc143.pdb" -o pond_bank_study.dir\Release\pond_bank_study.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\tools\pond_bank_study.cu" 
+  pond_bank_study.cu
+  tmpxft_00007cc0_00000000-7_pond_bank_study.cudafe1.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_bank_study.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_bank_study.exp
+  pond_bank_study.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_bank_study.exe
+  pond_choice_eval.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_choice_eval.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_choice_eval.exp
+  pond_choice_eval.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_choice_eval.exe
+  Compiling CUDA source file ..\tools\pond_current_eval.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir pond_cur.B7AC1789\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/Fdpond_current_eval.dir\Release\vc143.pdb" -o pond_current_eval.dir\Release\pond_current_eval.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\tools\pond_current_eval.cu" 
+  pond_current_eval.cu
+  tmpxft_00006d78_00000000-7_pond_current_eval.cudafe1.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_current_eval.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_current_eval.exp
+  pond_current_eval.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_current_eval.exe
+  Compiling CUDA source file ..\tools\pond_fixed_target_eval.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir pond_fix.EDE5777C\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/Fdpond_fixed_target_eval.dir\Release\vc143.pdb" -o pond_fixed_target_eval.dir\Release\pond_fixed_target_eval.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\tools\pond_fixed_target_eval.cu" 
+  pond_fixed_target_eval.cu
+  tmpxft_00008630_00000000-7_pond_fixed_target_eval.cudafe1.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_fixed_target_eval.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_fixed_target_eval.exp
+  pond_fixed_target_eval.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_fixed_target_eval.exe
+  pond_probe.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_probe.exe
+  pond_progress_profile.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_progress_profile.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_progress_profile.exp
+  pond_progress_profile.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_progress_profile.exe
+  pond_progress_train.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_progress_train.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_progress_train.exp
+  pond_progress_train.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_progress_train.exe
+  pond_recovery_probe.cpp
+  pond_recovery_probe.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_recovery_probe.exe
+  pond_reliability.cpp
+  pond_reliability.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_reliability.exe
+  pond_selector_train.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_selector_train.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/pond_selector_train.exp
+  pond_selector_train.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\pond_selector_train.exe
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/racing_bench.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/racing_bench.exp
+  racing_bench.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\racing_bench.exe
+  shuffle_experiment.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/shuffle_experiment.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/shuffle_experiment.exp
+  shuffle_experiment.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\shuffle_experiment.exe
+  swimmer_experiment.cpp
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/swimmer_experiment.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/swimmer_experiment.exp
+  swimmer_experiment.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\swimmer_experiment.exe

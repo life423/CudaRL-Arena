@@ -17,7 +17,7 @@ func _start_lab() -> bool:
 
 func _ready() -> void:
 	super._ready()
-	get_window().title = "CudaRL · Learned recovery comparison"
+	get_window().title = "CudaRL · Recovery comparison · recording"
 	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Learned recovery"
 	if not state.is_empty():
 		scenario.select(1)

@@ -47,12 +47,12 @@ func _run() -> void:
 	await settle()
 	check(scene.untrained_button.button_pressed, "Keyboard did not enable the untrained policy")
 	check(scene.lab.get_stats().showcase_untrained and not scene.lab.get_stats().validated_controller, "Random weights are presented as a validated policy")
-	check(scene.title_status.text == "Untrained · random weights", "Untrained state is not clearly labeled")
+	check(scene.title_status.text == "Live · random initial weights", "Untrained state is not clearly labeled")
 	check(scene.training_heading.text == "Untrained controller", "Untrained details still describe trained weights")
 	check(scene.state.elapsed == 0 and scene.state.eaten == 0, "Switch inherited time or food counters")
 	check(scene.state.position == initial.position and scene.state.foods == initial.foods, "Untrained comparison changed the starting layout")
 	check(scene.previous.position == scene.state.position and scene.accumulator == 0, "Switch interpolates from a stale trained pose")
-	check(scene.curve.plot_title == "Trained controller reference" and scene.curve.plot_caption.contains("not the untrained"), "Trained validation is attributed to the untrained swimmer")
+	check(scene.curve.plot_title == "Live collection rate" and scene.curve.current_score < 0 and scene.curve.best_score < 0, "Trained validation is attributed to the untrained swimmer")
 	check(scene.lab.get_stats().background_swimmers == 0 and scene.lab.get_stats().env_steps == 0, "Untrained viewing started training")
 	var random: Array[Dictionary] = []
 	for tick in 80:
@@ -73,8 +73,8 @@ func _run() -> void:
 	scene.untrained_button.button_pressed = false
 	await settle()
 	check(not scene.lab.get_stats().showcase_untrained and scene.lab.get_stats().validated_controller, "Trained policy was not restored")
-	check(scene.title_status.text == "Trained PPO food selector", "Trained label was not restored")
-	check(scene.curve.plot_title == "Saved controller validation", "Trained validation label was not restored")
+	check(scene.title_status.text == "Live · original saved agent", "Trained label was not restored")
+	check(scene.curve.plot_title == "Live collection rate" and scene.curve.points.is_empty(), "Previous session graph survived the comparison reset")
 	for tick in 80:
 		var actual: Dictionary = scene.lab.step()
 		check(actual.position.distance_to(trained[tick].position) < 0.000001 and actual.selected_food == trained[tick].selected_food, "Restoring trained weights changed the original trajectory")

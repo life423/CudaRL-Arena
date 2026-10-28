@@ -62,6 +62,14 @@ int main(int argc,char** argv) {
             }
             for(int tick=40;tick<1200;++tick) optional->step();
             check(optional->frame().state.eaten>10,"Optional module did not retain food collection");
+            auto food_probe=cudarl::demos::create_pond_playback(policy,"auto",argv[3]);
+            food_probe->step();const auto food_before=food_probe->frame();food_probe->set_food_drift(true);
+            check(food_probe->frame().food_drift && food_probe->frame().state.steps==food_before.state.steps,"Food-drift capability reset the portable session");
+            check(cudarl::deep::norm(food_probe->frame().state.body.position-food_before.state.body.position)==0,"Food-drift capability moved the body instantly");
+            food_probe->set_current({.005f,0,0});food_probe->step();
+            check(food_probe->frame().state.steps==food_before.state.steps+1,"Food-drift capability stopped playback");
+            for(int f=0;f<3;++f) check(cudarl::deep_pond::water(food_probe->frame().state.food[f]),"Food-drift capability produced unreachable food");
+            std::printf("PORTABLE_FOOD_DRIFT backend=%s state_continuity=true\n",food_probe->backend());
             const auto before=optional->frame();optional->set_current({.005f,0,0});
             check(optional->frame().state.steps==before.state.steps && optional->frame().selected==before.selected,"Current control reset the portable session");
             check(cudarl::deep::norm(optional->frame().state.body.position-before.state.body.position)==0,"Current control moved the portable body instantly");

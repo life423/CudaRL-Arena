@@ -72,6 +72,34 @@ TEST_CASE("deep pond: swimming forces are retained away from the bank and the ba
     auto state=dp::initial(4,1);state.body.position={0,-2,0};state.food[0]={0,-1,0};
     CHECK(dp::advance(state,zero).eaten_slot<0); // Same X/Z, wrong depth is not collection.
 }
+TEST_CASE("deep pond: suspended food follows SI current, keeps depth and leaves calm food unchanged") {
+    auto state=dp::initial(71,0);state.food[0]={0,-1,0};state.food[1]={-1,-2,0};state.food[2]={0,-3,0};const auto before=state;
+    dp::drift_food(state,{});
+    for(int f=0;f<3;++f) CHECK(dw::norm(state.food[f]-before.food[f])==0);
+    dp::drift_food(state,{.005f,0,0});
+    for(int f=0;f<3;++f) {
+        CHECK(std::fabs((state.food[f].x-before.food[f].x)*dw::scale-.005f*dw::dt)<1e-8f);
+        CHECK(state.food[f].y==before.food[f].y);CHECK(state.food[f].z==before.food[f].z);
+        CHECK(state.placements[f]==before.placements[f]);
+    }
+    CHECK(state.steps==before.steps && state.eaten==before.eaten);
+    CHECK(dw::norm(state.body.position-before.body.position)==0);
+}
+TEST_CASE("deep pond: drifting food stays reachable through prolonged bank contact without respawns") {
+    for(uint32_t seed=1;seed<=16;++seed) {
+        auto state=dp::initial(seed,0);const auto before=state;
+        for(int tick=0;tick<12000;++tick) {
+            const dw::V flow=tick<6000?dw::V{.005f,0,.002f}:dw::V{-.005f,0,-.002f};
+            const auto previous=state;dp::drift_food(state,flow);
+            for(int f=0;f<3;++f) {
+                CHECK(dp::water(state.food[f]));CHECK(state.food[f].y==before.food[f].y);
+                CHECK(dw::norm(state.food[f]-previous.food[f])<=dw::norm(flow)*dw::dt/dw::scale+2e-6f);
+                CHECK(state.placements[f]==before.placements[f]);
+            }
+        }
+        CHECK(state.steps==0 && state.eaten==0);
+    }
+}
 GPU_TEST_CASE("deep pond: transfer preserves motor outputs, Adam, source save and exact resumed learning") {
     const auto path=std::filesystem::temp_directory_path()/std::filesystem::path("cudarl-deep-transfer-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
     std::filesystem::create_directories(path);
