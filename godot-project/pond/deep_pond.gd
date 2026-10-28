@@ -94,7 +94,7 @@ func _toggle_untrained(enabled: bool) -> void:
 	_apply_pose(1.0)
 
 func _start_lab() -> bool:
-	if checkpoint_path == "user://pond-policies/deep-pond-v1/training.bin" and not controller_policy_path.is_empty() and FileAccess.file_exists(controller_policy_path):
+	if checkpoint_path == "user://pond-policies/deep-pond-v1/training.bin" and not controller_policy_path.is_empty():
 		paused = true
 		var backend := "auto"
 		for argument in OS.get_cmdline_user_args():

@@ -1,5 +1,7 @@
 # End-to-end architecture audit and creature directions
 
+October 28 follow-up on `codex/pond-gentle-current`: the [first live current interaction](experiments/swimmer/live-gentle-current/README.md) addresses the flow-control part of finding 3, preserves module ABI compatibility, and fixes finding 1's missing-policy training fallback. Exact challenge export/restore, practice integration and promotion remain future work. The audit below describes the earlier `a64fcc2` architecture; its other proposals are not implied completed.
+
 October 27, 2026. Audited local commit `a64fcc2` on `codex/portable-pond`, which is newer than the `6b42958` GitHub links supplied in the discussion. This is an architecture/behavior audit and planning document. No gameplay, policy, physics, current control or training implementation was changed for it.
 
 ## Scope and validation

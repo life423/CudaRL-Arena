@@ -1,0 +1,62 @@
+[
+  {
+    "Backend": "cpu",
+    "Condition": "calm",
+    "Sessions": 4,
+    "Foods": 358.0,
+    "FoodPerMinute": 17.9,
+    "MaxFoodGap": 13.5,
+    "ImmobilityEvents": 0.0,
+    "Failures": 0
+  },
+  {
+    "Backend": "cpu",
+    "Condition": "gentle",
+    "Sessions": 4,
+    "Foods": 352.0,
+    "FoodPerMinute": 17.6,
+    "MaxFoodGap": 6.8,
+    "ImmobilityEvents": 0.0,
+    "Failures": 0
+  },
+  {
+    "Backend": "cpu",
+    "Condition": "switch-60",
+    "Sessions": 4,
+    "Foods": 348.0,
+    "FoodPerMinute": 17.4,
+    "MaxFoodGap": 11.95,
+    "ImmobilityEvents": 0.0,
+    "Failures": 0
+  },
+  {
+    "Backend": "cuda",
+    "Condition": "calm",
+    "Sessions": 4,
+    "Foods": 361.0,
+    "FoodPerMinute": 18.05,
+    "MaxFoodGap": 8.3,
+    "ImmobilityEvents": 0.0,
+    "Failures": 0
+  },
+  {
+    "Backend": "cuda",
+    "Condition": "gentle",
+    "Sessions": 4,
+    "Foods": 345.0,
+    "FoodPerMinute": 17.25,
+    "MaxFoodGap": 9.1,
+    "ImmobilityEvents": 0.0,
+    "Failures": 0
+  },
+  {
+    "Backend": "cuda",
+    "Condition": "switch-60",
+    "Sessions": 4,
+    "Foods": 353.0,
+    "FoodPerMinute": 17.65,
+    "MaxFoodGap": 8.55,
+    "ImmobilityEvents": 0.0,
+    "Failures": 0
+  }
+]

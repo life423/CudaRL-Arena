@@ -1,0 +1,5 @@
+seed,environment,backend,minutes,foods,food_per_minute,max_food_gap_s,immobility_events,max_immobility_s,invalid_states,invalid_foods,nonsequential_steps,passes,current_x_cm_s,switch_seconds
+3235825665,0,CUDA,5,92,18.4,5.8,0,0,0,0,0,1,0.5,-1
+3235825666,0,CUDA,5,85,17,9.1,0,0,0,0,0,1,0.5,-1
+3235825667,0,CUDA,5,85,17,7,0,0,0,0,0,1,0.5,-1
+3235825668,0,CUDA,5,83,16.6,8.9,0,0,0,0,0,1,0.5,-1

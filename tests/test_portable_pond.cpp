@@ -62,6 +62,13 @@ int main(int argc,char** argv) {
             }
             for(int tick=40;tick<1200;++tick) optional->step();
             check(optional->frame().state.eaten>10,"Optional module did not retain food collection");
+            const auto before=optional->frame();optional->set_current({.005f,0,0});
+            check(optional->frame().state.steps==before.state.steps && optional->frame().selected==before.selected,"Current control reset the portable session");
+            check(cudarl::deep::norm(optional->frame().state.body.position-before.state.body.position)==0,"Current control moved the portable body instantly");
+            check(std::fabs(optional->current().x-.005f)<1e-8f,"Portable current was not retained");
+            optional->step();check(optional->frame().state.steps==before.state.steps+1,"Portable current stopped the simulation");
+            optional->set_current({});check(cudarl::deep::norm(optional->current())==0,"Portable calm control failed");
+            std::printf("PORTABLE_CURRENT backend=%s state_continuity=true\n",optional->backend());
         }
         std::printf("PORTABLE_POND checks=%d failures=0 foods=%d\n",checks,cpu->frame().state.eaten);return 0;
     } catch(const std::exception& e) {std::fprintf(stderr,"PORTABLE_POND failure: %s\n",e.what());return 1;}

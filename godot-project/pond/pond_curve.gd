@@ -71,7 +71,7 @@ func _draw() -> void:
 		saved_text = "Best policy save failed"
 	if not status_caption.is_empty():
 		saved_text = status_caption
-	draw_string(font, Vector2(20, 45), saved_text, HORIZONTAL_ALIGNMENT_LEFT, maxf(1, size.x - 164), 12, MUTED if save_error.is_empty() else Color("ffb2a9"))
+	draw_string(font, Vector2(20, 45), saved_text, HORIZONTAL_ALIGNMENT_LEFT, maxf(1, size.x - (164 if watch_button.visible else 40)), 12, MUTED if save_error.is_empty() else Color("ffb2a9"))
 	var current_text := "%s  %.1f / min" % [score_label, current_score] if current_score >= 0 else "%s  —" % score_label
 	var best_text := "Best  %.1f / min" % best_score if best_score >= 0 else "Best  —"
 	draw_string(font, Vector2(20, 72), current_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, ACCENT)

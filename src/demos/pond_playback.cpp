@@ -21,6 +21,7 @@ public:
         if(progress_) frame_.history=progress_selector::initial_history(frame_.state);
     }
     void continue_from(const PondFrame& state) {frame_=state;}
+    void set_current(deep::V current) override {validate_pond_current(current);frame_.current=current;}
     const PondFrame& frame() const override {return frame_;}
     const char* backend() const override {return "CPU";}
     const std::string& detail() const override {return detail_;}
@@ -34,7 +35,7 @@ public:
                 selector_.forward(features,1);scores[f]=selector_.output()[0];}
             frame_.selected=0;for(int f=1;f<3;++f) if(scores[f]>scores[frame_.selected]) frame_.selected=f;
         }
-        float o[33];deep_pond::observe(state,o);primary_pond_food(o,frame_.selected);motor_.forward(o,1);deep_pond::advance(state,motor_.output());
+        float o[33];deep_pond::observe(state,o);primary_pond_food(o,frame_.selected);motor_.forward(o,1);deep_pond::advance(state,motor_.output(),frame_.current);
         if(progress_ && state.steps%policy_.decision_steps==0) progress_selector::update_history(state,frame_.history,policy_.decision_steps);
         return frame_;
     }
@@ -56,23 +57,23 @@ public:
         if(handle_) dlclose(handle_);
 #endif
     }
-    GetPondCudaApi entry() const {
+    template<class T> T entry(const char* name) const {
         if(!handle_) return nullptr;
 #ifdef _WIN32
-        const auto symbol=GetProcAddress(static_cast<HMODULE>(handle_),"cudarl_get_pond_cuda_api");
-        GetPondCudaApi result=nullptr;static_assert(sizeof(result)==sizeof(symbol));std::memcpy(&result,&symbol,sizeof(result));return result;
+        const auto symbol=GetProcAddress(static_cast<HMODULE>(handle_),name);
+        T result=nullptr;static_assert(sizeof(result)==sizeof(symbol));std::memcpy(&result,&symbol,sizeof(result));return result;
 #else
-        return reinterpret_cast<GetPondCudaApi>(dlsym(handle_,"cudarl_get_pond_cuda_api"));
+        return reinterpret_cast<T>(dlsym(handle_,name));
 #endif
     }
 };
 class CudaPlayback final:public PondPlayback {
-    std::unique_ptr<Module> module_;const PondCudaApi* api_;void* handle_;
+    std::unique_ptr<Module> module_;const PondCudaApi* api_;const PondCudaCurrentApi* current_api_;void* handle_;
     rl::SelectorPolicy policy_;std::vector<float> selector_weights_;PondFrame frame_;std::string detail_;bool fallback_allowed_,progress_;
     std::unique_ptr<CpuPlayback> fallback_;
 public:
-    CudaPlayback(std::unique_ptr<Module> module,const PondCudaApi* api,void* handle,const rl::SelectorPolicy& policy,const std::vector<float>& weights,bool progress,
-        uint32_t seed,uint32_t environment,std::string detail,bool allow_fallback):module_(std::move(module)),api_(api),handle_(handle),
+    CudaPlayback(std::unique_ptr<Module> module,const PondCudaApi* api,const PondCudaCurrentApi* current_api,void* handle,const rl::SelectorPolicy& policy,const std::vector<float>& weights,bool progress,
+        uint32_t seed,uint32_t environment,std::string detail,bool allow_fallback):module_(std::move(module)),api_(api),current_api_(current_api),handle_(handle),
         policy_(policy),selector_weights_(weights),detail_(std::move(detail)),fallback_allowed_(allow_fallback),progress_(progress) {
         frame_.state=deep_pond::initial(seed,environment);if(progress_) frame_.history=progress_selector::initial_history(frame_.state);
     }
@@ -80,11 +81,25 @@ public:
     const PondFrame& frame() const override {return fallback_?fallback_->frame():frame_;}
     const char* backend() const override {return fallback_?"CPU":"CUDA";}
     const std::string& detail() const override {return fallback_?fallback_->detail():detail_;}
+    void set_current(deep::V current) override {
+        validate_pond_current(current);
+        if(fallback_) {fallback_->set_current(current);return;}
+        char error[512]{};
+        if(current_api_) {
+            if(!current_api_->set_current(handle_,current,error,sizeof(error))) throw std::runtime_error(std::string("Could not change CUDA current: ")+error);
+            frame_.current=current;return;
+        }
+        if(deep::norm(current)==0) return;
+        if(!fallback_allowed_) throw std::runtime_error("This CUDA playback module needs rebuilding for current control");
+        fallback_=std::make_unique<CpuPlayback>(policy_,selector_weights_,progress_,frame_.state.seed,frame_.state.environment,"CUDA module has no current control; continued on CPU");
+        fallback_->continue_from(frame_);fallback_->set_current(current);
+    }
     const PondFrame& step() override {
         if(fallback_) return fallback_->step();char error[512]{};
         PondFrame next;
         if(api_->step(handle_,&next.state,&next.selected,error,sizeof(error))) {
             next.history=frame_.history;
+            next.current=frame_.current;
             if(progress_ && next.state.steps%policy_.decision_steps==0) progress_selector::update_history(next.state,next.history,policy_.decision_steps);
             frame_=next;return frame_;
         }
@@ -104,12 +119,17 @@ static std::unique_ptr<PondPlayback> create_playback(const rl::SelectorPolicy& p
     if(preference=="cpu") return std::make_unique<CpuPlayback>(policy,weights,progress,seed,environment,"CPU selected explicitly");
     std::string reason="Optional CUDA module not installed";
     if(!module_path.empty() && std::filesystem::exists(std::filesystem::u8path(module_path))) {
-        auto module=std::make_unique<Module>(module_path);const auto entry=module->entry();
+        auto module=std::make_unique<Module>(module_path);const auto entry=module->entry<GetPondCudaApi>("cudarl_get_pond_cuda_api");
         if(entry) {
             const auto* api=entry();
             if(api && api->version==1 && api->api_size==sizeof(PondCudaApi) && api->state_size==sizeof(deep_pond::State) && api->create && api->step && api->destroy) {
                 char message[512]{};void* handle=api->create(policy.motor.data(),static_cast<int>(policy.motor.size()),weights.data(),static_cast<int>(weights.size()),policy.decision_steps,seed,environment,message,sizeof(message));
-                if(handle) return std::make_unique<CudaPlayback>(std::move(module),api,handle,policy,weights,progress,seed,environment,message,preference=="auto");
+                if(handle) {
+                    const auto extension=module->entry<GetPondCudaCurrentApi>("cudarl_get_pond_current_api");
+                    const auto* current_api=extension?extension():nullptr;
+                    if(current_api && (current_api->version!=1 || current_api->api_size!=sizeof(PondCudaCurrentApi) || !current_api->set_current)) current_api=nullptr;
+                    return std::make_unique<CudaPlayback>(std::move(module),api,current_api,handle,policy,weights,progress,seed,environment,message,preference=="auto");
+                }
                 reason=std::string("CUDA health check unavailable: ")+message;
             } else reason="CUDA module has an incompatible interface";
         } else reason="CUDA module could not load";
