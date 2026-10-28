@@ -22,6 +22,7 @@ public:
     }
     void continue_from(const PondFrame& state) {frame_=state;}
     void set_current(deep::V current) override {validate_pond_current(current);frame_.current=current;}
+    void set_food_drift(bool enabled) override {frame_.food_drift=enabled;}
     const PondFrame& frame() const override {return frame_;}
     const char* backend() const override {return "CPU";}
     const std::string& detail() const override {return detail_;}
@@ -35,7 +36,7 @@ public:
                 selector_.forward(features,1);scores[f]=selector_.output()[0];}
             frame_.selected=0;for(int f=1;f<3;++f) if(scores[f]>scores[frame_.selected]) frame_.selected=f;
         }
-        float o[33];deep_pond::observe(state,o);primary_pond_food(o,frame_.selected);motor_.forward(o,1);deep_pond::advance(state,motor_.output(),frame_.current);
+        float o[33];deep_pond::observe(state,o);primary_pond_food(o,frame_.selected);motor_.forward(o,1);deep_pond::advance(state,motor_.output(),frame_.current,frame_.food_drift);
         if(progress_ && state.steps%policy_.decision_steps==0) progress_selector::update_history(state,frame_.history,policy_.decision_steps);
         return frame_;
     }
@@ -68,12 +69,12 @@ public:
     }
 };
 class CudaPlayback final:public PondPlayback {
-    std::unique_ptr<Module> module_;const PondCudaApi* api_;const PondCudaCurrentApi* current_api_;void* handle_;
+    std::unique_ptr<Module> module_;const PondCudaApi* api_;const PondCudaCurrentApi* current_api_;const PondCudaFoodApi* food_api_;void* handle_;
     rl::SelectorPolicy policy_;std::vector<float> selector_weights_;PondFrame frame_;std::string detail_;bool fallback_allowed_,progress_;
     std::unique_ptr<CpuPlayback> fallback_;
 public:
-    CudaPlayback(std::unique_ptr<Module> module,const PondCudaApi* api,const PondCudaCurrentApi* current_api,void* handle,const rl::SelectorPolicy& policy,const std::vector<float>& weights,bool progress,
-        uint32_t seed,uint32_t environment,std::string detail,bool allow_fallback):module_(std::move(module)),api_(api),current_api_(current_api),handle_(handle),
+    CudaPlayback(std::unique_ptr<Module> module,const PondCudaApi* api,const PondCudaCurrentApi* current_api,const PondCudaFoodApi* food_api,void* handle,const rl::SelectorPolicy& policy,const std::vector<float>& weights,bool progress,
+        uint32_t seed,uint32_t environment,std::string detail,bool allow_fallback):module_(std::move(module)),api_(api),current_api_(current_api),food_api_(food_api),handle_(handle),
         policy_(policy),selector_weights_(weights),detail_(std::move(detail)),fallback_allowed_(allow_fallback),progress_(progress) {
         frame_.state=deep_pond::initial(seed,environment);if(progress_) frame_.history=progress_selector::initial_history(frame_.state);
     }
@@ -94,12 +95,25 @@ public:
         fallback_=std::make_unique<CpuPlayback>(policy_,selector_weights_,progress_,frame_.state.seed,frame_.state.environment,"CUDA module has no current control; continued on CPU");
         fallback_->continue_from(frame_);fallback_->set_current(current);
     }
+    void set_food_drift(bool enabled) override {
+        if(fallback_) {fallback_->set_food_drift(enabled);return;}
+        if(food_api_) {
+            char error[512]{};
+            if(!food_api_->set_food_drift(handle_,enabled?1:0,error,sizeof(error))) throw std::runtime_error(std::string("Could not change food drift: ")+error);
+            frame_.food_drift=enabled;return;
+        }
+        if(!enabled) return;
+        if(!fallback_allowed_) throw std::runtime_error("This CUDA playback module needs rebuilding for drifting food");
+        fallback_=std::make_unique<CpuPlayback>(policy_,selector_weights_,progress_,frame_.state.seed,frame_.state.environment,"CUDA module has no food drift; continued on CPU");
+        fallback_->continue_from(frame_);fallback_->set_food_drift(enabled);
+    }
     const PondFrame& step() override {
         if(fallback_) return fallback_->step();char error[512]{};
         PondFrame next;
         if(api_->step(handle_,&next.state,&next.selected,error,sizeof(error))) {
             next.history=frame_.history;
             next.current=frame_.current;
+            next.food_drift=frame_.food_drift;
             if(progress_ && next.state.steps%policy_.decision_steps==0) progress_selector::update_history(next.state,next.history,policy_.decision_steps);
             frame_=next;return frame_;
         }
@@ -128,7 +142,10 @@ static std::unique_ptr<PondPlayback> create_playback(const rl::SelectorPolicy& p
                     const auto extension=module->entry<GetPondCudaCurrentApi>("cudarl_get_pond_current_api");
                     const auto* current_api=extension?extension():nullptr;
                     if(current_api && (current_api->version!=1 || current_api->api_size!=sizeof(PondCudaCurrentApi) || !current_api->set_current)) current_api=nullptr;
-                    return std::make_unique<CudaPlayback>(std::move(module),api,current_api,handle,policy,weights,progress,seed,environment,message,preference=="auto");
+                    const auto food_extension=module->entry<GetPondCudaFoodApi>("cudarl_get_pond_food_api");
+                    const auto* food_api=food_extension?food_extension():nullptr;
+                    if(food_api && (food_api->version!=1 || food_api->api_size!=sizeof(PondCudaFoodApi) || !food_api->set_food_drift)) food_api=nullptr;
+                    return std::make_unique<CudaPlayback>(std::move(module),api,current_api,food_api,handle,policy,weights,progress,seed,environment,message,preference=="auto");
                 }
                 reason=std::string("CUDA health check unavailable: ")+message;
             } else reason="CUDA module has an incompatible interface";

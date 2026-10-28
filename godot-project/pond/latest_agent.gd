@@ -3,6 +3,19 @@ extends "res://pond/deep_pond.gd"
 const LATEST_POLICY := "res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"
 var current_switch: CheckButton
 var water_status: Label
+var flow: Node3D
+
+func _build_world() -> void:
+	super._build_world()
+	flow = preload("res://pond/current_flow.gd").new()
+	flow.configure(water_surface.material_override)
+	world.add_child(flow)
+
+func _physics_process(delta: float) -> void:
+	var before: float = state.get("elapsed", 0)
+	super._physics_process(delta)
+	if flow:
+		flow.advance(float(state.get("elapsed", 0)) - before)
 
 func _build_ui() -> void:
 	super._build_ui()
@@ -16,7 +29,7 @@ func _build_ui() -> void:
 	current_switch.add_theme_font_size_override("font_size", 15)
 	current_switch.add_theme_color_override("font_color", TEXT)
 	current_switch.add_theme_stylebox_override("focus", camera_button.get_theme_stylebox("focus"))
-	current_switch.tooltip_text = "Switch between calm water and a steady 0.5 cm/s current across the pond. The creature and food stay in place when switched. Saved weights remain fixed."
+	current_switch.tooltip_text = "Apply a steady 0.5 cm/s current to the swimmer and suspended food. Switching preserves the current physical state; saved weights remain fixed."
 	current_switch.toggled.connect(_set_current)
 	water_controls.add_child(current_switch)
 	water_status = _label("Calm water", 13, MUTED)
@@ -26,7 +39,7 @@ func _build_ui() -> void:
 	controls.move_child(water_controls, 3)
 
 func _set_current(enabled: bool) -> void:
-	if not lab or not lab.set_gentle_current(enabled):
+	if not lab or not lab.set_gentle_current(enabled, true):
 		current_switch.set_pressed_no_signal(not enabled)
 		water_status.text = "Current could not change"
 		water_status.tooltip_text = lab.get_error() if lab else "Live pond is unavailable."
@@ -66,8 +79,10 @@ func _poll() -> void:
 	title_status.text = "Live · random initial weights" if untrained else "Live · latest trained agent"
 	training_heading.text = "Live inference"
 	var flowing: bool = stats.get("water_current_cm_s", 0.0) > 0
+	var drifting: bool = stats.get("food_drifting", false)
+	flow.set_current(stats.get("water_current", Vector3.ZERO))
 	current_switch.set_pressed_no_signal(flowing)
-	water_status.text = "0.5 cm/s · steady flow →" if flowing else "Calm water"
-	water_status.tooltip_text = "Uniform flow along the pond's horizontal X axis; food stays at its existing underwater locations." if flowing else "No imposed water current."
+	water_status.text = ("0.5 cm/s · food drifts →" if drifting else "0.5 cm/s · steady flow →") if flowing else "Calm water"
+	water_status.tooltip_text = ("Suspended food follows the horizontal current at fixed depth, with clearance at the bank." if drifting else "Stationary-food reference mode.") if flowing else "No imposed current; food remains at its present position."
 	training_stats.text = "AI and physics · %s\nSelector update %d\nSwimming retained from %d\nThree underwater foods" % [stats.compute_backend, 0 if untrained else stats.selector_update, 0 if untrained else stats.policy_update]
 	save_status.text = "Random initial networks · no training updates." if untrained else "Bank-trained candidate · weights fixed.\nPhysical simulation runs live.\nOriginal policy and saves preserved."

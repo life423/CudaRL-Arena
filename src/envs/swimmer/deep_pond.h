@@ -16,6 +16,32 @@ CUDARL_HD inline bool water(V p) {
     return p.y>=-3.35f && p.y<=-.65f && p.y>deep::pond_floor(p.x,p.z)+.4f &&
            p.x*p.x/(4.6f*4.6f)+p.z*p.z/(3.5f*3.5f)<.85f*.85f;
 }
+// Optional neutrally buoyant passive tracers. Coordinates are model units,
+// whereas imposed fluid velocity is SI m/s. The existing feeding envelope
+// supplies conservative body/floor clearance; its boundary is no-flux.
+CUDARL_HD inline void drift_food(State& s,V velocity) {
+    const V displacement=velocity*(deep::dt/deep::scale);
+    const float maximum=deep::norm(displacement);
+    if(maximum==0) return;
+    for(auto& p:s.food) {
+        if(!water(p)) continue; // Invalid states stay observable to diagnostics.
+        V next=p+displacement;
+        if(!water(next)) {
+            V normal{next.x/(4.6f*4.6f),0,next.z/(3.5f*3.5f)};
+            const float length=deep::norm(normal);
+            if(length==0) continue;
+            normal=normal/length;
+            next=p+displacement-normal*fmaxf(0,deep::dot(displacement,normal));
+            const float allowed=fminf(.85f,powf((p.y+3.6f)/4.5f,1.f/6.f))*(1.f-2e-6f);
+            const float radius=sqrtf(next.x*next.x/(4.6f*4.6f)+next.z*next.z/(3.5f*3.5f));
+            if(radius>allowed) {next.x*=allowed/radius;next.z*=allowed/radius;}
+            const float moved=deep::norm(next-p);
+            if(moved>maximum) next=p+(next-p)*(maximum/moved);
+            if(!water(next)) continue;
+        }
+        p=next;
+    }
+}
 CUDARL_HD inline bool valid_food(const State& s,int slot,V p) {
     if(!water(p) || deep::norm(p-s.body.position)<.8f) return false;
     const auto geometry=deep::shape(s.body);
@@ -69,7 +95,8 @@ CUDARL_HD inline float potential(const State& s) {
     float sum=0;for(float d:distances) sum+=expf(-4.f*(d-minimum));return -minimum+logf(sum)/4.f;
 }
 struct Result {float reward=0;int eaten_slot=-1;bool timeout=false;};
-CUDARL_HD inline Result advance(State& s,const float* action,V water_velocity={}) {
+CUDARL_HD inline Result advance(State& s,const float* action,V water_velocity={},bool food_drift=false) {
+    if(food_drift) drift_food(s,water_velocity);
     const float before=potential(s);deep::Physics physics;physics.pond=true;
     physics.water_velocity=water_velocity;
     deep::advance_physics(s.body,action,physics);++s.steps;++s.since_food;s.last_eaten=-1;
@@ -94,7 +121,7 @@ CUDARL_HD inline void permute(float* o,int order) {
 class Batch {
 public:
     Batch(int n,uint32_t seed,swimmer::Body unused={});
-    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true,int evaluation_steps=kEpisodeSteps,V water_velocity={});
+    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true,int evaluation_steps=kEpisodeSteps,V water_velocity={},bool food_drift=false);
     const float* obs() const {return obs_.get();}
     const State* states() const {return states_.get();}
     void save(checkpoint::Writer& out) const;

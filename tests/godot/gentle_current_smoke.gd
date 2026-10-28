@@ -89,9 +89,9 @@ func _run() -> void:
 	check(scene.curve.points.size() == samples, "Changing water reset the session graph")
 	key_toggle(scene.current_switch)
 	scene._toggle_untrained(true)
-	check(scene.stats.showcase_untrained and absf(scene.stats.water_current_cm_s - 0.5) < 0.0001, "Random-weight comparison lost the water condition")
+	check(scene.stats.showcase_untrained and scene.stats.food_drifting and absf(scene.stats.water_current_cm_s - 0.5) < 0.0001, "Random-weight comparison lost the water or food-drift condition")
 	scene._toggle_untrained(false)
-	check(not scene.stats.showcase_untrained and scene.stats.selector_update == 320 and absf(scene.stats.water_current_cm_s - 0.5) < 0.0001, "Restoring trained weights lost the current or policy")
+	check(not scene.stats.showcase_untrained and scene.stats.food_drifting and scene.stats.selector_update == 320 and absf(scene.stats.water_current_cm_s - 0.5) < 0.0001, "Restoring trained weights lost the current, food mode or policy")
 	for tick in 300:
 		scene.state = scene.lab.step()
 		if tick % 100 == 0:

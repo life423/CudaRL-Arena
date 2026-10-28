@@ -21,6 +21,7 @@ __global__ void motor_observation(const float* input,const int* target,float* ou
 struct GpuPlayback {
     deep_pond::Batch world;nn::GpuMlp motor,selector;cudaStream_t stream=nullptr;
     deep::V current{};
+    bool food_drift=false;
     device_ptr<float> obs,features,motor_obs,logp;device_ptr<int> target;device_ptr<progress_selector::History> history;int tick=0,period;bool progress;
     GpuPlayback(const float* m,int nm,const float* p,int np,int interval,uint32_t seed,uint32_t environment):
         world(1,seed),motor(rl::swimmer_specification(4,33),1,7),selector(np==rl::progress_selector_spec().num_params()?rl::progress_selector_spec():rl::selector_spec(),3,7),period(interval),progress(np==rl::progress_selector_spec().num_params()) {
@@ -50,7 +51,7 @@ struct GpuPlayback {
             rl::sample_actions(selector.output(),1,3,0,0,true,target.get(),logp.get(),stream);
         }
         motor_observation<<<1,1,0,stream>>>(world.obs(),target.get(),motor_obs.get());CUDA_CHECK_THROW(cudaGetLastError());
-        motor.forward(motor_obs.get(),1,stream);world.step(motor.output(),{},stream,false,INT_MAX,current);
+        motor.forward(motor_obs.get(),1,stream);world.step(motor.output(),{},stream,false,INT_MAX,current,food_drift);
         if(progress && (tick+1)%period==0) {refresh_history<<<1,1,0,stream>>>(world.states(),history.get(),period);CUDA_CHECK_THROW(cudaGetLastError());}
         CUDA_CHECK_THROW(cudaMemcpyAsync(state,world.states(),sizeof(*state),cudaMemcpyDeviceToHost,stream));
         CUDA_CHECK_THROW(cudaMemcpyAsync(selected,target.get(),sizeof(*selected),cudaMemcpyDeviceToHost,stream));CUDA_CHECK_THROW(cudaStreamSynchronize(stream));++tick;
@@ -72,6 +73,10 @@ int set_current(void* handle,deep::V current,char* error,size_t size) {
     try {validate_pond_current(current);static_cast<GpuPlayback*>(handle)->current=current;return 1;}
     catch(const std::exception& e) {std::snprintf(error,size,"%s",e.what());return 0;}
 }
+int set_food_drift(void* handle,int enabled,char* error,size_t size) {
+    if(enabled!=0 && enabled!=1) {std::snprintf(error,size,"Invalid food drift mode");return 0;}
+    static_cast<GpuPlayback*>(handle)->food_drift=enabled!=0;return 1;
+}
 }
 }
 #ifdef _WIN32
@@ -85,4 +90,7 @@ extern "C" CUDARL_PLAYBACK_EXPORT const cudarl::demos::PondCudaApi* cudarl_get_p
 }
 extern "C" CUDARL_PLAYBACK_EXPORT const cudarl::demos::PondCudaCurrentApi* cudarl_get_pond_current_api() {
     static const cudarl::demos::PondCudaCurrentApi api{1,sizeof(cudarl::demos::PondCudaCurrentApi),cudarl::demos::set_current};return &api;
+}
+extern "C" CUDARL_PLAYBACK_EXPORT const cudarl::demos::PondCudaFoodApi* cudarl_get_pond_food_api() {
+    static const cudarl::demos::PondCudaFoodApi api{1,sizeof(cudarl::demos::PondCudaFoodApi),cudarl::demos::set_food_drift};return &api;
 }
