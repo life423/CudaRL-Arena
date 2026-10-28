@@ -177,6 +177,8 @@ add_executable(cudarl_tests
 )
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
+add_dependencies(cudarl_tests cudarl_pond_cuda)
+target_compile_definitions(cudarl_tests PRIVATE CUDARL_POND_MODULE="$<TARGET_FILE:cudarl_pond_cuda>")
 cudarl_strict_warnings(cudarl_tests)
 add_test(NAME cudarl_tests COMMAND cudarl_tests)
 

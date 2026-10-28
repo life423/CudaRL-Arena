@@ -18,6 +18,8 @@ Do not replace the visible controller merely because it has a higher reward or b
 
 ## 2. Increasingly challenging interactions
 
+First bounded interaction is implemented on `codex/pond-gentle-current`: the latest saved agent offers Calm/steady 0.5 cm/s flow in the live pond, preserving its physical state. [Measured response and limitations](experiments/swimmer/live-gentle-current/README.md) cover 24 five-minute CPU/CUDA sessions with no confirmed immobility; no new learning phase was needed for this sample. This is fixed-policy response to a real force change. Practice, challenge export/restore and candidate promotion remain to build, and harder bank cases remain separate.
+
 Add one bounded interaction after the reliable baseline: for example, changing a gentle current or placing food at a valid underwater location. Keep the initial supported range physically attainable, with immediate understandable creature response. Later broaden to slowly changing currents and spatial variation, extending the fluid model where necessary. Do not promise arbitrary-water competence from a uniform-flow simulator.
 
 This stage is real reactive inference from learned skills. A changed action is not proof that network weights changed. Validate both the physical environment and agent observations before making the challenge harder. No new interaction UI or flow-field implementation is delivered merely by saving this plan.

@@ -1,5 +1,7 @@
 # Young swimmer reliability and Godot recovery preview
 
+October 28 follow-up: the latest agent now supports a [live Calm/Gentle current switch](experiments/swimmer/live-gentle-current/README.md). New CPU/CUDA response tests cover both steady flow and switching during playback. The original calm-water evidence below remains historical; practice/online promotion is still future work.
+
 October 27, 2026. First implemented step of the [approved creature journey](CREATURE_PLAN.md): a dependable young swimmer, then challenging interactions, measured adaptation and physical growth. The interactive learning/growth loop remains to build.
 
 ## What is implemented

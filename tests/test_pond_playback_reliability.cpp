@@ -1,5 +1,6 @@
 #include "check.h"
 #include "demos/pond_reliability.h"
+#include "nn/mlp_cpu.h"
 #include <limits>
 namespace dm=cudarl::demos;
 TEST_CASE("playback reliability: stationary, moving and short pauses remain distinct") {
@@ -30,4 +31,37 @@ TEST_CASE("progress playback: transferred selector keeps the legacy CPU trajecto
     }
     auto fallback=dm::create_pond_playback(progress,"auto","missing-module");CHECK(std::string(fallback->backend())=="CPU");
     auto bad=progress;bad.actor.resize(3);bool rejected=false;try {dm::create_pond_playback(bad,"cpu");} catch(const std::exception&) {rejected=true;}CHECK(rejected);
+}
+TEST_CASE("playback currents: switching preserves state and uses the shared water-relative forces") {
+    const auto policy=cudarl::rl::initial_pond_policy();auto player=dm::create_pond_playback(policy,"cpu");
+    for(int tick=0;tick<23;++tick) player->step();
+    const auto before=player->frame();player->set_current({.005f,0,0});
+    CHECK(player->frame().state.steps==before.state.steps);CHECK(player->frame().selected==before.selected);
+    CHECK(cudarl::deep::norm(player->frame().state.body.position-before.state.body.position)==0);
+    for(int f=0;f<3;++f) CHECK(cudarl::deep::norm(player->frame().state.food[f]-before.state.food[f])==0);
+    const auto next=player->step();auto expected=before.state;float observation[33];
+    cudarl::deep_pond::observe(expected,observation);cudarl::demos::primary_pond_food(observation,next.selected);
+    cudarl::nn::CpuMlp<float> motor(cudarl::rl::swimmer_specification(4,33));motor.params()=policy.motor;motor.forward(observation,1);
+    cudarl::deep_pond::advance(expected,motor.output(),{.005f,0,0});
+    CHECK(cudarl::deep::norm(next.state.body.position-expected.body.position)<1e-7f);
+    for(int j=0;j<cudarl::deep::dofs;++j) CHECK(std::fabs(next.state.body.velocity[j]-expected.body.velocity[j])<1e-7f);
+    player->set_current({});CHECK(player->frame().state.steps==next.state.steps);CHECK(cudarl::deep::norm(player->current())==0);
+    const cudarl::deep::V invalid[]={{.1f,0,0},{0,.001f,0},{std::numeric_limits<float>::quiet_NaN(),0,0}};
+    for(auto value:invalid) {bool rejected=false;try {player->set_current(value);} catch(const std::invalid_argument&) {rejected=true;}CHECK(rejected);CHECK(cudarl::deep::norm(player->current())==0);}
+}
+GPU_TEST_CASE("playback currents: optional CUDA module preserves continuity and agrees with CPU after a live switch") {
+    const auto policy=cudarl::rl::initial_pond_policy();
+    auto cpu=dm::create_pond_playback(policy,"cpu"),gpu=dm::create_pond_playback(policy,"cuda",CUDARL_POND_MODULE);
+    CHECK(std::string(gpu->backend())=="CUDA");
+    for(int tick=0;tick<50;++tick) {
+        if(tick==13 || tick==34) {
+            const auto before=gpu->frame();const cudarl::deep::V flow=tick==13?cudarl::deep::V{.005f,0,0}:cudarl::deep::V{};
+            cpu->set_current(flow);gpu->set_current(flow);
+            CHECK(gpu->frame().state.steps==before.state.steps);CHECK(gpu->frame().selected==before.selected);
+            CHECK(cudarl::deep::norm(gpu->frame().state.body.position-before.state.body.position)==0);
+        }
+        const auto& a=cpu->step();const auto& b=gpu->step();
+        CHECK(cudarl::deep::norm(a.state.body.position-b.state.body.position)<.003f);CHECK(a.selected==b.selected);
+        CHECK(cudarl::deep::norm(cpu->current()-gpu->current())==0);
+    }
 }

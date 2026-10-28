@@ -1,4 +1,5 @@
 #include "pond_cuda_api.h"
+#include "pond_playback.h"
 #include "rl/pond_selector_policy.h"
 #include "rl/progress_selector_policy.h"
 #include "rl/ppo_kernels.h"
@@ -19,6 +20,7 @@ __global__ void motor_observation(const float* input,const int* target,float* ou
 }
 struct GpuPlayback {
     deep_pond::Batch world;nn::GpuMlp motor,selector;cudaStream_t stream=nullptr;
+    deep::V current{};
     device_ptr<float> obs,features,motor_obs,logp;device_ptr<int> target;device_ptr<progress_selector::History> history;int tick=0,period;bool progress;
     GpuPlayback(const float* m,int nm,const float* p,int np,int interval,uint32_t seed,uint32_t environment):
         world(1,seed),motor(rl::swimmer_specification(4,33),1,7),selector(np==rl::progress_selector_spec().num_params()?rl::progress_selector_spec():rl::selector_spec(),3,7),period(interval),progress(np==rl::progress_selector_spec().num_params()) {
@@ -48,7 +50,7 @@ struct GpuPlayback {
             rl::sample_actions(selector.output(),1,3,0,0,true,target.get(),logp.get(),stream);
         }
         motor_observation<<<1,1,0,stream>>>(world.obs(),target.get(),motor_obs.get());CUDA_CHECK_THROW(cudaGetLastError());
-        motor.forward(motor_obs.get(),1,stream);world.step(motor.output(),{},stream,false,INT_MAX);
+        motor.forward(motor_obs.get(),1,stream);world.step(motor.output(),{},stream,false,INT_MAX,current);
         if(progress && (tick+1)%period==0) {refresh_history<<<1,1,0,stream>>>(world.states(),history.get(),period);CUDA_CHECK_THROW(cudaGetLastError());}
         CUDA_CHECK_THROW(cudaMemcpyAsync(state,world.states(),sizeof(*state),cudaMemcpyDeviceToHost,stream));
         CUDA_CHECK_THROW(cudaMemcpyAsync(selected,target.get(),sizeof(*selected),cudaMemcpyDeviceToHost,stream));CUDA_CHECK_THROW(cudaStreamSynchronize(stream));++tick;
@@ -66,6 +68,10 @@ int step(void* handle,deep_pond::State* state,int* target,char* error,size_t siz
     catch(const std::exception& e) {std::snprintf(error,size,"%s",e.what());return 0;}
 }
 void destroy(void* handle) {delete static_cast<GpuPlayback*>(handle);}
+int set_current(void* handle,deep::V current,char* error,size_t size) {
+    try {validate_pond_current(current);static_cast<GpuPlayback*>(handle)->current=current;return 1;}
+    catch(const std::exception& e) {std::snprintf(error,size,"%s",e.what());return 0;}
+}
 }
 }
 #ifdef _WIN32
@@ -76,4 +82,7 @@ void destroy(void* handle) {delete static_cast<GpuPlayback*>(handle);}
 extern "C" CUDARL_PLAYBACK_EXPORT const cudarl::demos::PondCudaApi* cudarl_get_pond_cuda_api() {
     static const cudarl::demos::PondCudaApi api{1,sizeof(cudarl::demos::PondCudaApi),sizeof(cudarl::deep_pond::State),
         cudarl::demos::create,cudarl::demos::step,cudarl::demos::destroy};return &api;
+}
+extern "C" CUDARL_PLAYBACK_EXPORT const cudarl::demos::PondCudaCurrentApi* cudarl_get_pond_current_api() {
+    static const cudarl::demos::PondCudaCurrentApi api{1,sizeof(cudarl::demos::PondCudaCurrentApi),cudarl::demos::set_current};return &api;
 }

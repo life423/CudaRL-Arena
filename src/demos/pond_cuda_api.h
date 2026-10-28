@@ -16,5 +16,12 @@ struct PondCudaApi {
     void (*destroy)(void* handle);
 };
 using GetPondCudaApi=const PondCudaApi* (*)();
+// Optional extension: the original v1 create/step/destroy ABI stays unchanged.
+struct PondCudaCurrentApi {
+    uint32_t version;
+    uint32_t api_size;
+    int (*set_current)(void* handle,deep::V current,char* error,size_t error_size);
+};
+using GetPondCudaCurrentApi=const PondCudaCurrentApi* (*)();
 }
 #endif
