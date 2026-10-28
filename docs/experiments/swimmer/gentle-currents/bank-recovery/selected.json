@@ -1,0 +1,14 @@
+{
+  "Seed": 71,
+  "Update": 320,
+  "PhaseUpdates": 192,
+  "Recovered20": 50,
+  "Trials": 51,
+  "RecoveryRate": 0.9803921568627451,
+  "BankMeanFoods": 14.1961,
+  "CalmFpm": 17.9219,
+  "CurrentMeanFpm": 14.70315,
+  "FixtureFirst": 14.0,
+  "Eligible": true,
+  "Path": "build/pond-bank-study/seed-71/candidate-320.bin"
+}

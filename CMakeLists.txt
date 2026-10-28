@@ -167,6 +167,8 @@ add_executable(cudarl_tests
     tests/test_deep_solver.cu
     tests/test_deep_pond.cpp
     tests/test_pond_current.cpp
+    tests/test_pond_playback_reliability.cpp
+    tests/test_fixed_target.cpp
     tests/test_progress_selector.cpp
     tests/test_pond_selector.cpp
     tests/test_training_resume.cpp
@@ -180,6 +182,16 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(pond_reliability tools/pond_reliability.cpp)
+    target_link_libraries(pond_reliability PRIVATE cudarl_runtime)
+    target_compile_definitions(pond_reliability PRIVATE CUDARL_WITH_CUDA=0)
+    cudarl_strict_warnings(pond_reliability)
+    add_executable(pond_bank_study tools/pond_bank_study.cu)
+    target_link_libraries(pond_bank_study PRIVATE cudarl_core)
+    cudarl_strict_warnings(pond_bank_study)
+    add_executable(pond_fixed_target_eval tools/pond_fixed_target_eval.cu)
+    target_link_libraries(pond_fixed_target_eval PRIVATE cudarl_core)
+    cudarl_strict_warnings(pond_fixed_target_eval)
     add_executable(pond_progress_profile tools/pond_progress_profile.cpp)
     target_link_libraries(pond_progress_profile PRIVATE cudarl_core)
     set(CUDARL_NVTX_INCLUDE_DIR "" CACHE PATH "Optional NVTX headers for profiling-only phase labels")

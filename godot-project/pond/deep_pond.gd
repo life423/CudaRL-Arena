@@ -63,6 +63,18 @@ func _build_ui() -> void:
 	var controls := camera_button.get_parent()
 	controls.add_child(untrained_button)
 	controls.move_child(untrained_button, 3)
+	if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"):
+		var latest := _button("Latest trained agent")
+		latest.name = "WatchLatestAgent"
+		latest.tooltip_text = "Run the latest saved bank-trained selector in the live pond. No recording or training updates."
+		latest.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/latest_agent.tscn"))
+		controls.add_child(latest)
+	if FileAccess.file_exists("res://../build/pond-reliability-study/bank-preview/replay.json"):
+		var recovery := _button("Recovery comparison")
+		recovery.name = "WatchBankRecovery"
+		recovery.tooltip_text = "Compare recorded original and bank-trained food selection from the same held-out starting state."
+		recovery.pressed.connect(func(): get_tree().change_scene_to_file("res://pond/bank_preview.tscn"))
+		controls.add_child(recovery)
 	if FileAccess.file_exists("res://../build/pond-current-study/diagnosis/replay.json"):
 		var replay := _button("Watch current test")
 		replay.name = "WatchCurrentTest"

@@ -5,6 +5,7 @@ var case_index := 0
 var index := 0
 var error := ""
 var paused := false
+var expected_case_count := 10
 
 func open(path: String) -> bool:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -12,7 +13,7 @@ func open(path: String) -> bool:
 		error = "Replay is missing. Run the documented frozen-policy current diagnosis first."
 		return false
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary or parsed.get("version", 0) != 1 or parsed.get("cases", []).size() != 10:
+	if not parsed is Dictionary or parsed.get("version", 0) != 1 or parsed.get("cases", []).size() != expected_case_count:
 		error = "Unsupported current replay."
 		return false
 	data = parsed

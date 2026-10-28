@@ -22,6 +22,7 @@ public:
         String source="user://pond-policies/deep-v1/training.bin");
     void stop();
     bool watch_controller(String path,String backend="auto");
+    bool watch_progress_controller(String path,String backend="auto");
     bool set_untrained(bool enabled);
     void set_paused(bool paused);
     void set_updates_per_second(double speed);
@@ -39,6 +40,8 @@ private:
     std::unique_ptr<cudarl::nn::CpuMlp<float>> actor_;
     std::unique_ptr<cudarl::demos::PondPlayback> playback_;
     cudarl::rl::SelectorPolicy controller_;
+    cudarl::rl::ProgressPolicy progress_controller_;
+    bool use_progress_controller_=false;
     String controller_path_;
     String controller_backend_="auto";
     bool showcase_untrained_=false;

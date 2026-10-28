@@ -4,6 +4,7 @@
 namespace cudarl::progress_selector {
 constexpr int kObs=40,kFeatures=34;
 struct History {float distance[3]{},progress[3]{};uint32_t placements[3]{};};
+struct RecoveryStart {deep_pond::State state;History history;deep::V current;int target=-1;};
 CUDARL_HD inline History initial_history(const deep_pond::State& s) {
     History h;for(int f=0;f<3;++f) {h.distance[f]=deep::norm(s.food[f]-s.body.position);h.placements[f]=s.placements[f];}return h;
 }
@@ -40,11 +41,13 @@ public:
     void step(const float* torques,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true);
     void save(checkpoint::Writer& out) const;
     void load(checkpoint::Reader& in);
+    void set_recovery_starts(const std::vector<RecoveryStart>& starts,bool reset_worlds);
 private:
     int n_,period_;uint32_t seed_;float maximum_;bool training_;deep::V fixed_;
     device_ptr<deep_pond::State> states_;device_ptr<uint32_t> episodes_;device_ptr<int> targets_;
     device_ptr<History> history_;device_ptr<deep::V> currents_;
     device_ptr<float> observations_,motor_inputs_;
+    device_ptr<RecoveryStart> recovery_;int recovery_count_=0;
 };
 #endif
 }

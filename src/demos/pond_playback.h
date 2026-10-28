@@ -2,9 +2,9 @@
 #define CUDARL_DEMOS_POND_PLAYBACK_H
 #include <memory>
 #include <string>
-#include "rl/pond_selector_policy.h"
+#include "rl/progress_selector_policy.h"
 namespace cudarl::demos {
-struct PondFrame {deep_pond::State state;int selected=-1;};
+struct PondFrame {deep_pond::State state;int selected=-1;progress_selector::History history;};
 class PondPlayback {
 public:
     virtual ~PondPlayback()=default;
@@ -16,6 +16,8 @@ public:
 // preference: auto (CUDA health check, then CPU), cpu, or strict cuda.
 // An absent optional module never prevents the portable CPU player from loading.
 std::unique_ptr<PondPlayback> create_pond_playback(const rl::SelectorPolicy& policy,const std::string& preference="auto",
+    const std::string& cuda_module={},uint32_t seed=7,uint32_t environment=0);
+std::unique_ptr<PondPlayback> create_pond_playback(const rl::ProgressPolicy& policy,const std::string& preference="auto",
     const std::string& cuda_module={},uint32_t seed=7,uint32_t environment=0);
 }
 #endif

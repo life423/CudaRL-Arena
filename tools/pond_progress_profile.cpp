@@ -52,7 +52,8 @@ int main(int argc,char** argv) {
         std::vector<uint8_t> saved;uint32_t seed=71;
         if(!checkpoint.empty()) {
             saved=cudarl::checkpoint::read(checkpoint);cudarl::checkpoint::Reader header{saved};
-            if(header.value<uint32_t>()!=0x50535431u || header.value<uint32_t>()!=1) throw std::invalid_argument("Unsupported profile input save");
+            if(header.value<uint32_t>()!=0x50535431u) throw std::invalid_argument("Unsupported profile input save");
+            const auto version=header.value<uint32_t>();if(version!=1 && version!=2) throw std::invalid_argument("Unsupported profile input version");
             n=header.value<int>();seed=header.value<uint32_t>();if(n<16 || n>32768) throw std::invalid_argument("Invalid saved batch");
         }
         rl::ProgressTrainer trial(baseline,n,seed);if(!saved.empty()) trial.restore(saved);

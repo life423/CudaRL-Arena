@@ -1,0 +1,7 @@
+CUDA device: present
+
+PASS  progress selector: zero-column transfer preserves learned scores and progress is food-specific      0.6 ms
+PASS  progress selector: finite PPO, frozen motor and exact full-state continuation    735.4 ms
+PASS  progress selector: bank curriculum preserves underwater food and exact resumable learning    581.8 ms
+
+3/3 tests passed, 0 skipped

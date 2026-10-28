@@ -14,6 +14,7 @@ struct ProgressTrainer {
     static constexpr int horizon=32,epochs=4,minibatches=8,inputs=pg::kObs;
     int n,batch,mb,update=0;uint32_t seed;float maximum;
     SelectorPolicy baseline;SwimmerStream stream;pg::Batch env;
+    std::vector<pg::RecoveryStart> recovery;
     nn::GpuMlp actor,critic,motor;nn::GpuAdam actor_opt,critic_opt;
     device_ptr<float> obs,old_logp,values,rewards,done,truncated,final_obs,final_values,last_values,advantages,returns,
         mb_obs,mb_logp,mb_adv,mb_ret,dlogits,dvalues,adv_stats,row_stats,stats,feature_rows;
@@ -64,6 +65,7 @@ struct ProgressTrainer {
         CUDA_CHECK_THROW(cudaStreamSynchronize(s));mark(4);++update;
     }
     ProgressPolicy policy() const {return {update,baseline,actor.get_params()};}
+    void set_recovery_starts(const std::vector<pg::RecoveryStart>& starts,bool reset_worlds=true) {env.set_recovery_starts(starts,reset_worlds);recovery=starts;}
     std::vector<double> evaluate(uint32_t key=0xA7D13101u) {
         constexpr int count=64;std::vector<double> results;
         const deep::V current[3]={{},{.01f,0,0},{-.007071067579f,0,-.007071067579f}};
@@ -80,15 +82,17 @@ struct ProgressTrainer {
         return results;
     }
     std::vector<uint8_t> snapshot() const {
-        CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));checkpoint::Writer out;out.value(uint32_t{0x50535431});out.value(uint32_t{1});out.value(n);out.value(seed);out.value(maximum);out.value(update);baseline.write(out);
-        out.array(actor.get_params());out.array(critic.get_params());actor_opt.save(out);critic_opt.save(out);env.save(out);return out.data;
+        CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));checkpoint::Writer out;out.value(uint32_t{0x50535431});out.value(uint32_t{recovery.empty()?1u:2u});out.value(n);out.value(seed);out.value(maximum);out.value(update);baseline.write(out);
+        out.array(actor.get_params());out.array(critic.get_params());actor_opt.save(out);critic_opt.save(out);env.save(out);if(!recovery.empty()) out.array(recovery);return out.data;
     }
     void restore(const std::vector<uint8_t>& bytes) {
-        checkpoint::Reader in{bytes};if(in.value<uint32_t>()!=0x50535431u || in.value<uint32_t>()!=1) throw std::runtime_error("Unsupported progress training save");
+        checkpoint::Reader in{bytes};if(in.value<uint32_t>()!=0x50535431u) throw std::runtime_error("Unsupported progress training save");
+        const auto version=in.value<uint32_t>();if(version!=1 && version!=2) throw std::runtime_error("Unsupported progress training version");
         if(in.value<int>()!=n || in.value<uint32_t>()!=seed || in.value<float>()!=maximum) throw std::runtime_error("Progress training configuration mismatch");
         update=in.value<int>();const auto parent=SelectorPolicy::read(in);
         if(update<0 || parent.motor!=baseline.motor || parent.selector!=baseline.selector || parent.decision_steps!=baseline.decision_steps) throw std::runtime_error("Frozen baseline mismatch");
-        actor.set_params(in.array<float>(actor.num_params()));critic.set_params(in.array<float>(critic.num_params()));actor_opt.load(in);critic_opt.load(in);env.load(in);in.finish();
+        actor.set_params(in.array<float>(actor.num_params()));critic.set_params(in.array<float>(critic.num_params()));actor_opt.load(in);critic_opt.load(in);env.load(in);
+        set_recovery_starts(version==2?in.array<pg::RecoveryStart>(4096):std::vector<pg::RecoveryStart>{},false);in.finish();
         if(actor_opt.steps()!=update*epochs*minibatches || critic_opt.steps()!=actor_opt.steps()) throw std::runtime_error("Progress optimizer counter mismatch");
     }
 };

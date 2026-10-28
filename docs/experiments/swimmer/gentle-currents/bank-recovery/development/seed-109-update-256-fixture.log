@@ -1,0 +1,2 @@
+FIXTURE mode=original foods=0 first_food_upper=-1.00
+FIXTURE mode=candidate foods=8 first_food_upper=14.00

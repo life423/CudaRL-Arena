@@ -1,6 +1,7 @@
 #include "check.h"
 #include "rl/progress_selector_ppo.h"
 #include "nn/mlp_cpu.h"
+#include "rl/pond_recovery_pool.h"
 namespace pg=cudarl::progress_selector;
 namespace p=cudarl::deep_pond;
 namespace rl=cudarl::rl;
@@ -37,4 +38,16 @@ GPU_TEST_CASE("progress selector: finite PPO, frozen motor and exact full-state 
     CHECK(a.snapshot()==b.snapshot());CHECK(a.motor.get_params()==parent.motor);
     cudarl::checkpoint::Writer out;a.policy().write(out);cudarl::checkpoint::Reader in{out.data};const auto restored=rl::ProgressPolicy::read(in);in.finish();
     CHECK(restored.actor==a.actor.get_params());CHECK(restored.baseline.motor==parent.motor);
+}
+GPU_TEST_CASE("progress selector: bank curriculum preserves underwater food and exact resumable learning") {
+    auto parent=rl::initial_pond_policy();parent.foods=0;rl::ProgressTrainer a(parent,16,71);a.train_update();
+    pg::RecoveryStart start;start.state=p::initial(81,4);start.state.since_food=500;start.target=1;start.history=pg::initial_history(start.state);start.current={.005f,0,0};
+    const auto actor=a.actor.get_params(),critic=a.critic.get_params();a.set_recovery_starts({start});
+    CHECK(a.actor.get_params()==actor);CHECK(a.critic.get_params()==critic);CHECK(a.motor.get_params()==parent.motor);
+    const auto save=a.snapshot();rl::ProgressTrainer b(parent,16,71);b.restore(save);CHECK(b.recovery.size()==1);CHECK(b.snapshot()==save);
+    a.train_update();b.train_update();CHECK(a.snapshot()==b.snapshot());CHECK(a.motor.get_params()==parent.motor);
+    auto bad=start;bad.state.food[0].y=1;bool rejected=false;try {a.set_recovery_starts({bad});} catch(const std::exception&) {rejected=true;}CHECK(rejected);
+    rejected=false;try {rl::validate_recovery(bad);} catch(const std::exception&) {rejected=true;}CHECK(rejected);
+    cudarl::checkpoint::Writer world;a.env.save(world);cudarl::checkpoint::Reader reader{world.data};const auto states=reader.array<p::State>();
+    for(const auto& state:states) for(auto food:state.food) CHECK(p::water(food));
 }

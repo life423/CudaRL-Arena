@@ -97,6 +97,8 @@ func _seek_time(seconds: float) -> void:
 		return
 	lab.seek(seconds)
 	state = lab.get_state()
+	if timeline:
+		timeline.set_value_no_signal(state.elapsed)
 	previous = state.duplicate(true)
 	accumulator = 0
 	_poll()
