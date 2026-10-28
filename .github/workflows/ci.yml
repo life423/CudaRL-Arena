@@ -40,19 +40,22 @@ jobs:
       - uses: actions/checkout@v4
 
       # NVIDIA's network installer, with only the components the build needs:
-      # compiler, runtime, headers, cuBLAS (benchmark only), and the Visual Studio
-      # integration the CMake Visual Studio generator uses to find CUDA.
+      # compiler, runtime, headers, profiler API (pond_progress_profile), cuBLAS
+      # (benchmark only), and the Visual Studio integration CMake uses to find CUDA.
       - name: Install CUDA toolkit
         shell: pwsh
         run: |
           $v = $env:CUDA_VERSION
           Invoke-WebRequest -Uri $env:CUDA_INSTALLER -OutFile cuda_installer.exe
-          $components = 'nvcc','crt','cudart','nvvm','thrust','nvptxcompiler','nvfatbin','nvjitlink',
+          $components = 'nvcc','crt','cudart','cuda_profiler_api','nvvm','thrust','nvptxcompiler','nvfatbin','nvjitlink',
                         'cublas','cublas_dev','visual_studio_integration' | ForEach-Object { "${_}_$v" }
           $p = Start-Process -FilePath .\cuda_installer.exe -ArgumentList (@('-s') + $components + @('-n')) -Wait -PassThru
           if ($p.ExitCode -ne 0) { throw "CUDA installer failed with exit code $($p.ExitCode)" }
           $root = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v$v"
           if (-not (Test-Path "$root\bin\nvcc.exe")) { throw "nvcc not found under $root" }
+          if (-not (Test-Path "$root\include\cuda_profiler_api.h")) {
+            throw "CUDA profiler API header missing; cuda_profiler_api_$v must be installed for pond_progress_profile."
+          }
           "CUDA_PATH=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           "CUDA_PATH_V$($v -replace '\.','_')=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           "$root\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
