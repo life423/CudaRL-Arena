@@ -122,7 +122,7 @@ func _run() -> void:
 		pond.find_child("BackToDemos", true, false).pressed.emit()
 		await settle()
 		check(current_scene.name == "DemoMenu" and not playback.get_stats().get("training_ready", false), "Leaving pond did not stop its session")
-		check(root.title == "CudaRL Arena · Demos", "Menu keeps the previous scene's misleading window title")
+		check(root.title == "Tadpole Pond · CudaRL", "Menu keeps the previous scene's misleading window title")
 	check(FileAccess.get_sha256(source) == policy_hash, "UI modified saved weights")
 	print("POND_NAVIGATION checks=%d failures=%d" % [checks, failures])
 	quit(1 if failures else 0)

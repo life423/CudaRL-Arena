@@ -1,0 +1,26 @@
+Focused native verification; GPU required. No complete suite rerun.
+CUDA device: present
+
+PASS  changing currents: constant speed, mirrored directions and a physical two-minute period      0.1 ms
+PASS  changing currents: bank observations distinguish clearing, feeding and censored visits      0.0 ms
+PASS  changing currents: live CUDA playback agrees with CPU while flow turns without resets     89.6 ms
+
+3/3 tests passed, 0 skipped
+CUDA device: present
+
+PASS  playback currents: switching preserves state and uses the shared water-relative forces      2.1 ms
+PASS  playback currents: optional CUDA module preserves continuity and agrees with CPU after a live switch     91.6 ms
+
+2/2 tests passed, 0 skipped
+CUDA device: present
+
+PASS  playback reliability: stationary, moving and short pauses remain distinct      0.1 ms
+PASS  playback reliability: invalid food, state and duplicate steps fail visibly      0.0 ms
+
+2/2 tests passed, 0 skipped
+CUDA device: present
+
+PASS  playback food drift: opt-in preserves state, advances targets and switches back without resets      0.4 ms
+PASS  playback food drift: CUDA and CPU agree on opt-in targets and live toggles    106.6 ms
+
+2/2 tests passed, 0 skipped

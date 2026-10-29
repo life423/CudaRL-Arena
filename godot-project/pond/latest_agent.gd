@@ -56,7 +56,7 @@ func _start_lab() -> bool:
 
 func _ready() -> void:
 	super._ready()
-	get_window().title = "CudaRL · Latest trained swimmer · live"
+	get_window().title = "Tadpole Pond · Live trained creature · CudaRL"
 	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Tadpole pond"
 	_poll()
 	if "--gentle-current" in OS.get_cmdline_user_args():

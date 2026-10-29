@@ -23,7 +23,7 @@ var header_spacer: Control
 var experiments: AcceptDialog
 
 func _ready() -> void:
-	get_window().title = "CudaRL Arena · Demos"
+	get_window().title = "Tadpole Pond · CudaRL"
 	RenderingServer.set_default_clear_color(BG)
 	_build()
 	resized.connect(_fit_layout)
@@ -102,13 +102,15 @@ func _build() -> void:
 	var bold := SystemFont.new()
 	bold.font_names = PackedStringArray(["Segoe UI"])
 	bold.font_weight = 700
-	for word in ["CudaRL", " Arena"]:
-		var label := _label(word, 48, ACCENT if word == "CudaRL" else TEXT)
+	for word in ["Tadpole", " Pond"]:
+		var label := _label(word, 48, ACCENT if word == "Tadpole" else TEXT)
 		label.add_theme_font_override("font", bold)
 		title_row.add_child(label)
 		title_labels.append(label)
 	header.add_child(title_row)
-	header.add_child(_label("Choose a demonstration", 22, MUTED))
+	var subtitle := _label("Learned control in a changing world", 20, MUTED)
+	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	header.add_child(subtitle)
 	content.add_child(header)
 	var portable: bool = ProjectSettings.get_setting("cudarl/portable_player", false)
 	guide_button = _button("About this build" if portable else "Help & training", "guide", false)
@@ -119,9 +121,8 @@ func _build() -> void:
 	header_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_row.add_child(header_spacer)
 	title_row.add_child(guide_button)
-	var demos := [["cartpole", "CartPole", "Learn to balance a pole."], ["racing", "Racing", "Eight agents on a shared circuit."], ["pond", "Tadpole Pond", "A trained swimmer in a live 3D pond. Change the current or compare untrained behavior."]]
-	if portable:
-		demos = [["pond", "Tadpole Pond", "The trained creature, with automatic CUDA or CPU playback."]]
+	# Keep legacy scenes, policies and routing intact; the product entry is the pond.
+	var demos := [["pond", "Meet your swimmer", "Watch a trained creature find food at different depths. Change the water current, move closer, or compare its behavior with an untrained creature."]]
 	for spec in demos:
 		var row := BoxContainer.new()
 		row.name = spec[0] + "_row"
@@ -145,7 +146,7 @@ func _build() -> void:
 		actions.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		actions.alignment = BoxContainer.ALIGNMENT_CENTER
 		actions.add_theme_constant_override("separation", 12)
-		row.add_child(actions)
+		details.add_child(actions)
 		if spec[0] == "pond":
 			if portable:
 				actions.add_child(_button("Open pond", "deep_water", false, true))
@@ -160,11 +161,6 @@ func _build() -> void:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))
 		rows.append({"row": row, "preview": preview, "details": details, "actions": actions})
-		var line := ColorRect.new()
-		line.color = BORDER
-		line.custom_minimum_size.y = 1
-		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		content.add_child(line)
 	status = _label("", 16, Color("ffb2a9"))
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.visible = false
@@ -192,19 +188,19 @@ func _fit_layout() -> void:
 	var width := size.x - padding * 2
 	var wide := width >= 1000
 	content.add_theme_constant_override("separation", 16 if wide else 24)
-	var preview_height := clampf((size.y - padding * 2 - 240) / 3.0, 112, 184)
+	var preview_height := clampf(size.y - padding * 2 - 200, 280, 440)
 	for data in rows:
 		var row: BoxContainer = data.row
 		row.vertical = not wide
 		row.add_theme_constant_override("separation", 28 if wide else 16)
 		var preview: Control = data.preview
-		preview.custom_minimum_size = Vector2(clampf(width * 0.39, 320, 560), preview_height) if wide else Vector2(0, clampf(width / 2.8, 130, 216))
+		preview.custom_minimum_size = Vector2(width * 0.56, preview_height) if wide else Vector2(0, clampf(width / 1.65, 180, 360))
 		preview.size_flags_horizontal = Control.SIZE_FILL if wide else Control.SIZE_EXPAND_FILL
 		var details: VBoxContainer = data.details
 		details.custom_minimum_size.x = 180 if wide else 0
 		var actions: BoxContainer = data.actions
-		actions.vertical = width < 420
-		actions.size_flags_horizontal = Control.SIZE_FILL if wide else Control.SIZE_EXPAND_FILL
+		actions.vertical = width < 420 or (wide and width * 0.44 - 28 < 356)
+		actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		for button: Button in actions.get_children():
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	queue_redraw()
@@ -251,7 +247,7 @@ func _show_guide() -> void:
 			guide.title = "Portable pond"
 			guide.dialog_autowrap = true
 			PondExperiments.style_dialog(guide)
-			guide.dialog_text = "The trained AI and pond physics prefer CUDA when its device-and-kernel check passes, with CPU fallback. Graphics use your available graphics hardware.\n\nUse Closer view or Pond overview to change the camera.\n\nThis first portable build plays the saved tadpole controller. Live CPU training, CartPole, Racing and creature growth are planned separately."
+			guide.dialog_text = "The trained AI and pond physics prefer CUDA when its device-and-kernel check passes, with CPU fallback. Graphics use your available graphics hardware.\n\nUse Closer view or Pond overview to change the camera.\n\nThis build plays the saved tadpole controller. Physical growth and new movement skills are future stages."
 			add_child(guide)
 		guide.popup_centered(Vector2i(mini(610, int(size.x) - 24), mini(320, int(size.y) - 80)))
 		return
@@ -269,7 +265,7 @@ func _show_guide() -> void:
 		body.add_theme_constant_override("separation", 12)
 		scroll.add_child(body)
 		for item in [
-			["Watch or learn", "CartPole and Racing offer saved-policy playback or a fresh training run. Open pond runs the latest saved swimmer live. Experiments contains the shallow learning lab, the original agent and recorded diagnostics."],
+			["Start in the pond", "Open pond runs the latest saved swimmer in a live physical simulation. Experiments contains the separate shallow learning lab, the original agent and recorded diagnostics."],
 			["Interact with the live pond", "Gentle current changes water forces, moves suspended food and reveals visible flow. Closer view changes the camera. Show untrained policy compares random initial networks and restarts the same layout. The graph measures this session's food collection. Live inference does not update the saved weights."],
 			["Train without graphics", "The console below continues PPO food-selector training at fixed physics timesteps. An existing full save resumes; a new installation starts from the packaged networks with a fresh optimizer. Ctrl+C saves and stops. Every 25 updates saves a full checkpoint; a crash can lose progress since that save. Only one trainer can own each save."],
 			["Keep learned skills safe", "Headless training saves a separate candidate. Watching the pond keeps its tested saved agent until a replacement is evaluated. Your original networks and full training saves are preserved. Recordings are always labeled; they are not live simulation."]

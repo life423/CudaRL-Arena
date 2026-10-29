@@ -1,8 +1,55 @@
 #include "check.h"
 #include "demos/pond_reliability.h"
+#include "demos/pond_current_schedule.h"
+#include "demos/pond_bank_monitor.h"
 #include "nn/mlp_cpu.h"
 #include <limits>
 namespace dm=cudarl::demos;
+TEST_CASE("changing currents: constant speed, mirrored directions and a physical two-minute period") {
+    const dm::PondCurrentSchedule steady({.005f,0,0}),positive({.005f,0,0},120),negative({.005f,0,0},-120);
+    for(int tick=0;tick<=6000;tick+=7) {
+        const auto a=positive.at_step(tick),b=negative.at_step(tick);
+        CHECK(std::fabs(cudarl::deep::norm(a)-.005f)<1e-8f);CHECK(a.y==0);
+        CHECK(std::fabs(a.x-b.x)<1e-8f && std::fabs(a.z+b.z)<1e-8f);
+        CHECK(steady.at_step(tick).x==.005f && steady.at_step(tick).z==0);
+        CHECK(cudarl::deep::norm(positive.at_step(tick+1)-a)<1.4e-5f);
+    }
+    CHECK(cudarl::deep::norm(positive.at_step(600)-cudarl::deep::V{0,0,.005f})<1e-8f);
+    CHECK(cudarl::deep::norm(positive.at_step(1200)-cudarl::deep::V{-.005f,0,0})<1e-8f);
+    CHECK(cudarl::deep::norm(positive.at_step(2400)-cudarl::deep::V{.005f,0,0})<1e-8f);
+    bool rejected=false;try {dm::PondCurrentSchedule invalid({.005f,0,0},std::numeric_limits<double>::quiet_NaN());} catch(const std::invalid_argument&) {rejected=true;}CHECK(rejected);
+}
+TEST_CASE("changing currents: bank observations distinguish clearing, feeding and censored visits") {
+    auto state=cudarl::deep_pond::initial(7,0);state.eaten=10;state.body=cudarl::deep::BodyState{};
+    const cudarl::deep::V bank{3.5f,cudarl::deep::pond_floor(3.5f,0)+.1f,0},free{0,-2,0};
+    state.body.position=bank;CHECK(dm::pond_near_bank(state));state.body.position=free;CHECK(!dm::pond_near_bank(state));
+    dm::PondBankMonitor monitor;
+    for(int tick=0;tick<=50;++tick) {
+        state.steps=tick;state.body.position=tick<=30?bank:free;if(tick==40) ++state.eaten;
+        monitor.observe(state);
+        if(tick==0) CHECK(monitor.visits[0].first_food<0);
+    }
+    CHECK(monitor.visits.size()==1);CHECK(monitor.contact_steps==30);
+    CHECK(monitor.visits[0].start==0 && monitor.visits[0].clear==50);
+    CHECK(monitor.visits[0].first_food==40 && monitor.visits[0].slow_steps==30);
+    dm::PondBankMonitor unfinished;state.eaten=20;state.body.position=bank;
+    for(int tick=0;tick<=10;++tick) {state.steps=tick;unfinished.observe(state);}
+    CHECK(unfinished.visits.size()==1 && unfinished.visits[0].clear<0 && unfinished.visits[0].first_food<0);
+}
+GPU_TEST_CASE("changing currents: live CUDA playback agrees with CPU while flow turns without resets") {
+    const auto policy=cudarl::rl::initial_pond_policy();const dm::PondCurrentSchedule schedule({.005f,0,0},120);
+    auto cpu=dm::create_pond_playback(policy,"cpu"),gpu=dm::create_pond_playback(policy,"cuda",CUDARL_POND_MODULE);
+    cpu->set_food_drift(true);gpu->set_food_drift(true);
+    for(int tick=0;tick<40;++tick) {
+        const auto before=gpu->frame();const auto current=schedule.at_step(tick);
+        cpu->set_current(current);gpu->set_current(current);
+        CHECK(gpu->frame().state.steps==before.state.steps);
+        CHECK(cudarl::deep::norm(gpu->frame().state.body.position-before.state.body.position)==0);
+        const auto& a=cpu->step();const auto& b=gpu->step();
+        CHECK(a.selected==b.selected);CHECK(cudarl::deep::norm(a.state.body.position-b.state.body.position)<.003f);
+        for(int f=0;f<3;++f) CHECK(cudarl::deep::norm(a.state.food[f]-b.state.food[f])<2e-5f);
+    }
+}
 TEST_CASE("playback reliability: stationary, moving and short pauses remain distinct") {
     dm::PondFrame frame;frame.state=cudarl::deep_pond::initial(7,0);const auto origin=frame.state.body.position;
     dm::PondReliability stopped,moving,brief;

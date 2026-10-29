@@ -28,7 +28,7 @@ func _run() -> void:
 			await process_frame
 			await RenderingServer.frame_post_draw
 			viewport.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../build/menu-checks/menu-phone-bottom.png"))
-			assert(scene.buttons[3].get_global_rect().end.y <= dimensions.y, "Last action cannot be reached by scrolling")
+			assert(scene.buttons[-1].get_global_rect().end.y <= dimensions.y, "Last action cannot be reached by scrolling")
 	scene.queue_free()
 	await process_frame
 	var router := root.get_node("DemoLaunch")
