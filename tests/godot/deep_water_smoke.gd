@@ -71,18 +71,7 @@ func _run() -> void:
 	var menu = load("res://launcher/launcher.tscn").instantiate()
 	root.add_child(menu)
 	await settle()
-	check(menu.find_child("deep_water_train", true, false) != null, "Menu is missing Deep water")
-	check(menu.find_child("pond_shuffle_train", true, false) == null, "Shuffled comparison still occupies the menu")
-	menu._show_guide()
-	await settle()
-	for dimensions in [Vector2i(1280, 720), Vector2i(768, 1024), Vector2i(390, 844)]:
-		root.size = dimensions
-		await settle()
-		check(menu.guide.size.x <= dimensions.x and menu.guide.size.y <= dimensions.y, "Training guide overflows")
-		if DisplayServer.get_name() != "headless":
-			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../build/pond-learning-checks/deep-guide-%dx%d.png" % [dimensions.x, dimensions.y]))
-	menu.queue_free()
-	await settle()
+	check(menu.find_child("pond_feeding_watch", true, false) != null, "Menu is missing the main pond")
+	check(menu.find_child("guide_train", true, false) == null, "Removed help section remains visible")
 	print("DEEP_WATER_SMOKE checks=%d failures=%d" % [checks, failures])
 	quit(1 if failures else 0)

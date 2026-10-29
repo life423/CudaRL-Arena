@@ -21,7 +21,7 @@ func _initialize() -> void:
 
 func open_pond(path: String):
 	var scene = load("res://pond/feeding_pond.tscn").instantiate()
-	scene.population = 1024 if production_check else 128
+	scene.population = 16 if "--pond-backend=cpu" in OS.get_cmdline_user_args() else (1024 if production_check else 128)
 	scene.feeding_checkpoint_path = path
 	root.add_child(scene)
 	current_scene = scene
@@ -31,9 +31,13 @@ func open_pond(path: String):
 
 func _run() -> void:
 	production_check = "--production-learning-check" in OS.get_cmdline_user_args()
+	if ProjectSettings.get_setting("cudarl/release_build", false):
+		output = OS.get_executable_path().get_base_dir().path_join("qa-output")
 	create_timer(120).timeout.connect(func(): quit(1))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	var source := "res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"
+	if ProjectSettings.get_setting("cudarl/release_build", false):
+		source = OS.get_executable_path().get_base_dir().path_join("data/selected-policy.bin")
 	var source_hash := FileAccess.get_sha256(source)
 	var path := "user://tests/live-feeding-%d-%d.bin" % [OS.get_process_id(), Time.get_ticks_usec()]
 	var scene = await open_pond(path)
@@ -131,7 +135,7 @@ func _run() -> void:
 	scene.lab.stop()
 	scene.queue_free()
 	await settle()
-	check(FileAccess.file_exists(path), "Closing did not save full learning state")
+	check(FileAccess.file_exists(path.get_basename() + "-cpu.bin" if "--pond-backend=cpu" in OS.get_cmdline_user_args() else path), "Closing did not save full learning state")
 	scene = await open_pond(path)
 	started = Time.get_ticks_msec()
 	while scene.stats.update <= scene.stats.loaded_update and Time.get_ticks_msec() - started < 15000 and str(scene.stats.learning_error).is_empty():

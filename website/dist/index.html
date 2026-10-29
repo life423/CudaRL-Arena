@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ed">
+  <meta name="description" content="Feed a tiny swimmer. Change its world. Watch real reinforcement learning in Tadpole Pond, a free Windows experiment built with Godot, C++ and CUDA.">
+  <meta property="og:title" content="Tadpole Pond — a little world that learns">
+  <meta property="og:description" content="Drop food, change the current, and watch a neural swimmer practice. Download the Windows preview. CPU learning included; NVIDIA acceleration optional.">
+  <meta property="og:type" content="website">
+  <title>Tadpole Pond — a little world that learns</title>
+  <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#" aria-label="Tadpole Pond home"><img src="assets/mark.svg" width="38" height="38" alt=""><span>Tadpole Pond<span class="brand-note">by CudaRL</span></span></a>
+    <nav aria-label="Main navigation"><a href="#experience">The experience</a><a href="#inside">The AI</a><a class="nav-download" href="#download">Get the preview <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="little-line"></span> A little world that learns</p>
+        <h1 id="hero-title">Give it a little food.<br>See what it <em>learns.</em></h1>
+        <p class="intro">Meet a tiny swimmer with a neural brain. Drop food into its pond, change the current, and let it figure things out.</p>
+        <a class="button primary download-link" href="https://github.com/life423/CudaRL-Arena/releases/download/v0.1.0-preview.1/TadpolePond-Windows-x64.zip"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg>Download for Windows</a>
+        <p class="download-note">Free preview · Windows 10/11, 64-bit<br>NVIDIA accelerated. CPU learning included.</p>
+      </div>
+      <figure class="hero-figure">
+        <div class="image-mat"><img src="assets/pond.png" width="1000" height="720" alt="A teal tadpole swimming through a natural 3D pond with golden food pellets at different depths." fetchpriority="high"></div>
+        <figcaption><span class="figure-label">01 / IN THE POND</span><span>Actual simulation. A creature making its own moves.</span></figcaption>
+      </figure>
+    </section>
+    <div class="facts wrap" aria-label="At a glance"><span>REAL PPO LEARNING</span><span>PHYSICS-DRIVEN SWIMMING</span><span>RUNS ON YOUR COMPUTER</span><span>NO ACCOUNT NEEDED</span></div>
+    <section class="experience wrap section" id="experience" aria-labelledby="experience-title">
+      <div class="section-heading"><p class="eyebrow">A pond. A swimmer. You.</p><h2 id="experience-title">Small interactions.<br>Something worth watching.</h2></div>
+      <div class="steps">
+        <article><span class="step-number">01</span><div><h3>Drop a little food.</h3><p>Click the open water. Pellets sink, drift with the current, and settle on the bottom. The swimmer decides which one to chase.</p></div></article>
+        <article><span class="step-number">02</span><div><h3>Change the water.</h3><p>Switch on a gentle current and watch food move through the pond. The creature has to turn, dive and control its tail to reach it.</p></div></article>
+        <article><span class="step-number">03</span><div><h3>Let it practice.</h3><p>Background swimmers practice your feeding locations and water conditions. New weights reach your creature after comparison checks. Learning can plateau; the app shows what actually changes.</p></div></article>
+      </div>
+    </section>
+    <section class="inside" id="inside" aria-labelledby="inside-title">
+      <div class="wrap inside-grid">
+        <div><p class="eyebrow">Under the surface</p><h2 id="inside-title">The tail isn't scripted.<br>The control is learned.</h2><p class="inside-intro">Two neural controllers work together: one chooses a food target; the other controls the body. In this preview, PPO adapts the swimming controller while the goal selector stays fixed.</p><a class="text-link" href="https://github.com/life423/CudaRL-Arena">Explore the source <span aria-hidden="true">↗</span></a></div>
+        <div class="technical-notes">
+          <article><span>01 / NATIVE</span><h3>C++ and CUDA. No PyTorch.</h3><p>Hand-written neural-network and reinforcement-learning code. No Python or PyTorch is required to play or train.</p></article>
+          <article><span>02 / PHYSICAL</span><h3>Movement has to earn its way.</h3><p>Tail actuation, articulated-body forces, buoyancy and simplified water drag produce the motion. Food follows gravity and drag too.</p></article>
+          <article><span>03 / LOCAL</span><h3>Your computer is the lab.</h3><p>CUDA is preferred when its device check passes. Otherwise a smaller CPU learner practices the same task. Your progress saves locally.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="download-section wrap section" id="download" aria-labelledby="download-title">
+      <div class="download-copy"><p class="eyebrow">Take a look beneath the surface</p><h2 id="download-title">A little pond.<br>Ready for your desktop.</h2><p>This is an early, playable AI experiment. The swimmer starts with learned swimming skills and keeps practicing during play. Legs, physical growth and land movement are future stages.</p><div class="release-details"><span class="release-version">Windows preview · v0.1.0-preview.1</span><span id="download-size">64-bit Windows</span></div><a class="button primary download-link" href="https://github.com/life423/CudaRL-Arena/releases/download/v0.1.0-preview.1/TadpolePond-Windows-x64.zip">Download Windows preview <span aria-hidden="true">↓</span></a><a class="checksum" href="https://github.com/life423/CudaRL-Arena/releases/download/v0.1.0-preview.1/SHA256SUMS.txt">SHA-256 checksum</a></div>
+      <div class="getting-started"><h3>From download to pond</h3><ol><li><span>Download the ZIP.</span> No installer or account.</li><li><span>Extract everything.</span> Keep the included files together.</li><li><span>Open TadpolePond.exe.</span> Choose Open pond, then click the water to feed.</li></ol><p>Use <strong>Pause learning</strong> to pause practice while watching. Close normally to save; reopen to resume.</p></div>
+    </section>
+    <section class="questions wrap" aria-labelledby="questions-title"><h2 id="questions-title">A few things to know.</h2><div class="faq-list">
+      <details><summary>Do I need an NVIDIA graphics card?</summary><p>No. An NVIDIA RTX 30-series or newer GPU with a compatible driver enables CUDA learning in this build. Without it, the same sinking-food task uses genuine CPU PPO with 16 background swimmers. Learning speed varies with your hardware; it isn't promised to match GPU training. Keep your graphics drivers current.</p></details>
+      <details><summary>Do I need Godot, Python, or a CUDA installation?</summary><p>No. The Windows ZIP includes the engine and native runtime. NVIDIA acceleration needs a compatible GPU and driver, but the CUDA toolkit isn't required. No Godot editor, Python or PyTorch installation is needed.</p></details>
+      <details><summary>Is it really learning while I play?</summary><p>Yes. The swimming network receives PPO weight updates in background practice worlds influenced by your recent food drops and current setting. Separately evaluated improvements can be adopted by the visible creature without resetting its body. PPO update and adopted update are shown separately. Every update isn't necessarily an improvement.</p></details>
+      <details><summary>Where does my progress go?</summary><p>It stays on your computer, in the CudaRL Arena folder under Godot's app data. The full learner and pond autosave every 30 seconds and on normal exit. CPU and CUDA have separate checkpoints. Learning stops when the app closes, and only one learning window should use a save at a time.</p></details>
+      <details><summary>Why does Windows show an unknown-publisher warning?</summary><p>This free preview isn't code-signed, so Windows may show a publisher or reputation warning. Use the official GitHub release linked here and compare its SHA-256 checksum if needed. If you'd rather wait for a signed release, you can still explore the source.</p></details>
+      <details><summary>Can I play on Mac or in my browser?</summary><p>This release is for Windows only. Mac and browser editions are future work. This website is the download page; it doesn't run a remote GPU or train your creature on a server.</p></details>
+    </div></section>
+  </main>
+  <footer class="wrap footer"><a class="brand" href="#"><img src="assets/mark.svg" width="30" height="30" alt=""><span>Tadpole Pond</span></a><p>An evolving AI experiment, built with CudaRL and Godot.</p><a href="https://github.com/life423/CudaRL-Arena">Source & releases <span aria-hidden="true">↗</span></a></footer>
+</body>
+</html>

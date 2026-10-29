@@ -1,3 +1,9 @@
+# Current Windows player menu
+
+The Windows preview now has one **Open pond** action. It opens the newest sinking-food learner, preferring CUDA and falling back to genuine CPU PPO. Experiments and Help/training no longer appear in the menu or pond. Feeding, current/camera controls, Pause learning, save and optional AI details remain in the pond. Backend/developer routes and CartPole/Racing are retained. Standalone packaging, CPU differences and current verification: [Windows release](windows_release.md).
+
+The following entries document earlier menu iterations; their Experiments/Help actions and old frozen-only portable restrictions are historical, not the current release UI.
+
 # Tadpole Pond entry menu
 
 Latest interaction step: on a healthy CUDA developer build, **Open pond** now opens [sinking-food interaction with concurrent PPO](live_feeding.md). Click/tap water to feed; native particles sink and drift, and the swimming actor learns in background practice worlds. Its initial reference is brief. There is no three-pellet replacement rule; all active candidates are scored with a reported 128-pellet resource guard. The menu falls back to the frozen reference when CUDA is unavailable. **Experiments → Trained reference** preserves the earlier CPU/CUDA saved-weight pond and its untrained comparison. Help distinguishes the new learner's save/resume from the preserved original headless selector console. Modal navigation is deferred until input dispatch finishes to avoid detached-window key events.

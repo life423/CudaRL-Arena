@@ -12,3 +12,10 @@ Before substantive work, read `docs/CREATURE_PLAN.md` and the latest entry in `d
 - Work in manageable verified steps. Keep protocol, training, development and final evaluation evidence separate; do not call a policy globally optimal or robust to every current. Do not automatically replace the working demo with an unvalidated experimental actor.
 - For visual AI demonstrations, the user wants the newest saved agent running live in the pond. Open `pond/latest_agent.tscn` for the current candidate; recorded before/after clips are supplementary diagnostics, not a substitute. Clearly distinguish live physical simulation from actual learning updates.
 - After a push or merge, inspect GitHub Actions for the exact pushed commit. Local tests and a successful push do not establish remote CI success. Follow applicable jobs through completion before reporting the integration finished; if verification cannot finish, explicitly report CI as pending or failed. Keep GPU-required local evidence separate from hosted jobs that intentionally skip GPU execution.
+
+## Windows release decision — October 28, 2026
+
+- User approved a Windows download plus public Azure download website, and explicitly chose genuine CPU learning for systems without NVIDIA. Keep the newest sinking-food task; do not substitute the older frozen three-food viewer and call it learning.
+- CUDA is preferred after a real device/kernel probe; CPU uses 16 background worlds with the same physical equations and PPO math. Separate full CPU/CUDA checkpoints preserve existing saves. See docs/windows_release.md.
+- Hosting is Azure Static Web Apps Free with GitHub release downloads. No GPU VM or paid training server is authorized. A review blocked sending the Azure deployment credential to GitHub Secrets; use direct local-to-Azure deployment without persisting/printing that credential.
+- Experiments and Help/training are removed from player-facing navigation. Preserve developer code/routes. macOS/browser ports remain deferred.

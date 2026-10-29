@@ -20,19 +20,6 @@ __global__ void choose(State* states,const float* scores,float* obs,int n) {
     }
     motor_observe(s,obs+i*kObs);
 }
-CUDARL_HD void replenish(State& s,const Context& context) {
-    if(s.retention) {
-        auto old=view(s,0,1,2);
-        for(int j=0;j<3;++j) if(!s.pellets[j].active && deep_pond::place_food(old,j)) {
-            auto& p=s.pellets[j];p={};p.active=true;p.settling=false;p.id=s.next_id++;p.position=old.food[j];p.distance=deep::norm(p.position-s.body.position);s.decision=true;
-        }
-    } else for(int j=0;j<s.desired_foods;++j) if(!s.pellets[j].active) {
-        const uint32_t key=rng::bits(s.seed,s.environment,s.next_id+s.episode*997u);V position;
-        if(context.count) position=context.drops[key%static_cast<uint32_t>(context.count)];
-        else {const float angle=6.2831853f*rng::uniform(s.seed,s.environment,key),r=.75f*sqrtf(rng::uniform(s.seed,s.environment,key+1));position={4.6f*r*cosf(angle),0,3.5f*r*sinf(angle)};}
-        drop(s,position);
-    }
-}
 __global__ void advance_kernel(State* states,const float* actions,swimmer::Outputs out,int n,bool autoreset,Context context) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=n) return;auto& s=states[i];
     const float reward=advance(s,actions+i*kAct,context.current);const bool timeout=s.steps>=kEpisodeSteps;

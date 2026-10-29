@@ -9,6 +9,7 @@ struct FeedingStats {
     double update_ms=0,original_score=-1,candidate_score=-1,adopted_score=-1;
     bool ready=false,resumed=false,training=false,paused=false,learner_changed=false;
     std::string error,save_error;
+    std::string backend="CUDA";
 };
 class FeedingSession {
 public:
@@ -24,5 +25,6 @@ public:
     virtual void stop()=0;
 };
 std::unique_ptr<FeedingSession> create_feeding_session(const std::string& policy,const std::string& checkpoint,int worlds=1024);
+std::unique_ptr<FeedingSession> create_cpu_feeding_session(const std::string& policy,const std::string& checkpoint,int worlds=16);
 }
 #endif

@@ -1,5 +1,4 @@
 extends "res://pond/latest_agent.gd"
-
 @export var feeding_checkpoint_path := "user://pond-policies/feeding-learning-v1/training.bin"
 var pellet_pool: MultiMeshInstance3D
 var feed_feedback: Label
@@ -10,11 +9,20 @@ var last_touch_msec := -1000
 
 func _start_lab() -> bool:
 	paused = false
-	return lab.start_feeding_learning(LATEST_POLICY, feeding_checkpoint_path, population)
+	var backend := "auto"
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--pond-backend="):
+			backend = argument.get_slice("=", 1)
+	var policy: String = ProjectSettings.get_setting("cudarl/feeding_policy", LATEST_POLICY)
+	if ProjectSettings.get_setting("cudarl/release_build", false):
+		policy = OS.get_executable_path().get_base_dir().path_join("data/selected-policy.bin")
+	return lab.start_feeding_learning(policy, feeding_checkpoint_path, population, backend)
 
 func _build_ui() -> void:
 	super._build_ui()
 	untrained_button.hide()
+	current_switch.tooltip_text = "Apply physical steady flow. Your setting also updates background practice conditions."
+	current_strength.tooltip_text = "Choose a tested flow strength; the learner practices the changed water conditions."
 	feed_feedback = _label("Click or tap open water to drop food.", 14, MUTED)
 	feed_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var controls := camera_button.get_parent()
@@ -141,7 +149,7 @@ func _poll() -> void:
 	super._poll()
 	if lab and not lab.get_error().is_empty():
 		title_status.text = "Feeding pond could not start"
-		feed_feedback.text = lab.get_error() + " Open the trained reference through Experiments."
+		feed_feedback.text = lab.get_error() + " Return to the menu and try again."
 		return
 	if not stats.get("feeding_mode", false):
 		return
@@ -155,12 +163,12 @@ func _poll() -> void:
 	pause_button.show()
 	pause_button.text = "Resume learning" if stats.paused else "Pause learning"
 	find_child("SaveTrainingNow", true, false).show()
-	training_heading.text = "Native PPO · swimming adaptation"
+	training_heading.text = "Local PPO · swimming adaptation"
 	var comparison := "First matched candidate check pending."
 	if stats.evaluation_count > 0:
 		comparison = "Matched check: candidate %.1f / min\nPreserved reference %.1f / min" % [stats.current_food_per_minute, stats.original_food_per_minute]
 	training_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	training_stats.text = "%d background swimmers\nLearner update %d · adopted %d\nInteraction version %d · practiced %d\n%s" % [stats.background_swimmers, stats.update, stats.adopted_update, stats.context_version, stats.trained_context_version, comparison]
+	training_stats.text = "%s · %d background swimmers\nLearner update %d · adopted %d\nInteraction version %d · practiced %d\n%s" % [stats.compute_backend, stats.background_swimmers, stats.update, stats.adopted_update, stats.context_version, stats.trained_context_version, comparison]
 	curve.status_caption = "PPO %d · adopted %d · %d background swimmers" % [stats.update, stats.adopted_update, stats.background_swimmers]
 	save_status.text = "Swimming retained from %d. Original policies preserved.\nSaved at %d · autosaves every 30 s and on exit." % [stats.policy_update, stats.saved_update]
 	if not str(stats.save_error).is_empty():

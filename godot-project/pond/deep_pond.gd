@@ -1,6 +1,5 @@
 extends "res://pond/deep_water.gd"
 
-const PondExperiments = preload("res://launcher/pond_experiments.gd")
 @export var swimming_checkpoint := "user://pond-policies/deep-v1/training.bin"
 @export var controller_policy_path := "res://pond/policies/deep_selector.bin"
 var foods: Array[MeshInstance3D] = []
@@ -20,7 +19,6 @@ var camera_mode_initialized := false
 var previous_camera_overview := true
 var fitted_viewport_size := Vector2i.ZERO
 var fitted_overview_distance := 13.8
-var experiments: AcceptDialog
 var details_button: Button
 var details_group: VBoxContainer
 var details_expanded := false
@@ -85,17 +83,6 @@ func _build_ui() -> void:
 	for item in [training_heading, training_stats, save_status]:
 		item.reparent(details_group)
 	details_group.hide()
-	var more := _button("Experiments")
-	more.name = "PondExperiments"
-	more.tooltip_text = "Other live agents, the learning lab and recorded diagnostics."
-	more.pressed.connect(_show_experiments)
-	controls.add_child(more)
-
-func _show_experiments() -> void:
-	if experiments == null:
-		experiments = PondExperiments.new()
-		add_child(experiments)
-	experiments.open()
 
 func _toggle_untrained(enabled: bool) -> void:
 	if not lab or not lab.set_untrained(enabled):

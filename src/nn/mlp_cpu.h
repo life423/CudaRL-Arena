@@ -7,6 +7,7 @@
 
 #include "adam_config.h"
 #include "mlp_spec.h"
+#include "core/checkpoint.h"
 
 // Plain-loop CPU reference for the MLP and Adam. It is written for obvious
 // correctness, not speed: it is the ground truth the GPU kernels are tested
@@ -130,6 +131,22 @@ public:
     }
 
     int steps() const { return t_; }
+
+    void save(checkpoint::Writer& out) const {
+        out.value(cfg_); out.value(t_); out.array(m_); out.array(v_);
+    }
+    void load(checkpoint::Reader& in) {
+        const auto cfg=in.value<AdamConfig>(); const int steps=in.value<int>();
+        auto m=in.array<T>(m_.size()), v=in.array<T>(v_.size());
+        if(m.size()!=m_.size() || v.size()!=v_.size() || steps<0 ||
+           !std::isfinite(cfg.lr) || cfg.lr<=0 || cfg.beta1!=cfg_.beta1 || cfg.beta2!=cfg_.beta2 ||
+           cfg.eps!=cfg_.eps || cfg.max_grad_norm!=cfg_.max_grad_norm)
+            throw std::runtime_error("Incompatible CPU Adam checkpoint");
+        for(size_t i=0;i<m.size();++i)
+            if(!std::isfinite(m[i]) || !std::isfinite(v[i]) || v[i]<0)
+                throw std::runtime_error("Invalid CPU Adam moments");
+        cfg_=cfg; t_=steps; m_=std::move(m); v_=std::move(v);
+    }
 
 private:
     AdamConfig     cfg_;

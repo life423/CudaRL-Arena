@@ -36,6 +36,10 @@ func _run() -> void:
 	create_timer(90).timeout.connect(func(): quit(1))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	var source := "res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"
+	if ProjectSettings.get_setting("cudarl/release_build", false):
+		source = OS.get_executable_path().get_base_dir().path_join("data/selected-policy.bin")
+		output = OS.get_executable_path().get_base_dir().path_join("qa-output/reference")
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	var policy_hash := FileAccess.get_sha256(source)
 	change_scene_to_file("res://launcher/launcher.tscn")
 	await settle()
@@ -50,37 +54,10 @@ func _run() -> void:
 		await settle()
 		check(open.size.y >= 44 and open.get_global_rect().end.x <= dimensions.x, "Pond entry is clipped or too small")
 		await capture("menu", dimensions)
-		press_space(menu.find_child("pond_experiments_train", true, false))
-		await settle()
-		var experiments = menu.experiments
-		check(experiments.visible, "Keyboard could not open experiments")
-		check(menu.get_node("ModalBackdrop").visible, "Modal does not distinguish itself from the background")
-		check(experiments.size.x <= dimensions.x and experiments.size.y <= dimensions.y, "Experiments dialog overflows")
-		check(experiments.get_ok_button().size.y >= 44, "Dialog close target is too small")
-		check(experiments.find_child("Open_pond_live", true, false) != null, "Experiments lost the live route")
-		for action: Button in experiments.actions:
-			experiments.scroll.ensure_control_visible(action)
-			await settle()
-			check(action.size.y >= 44 and action.get_global_rect().end.x <= experiments.size.x, "Experiment action is clipped or too small")
-			if action.name.contains("replay") or action.name.contains("recovery"):
-				check(action.text == "Play recording", "Recording is mislabeled as live")
-		experiments.scroll.scroll_vertical = 0
-		await settle()
-		await capture("experiments", dimensions)
-		press_space(experiments.get_ok_button())
-		await settle()
-		check(not experiments.visible, "Dialog close control failed")
-		check(not menu.get_node("ModalBackdrop").visible, "Closing experiments leaves a blocked screen")
-		menu._show_guide()
-		await settle()
-		check(menu.guide.visible and menu.guide.size.x <= dimensions.x and menu.guide.size.y <= dimensions.y, "Help dialog is clipped")
-		await capture("help", dimensions)
-		menu.guide.hide()
-		# The frozen reference remains a separate experiment route; its controls
-		# below intentionally test fixed-policy playback rather than new learning.
-		menu._show_experiments()
-		await settle()
-		press_space(menu.experiments.find_child("Open_pond_live", true, false))
+		for removed in ["pond_experiments_train", "guide_train"]:
+			check(menu.find_child(removed, true, false) == null, "Developer section remains in the menu")
+		# Direct developer routing retains the frozen reference without player UI.
+		check(root.get_node("DemoLaunch").open_demo("pond_live", true) == OK, "Reference developer route failed")
 		await settle()
 		var pond = current_scene
 		pond.set_physics_process(false)
@@ -112,16 +89,7 @@ func _run() -> void:
 		press_space(pond.details_button)
 		await settle()
 		check(not pond.details_group.visible, "AI details do not collapse")
-		pond.find_child("PondExperiments", true, false).pressed.emit()
-		await settle()
-		check(pond.experiments.visible, "Pond experiments control is disconnected")
-		for pressed in [true, false]:
-			var cancel := InputEventKey.new()
-			cancel.keycode = KEY_ESCAPE
-			cancel.pressed = pressed
-			root.push_input(cancel)
-		await settle()
-		check(not pond.experiments.visible and current_scene == pond, "Escape from experiments unexpectedly leaves the live pond")
+		check(pond.find_child("PondExperiments", true, false) == null, "Experiments remain in the pond UI")
 		var playback: RefCounted = pond.lab
 		pond.find_child("BackToDemos", true, false).pressed.emit()
 		await settle()

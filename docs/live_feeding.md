@@ -1,5 +1,7 @@
 # Feed the tadpole while it learns — October 28, 2026
 
+Windows release follow-up: the newest feeding learner now has native **CPU PPO fallback**, using 16 background swimmers when CUDA is unavailable. CUDA keeps 1,024. Both use the same task, force/particle equations, PPO/GAE math and candidate gate; smaller CPU batches change throughput and learning variance. CPU and CUDA full saves are separate. Player-facing Experiments and Help/training were removed; reference modes remain developer routes. [Release, hosting and verification](windows_release.md). Earlier CUDA-only/UI descriptions below document the initial implementation.
+
 Choose **Open pond** in the NVIDIA developer build. Click or tap open water to drop a pellet. Food is born just below the surface, sinks, drifts under water drag, and rests or slides at the bed. The tadpole's inherited goal selector chooses its own target and its swimming network produces the four tail-joint commands. No cursor-following, scripted interception or remote food collection is added.
 
 There is no three-pellet replacement rule. Every valid drop adds a pellet without deleting another. A reported **128-active-pellet resource guard** prevents unbounded buildup; excess drops are rejected visibly. Every active pellet is scored by the shared goal network. The motor receives the selected target and nearby context, not a three-food decision shortlist. **Drop food at pond center** is a keyboard-accessible alternative; the focused pond also supports arrow-key placement and Space/Enter. Invalid shoreline drops show feedback.
