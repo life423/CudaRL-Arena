@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070
+
+POND_FEEDING CPU live + PPO source selector=320
+FEEDING_CPU_REFERENCE worlds=8 seconds=10 food_min=16.000 valid=1
+FEEDING_CPU_EVAL update=16 original=16.000 incumbent=16.000 candidate=14.667 accepted=0
+FEEDING_CPU_EVAL update=32 original=16.167 incumbent=16.167 candidate=16.500 accepted=1
+POND_FEEDING CPU live + PPO source selector=320
+FEEDING_CPU_REFERENCE worlds=8 seconds=10 food_min=15.000 valid=1
+AUTONOMOUS_FEEDING backend=cpu checks=32 failures=0 loaded=33

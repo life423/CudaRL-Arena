@@ -1,4 +1,5 @@
 #include "deep_pond_lab.h"
+#include "envs/swimmer/arch.h"
 #include <exception>
 #include <filesystem>
 #include <godot_cpp/classes/os.hpp>
@@ -40,6 +41,11 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("start_feeding_learning","policy","checkpoint","environments","backend"),&DeepPondLab::start_feeding_learning,DEFVAL(1024),DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("start_arch_learning","source_checkpoint","checkpoint","environments","backend"),&DeepPondLab::start_arch_learning,DEFVAL(1024),DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("get_arch_geometry"),&DeepPondLab::get_arch_geometry);
+    ClassDB::bind_method(D_METHOD("start_cove_learning","source_checkpoint","checkpoint","environments","backend"),&DeepPondLab::start_cove_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("get_cove_geometry"),&DeepPondLab::get_cove_geometry);
+    ClassDB::bind_method(D_METHOD("sample_cove_terrain","positions"),&DeepPondLab::sample_cove_terrain);
+    ClassDB::bind_method(D_METHOD("get_arch_flow_vectors","positions"),&DeepPondLab::get_arch_flow_vectors);
+    ClassDB::bind_method(D_METHOD("advect_arch_tracers","positions","seconds"),&DeepPondLab::advect_arch_tracers);
     ClassDB::bind_method(D_METHOD("drop_food","position"),&DeepPondLab::drop_food);
     ClassDB::bind_method(D_METHOD("set_paused","paused"),&DeepPondLab::set_paused);
     ClassDB::bind_method(D_METHOD("set_updates_per_second","speed"),&DeepPondLab::set_updates_per_second);
@@ -177,12 +183,81 @@ bool DeepPondLab::start_arch_learning(String source_checkpoint,String checkpoint
     } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
 }
 Dictionary DeepPondLab::get_arch_geometry() const {
-    cudarl::deep::Habitat habitat;habitat.scale=1.5f;habitat.arch=true;
+    const auto habitat=cudarl::arch::geometry();
     Dictionary d;d["radii"]=Vector2(4.6f*habitat.scale,3.5f*habitat.scale);
     d["center"]=Vector3(habitat.center.x,habitat.center.y,habitat.center.z);
     d["major_radius"]=habitat.major;d["tube_radius"]=habitat.minor;d["yaw"]=habitat.yaw;
     d["scale"]=habitat.scale;d["opening_radius"]=habitat.major-habitat.minor;
     return d;
+}
+bool DeepPondLab::start_cove_learning(String source_checkpoint,String checkpoint,int environments,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown cove backend");
+        if(backend=="cpu") throw std::runtime_error("Cove learning currently requires NVIDIA CUDA. The existing feeding pond supports CPU learning.");
+#if CUDARL_WITH_CUDA
+        const auto device=cudarl::probe_device();
+        if(!device.available) throw std::runtime_error("Cove learning requires a healthy CUDA device: "+device.error);
+        const auto source_path=ProjectSettings::get_singleton()->globalize_path(source_checkpoint).utf8();
+        const auto save_path=ProjectSettings::get_singleton()->globalize_path(checkpoint).utf8();
+        feeding_=cudarl::demos::create_cove_session(source_path.get_data(),save_path.get_data(),environments);
+        controller_path_=checkpoint;controller_backend_="cuda";
+        UtilityFunctions::print("COVE_LEARNING CUDA imported_update=",feeding_->stats().parent_stage_update," worlds=",environments);
+        return true;
+#else
+        (void)source_checkpoint;(void)checkpoint;(void)environments;
+        throw std::runtime_error("This build supports CPU feeding learning; the cove prototype requires the CUDA developer build.");
+#endif
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+Dictionary DeepPondLab::get_cove_geometry() const {
+    auto d=get_arch_geometry();const auto h=cudarl::arch::geometry();const cudarl::deep::Basin basin{1};
+    PackedVector3Array outline;Vector2 minimum(1000,1000),maximum(-1000,-1000);
+    for(int i=0;i<192;++i) {
+        const auto p=cudarl::deep::basin_boundary(static_cast<float>(i)*6.28318530718f/192.f,h,basin);
+        outline.push_back(Vector3(p.x,p.y,p.z));
+        minimum.x=std::min(minimum.x,p.x);minimum.y=std::min(minimum.y,p.z);
+        maximum.x=std::max(maximum.x,p.x);maximum.y=std::max(maximum.y,p.z);
+    }
+    const auto center=cudarl::deep::cove_center(h),radii=cudarl::deep::cove_radii(h);
+    d["layout_id"]=1;d["layout_name"]="cove-basin-v1";d["shore_outline"]=outline;
+    d["bounds_min"]=minimum;d["bounds_max"]=maximum;d["cove_center"]=Vector3(center.x,center.y,center.z);
+    d["cove_radii"]=Vector2(radii.x,radii.z);d["cove_depth"]=3.;d["blend_width"]=.35;
+    return d;
+}
+PackedVector3Array DeepPondLab::sample_cove_terrain(const PackedVector3Array& positions) const {
+    PackedVector3Array out;if(positions.size()>65536) return out;out.resize(positions.size());
+    const auto h=cudarl::arch::geometry();const cudarl::deep::Basin basin{1};
+    for(int64_t i=0;i<positions.size();++i) {
+        const auto p=positions[i];if(!std::isfinite(p.x) || !std::isfinite(p.z)) continue;
+        const float x=static_cast<float>(p.x),z=static_cast<float>(p.z);
+        const auto gradient=cudarl::deep::habitat_gradient(x,z,h,basin);
+        out.set(i,Vector3(cudarl::deep::habitat_floor(x,z,h,basin),gradient.x,gradient.z));
+    }
+    return out;
+}
+PackedVector3Array DeepPondLab::get_arch_flow_vectors(const PackedVector3Array& positions) const {
+    PackedVector3Array out;out.resize(positions.size());
+    if(positions.size()>2048 || !feeding_ || !feeding_->stats().arch_mode) return out;
+    const auto current=feeding_->current();const auto habitat=cudarl::arch::geometry();const cudarl::deep::Basin basin{feeding_->stats().layout_id};
+    for(int64_t i=0;i<positions.size();++i) {
+        const auto p=positions[i];
+        if(!std::isfinite(p.x) || !std::isfinite(p.y) || !std::isfinite(p.z)) continue;
+        const auto flow=cudarl::deep::habitat_flow({static_cast<float>(p.x),static_cast<float>(p.y),static_cast<float>(p.z)},habitat,current,basin);
+        out.set(i,Vector3(flow.x,flow.y,flow.z));
+    }
+    return out;
+}
+PackedVector3Array DeepPondLab::advect_arch_tracers(const PackedVector3Array& positions,double seconds) const {
+    if(positions.size()>2048 || !std::isfinite(seconds) || seconds<0 || seconds>1 || !feeding_ || !feeding_->stats().arch_mode) return positions;
+    auto out=positions;const auto current=feeding_->current();const auto habitat=cudarl::arch::geometry();const cudarl::deep::Basin basin{feeding_->stats().layout_id};
+    for(int64_t i=0;i<positions.size();++i) {
+        const auto p=positions[i];
+        if(!std::isfinite(p.x) || !std::isfinite(p.y) || !std::isfinite(p.z)) continue;
+        const auto next=cudarl::arch::advect({static_cast<float>(p.x),static_cast<float>(p.y),static_cast<float>(p.z)},current,habitat,static_cast<float>(seconds),basin);
+        out.set(i,Vector3(next.x,next.y,next.z));
+    }
+    return out;
 }
 int DeepPondLab::drop_food(Vector3 position) {
     if(feeding_) {
@@ -318,6 +393,10 @@ Dictionary DeepPondLab::get_stats() {
         d["resumed"]=s.resumed;d["loaded_update"]=s.loaded_update;d["saved_update"]=s.saved_update;d["save_error"]=s.save_error.c_str();d["transferred"]=false;
         d["food_count"]=cudarl::feeding::count(feeding_->state());d["food_capacity"]=cudarl::feeding::capacity;d["policy_inputs"]=s.input_count;
         d["arch_mode"]=s.arch_mode;d["arch_contacts"]=s.arch_contacts;d["arch_passages"]=s.arch_passages;d["arch_clean_passages"]=s.arch_clean_passages;d["parent_update"]=s.parent_update;
+        d["arch_calm_food_per_minute"]=s.arch_calm_score;d["arch_calm_reference_food_per_minute"]=s.arch_calm_reference_score;
+        d["arch_current_food_per_minute"]=s.arch_current_score;d["evaluated_context_version"]=s.evaluated_context;
+        d["layout_id"]=s.layout_id;d["habitat_name"]=s.habitat_name.c_str();d["parent_stage_update"]=s.parent_stage_update;
+        d["imported_full_state"]=s.imported_full_state;d["habitat_food_per_minute"]=s.habitat_score;
         d["watching_best"]=true;d["policy_update"]=s.arch_mode?s.parent_update:controller_.motor_update;
         d["selector_update"]=s.arch_mode?s.parent_selector_update:controller_.update;
         d["decision_steps"]=20;d["update"]=s.update;

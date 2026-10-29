@@ -1,0 +1,13 @@
+{
+	"checkpoint": "C:/Users/aiand/Documents/programming/CudaRL-Arena/godot-project/../build/arch-current/rendered/arch-current-28320-683334.bin",
+	"checks": 52,
+	"context_version": 4,
+	"current_cm_s": 0.749999983236194,
+	"evaluated_context_version": -1,
+	"failures": 0,
+	"loaded_v1": 1468.0,
+	"population": 1024,
+	"resumed_v2": 1475,
+	"source_sha256": "19557cf97ff870acdefb4e2a20b8686e4918d07aff35c6ba07e3f400ebba0211",
+	"trained_context_version": 4
+}

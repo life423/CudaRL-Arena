@@ -174,6 +174,8 @@ add_executable(cudarl_tests
     tests/test_pond_playback_reliability.cpp
     tests/test_arch_geometry.cpp
     tests/test_arch_navigation.cpp
+    tests/test_arch_current.cpp
+    tests/test_cove_geometry.cpp
     tests/test_fixed_target.cpp
     tests/test_progress_selector.cpp
     tests/test_pond_selector.cpp
@@ -190,6 +192,9 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(arch_resume_verify tools/arch_resume_verify.cpp)
+    target_link_libraries(arch_resume_verify PRIVATE cudarl_core)
+    cudarl_strict_warnings(arch_resume_verify)
     add_executable(feeding_heldout_eval tools/feeding_heldout_eval.cu)
     target_link_libraries(feeding_heldout_eval PRIVATE cudarl_core)
     cudarl_strict_warnings(feeding_heldout_eval)

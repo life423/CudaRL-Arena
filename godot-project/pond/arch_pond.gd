@@ -9,7 +9,7 @@ func _ready() -> void:
 	# The native habitat also supplies the rendered dimensions. Fetch it before
 	# the inherited setup builds the basin, surface, shore and camera.
 	lab = DeepPondLab.new()
-	arch_geometry = lab.get_arch_geometry()
+	arch_geometry = _load_habitat_geometry()
 	super._ready()
 	get_window().title = "Tadpole Pond · Rock arch learning · CudaRL"
 	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Rock arch pond"
@@ -17,6 +17,12 @@ func _ready() -> void:
 
 func _create_lab() -> RefCounted:
 	return lab
+
+func _load_habitat_geometry() -> Dictionary:
+	return lab.get_arch_geometry()
+
+func _configure_flow() -> void:
+	flow.configure_habitat(_pond_radii(), Callable(lab, "advect_arch_tracers"), Callable(lab, "get_arch_flow_vectors"), arch_geometry)
 
 func _pond_radii() -> Vector2:
 	return arch_geometry.get("radii", Vector2(6.9, 5.25))
@@ -34,9 +40,11 @@ func _start_lab() -> bool:
 
 func _build_ui() -> void:
 	super._build_ui()
-	# This first navigation task controls food and current in native simulation.
+	# Food remains automatic while the current is a supported live interaction.
 	# Keep the public feeding scene's interactions unchanged in its own scene.
-	find_child("WaterControls", true, false).hide()
+	find_child("WaterControls", true, false).show()
+	current_switch.tooltip_text = "Change the actual water current without resetting the creature. Background PPO practices the changed conditions while retaining calm-water swimming."
+	current_strength.tooltip_text = "Choose 0.5 or 0.75 cm/s imposed flow. Native flow deflects near the rock and bank; wakes and turbulence are not simulated."
 	find_child("DropFoodAtCenter", true, false).hide()
 	speed_button.hide()
 	auto_feed_button.hide()
@@ -44,7 +52,7 @@ func _build_ui() -> void:
 	feed_surface.hide()
 	feed_surface.focus_mode = Control.FOCUS_NONE
 	feed_surface.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	feed_feedback.text = "Food replenishes on both sides of the rock arch. Calm water."
+	feed_feedback.text = "Food replenishes across the arch and drifts with the current."
 	feed_feedback.tooltip_text = "Two suspended foods are placed by the native simulation, clear of solid rock. This controlled task preserves the original feeding pond."
 	swimmer_stats.tooltip_text = "Live physical measurements. A passage counts only when the swimmer crosses the native arch opening. Rock contact is handled by the same CPU/CUDA physics that runs training."
 
@@ -55,10 +63,7 @@ func _set_auto_feed(_enabled: bool) -> void:
 		auto_feed_button.set_pressed_no_signal(false)
 
 func _set_current(_enabled: bool) -> void:
-	# Ignore developer launch flags inherited from the gentle-current scene.
-	# Currents are intentionally outside this first obstacle experiment.
-	if current_switch:
-		current_switch.set_pressed_no_signal(false)
+	super._set_current(_enabled)
 
 func _stone_material() -> StandardMaterial3D:
 	var noise := FastNoiseLite.new()
@@ -114,6 +119,7 @@ func _build_world() -> void:
 	rock_arch.basis = Basis(Vector3.UP, float(arch_geometry.get("yaw", 0.0))) * Basis(Vector3.RIGHT, PI * 0.5)
 	rock_arch.position = arch_geometry.get("center", Vector3(0, -2.25, 0))
 	world.add_child(rock_arch)
+	_configure_flow()
 
 func _swimmer_text() -> String:
 	return "Food collected  %d\nArch passages  %d\nDepth  %.1f cm\nSpeed  %.1f cm/s" % [state.get("eaten", 0), stats.get("arch_passages", 0), state.get("depth_cm", 0.0), state.get("speed_cm_s", 0.0)]
@@ -129,13 +135,16 @@ func _poll() -> void:
 	if not stats.get("arch_mode", false):
 		return
 	curve.watch_button.hide()
-	feed_feedback.text = "Food replenishes on both sides of the rock arch. Calm water."
+	feed_feedback.text = "Food replenishes across the arch and drifts with the current."
+	var current_speed := float(stats.get("water_current_cm_s", 0.0))
+	water_status.text = "%.2f cm/s · food drifts" % current_speed if current_speed > 0 else "Calm water"
+	water_status.tooltip_text = "The same native boundary-aware flow drives physical drag, suspended food and visible tracers. This prescribed flow approximation does not simulate wakes or turbulence."
 	training_heading.text = "PPO · obstacle navigation"
-	var comparison := "First matched candidate check pending."
-	if int(stats.get("evaluation_count", 0)) > 0:
-		comparison = "Matched check: candidate %.1f / min\nInherited swimmer %.1f / min" % [stats.get("current_food_per_minute", 0.0), stats.get("original_food_per_minute", 0.0)]
+	var comparison := "Current settings awaiting a matched comparison."
+	if int(stats.get("evaluation_count", 0)) > 0 and int(stats.get("evaluated_context_version", -1)) == int(stats.get("context_version", 0)):
+		comparison = "Matched candidate %.1f / min\nCalm arch %.1f / min · reference %.1f" % [stats.get("current_food_per_minute", 0.0), stats.get("arch_calm_food_per_minute", 0.0), stats.get("arch_calm_reference_food_per_minute", 0.0)]
 	var actor_label := "inherited swimmer" if int(stats.get("adopted_update", 0)) == 0 else "validated arch %d" % int(stats.adopted_update)
-	training_stats.text = "%s · %d background swimmers\nLearner update %d\nVisible: %s\n%d swimming observations\nRock contacts  %d\n%s\nCalm water; suspended food on opposite sides. The motor learns from inherited weights; food selection remains inherited." % [stats.get("compute_backend", ""), stats.get("background_swimmers", population), stats.get("update", 0), actor_label, stats.get("policy_inputs", 55), stats.get("arch_contacts", 0), comparison]
+	training_stats.text = "%s · %d background swimmers\nLearner update %d\nVisible: %s\nCurrent change %d · practiced %d\n%d swimming observations\nRock contact steps  %d\n%s\nPractice retains calm water and calm arch navigation, alongside steady and varying flow up to %.2f cm/s. The motor learns from inherited weights; food selection remains inherited." % [stats.get("compute_backend", ""), stats.get("background_swimmers", population), stats.get("update", 0), actor_label, stats.get("context_version", 0), stats.get("trained_context_version", 0), stats.get("policy_inputs", 55), stats.get("arch_contacts", 0), comparison, current_speed]
 	save_status.text = "Swimming inherited from update %d. Original feeding save preserved.\nSeparate arch save at %d · autosaves every 30 s and on exit." % [stats.get("parent_update", 0), stats.get("saved_update", 0)]
 	if not str(stats.get("save_error", "")).is_empty():
 		save_status.text = "Save failed: " + str(stats.save_error)

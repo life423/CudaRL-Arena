@@ -1,0 +1,45 @@
+{
+	"cases": [
+		{
+			"actor_update": 1376,
+			"contact_steps": 21,
+			"finite": true,
+			"foods": 20,
+			"max_food_gap_seconds": 6.6,
+			"max_immobility_seconds": 0.25,
+			"passages": 7,
+			"passed": true,
+			"seconds": 60,
+			"speed_cm_s": 0.0
+		},
+		{
+			"actor_update": 1376,
+			"contact_steps": 70,
+			"finite": true,
+			"foods": 16,
+			"max_food_gap_seconds": 12.35,
+			"max_immobility_seconds": 0.6,
+			"passages": 3,
+			"passed": true,
+			"seconds": 60,
+			"speed_cm_s": 0.5
+		},
+		{
+			"actor_update": 1376,
+			"contact_steps": 32,
+			"finite": true,
+			"foods": 16,
+			"max_food_gap_seconds": 6.85,
+			"max_immobility_seconds": 1.2,
+			"passages": 3,
+			"passed": true,
+			"seconds": 60,
+			"speed_cm_s": 0.75
+		}
+	],
+	"failures": 0,
+	"frozen_inference": true,
+	"source_sha256": "19557cf97ff870acdefb4e2a20b8686e4918d07aff35c6ba07e3f400ebba0211",
+	"source_unchanged": true,
+	"training_paused": true
+}

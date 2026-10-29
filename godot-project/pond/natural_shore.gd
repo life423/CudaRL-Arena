@@ -6,6 +6,12 @@ const RZ := 3.5
 var vegetation: MultiMeshInstance3D
 var rock_count := 0
 var materials: Array[ShaderMaterial] = []
+var native_outline := PackedVector3Array()
+var native_terrain := Callable()
+
+func configure_outline(outline: PackedVector3Array, terrain_sampler: Callable) -> void:
+	native_outline = outline
+	native_terrain = terrain_sampler
 
 func _ground_y(x: float, z: float) -> float:
 	var radius := sqrt(x * x / (RX * RX) + z * z / (RZ * RZ))
@@ -44,7 +50,7 @@ func _rock(rng: RandomNumberGenerator, position_value: Vector3, radius: float) -
 	var stone := MeshInstance3D.new()
 	stone.mesh = mesh
 	stone.position = position_value
-	stone.position.y = _ground_y(position_value.x, position_value.z) + 0.04
+	stone.position.y = (position_value.y if native_terrain.is_valid() else _ground_y(position_value.x, position_value.z)) + 0.04
 	stone.scale = Vector3(rng.randf_range(1.0, 1.8), rng.randf_range(0.6, 0.95), rng.randf_range(0.8, 1.4))
 	stone.rotation = Vector3(rng.randf_range(-0.2, 0.2), rng.randf_range(0, TAU), rng.randf_range(-0.15, 0.15))
 	stone.material_override = _material(Color("626a50").lerp(Color("969080"), rng.randf()))
@@ -63,6 +69,9 @@ func _leaf_mesh() -> ArrayMesh:
 func _ready() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 8271
+	if native_outline.size() >= 16 and native_terrain.is_valid():
+		_build_native_shore(rng)
+		return
 	# Uneven clusters and open muddy gaps replace the evenly spaced stone rim.
 	for cluster in 12:
 		var angle := rng.randf_range(0, TAU)
@@ -100,5 +109,50 @@ func _ready() -> void:
 	vegetation.multimesh = multi
 	var leaves := _material(Color.WHITE)
 	vegetation.material_override = leaves
+	vegetation.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(vegetation)
+
+func _build_native_shore(rng: RandomNumberGenerator) -> void:
+	# Native floor samples decide dry placement; no old ellipse cuts through bay.
+	var candidates := PackedVector3Array()
+	var stones: Array[bool] = []
+	for cluster in 64:
+		var index := rng.randi_range(0, native_outline.size() - 1)
+		var before := native_outline[(index - 1 + native_outline.size()) % native_outline.size()]
+		var after := native_outline[(index + 1) % native_outline.size()]
+		var tangent := (after - before).normalized()
+		var outward := Vector3(tangent.z, 0, -tangent.x)
+		var center := native_outline[index] + outward * rng.randf_range(0.35, 2.1)
+		var is_stone := cluster < 18
+		var count := rng.randi_range(1, 3) if is_stone else rng.randi_range(8, 15)
+		for piece in count:
+			candidates.append(center + Vector3(rng.randf_range(-0.32, 0.32), 0, rng.randf_range(-0.25, 0.25)))
+			stones.append(is_stone)
+	var samples: PackedVector3Array = native_terrain.call(candidates)
+	var instances: Array[Transform3D] = []
+	var colors: Array[Color] = []
+	for index in candidates.size():
+		if samples[index].x < 0.3:
+			continue
+		var p := candidates[index]
+		p.y = samples[index].x
+		if stones[index]:
+			_rock(rng, p, rng.randf_range(0.10, 0.26))
+		else:
+			p.y -= 0.015
+			var basis := Basis(Vector3.UP, rng.randf_range(0, TAU)).scaled(Vector3(rng.randf_range(0.65, 1.1), rng.randf_range(0.28, 0.8), 1))
+			instances.append(Transform3D(basis, p))
+			colors.append(Color("375523").lerp(Color("86934c"), rng.randf()))
+	vegetation = MultiMeshInstance3D.new()
+	var multi := MultiMesh.new()
+	multi.transform_format = MultiMesh.TRANSFORM_3D
+	multi.use_colors = true
+	multi.mesh = _leaf_mesh()
+	multi.instance_count = instances.size()
+	for index in instances.size():
+		multi.set_instance_transform(index, instances[index])
+		multi.set_instance_color(index, colors[index])
+	vegetation.multimesh = multi
+	vegetation.material_override = _material(Color.WHITE)
 	vegetation.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(vegetation)

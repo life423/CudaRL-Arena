@@ -1,0 +1,9 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070
+
+ARCH_LEARNING CUDA source_parent=10000 worlds=1024
+ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=5 contacts=22 valid=1
+ARCH_EVAL update=1472 context=4 speed_cm_s=0.750 seed=2730797761 original=13.750 incumbent=14.500 candidate=15.500 old_calm=37/35 arch_calm=33/33 contacts=92/172 passages=32 clean=18 accepted=1
+ARCH_LEARNING CUDA source_parent=10000 worlds=1024
+ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=4 contacts=8 valid=1
+ARCH_CURRENT_SMOKE {"checkpoint":"C:/Users/aiand/Documents/programming/CudaRL-Arena/godot-project/../build/cove-navigation/legacy-arch/arch-current-8680-787535.bin","checks":52,"context_version":4,"current_cm_s":0.749999983236194,"evaluated_context_version":-1,"failures":0,"loaded_v1":1468.0,"population":1024,"resumed_v2":1475,"source_sha256":"19557cf97ff870acdefb4e2a20b8686e4918d07aff35c6ba07e3f400ebba0211","trained_context_version":4}

@@ -1,0 +1,21 @@
+CUDA device: present
+
+PASS  arch habitat: wider analytic floor and gradient preserve the default basin      0.0 ms
+PASS  arch habitat: exact torus opening, solid distance, normals and yaw transform      0.0 ms
+PASS  arch habitat: opt-in contact reaches head, both tail links and the distal fin      0.0 ms
+PASS  arch habitat: legacy assembly is unchanged and larger floor contact is opt-in      2.9 ms
+PASS  arch habitat: compliant contact stays finite and resolves shallow penetration without projection      6.7 ms
+PASS  arch navigation: transfer preserves inherited actions with arbitrary obstacle readings      0.1 ms
+PASS  arch navigation: sensing distinguishes solid rock from the clear opening in the body frame      0.0 ms
+PASS  arch navigation: automatic foods remain clear and replenish across the rock      0.5 ms
+PASS  arch navigation: passage observer requires the full body and rejects routes around rock      0.1 ms
+PASS  arch navigation: retention follows the old calm task exactly     17.7 ms
+PASS  arch navigation: CUDA and CPU share contacts sensing goals and resumable worlds    374.5 ms
+PASS  arch current: local field preserves uniform legacy flow and vanishes in solids      0.0 ms
+PASS  arch current: boundary field is finite bounded and turns normal flow near rock      0.3 ms
+PASS  arch current: passive spheres cross the hole and stay outside rock bed and surface     15.4 ms
+PASS  arch current: practice schedules preserve calm worlds and clocks and cover bounded variation      0.2 ms
+PASS  arch current: zero flow keeps calm physics and food unchanged and switch-off clears velocity      0.5 ms
+PASS  arch current: CUDA matches CPU local drag food drift and full current-context continuation     33.5 ms
+
+17/17 tests passed, 0 skipped

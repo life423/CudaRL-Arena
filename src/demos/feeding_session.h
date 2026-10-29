@@ -12,6 +12,12 @@ struct FeedingStats {
     std::string backend="CUDA";
     bool arch_mode=false;
     int input_count=feeding::kObs,parent_update=0,parent_selector_update=0,arch_contacts=0,arch_passages=0,arch_clean_passages=0;
+    int evaluated_context=-1;
+    double arch_calm_score=-1,arch_calm_reference_score=-1,arch_current_score=-1;
+    int layout_id=0,parent_stage_update=0;
+    bool imported_full_state=false;
+    std::string habitat_name="Rock arch pond";
+    double habitat_score=-1;
 };
 class FeedingSession {
 public:
@@ -29,5 +35,6 @@ public:
 std::unique_ptr<FeedingSession> create_feeding_session(const std::string& policy,const std::string& checkpoint,int worlds=1024);
 std::unique_ptr<FeedingSession> create_cpu_feeding_session(const std::string& policy,const std::string& checkpoint,int worlds=16);
 std::unique_ptr<FeedingSession> create_arch_session(const std::string& source_full_save,const std::string& checkpoint,int worlds=1024);
+std::unique_ptr<FeedingSession> create_cove_session(const std::string& source_arch_save,const std::string& checkpoint,int worlds=1024);
 }
 #endif

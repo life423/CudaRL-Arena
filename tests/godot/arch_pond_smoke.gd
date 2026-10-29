@@ -97,7 +97,7 @@ func run() -> void:
 	for food: Vector3 in scene.state.foods:
 		safe_foods = safe_foods and arch_distance(food, geometry) > 0.1 and food.y < -0.1
 	check(safe_foods, "Native automatic food intersects solid rock or leaves the water")
-	check(not scene.find_child("WaterControls", true, false).visible and not scene.auto_feed_button.visible and not scene.feed_surface.visible, "Controlled arch task exposes unsupported current/manual-food controls")
+	check(scene.find_child("WaterControls", true, false).visible and not scene.auto_feed_button.visible and not scene.feed_surface.visible, "Arch current controls or automatic-food boundaries are incorrect")
 	check(not scene.curve.watch_button.visible and not scene.speed_button.visible and not scene.untrained_button.visible, "Arch task exposes disconnected policy/speed controls")
 	check(scene.curve.plot_title == "Live collection rate" and scene.curve.tooltip_text.contains("session"), "Live collection plot is mislabeled as candidate evaluation")
 	var before: Dictionary = scene.lab.get_state().duplicate(true)

@@ -46,27 +46,79 @@ struct Habitat {
     V center{0,-2.25f,0};
     float major=1.35f,minor=.5f,yaw=0;
 };
+// Layout identity is external to Habitat/BodyState: old raw world snapshots
+// remain readable. Layout 1 is the fixed, versioned outward-cove definition.
+struct Basin {int layout=0;};
 struct Physics {
     float density=1000,viscosity=.001f,gravity=9.81f;
     bool boundaries=true,pond=false;
-    V water_velocity{}; // imposed uniform fluid velocity in world m/s
+    V water_velocity{}; // imposed far-field fluid velocity in world m/s
     Habitat habitat{};
+    Basin basin{};
 };
 // Shared analytic basin, also sampled by Godot for its visible terrain.
 CUDARL_HD inline float pond_floor(float x,float z) {
     const float r2=fminf(1.f,x*x/(4.6f*4.6f)+z*z/(3.5f*3.5f));
     return -4.f+4.5f*r2*r2*r2;
 }
-CUDARL_HD inline float habitat_floor(float x,float z,const Habitat& h) {
+CUDARL_HD inline float habitat_floor(float x,float z,const Habitat& h,Basin basin={});
+CUDARL_HD inline V habitat_gradient(float x,float z,const Habitat& h,Basin basin={});
+CUDARL_HD inline V cove_center(const Habitat& h) {
+    const float factor=h.scale/1.5f;return {5.8f*factor,0,-1.5f*factor};
+}
+CUDARL_HD inline V cove_radii(const Habitat& h) {
+    const float factor=h.scale/1.5f;return {3.2f*factor,0,2.8f*factor};
+}
+CUDARL_HD inline float main_basin_floor(float x,float z,const Habitat& h) {
     if(h.scale==1.f) return pond_floor(x,z);
     const float rx=4.6f*h.scale,rz=3.5f*h.scale;
     const float r2=fminf(1.f,x*x/(rx*rx)+z*z/(rz*rz));
     return -4.f+4.5f*r2*r2*r2;
 }
-CUDARL_HD inline V habitat_gradient(float x,float z,const Habitat& h) {
+CUDARL_HD inline V main_basin_gradient(float x,float z,const Habitat& h) {
     const float rx=4.6f*h.scale,rz=3.5f*h.scale;
     const float r2=x*x/(rx*rx)+z*z/(rz*rz);
     return r2<1.f?V{27.f*x*r2*r2/(rx*rx),0,27.f*z*r2*r2/(rz*rz)}:V{};
+}
+CUDARL_HD inline float cove_floor(float x,float z,const Habitat& h) {
+    const V center=cove_center(h),radii=cove_radii(h);x-=center.x;z-=center.z;
+    const float r2=fminf(1.f,x*x/(radii.x*radii.x)+z*z/(radii.z*radii.z));
+    return -3.f+3.5f*r2*r2*r2;
+}
+CUDARL_HD inline V cove_gradient(float x,float z,const Habitat& h) {
+    const V center=cove_center(h),radii=cove_radii(h);x-=center.x;z-=center.z;
+    const float r2=x*x/(radii.x*radii.x)+z*z/(radii.z*radii.z);
+    return r2<1.f?V{21.f*x*r2*r2/(radii.x*radii.x),0,21.f*z*r2*r2/(radii.z*radii.z)}:V{};
+}
+CUDARL_HD inline float habitat_floor(float x,float z,const Habitat& h,Basin basin) {
+    const float main=main_basin_floor(x,z,h);
+    if(basin.layout==0) return main;
+    constexpr float blend=.35f;const float cove=cove_floor(x,z,h);
+    const float weight=clamp(.5f+.5f*(cove-main)/blend,0,1);
+    if(weight>=1) return main;if(weight<=0) return cove;
+    return cove+(main-cove)*weight-blend*weight*(1-weight);
+}
+CUDARL_HD inline V habitat_gradient(float x,float z,const Habitat& h,Basin basin) {
+    const auto main=main_basin_gradient(x,z,h);if(basin.layout==0) return main;
+    const float weight=clamp(.5f+.5f*(cove_floor(x,z,h)-main_basin_floor(x,z,h))/.35f,0,1);
+    if(weight>=1) return main;
+    const auto cove=cove_gradient(x,z,h);if(weight<=0) return cove;
+    return main*weight+cove*(1-weight);
+}
+// Rare render/diagnostic contour query. Particle/drag integration uses the
+// analytic floor and gradient above, without a root search in its hot path.
+CUDARL_HD inline V basin_boundary(float angle,const Habitat& h,Basin basin={},float level=0) {
+    const float x=cosf(angle),z=sinf(angle);float low=0,high=16.f*h.scale;
+    for(int step=0;step<32;++step) {
+        const float mid=(low+high)*.5f;
+        if(habitat_floor(x*mid,z*mid,h,basin)<level) low=mid;else high=mid;
+    }
+    return {x*(low+high)*.5f,level,z*(low+high)*.5f};
+}
+CUDARL_HD inline float basin_radius(V p,const Habitat& h,Basin basin={}) {
+    const float radius=sqrtf(p.x*p.x+p.z*p.z);if(radius==0) return 0;
+    const V boundary=basin_boundary(atan2f(p.z,p.x),h,basin);
+    return radius/sqrtf(boundary.x*boundary.x+boundary.z*boundary.z);
 }
 CUDARL_HD inline V arch_to_local(V point,const Habitat& h) {
     const V p=point-h.center;const float c=cosf(h.yaw),s=sinf(h.yaw);
@@ -92,6 +144,30 @@ CUDARL_HD inline float arch_distance(V point,const Habitat& h,V* normal=nullptr)
         *normal={c*n.x+s*n.z,n.y,-s*n.x+c*n.z};
     }
     return tube-h.minor;
+}
+// A prescribed, bounded boundary-aware current, not a pressure/CFD solver.
+// Model-unit distances define a smooth free-slip projection near the arch and
+// basin, with a thin zero-velocity layer at every solid/surface intersection.
+// Disabled habitats retain the exact legacy uniform flow.
+CUDARL_HD inline float flow_smooth(float x) {
+    const float t=clamp(x,0,1);return t*t*(3.f-2.f*t);
+}
+CUDARL_HD inline V habitat_flow(V point,const Habitat& h,V imposed,Basin basin={}) {
+    if(!h.arch && basin.layout==0) return imposed;
+    if(imposed.x==0 && imposed.y==0 && imposed.z==0) return {};
+    V rock_normal;const float rock=arch_distance(point,h,&rock_normal);
+    const V gradient=habitat_gradient(point.x,point.z,h,basin);
+    const float magnitude=sqrtf(1+gradient.x*gradient.x+gradient.z*gradient.z);
+    const V bed_normal=V{-gradient.x,1,-gradient.z}/magnitude;
+    const float bed=(point.y-habitat_floor(point.x,point.z,h,basin))/magnitude,surface=-point.y;
+    if(rock<=0 || bed<=0 || surface<=0) return {};
+    V velocity=imposed-rock_normal*(dot(imposed,rock_normal)*(1.f-flow_smooth(rock/.75f)));
+    velocity=velocity-bed_normal*(dot(velocity,bed_normal)*(1.f-flow_smooth(bed/.75f)));
+    velocity.y*=flow_smooth(surface/.3f);
+    // Each orthogonal projection is a contraction, so the field never exceeds
+    // the selected speed. This final layer also prevents leakage where the
+    // individual projected boundary normals are not orthogonal.
+    return velocity*(flow_smooth(rock/.05f)*flow_smooth(bed/.05f)*flow_smooth(surface/.05f));
 }
 struct Link {
     Q q;
@@ -199,11 +275,11 @@ CUDARL_HD inline void contact(System& a,const V* J,V point,V velocity,float radi
 }
 // Opt-in basin branch. The original contact routine above remains unchanged
 // so existing environments/checkpoints retain their exact arithmetic path.
-CUDARL_HD inline void habitat_contact(System& a,const V* J,V point,V velocity,float radius,const Habitat& h) {
-    const float x=point.x/scale,z=point.z/scale;const V gradient=habitat_gradient(x,z,h);
+CUDARL_HD inline void habitat_contact(System& a,const V* J,V point,V velocity,float radius,const Habitat& h,Basin basin={}) {
+    const float x=point.x/scale,z=point.z/scale;const V gradient=habitat_gradient(x,z,h,basin);
     const float magnitude=sqrtf(1+gradient.x*gradient.x+gradient.z*gradient.z);
     const V n=V{-gradient.x,1,-gradient.z}/magnitude;
-    const float gap=(point.y-habitat_floor(x,z,h)*scale)/magnitude-radius;
+    const float gap=(point.y-habitat_floor(x,z,h,basin)*scale)/magnitude-radius;
     if(gap<0) {load(a,J,n*(-.8f*gap));if(dot(velocity,n)<0) resist(a,J,n,.006f);}
     const float surface=-point.y-radius;
     if(surface<0) {load(a,J,{0,.8f*surface,0});if(velocity.y>0) resist(a,J,{0,-1,0},.006f);}
@@ -249,7 +325,10 @@ CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
             const V r=axis[0]*((sample-1)*l.length/3.f);V J[dofs];
             for(int i=0;i<dofs;++i) J[i]=l.linear[i]+cross(l.angular[i],r);
             const V v=multiply(J,s.velocity);
-            const V relative=v-physics.water_velocity;
+            const bool moving_water=physics.water_velocity.x!=0 || physics.water_velocity.y!=0 || physics.water_velocity.z!=0;
+            const V water=(physics.habitat.arch || physics.basin.layout!=0) && moving_water?
+                habitat_flow((l.center+r)/scale,physics.habitat,physics.water_velocity,physics.basin):physics.water_velocity;
+            const V relative=v-water;
             for(int direction=0;direction<3;++direction) {
                 const float viscous=6.f*3.14159265f*physics.viscosity*(b==0?.008f:.004f);
                 const float coefficient=submersion*(viscous+.5f*physics.density*area[direction]*fabsf(dot(relative,axis[direction])))/3.f;
@@ -257,12 +336,12 @@ CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
                 // Semi-implicit drag is -R*(v_new-u). The coefficient is
                 // evaluated from the previous water-relative point velocity.
                 // Keep the zero-current force path unchanged.
-                if(physics.water_velocity.x!=0 || physics.water_velocity.y!=0 || physics.water_velocity.z!=0)
-                    load(a,J,axis[direction]*(coefficient*dot(physics.water_velocity,axis[direction])));
+                if(moving_water)
+                    load(a,J,axis[direction]*(coefficient*dot(water,axis[direction])));
             }
             if(physics.boundaries) {
-                if(physics.pond && physics.habitat.scale!=1.f)
-                    habitat_contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.habitat);
+                if(physics.pond && (physics.habitat.scale!=1.f || physics.basin.layout!=0))
+                    habitat_contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.habitat,physics.basin);
                 else contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.pond);
             }
         }

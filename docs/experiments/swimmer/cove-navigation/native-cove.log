@@ -1,0 +1,18 @@
+CUDA device: present
+
+  FOOD_COVERAGE outside_old=73.7% gap=2.201 x=[-3.88,3.84] y=[-2.78,2.78]
+PASS  foraging: initial and replacement food cover the pond without clumping      1.3 ms
+PASS  foraging: learned recovery releases folded tails without scripted movement    105.2 ms
+PASS  deep water: food varies vertically, collection uses 3D distance and boundary forces recover      5.7 ms
+PASS  practice feeding: saved player locations supplement broad automatic coverage      0.1 ms
+PASS  arch current: practice schedules preserve calm worlds and clocks and cover bounded variation      0.2 ms
+PASS  cove habitat: versioned basin stays outside old raw world layout      0.0 ms
+PASS  cove habitat: smooth union extends water without reducing the old pool or central depths      0.0 ms
+PASS  cove habitat: analytic join gradients and continuous open shoreline agree      0.4 ms
+PASS  cove habitat: automatic food covers both original sides and the reachable new region      0.8 ms
+PASS  cove habitat: particles and imposed flow use the extended basin without old ellipse clipping      7.3 ms
+PASS  cove habitat: CUDA and CPU agree on extended contact flow food and saved layout    191.3 ms
+PASS  pond selector: recovery failures are terminal, training resets never alter deployment physics      3.3 ms
+PASS  pond selector: recovery training resumes bit identically through a five-minute timeout    321.8 ms
+
+13/13 tests passed, 0 skipped

@@ -113,6 +113,22 @@ func _pond_radii() -> Vector2:
 func _pond_overview_direction() -> Vector3:
 	return NATURAL_OVERVIEW_DIRECTION
 
+func _pond_overview_target() -> Vector3:
+	return Vector3(0, -1.3, 0)
+
+func _pond_fit_points() -> Array[Vector3]:
+	var points: Array[Vector3] = []
+	var radii := _pond_radii()
+	for i in 32:
+		var angle := TAU * float(i) / 32
+		points.append(Vector3(cos(angle) * radii.x * 1.18, 0.8, sin(angle) * radii.y * 1.18))
+		for radius in [0.0, 0.35, 0.65, 0.85, 0.97]:
+			points.append(Vector3(cos(angle) * radii.x * radius, _floor_y(radius) + 0.1, sin(angle) * radii.y * radius))
+	return points
+
+func _create_shore() -> Node3D:
+	return preload("res://pond/natural_shore.gd").new()
+
 func _visual_height(x: float, z: float) -> float:
 	var radii := _pond_radii()
 	var radius := sqrt(x * x / (radii.x * radii.x) + z * z / (radii.y * radii.y))
@@ -205,7 +221,7 @@ func _build_world() -> void:
 	var radii := _pond_radii()
 	water_surface.scale = Vector3(radii.x, 1, radii.y)
 	water_surface.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	shore = preload("res://pond/natural_shore.gd").new()
+	shore = _create_shore()
 	world.add_child(shore)
 	creature = Creature.new()
 	world.add_child(creature)
@@ -289,18 +305,12 @@ func _fit_view_distance(points: Array[Vector3], target: Vector3, direction: Vect
 func _update_camera(delta: float) -> void:
 	if state.is_empty():
 		return
-	var target := Vector3(0, -1.3, 0)
+	var target := _pond_overview_target()
 	var overview_direction := _pond_overview_direction().normalized()
 	var direction := overview_direction if overview else camera_direction
 	var mode_changed := not camera_mode_initialized or previous_camera_overview != overview
 	if fitted_viewport_size != viewport.size:
-		var points: Array[Vector3] = []
-		var radii := _pond_radii()
-		for i in 32:
-			var angle := TAU * float(i) / 32
-			points.append(Vector3(cos(angle) * radii.x * 1.18, 0.8, sin(angle) * radii.y * 1.18))
-			for radius in [0.0, 0.35, 0.65, 0.85, 0.97]:
-				points.append(Vector3(cos(angle) * radii.x * radius, _floor_y(radius) + 0.1, sin(angle) * radii.y * radius))
+		var points := _pond_fit_points()
 		fitted_overview_distance = maxf(9.0, _fit_view_distance(points, target, overview_direction))
 		fitted_viewport_size = viewport.size
 	var distance := fitted_overview_distance

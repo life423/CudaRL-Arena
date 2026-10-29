@@ -6,6 +6,7 @@ namespace cudarl::arch {
 using deep::V;
 constexpr int kObs=55,kAct=4,kEpisodeSteps=1200;
 constexpr float sensing_range=3.f;
+struct Context {V current{};int version=0;deep::Basin basin{};};
 struct State {
     feeding::State pond;
     deep::Habitat habitat;
@@ -19,9 +20,59 @@ CUDARL_HD inline float radial(V p,const deep::Habitat& h) {
     const float rx=4.6f*h.scale,rz=3.5f*h.scale;
     return p.x*p.x/(rx*rx)+p.z*p.z/(rz*rz);
 }
-CUDARL_HD inline bool water(V p,const deep::Habitat& h,float clearance=.3f) {
-    return radial(p,h)<.86f*.86f && p.y<-.35f &&
-        p.y>deep::habitat_floor(p.x,p.z,h)+clearance && deep::arch_distance(p,h)>clearance;
+CUDARL_HD inline bool water(V p,const deep::Habitat& h,float clearance=.3f,deep::Basin basin={}) {
+    return (basin.layout!=0 || radial(p,h)<.86f*.86f) && p.y<-.35f &&
+        p.y>deep::habitat_floor(p.x,p.z,h,basin)+clearance && deep::arch_distance(p,h)>clearance;
+}
+// Passive, neutrally buoyant food/tracers use the same imposed local velocity
+// as articulated drag. Only particles receive geometric solid contact; the
+// swimmer remains fully force-driven. Coordinates are model units.
+CUDARL_HD inline V particle_contact(V p,const deep::Habitat& h,deep::Basin basin={}) {
+    constexpr float r=feeding::radius/deep::scale;
+    for(int iteration=0;iteration<4;++iteration) {
+        V normal;const float rock=deep::arch_distance(p,h,&normal);
+        if(rock<r) p+=normal*(r-rock+1e-5f);
+        const V gradient=deep::habitat_gradient(p.x,p.z,h,basin);
+        const float length=sqrtf(1+gradient.x*gradient.x+gradient.z*gradient.z);
+        const V bed_normal=V{-gradient.x,1,-gradient.z}/length;
+        const float gap=(p.y-deep::habitat_floor(p.x,p.z,h,basin))/length-r;
+        if(gap<0) p+=bed_normal*(-gap+1e-5f);
+        if(p.y>-r) p.y=-r;
+        if(basin.layout==0) {
+            const float edge=sqrtf(radial(p,h));
+            if(edge>.94f) {p.x*=.94f/edge;p.z*=.94f/edge;}
+        }
+    }
+    return p;
+}
+CUDARL_HD inline V advect(V position,V current,const deep::Habitat& h,float seconds,deep::Basin basin={}) {
+    if(!(seconds>0) || (current.x==0 && current.y==0 && current.z==0)) return position;
+    // The normal caller advances one 50 ms physical step. Small midpoint
+    // substeps also make visual tracers agree under ordinary render intervals.
+    const int ticks=static_cast<int>(ceilf(seconds/.005f));const float dt=seconds/ticks;
+    for(int tick=0;tick<ticks;++tick) {
+        const V first=deep::habitat_flow(position,h,current,basin);
+        const V midpoint=particle_contact(position+first*(.5f*dt/deep::scale),h,basin);
+        const V velocity=deep::habitat_flow(midpoint,h,current,basin);
+        position=particle_contact(position+velocity*(dt/deep::scale),h,basin);
+    }
+    return position;
+}
+CUDARL_HD inline V practice_current(const State& s,const Context& context) {
+    const float maximum=deep::norm(context.current);
+    if(s.pond.retention || s.pond.environment%4u==1u || !(maximum>0)) return {};
+    const V direction=context.current/maximum;const auto& pond=s.pond;
+    if(pond.environment%4u==2u) {
+        const uint32_t key=feeding::practice_key(pond,0,0xA2C457EDu);
+        return direction*(maximum*rng::uniform(pond.seed,pond.environment,key));
+    }
+    const uint32_t period=80u+feeding::practice_key(pond,0,0xA2C4C10Cu)%121u;
+    const uint32_t tick=static_cast<uint32_t>(pond.steps),frame=tick/period;
+    const float u=static_cast<float>(tick%period)/static_cast<float>(period),blend=u*u*(3.f-2.f*u);
+    const uint32_t a=feeding::practice_key(pond,frame,0xA2C4C011u),b=feeding::practice_key(pond,frame+1u,0xA2C4C011u);
+    const float low=a%4u<2u?0.f:rng::uniform(pond.seed,pond.environment,a);
+    const float high=b%4u<2u?0.f:rng::uniform(pond.seed,pond.environment,b);
+    return direction*(maximum*(low+(high-low)*blend));
 }
 // All 18 rays are expressed in the physical head frame, not the animated mesh.
 CUDARL_HD inline V ray_direction(int ray) {
@@ -46,7 +97,40 @@ CUDARL_HD inline void observe(const State& s,float* out) {
     for(int ray=0;ray<18;++ray)
         out[feeding::kObs+ray]=proximity(s.pond.body.position,s.pond.body.orientation.rotate(ray_direction(ray)),s.habitat);
 }
-CUDARL_HD inline void place(State& s,int slot,int side) {
+CUDARL_HD inline bool cove_food_clear(const State& s,int slot,V position,deep::Basin basin) {
+    if(!water(position,s.habitat,.4f,basin) || deep::norm(position-s.pond.body.position)<.8f) return false;
+    const auto body=deep::shape(s.pond.body);
+    for(const auto& link:body.link) {
+        const V axis=link.q.rotate({1,0,0}),relative=position-link.center/deep::scale;
+        const float axial=deep::clamp(deep::dot(relative,axis),-.5f*link.length/deep::scale,.5f*link.length/deep::scale);
+        if(deep::norm(relative-axis*axial)<.4f) return false;
+    }
+    for(int i=0;i<feeding::capacity;++i) if(i!=slot && s.pond.pellets[i].active &&
+        deep::norm(position-s.pond.pellets[i].position)<1.2f) return false;
+    return true;
+}
+CUDARL_HD inline void place(State& s,int slot,int side,deep::Basin basin={}) {
+    if(basin.layout!=0) {
+        const uint32_t key=s.pond.next_id*193u+s.pond.episode*7919u;
+        // Successive replacements exercise both original sides and the new
+        // cove. A blocked placement can use another reachable region; food is
+        // never placed inside the animal to enforce a particular visit.
+        for(uint32_t trial=0;trial<192;++trial) {
+            const int region=static_cast<int>((s.pond.next_id-1u+trial/64u)%3u);
+            const float x=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u)*2-1;
+            const float y=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u+1u)*2-1;
+            const float z=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u+2u)*2-1;
+            V position;
+            if(region==2) {
+                const V center=deep::cove_center(s.habitat),radii=deep::cove_radii(s.habitat);
+                position={center.x+radii.x*(.45f+.15f*x),-1.65f+.35f*y,center.z+radii.z*.23f*z};
+            } else position=deep::arch_to_world({x*.8f,y*.28f,(region==0?-1.f:1.f)*(2.65f+.35f*z)},s.habitat);
+            if(!cove_food_clear(s,slot,position,basin)) continue;
+            auto& p=s.pond.pellets[slot];p={};p.active=true;p.settling=false;p.position=position;p.id=s.pond.next_id++;
+            p.distance=deep::norm(position-s.pond.body.position);s.pond.decision=true;return;
+        }
+        return;
+    }
     auto& p=s.pond.pellets[slot];const uint32_t key=s.pond.next_id*193u+s.pond.episode*7919u;
     const auto body=deep::shape(s.pond.body);V position;
     for(uint32_t trial=0;trial<64;++trial) {
@@ -70,14 +154,14 @@ CUDARL_HD inline void place(State& s,int slot,int side) {
     p={};p.active=true;p.settling=false;p.position=position;p.id=s.pond.next_id++;
     p.distance=deep::norm(position-s.pond.body.position);s.pond.decision=true;
 }
-CUDARL_HD inline void replenish(State& s) {
+CUDARL_HD inline void replenish(State& s,deep::Basin basin={}) {
     if(s.pond.retention) {feeding::replenish(s.pond,{});return;}
     for(int slot=0;slot<2;++slot) if(!s.pond.pellets[slot].active) {
         const float previous=deep::arch_to_local(s.pond.pellets[slot].position,s.habitat).z;
-        place(s,slot,previous>=0?-1:1);
+        place(s,slot,previous>=0?-1:1,basin);
     }
 }
-CUDARL_HD inline State initial(uint32_t seed,uint32_t environment,uint32_t episode,bool retention=false) {
+CUDARL_HD inline State initial(uint32_t seed,uint32_t environment,uint32_t episode,bool retention=false,deep::Basin basin={}) {
     State s;s.pond=feeding::initial(seed,environment,episode,{},true);s.pond.retention=retention;
     if(retention) return s;
     s.habitat=geometry();
@@ -95,7 +179,7 @@ CUDARL_HD inline State initial(uint32_t seed,uint32_t environment,uint32_t episo
     s.pond.body.position=deep::arch_to_world({x,0,side*2.35f},s.habitat);
     s.pond.body.orientation=deep::axis_rotation({0,1,0},rng::uniform(seed,environment,episode*31u+4u)*6.2831853f);
     s.pond.anchor=s.pond.body.position;s.pond.target=-1;s.pond.desired_foods=2;
-    place(s,0,-1);place(s,1,1);return s;
+    place(s,0,-1,basin);place(s,1,1,basin);return s;
 }
 // A read-only event detector: it never changes the physical pose. A passage
 // requires the entire articulated body to change sides through the aperture.
@@ -130,11 +214,15 @@ CUDARL_HD inline void record_passage(State& s,bool contact) {
     }
     if(full!=0) s.last_full_side=full;
 }
-CUDARL_HD inline float advance(State& s,const float* action) {
+CUDARL_HD inline float advance(State& s,const float* action,V current={},deep::Basin basin={}) {
     if(s.pond.retention) return feeding::advance(s.pond,action,{});
     auto& p=s.pond;const bool targeted=p.target>=0 && p.pellets[p.target].active;
+    for(auto& food:p.pellets) if(food.active) {
+        const V previous=food.position;food.position=advect(previous,current,s.habitat,deep::dt,basin);
+        food.velocity=(food.position-previous)*(deep::scale/deep::dt);
+    }
     const float before=targeted?deep::norm(p.pellets[p.target].position-p.body.position):0;
-    deep::Physics physics;physics.pond=true;physics.habitat=s.habitat;
+    deep::Physics physics;physics.pond=true;physics.habitat=s.habitat;physics.water_velocity=current;physics.basin=basin;
     bool contact=false;deep::advance_physics(p.body,action,physics,&contact);++p.steps;++p.since_food;
     float reward=-.005f;
     if(!(deep::norm(p.body.position)<100.f)) p.invalid=true;

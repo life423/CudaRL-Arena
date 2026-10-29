@@ -1,0 +1,16 @@
+{
+	"checkpoint": "C:/Users/aiand/Documents/programming/CudaRL-Arena/godot-project/../build/cove-navigation/rendered-4.4.1/cove-training-4340-673136.bin",
+	"checks": 52,
+	"failures": 0,
+	"initial_controller": {
+		"cove_food_seen": true,
+		"cove_visit": true,
+		"foods_collected": 12,
+		"max_immobility_seconds": 0.55
+	},
+	"loaded_parent": 4539.0,
+	"population": 1024,
+	"resumed_cove": 4548,
+	"source_sha256": "5f3ac35d996ce4500875031cc26c1d1e34ab7b83c4df9bc090b14dbbe9985665",
+	"update": 4549
+}

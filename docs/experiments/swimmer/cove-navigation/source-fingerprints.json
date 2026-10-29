@@ -1,0 +1,90 @@
+[
+  {
+    "path": "CMakeLists.txt",
+    "hash": "8DFD17A26EED47BE054BECBA257BB86C0ED7C375B82290FCA4C9521D96FB87E6"
+  },
+  {
+    "path": "src/envs/swimmer/deep_physics.h",
+    "hash": "BB6FA23D30AB0877506422FB6BA137CD52A70E3E31C29093B5B95908D1D2CD92"
+  },
+  {
+    "path": "src/envs/swimmer/arch.h",
+    "hash": "4B178EF2FD45A1663E2B40AE9F9299210038648B1BD92F752A0DC64865402431"
+  },
+  {
+    "path": "src/envs/swimmer/arch_batch.h",
+    "hash": "4F93D4A54AB6B1285536D6CB3C1FB3CA0C92C9AA7E3B89CF1E32FE066D4577D7"
+  },
+  {
+    "path": "src/envs/swimmer/arch_batch.cu",
+    "hash": "9C06450E8CAA966B9E287B6BEC8C386CCED94BDC83007361D66316E5348525D5"
+  },
+  {
+    "path": "src/rl/arch_cpu.h",
+    "hash": "2996978C9E67289D2F9060C4EADBBE19CF356C9A44549FCB2660134227C6FE5E"
+  },
+  {
+    "path": "src/demos/arch_session.cu",
+    "hash": "8DA1649F20FC70CFF2CEE426757109C5C6F60D37A39ADDF2C0F07A3D4E2F9A37"
+  },
+  {
+    "path": "src/demos/feeding_session.h",
+    "hash": "0E7EC183642EA90D3347DE0E29382259A11D374CFDA50047BF17E00150BA8C90"
+  },
+  {
+    "path": "src/godot/deep_pond_lab.h",
+    "hash": "042A8A24E53997543EB05F2809BF5BAFE0369965D72D110F1FFF34BA92D66CFD"
+  },
+  {
+    "path": "src/godot/deep_pond_lab.cpp",
+    "hash": "0E90840BDD4B129B658E2B97F6B64F8569F12458B4AF4759BF152DDAB5338A28"
+  },
+  {
+    "path": "godot-project/pond/cove_pond.gd",
+    "hash": "0B5D82DB1D48362868ADEA4F2E3E3D25AB8C4EAB9FF0FDD214CC3AC73848222B"
+  },
+  {
+    "path": "godot-project/pond/cove_pond.tscn",
+    "hash": "E8611B7BFECEAF0F4FD1ECD101C5E2C2084911050592D7CF6DA1BFA062220C07"
+  },
+  {
+    "path": "godot-project/pond/arch_pond.gd",
+    "hash": "7A443C3E75A83B8098BD5F20AD43C7CED81369CB881740745454B14069EA1183"
+  },
+  {
+    "path": "godot-project/pond/deep_pond.gd",
+    "hash": "2168354F17311BE4C805E3AD1DC5E9852E87462DA2BECE9CCE5768FB3ED769AD"
+  },
+  {
+    "path": "godot-project/pond/current_flow.gd",
+    "hash": "DD64A367FB059FBFE576DF97FFA0272DC2357894C3DBBCC0BE5F364202763A75"
+  },
+  {
+    "path": "godot-project/pond/natural_shore.gd",
+    "hash": "B88000A03BBC57618C12610607151871269E3C6BEC211751C4F076BC7BB1E7CA"
+  },
+  {
+    "path": "tests/test_cove_geometry.cpp",
+    "hash": "4B1993CC9D76070E82DC886639BEC094B07D1CA265DB95CB9E7431DE2792D068"
+  },
+  {
+    "path": "tests/godot/cove_pond_smoke.gd",
+    "hash": "AF879008821139C820F7ABDFFD9747520F36A28A560FDFA3C2803D025D27BD4E"
+  },
+  {
+    "path": "tests/godot/arch_current_frozen_probe.gd",
+    "hash": "95268996F70FF999F4107553147676725A3173203D0C8077244F0C1762744468"
+  },
+  {
+    "path": "tools/arch_resume_verify.cpp",
+    "hash": "5C4292A513DCF41D20B98DD4A63039CEECD843467751476CD63D19A8A85944BC"
+  },
+  {
+    "path": "godot-project/addons/cudarl/bin/cudarl.dll",
+    "hash": "7C1183F85B9B3FC7C8B6988E1BF480BFE3118E0383982C3306AE8DB75B15D12A"
+  },
+  {
+    "path": "godot-project/addons/cudarl/bin/cudarl_pond_cuda.dll",
+    "hash": "B67FB763BF5F94D9B5C70039DE882E8627C4B5BF80B3BE8BBDD15AAFF8385BEC"
+  }
+]
