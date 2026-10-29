@@ -25,6 +25,7 @@ public:
     bool watch_progress_controller(String path,String backend="auto");
     bool set_untrained(bool enabled);
     bool set_gentle_current(bool enabled,bool drifting_food=false);
+    bool set_steady_current(double speed_cm_s,bool drifting_food=false);
     void set_paused(bool paused);
     void set_updates_per_second(double speed);
     void save_training_now();

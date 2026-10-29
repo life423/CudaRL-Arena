@@ -266,7 +266,7 @@ func _show_guide() -> void:
 		scroll.add_child(body)
 		for item in [
 			["Start in the pond", "Open pond runs the latest saved swimmer in a live physical simulation. Experiments contains the separate shallow learning lab, the original agent and recorded diagnostics."],
-			["Interact with the live pond", "Gentle current changes water forces, moves suspended food and reveals visible flow. Closer view changes the camera. Show untrained policy compares random initial networks and restarts the same layout. The graph measures this session's food collection. Live inference does not update the saved weights."],
+			["Interact with the live pond", "Turn Current on, then choose 0.5 or 0.75 cm/s. Steady flow changes swimmer forces, moves suspended food and reveals visible flow. Switching strength preserves the session. Closer view changes the camera. Show untrained policy restarts the same layout with random weights. The graph measures session collection; saved weights do not update."],
 			["Train without graphics", "The console below continues PPO food-selector training at fixed physics timesteps. An existing full save resumes; a new installation starts from the packaged networks with a fresh optimizer. Ctrl+C saves and stops. Every 25 updates saves a full checkpoint; a crash can lose progress since that save. Only one trainer can own each save."],
 			["Keep learned skills safe", "Headless training saves a separate candidate. Watching the pond keeps its tested saved agent until a replacement is evaluated. Your original networks and full training saves are preserved. Recordings are always labeled; they are not live simulation."]
 		]:

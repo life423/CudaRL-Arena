@@ -26,6 +26,8 @@ The [frozen-agent slowly changing flow experiment](experiments/swimmer/rotating-
 
 The [0.75 cm/s follow-up](experiments/swimmer/current-075/README.md) also passes its declared suite: 100 sessions / 700 simulated minutes including calm and 0.5 references, both networks frozen, all protected saves intact. Stronger-flow collection retains 96.07%–101.13% of matched reference means, with no confirmed immobility. The visible pond still has the steady 0.5 switch. Turning uniform flow is not a spatial whirlpool. A future rock interaction needs a validated local disturbance/contact model, varied training and held-out testing; visual ripples alone do not supply physics or generalization. Do not promise competence under arbitrary unseen or physically overwhelming conditions.
 
+The subsequent [live strength control](pond_current_controls.md) exposes the two evaluated steady strengths, 0.5 and 0.75 cm/s, alongside Current on/off. The same native vector drives body drag, food and visuals; switching preserves the session. Both networks remain frozen. This completes one bounded visible interaction, not actual practice/promotion or rock-impact physics. Turning flow remains in the research tools.
+
 This stage is real reactive inference from learned skills. A changed action is not proof that network weights changed. Validate both the physical environment and agent observations before making the challenge harder. No new interaction UI or flow-field implementation is delivered merely by saving this plan.
 
 ## 3. Genuine measured adaptation

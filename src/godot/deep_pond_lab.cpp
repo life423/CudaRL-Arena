@@ -18,6 +18,7 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("watch_progress_controller","path","backend"),&DeepPondLab::watch_progress_controller,DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("set_untrained","enabled"),&DeepPondLab::set_untrained);
     ClassDB::bind_method(D_METHOD("set_gentle_current","enabled","drifting_food"),&DeepPondLab::set_gentle_current,DEFVAL(false));
+    ClassDB::bind_method(D_METHOD("set_steady_current","speed_cm_s","drifting_food"),&DeepPondLab::set_steady_current,DEFVAL(false));
     ClassDB::bind_method(D_METHOD("set_paused","paused"),&DeepPondLab::set_paused);
     ClassDB::bind_method(D_METHOD("set_updates_per_second","speed"),&DeepPondLab::set_updates_per_second);
     ClassDB::bind_method(D_METHOD("save_training_now"),&DeepPondLab::save_training_now);
@@ -109,11 +110,17 @@ bool DeepPondLab::watch_progress_controller(String path,String backend) {
     } catch(const std::exception& e) {stop();error_=e.what();return false;}
 }
 bool DeepPondLab::set_gentle_current(bool enabled,bool drifting_food) {
+    return set_steady_current(enabled?.5:0.,drifting_food);
+}
+bool DeepPondLab::set_steady_current(double speed_cm_s,bool drifting_food) {
     if(!playback_) return false;
+    if(!std::isfinite(speed_cm_s) || speed_cm_s<0 || speed_cm_s>.75) {
+        error_="Live steady current must be between 0 and 0.75 cm/s";return false;
+    }
     const auto previous_current=playback_->current();const bool previous_drift=playback_->frame().food_drift;
     try {
-        playback_->set_food_drift(enabled && drifting_food);
-        playback_->set_current(enabled?cudarl::deep::V{.005f,0,0}:cudarl::deep::V{});error_=String();return true;
+        playback_->set_food_drift(speed_cm_s>0 && drifting_food);
+        playback_->set_current({static_cast<float>(speed_cm_s*.01),0,0});error_=String();return true;
     } catch(const std::exception& e) {
         error_=e.what();
         try {playback_->set_food_drift(previous_drift);playback_->set_current(previous_current);} catch(const std::exception&) {}
