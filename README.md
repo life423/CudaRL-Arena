@@ -1,6 +1,6 @@
 # CudaRL-Arena
 
-Windows preview: **Tadpole Pond** now includes sinking-food interaction and genuine local PPO on CUDA **or CPU**. The player menu focuses on the pond; CartPole/Racing code and developer routes remain. [Download website](https://gray-pond-0d7501010.2.azurestaticapps.net) · [Windows release notes and rebuild](docs/windows_release.md). macOS/browser-game versions and physical growth are future stages.
+Windows preview: **Tadpole Pond** now includes sinking-food interaction and genuine local PPO on CUDA **or CPU**. The player menu focuses on the pond; CartPole/Racing code and developer routes remain. [Download website](https://cudarl.drewclark.io) · [Windows release notes and rebuild](docs/windows_release.md). macOS/browser-game versions and physical growth are future stages.
 
 [![CI](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml/badge.svg)](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml)
 

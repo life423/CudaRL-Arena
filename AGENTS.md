@@ -15,6 +15,8 @@ Before substantive work, read `docs/CREATURE_PLAN.md` and the latest entry in `d
 
 ## Windows release decision — October 28, 2026
 
+Future idea explicitly deferred by the user: consider GPU-backed browser play with an enforced **$15/month maximum Azure GPU spend**. Hold it until the current Windows/download-site task is complete; no GPU resource is authorized now. Verify enforceable limits before promising a hard cap.
+
 - User approved a Windows download plus public Azure download website, and explicitly chose genuine CPU learning for systems without NVIDIA. Keep the newest sinking-food task; do not substitute the older frozen three-food viewer and call it learning.
 - CUDA is preferred after a real device/kernel probe; CPU uses 16 background worlds with the same physical equations and PPO math. Separate full CPU/CUDA checkpoints preserve existing saves. See docs/windows_release.md.
 - Hosting is Azure Static Web Apps Free with GitHub release downloads. No GPU VM or paid training server is authorized. A review blocked sending the Azure deployment credential to GitHub Secrets; use direct local-to-Azure deployment without persisting/printing that credential.

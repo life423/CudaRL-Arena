@@ -48,6 +48,8 @@ Food collection can participate in a designed progression trigger, while the abi
 
 ## Shared architecture and priorities
 
+Later hosting option saved October 28: the user is willing to consider **at most $15/month of Azure GPU spending** for browser play, with a genuinely enforced spending cap. This is a deferred idea, not authorization to provision a GPU now. Finish the Windows CPU/CUDA release and public download site first. Investigate enforceability and actual economics before presenting a future GPU service as capped or safe from overage; do not treat budget alerts alone as a guaranteed cap.
+
 - Two decision controllers: food/goal choice and swimming/body movement. PPO's value estimator is a training helper, not a separate new creature ability.
 - Preserve the original capable creature, best tested actor, full learner state and honest fallback/error reporting. Neural actions obey the shared physical model.
 - Optimize for the visible experience and verified adaptability. Higher GPU utilization, more training steps or a nicer graph does not establish a better creature.

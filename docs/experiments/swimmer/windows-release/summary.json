@@ -35,5 +35,8 @@
     "No promise of improvement after every interaction",
     "Unsigned Windows preview",
     "No Mac or browser game edition in this release"
-  ]
+  ],
+  "websiteInteractiveAssertions": 77,
+  "websiteCanonical": "https://cudarl.drewclark.io",
+  "customDomainDnsAndTls": "verified; Azure Ready"
 }
