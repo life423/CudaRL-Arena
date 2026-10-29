@@ -413,7 +413,7 @@ func _build_ui() -> void:
 	var navigation := HBoxContainer.new()
 	navigation.add_theme_constant_override("separation", 8)
 	text.add_child(navigation)
-	back_button = _button("Back to demos")
+	back_button = _button("Pond menu")
 	back_button.name = "BackToDemos"
 	back_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	back_button.pressed.connect(DemoLaunch.show_menu)

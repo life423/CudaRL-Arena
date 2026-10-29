@@ -53,7 +53,7 @@ endfunction()
 
 # Portable runtime: the exact saved networks and shared physical equations,
 # without a CUDA compiler, headers, driver or runtime dependency.
-add_library(cudarl_runtime STATIC src/core/checkpoint.cpp src/demos/pond_playback.cpp)
+add_library(cudarl_runtime STATIC src/core/checkpoint.cpp src/demos/pond_playback.cpp src/demos/feeding_cpu_session.cpp)
 set_target_properties(cudarl_runtime PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(cudarl_runtime PUBLIC src)
 target_compile_definitions(cudarl_runtime PRIVATE CUDARL_WITH_CUDA=0)
@@ -76,6 +76,8 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/deep_pond.cu
     src/envs/swimmer/pond_selector.cu
     src/envs/swimmer/progress_selector.cu
+    src/envs/swimmer/feeding.cu
+    src/demos/feeding_session.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
@@ -99,8 +101,9 @@ cudarl_strict_warnings(cudarl_core)
 add_library(cudarl_pond_cuda SHARED src/demos/pond_playback_cuda.cu)
 target_link_libraries(cudarl_pond_cuda PRIVATE cudarl_core)
 cudarl_strict_warnings(cudarl_pond_cuda)
+set(CUDARL_ADDON_BIN "${CMAKE_SOURCE_DIR}/godot-project/addons/cudarl/bin" CACHE PATH "Godot extension output directory")
 set_target_properties(cudarl_pond_cuda PROPERTIES PREFIX ""
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/cudarl/bin")
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CUDARL_ADDON_BIN}")
 
 # --- Godot extension ------------------------------------------------------------
 if(CUDARL_BUILD_GODOT)
@@ -134,7 +137,6 @@ if(CUDARL_BUILD_GODOT)
     target_compile_definitions(cudarl PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED)
     cudarl_strict_warnings(cudarl)
 
-    set(CUDARL_ADDON_BIN "${CMAKE_SOURCE_DIR}/godot-project/addons/cudarl/bin")
     set_target_properties(cudarl PROPERTIES
         PREFIX ""
         RUNTIME_OUTPUT_DIRECTORY         "${CUDARL_ADDON_BIN}"

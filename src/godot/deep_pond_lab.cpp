@@ -1,15 +1,32 @@
 #include "deep_pond_lab.h"
 #include <exception>
+#include <filesystem>
+#include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
+#include <godot_cpp/variant/packed_int64_array.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #if CUDARL_WITH_CUDA
 #include "cuda/device.h"
 #endif
 namespace godot {
+namespace {
+// Native model readers need real files; res:// may live inside an exported PCK.
+// The release carries immutable base policies beside the executable.
+std::string native_policy_file(const String& path) {
+    const auto absolute=ProjectSettings::get_singleton()->globalize_path(path).utf8();
+    std::error_code error;
+    if(std::filesystem::is_regular_file(absolute.get_data(),error) || !path.begins_with("res://")) return absolute.get_data();
+    const auto data=OS::get_singleton()->get_executable_path().get_base_dir().path_join("data");
+    for(const auto& candidate:{data.path_join(path.get_file()),data.path_join("policies").path_join(path.get_file())}) {
+        const auto file=candidate.utf8();if(std::filesystem::is_regular_file(file.get_data(),error)) return file.get_data();
+    }
+    return absolute.get_data();
+}
+}
 void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("start_training","environments","seed","checkpoint","source"),&DeepPondLab::start_training,
         DEFVAL(1024),DEFVAL(7),DEFVAL("user://pond-policies/deep-pond-v1/training.bin"),DEFVAL("user://pond-policies/deep-v1/training.bin"));
@@ -18,6 +35,9 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("watch_progress_controller","path","backend"),&DeepPondLab::watch_progress_controller,DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("set_untrained","enabled"),&DeepPondLab::set_untrained);
     ClassDB::bind_method(D_METHOD("set_gentle_current","enabled","drifting_food"),&DeepPondLab::set_gentle_current,DEFVAL(false));
+    ClassDB::bind_method(D_METHOD("set_steady_current","speed_cm_s","drifting_food"),&DeepPondLab::set_steady_current,DEFVAL(false));
+    ClassDB::bind_method(D_METHOD("start_feeding_learning","policy","checkpoint","environments","backend"),&DeepPondLab::start_feeding_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("drop_food","position"),&DeepPondLab::drop_food);
     ClassDB::bind_method(D_METHOD("set_paused","paused"),&DeepPondLab::set_paused);
     ClassDB::bind_method(D_METHOD("set_updates_per_second","speed"),&DeepPondLab::set_updates_per_second);
     ClassDB::bind_method(D_METHOD("save_training_now"),&DeepPondLab::save_training_now);
@@ -54,6 +74,7 @@ bool DeepPondLab::start_training(int environments,int seed,String checkpoint,Str
 #endif
 }
 void DeepPondLab::stop() {
+    if(feeding_) feeding_->stop();feeding_.reset();
 #if CUDARL_WITH_CUDA
     if(session_) session_->stop();session_.reset();actor_.reset();history_.clear();evaluations_.clear();
     policy_version_=0;best_version_=0;policy_update_=0;training_ms_=0;best_={};applied_best_update_=-1;watching_best_=true;
@@ -65,7 +86,7 @@ void DeepPondLab::stop() {
 bool DeepPondLab::watch_controller(String path,String backend) {
     stop();error_=String();
     try {
-        controller_=cudarl::rl::SelectorPolicy::load(ProjectSettings::get_singleton()->globalize_path(path).utf8().get_data());
+        controller_=cudarl::rl::SelectorPolicy::load(native_policy_file(path));
         const auto module=ProjectSettings::get_singleton()->globalize_path("res://addons/cudarl/bin/cudarl_pond_cuda.dll").utf8();
         playback_=cudarl::demos::create_pond_playback(controller_,backend.utf8().get_data(),module.get_data());
         UtilityFunctions::print("POND_PLAYBACK backend=",playback_->backend()," detail=",playback_->detail().c_str());
@@ -98,7 +119,7 @@ bool DeepPondLab::set_untrained(bool enabled) {
 bool DeepPondLab::watch_progress_controller(String path,String backend) {
     stop();error_=String();
     try {
-        progress_controller_=cudarl::rl::ProgressPolicy::load(ProjectSettings::get_singleton()->globalize_path(path).utf8().get_data());
+        progress_controller_=cudarl::rl::ProgressPolicy::load(native_policy_file(path));
         controller_=progress_controller_.baseline;controller_.update=progress_controller_.update;
         const auto module=ProjectSettings::get_singleton()->globalize_path("res://addons/cudarl/bin/cudarl_pond_cuda.dll").utf8();
         playback_=cudarl::demos::create_pond_playback(progress_controller_,backend.utf8().get_data(),module.get_data());
@@ -108,12 +129,52 @@ bool DeepPondLab::watch_progress_controller(String path,String backend) {
         return true;
     } catch(const std::exception& e) {stop();error_=e.what();return false;}
 }
+bool DeepPondLab::start_feeding_learning(String policy,String checkpoint,int environments,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown feeding backend");
+        const auto native_policy=ProjectSettings::get_singleton()->globalize_path(policy).utf8();
+        const auto source=cudarl::rl::ProgressPolicy::load(native_policy.get_data());
+        controller_=source.baseline;controller_.update=source.update;controller_path_=policy;
+        bool cuda=false;
+#if CUDARL_WITH_CUDA
+        if(backend!="cpu") cuda=cudarl::probe_device().available;
+#endif
+        if(backend=="cuda" && !cuda) throw std::runtime_error("CUDA device and kernel check failed");
+        if(cuda) {
+#if CUDARL_WITH_CUDA
+            feeding_=cudarl::demos::create_feeding_session(native_policy.get_data(),ProjectSettings::get_singleton()->globalize_path(checkpoint).utf8().get_data(),environments);
+#endif
+        } else {
+            const String cpu_save=checkpoint.is_empty()?String():checkpoint.get_basename()+"-cpu.bin";
+            feeding_=cudarl::demos::create_cpu_feeding_session(native_policy.get_data(),ProjectSettings::get_singleton()->globalize_path(cpu_save).utf8().get_data(),std::min(environments,16));
+        }
+        UtilityFunctions::print("POND_FEEDING ",cuda?"CUDA":"CPU"," live + PPO source selector=",source.update);return true;
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+int DeepPondLab::drop_food(Vector3 position) {
+    if(feeding_) {
+        try {return feeding_->drop({static_cast<float>(position.x),static_cast<float>(position.y),static_cast<float>(position.z)});}
+        catch(const std::exception& e) {error_=e.what();}
+    }
+    return -1;
+}
 bool DeepPondLab::set_gentle_current(bool enabled,bool drifting_food) {
+    return set_steady_current(enabled?.5:0.,drifting_food);
+}
+bool DeepPondLab::set_steady_current(double speed_cm_s,bool drifting_food) {
+    if(!std::isfinite(speed_cm_s) || speed_cm_s<0 || speed_cm_s>.75) {
+        error_="Live steady current must be between 0 and 0.75 cm/s";return false;
+    }
+    if(feeding_) {
+        try {feeding_->set_current({static_cast<float>(speed_cm_s*.01),0,0});error_=String();return true;}
+        catch(const std::exception& e) {error_=e.what();return false;}
+    }
     if(!playback_) return false;
     const auto previous_current=playback_->current();const bool previous_drift=playback_->frame().food_drift;
     try {
-        playback_->set_food_drift(enabled && drifting_food);
-        playback_->set_current(enabled?cudarl::deep::V{.005f,0,0}:cudarl::deep::V{});error_=String();return true;
+        playback_->set_food_drift(speed_cm_s>0 && drifting_food);
+        playback_->set_current({static_cast<float>(speed_cm_s*.01),0,0});error_=String();return true;
     } catch(const std::exception& e) {
         error_=e.what();
         try {playback_->set_food_drift(previous_drift);playback_->set_current(previous_current);} catch(const std::exception&) {}
@@ -121,10 +182,9 @@ bool DeepPondLab::set_gentle_current(bool enabled,bool drifting_food) {
     }
 }
 void DeepPondLab::set_paused(bool paused) {
+    if(feeding_) feeding_->set_paused(paused);
 #if CUDARL_WITH_CUDA
     if(session_) session_->set_paused(paused);
-#else
-    (void)paused;
 #endif
 }
 void DeepPondLab::set_updates_per_second(double speed) {
@@ -135,6 +195,7 @@ void DeepPondLab::set_updates_per_second(double speed) {
 #endif
 }
 void DeepPondLab::save_training_now() {
+    if(feeding_) feeding_->request_save();
 #if CUDARL_WITH_CUDA
     if(session_) session_->request_save();
 #endif
@@ -164,6 +225,7 @@ void DeepPondLab::collect() {
 #endif
 }
 Dictionary DeepPondLab::step() {
+    if(feeding_) {try {feeding_->step();} catch(const std::exception& e) {error_=e.what();}return get_state();}
     if(playback_) {
         try {const auto& next=playback_->step();state_=next.state;selected_food_=next.selected;}
         catch(const std::exception& e) {error_=e.what();}
@@ -184,6 +246,18 @@ Dictionary DeepPondLab::step() {
     return get_state();
 }
 Dictionary DeepPondLab::get_state() const {
+    if(feeding_) {
+        const auto& s=feeding_->state();const auto& p=s.body.position;const auto& q=s.body.orientation;Dictionary d;
+        d["ready"]=true;d["position"]=Vector3(p.x,p.y,p.z);d["orientation"]=Quaternion(q.x,q.y,q.z,q.w);
+        PackedVector3Array foods,velocities;PackedInt64Array identities;
+        for(const auto& food:s.pellets) if(food.active) {foods.push_back(Vector3(food.position.x,food.position.y,food.position.z));velocities.push_back(Vector3(food.velocity.x,food.velocity.y,food.velocity.z));identities.push_back(food.id);}
+        d["foods"]=foods;d["pellet_velocities"]=velocities;d["pellet_ids"]=identities;d["food"]=foods.is_empty()?Vector3(p.x,p.y,p.z):foods[0];d["eaten_slot"]=-1;
+        d["eaten"]=s.eaten;d["elapsed"]=s.steps*cudarl::deep::dt;d["selected_food"]=s.target;
+        d["seconds_since_food"]=s.since_food*cudarl::deep::dt;d["depth_cm"]=-p.y*4.;d["speed_cm_s"]=100.*cudarl::deep::norm({s.body.velocity[0],s.body.velocity[1],s.body.velocity[2]});
+        const auto geometry=cudarl::deep::shape(s.body);Array links;
+        for(const auto& link:geometry.link) {Dictionary item;const auto c=link.center/cudarl::deep::scale;const auto& r=link.q;item["position"]=Vector3(c.x,c.y,c.z);item["orientation"]=Quaternion(r.x,r.y,r.z,r.w);links.push_back(item);}
+        d["links"]=links;return d;
+    }
     Dictionary d;d["ready"]=static_cast<bool>(actor_) || static_cast<bool>(playback_);if(!actor_ && !playback_) return d;
     const auto& p=state_.body.position;const auto& q=state_.body.orientation;
     d["position"]=Vector3(p.x,p.y,p.z);d["orientation"]=Quaternion(q.x,q.y,q.z,q.w);
@@ -204,6 +278,19 @@ Dictionary DeepPondLab::get_state() const {
 }
 Dictionary DeepPondLab::get_stats() {
     collect();Dictionary d;
+    if(feeding_) {
+        const auto s=feeding_->stats();const auto current=feeding_->current();
+        d["feeding_mode"]=true;d["playback_mode"]=true;d["showcase_untrained"]=false;d["validated_controller"]=false;d["progress_controller"]=true;
+        d["water_current_cm_s"]=100.*cudarl::deep::norm(current);d["water_current"]=Vector3(current.x,current.y,current.z);d["food_drifting"]=cudarl::deep::norm(current)>0;
+        d["compute_backend"]=s.backend.c_str();d["compute_detail"]="Native local physics/inference and concurrent PPO";d["training_ready"]=true;d["paused"]=s.paused;
+        d["resumed"]=s.resumed;d["loaded_update"]=s.loaded_update;d["saved_update"]=s.saved_update;d["save_error"]=s.save_error.c_str();d["transferred"]=false;
+        d["food_count"]=cudarl::feeding::count(feeding_->state());d["food_capacity"]=cudarl::feeding::capacity;d["policy_inputs"]=cudarl::feeding::kObs;
+        d["watching_best"]=true;d["policy_update"]=controller_.motor_update;d["selector_update"]=controller_.update;d["decision_steps"]=20;d["update"]=s.update;
+        d["env_steps"]=static_cast<int64_t>(s.update)*s.worlds*64;d["update_ms"]=s.update_ms;d["training_seconds"]=0.;d["background_swimmers"]=s.worlds;
+        d["current_food_per_minute"]=s.candidate_score;d["best_food_per_minute"]=s.adopted_score;d["best_update"]=s.adopted_update;d["evaluation_count"]=s.evaluations;d["checkpoint_path"]=controller_path_;
+        d["learning_ready"]=s.ready;d["learning_active"]=s.training && !s.paused;d["learning_error"]=s.error.c_str();d["adopted_update"]=s.applied_update;d["approved_update"]=s.adopted_update;d["learner_weights_changed"]=s.learner_changed;
+        d["original_food_per_minute"]=s.original_score;d["context_version"]=s.context_version;d["trained_context_version"]=s.trained_context;return d;
+    }
     d["playback_mode"]=static_cast<bool>(playback_);
     d["showcase_untrained"]=showcase_untrained_;
     d["validated_controller"]=static_cast<bool>(playback_) && !showcase_untrained_ && !use_progress_controller_;

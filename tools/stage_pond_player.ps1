@@ -20,7 +20,7 @@ if(-not $CpuOnly -and (Test-Path -LiteralPath $cuda)) {Copy-Item -LiteralPath $c
 elseif(Test-Path -LiteralPath (Join-Path $native 'cudarl_pond_cuda.dll')) {Remove-Item -LiteralPath (Join-Path $native 'cudarl_pond_cuda.dll')}
 Copy-Item -LiteralPath (Join-Path $source 'addons/cudarl/cudarl.gdextension') -Destination (Join-Path $project 'addons/cudarl/cudarl.gdextension')
 foreach($folder in @('pond','launcher')) {New-Item -ItemType Directory -Force -Path (Join-Path $project $folder) | Out-Null}
-foreach($file in @('deep_pond.gd','deep_pond.tscn','deep_water.gd','deep_creature.gd','natural_shore.gd','pond_curve.gd','pond_geometry.gd')) {
+foreach($file in @('deep_pond.gd','deep_pond.tscn','deep_water.gd','deep_creature.gd','natural_shore.gd','pond_curve.gd','pond_geometry.gd','latest_agent.gd','latest_agent.tscn','feeding_pond.gd','feeding_pond.tscn','current_flow.gd')) {
     Copy-Item -LiteralPath (Join-Path $source "pond/$file") -Destination (Join-Path $project "pond/$file")
     if(Test-Path -LiteralPath (Join-Path $source "pond/$file.uid")) {Copy-Item -LiteralPath (Join-Path $source "pond/$file.uid") -Destination (Join-Path $project "pond/$file.uid")}
 }
@@ -28,10 +28,11 @@ Get-ChildItem -LiteralPath (Join-Path $source 'pond') -File | Where-Object {$_.N
 Copy-Item -LiteralPath (Join-Path $source 'pond/policies') -Destination (Join-Path $project 'pond') -Recurse -Force
 foreach($file in @('launcher.gd','launcher.tscn','demo_launch.gd','thumbnail.gd')) {Copy-Item -LiteralPath (Join-Path $source "launcher/$file") -Destination (Join-Path $project "launcher/$file")}
 Copy-Item -LiteralPath (Join-Path $source 'launcher/assets') -Destination (Join-Path $project 'launcher') -Recurse -Force
+Copy-Item -LiteralPath (Join-Path $workspace 'docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin') -Destination (Join-Path $project 'pond/policies/feeding_base.bin')
 Copy-Item -LiteralPath (Join-Path $source 'icon.svg') -Destination $project
 $config=[IO.File]::ReadAllText((Join-Path $source 'project.godot'))
 $config=$config.Replace('run/main_scene="res://launcher/launcher.tscn"','run/main_scene="res://pond/deep_pond.tscn"')
-$config+="`n[cudarl]`nportable_player=true`n"
+$config+="`n[cudarl]`nportable_player=true`nfeeding_policy=""res://pond/policies/feeding_base.bin""`n"
 [IO.File]::WriteAllText((Join-Path $project 'project.godot'),$config,(New-Object Text.UTF8Encoding($false)))
 Copy-Item -LiteralPath (Resolve-Path $GodotPath).Path -Destination (Join-Path $package 'engine.exe')
 Copy-Item -LiteralPath (Join-Path $workspace 'build/portable/Release/CudaRLPond.exe') -Destination $package

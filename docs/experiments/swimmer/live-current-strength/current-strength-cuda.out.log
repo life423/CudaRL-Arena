@@ -1,0 +1,5 @@
+Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
+Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070
+
+POND_LIVE_CANDIDATE selector=320 backend=CUDA detail=NVIDIA GeForce RTX 5070; CUDA device and kernel check passed
+CURRENT_STRENGTH backend=CUDA checks=45 failures=0

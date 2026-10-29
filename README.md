@@ -1,5 +1,7 @@
 # CudaRL-Arena
 
+Windows preview: **Tadpole Pond** now includes sinking-food interaction and genuine local PPO on CUDA **or CPU**. The player menu focuses on the pond; CartPole/Racing code and developer routes remain. [Download website](https://cudarl.drewclark.io) · [Windows release notes and rebuild](docs/windows_release.md). macOS/browser-game versions and physical growth are future stages.
+
 [![CI](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml/badge.svg)](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml)
 
 Reinforcement learning environments written as hand-written CUDA kernels and driven directly from the Godot game engine, with no Python anywhere in the loop.
@@ -10,7 +12,7 @@ The new [portable Windows pond preview](docs/portable_pond.md) also builds witho
 
 [Frozen-policy current tests](docs/experiments/swimmer/gentle-currents/README.md) now measure robustness before adaptation: 0.5 cm/s currents reduce collection by 3.05% on the tested layouts; 1.0 cm/s reduces it by 18.48% and exposes a prolonged stall in a five-minute trial. The original controller and training saves are preserved; no robustness-training improvement is claimed.
 
-> **Status: three demonstrations in Godot—CartPole, eight-car racing and a 3D tadpole pond—with hand-written C++/CUDA reinforcement learning.** The deep pond plays a validated PPO food selector paired with a retained swimming network. Headless training runs across 1,024 worlds with full resume; fresh evaluation measures 17.56 versus 15.36 food/minute for the original controller. The shallow pond still offers live learning. See the [food-selection experiment](docs/experiments/swimmer/deep-pond-food-choice/README.md), [deep pond guide](docs/deep_pond.md) and [eight-car write-up](docs/racing_traffic.md).
+> **Status: Tadpole Pond now supports user-dropped sinking food and native CUDA PPO during play.** The inherited shared selector scores all active food; the swimming actor learns in 1,024 practice worlds influenced by user drops/current and adopts validated improvements without a world reset. The [feeding guide](docs/live_feeding.md) records the brief starting check, separate full save/resume, preserved references and prototype limits. The earlier frozen CPU/CUDA pond remains in Experiments, with its [0.75 cm/s evidence](docs/experiments/swimmer/current-075/README.md). CartPole and racing code/training remain intact as hidden developer demonstrations. Physical growth and land movement are future stages. See the [creature plan](docs/CREATURE_PLAN.md).
 
 ![Three-food tadpole pond with native CUDA training statistics and a measured food-per-minute learning curve](docs/images/tadpole-learning.png)
 
@@ -38,7 +40,7 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 | **Live CartPole view in Godot** (`cartpole/cartpole.tscn`): carts balancing with the newest policy, learning curve, training stats, speed control | ✅ Working |
 | **PPO on a racing track, entirely on the GPU:** Gaussian policy for steering and throttle, bicycle-model car, nine raycasts, same GAE and clipped objective | ✅ Working, 3 seeds reach 3.8–3.9 laps in 50 s ([write-up](docs/ppo_racing.md)) |
 | **Eight-car racing in Godot**: harder circuit, nearby-car sensing, swept collisions, separated respawns, brake lights, clean laps and lap times | ✅ Working ([validation](docs/racing_traffic.md)) |
-| **Startup demo menu:** CartPole and Racing with playback/fresh training; Tadpole Pond with live learning | ✅ Working; Back to demos/Escape returns cleanly ([menu](docs/demo_menu.md), [pond](docs/three_food_learning.md)) |
+| **Pond entry menu:** live saved creature, separate experiments and training help; retained developer demos | ✅ Working; Pond menu/Escape returns cleanly ([menu](docs/demo_menu.md), [pond](docs/three_food_learning.md)) |
 | **Three-food tadpole pond:** 1,024 CUDA swimmers, continuous PPO, shared articulated C++/CUDA physics and a 3D Godot view | ✅ Working; policy sees all three foods and commands two tail torques. Fixed-trial food/min graph, regional respawns and folded-pose recovery checks ([evidence and limits](docs/three_food_learning.md)) |
 | **Deep pond:** free 3D swimming, three food depths and a learned food selector over a retained motor network | ✅ Working; shared-score categorical PPO improves collection by 14.3% across 512 fresh one-minute trials; 128 new five-minute trials and a recorded-stall regression checked separately. The viewer plays the validated saved controller ([results and limits](docs/experiments/swimmer/deep-pond-food-choice/README.md)) |
 | **Native headless training:** fixed-step CUDA execution without rendering, full optimizer/world resume | ✅ Working; the menu guide continues selector training into a separate candidate save. Earlier motor training remains available ([usage](docs/pond_food_selection.md)) |
@@ -216,7 +218,7 @@ earlier traffic-only comparison.
 godot --path godot-project
 ```
 
-The default scene is the three-demo menu. For CartPole and Racing, **Watch trained** loads a bundled actor policy and runs the showcase on the CPU without starting training. **Train from scratch** opens a paused, untrained run; press **Start learning** to train on CUDA. For **Tadpole Pond**, choose **Watch it learn**: a fresh 1,024-swimmer run begins automatically after a short untrained view and keeps learning until the scene closes. Its controls include Pause/Resume, paced/maximum training speed and Start over. **Back to demos** or Escape returns to the menu and stops that session. See [menu validation and policy regeneration](docs/demo_menu.md) and [three-food learning](docs/three_food_learning.md). Direct scenes remain available by appending `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://pond/pond.tscn`, `res://fit/fit.tscn`, or `res://maze/maze.tscn` to the command.
+The default scene is the **Tadpole Pond** menu. With healthy CUDA, **Open pond** starts [sinking-food interaction and native PPO during play](docs/live_feeding.md). Click/tap water to feed. The worker practices user-influenced conditions and applies validated motor updates without resetting the visible creature. Leaving saves/stops; reopening resumes the separate feeding checkpoint. **Experiments → Trained reference** keeps the earlier frozen CPU/CUDA pond and untrained comparison; CUDA-unavailable machines select that reference. Help labels the older headless selector console as a separate task. CartPole/Racing code, policies and training remain available through developer routes/direct scenes while hidden from this UI. Direct scene examples: `res://pond/feeding_pond.tscn`, `res://pond/latest_agent.tscn`, `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://pond/pond.tscn`.
 
 ### Continuous integration
 

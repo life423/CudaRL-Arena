@@ -1,0 +1,42 @@
+{
+  "status": "local checks passed; exact-commit branch/main CI and publication pending",
+  "native": {
+    "passed": 180,
+    "skipped": 0,
+    "gpuRequired": true
+  },
+  "portableSuites": 2,
+  "cpuCorrectnessAssertions": 12946,
+  "cpuRenderedAssertions": 194,
+  "cudaRenderedAssertions": 172,
+  "releaseMenuAssertions": 41,
+  "developerDemoAssertions": 104,
+  "referenceNavigationAssertions": 81,
+  "websiteAssertions": 42,
+  "viewportWidths": [
+    320,
+    390,
+    768,
+    1280,
+    1440
+  ],
+  "preservedInputs": 11,
+  "cpuWorlds": 16,
+  "cudaWorlds": 1024,
+  "hosting": {
+    "provider": "Azure Static Web Apps",
+    "sku": "Free",
+    "name": "tadpole-pond",
+    "resourceGroup": "rg-tadpole-pond",
+    "gpuServer": false
+  },
+  "limits": [
+    "Forced CPU tested on an NVIDIA Windows host; physical AMD/Intel-only systems not directly tested",
+    "No promise of improvement after every interaction",
+    "Unsigned Windows preview",
+    "No Mac or browser game edition in this release"
+  ],
+  "websiteInteractiveAssertions": 77,
+  "websiteCanonical": "https://cudarl.drewclark.io",
+  "customDomainDnsAndTls": "verified; Azure Ready"
+}

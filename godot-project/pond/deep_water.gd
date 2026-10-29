@@ -124,7 +124,7 @@ func _build_ui() -> void:
 	controls.add_child(_label("Deep-water lab", 25))
 	title_status = _label("Preparing native PPO…", 14, MUTED)
 	controls.add_child(title_status)
-	var back := _button("Back to demos")
+	var back := _button("Pond menu")
 	back.name = "BackToDemos"
 	back.pressed.connect(func(): DemoLaunch.show_menu())
 	var navigation := HBoxContainer.new()
@@ -390,5 +390,5 @@ func _swimmer_text() -> String:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		DemoLaunch.show_menu()
 		get_viewport().set_input_as_handled()
+		DemoLaunch.show_menu()

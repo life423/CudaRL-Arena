@@ -95,7 +95,7 @@ func _ready() -> void:
 	controls.add_theme_constant_override("h_separation", 8)
 	controls.add_theme_constant_override("v_separation", 4)
 	column.add_child(controls)
-	var back := button("Back to demos")
+	var back := button("Pond menu")
 	back.name = "BackToDemos"
 	back.pressed.connect(DemoLaunch.show_menu)
 	controls.add_child(back)

@@ -31,7 +31,10 @@ func _run() -> void:
 	var test_checkpoint := "user://tests/menu-best-%d-%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
 	node_added.connect(func(node: Node):
 		if node.name == "TadpolePond":
-			node.best_policy_path = test_checkpoint)
+			node.best_policy_path = test_checkpoint
+		elif node.name == "FeedingPond":
+			node.feeding_checkpoint_path = test_checkpoint + ".feeding.bin"
+			node.population = 128)
 	create_timer(30.0).timeout.connect(func():
 		push_error("Demo menu checks timed out")
 		quit(1))
@@ -39,14 +42,18 @@ func _run() -> void:
 	check(ProjectSettings.get_setting("application/run/main_scene") == "res://launcher/launcher.tscn", "Menu must be the startup scene")
 	change_scene_to_file("res://launcher/launcher.tscn")
 	await settle()
-	check(current_scene.rows.size() == 3 and current_scene.buttons.size() == 6, "Menu must contain three demos and six actions")
-	for expected in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train", "pond_live_watch", "pond_experiments_train", "guide_train"]:
+	check(current_scene.rows.size() == 1 and current_scene.buttons.size() == 1, "Menu must have one clear pond action")
+	for legacy in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train"]:
+		check(current_scene.find_child(legacy, true, false) == null, "Legacy demonstration still appears in the pond UI")
+	for removed in ["pond_experiments_train", "guide_train"]:
+		check(current_scene.find_child(removed, true, false) == null, "Developer sections remain in the player menu")
+	for expected in ["pond_feeding_watch"]:
 		check(root.gui_get_focus_owner().name == expected, "Keyboard focus order is incorrect")
 		input_action("ui_focus_next")
 		await settle()
 	input_action("ui_accept")
 	await settle()
-	check(current_scene.watch_mode, "Keyboard activation did not open playback")
+	check(current_scene.stats.get("progress_controller", false), "Keyboard activation did not open the latest live pond")
 	var escape := InputEventKey.new()
 	escape.keycode = KEY_ESCAPE
 	escape.pressed = true
@@ -72,12 +79,8 @@ func _run() -> void:
 	for spec in [["cartpole", true], ["racing", true], ["cartpole", false], ["racing", false], ["racing", true]]:
 		var demo: String = spec[0]
 		var watch: bool = spec[1]
-		var action: Button = current_scene.find_child("%s_%s" % [demo, "watch" if watch else "train"], true, false)
-		check(action != null, "Menu action missing")
-		if action == null:
-			quit(1)
-			return
-		action.pressed.emit()
+		# Legacy scenes remain available to developers through the retained router.
+		check(router.open_demo(demo, watch) == OK, "Retained legacy route failed")
 		await settle()
 		var scene := current_scene
 		check(scene != null and scene.watch_mode == watch, "Demo launch mode mismatch")
@@ -106,19 +109,16 @@ func _run() -> void:
 		await settle()
 		check(current_scene.name == "DemoMenu", "Back did not return to menu")
 		check(not lab.get_stats().get("policy_ready", false), "Leaving a demo must stop its session")
-	var pond_action: Button = current_scene.find_child("pond_live_watch", true, false)
+	var pond_action: Button = current_scene.find_child("pond_feeding_watch", true, false)
 	check(pond_action != null and pond_action.text == "Open pond", "The main pond action is missing")
 	pond_action.pressed.emit()
 	await settle()
 	check(current_scene.stats.get("progress_controller", false), "The main pond action did not open the latest saved agent")
-	check(current_scene.stats.selector_update == 320 and current_scene.stats.background_swimmers == 0, "Opening the pond started training or loaded the wrong agent")
+	check(current_scene.stats.selector_update == 320 and current_scene.stats.feeding_mode, "Opening the pond did not start the intended feeding/learning mode")
 	check(current_scene.current_switch.visible, "The live pond has no current control")
 	current_scene.find_child("BackToDemos", true, false).pressed.emit()
 	await settle()
-	current_scene.find_child("pond_experiments_train", true, false).pressed.emit()
-	await settle()
-	check(current_scene.experiments.visible, "Pond experiments did not open")
-	current_scene.experiments.find_child("Open_pond", true, false).pressed.emit()
+	check(router.open_demo("pond", false) == OK, "Retained developer learning route failed")
 	await settle()
 	check(current_scene.name == "TadpolePond" and current_scene.live_learning, "The explicit learning action did not open shallow-water training")
 	var pond_lab: Object = current_scene.lab
@@ -132,9 +132,7 @@ func _run() -> void:
 	pond_back.pressed.emit()
 	await settle()
 	check(current_scene.name == "DemoMenu" and not pond_lab.get_stats().training, "Back from pond did not stop training and return to menu")
-	current_scene.find_child("pond_experiments_train", true, false).pressed.emit()
-	await settle()
-	current_scene.experiments.find_child("Open_pond", true, false).pressed.emit()
+	check(router.open_demo("pond", false) == OK, "Retained developer learning route failed")
 	await settle()
 	pond_lab = current_scene.lab
 	escape = InputEventKey.new()
@@ -148,7 +146,7 @@ func _run() -> void:
 		root.size = dimensions
 		await settle()
 		var scroll: ScrollContainer = current_scene.find_child("DemoScroll", true, false)
-		pond_action = current_scene.find_child("pond_live_watch", true, false)
+		pond_action = current_scene.find_child("pond_feeding_watch", true, false)
 		scroll.ensure_control_visible(pond_action)
 		await settle()
 		check(pond_action.get_global_rect().end.x <= dimensions.x and pond_action.get_global_rect().end.y <= dimensions.y, "Pond action is not reachable within the menu viewport")
@@ -156,10 +154,12 @@ func _run() -> void:
 		for data in current_scene.rows:
 			check(data.row.get_global_rect().end.x <= dimensions.x, "Menu row overflows horizontally")
 		if dimensions.x >= 1280:
-			check(scroll.scroll_vertical == 0, "All three demo rows should fit on the desktop menu")
+			check(scroll.scroll_vertical == 0, "Pond entry should fit on the desktop menu")
 		if DisplayServer.get_name() != "headless":
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../build/pond-learning-checks/menu-%dx%d.png" % [dimensions.x, dimensions.y]))
+			var folder := OS.get_executable_path().get_base_dir().path_join("qa-output/developer-menu") if ProjectSettings.get_setting("cudarl/release_build", false) else ProjectSettings.globalize_path("res://../build/pond-learning-checks")
+			DirAccess.make_dir_recursive_absolute(folder)
+			check(root.get_texture().get_image().save_png(folder.path_join("menu-%dx%d.png" % [dimensions.x, dimensions.y])) == OK, "Menu screenshot failed")
 	var invalid := PackedFloat32Array([1.0])
 	for name in ["PpoLab", "RacingLab"]:
 		var lab: Object = ClassDB.instantiate(name)

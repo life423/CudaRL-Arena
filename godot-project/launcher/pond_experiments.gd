@@ -66,7 +66,8 @@ func _ready() -> void:
 	scroll.add_child(body)
 	var options := []
 	if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"):
-		options.append(["Latest swimmer", "Live simulation · saved PPO agent. Includes calm water, gentle current and an untrained comparison.", "Open live pond", "pond_live"])
+		options.append(["Feed and learn", "User-dropped sinking food · concurrent native CUDA PPO with separate saves and measured adoption.", "Open learning pond", "pond_feeding"])
+		options.append(["Trained reference", "Live saved-weight simulation · CPU/CUDA. Steady 0.5/0.75 cm/s flow and untrained comparison, without learning updates.", "Open reference pond", "pond_live"])
 	options.append(["Original swimmer", "Live simulation · earlier saved agent, preserved for comparison.", "Watch original", "deep_water"])
 	if not ProjectSettings.get_setting("cudarl/portable_player", false):
 		options.append(["Shallow-water learning", "Live PPO training · resumes the shallow pond's separate training save.", "Watch training", "pond"])
@@ -134,9 +135,12 @@ func _fit() -> void:
 		position = (Vector2i(get_parent().size) - size) / 2
 
 func _open_demo(demo: String) -> void:
+	_open_after_input.call_deferred(demo)
+
+func _open_after_input(demo: String) -> void:
+	hide()
 	var error := DemoLaunch.open_demo(demo, demo != "pond")
 	if error != OK:
 		message.text = "Could not open this experiment. Its scene may be unavailable."
 		message.show()
-	else:
-		hide()
+		open()
