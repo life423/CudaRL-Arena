@@ -7,6 +7,7 @@ const SCENES := {
 	"pond_shuffle": "res://pond/shuffle_compare.tscn",
 	"deep_water": "res://pond/deep_pond.tscn",
 	"pond_live": "res://pond/latest_agent.tscn",
+	"pond_feeding": "res://pond/feeding_pond.tscn",
 	"pond_current_replay": "res://pond/current_replay.tscn",
 	"pond_recovery": "res://pond/bank_preview.tscn",
 }

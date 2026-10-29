@@ -10,6 +10,7 @@
 #if CUDARL_WITH_CUDA
 #include "demos/ppo_session.h"
 #include "rl/swimmer_ppo.h"
+#include "demos/feeding_session.h"
 #endif
 namespace godot {
 class DeepPondLab:public RefCounted {
@@ -26,6 +27,8 @@ public:
     bool set_untrained(bool enabled);
     bool set_gentle_current(bool enabled,bool drifting_food=false);
     bool set_steady_current(double speed_cm_s,bool drifting_food=false);
+    bool start_feeding_learning(String policy,String checkpoint,int environments=1024);
+    int drop_food(Vector3 position);
     void set_paused(bool paused);
     void set_updates_per_second(double speed);
     void save_training_now();
@@ -38,6 +41,7 @@ public:
 private:
 #if CUDARL_WITH_CUDA
     std::unique_ptr<cudarl::demos::TrainingSession<cudarl::rl::DeepPondTrainer>> session_;
+    std::unique_ptr<cudarl::demos::FeedingSession> feeding_;
 #endif
     std::unique_ptr<cudarl::nn::CpuMlp<float>> actor_;
     std::unique_ptr<cudarl::demos::PondPlayback> playback_;

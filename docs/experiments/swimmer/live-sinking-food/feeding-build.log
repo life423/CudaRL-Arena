@@ -1,0 +1,13 @@
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  cudarl_runtime.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_runtime.lib
+  Compiling CUDA source file ..\src\demos\feeding_session.cu...
+  
+  C:\Users\aiand\Documents\programming\CudaRL-Arena\build>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\nvcc.exe"  --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64" -x cu   -I"C:\Users\aiand\Documents\programming\CudaRL-Arena\src" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include\cccl" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\include"     --keep-dir cudarl_core\x64\Release  -maxrregcount=0    --machine 64 --compile -cudart static -std=c++17 --generate-code=arch=compute_120,code=[compute_120,sm_120] --Werror=all-warnings -Xcompiler="/EHsc -Ob2 /wd4211 /WX"   -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -D_MBCS -DWIN32 -D_WINDOWS -DNDEBUG -DCUDARL_WITH_CUDA=1 -D"CMAKE_INTDIR=\"Release\"" -Xcompiler "/EHsc /W4 /nologo /O2 /FS   /MT " -Xcompiler "/FdC:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_core.pdb" -o cudarl_core.dir\Release\feeding_session.obj "C:\Users\aiand\Documents\programming\CudaRL-Arena\src\demos\feeding_session.cu" 
+  feeding_session.cu
+  tmpxft_0000905c_00000000-7_feeding_session.cudafe1.cpp
+  cudarl_core.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\build\Release\cudarl_core.lib
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl_pond_cuda.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl_pond_cuda.exp
+  cudarl_pond_cuda.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\godot-project\addons\cudarl\bin\cudarl_pond_cuda.dll
+     Creating library C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl.lib and object C:/Users/aiand/Documents/programming/CudaRL-Arena/build/Release/cudarl.exp
+  cudarl.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\godot-project\addons\cudarl\bin\cudarl.dll

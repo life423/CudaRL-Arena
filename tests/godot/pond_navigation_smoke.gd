@@ -43,7 +43,7 @@ func _run() -> void:
 		root.size = dimensions
 		await settle()
 		var menu = current_scene
-		var open: Button = menu.find_child("pond_live_watch", true, false)
+		var open: Button = menu.find_child("pond_feeding_watch", true, false)
 		check(open != null and open.text == "Open pond", "Main pond route is not the live agent")
 		var menu_scroll: ScrollContainer = menu.find_child("DemoScroll", true, false)
 		menu_scroll.ensure_control_visible(open)
@@ -76,7 +76,11 @@ func _run() -> void:
 		check(menu.guide.visible and menu.guide.size.x <= dimensions.x and menu.guide.size.y <= dimensions.y, "Help dialog is clipped")
 		await capture("help", dimensions)
 		menu.guide.hide()
-		press_space(open)
+		# The frozen reference remains a separate experiment route; its controls
+		# below intentionally test fixed-policy playback rather than new learning.
+		menu._show_experiments()
+		await settle()
+		press_space(menu.experiments.find_child("Open_pond_live", true, false))
 		await settle()
 		var pond = current_scene
 		pond.set_physics_process(false)

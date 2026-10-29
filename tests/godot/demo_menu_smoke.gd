@@ -31,7 +31,10 @@ func _run() -> void:
 	var test_checkpoint := "user://tests/menu-best-%d-%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
 	node_added.connect(func(node: Node):
 		if node.name == "TadpolePond":
-			node.best_policy_path = test_checkpoint)
+			node.best_policy_path = test_checkpoint
+		elif node.name == "FeedingPond":
+			node.feeding_checkpoint_path = test_checkpoint + ".feeding.bin"
+			node.population = 128)
 	create_timer(30.0).timeout.connect(func():
 		push_error("Demo menu checks timed out")
 		quit(1))
@@ -42,7 +45,7 @@ func _run() -> void:
 	check(current_scene.rows.size() == 1 and current_scene.buttons.size() == 2, "Menu must focus on the pond and its two actions")
 	for legacy in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train"]:
 		check(current_scene.find_child(legacy, true, false) == null, "Legacy demonstration still appears in the pond UI")
-	for expected in ["pond_live_watch", "pond_experiments_train", "guide_train"]:
+	for expected in ["pond_feeding_watch", "pond_experiments_train", "guide_train"]:
 		check(root.gui_get_focus_owner().name == expected, "Keyboard focus order is incorrect")
 		input_action("ui_focus_next")
 		await settle()
@@ -104,12 +107,12 @@ func _run() -> void:
 		await settle()
 		check(current_scene.name == "DemoMenu", "Back did not return to menu")
 		check(not lab.get_stats().get("policy_ready", false), "Leaving a demo must stop its session")
-	var pond_action: Button = current_scene.find_child("pond_live_watch", true, false)
+	var pond_action: Button = current_scene.find_child("pond_feeding_watch", true, false)
 	check(pond_action != null and pond_action.text == "Open pond", "The main pond action is missing")
 	pond_action.pressed.emit()
 	await settle()
 	check(current_scene.stats.get("progress_controller", false), "The main pond action did not open the latest saved agent")
-	check(current_scene.stats.selector_update == 320 and current_scene.stats.background_swimmers == 0, "Opening the pond started training or loaded the wrong agent")
+	check(current_scene.stats.selector_update == 320 and current_scene.stats.feeding_mode, "Opening the pond did not start the intended feeding/learning mode")
 	check(current_scene.current_switch.visible, "The live pond has no current control")
 	current_scene.find_child("BackToDemos", true, false).pressed.emit()
 	await settle()
@@ -146,7 +149,7 @@ func _run() -> void:
 		root.size = dimensions
 		await settle()
 		var scroll: ScrollContainer = current_scene.find_child("DemoScroll", true, false)
-		pond_action = current_scene.find_child("pond_live_watch", true, false)
+		pond_action = current_scene.find_child("pond_feeding_watch", true, false)
 		scroll.ensure_control_visible(pond_action)
 		await settle()
 		check(pond_action.get_global_rect().end.x <= dimensions.x and pond_action.get_global_rect().end.y <= dimensions.y, "Pond action is not reachable within the menu viewport")

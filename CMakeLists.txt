@@ -76,6 +76,8 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/deep_pond.cu
     src/envs/swimmer/pond_selector.cu
     src/envs/swimmer/progress_selector.cu
+    src/envs/swimmer/feeding.cu
+    src/demos/feeding_session.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu

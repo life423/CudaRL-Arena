@@ -75,8 +75,10 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 	button.tooltip_text = "Play the saved policy without training." if watch else "Open a fresh, untrained run."
 	if demo == "pond":
 		button.tooltip_text = "Watch the three-food shallow pond learn. Saved training resumes automatically."
-	elif demo in ["deep_water", "pond_live"]:
+	elif demo in ["deep_water", "pond_live", "pond_feeding"]:
 		button.tooltip_text = "Open a live physical simulation controlled by the saved neural networks."
+		if demo == "pond_feeding":
+			button.tooltip_text = "Drop sinking food while native CUDA PPO practices and validates improved swimming."
 	if demo not in ["guide", "headless"]:
 		if demo != "pond_experiments":
 			button.pressed.connect(func(): _open(demo, watch))
@@ -122,7 +124,7 @@ func _build() -> void:
 	title_row.add_child(header_spacer)
 	title_row.add_child(guide_button)
 	# Keep legacy scenes, policies and routing intact; the product entry is the pond.
-	var demos := [["pond", "Meet your swimmer", "Watch a trained creature find food at different depths. Change the water current, move closer, or compare its behavior with an untrained creature."]]
+	var demos := [["pond", "Feed your swimmer", "Drop food into the water and watch it sink and drift. The creature chooses its own targets while native PPO practices in the background."]]
 	for spec in demos:
 		var row := BoxContainer.new()
 		row.name = spec[0] + "_row"
@@ -149,9 +151,15 @@ func _build() -> void:
 		details.add_child(actions)
 		if spec[0] == "pond":
 			if portable:
+				heading.text = "Watch your swimmer"
+				caption.text = "The saved trained creature, with CUDA or CPU playback. This portable build does not run live learning."
 				actions.add_child(_button("Open pond", "deep_water", false, true))
 			else:
-				var live_demo := "pond_live" if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin") else "deep_water"
+				var live_demo := "pond_feeding" if FileAccess.file_exists("res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin") else "deep_water"
+				if live_demo == "pond_feeding" and (not ClassDB.class_exists("CudaDevice") or not ClassDB.instantiate("CudaDevice").is_available()):
+					live_demo = "pond_live"
+					heading.text = "Watch your swimmer"
+					caption.text = "The saved trained creature runs with CPU fallback. Sinking-food learning requires a working CUDA device."
 				actions.add_child(_button("Open pond", live_demo, true, true))
 				var more := _button("Experiments", "pond_experiments", false)
 				more.tooltip_text = "Separate learning labs, older agents and clearly labeled recordings."
@@ -265,16 +273,17 @@ func _show_guide() -> void:
 		body.add_theme_constant_override("separation", 12)
 		scroll.add_child(body)
 		for item in [
-			["Start in the pond", "Open pond runs the latest saved swimmer in a live physical simulation. Experiments contains the separate shallow learning lab, the original agent and recorded diagnostics."],
-			["Interact with the live pond", "Turn Current on, then choose 0.5 or 0.75 cm/s. Steady flow changes swimmer forces, moves suspended food and reveals visible flow. Switching strength preserves the session. Closer view changes the camera. Show untrained policy restarts the same layout with random weights. The graph measures session collection; saved weights do not update."],
-			["Train without graphics", "The console below continues PPO food-selector training at fixed physics timesteps. An existing full save resumes; a new installation starts from the packaged networks with a fresh optimizer. Ctrl+C saves and stops. Every 25 updates saves a full checkpoint; a crash can lose progress since that save. Only one trainer can own each save."],
-			["Keep learned skills safe", "Headless training saves a separate candidate. Watching the pond keeps its tested saved agent until a replacement is evaluated. Your original networks and full training saves are preserved. Recordings are always labeled; they are not live simulation."]
+			["Start in the pond", "Open pond offers sinking-food interaction with concurrent native CUDA PPO. Click or tap open water to feed; the creature makes its own choices. GPU learning is available in the NVIDIA developer build. Experiments preserves the frozen trained reference and its CPU fallback."],
+			["Interact and learn", "Current applies steady 0.5 or 0.75 cm/s flow. Pellets keep sinking when flow is off. Background swimmers practice your drop locations and water conditions; improved motor weights are adopted only after comparison checks. The display separates PPO updates from adopted updates. The original selector and swimming source remain preserved."],
+			["Save and resume feeding", "The feeding pond autosaves every 30 seconds and on exit: learner, optimizer, practice worlds and visible pond. Leaving the pond stops learning; reopen it to resume. Pause learning keeps the visible swimmer running. Your original policies and older training saves are preserved."],
+			["Original headless tools", "The console below runs the preserved original food-selector task, not sinking-food learning. It resumes its own full save; Ctrl+C saves and stops. The feeding learner runs while its pond is open and uses a separate checkpoint. Recordings in Experiments are labeled and do not train."]
 		]:
 			body.add_child(_label(item[0], 20))
 			var paragraph := _label(item[1], 15, MUTED)
 			paragraph.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			body.add_child(paragraph)
-		var run := _button("Open headless training console", "headless", false, true)
+		var run := _button("Open original selector console", "headless", false, true)
+		run.tooltip_text = "Runs the original selector task, using its separate checkpoint; does not train the sinking-food pond."
 		run.pressed.connect(_start_headless)
 		body.add_child(run)
 		var copy := Button.new()
