@@ -1,0 +1,17 @@
+{
+  "study": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\build\\autonomous-heldout\\20261029043654502",
+  "utc": "2026-10-29T04:36:54.5532465Z",
+  "liveSave": "C:\\Users\\aiand\\AppData\\Roaming\\Godot\\app_userdata\\CudaRL Arena\\pond-policies\\feeding-learning-v1\\training.bin",
+  "files": [
+    {
+      "name": "before.bin",
+      "bytes": 6038764,
+      "sha256": "c6fd086ac6ada672a2f3a09ea165b46a5ba7e4282dbff9aa774e1b9a10f9ae03"
+    },
+    {
+      "name": "after.bin",
+      "bytes": 6038764,
+      "sha256": "e80da9ce4a003bd408f92e78862dfa49b9dbb8df38da0c7a7164687f5b086026"
+    }
+  ]
+}

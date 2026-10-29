@@ -15,7 +15,7 @@ struct Evaluation {int foods=0,calm=0,feeding_worlds=0;double progress=0;bool va
 Evaluation evaluate_cpu(const std::vector<float>& weights,const rl::ProgressPolicy& source,const fd::Context& context,int count,int steps,uint32_t seed) {
     fd::CpuBatch worlds(count,seed,source.actor,context);
     nn::CpuMlp<float> actor(rl::swimmer_specification(4,fd::kObs));actor.params()=weights;
-    for(int tick=0;tick<steps;++tick) {actor.forward(worlds.observations.data(),count);worlds.step(actor.output(),nullptr,nullptr,nullptr,false);}
+    for(int tick=0;tick<steps;++tick) {actor.forward(worlds.observations.data(),count);worlds.step(actor.output(),nullptr,nullptr,nullptr,false,true);}
     Evaluation result;
     for(const auto& s:worlds.states) {
         result.valid=result.valid && !s.invalid && s.max_still<100;
@@ -59,7 +59,8 @@ class CpuSession final:public FeedingSession {
                 if(paused_.load()) {std::this_thread::sleep_for(std::chrono::milliseconds(10));continue;}
                 const auto start=Clock::now();fd::Context next;
                 {std::lock_guard<std::mutex> lock(mutex_);next=context_;}
-                if(next.version!=practice.version) {practice=next;trainer.env.context=practice;trainer.env.reset();}
+                // Apply interaction context at the rollout boundary without restarting world schedules.
+                if(next.version!=practice.version) {practice=next;trainer.env.context=practice;trainer.env.prepare();}
                 trainer.update();
                 for(float p:trainer.actor.params()) if(!std::isfinite(p)) throw std::runtime_error("Non-finite CPU learner; original controller preserved");
                 for(float p:trainer.critic.params()) if(!std::isfinite(p)) throw std::runtime_error("Non-finite CPU value estimator");

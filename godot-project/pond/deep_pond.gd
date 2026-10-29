@@ -107,21 +107,29 @@ func _start_lab() -> bool:
 func _floor_y(radius: float) -> float:
 	return -4.0 + 4.5 * pow(minf(radius, 1), 6)
 
+func _pond_radii() -> Vector2:
+	return Vector2(RX, RZ)
+
+func _pond_overview_direction() -> Vector3:
+	return NATURAL_OVERVIEW_DIRECTION
+
 func _visual_height(x: float, z: float) -> float:
-	var radius := sqrt(x * x / (RX * RX) + z * z / (RZ * RZ))
+	var radii := _pond_radii()
+	var radius := sqrt(x * x / (radii.x * radii.x) + z * z / (radii.y * radii.y))
 	return _floor_y(radius) + smoothstep(1.02, 1.65, radius) * 0.10 * sin(x * 0.7) * cos(z * 0.8)
 
 func _terrain() -> ArrayMesh:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var radii := _pond_radii()
 	for ring in 129:
 		# Retain the physical basin and extend the dry ground beyond the view.
 		var r := float(ring) / 64 * 1.2 if ring <= 64 else 1.2 + float(ring - 64) / 64 * 10.8
 		for spoke in 129:
 			var angle := TAU * float(spoke) / 128
 			tool.set_uv(Vector2(cos(angle), sin(angle)) * r * 0.5 + Vector2.ONE * 0.5)
-			var x := cos(angle) * RX * r
-			var z := sin(angle) * RZ * r
+			var x := cos(angle) * radii.x * r
+			var z := sin(angle) * radii.y * r
 			# Exterior dry ground is decorative; underwater geometry stays exact.
 			var height := _visual_height(x, z)
 			var slope_x := (_visual_height(x + 0.005, z) - _visual_height(x - 0.005, z)) / 0.01
@@ -194,7 +202,8 @@ func _build_world() -> void:
 	water_material.shader = preload("res://pond/deep_surface.gdshader")
 	water_material.render_priority = 1
 	water_surface = _mesh(surface, water_material, Vector3.ZERO)
-	water_surface.scale = Vector3(RX, 1, RZ)
+	var radii := _pond_radii()
+	water_surface.scale = Vector3(radii.x, 1, radii.y)
 	water_surface.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	shore = preload("res://pond/natural_shore.gd").new()
 	world.add_child(shore)
@@ -246,10 +255,11 @@ func _apply_pose(alpha: float) -> void:
 	creature.pose(links)
 	rendered_swimmer_position = links[0].position
 	visibility_focus = (links[0].position as Vector3).lerp(links[2].position, 0.5)
+	var radii := _pond_radii()
 	for i in 3:
 		foods[i].position = state.foods[i]
 		var p := foods[i].position
-		var radius := sqrt(p.x * p.x / (RX * RX) + p.z * p.z / (RZ * RZ))
+		var radius := sqrt(p.x * p.x / (radii.x * radii.x) + p.z * p.z / (radii.y * radii.y))
 		markers[i].position = Vector3(p.x, _floor_y(radius) + 0.012, p.z)
 		lines[i].position = (p + markers[i].position) * 0.5
 		lines[i].scale.y = maxf(0.01, p.y - markers[i].position.y)
@@ -280,16 +290,18 @@ func _update_camera(delta: float) -> void:
 	if state.is_empty():
 		return
 	var target := Vector3(0, -1.3, 0)
-	var direction := NATURAL_OVERVIEW_DIRECTION.normalized() if overview else camera_direction
+	var overview_direction := _pond_overview_direction().normalized()
+	var direction := overview_direction if overview else camera_direction
 	var mode_changed := not camera_mode_initialized or previous_camera_overview != overview
 	if fitted_viewport_size != viewport.size:
 		var points: Array[Vector3] = []
+		var radii := _pond_radii()
 		for i in 32:
 			var angle := TAU * float(i) / 32
-			points.append(Vector3(cos(angle) * RX * 1.18, 0.8, sin(angle) * RZ * 1.18))
+			points.append(Vector3(cos(angle) * radii.x * 1.18, 0.8, sin(angle) * radii.y * 1.18))
 			for radius in [0.0, 0.35, 0.65, 0.85, 0.97]:
-				points.append(Vector3(cos(angle) * RX * radius, _floor_y(radius) + 0.1, sin(angle) * RZ * radius))
-		fitted_overview_distance = maxf(9.0, _fit_view_distance(points, target, NATURAL_OVERVIEW_DIRECTION.normalized()))
+				points.append(Vector3(cos(angle) * radii.x * radius, _floor_y(radius) + 0.1, sin(angle) * radii.y * radius))
+		fitted_overview_distance = maxf(9.0, _fit_view_distance(points, target, overview_direction))
 		fitted_viewport_size = viewport.size
 	var distance := fitted_overview_distance
 	if not overview:

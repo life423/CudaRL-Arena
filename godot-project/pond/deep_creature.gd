@@ -3,6 +3,7 @@ extends Node3D
 var head: Node3D
 var tail: MeshInstance3D
 var membrane: MeshInstance3D
+var membrane_half_height := 0.215
 
 func _ready() -> void:
 	head = Node3D.new()
@@ -85,7 +86,7 @@ func pose(links: Array) -> void:
 			var angle := TAU * float(spoke) / 12
 			vertices.append(center + (up * sin(angle) + side * cos(angle)) * lerpf(0.06, 0.018, t))
 			uv.append(Vector2(t, float(spoke) / 12))
-		var height := 0.025 + 0.19 * sin(PI * clampf((t - 0.3) / 0.7, 0, 1))
+		var height := minf(membrane_half_height, 0.025 + 0.19 * sin(PI * clampf((t - 0.3) / 0.7, 0, 1)))
 		for sign_y in [-1, 1]:
 			fin_vertices.append(center + up * height * sign_y)
 			fin_uv.append(Vector2(t, (sign_y + 1) * 0.5))

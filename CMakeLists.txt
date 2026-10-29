@@ -77,7 +77,9 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/pond_selector.cu
     src/envs/swimmer/progress_selector.cu
     src/envs/swimmer/feeding.cu
+    src/envs/swimmer/arch_batch.cu
     src/demos/feeding_session.cu
+    src/demos/arch_session.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
@@ -170,6 +172,8 @@ add_executable(cudarl_tests
     tests/test_deep_pond.cpp
     tests/test_pond_current.cpp
     tests/test_pond_playback_reliability.cpp
+    tests/test_arch_geometry.cpp
+    tests/test_arch_navigation.cpp
     tests/test_fixed_target.cpp
     tests/test_progress_selector.cpp
     tests/test_pond_selector.cpp
@@ -186,6 +190,9 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(feeding_heldout_eval tools/feeding_heldout_eval.cu)
+    target_link_libraries(feeding_heldout_eval PRIVATE cudarl_core)
+    cudarl_strict_warnings(feeding_heldout_eval)
     add_executable(pond_reliability tools/pond_reliability.cpp)
     target_link_libraries(pond_reliability PRIVATE cudarl_runtime)
     target_compile_definitions(pond_reliability PRIVATE CUDARL_WITH_CUDA=0)

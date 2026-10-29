@@ -10,6 +10,8 @@ struct FeedingStats {
     bool ready=false,resumed=false,training=false,paused=false,learner_changed=false;
     std::string error,save_error;
     std::string backend="CUDA";
+    bool arch_mode=false;
+    int input_count=feeding::kObs,parent_update=0,parent_selector_update=0,arch_contacts=0,arch_passages=0,arch_clean_passages=0;
 };
 class FeedingSession {
 public:
@@ -26,5 +28,6 @@ public:
 };
 std::unique_ptr<FeedingSession> create_feeding_session(const std::string& policy,const std::string& checkpoint,int worlds=1024);
 std::unique_ptr<FeedingSession> create_cpu_feeding_session(const std::string& policy,const std::string& checkpoint,int worlds=16);
+std::unique_ptr<FeedingSession> create_arch_session(const std::string& source_full_save,const std::string& checkpoint,int worlds=1024);
 }
 #endif

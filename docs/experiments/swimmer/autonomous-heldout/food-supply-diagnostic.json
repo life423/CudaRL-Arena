@@ -1,0 +1,18 @@
+{
+  "exploratory_diagnostic": true,
+  "note": "Created pellets include initial and late arrivals; uneaten pellets at the cutoff may still be in transit. High collection fraction suggests limited food-count headroom; it does not establish an optimal policy.",
+  "before": {
+    "cases": 96,
+    "foods": 2757,
+    "created": 2857,
+    "collection_percent": 96.49982499124957,
+    "mean_food_per_minute": 14.359375
+  },
+  "after": {
+    "cases": 96,
+    "foods": 2744,
+    "created": 2857,
+    "collection_percent": 96.044802240112,
+    "mean_food_per_minute": 14.291666666666666
+  }
+}

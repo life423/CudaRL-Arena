@@ -6,6 +6,13 @@ var feed_surface: Control
 var drop_point := Vector2.ZERO
 var feedback_until := 0
 var last_touch_msec := -1000
+var auto_feed_button: CheckButton
+var auto_feed_enabled := false
+var auto_feed_next_time := -1.0
+var auto_feed_last_time := -1.0
+var auto_feed_count := 0
+var auto_feed_rng := RandomNumberGenerator.new()
+var auto_feed_seeded := false
 
 func _start_lab() -> bool:
 	paused = false
@@ -21,8 +28,8 @@ func _start_lab() -> bool:
 func _build_ui() -> void:
 	super._build_ui()
 	untrained_button.hide()
-	current_switch.tooltip_text = "Apply physical steady flow. Your setting also updates background practice conditions."
-	current_strength.tooltip_text = "Choose a tested flow strength; the learner practices the changed water conditions."
+	current_switch.tooltip_text = "Apply steady flow to this pond. Background practice independently includes calm, steady and varying currents."
+	current_strength.tooltip_text = "Choose this pond's steady current. Background practice varies between calm water and 0.75 cm/s."
 	feed_feedback = _label("Click or tap open water to drop food.", 14, MUTED)
 	feed_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var controls := camera_button.get_parent()
@@ -33,6 +40,19 @@ func _build_ui() -> void:
 	accessible.pressed.connect(func(): _drop_at(Vector3.ZERO))
 	controls.add_child(accessible)
 	controls.move_child(accessible, 5)
+	auto_feed_button = CheckButton.new()
+	auto_feed_button.name = "AutoFeed"
+	auto_feed_button.text = "Auto feed"
+	auto_feed_button.custom_minimum_size.y = 44
+	auto_feed_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	auto_feed_button.add_theme_font_size_override("font_size", 15)
+	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		auto_feed_button.add_theme_color_override(color, TEXT)
+	auto_feed_button.add_theme_stylebox_override("focus", camera_button.get_theme_stylebox("focus"))
+	auto_feed_button.tooltip_text = "Drop one pellet every 2–6 seconds of pond time. You can still feed by hand; existing pellets are kept."
+	auto_feed_button.toggled.connect(_set_auto_feed)
+	controls.add_child(auto_feed_button)
+	controls.move_child(auto_feed_button, 5)
 	feed_surface = Control.new()
 	feed_surface.name = "FeedingSurface"
 	feed_surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -77,6 +97,57 @@ func _ready() -> void:
 		released = true
 	get_window().title = "Tadpole Pond · Feed and learn · CudaRL"
 	_poll()
+	if "--auto-feed" in OS.get_cmdline_user_args():
+		auto_feed_button.button_pressed = true
+
+func _set_auto_feed(enabled: bool) -> void:
+	auto_feed_enabled = enabled
+	if enabled:
+		if not auto_feed_seeded:
+			auto_feed_rng.seed = training_seed ^ 0xA17F00D
+			auto_feed_seeded = true
+		auto_feed_last_time = float(state.get("elapsed", 0.0))
+		auto_feed_next_time = auto_feed_last_time + auto_feed_rng.randf_range(2.0, 6.0)
+	else:
+		auto_feed_next_time = -1.0
+	feedback_until = 0
+	_poll()
+
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
+	_advance_auto_feed()
+
+func _advance_auto_feed() -> void:
+	if not auto_feed_enabled or not lab or state.is_empty() or not stats.get("feeding_mode", false):
+		return
+	var elapsed: float = state.elapsed
+	if elapsed <= auto_feed_last_time:
+		if elapsed < auto_feed_last_time:
+			auto_feed_next_time = elapsed + auto_feed_rng.randf_range(2.0, 6.0)
+		auto_feed_last_time = elapsed
+		return
+	auto_feed_last_time = elapsed
+	if elapsed < auto_feed_next_time:
+		return
+	# Consume a complete seeded event even when the pond is full, without deleting food.
+	var angle := auto_feed_rng.randf_range(0.0, TAU)
+	var radius := 0.86 * sqrt(auto_feed_rng.randf())
+	var position := Vector3(RX * radius * cos(angle), 0, RZ * radius * sin(angle))
+	auto_feed_next_time = elapsed + auto_feed_rng.randf_range(2.0, 6.0)
+	if state.foods.size() >= int(stats.get("food_capacity", 128)):
+		feed_feedback.text = "Auto feed is waiting for space in the pond (128 pellets)."
+		feedback_until = Time.get_ticks_msec() + 4000
+		return
+	var slot: int = lab.drop_food(position)
+	if slot < 0:
+		feed_feedback.text = "Auto feed could not place food in open water."
+		feedback_until = Time.get_ticks_msec() + 4000
+		return
+	auto_feed_count += 1
+	state = lab.get_state()
+	_poll()
+	feed_feedback.text = "Food dropped automatically. You can still feed by hand."
+	feedback_until = Time.get_ticks_msec() + 2500
 
 func _feed_input(event: InputEvent) -> void:
 	var point := Vector2.ZERO
@@ -150,12 +221,16 @@ func _poll() -> void:
 	if lab and not lab.get_error().is_empty():
 		title_status.text = "Feeding pond could not start"
 		feed_feedback.text = lab.get_error() + " Return to the menu and try again."
+		auto_feed_button.disabled = true
 		return
 	if not stats.get("feeding_mode", false):
 		return
 	untrained_button.hide()
 	if Time.get_ticks_msec() > feedback_until:
-		feed_feedback.text = "Click or tap open water to drop food."
+		if auto_feed_enabled and state.foods.size() >= int(stats.get("food_capacity", 128)):
+			feed_feedback.text = "Auto feed is waiting for space in the pond (128 pellets)."
+		else:
+			feed_feedback.text = "Auto feed · one pellet every 2–6 s. You can still drop food." if auto_feed_enabled else "Click or tap open water to drop food."
 	var learning: bool = stats.learning_active
 	title_status.text = "Learning live · PPO update %d" % stats.update if learning else ("Learning paused" if stats.paused else "Preparing background PPO…")
 	if not str(stats.learning_error).is_empty():
@@ -168,7 +243,7 @@ func _poll() -> void:
 	if stats.evaluation_count > 0:
 		comparison = "Matched check: candidate %.1f / min\nPreserved reference %.1f / min" % [stats.current_food_per_minute, stats.original_food_per_minute]
 	training_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	training_stats.text = "%s · %d background swimmers\nLearner update %d · adopted %d\nInteraction version %d · practiced %d\n%s" % [stats.compute_backend, stats.background_swimmers, stats.update, stats.adopted_update, stats.context_version, stats.trained_context_version, comparison]
+	training_stats.text = "%s · %d background swimmers\nLearner update %d · adopted %d\nInteraction version %d · practiced %d\n%s\nPractice: timed food; calm, steady and varying currents (0–0.75 cm/s).\nThis pond's current uses your controls." % [stats.compute_backend, stats.background_swimmers, stats.update, stats.adopted_update, stats.context_version, stats.trained_context_version, comparison]
 	curve.status_caption = "PPO %d · adopted %d · %d background swimmers" % [stats.update, stats.adopted_update, stats.background_swimmers]
 	save_status.text = "Swimming retained from %d. Original policies preserved.\nSaved at %d · autosaves every 30 s and on exit." % [stats.policy_update, stats.saved_update]
 	if not str(stats.save_error).is_empty():

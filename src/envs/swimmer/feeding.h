@@ -83,6 +83,39 @@ CUDARL_HD inline void motor_observe(const State& s,float* out) {
     V relative{};if(target>=0) relative=s.body.orientation.inverse(s.pellets[target].velocity-V{s.body.velocity[0],s.body.velocity[1],s.body.velocity[2]})/.04f;
     out[33]=relative.x;out[34]=relative.y;out[35]=relative.z;out[36]=target>=0?1.f:0.f;
 }
+// Practice events depend on seed and simulation time, never on collection/action
+// history. Matched actors therefore receive the same arrival/current schedule.
+// Deriving phase from the existing state also preserves full-save binary layout.
+CUDARL_HD inline uint32_t practice_key(const State& s,uint32_t event,uint32_t domain) {
+    return rng::bits(s.seed^domain,s.environment,s.episode*4099u+event);
+}
+CUDARL_HD inline V sample_practice_drop(const State& s,const Context& context,uint32_t event) {
+    const uint32_t key=practice_key(s,event,0xFEED431u);
+    if(context.count>0 && (key&1u)) return context.drops[(key>>1)%static_cast<uint32_t>(context.count)];
+    const float angle=6.2831853f*rng::uniform(s.seed^0xBA5E431u,s.environment,key);
+    const float r=.86f*sqrtf(rng::uniform(s.seed^0xBA5E431u,s.environment,key+1u));
+    return {4.6f*r*cosf(angle),0,3.5f*r*sinf(angle)};
+}
+CUDARL_HD inline float practice_speed(const State& s,uint32_t frame) {
+    const uint32_t key=practice_key(s,frame,0xC011E17u);
+    // Consecutive zero keyframes supply genuinely calm intervals as well as lulls.
+    return key%4u<2u?0.f:.0075f*rng::uniform(s.seed,s.environment,key);
+}
+CUDARL_HD inline V practice_current(const State& s,const Context& context) {
+    if(s.retention || s.environment%4u<2u) return {};
+    const float magnitude=deep::norm(context.current);
+    const V direction=magnitude>1e-8f?context.current/magnitude:V{1,0,0};
+    if(s.environment%4u==2u) {
+        const uint32_t key=practice_key(s,0,0x57EAD1u);
+        const float speed=(key&1u) && magnitude>0?fminf(magnitude,.0075f):.0075f*rng::uniform(s.seed,s.environment,key);
+        return direction*speed;
+    }
+    const uint32_t period=80u+practice_key(s,0,0xC10C431u)%121u; // 4–10 simulated seconds.
+    const uint32_t tick=static_cast<uint32_t>(s.steps),frame=tick/period;
+    const float u=static_cast<float>(tick%period)/static_cast<float>(period),blend=u*u*(3.f-2.f*u);
+    const float a=practice_speed(s,frame),b=practice_speed(s,frame+1u);
+    return direction*(a+(b-a)*blend);
+}
 CUDARL_HD inline State initial(uint32_t seed,uint32_t environment,uint32_t episode,const Context& context,bool retention=false) {
     State s;s.seed=seed;s.environment=environment;s.episode=episode;s.retention=retention;
     const auto old=deep_pond::initial(seed,environment,episode);s.body=old.body;s.anchor=s.body.position;
@@ -91,9 +124,8 @@ CUDARL_HD inline State initial(uint32_t seed,uint32_t environment,uint32_t episo
         const int number=1+static_cast<int>(rng::bits(seed,environment,episode)%8u);
         s.desired_foods=number;
         for(int i=0;i<number;++i) {
-            const uint32_t key=rng::bits(seed^0xFEED123u,environment,episode*31u+static_cast<uint32_t>(i));V position;
-            if(context.count>0) position=context.drops[key%static_cast<uint32_t>(context.count)];
-            else {const float angle=6.2831853f*rng::uniform(seed,environment,key),r=.75f*sqrtf(rng::uniform(seed,environment,key+1));position={4.6f*r*cosf(angle),0,3.5f*r*sinf(angle)};}
+            const uint32_t key=rng::bits(seed^0xFEED123u,environment,episode*31u+static_cast<uint32_t>(i));
+            const V position=sample_practice_drop(s,context,0x80000000u+static_cast<uint32_t>(i));
             const int slot=drop(s,position);
             if(slot>=0 && i%2) {auto& p=s.pellets[slot];const float bed=deep::pond_floor(p.position.x,p.position.z)+radius/deep::scale+.03f;p.position.y=bed+(-.2f-bed)*rng::uniform(seed,environment,key+2);p.velocity.y=-.0018f;}
         }
@@ -106,11 +138,15 @@ CUDARL_HD inline void replenish(State& s,const Context& context) {
         for(int j=0;j<3;++j) if(!s.pellets[j].active && deep_pond::place_food(old,j)) {
             auto& p=s.pellets[j];p={};p.active=true;p.settling=false;p.id=s.next_id++;p.position=old.food[j];p.distance=deep::norm(p.position-s.body.position);s.decision=true;
         }
-    } else for(int j=0;j<s.desired_foods;++j) if(!s.pellets[j].active) {
-        const uint32_t key=rng::bits(s.seed,s.environment,s.next_id+s.episode*997u);V position;
-        if(context.count) position=context.drops[key%static_cast<uint32_t>(context.count)];
-        else {const float angle=6.2831853f*rng::uniform(s.seed,s.environment,key),r=.75f*sqrtf(rng::uniform(s.seed,s.environment,key+1));position={4.6f*r*cosf(angle),0,3.5f*r*sinf(angle)};}
-        drop(s,position);
+    } else {
+        // One seeded arrival per six-second window, offset within the window;
+        // arrivals are 2–10 seconds apart, with occasional pairs. Eating does not
+        // trigger replacement. A practice-only occupancy bound prevents buildup.
+        const uint32_t tick=static_cast<uint32_t>(s.steps),window=tick/120u;
+        const uint32_t key=practice_key(s,window,0xA221431u),offset=20u+key%81u;
+        if(tick%120u!=offset || count(s)>=16) return;
+        const int arrivals=1+static_cast<int>((key>>16)%4u==0u);
+        for(int j=0;j<arrivals && count(s)<16;++j) drop(s,sample_practice_drop(s,context,window*2u+static_cast<uint32_t>(j)));
     }
 }
 CUDARL_HD inline float advance(State& s,const float* action,V current) {

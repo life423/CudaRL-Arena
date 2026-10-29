@@ -12,7 +12,8 @@ class Batch {
 public:
     Batch(int n,uint32_t seed,swimmer::Body unused={});
     void configure(const std::vector<float>& selector,const Context& context,cudaStream_t stream,bool reset=false);
-    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true);
+    // Evaluation may run practice events without resetting a timed-out world.
+    void step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset=true,bool practice_events=false);
     const float* obs() const {return observations_.get();}
     const State* states() const {return states_.get();}
     const Context& context() const {return context_;}

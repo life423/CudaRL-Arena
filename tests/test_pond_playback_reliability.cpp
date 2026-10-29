@@ -8,6 +8,7 @@
 #include "envs/swimmer/feeding_batch.h"
 #include "rl/feeding_policy.h"
 #include "rl/swimmer_ppo.h"
+#include "rl/feeding_cpu.h"
 TEST_CASE("sinking food: added velocity inputs preserve the inherited motor before training") {
     const auto source=cudarl::rl::initial_pond_policy();const auto state=cudarl::deep_pond::initial(7,0);
     float old[33],expanded[cudarl::feeding::kObs]{};cudarl::deep_pond::observe(state,old);
@@ -59,6 +60,150 @@ GPU_TEST_CASE("sinking food: CUDA scores candidates beyond three and shares nati
     fd::motor_observe(reference,expected);final_obs.copy_to_host(terminal,fd::kObs);done.copy_to_host(&ended,1);
     CHECK(ended==1 && batch.state(stream.value).steps==0);
     for(int i=0;i<fd::kObs;++i) CHECK(std::fabs(terminal[i]-expected[i])<.003f);
+}
+TEST_CASE("practice feeding: timed arrivals repeat exactly and do not immediately replace eaten food") {
+    namespace fd=cudarl::feeding;
+    fd::Context context;context.count=1;context.drops[0]={2.f,0,-1.f};
+    auto first=fd::initial(771,3,0,context,false),second=first;
+    for(auto& pellet:first.pellets) pellet.active=false;
+    for(auto& pellet:second.pellets) pellet.active=false;
+    const auto body=first.body.position;
+    int arrivals=0,previous_tick=-120;
+    for(int tick=1;tick<=1200;++tick) {
+        first.steps=second.steps=tick;
+        fd::replenish(first,context);fd::replenish(second,context);
+        CHECK(first.next_id==second.next_id);
+        CHECK(fd::count(first)==fd::count(second));
+        const int added=fd::count(first);
+        CHECK(added<=2);
+        if(added) {
+            // A seeded arrival is scheduled inside each six-second window.
+            CHECK(tick%120>=20 && tick%120<=100);
+            CHECK(tick-previous_tick>1);
+            previous_tick=tick;arrivals+=added;
+        }
+        for(int i=0;i<fd::capacity;++i) {
+            CHECK(first.pellets[i].active==second.pellets[i].active);
+            if(first.pellets[i].active) {
+                CHECK(cudarl::deep::norm(first.pellets[i].position-second.pellets[i].position)==0);
+                CHECK(fd::valid_drop(first.pellets[i].position));
+                CHECK(first.pellets[i].position.y==-.2f);
+                first.pellets[i].active=second.pellets[i].active=false;
+            }
+        }
+        CHECK(cudarl::deep::norm(first.body.position-body)==0);
+    }
+    CHECK(arrivals>=10 && arrivals<=20);
+    auto full=fd::initial(771,3,0,context,false);
+    for(auto& pellet:full.pellets) pellet.active=false;
+    for(int i=0;i<16;++i) CHECK(fd::drop(full,{2.f,0,-1.f})==i);
+    const auto before=full;
+    for(int tick=1;tick<=120;++tick) {full.steps=tick;fd::replenish(full,context);}
+    CHECK(fd::count(full)==16 && full.next_id==before.next_id);
+    for(int i=0;i<16;++i) CHECK(full.pellets[i].id==before.pellets[i].id && cudarl::deep::norm(full.pellets[i].position-before.pellets[i].position)==0);
+}
+TEST_CASE("practice feeding: saved player locations supplement broad automatic coverage") {
+    namespace fd=cudarl::feeding;
+    fd::Context context;context.count=1;context.drops[0]={0,0,0};
+    auto state=fd::initial(901,3,0,context,false);
+    int contextual=0,broad=0,outer=0;
+    float minimum_x=100,maximum_x=-100,minimum_z=100,maximum_z=-100;
+    for(uint32_t event=0;event<1024;++event) {
+        const auto point=fd::sample_practice_drop(state,context,event);
+        CHECK(fd::valid_drop(point));
+        CHECK(cudarl::deep::norm(point-fd::sample_practice_drop(state,context,event))==0);
+        if(cudarl::deep::norm(point-context.drops[0])==0) ++contextual;
+        else {
+            ++broad;if(fd::radial(point)>.8f*.8f) ++outer;
+            minimum_x=std::fmin(minimum_x,point.x);maximum_x=std::fmax(maximum_x,point.x);
+            minimum_z=std::fmin(minimum_z,point.z);maximum_z=std::fmax(maximum_z,point.z);
+        }
+    }
+    CHECK(contextual>256 && contextual<768);
+    CHECK(broad>256 && outer>10);
+    CHECK(minimum_x<-2.5f && maximum_x>2.5f && minimum_z<-1.8f && maximum_z>1.8f);
+    context.count=0;
+    for(uint32_t event=0;event<64;++event) CHECK(fd::valid_drop(fd::sample_practice_drop(state,context,event)));
+}
+TEST_CASE("practice currents: calm, steady and smoothly fluctuating speeds stay bounded and deterministic") {
+    namespace fd=cudarl::feeding;
+    fd::Context context;context.current={-.003f,0,.004f};
+    int calm_nonretention=0,fluctuating_worlds=0,fluctuating_calm_ticks=0;
+    for(uint32_t environment=0;environment<32;++environment) {
+        auto state=fd::initial(1801,environment,0,context,environment%4==0);
+        auto previous=fd::practice_current(state,context);
+        const float initial_speed=cudarl::deep::norm(previous);
+        float minimum=initial_speed,maximum=initial_speed;
+        if(!state.retention && environment%4==1) ++calm_nonretention;
+        for(int tick=0;tick<=1200;++tick) {
+            state.steps=tick;
+            const auto flow=fd::practice_current(state,context);
+            const float speed=cudarl::deep::norm(flow);
+            CHECK(std::isfinite(speed) && speed<=.0075001f && flow.y==0);
+            CHECK(cudarl::deep::norm(flow-fd::practice_current(state,context))==0);
+            CHECK(std::fabs(flow.x*context.current.z-flow.z*context.current.x)<1e-9f);
+            if(state.retention || environment%4==1) CHECK(speed==0);
+            if(environment%4==2) CHECK(std::fabs(speed-initial_speed)<1e-8f);
+            if(environment%4==3) {
+                CHECK(cudarl::deep::norm(flow-previous)<=.0002f);
+                if(speed==0) ++fluctuating_calm_ticks;
+            }
+            minimum=std::fmin(minimum,speed);maximum=std::fmax(maximum,speed);previous=flow;
+        }
+        if(environment%4==3 && maximum-minimum>.0005f) ++fluctuating_worlds;
+    }
+    CHECK(calm_nonretention==8 && fluctuating_worlds==8 && fluctuating_calm_ticks>0);
+    auto retained=fd::initial(1801,0,0,context,true);
+    const auto retained_position=retained.body.position;retained.pellets[1].active=false;fd::replenish(retained,context);
+    CHECK(fd::count(retained)==3 && !retained.pellets[1].settling);
+    CHECK(cudarl::deep::norm(retained.body.position-retained_position)==0 && cudarl::deep::norm(fd::practice_current(retained,context))==0);
+    context.current={};auto state=fd::initial(1801,3,0,context,false);
+    for(int tick=0;tick<600;++tick) {state.steps=tick;const auto flow=fd::practice_current(state,context);CHECK(flow.x>=0 && flow.y==0 && flow.z==0);}
+}
+TEST_CASE("practice feeding: CPU optimizer and scheduled worlds continue exactly after a full save") {
+    namespace fd=cudarl::feeding;namespace rl=cudarl::rl;
+    const auto parent=rl::initial_pond_policy();
+    const rl::ProgressPolicy source{0,parent,rl::transfer_progress_actor(parent.selector)};
+    fd::Context context;context.count=1;context.drops[0]={2.f,0,-1.f};context.current={.005f,0,0};
+    rl::CpuFeedingTrainer uninterrupted(8,source,context);
+    for(int i=0;i<2;++i) uninterrupted.update();
+    cudarl::checkpoint::Writer saved;uninterrupted.save(saved);
+    rl::CpuFeedingTrainer restored(8,source,{});cudarl::checkpoint::Reader reader{saved.data};restored.load(reader);reader.finish();
+    for(int i=0;i<2;++i) {uninterrupted.update();restored.update();}
+    cudarl::checkpoint::Writer original_state,restored_state;uninterrupted.save(original_state);restored.save(restored_state);
+    CHECK(original_state.data==restored_state.data);
+    CHECK(uninterrupted.actor.params()!=rl::feeding_motor_parameters(parent.motor));
+    CHECK(source.baseline.motor==parent.motor && source.actor==rl::transfer_progress_actor(parent.selector));
+}
+GPU_TEST_CASE("practice feeding: CUDA and CPU share timed events and checkpointed current phases") {
+    namespace fd=cudarl::feeding;
+    fd::Context context;context.count=1;context.drops[0]={2.f,0,-1.f};context.current={.006f,0,0};
+    const std::vector<float> selector(cudarl::rl::progress_selector_spec().num_params(),0);
+    fd::CpuBatch cpu(1,77,selector,context);cpu.states[0]=fd::initial(77,3,0,context,false);cpu.prepare();
+    fd::Batch gpu(1,77);cudarl::rl::SwimmerStream stream;gpu.configure(selector,context,stream.value);gpu.set_state(cpu.states[0],stream.value);
+    const float zeros[4]={};device_ptr<float> actions(4);actions.copy_from_host(zeros,4);
+    for(int tick=0;tick<240;++tick) {
+        cpu.step(zeros,nullptr,nullptr,nullptr,false,true);gpu.step(actions.get(),{},stream.value,false,true);
+        if(tick%30==0 || tick==239) {
+            const auto actual=gpu.state(stream.value);const auto& expected=cpu.states[0];
+            CHECK(actual.steps==expected.steps && actual.next_id==expected.next_id && actual.target==expected.target);
+            CHECK(cudarl::deep::norm(actual.body.position-expected.body.position)<.003f);
+            CHECK(fd::count(actual)==fd::count(expected));
+            for(int i=0;i<fd::capacity;++i) if(actual.pellets[i].active || expected.pellets[i].active) {
+                CHECK(actual.pellets[i].active==expected.pellets[i].active);
+                CHECK(cudarl::deep::norm(actual.pellets[i].position-expected.pellets[i].position)<.0002f);
+            }
+        }
+    }
+    CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));
+    cudarl::checkpoint::Writer saved;gpu.save(saved);
+    fd::Batch restored(1,91);restored.configure(selector,{},stream.value);
+    cudarl::checkpoint::Reader reader{saved.data};restored.load(reader);reader.finish();
+    for(int tick=0;tick<160;++tick) {
+        gpu.step(actions.get(),{},stream.value,false,true);restored.step(actions.get(),{},stream.value,false,true);
+    }
+    CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));
+    cudarl::checkpoint::Writer first,second;gpu.save(first);restored.save(second);CHECK(first.data==second.data);
 }
 namespace dm=cudarl::demos;
 TEST_CASE("changing currents: constant speed, mirrored directions and a physical two-minute period") {

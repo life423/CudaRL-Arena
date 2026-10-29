@@ -43,12 +43,13 @@ public:
         }
         for(size_t i=0;i<states.size();++i) {states[i].decision=false;motor_observe(states[i],observations.data()+i*kObs);}
     }
-    void step(const float* actions,float* rewards=nullptr,float* done=nullptr,float* final_obs=nullptr,bool autoreset=true) {
+    void step(const float* actions,float* rewards=nullptr,float* done=nullptr,float* final_obs=nullptr,bool autoreset=true,bool practice_events=false) {
         for(size_t i=0;i<states.size();++i) {
-            const float reward=advance(states[i],actions+i*kAct,context.current);
+            const auto current=(autoreset||practice_events)?practice_current(states[i],context):context.current;
+            const float reward=advance(states[i],actions+i*kAct,current);
             const bool timeout=states[i].steps>=kEpisodeSteps;
             if(rewards) rewards[i]=reward;if(done) done[i]=timeout?1.f:0.f;
-            if(autoreset && !timeout) replenish(states[i],context);
+            if((autoreset||practice_events) && (!autoreset||!timeout)) replenish(states[i],context);
         }
         prepare(); // The time-limit bootstrap uses the selected terminal observation.
         if(autoreset) {

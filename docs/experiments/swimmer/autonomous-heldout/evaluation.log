@@ -1,0 +1,11 @@
+FROZEN_ACTORS before_validated=4688 before_learner=4751 after_validated=9216 after_learner=9218 identical=0
+IDENTICAL_POLICY_SELF_CHECK PASS
+HELDOUT_SEED 1662667521 complete (32 frozen trials)
+HELDOUT_SEED 2106779219 complete (32 frozen trials)
+HELDOUT_SEED 1133234089 complete (32 frozen trials)
+HELDOUT_SEED 2512462669 complete (32 frozen trials)
+HELDOUT_SEED 728728791 complete (32 frozen trials)
+HELDOUT_SEED 3246035893 complete (32 frozen trials)
+HELDOUT_SEED 1579196267 complete (32 frozen trials)
+HELDOUT_SEED 2822601753 complete (32 frozen trials)
+FROZEN_HELDOUT COMPLETE: no training or policy replacement performed

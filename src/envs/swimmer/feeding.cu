@@ -20,11 +20,13 @@ __global__ void choose(State* states,const float* scores,float* obs,int n) {
     }
     motor_observe(s,obs+i*kObs);
 }
-__global__ void advance_kernel(State* states,const float* actions,swimmer::Outputs out,int n,bool autoreset,Context context) {
+__global__ void advance_kernel(State* states,const float* actions,swimmer::Outputs out,int n,bool autoreset,bool practice_events,Context context) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=n) return;auto& s=states[i];
-    const float reward=advance(s,actions+i*kAct,context.current);const bool timeout=s.steps>=kEpisodeSteps;
+    const bool scheduled=autoreset||practice_events;
+    const auto current=scheduled?practice_current(s,context):context.current;
+    const float reward=advance(s,actions+i*kAct,current);const bool timeout=s.steps>=kEpisodeSteps;
     if(out.reward) out.reward[i]=reward;if(out.done) out.done[i]=timeout?1.f:0.f;if(out.truncated) out.truncated[i]=timeout?1.f:0.f;
-    if(autoreset && !timeout) replenish(s,context);
+    if(scheduled && (!autoreset||!timeout)) replenish(s,context);
 }
 __global__ void finish_time_limits(State* states,const float* observations,float* final_obs,int n,Context context) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=n) return;auto& s=states[i];
@@ -50,8 +52,8 @@ void Batch::configure(const std::vector<float>& weights,const Context& context,c
     if(reset) {ticks_=0;initialize<<<(n_+63)/64,64,0,stream>>>(states_.get(),n_,seed_,context_);CUDA_CHECK_THROW(cudaGetLastError());}
     prepare(stream);
 }
-void Batch::step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset) {
-    advance_kernel<<<(n_+63)/64,64,0,stream>>>(states_.get(),actions,out,n_,autoreset,context_);CUDA_CHECK_THROW(cudaGetLastError());prepare(stream);
+void Batch::step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset,bool practice_events) {
+    advance_kernel<<<(n_+63)/64,64,0,stream>>>(states_.get(),actions,out,n_,autoreset,practice_events,context_);CUDA_CHECK_THROW(cudaGetLastError());prepare(stream);
     if(autoreset && ++ticks_>=kEpisodeSteps) {
         finish_time_limits<<<(n_+63)/64,64,0,stream>>>(states_.get(),observations_.get(),out.final_obs,n_,context_);CUDA_CHECK_THROW(cudaGetLastError());
         ticks_=0;prepare(stream);

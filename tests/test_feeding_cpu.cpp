@@ -22,7 +22,7 @@ int main(int argc,char** argv) {
         }
         worlds.states[0].steps=fd::kEpisodeSteps-1;
         fd::CpuBatch terminal=worlds;
-        terminal.step(action,nullptr,nullptr,nullptr,false);
+        terminal.step(action,nullptr,nullptr,nullptr,false,true);
         float done=0,final_obs[fd::kObs]{};
         worlds.step(action,nullptr,&done,final_obs);
         check(done==1 && worlds.states[0].steps==0,"Time-limit reset failed");

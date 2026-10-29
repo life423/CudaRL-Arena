@@ -1,0 +1,11 @@
+{
+  "protocol":"autonomous-heldout-v1",
+  "seconds":120,
+  "worlds":16,
+  "seeds":[1662667521,2106779219,1133234089,2512462669,728728791,3246035893,1579196267,2822601753],
+  "before":{"learner_update":4751,"validated_update":4688,"actor_fnv64":"bae2ef659467726e"},
+  "after":{"learner_update":9218,"validated_update":9216,"actor_fnv64":"53832fe8d5e30f66"},
+  "self_check":true,
+  "actor_weights_unchanged":true,
+  "source_reference_unchanged":true
+}

@@ -23,7 +23,7 @@ struct Evaluation {int foods=0,calm=0,feeding_worlds=0,calm_worlds=0;double prog
 Evaluation evaluate(const std::vector<float>& actor,const std::vector<float>& selector,const fd::Context& context,int count,int steps,uint32_t seed) {
     fd::Batch worlds(count,seed);rl::SwimmerStream stream;worlds.configure(selector,context,stream.value,true);
     nn::GpuMlp motor(rl::swimmer_specification(4,fd::kObs),count,7);motor.set_params(actor);
-    for(int tick=0;tick<steps;++tick) {motor.forward(worlds.obs(),count,stream.value);worlds.step(motor.output(),{},stream.value,false);}
+    for(int tick=0;tick<steps;++tick) {motor.forward(worlds.obs(),count,stream.value);worlds.step(motor.output(),{},stream.value,false,true);}
     std::vector<fd::State> states(static_cast<size_t>(count));CUDA_CHECK_THROW(cudaMemcpyAsync(states.data(),worlds.states(),states.size()*sizeof(fd::State),cudaMemcpyDeviceToHost,stream.value));CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));
     Evaluation result;
     for(const auto& s:states) {
@@ -88,7 +88,8 @@ class Session final:public FeedingSession {
                 if(paused_.load()) {std::this_thread::sleep_for(std::chrono::milliseconds(10));continue;}
                 const auto start=rl::Clock::now();fd::Context next;
                 {std::lock_guard<std::mutex> lock(mutex_);next=context_;}
-                if(next.version!=practice.version) {practice=next;trainer.env.configure(source_.actor,practice,trainer.stream.value,true);}
+                // Apply interaction context at the rollout boundary without restarting world schedules.
+                if(next.version!=practice.version) {practice=next;trainer.env.configure(source_.actor,practice,trainer.stream.value,false);}
                 const auto update=trainer.update();
                 const auto learned=trainer.actor_params();
                 for(float weight:learned) if(!std::isfinite(weight)) throw std::runtime_error("Non-finite learner weights; original controller preserved");

@@ -38,15 +38,60 @@ struct BodyState {
     float angle[4]{},velocity[dofs]{}; // world m/s, world rad/s, relative rad/s
     float work=0,travel=0;
 };
+// Geometry is expressed in the same model units as BodyState/Godot. The arch
+// is a solid torus about local Z, with its lower half buried in the basin.
+struct Habitat {
+    float scale=1;
+    bool arch=false;
+    V center{0,-2.25f,0};
+    float major=1.35f,minor=.5f,yaw=0;
+};
 struct Physics {
     float density=1000,viscosity=.001f,gravity=9.81f;
     bool boundaries=true,pond=false;
     V water_velocity{}; // imposed uniform fluid velocity in world m/s
+    Habitat habitat{};
 };
 // Shared analytic basin, also sampled by Godot for its visible terrain.
 CUDARL_HD inline float pond_floor(float x,float z) {
     const float r2=fminf(1.f,x*x/(4.6f*4.6f)+z*z/(3.5f*3.5f));
     return -4.f+4.5f*r2*r2*r2;
+}
+CUDARL_HD inline float habitat_floor(float x,float z,const Habitat& h) {
+    if(h.scale==1.f) return pond_floor(x,z);
+    const float rx=4.6f*h.scale,rz=3.5f*h.scale;
+    const float r2=fminf(1.f,x*x/(rx*rx)+z*z/(rz*rz));
+    return -4.f+4.5f*r2*r2*r2;
+}
+CUDARL_HD inline V habitat_gradient(float x,float z,const Habitat& h) {
+    const float rx=4.6f*h.scale,rz=3.5f*h.scale;
+    const float r2=x*x/(rx*rx)+z*z/(rz*rz);
+    return r2<1.f?V{27.f*x*r2*r2/(rx*rx),0,27.f*z*r2*r2/(rz*rz)}:V{};
+}
+CUDARL_HD inline V arch_to_local(V point,const Habitat& h) {
+    const V p=point-h.center;const float c=cosf(h.yaw),s=sinf(h.yaw);
+    return {c*p.x-s*p.z,p.y,s*p.x+c*p.z};
+}
+CUDARL_HD inline V arch_to_world(V point,const Habitat& h) {
+    const float c=cosf(h.yaw),s=sinf(h.yaw);
+    return h.center+V{c*point.x+s*point.z,point.y,-s*point.x+c*point.z};
+}
+// Exact point-to-torus signed distance in model units. Outward unit normal
+// uses finite deterministic fallbacks at the two nondifferentiable loci.
+CUDARL_HD inline float arch_distance(V point,const Habitat& h,V* normal=nullptr) {
+    if(!h.arch) {if(normal) *normal=V{};return 1e6f;}
+    const V p=arch_to_local(point,h);const float radial=sqrtf(p.x*p.x+p.y*p.y);
+    const float ring=radial-h.major,tube=sqrtf(ring*ring+p.z*p.z);
+    if(normal) {
+        V n{0,0,1};
+        if(tube>1e-8f) {
+            const float x=radial>1e-8f?p.x/radial:1.f,y=radial>1e-8f?p.y/radial:0.f;
+            n={x*ring/tube,y*ring/tube,p.z/tube};
+        }
+        const float c=cosf(h.yaw),s=sinf(h.yaw);
+        *normal={c*n.x+s*n.z,n.y,-s*n.x+c*n.z};
+    }
+    return tube-h.minor;
 }
 struct Link {
     Q q;
@@ -55,6 +100,15 @@ struct Link {
     float length=0,mass=0,volume=0,vertical_radius=0;
 };
 struct Shape {Link link[3];};
+constexpr int arch_axial_samples=9;
+// Each axial slice has an elliptical cross section; support is projected on
+// the contact normal in that link's frame, including the distal tail fin.
+CUDARL_HD inline float arch_slice_support(const Link& l,int body,float fraction,V normal) {
+    const float profile=body==0?sqrtf(fmaxf(0.f,1.f-fraction*fraction)):1.f;
+    const float ry=(body==0?.0064f:(body==2?.006f:.0015f))*profile;
+    const float rz=(body==0?.008f:.0015f)*profile;const V n=l.q.inverse(normal);
+    return sqrtf(n.y*n.y*ry*ry+n.z*n.z*rz*rz);
+}
 CUDARL_HD inline V inertial(const Link& l,V v) {
     const V u=l.q.inverse(v);return l.q.rotate({u.x*l.inertia.x,u.y*l.inertia.y,u.z*l.inertia.z});
 }
@@ -104,7 +158,20 @@ CUDARL_HD inline Shape shape(const BodyState& s) {
     }
     return out;
 }
-struct System {float M[dofs][dofs]{},R[dofs][dofs]{},C[dofs]{},force[dofs]{};};
+CUDARL_HD inline float arch_body_clearance(const BodyState& s,const Habitat& h) {
+    if(!h.arch) return 1e6f;
+    const auto geometry=shape(s);float gap=1e6f;
+    for(int b=0;b<3;++b) {
+        const auto& l=geometry.link[b];const V axis=l.q.rotate({1,0,0});
+        for(int sample=0;sample<arch_axial_samples;++sample) {
+            const float f=(sample-4)*.25f;const V point=l.center+axis*(f*l.length*.5f);V normal;
+            const float distance=arch_distance(point/scale,h,&normal);
+            gap=fminf(gap,distance-arch_slice_support(l,b,f,normal)/scale);
+        }
+    }
+    return gap;
+}
+struct System {float M[dofs][dofs]{},R[dofs][dofs]{},C[dofs]{},force[dofs]{};bool arch_touched=false;};
 CUDARL_HD inline void resist(System& a,const V* J,V axis,float coefficient) {
     float j[dofs];for(int i=0;i<dofs;++i) j[i]=dot(J[i],axis);
     for(int i=0;i<dofs;++i) for(int k=0;k<dofs;++k) a.R[i][k]+=coefficient*j[i]*j[k];
@@ -128,6 +195,34 @@ CUDARL_HD inline void contact(System& a,const V* J,V point,V velocity,float radi
     for(int wall=0;wall<6;++wall) if(gap[wall]<0) {
         load(a,J,normal[wall]*(-.8f*gap[wall]));
         if(dot(velocity,normal[wall])<0) resist(a,J,normal[wall],.006f);
+    }
+}
+// Opt-in basin branch. The original contact routine above remains unchanged
+// so existing environments/checkpoints retain their exact arithmetic path.
+CUDARL_HD inline void habitat_contact(System& a,const V* J,V point,V velocity,float radius,const Habitat& h) {
+    const float x=point.x/scale,z=point.z/scale;const V gradient=habitat_gradient(x,z,h);
+    const float magnitude=sqrtf(1+gradient.x*gradient.x+gradient.z*gradient.z);
+    const V n=V{-gradient.x,1,-gradient.z}/magnitude;
+    const float gap=(point.y-habitat_floor(x,z,h)*scale)/magnitude-radius;
+    if(gap<0) {load(a,J,n*(-.8f*gap));if(dot(velocity,n)<0) resist(a,J,n,.006f);}
+    const float surface=-point.y-radius;
+    if(surface<0) {load(a,J,{0,.8f*surface,0});if(velocity.y>0) resist(a,J,{0,-1,0},.006f);}
+}
+CUDARL_HD inline void arch_contact(System& a,const Link& l,int body,const float* velocity,const Habitat& h) {
+    if(!h.arch) return;
+    const V axis=l.q.rotate({1,0,0});
+    for(int sample=0;sample<arch_axial_samples;++sample) {
+        const float f=(sample-4)*.25f;const V r=axis*(f*l.length*.5f);V normal;
+        // Populate the normal before evaluating cross-section support. The
+        // operands of subtraction may be evaluated in either order on CPU/CUDA.
+        const float distance=arch_distance((l.center+r)/scale,h,&normal);
+        const float gap=distance*scale-arch_slice_support(l,body,f,normal);
+        if(gap<0) {
+            a.arch_touched=true;
+            V J[dofs];for(int i=0;i<dofs;++i) J[i]=l.linear[i]+cross(l.angular[i],r);
+            load(a,J,normal*(-.8f*gap));
+            if(dot(multiply(J,velocity),normal)<0) resist(a,J,normal,.006f);
+        }
     }
 }
 CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
@@ -165,8 +260,13 @@ CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
                 if(physics.water_velocity.x!=0 || physics.water_velocity.y!=0 || physics.water_velocity.z!=0)
                     load(a,J,axis[direction]*(coefficient*dot(physics.water_velocity,axis[direction])));
             }
-            if(physics.boundaries) contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.pond);
+            if(physics.boundaries) {
+                if(physics.pond && physics.habitat.scale!=1.f)
+                    habitat_contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.habitat);
+                else contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.pond);
+            }
         }
+        if(physics.boundaries && physics.habitat.arch) arch_contact(a,l,b,s.velocity,physics.habitat);
         for(int k=0;k<3;++k) resist(a,l.angular,axis[k],submersion*8.f*3.14159265f*physics.viscosity*powf(b==0?.008f:.002f,3.f));
     }
     return a;
@@ -175,8 +275,9 @@ CUDARL_HD inline float energy(const BodyState& s) {
     Physics p;p.density=0;p.viscosity=0;p.gravity=0;p.boundaries=false;const auto a=assemble(s,p);float e=0;
     for(int i=0;i<dofs;++i) for(int j=0;j<dofs;++j) e+=.5f*s.velocity[i]*a.M[i][j]*s.velocity[j];return e;
 }
-CUDARL_HD inline void substep(BodyState& s,const float* action,float h,Physics physics={}) {
+CUDARL_HD inline void substep(BodyState& s,const float* action,float h,Physics physics={},bool* arch_touched=nullptr) {
     auto a=assemble(s,physics);
+    if(arch_touched && a.arch_touched) *arch_touched=true;
     for(int j=0;j<4;++j) {
         const float displacement=s.angle[j]-clamp(s.angle[j],-limit,limit);
         a.force[6+j]+=torque*clamp(action[j],-1,1)-1e-4f*displacement;
@@ -204,8 +305,9 @@ CUDARL_HD inline void substep(BodyState& s,const float* action,float h,Physics p
     for(int i=0;i<dofs;++i) s.velocity[i]=v[i];
     s.travel+=h*norm({v[0],v[1],v[2]})/scale;
 }
-CUDARL_HD inline void advance_physics(BodyState& s,const float* action,Physics p={}) {
-    for(int i=0;i<10;++i) substep(s,action,.005f,p);
+CUDARL_HD inline void advance_physics(BodyState& s,const float* action,Physics p={},bool* arch_touched=nullptr) {
+    if(arch_touched) *arch_touched=false;
+    for(int i=0;i<10;++i) substep(s,action,.005f,p,arch_touched);
 }
 }
 #endif

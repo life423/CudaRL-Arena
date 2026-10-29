@@ -1,0 +1,49 @@
+{
+  "branch": "codex/autonomous-pond-practice",
+  "status": "local verified; not committed/pushed or published",
+  "native": {
+    "skipped": 0,
+    "gpuRequired": true,
+    "passed": 185
+  },
+  "portableSuites": 2,
+  "renderedCpuChecks": 32,
+  "renderedCudaChecks": 32,
+  "copiedHistoricalSave": {
+    "continuedUpdate": 4752,
+    "physicalStatePreserved": true,
+    "originalUnchanged": true,
+    "loadedUpdate": 4751
+  },
+  "protectedChecks": 11,
+  "practiceWorlds": {
+    "cpu": 16,
+    "cuda": 1024
+  },
+  "practice": {
+    "steadyPercent": 25,
+    "arrivalOffsetsSeconds": [
+      1,
+      5
+    ],
+    "fluctuatingPercent": 25,
+    "calmSinkingPercent": 25,
+    "maximumCurrentCmS": 0.75,
+    "randomPlacementFraction": 0.5,
+    "retentionPercent": 25,
+    "maximumPracticePellets": 16,
+    "arrivalWindowSeconds": 6
+  },
+  "visibleAutoFeedSeconds": [
+    2,
+    6
+  ],
+  "visibleCurrents": "manual, same existing controls",
+  "limitations": [
+    "Short candidate gates, not comprehensive generalization evidence",
+    "Current direction unchanged; no spatial flow fields",
+    "Aggregate promotion does not guarantee improvement in every current subgroup",
+    "Native save layout unchanged but practice distribution intentionally changed",
+    "UI auto-feed preference is per window; full learner and physical state still resume"
+  ]
+}

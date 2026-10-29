@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/variant/vector2.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
@@ -37,6 +38,8 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_gentle_current","enabled","drifting_food"),&DeepPondLab::set_gentle_current,DEFVAL(false));
     ClassDB::bind_method(D_METHOD("set_steady_current","speed_cm_s","drifting_food"),&DeepPondLab::set_steady_current,DEFVAL(false));
     ClassDB::bind_method(D_METHOD("start_feeding_learning","policy","checkpoint","environments","backend"),&DeepPondLab::start_feeding_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("start_arch_learning","source_checkpoint","checkpoint","environments","backend"),&DeepPondLab::start_arch_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("get_arch_geometry"),&DeepPondLab::get_arch_geometry);
     ClassDB::bind_method(D_METHOD("drop_food","position"),&DeepPondLab::drop_food);
     ClassDB::bind_method(D_METHOD("set_paused","paused"),&DeepPondLab::set_paused);
     ClassDB::bind_method(D_METHOD("set_updates_per_second","speed"),&DeepPondLab::set_updates_per_second);
@@ -151,6 +154,35 @@ bool DeepPondLab::start_feeding_learning(String policy,String checkpoint,int env
         }
         UtilityFunctions::print("POND_FEEDING ",cuda?"CUDA":"CPU"," live + PPO source selector=",source.update);return true;
     } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+bool DeepPondLab::start_arch_learning(String source_checkpoint,String checkpoint,int environments,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown rock-arch backend");
+        if(backend=="cpu") throw std::runtime_error("Rock-arch learning currently requires NVIDIA CUDA. The existing feeding pond supports CPU learning.");
+#if CUDARL_WITH_CUDA
+        const auto device=cudarl::probe_device();
+        if(!device.available) throw std::runtime_error("Rock-arch learning requires a healthy CUDA device: "+device.error);
+        const auto source_path=ProjectSettings::get_singleton()->globalize_path(source_checkpoint).utf8();
+        const auto save_path=ProjectSettings::get_singleton()->globalize_path(checkpoint).utf8();
+        feeding_=cudarl::demos::create_arch_session(source_path.get_data(),save_path.get_data(),environments);
+        controller_path_=checkpoint;controller_backend_="cuda";
+        const auto stats=feeding_->stats();controller_.motor_update=stats.parent_update;
+        UtilityFunctions::print("ARCH_LEARNING CUDA source_parent=",stats.parent_update," worlds=",environments);
+        return true;
+#else
+        (void)source_checkpoint;(void)checkpoint;(void)environments;
+        throw std::runtime_error("This build supports CPU feeding learning; the rock-arch learning prototype requires the CUDA developer build.");
+#endif
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+Dictionary DeepPondLab::get_arch_geometry() const {
+    cudarl::deep::Habitat habitat;habitat.scale=1.5f;habitat.arch=true;
+    Dictionary d;d["radii"]=Vector2(4.6f*habitat.scale,3.5f*habitat.scale);
+    d["center"]=Vector3(habitat.center.x,habitat.center.y,habitat.center.z);
+    d["major_radius"]=habitat.major;d["tube_radius"]=habitat.minor;d["yaw"]=habitat.yaw;
+    d["scale"]=habitat.scale;d["opening_radius"]=habitat.major-habitat.minor;
+    return d;
 }
 int DeepPondLab::drop_food(Vector3 position) {
     if(feeding_) {
@@ -284,8 +316,11 @@ Dictionary DeepPondLab::get_stats() {
         d["water_current_cm_s"]=100.*cudarl::deep::norm(current);d["water_current"]=Vector3(current.x,current.y,current.z);d["food_drifting"]=cudarl::deep::norm(current)>0;
         d["compute_backend"]=s.backend.c_str();d["compute_detail"]="Native local physics/inference and concurrent PPO";d["training_ready"]=true;d["paused"]=s.paused;
         d["resumed"]=s.resumed;d["loaded_update"]=s.loaded_update;d["saved_update"]=s.saved_update;d["save_error"]=s.save_error.c_str();d["transferred"]=false;
-        d["food_count"]=cudarl::feeding::count(feeding_->state());d["food_capacity"]=cudarl::feeding::capacity;d["policy_inputs"]=cudarl::feeding::kObs;
-        d["watching_best"]=true;d["policy_update"]=controller_.motor_update;d["selector_update"]=controller_.update;d["decision_steps"]=20;d["update"]=s.update;
+        d["food_count"]=cudarl::feeding::count(feeding_->state());d["food_capacity"]=cudarl::feeding::capacity;d["policy_inputs"]=s.input_count;
+        d["arch_mode"]=s.arch_mode;d["arch_contacts"]=s.arch_contacts;d["arch_passages"]=s.arch_passages;d["arch_clean_passages"]=s.arch_clean_passages;d["parent_update"]=s.parent_update;
+        d["watching_best"]=true;d["policy_update"]=s.arch_mode?s.parent_update:controller_.motor_update;
+        d["selector_update"]=s.arch_mode?s.parent_selector_update:controller_.update;
+        d["decision_steps"]=20;d["update"]=s.update;
         d["env_steps"]=static_cast<int64_t>(s.update)*s.worlds*64;d["update_ms"]=s.update_ms;d["training_seconds"]=0.;d["background_swimmers"]=s.worlds;
         d["current_food_per_minute"]=s.candidate_score;d["best_food_per_minute"]=s.adopted_score;d["best_update"]=s.adopted_update;d["evaluation_count"]=s.evaluations;d["checkpoint_path"]=controller_path_;
         d["learning_ready"]=s.ready;d["learning_active"]=s.training && !s.paused;d["learning_error"]=s.error.c_str();d["adopted_update"]=s.applied_update;d["approved_update"]=s.adopted_update;d["learner_weights_changed"]=s.learner_changed;

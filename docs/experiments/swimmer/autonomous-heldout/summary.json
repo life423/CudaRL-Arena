@@ -1,0 +1,1040 @@
+{
+  "protocol": "autonomous-heldout-v1",
+  "provenance": {
+    "protocol": "autonomous-heldout-v1",
+    "seconds": 120,
+    "worlds": 16,
+    "seeds": [
+      1662667521,
+      2106779219,
+      1133234089,
+      2512462669,
+      728728791,
+      3246035893,
+      1579196267,
+      2822601753
+    ],
+    "before": {
+      "learner_update": 4751,
+      "validated_update": 4688,
+      "actor_fnv64": "bae2ef659467726e"
+    },
+    "after": {
+      "learner_update": 9218,
+      "validated_update": 9216,
+      "actor_fnv64": "53832fe8d5e30f66"
+    },
+    "self_check": true,
+    "actor_weights_unchanged": true,
+    "source_reference_unchanged": true
+  },
+  "uncertainty": {
+    "draws": 10000,
+    "seed": 251712769,
+    "clusters": 8,
+    "resampling_unit": "seed; same sampled seed IDs across all groups and both policies"
+  },
+  "groups": {
+    "retention": {
+      "pairs": 32,
+      "before": {
+        "cases": 32,
+        "foods": 1167,
+        "food_per_minute": 18.234375,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 2.3140625,
+            "median": 2.325,
+            "p95": 2.9225,
+            "max": 3.1
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 5.7203125,
+          "median": 5.574999999999999,
+          "p95": 7.545,
+          "max": 9.55
+        },
+        "max_available_gap_seconds": {
+          "mean": 5.7203125,
+          "median": 5.574999999999999,
+          "p95": 7.545,
+          "max": 9.55
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 0,
+          "median": 0,
+          "p95": 0,
+          "max": 0
+        },
+        "final_gap_seconds": {
+          "mean": 1.8390624999999994,
+          "median": 1.7,
+          "p95": 3.425,
+          "max": 4.95
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 1263,
+          "mean_including_initial": 39.46875
+        },
+        "final_food_count": {
+          "mean": 3,
+          "median": 3,
+          "p95": 3,
+          "max": 3
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "after": {
+        "cases": 32,
+        "foods": 1186,
+        "food_per_minute": 18.53125,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 2.3578125,
+            "median": 2.375,
+            "p95": 2.9225,
+            "max": 4.05
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 5.628125000000001,
+          "median": 5.275,
+          "p95": 7.7175,
+          "max": 9.8
+        },
+        "max_available_gap_seconds": {
+          "mean": 5.628125000000001,
+          "median": 5.275,
+          "p95": 7.7175,
+          "max": 9.8
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 0,
+          "median": 0,
+          "p95": 0,
+          "max": 0
+        },
+        "final_gap_seconds": {
+          "mean": 1.5078124999999998,
+          "median": 1.375,
+          "p95": 3.0225,
+          "max": 3.9
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 1282,
+          "mean_including_initial": 40.0625
+        },
+        "final_food_count": {
+          "mean": 3,
+          "median": 3,
+          "p95": 3,
+          "max": 3
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "paired": {
+        "delta_food_per_minute": 0.296875,
+        "change_percent": 1.6281062553556127,
+        "ci95": [
+          -0.15625,
+          0.734375
+        ],
+        "interval_method": "paired cluster bootstrap of seed-group mean deltas; percentile 95%",
+        "observed_direction": "increase",
+        "evidence": "inconclusive",
+        "wins": 16,
+        "ties": 4,
+        "losses": 12,
+        "seed_mean_deltas": [
+          {
+            "seed": 1662667521,
+            "delta": 0.375
+          },
+          {
+            "seed": 2106779219,
+            "delta": 0.625
+          },
+          {
+            "seed": 1133234089,
+            "delta": -0.125
+          },
+          {
+            "seed": 2512462669,
+            "delta": -0.75
+          },
+          {
+            "seed": 728728791,
+            "delta": 0.375
+          },
+          {
+            "seed": 3246035893,
+            "delta": 1.25
+          },
+          {
+            "seed": 1579196267,
+            "delta": -0.375
+          },
+          {
+            "seed": 2822601753,
+            "delta": 1
+          }
+        ]
+      },
+      "provisional_interpretation": {
+        "five_percent_margin_food_per_minute": 0.91171875,
+        "material_mean_regression": false,
+        "lower_ci_above_negative_five_percent_margin": true,
+        "retention_evidence": "bounded retention supported",
+        "after_reliability_gap": false
+      }
+    },
+    "calm": {
+      "pairs": 32,
+      "before": {
+        "cases": 32,
+        "foods": 930,
+        "food_per_minute": 14.53125,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 2.66875,
+            "median": 2.45,
+            "p95": 4.572499999999999,
+            "max": 6.05
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 9.18125,
+          "median": 9.225,
+          "p95": 10.89,
+          "max": 11.4
+        },
+        "max_available_gap_seconds": {
+          "mean": 6.532812499999999,
+          "median": 6.15,
+          "p95": 8.22,
+          "max": 11
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 22.2390625,
+          "median": 21.174999999999997,
+          "p95": 35.975,
+          "max": 42.65
+        },
+        "final_gap_seconds": {
+          "mean": 3.0984374999999997,
+          "median": 2.6,
+          "p95": 8.149999999999999,
+          "max": 9.6
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 961,
+          "mean_including_initial": 30.03125
+        },
+        "final_food_count": {
+          "mean": 0.96875,
+          "median": 1,
+          "p95": 2,
+          "max": 3
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "after": {
+        "cases": 32,
+        "foods": 930,
+        "food_per_minute": 14.53125,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 2.6046875000000003,
+            "median": 2.425,
+            "p95": 3.6125,
+            "max": 5.75
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 9.635937499999999,
+          "median": 9.7,
+          "p95": 12.0825,
+          "max": 12.75
+        },
+        "max_available_gap_seconds": {
+          "mean": 7.320312500000002,
+          "median": 6.625,
+          "p95": 11.59,
+          "max": 12.55
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 21.9296875,
+          "median": 19.775,
+          "p95": 38.74,
+          "max": 44.95
+        },
+        "final_gap_seconds": {
+          "mean": 2.8984374999999996,
+          "median": 1.95,
+          "p95": 7.532499999999999,
+          "max": 9.15
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 961,
+          "mean_including_initial": 30.03125
+        },
+        "final_food_count": {
+          "mean": 0.96875,
+          "median": 1,
+          "p95": 2,
+          "max": 3
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "paired": {
+        "delta_food_per_minute": 0,
+        "change_percent": 0,
+        "ci95": [
+          -0.078125,
+          0.0625
+        ],
+        "interval_method": "paired cluster bootstrap of seed-group mean deltas; percentile 95%",
+        "observed_direction": "tie",
+        "evidence": "inconclusive",
+        "wins": 4,
+        "ties": 25,
+        "losses": 3,
+        "seed_mean_deltas": [
+          {
+            "seed": 1662667521,
+            "delta": 0
+          },
+          {
+            "seed": 2106779219,
+            "delta": 0
+          },
+          {
+            "seed": 1133234089,
+            "delta": 0.125
+          },
+          {
+            "seed": 2512462669,
+            "delta": 0
+          },
+          {
+            "seed": 728728791,
+            "delta": 0
+          },
+          {
+            "seed": 3246035893,
+            "delta": 0
+          },
+          {
+            "seed": 1579196267,
+            "delta": 0.125
+          },
+          {
+            "seed": 2822601753,
+            "delta": -0.25
+          }
+        ]
+      },
+      "provisional_interpretation": {
+        "five_percent_margin_food_per_minute": 0.7265625,
+        "material_mean_regression": false,
+        "lower_ci_above_negative_five_percent_margin": true,
+        "retention_evidence": "bounded retention supported",
+        "after_reliability_gap": false
+      }
+    },
+    "steady": {
+      "pairs": 32,
+      "before": {
+        "cases": 32,
+        "foods": 906,
+        "food_per_minute": 14.15625,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 3.128125,
+            "median": 2.775,
+            "p95": 6.732499999999999,
+            "max": 8.85
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 9.631249999999996,
+          "median": 9.425,
+          "p95": 11.489999999999998,
+          "max": 18.4
+        },
+        "max_available_gap_seconds": {
+          "mean": 7.4765625,
+          "median": 6.65,
+          "p95": 10.939999999999998,
+          "max": 18.4
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 23.218749999999996,
+          "median": 23.549999999999997,
+          "p95": 38.35,
+          "max": 38.55
+        },
+        "final_gap_seconds": {
+          "mean": 3.1640625,
+          "median": 2.35,
+          "p95": 7.404999999999999,
+          "max": 14.55
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 942,
+          "mean_including_initial": 29.4375
+        },
+        "final_food_count": {
+          "mean": 1.125,
+          "median": 1,
+          "p95": 2.4499999999999993,
+          "max": 7
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "after": {
+        "cases": 32,
+        "foods": 895,
+        "food_per_minute": 13.984375,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 3.0828125000000006,
+            "median": 2.825,
+            "p95": 5.722499999999999,
+            "max": 11.25
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 9.907812500000002,
+          "median": 9.575,
+          "p95": 13.077499999999999,
+          "max": 14.45
+        },
+        "max_available_gap_seconds": {
+          "mean": 7.864062499999998,
+          "median": 6.525,
+          "p95": 13.077499999999999,
+          "max": 14.45
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 21.6,
+          "median": 24.85,
+          "p95": 35.379999999999995,
+          "max": 38.6
+        },
+        "final_gap_seconds": {
+          "mean": 3.284375,
+          "median": 2.8499999999999996,
+          "p95": 7.574999999999999,
+          "max": 12.5
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 942,
+          "mean_including_initial": 29.4375
+        },
+        "final_food_count": {
+          "mean": 1.46875,
+          "median": 1,
+          "p95": 4.2499999999999964,
+          "max": 10
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "paired": {
+        "delta_food_per_minute": -0.171875,
+        "change_percent": -1.2141280353200883,
+        "ci95": [
+          -0.515625,
+          0.078125
+        ],
+        "interval_method": "paired cluster bootstrap of seed-group mean deltas; percentile 95%",
+        "observed_direction": "decrease",
+        "evidence": "inconclusive",
+        "wins": 4,
+        "ties": 22,
+        "losses": 6,
+        "seed_mean_deltas": [
+          {
+            "seed": 1662667521,
+            "delta": -0.25
+          },
+          {
+            "seed": 2106779219,
+            "delta": -0.125
+          },
+          {
+            "seed": 1133234089,
+            "delta": -0.125
+          },
+          {
+            "seed": 2512462669,
+            "delta": 0.25
+          },
+          {
+            "seed": 728728791,
+            "delta": -0.125
+          },
+          {
+            "seed": 3246035893,
+            "delta": 0
+          },
+          {
+            "seed": 1579196267,
+            "delta": 0.25
+          },
+          {
+            "seed": 2822601753,
+            "delta": -1.25
+          }
+        ]
+      },
+      "provisional_interpretation": {
+        "five_percent_margin_food_per_minute": 0.7078125000000001,
+        "material_mean_regression": false,
+        "lower_ci_above_negative_five_percent_margin": true,
+        "retention_evidence": "bounded retention supported",
+        "after_reliability_gap": false
+      }
+    },
+    "fluctuating": {
+      "pairs": 32,
+      "before": {
+        "cases": 32,
+        "foods": 921,
+        "food_per_minute": 14.390625,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 3.04375,
+            "median": 2.8,
+            "p95": 4.6075,
+            "max": 5.6
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 9.445312499999998,
+          "median": 9.399999999999999,
+          "p95": 11.5225,
+          "max": 11.9
+        },
+        "max_available_gap_seconds": {
+          "mean": 7.4343749999999975,
+          "median": 6.925,
+          "p95": 11.334999999999999,
+          "max": 11.55
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 20.651562499999997,
+          "median": 20.025,
+          "p95": 37.5375,
+          "max": 46.25
+        },
+        "final_gap_seconds": {
+          "mean": 2.9890624999999993,
+          "median": 2.675,
+          "p95": 5.965,
+          "max": 7.75
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 954,
+          "mean_including_initial": 29.8125
+        },
+        "final_food_count": {
+          "mean": 1.03125,
+          "median": 1,
+          "p95": 2,
+          "max": 3
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "after": {
+        "cases": 32,
+        "foods": 919,
+        "food_per_minute": 14.359375,
+        "first_food": {
+          "censored_cases": 0,
+          "observed_cases": 32,
+          "seconds_among_observed": {
+            "mean": 3.1312500000000005,
+            "median": 2.875,
+            "p95": 4.68,
+            "max": 5.15
+          }
+        },
+        "max_gap_seconds": {
+          "mean": 9.487500000000002,
+          "median": 9.325,
+          "p95": 12.772499999999999,
+          "max": 14
+        },
+        "max_available_gap_seconds": {
+          "mean": 7.734375000000001,
+          "median": 7.175,
+          "p95": 10.985,
+          "max": 14
+        },
+        "immobility": {
+          "confirmed_cases": 0,
+          "confirmed_events": 0,
+          "max_seconds": 0,
+          "terminal_immobile_cases": 0
+        },
+        "invalid": {
+          "cases": 0,
+          "body_ticks": 0,
+          "food_ticks": 0
+        },
+        "empty_seconds": {
+          "mean": 21.165625,
+          "median": 21.925,
+          "p95": 30.399999999999995,
+          "max": 48.4
+        },
+        "final_gap_seconds": {
+          "mean": 3.35625,
+          "median": 3.4000000000000004,
+          "p95": 6.015,
+          "max": 7.05
+        },
+        "accepted_food_creations": {
+          "total_including_initial": 954,
+          "mean_including_initial": 29.8125
+        },
+        "final_food_count": {
+          "mean": 1.09375,
+          "median": 1,
+          "p95": 3,
+          "max": 3
+        },
+        "capacity": {
+          "cases_at_cap": 0,
+          "seconds": {
+            "mean": 0,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        }
+      },
+      "paired": {
+        "delta_food_per_minute": -0.03125,
+        "change_percent": -0.21715526601520088,
+        "ci95": [
+          -0.125,
+          0.0625
+        ],
+        "interval_method": "paired cluster bootstrap of seed-group mean deltas; percentile 95%",
+        "observed_direction": "decrease",
+        "evidence": "inconclusive",
+        "wins": 2,
+        "ties": 27,
+        "losses": 3,
+        "seed_mean_deltas": [
+          {
+            "seed": 1662667521,
+            "delta": 0
+          },
+          {
+            "seed": 2106779219,
+            "delta": 0.125
+          },
+          {
+            "seed": 1133234089,
+            "delta": -0.25
+          },
+          {
+            "seed": 2512462669,
+            "delta": 0.125
+          },
+          {
+            "seed": 728728791,
+            "delta": 0
+          },
+          {
+            "seed": 3246035893,
+            "delta": 0
+          },
+          {
+            "seed": 1579196267,
+            "delta": 0
+          },
+          {
+            "seed": 2822601753,
+            "delta": -0.25
+          }
+        ]
+      },
+      "provisional_interpretation": {
+        "five_percent_margin_food_per_minute": 0.7195312500000001,
+        "material_mean_regression": false,
+        "lower_ci_above_negative_five_percent_margin": true,
+        "retention_evidence": "bounded retention supported",
+        "after_reliability_gap": false
+      }
+    }
+  },
+  "overall": {
+    "pairs": 128,
+    "before": {
+      "cases": 128,
+      "foods": 3924,
+      "food_per_minute": 15.328125,
+      "first_food": {
+        "censored_cases": 0,
+        "observed_cases": 128,
+        "seconds_among_observed": {
+          "mean": 2.788671875,
+          "median": 2.575,
+          "p95": 5.027499999999997,
+          "max": 8.85
+        }
+      },
+      "max_gap_seconds": {
+        "mean": 8.494531250000001,
+        "median": 8.8,
+        "p95": 11.165,
+        "max": 18.4
+      },
+      "max_available_gap_seconds": {
+        "mean": 6.791015625000002,
+        "median": 6.275,
+        "p95": 10.859999999999996,
+        "max": 18.4
+      },
+      "immobility": {
+        "confirmed_cases": 0,
+        "confirmed_events": 0,
+        "max_seconds": 0,
+        "terminal_immobile_cases": 0
+      },
+      "invalid": {
+        "cases": 0,
+        "body_ticks": 0,
+        "food_ticks": 0
+      },
+      "empty_seconds": {
+        "mean": 16.527343750000007,
+        "median": 18.049999999999997,
+        "p95": 36.574999999999996,
+        "max": 46.25
+      },
+      "final_gap_seconds": {
+        "mean": 2.7726562500000003,
+        "median": 2.4,
+        "p95": 6.912499999999998,
+        "max": 14.55
+      },
+      "accepted_food_creations": {
+        "total_including_initial": 4120,
+        "mean_including_initial": 32.1875
+      },
+      "final_food_count": {
+        "mean": 1.53125,
+        "median": 1,
+        "p95": 3,
+        "max": 7
+      },
+      "capacity": {
+        "cases_at_cap": 0,
+        "seconds": {
+          "mean": 0,
+          "median": 0,
+          "p95": 0,
+          "max": 0
+        }
+      }
+    },
+    "after": {
+      "cases": 128,
+      "foods": 3930,
+      "food_per_minute": 15.3515625,
+      "first_food": {
+        "censored_cases": 0,
+        "observed_cases": 128,
+        "seconds_among_observed": {
+          "mean": 2.7941406249999994,
+          "median": 2.6,
+          "p95": 4.464999999999999,
+          "max": 11.25
+        }
+      },
+      "max_gap_seconds": {
+        "mean": 8.664843749999998,
+        "median": 8.825,
+        "p95": 12.5325,
+        "max": 14.45
+      },
+      "max_available_gap_seconds": {
+        "mean": 7.136718749999997,
+        "median": 6.324999999999999,
+        "p95": 12.187499999999993,
+        "max": 14.45
+      },
+      "immobility": {
+        "confirmed_cases": 0,
+        "confirmed_events": 0,
+        "max_seconds": 0,
+        "terminal_immobile_cases": 0
+      },
+      "invalid": {
+        "cases": 0,
+        "body_ticks": 0,
+        "food_ticks": 0
+      },
+      "empty_seconds": {
+        "mean": 16.173828125000004,
+        "median": 18.05,
+        "p95": 34.43,
+        "max": 48.4
+      },
+      "final_gap_seconds": {
+        "mean": 2.761718750000001,
+        "median": 2.25,
+        "p95": 6.594999999999998,
+        "max": 12.5
+      },
+      "accepted_food_creations": {
+        "total_including_initial": 4139,
+        "mean_including_initial": 32.3359375
+      },
+      "final_food_count": {
+        "mean": 1.6328125,
+        "median": 1,
+        "p95": 3,
+        "max": 10
+      },
+      "capacity": {
+        "cases_at_cap": 0,
+        "seconds": {
+          "mean": 0,
+          "median": 0,
+          "p95": 0,
+          "max": 0
+        }
+      }
+    },
+    "paired": {
+      "delta_food_per_minute": 0.0234375,
+      "change_percent": 0.1529051987767584,
+      "ci95": [
+        -0.07421875,
+        0.12890625
+      ],
+      "interval_method": "paired cluster bootstrap of seed-group mean deltas; percentile 95%",
+      "observed_direction": "increase",
+      "evidence": "inconclusive",
+      "wins": 26,
+      "ties": 78,
+      "losses": 24,
+      "seed_mean_deltas": [
+        {
+          "seed": 1662667521,
+          "delta": 0.03125
+        },
+        {
+          "seed": 2106779219,
+          "delta": 0.15625
+        },
+        {
+          "seed": 1133234089,
+          "delta": -0.09375
+        },
+        {
+          "seed": 2512462669,
+          "delta": -0.09375
+        },
+        {
+          "seed": 728728791,
+          "delta": 0.0625
+        },
+        {
+          "seed": 3246035893,
+          "delta": 0.3125
+        },
+        {
+          "seed": 1579196267,
+          "delta": 0
+        },
+        {
+          "seed": 2822601753,
+          "delta": -0.1875
+        }
+      ]
+    },
+    "provisional_interpretation": {
+      "five_percent_margin_food_per_minute": 0.7664062500000001,
+      "material_mean_regression": false,
+      "lower_ci_above_negative_five_percent_margin": true,
+      "retention_evidence": "bounded retention supported",
+      "after_reliability_gap": false
+    }
+  },
+  "provisional_decision": {
+    "thresholds_are_provisional": true,
+    "any_after_reliability_gap": false,
+    "material_subgroup_mean_regressions": [],
+    "bounded_overall_food_rate_improvement_supported": false,
+    "next_step_signal": "Overall progress inconclusive; do not claim a general food-rate improvement",
+    "rules": [
+      "Any after-policy confirmed food-present five-second immobility or invalid case is a reliability gap to address before anatomy.",
+      "A subgroup mean food-rate loss exceeding 5% is a material regression.",
+      "A subgroup lower confidence bound above minus 5% of its before mean provides stronger bounded retention support.",
+      "An overall food-rate improvement claim requires a positive overall lower confidence bound and no material subgroup mean loss."
+    ]
+  },
+  "limitations": [
+    "This is progress between saved validated actors, not causal evidence that the new curriculum beats equally long old-curriculum training.",
+    "Aggregate improvement does not establish improvement in every current subgroup. Confidence intervals are descriptive; no multiple-comparison adjustment is applied.",
+    "Eight seed clusters give limited uncertainty resolution; an interval containing zero is inconclusive, not proof of equivalence.",
+    "First-food latency summaries exclude censored cases; compare censoring counts alongside latency.",
+    "Timed food can create legitimate empty-pond waiting. Available-food gaps/immobility are reported separately from raw food gaps.",
+    "Matched nominal arrivals can be suppressed differently at the occupancy cap. Accepted food creations include initial pellets."
+  ]
+}

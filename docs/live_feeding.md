@@ -1,5 +1,13 @@
 # Feed the tadpole while it learns — October 28, 2026
 
+## Autonomous practice — local development follow-up
+
+Background practice now supplies timed food arrivals without player input and mixes calm sinking-food worlds, seeded steady speeds and smoothly fluctuating speeds up to 0.75 cm/s, alongside the original calm/static-food retention worlds. Food locations mix broad pond coverage with recent player feeding spots; those spots no longer replace general random coverage. Ordinary interaction updates preserve practice-world clocks. See the [protocol and verification](experiments/swimmer/autonomous-practice/PROTOCOL.md). Earlier fixed-stock/steady-context descriptions below are historical.
+
+In the local pond, turn on **Auto feed** to watch unattended. It drops one pellet every 2–6 seconds of simulation time, through the same native particle/physics API as manual feeding. Manual drops still work, and full capacity waits for space without replacing food. The option starts off on ordinary menu launch; `--auto-feed` enables it for an unattended demonstration. Auto feed is a per-window viewing control, not a saved training setting. Background practice remains automatic regardless of this toggle. Visible current stays under the existing controls; its water effects show that actual current, not an unseen practice world's speed.
+
+The native full-save layout and network dimensions are unchanged. Existing feeding actors, optimizer moments and worlds can resume; the changed practice distribution is intentional new training, not a claim that the old and new tasks have identical outcomes. Original policy files and earlier saves remain protected. The local feature is not yet part of the published Windows installer/site.
+
 Windows release follow-up: the newest feeding learner now has native **CPU PPO fallback**, using 16 background swimmers when CUDA is unavailable. CUDA keeps 1,024. Both use the same task, force/particle equations, PPO/GAE math and candidate gate; smaller CPU batches change throughput and learning variance. CPU and CUDA full saves are separate. Player-facing Experiments and Help/training were removed; reference modes remain developer routes. [Release, hosting and verification](windows_release.md). Earlier CUDA-only/UI descriptions below document the initial implementation.
 
 Choose **Open pond** in the NVIDIA developer build. Click or tap open water to drop a pellet. Food is born just below the surface, sinks, drifts under water drag, and rests or slides at the bed. The tadpole's inherited goal selector chooses its own target and its swimming network produces the four tail-joint commands. No cursor-following, scripted interception or remote food collection is added.

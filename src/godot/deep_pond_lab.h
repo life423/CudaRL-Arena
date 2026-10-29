@@ -28,6 +28,8 @@ public:
     bool set_gentle_current(bool enabled,bool drifting_food=false);
     bool set_steady_current(double speed_cm_s,bool drifting_food=false);
     bool start_feeding_learning(String policy,String checkpoint,int environments=1024,String backend="auto");
+    bool start_arch_learning(String source_checkpoint,String checkpoint,int environments=1024,String backend="auto");
+    Dictionary get_arch_geometry() const;
     int drop_food(Vector3 position);
     void set_paused(bool paused);
     void set_updates_per_second(double speed);

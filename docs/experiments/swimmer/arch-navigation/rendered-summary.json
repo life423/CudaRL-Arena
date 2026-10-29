@@ -1,0 +1,12 @@
+{
+	"arch_contacts": 2,
+	"arch_passages": 1,
+	"checkpoint": "C:/Users/aiand/Documents/programming/CudaRL-Arena/build/arch-navigation/rendered/arch-training-24764-766992.bin",
+	"checks": 62,
+	"failures": 0,
+	"max_live_displacement": 5.52586221694946,
+	"population": 1024,
+	"resumed_update": 36,
+	"source_sha256": "25a147d693edd673abcb5dff417849dbeac81d71be5e2735caf91b069cc5388e",
+	"update": 37
+}
