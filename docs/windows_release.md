@@ -4,7 +4,7 @@ The user approved Windows first, with the **newest sinking-food experience and g
 
 ## Player experience
 
-Download `TadpolePond-Windows-x64.zip`, extract the complete archive, and open `TadpolePond.exe`. Godot's release engine and native runtime are included; players do not install the editor, Python, PyTorch, a CUDA toolkit or a compiler. Keep the PCK, native extension, data and notices together. This early preview is unsigned and Windows may display a publisher/reputation warning.
+Download and open **`TadpolePondSetup.exe`**. It installs into the current user's LocalAppData Programs folder without administrator access, creates **Tadpole Pond** desktop and Start Menu shortcuts, and opens the game automatically. Players do not extract files or read a README. The engine, native runtime, policies and notices are installed together behind the shortcut. Windows Settings can uninstall it; saved training remains in the separate app-data location. This preview is unsigned and Windows may display a publisher/reputation warning.
 
 The menu has one **Open pond** action. Experiments and Help/training were removed from player navigation at the user's request; native developer routes and CartPole/Racing remain. The pond still exposes meaningful feeding, current, camera, pause, save and progressively disclosed AI controls.
 
@@ -29,21 +29,25 @@ cmake -S . -B build/windows-distribution -G "Visual Studio 17 2022" -A x64 `
 cmake --build build/windows-distribution --config Release --target cudarl cudarl_tests
 ./tools/package_windows_release.ps1 -GodotPath <Godot.exe> `
   -TemplatePath <windows_release_x86_64.exe> -NativeDirectory build/windows-distribution/native
+./tools/package_windows_installer.ps1 -MakensisPath <NSIS-3.13/makensis.exe>
+./tools/verify_windows_installer.ps1
 ```
 
-Release packaging requires a clean commit. `-AllowDirty` is only for local verification. Each package uses a fresh staging/output directory, excluding stale QA outputs and user saves. Immutable policies remain external native-readable files beside the executable because a C++ file reader cannot open PCK resource paths. The ZIP includes redistribution notices, a file-hash manifest with source commit/dirty state, and a separate `SHA256SUMS.txt`. Publish only the clean, checked commit's ZIP.
+Release packaging requires a clean commit. `-AllowDirty` is only for local verification. Each package uses a fresh staging/output directory, excluding stale QA outputs and user saves. Immutable policies remain external native-readable files beside the executable because a C++ file reader cannot open PCK resource paths. The NSIS 3.13 installer verifies that payload's file hashes and rejects extra/missing files. Download the official compiler from `https://prdownloads.sourceforge.net/nsis/nsis-3.13.zip?download`; its redistribution notices are included. The optional ZIP is a developer archive, never the primary player download. Publish only the clean, checked commit's installer and `SHA256SUMS.txt`.
+
+The installer has one progress screen, no configuration wizard, and no account requirement. Silent installation (`/S`) skips automatic launch. `/TESTINSTALL /S /D=<isolated-folder>` additionally suppresses shortcuts and registration for isolated verification. Normal per-user installation is tested by `verify_windows_installer.ps1` only when there are no existing Tadpole Pond shortcuts/registration to overwrite. It checks installed hashes, actual shortcut targets, uninstall registration, genuine installed CPU PPO/resume, and uninstall preserving unrelated files. Installation/uninstallation refuse to replace/remove an open executable rather than terminating its learner. Neither uninstaller nor packaging deletes user training saves.
 
 ## Hosting and updates
 
 - Azure resource group: `rg-tadpole-pond`, Central US.
 - Static Web App: `tadpole-pond`, **Free** SKU; default hostname `gray-pond-0d7501010.2.azurestaticapps.net`.
 - Site source: `website/dist`, buildless HTML/CSS/JS and an actual rendered pond capture.
-- Download assets: public GitHub Releases in `life423/CudaRL-Arena`; initial version `v0.1.0-preview.1`.
+- Download assets: public GitHub Releases in `life423/CudaRL-Arena`; installer version `v0.1.0-preview.2`.
 - No VM, GPU, database, Functions backend, user account system or custom paid domain is created. Free hosting quotas apply; downloads are served by GitHub.
 
 Deploy the static folder locally with Azure's Static Web Apps CLI using an Azure deployment credential only in process environment/memory. Do not print or persist it. The automatic approval review rejected transferring that credential into GitHub Secrets; no such secret or automated deploy workflow was installed. Use the authorized direct-to-Azure path. Check Azure resource SKU and public HTTPS responses after deployment.
 
-GitHub Actions must pass for each exact feature/main commit. Public downloads also require inspecting the uploaded asset/checksum and cold-launching an extracted copy. Hosted no-GPU CI is distinct from the local GPU-required suite.
+GitHub Actions must pass for each exact feature/main commit. Public downloads also require verifying the uploaded installer/checksum and launching an installed copy. Hosted no-GPU CI is distinct from the local GPU-required suite.
 
 ## Verification and limits
 
@@ -57,7 +61,7 @@ Internal UI review heuristics: hierarchy, usability, consistency and feedback 9;
 
 Final local follow-up: developer-demo checks **104**, preserved-reference navigation **81**, both with empty final stderr; portable CTest **2/2**. All eleven protected inputs rehashed unchanged. Evidence is under `docs/experiments/swimmer/windows-release/`. Source-format backups are retained only in ignored build output. Exact-commit CI and public endpoint verification follow publication.
 
-Custom-domain follow-up: the user chose **https://cudarl.drewclark.io**. Its CNAME points to the Azure default hostname; public DNS and valid HTTPS were verified, and Azure reports Ready. This is the canonical website address, using the existing domain and managed free TLS. The site remains unpublished until release integration checks/asset publication complete.
+Custom-domain follow-up: the user chose **https://cudarl.drewclark.io**. Its CNAME points to the Azure default hostname; public DNS and valid HTTPS were verified, and Azure reports Ready. This is the canonical website address, using the existing domain and managed free TLS. The static site is deployed. Release updates require new asset publication and public link/hash verification before reporting completion.
 
 The latest site revision removes empty left columns from steps/FAQ, integrates the learning explanation into the shared full-width section, gives the source link a GitHub icon and matched button dimensions, and adds a keyboard-accessible four-stage architecture/CPU-versus-CUDA walkthrough. It is explanatory, not a browser policy or live training. Test with `node tests/web/download_site_smoke.cjs` after installing Playwright/Chromium and serving `website/dist`; `CUDARL_SITE_URL` selects a hosted target and `CUDARL_CHROME` optionally selects an installed Chrome binary.
 

@@ -7,6 +7,8 @@ const {chromium}=require('playwright');const fs=require('fs');
  for(const [width,height] of [[1440,1000],[1280,800],[768,1024],[390,844],[320,760]]){
   await page.setViewportSize({width,height});await page.goto(process.env.CUDARL_SITE_URL || 'http://127.0.0.1:4173',{waitUntil:'networkidle'});
   check(await page.locator('link[rel=canonical]').getAttribute('href')==='https://cudarl.drewclark.io/','Canonical domain wrong');
+  check((await page.locator('.download-link').evaluateAll(links=>links.every(link=>link.href.endsWith('/v0.1.0-preview.2/TadpolePondSetup.exe')))),'Player download is not the setup executable');
+  check(!(await page.locator('.getting-started').textContent()).match(/extract|ZIP/i),'Player flow still requires archive extraction');
   check(await page.locator('#learning-panel').isHidden(),'Inspector should start collapsed');
   const button=page.locator('#learning-toggle');const first=await button.boundingBox(),second=await page.locator('.source-button').boundingBox();
   check(Math.abs(first.width-second.width)<0.5 && Math.abs(first.height-second.height)<0.5,'Learning/source buttons differ in size');

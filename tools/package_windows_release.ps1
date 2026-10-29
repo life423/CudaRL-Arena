@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory=$true)][string]$GodotPath,
     [Parameter(Mandatory=$true)][string]$TemplatePath,
     [Parameter(Mandatory=$true)][string]$NativeDirectory,
-    [ValidatePattern('^\d+\.\d+\.\d+(-[A-Za-z0-9.]+)?$')][string]$Version='0.1.0-preview.1',
+    [ValidatePattern('^\d+\.\d+\.\d+(-[A-Za-z0-9.]+)?$')][string]$Version='0.1.0-preview.2',
     [switch]$AllowDirty
 )
 $ErrorActionPreference='Stop'
@@ -75,7 +75,7 @@ $process.WaitForExit();$process.Refresh()
 if($process.ExitCode -ne 0 -or (Get-Content "$log.err" -Raw) -match 'SCRIPT ERROR|ERROR:') {throw "Export failed; inspect $log.err"}
 $licenses=Join-Path $output 'licenses'
 New-Item -ItemType Directory -Force -Path $licenses | Out-Null
-foreach($component in @('godot','cuda')) {Copy-Item -LiteralPath (Join-Path $workspace "docs/third-party/$component") -Destination $licenses -Recurse -Force}
+foreach($component in @('godot','cuda','nsis')) {Copy-Item -LiteralPath (Join-Path $workspace "docs/third-party/$component") -Destination $licenses -Recurse -Force}
 @"
 Tadpole Pond $Version — Windows preview
 

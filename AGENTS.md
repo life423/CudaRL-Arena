@@ -1,5 +1,7 @@
 # CudaRL-Arena project memory
 
+- Windows consumer downloads must be installer-first: one setup EXE, automatic per-user installation and an obvious Tadpole Pond shortcut. Do not make players extract DLL/PCK/data folders or read notes to find what to open. Keep optional ZIP archives for developers. Preserve local training saves on upgrade/uninstall.
+
 Before substantive work, read `docs/CREATURE_PLAN.md` and the latest entry in `docs/SESSION_CHECKPOINT.md`. Later explicit user instructions take precedence.
 
 - The approved product journey is **a dependable young swimmer → increasingly challenging interactions → genuine measured adaptation → physical growth and new movement skills**. The main creature starts competent; learning is demonstrated honestly through further improvement and new capabilities.

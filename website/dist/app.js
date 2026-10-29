@@ -4,7 +4,7 @@ fetch('release.json').then(response => {
   return response.json();
 }).then(release => {
   if (typeof release.downloadSize === 'string') {
-    document.querySelector('#download-size').textContent = `${release.downloadSize} ZIP · CPU + optional CUDA`;
+    document.querySelector('#download-size').textContent = `${release.downloadSize} installer · CPU + optional CUDA`;
   }
 }).catch(() => {}); // Versioned, working download links remain usable without JS.
 
