@@ -24,6 +24,8 @@ func run() -> void:
 			node.feeding_checkpoint_path = checkpoint
 			node.population = 128)
 	var folder := OS.get_executable_path().get_base_dir().path_join("qa-output")
+	if not ProjectSettings.get_setting("cudarl/release_build", false):
+		folder = ProjectSettings.globalize_path("res://../build/boulder-menu-checks/cpu-fallback")
 	DirAccess.make_dir_recursive_absolute(folder)
 	for dimensions in [Vector2i(1280, 720), Vector2i(768, 1024), Vector2i(390, 844), Vector2i(844, 390)]:
 		root.size = dimensions

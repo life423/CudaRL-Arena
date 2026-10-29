@@ -1,0 +1,82 @@
+[
+  {
+    "path": "CMakeLists.txt",
+    "hash": "6C9F737E7598FF3AB7D9B5983408B1732DC412822648369756D6F4DE5458D2D2"
+  },
+  {
+    "path": "godot-project/addons/cudarl/bin/cudarl_pond_cuda.dll",
+    "hash": "EBC0F9498337EA1A6AAE819FCE98CD62B3A649A49487C6715295A6ABB20EA256"
+  },
+  {
+    "path": "godot-project/addons/cudarl/bin/cudarl.dll",
+    "hash": "42233EBCDDF18A298EB660EE167D11A4C969CD259460CC11A0C5E50853BEB5DD"
+  },
+  {
+    "path": "godot-project/pond/boulder_pond.gd",
+    "hash": "CDCC14C94C1BB91B6DA6D0443A02D60E1D817DAA277F337E43734A7589BBE76C"
+  },
+  {
+    "path": "godot-project/pond/boulder_pond.tscn",
+    "hash": "EE233E22B7662730A09DD2686017294943655489EAB5B1C737D0757D6BFD349A"
+  },
+  {
+    "path": "godot-project/pond/current_flow.gd",
+    "hash": "DC8C5F17835E4B38A305B52E7CD88114EFC06186A155ACEA31899C37D66EBA6F"
+  },
+  {
+    "path": "src/demos/arch_session.cu",
+    "hash": "C54EABCE1586865A8A31CD7391C17A619F7026E9810C69C7957FDF120BA7ABA7"
+  },
+  {
+    "path": "src/demos/feeding_session.h",
+    "hash": "9C9872C14EF33B92894AC393AC58E9A03BCEB9D8F51CBBFEAEC001AAD9950E9B"
+  },
+  {
+    "path": "src/envs/swimmer/arch_batch.cu",
+    "hash": "9BFBED70216174730857EF6B32F52691B6100F1B243D1BDE547E99D01E48DD80"
+  },
+  {
+    "path": "src/envs/swimmer/arch_batch.h",
+    "hash": "BB101E583654EE235D4AD35EBED6FA67B75975E97C22ABEA1E08C65F95F5C792"
+  },
+  {
+    "path": "src/envs/swimmer/arch.h",
+    "hash": "44660F22FF71D0E1A6ED3A997ED1A3097427F5CE368F2722BC193794D338E807"
+  },
+  {
+    "path": "src/envs/swimmer/deep_physics.h",
+    "hash": "8E5D9C3CB780D2FA7056F57F660ECDDF8BFB84ACB720E5AB1B11A38DED3DAF4A"
+  },
+  {
+    "path": "src/godot/deep_pond_lab.cpp",
+    "hash": "AE54E58784FCE9BC8EB5091018D7440F67B4DAF28E038B4934901485B3FAE521"
+  },
+  {
+    "path": "src/godot/deep_pond_lab.h",
+    "hash": "48D810DA06A449ED198DC615C379ECB3533264C35998BC3D13D93FAD25E07A59"
+  },
+  {
+    "path": "src/rl/arch_cpu.h",
+    "hash": "2C28EBD92E2CC54D3879974256E3BBE3197ED30ADDE073335BFEFD3EEA1E5653"
+  },
+  {
+    "path": "tests/godot/arch_current_frozen_probe.gd",
+    "hash": "38F286E0A53F3024BB1AA88BCF9EF42BA8EB1C03DEE4C568A85709567ECD8D38"
+  },
+  {
+    "path": "tests/godot/boulder_pond_smoke.gd",
+    "hash": "9608BF84F0C35DE3A7526A6296B821F4DA7049D899AD1365375699CA80382CA0"
+  },
+  {
+    "path": "tests/test_boulder_geometry.cpp",
+    "hash": "DB4CC63238EECCA404A28E9497ECF5058F036DD8769F920E816AABA66E818990"
+  },
+  {
+    "path": "tests/test_boulder_resume.cpp",
+    "hash": "7EBCEBCFC959F33E564B4930F11BCE24B1BC6BA9431C0A96C1681828A2505A4E"
+  },
+  {
+    "path": "tools/arch_resume_verify.cpp",
+    "hash": "4B406EFCE5A342D259D4331DCD3B64E058EFCE3B0C43B2BE40F3F2171989D5D1"
+  }
+]

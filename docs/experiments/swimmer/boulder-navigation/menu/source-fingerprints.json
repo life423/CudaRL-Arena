@@ -1,0 +1,38 @@
+[
+  {
+    "path": "godot-project/launcher/demo_launch.gd",
+    "hash": "498709688DAAFD240184266FA890DF1E91B7C99869F316376B73BE679F264110"
+  },
+  {
+    "path": "godot-project/launcher/launcher.gd",
+    "hash": "31597D640D84D2AC9A88453C993421CA2DC53265B4465EF838A90042FD0175E2"
+  },
+  {
+    "path": "godot-project/launcher/thumbnail.gd",
+    "hash": "AA94DECCFCA321CBE3C8CACD209B751FFAD54E847F3C6010475FA9D96B7AF8C4"
+  },
+  {
+    "path": "godot-project/launcher/assets/boulder-pond.png",
+    "hash": "A0AD0B97B4CEBCC57AF457ABE5FA5AA389B7038E41BE6ADB59B2FCCED293F98C"
+  },
+  {
+    "path": "godot-project/pond/arch_pond.gd",
+    "hash": "31591DEC5958C06D338F7FA2D518FA1D4F628791FE20D9E8F54C82E57FF8B856"
+  },
+  {
+    "path": "tests/godot/boulder_menu_smoke.gd",
+    "hash": "76B8B099E964693E012978A71E0EF49574521A8073502A0DFC3613495D514759"
+  },
+  {
+    "path": "tests/godot/demo_menu_smoke.gd",
+    "hash": "AB4BE9F4B0EBD2EA8CA11F533F7AB16C416717EA5F49E425EC33826D92116DE0"
+  },
+  {
+    "path": "tests/godot/pond_navigation_smoke.gd",
+    "hash": "D791D740E0BAF30F9AFEF0162DA16BCF708E6A9C656DEA14892D329AB8EB9748"
+  },
+  {
+    "path": "tests/godot/release_menu_smoke.gd",
+    "hash": "408205CBA4427CA81E65B534366657A64242329A910564B02162A5B4E4F61E14"
+  }
+]

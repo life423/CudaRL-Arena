@@ -93,6 +93,9 @@ void fragment() {
 		var ring := Vector2(local.x, local.y).length() - float(geometry.get("major_radius", 1.35))
 		if Vector2(ring, local.z).length() - float(geometry.get("tube_radius", 0.5)) <= 0.05:
 			continue
+		var boulder_radius: float = geometry.get("boulder_radius", 0.0)
+		if boulder_radius > 0.0 and candidate.distance_to(geometry.get("boulder_center", Vector3.ZERO)) <= boulder_radius + 0.05:
+			continue
 		tracer_positions.append(candidate)
 		if tracer_positions.size() == COUNT:
 			break

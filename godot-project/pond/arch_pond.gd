@@ -143,7 +143,7 @@ func _poll() -> void:
 	var comparison := "Current settings awaiting a matched comparison."
 	if int(stats.get("evaluation_count", 0)) > 0 and int(stats.get("evaluated_context_version", -1)) == int(stats.get("context_version", 0)):
 		comparison = "Matched candidate %.1f / min\nCalm arch %.1f / min · reference %.1f" % [stats.get("current_food_per_minute", 0.0), stats.get("arch_calm_food_per_minute", 0.0), stats.get("arch_calm_reference_food_per_minute", 0.0)]
-	var actor_label := "inherited swimmer" if int(stats.get("adopted_update", 0)) == 0 else "validated arch %d" % int(stats.adopted_update)
+	var actor_label := "inherited swimmer" if int(stats.get("adopted_update", 0)) == 0 else "validated swimmer %d" % int(stats.adopted_update)
 	training_stats.text = "%s · %d background swimmers\nLearner update %d\nVisible: %s\nCurrent change %d · practiced %d\n%d swimming observations\nRock contact steps  %d\n%s\nPractice retains calm water and calm arch navigation, alongside steady and varying flow up to %.2f cm/s. The motor learns from inherited weights; food selection remains inherited." % [stats.get("compute_backend", ""), stats.get("background_swimmers", population), stats.get("update", 0), actor_label, stats.get("context_version", 0), stats.get("trained_context_version", 0), stats.get("policy_inputs", 55), stats.get("arch_contacts", 0), comparison, current_speed]
 	save_status.text = "Swimming inherited from update %d. Original feeding save preserved.\nSeparate arch save at %d · autosaves every 30 s and on exit." % [stats.get("parent_update", 0), stats.get("saved_update", 0)]
 	if not str(stats.get("save_error", "")).is_empty():

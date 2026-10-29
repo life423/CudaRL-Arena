@@ -35,6 +35,7 @@ using Trainer=rl::BasicSwimmerTrainer<ArchTask>;
 struct Evaluation {
     int foods=0,calm=0,worlds=0,contacts=0,passages=0,clean=0;
     int arch_calm=0,arch_calm_worlds=0,current_foods=0,current_worlds=0,current_clean=0;
+    int cove_foods=0,cove_worlds=0;
     double progress=0,current_progress=0;
     bool valid=true;
 };
@@ -55,10 +56,12 @@ Evaluation evaluate(const std::vector<float>& actor,const std::vector<float>& se
         double nearest=10;
         for(const auto& food:pond.pellets) if(food.active) nearest=std::min(nearest,static_cast<double>(deep::norm(food.position-pond.body.position)));
         const double progress=pond.eaten*10.-nearest;result.progress+=progress;
-        const bool current_world=(deep::norm(context.current)>0 || context.basin.layout!=0) && pond.environment%4u>=2u;
+        const bool cove_retention=context.basin.layout==2 && pond.environment%4u==2u;
+        const bool current_world=(deep::norm(context.current)>0 || context.basin.layout!=0) && pond.environment%4u>=2u && !cove_retention;
         if(current_world) {
             result.current_foods+=pond.eaten;++result.current_worlds;result.current_clean+=state.clean_passages;result.current_progress+=progress;
-        } else {result.arch_calm+=pond.eaten;++result.arch_calm_worlds;}
+        } else if(cove_retention) {result.cove_foods+=pond.eaten;++result.cove_worlds;}
+        else {result.arch_calm+=pond.eaten;++result.arch_calm_worlds;}
     }
     return result;
 }
@@ -69,9 +72,12 @@ double rate(const Evaluation& result,int steps,bool current=false) {
 double calm_rate(const Evaluation& result,int steps) {
     return result.arch_calm_worlds?result.arch_calm*60./(result.arch_calm_worlds*steps*static_cast<double>(deep::dt)):0;
 }
+double cove_rate(const Evaluation& result,int steps) {
+    return result.cove_worlds?result.cove_foods*60./(result.cove_worlds*steps*static_cast<double>(deep::dt)):-1;
+}
 bool valid_context(const ar::Context& context) {
     return std::isfinite(deep::norm(context.current)) && deep::norm(context.current)<=.0075001f &&
-        fabsf(context.current.y)<=1e-8f && context.version>=0 && context.basin.layout>=0 && context.basin.layout<=1;
+        fabsf(context.current.y)<=1e-8f && context.version>=0 && context.basin.layout>=0 && context.basin.layout<=2;
 }
 bool same_context(const ar::Context& a,const ar::Context& b) {
     return a.version==b.version && a.current.x==b.current.x && a.current.y==b.current.y && a.current.z==b.current.z && a.basin.layout==b.basin.layout;
@@ -183,20 +189,23 @@ class ArchSession final:public FeedingSession {
                     const auto current=evaluate(incumbent,source_.policy.actor,practice,16,600,seed);
                     const auto trial=evaluate(learned,source_.policy.actor,practice,16,600,seed);
                     const bool has_current=deep::norm(practice.current)>0 || practice.basin.layout!=0;
-                    const bool retained=trial.calm>=std::max(original.calm,current.calm) && trial.arch_calm>=std::max(reference.arch_calm,current.arch_calm);
+                    const bool retained=trial.calm>=std::max(original.calm,current.calm) && trial.arch_calm>=std::max(reference.arch_calm,current.arch_calm) &&
+                        (practice.basin.layout!=2 || trial.cove_foods>=std::max(reference.cove_foods,current.cove_foods));
                     const bool improved=has_current?(trial.current_progress>current.current_progress+.02 || trial.current_clean>current.current_clean):
                         (trial.progress>current.progress+.02 || trial.clean>current.clean);
                     const bool better=trial.valid && retained && trial.foods>=current.foods && trial.current_foods>=current.current_foods && trial.contacts<=current.contacts && improved;
                     std::lock_guard<std::mutex> lock(mutex_);
                     const bool accepted=better && same_context(context_,practice);
-                    std::printf("ARCH_EVAL update=%d context=%d speed_cm_s=%.3f seed=%u original=%.3f incumbent=%.3f candidate=%.3f old_calm=%d/%d arch_calm=%d/%d contacts=%d/%d passages=%d clean=%d accepted=%d\n",
+                    std::printf("ARCH_EVAL update=%d context=%d speed_cm_s=%.3f seed=%u original=%.3f incumbent=%.3f candidate=%.3f old_calm=%d/%d arch_calm=%d/%d cove=%d/%d contacts=%d/%d passages=%d clean=%d accepted=%d\n",
                         update.update,practice.version,deep::norm(practice.current)*100,seed,rate(original,600,has_current),rate(current,600,has_current),rate(trial,600,has_current),
-                        trial.calm,std::max(original.calm,current.calm),trial.arch_calm,std::max(reference.arch_calm,current.arch_calm),trial.contacts,current.contacts,trial.passages,trial.clean,accepted?1:0);std::fflush(stdout);
+                        trial.calm,std::max(original.calm,current.calm),trial.arch_calm,std::max(reference.arch_calm,current.arch_calm),
+                        trial.cove_foods,std::max(reference.cove_foods,current.cove_foods),trial.contacts,current.contacts,trial.passages,trial.clean,accepted?1:0);std::fflush(stdout);
                     ++stats_.evaluations;
                     stats_.original_score=rate(original,600,has_current);stats_.candidate_score=rate(trial,600,has_current);stats_.adopted_score=rate(current,600,has_current);
                     stats_.arch_calm_score=calm_rate(trial,600);stats_.arch_calm_reference_score=std::max(calm_rate(reference,600),calm_rate(current,600));
                     stats_.arch_current_score=has_current?rate(trial,600,true):-1;stats_.evaluated_context=practice.version;
                     stats_.habitat_score=practice.basin.layout!=0?rate(trial,600,true):-1;
+                    stats_.cove_retention_score=cove_rate(trial,600);stats_.cove_retention_reference_score=std::max(cove_rate(reference,600),cove_rate(current,600));
                     if(accepted) {adopted_=learned;pending_=learned;++publication_;stats_.adopted_update=update.update;stats_.adopted_score=rate(trial,600,has_current);}
                 }
                 while(!stopping_.load() && rl::Clock::now()-start<std::chrono::milliseconds(500)) std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -235,29 +244,43 @@ class ArchSession final:public FeedingSession {
         if(parent_stage_fingerprint_==0) parent_stage_fingerprint_=fingerprint(bytes);
     }
 public:
-    ArchSession(const std::string& source_path,std::string path,int worlds,bool cove=false):path_(std::move(path)),worlds_(worlds),live_(1,7),motor_(rl::swimmer_specification(4,ar::kObs),1,7) {
-        if(worlds<16 || worlds>2048 || worlds%8) throw std::invalid_argument("Invalid arch population");
+    ArchSession(const std::string& source_path,std::string path,int worlds,int layout=0):path_(std::move(path)),worlds_(worlds),live_(1,7),motor_(rl::swimmer_specification(4,ar::kObs),1,7) {
+        if(worlds<16 || worlds>2048 || worlds%4) throw std::invalid_argument("Invalid arch population");
+        if(layout<0 || layout>2) throw std::invalid_argument("Invalid habitat stage");
         if(!path_.empty() && std::filesystem::weakly_canonical(path_)==std::filesystem::weakly_canonical(source_path))
             throw std::invalid_argument("Habitat checkpoint must be separate from its inherited save");
         stats_.arch_mode=true;stats_.input_count=ar::kObs;
         if(!path_.empty()) lease_=std::make_unique<checkpoint::Lease>(path_);
         if(!path_.empty() && checkpoint::exists(path_)) {
             restore(path_);
-            if((context_.basin.layout==1)!=cove) throw std::runtime_error("Checkpoint habitat identity does not match this scene");
-        } else if(cove) {
+            if(context_.basin.layout!=layout) throw std::runtime_error("Checkpoint habitat identity does not match this scene");
+        } else if(layout!=0) {
             // Import the complete previous learner without writing its source.
             // The saved live pose/food and all optimizer/world bytes remain
             // untouched; only the requested habitat context changes here.
             restore(source_path);stats_.parent_stage_update=stats_.loaded_update;stats_.imported_full_state=true;
+            if((layout==2 && context_.basin.layout!=1) || (layout==1 && context_.basin.layout>1))
+                throw std::runtime_error("The boulder stage needs a full cove save; source habitat does not match the requested transfer");
+            if(layout==2) {
+                // Reject a newly overlapping visible start instead of moving
+                // the animal or silently removing food. Existing arch contact
+                // remains a legitimate inherited physical state.
+                if(deep::boulder_body_clearance(frame_.pond.body,frame_.habitat)<0)
+                    throw std::runtime_error("Saved swimmer overlaps the new boulder; original cove save preserved");
+                for(const auto& food:frame_.pond.pellets) if(food.active &&
+                    deep::boulder_distance(food.position,frame_.habitat)<feeding::radius/deep::scale)
+                    throw std::runtime_error("Saved food overlaps the new boulder; original cove save preserved");
+            }
             parent_stage_fingerprint_=fingerprint(checkpoint::read(source_path));stats_.saved_update=-1;
-            if(context_.basin.layout!=1) {
+            if(context_.basin.layout!=layout) {
                 if(context_.version==std::numeric_limits<int>::max()) throw std::runtime_error("Habitat context counter exhausted");
-                context_.basin.layout=1;++context_.version;
+                context_.basin.layout=layout;++context_.version;
             }
         } else {
             source_=rl::load_arch_source(source_path);frame_=ar::initial(7,0,0,false);adopted_=rl::arch_motor_parameters(source_.motor);live_actor_=adopted_;calm_reference_=adopted_;
         }
-        stats_.layout_id=context_.basin.layout;stats_.habitat_name=cove?"Cove pond · layout 1":"Rock arch pond · layout 0";
+        stats_.layout_id=context_.basin.layout;stats_.habitat_name=layout==2?"Boulder pond · layout 2":
+            (layout==1?"Cove pond · layout 1":"Rock arch pond · layout 0");
         initial_=rl::arch_motor_parameters(source_.motor);stats_.parent_update=source_.parent_update;stats_.parent_selector_update=source_.policy.update;
         motor_.set_params(live_actor_);live_.configure(source_.policy.actor,context_,live_stream_.value);live_.set_state(frame_,live_stream_.value);
         worker_=std::thread([this] {run();});
@@ -300,6 +323,9 @@ std::unique_ptr<FeedingSession> create_arch_session(const std::string& source_fu
     return std::make_unique<ArchSession>(source_full_save,checkpoint,worlds);
 }
 std::unique_ptr<FeedingSession> create_cove_session(const std::string& source_arch_save,const std::string& checkpoint,int worlds) {
-    return std::make_unique<ArchSession>(source_arch_save,checkpoint,worlds,true);
+    return std::make_unique<ArchSession>(source_arch_save,checkpoint,worlds,1);
+}
+std::unique_ptr<FeedingSession> create_boulder_session(const std::string& source_cove_save,const std::string& checkpoint,int worlds) {
+    return std::make_unique<ArchSession>(source_cove_save,checkpoint,worlds,2);
 }
 }

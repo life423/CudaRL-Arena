@@ -4,7 +4,7 @@ This local development scene adds a larger habitat and one submerged rock arch. 
 
 The original feeding pond, its trained policies and full saves remain separate. This prototype is not part of the public installer or website.
 
-**Latest habitat stage:** the [natural cove pond](experiments/swimmer/cove-navigation/README.md) runs in `godot-project/pond/cove_pond.tscn`. It imports the entire saved arch learner into its own checkpoint, keeps current controls and online PPO, and adds shared native/visual cove geometry plus automatic food coverage. This guide's original `arch_pond.tscn` remains the legacy basin and a preserved source/reference; neither stage replaces the public feeding build.
+**Latest habitat stage:** the [boulder pond](experiments/swimmer/boulder-navigation/README.md) runs in `godot-project/pond/boulder_pond.tscn`, importing the complete cove learner into its own save and adding one solid obstacle plus a bounded physical downstream wake. The preserved [natural cove pond](experiments/swimmer/cove-navigation/README.md) runs in `godot-project/pond/cove_pond.tscn` and imports the full arch learner. This guide's original `arch_pond.tscn` remains the legacy basin/source. All retain online PPO/current controls; none replaces the public feeding build.
 
 ## How to watch
 

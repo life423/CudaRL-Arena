@@ -31,8 +31,13 @@ public:
     bool start_feeding_learning(String policy,String checkpoint,int environments=1024,String backend="auto");
     bool start_arch_learning(String source_checkpoint,String checkpoint,int environments=1024,String backend="auto");
     bool start_cove_learning(String source_checkpoint,String checkpoint,int environments=1024,String backend="auto");
+    bool start_boulder_learning(String source_checkpoint,String checkpoint,int environments=1024,String backend="auto");
+    bool start_predator_learning(String source_checkpoint,String checkpoint,int environments=1024,String backend="auto");
+    bool start_hold_learning(String source_motor_run,String checkpoint,int environments=1024,String backend="auto");
+    bool trigger_predator();
     Dictionary get_arch_geometry() const;
     Dictionary get_cove_geometry() const;
+    Dictionary get_boulder_geometry() const;
     PackedVector3Array sample_cove_terrain(const PackedVector3Array& positions) const;
     PackedVector3Array get_arch_flow_vectors(const PackedVector3Array& positions) const;
     PackedVector3Array advect_arch_tracers(const PackedVector3Array& positions,double seconds) const;

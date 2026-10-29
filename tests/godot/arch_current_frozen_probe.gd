@@ -6,25 +6,40 @@ func _initialize() -> void:
 func run() -> void:
 	var source := "res://../build/arch-current/preserved-20261029104613/arch-v1-training.bin"
 	var output := ProjectSettings.globalize_path("res://../build/arch-current/frozen-probe")
+	var duration := 60.0
 	var cove := "--cove" in OS.get_cmdline_user_args()
+	var boulder := "--boulder" in OS.get_cmdline_user_args()
 	if cove:
 		source = "res://../build/cove-navigation/preserved-20261029113418/arch-v2-training.bin"
 		output = ProjectSettings.globalize_path("res://../build/cove-navigation/frozen-probe")
+	if boulder:
+		source = "res://../build/boulder-navigation/source-cove.bin"
+		output = ProjectSettings.globalize_path("res://../build/boulder-navigation/frozen-probe")
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--arch-v1-source="):
 			source = argument.trim_prefix("--arch-v1-source=")
+		elif argument.begins_with("--probe-seconds="):
+			duration = clampf(float(argument.trim_prefix("--probe-seconds=")), 60.0, 1800.0)
+		elif argument.begins_with("--probe-output="):
+			output = ProjectSettings.globalize_path(argument.trim_prefix("--probe-output="))
 	DirAccess.make_dir_recursive_absolute(output)
 	var source_hash := FileAccess.get_sha256(source)
 	var rows := []
 	var failures := 0
 	for speed in [0.0, 0.5, 0.75]:
 		var copied := output.path_join("probe-%d-%d.bin" % [OS.get_process_id(), int(speed * 100)])
-		if not cove and DirAccess.copy_absolute(ProjectSettings.globalize_path(source), copied) != OK:
+		if not cove and not boulder and DirAccess.copy_absolute(ProjectSettings.globalize_path(source), copied) != OK:
 			push_error("Could not protect frozen probe source")
 			quit(1)
 			return
 		var lab = DeepPondLab.new()
-		var started: bool = lab.start_cove_learning(source, copied, 1024, "cuda") if cove else lab.start_arch_learning("res://../build/arch-current/missing-source.bin", copied, 1024, "cuda")
+		var started: bool
+		if boulder:
+			started = lab.start_boulder_learning(source, copied, 1024, "cuda")
+		elif cove:
+			started = lab.start_cove_learning(source, copied, 1024, "cuda")
+		else:
+			started = lab.start_arch_learning("res://../build/arch-current/missing-source.bin", copied, 1024, "cuda")
 		if not started:
 			push_error(lab.get_error())
 			quit(1)
@@ -47,10 +62,12 @@ func run() -> void:
 		var finite := true
 		var visited_cove := false
 		var cove_foods := 0
-		for tick in 1200:
+		var min_boulder_clearance := 1000000.0
+		for tick in int(duration / 0.05):
 			var previous: Dictionary = final
 			final = lab.step()
 			finite = finite and (final.position as Vector3).is_finite()
+			min_boulder_clearance = minf(min_boulder_clearance, float(final.get("boulder_clearance", 1000000.0)))
 			var p: Vector3 = final.position
 			visited_cove = visited_cove or p.x * p.x / (6.9 * 6.9) + p.z * p.z / (5.25 * 5.25) > 1.0
 			if int(final.eaten) > int(previous.eaten):
@@ -72,16 +89,16 @@ func run() -> void:
 				max_still = maxi(max_still, still)
 			if tick % 100 == 0:
 				await process_frame
-		max_gap = maxf(max_gap, 60.0 - last_food)
+		max_gap = maxf(max_gap, duration - last_food)
 		var final_stats: Dictionary = lab.get_stats()
 		var passed := finite and max_still < 100 and int(final.eaten) > int(start.eaten) and int(final_stats.adopted_update) == actor_update
 		failures += 0 if passed else 1
-		rows.append({"speed_cm_s":speed,"seconds":60,"foods":int(final.eaten)-int(start.eaten),"cove_visited":visited_cove,"cove_foods_collected":cove_foods,"max_immobility_seconds":max_still*0.05,"max_food_gap_seconds":max_gap,"contact_steps":int(final_stats.arch_contacts)-int(start_stats.arch_contacts),"passages":int(final_stats.arch_passages)-int(start_stats.arch_passages),"actor_update":actor_update,"finite":finite,"passed":passed})
+		rows.append({"speed_cm_s":speed,"seconds":duration,"foods":int(final.eaten)-int(start.eaten),"cove_visited":visited_cove,"cove_foods_collected":cove_foods,"minimum_boulder_clearance":min_boulder_clearance if boulder else null,"max_immobility_seconds":max_still*0.05,"max_food_gap_seconds":max_gap,"contact_steps":int(final_stats.arch_contacts)-int(start_stats.arch_contacts),"passages":int(final_stats.arch_passages)-int(start_stats.arch_passages),"actor_update":actor_update,"finite":finite,"passed":passed})
 		lab.stop()
 	var unchanged := FileAccess.get_sha256(source) == source_hash
 	if not unchanged:
 		failures += 1
-	var record := {"cove_mode":cove,"source_sha256":source_hash,"source_unchanged":unchanged,"frozen_inference":true,"training_paused":true,"failures":failures,"cases":rows}
+	var record := {"cove_mode":cove,"boulder_mode":boulder,"source_sha256":source_hash,"source_unchanged":unchanged,"frozen_inference":true,"training_paused":true,"failures":failures,"cases":rows}
 	var file := FileAccess.open(output.path_join("summary.json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(record, "\t"))
 	file.close()

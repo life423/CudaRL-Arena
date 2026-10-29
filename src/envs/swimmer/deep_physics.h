@@ -47,7 +47,8 @@ struct Habitat {
     float major=1.35f,minor=.5f,yaw=0;
 };
 // Layout identity is external to Habitat/BodyState: old raw world snapshots
-// remain readable. Layout 1 is the fixed, versioned outward-cove definition.
+// remain readable. Layout 1 is the fixed outward cove; layout 2 adds one
+// bed-rooted spherical boulder without changing the saved basin/world layout.
 struct Basin {int layout=0;};
 struct Physics {
     float density=1000,viscosity=.001f,gravity=9.81f;
@@ -145,6 +146,23 @@ CUDARL_HD inline float arch_distance(V point,const Habitat& h,V* normal=nullptr)
     }
     return tube-h.minor;
 }
+CUDARL_HD inline V boulder_center(const Habitat& h) {
+    const float factor=h.scale/1.5f;return {3.8f*factor,-2.65f,-1.25f*factor};
+}
+CUDARL_HD inline float boulder_radius(const Habitat& h) {return 1.3f*h.scale/1.5f;}
+CUDARL_HD inline float boulder_distance(V point,const Habitat& h,V* normal=nullptr) {
+    const V delta=point-boulder_center(h);const float length=norm(delta);
+    if(normal) *normal=length>1e-8f?delta/length:V{1,0,0};
+    return length-boulder_radius(h);
+}
+// Shared signed distance to all active solid obstacles. Legacy callers take
+// the identical torus arithmetic path; the new stage adds one exact sphere.
+// Strict comparison gives the arch a deterministic normal on an equal tie.
+CUDARL_HD inline float obstacle_distance(V point,const Habitat& h,Basin basin={},V* normal=nullptr) {
+    const float arch=arch_distance(point,h,normal);if(basin.layout!=2) return arch;
+    V sphere_normal;const float sphere=boulder_distance(point,h,normal?&sphere_normal:nullptr);
+    if(sphere<arch) {if(normal) *normal=sphere_normal;return sphere;}return arch;
+}
 // A prescribed, bounded boundary-aware current, not a pressure/CFD solver.
 // Model-unit distances define a smooth free-slip projection near the arch and
 // basin, with a thin zero-velocity layer at every solid/surface intersection.
@@ -152,10 +170,46 @@ CUDARL_HD inline float arch_distance(V point,const Habitat& h,V* normal=nullptr)
 CUDARL_HD inline float flow_smooth(float x) {
     const float t=clamp(x,0,1);return t*t*(3.f-2.f*t);
 }
+// Reduced-order mean wake from a rounded solid. Lengths are model units;
+// the dimensionless spread/recovery ratios scale with the source radius.
+// Only downstream water is attenuated, with a finite smooth lateral edge,
+// expanding footprint and a recovering centerline deficit. This does not
+// solve pressure, vortices, incompressibility or transient surge propagation.
+CUDARL_HD inline float sphere_wake_deficit(V delta,V direction,float radius) {
+    const float downstream=dot(delta,direction);if(!(downstream>0) || !(radius>0)) return 0;
+    const float trail=fmaxf(0.f,downstream-radius),width=1.25f*radius+.16f*trail;
+    const float lateral2=fmaxf(0.f,dot(delta,delta)-downstream*downstream);
+    if(lateral2>=width*width) return 0;
+    const float lateral=1.f-flow_smooth(lateral2/(width*width));
+    const float recovery=radius/(radius+.25f*trail);
+    return .72f*flow_smooth(downstream/(.5f*radius))*lateral*recovery*recovery;
+}
+CUDARL_HD inline float obstacle_wake_factor(V point,const Habitat& h,V imposed,Basin basin={}) {
+    if(basin.layout!=2) return 1;
+    const float speed=norm(imposed);if(!(speed>0)) return 1;
+    const V direction=imposed/speed;
+    float deficit=sphere_wake_deficit(point-boulder_center(h),direction,boulder_radius(h));
+    if(h.arch) {
+        const V local=arch_to_local(point,h);const float c=cosf(h.yaw),s=sinf(h.yaw);
+        const V travel{c*direction.x-s*direction.z,direction.y,s*direction.x+c*direction.z};
+        // Twelve overlapping tube-centered sources cast a ring-shaped wake.
+        // No opaque bounding sphere fills the arch aperture. Transform once
+        // and generate constants without per-sample arrays or trigonometry.
+        for(int quadrant=0;quadrant<4;++quadrant) for(int sector=0;sector<3;++sector) {
+            const float x=sector==0?1.f:(sector==1?.86602540378f:.5f);
+            const float y=sector==0?0.f:(sector==1?.5f:.86602540378f);
+            const V ring=quadrant==0?V{x,y,0}:(quadrant==1?V{-y,x,0}:(quadrant==2?V{-x,-y,0}:V{y,-x,0}));
+            deficit=fmaxf(deficit,sphere_wake_deficit(local-ring*h.major,travel,h.minor));
+        }
+    }
+    // Max aggregation is order-independent and avoids multiplying overlapping
+    // approximate sources into a fabricated completely stagnant region.
+    return 1.f-deficit;
+}
 CUDARL_HD inline V habitat_flow(V point,const Habitat& h,V imposed,Basin basin={}) {
     if(!h.arch && basin.layout==0) return imposed;
     if(imposed.x==0 && imposed.y==0 && imposed.z==0) return {};
-    V rock_normal;const float rock=arch_distance(point,h,&rock_normal);
+    V rock_normal;const float rock=obstacle_distance(point,h,basin,&rock_normal);
     const V gradient=habitat_gradient(point.x,point.z,h,basin);
     const float magnitude=sqrtf(1+gradient.x*gradient.x+gradient.z*gradient.z);
     const V bed_normal=V{-gradient.x,1,-gradient.z}/magnitude;
@@ -167,7 +221,8 @@ CUDARL_HD inline V habitat_flow(V point,const Habitat& h,V imposed,Basin basin={
     // Each orthogonal projection is a contraction, so the field never exceeds
     // the selected speed. This final layer also prevents leakage where the
     // individual projected boundary normals are not orthogonal.
-    return velocity*(flow_smooth(rock/.05f)*flow_smooth(bed/.05f)*flow_smooth(surface/.05f));
+    const V bounded=velocity*(flow_smooth(rock/.05f)*flow_smooth(bed/.05f)*flow_smooth(surface/.05f));
+    return basin.layout==2?bounded*obstacle_wake_factor(point,h,imposed,basin):bounded;
 }
 struct Link {
     Q q;
@@ -247,6 +302,22 @@ CUDARL_HD inline float arch_body_clearance(const BodyState& s,const Habitat& h) 
     }
     return gap;
 }
+CUDARL_HD inline float boulder_body_clearance(const BodyState& s,const Habitat& h) {
+    const auto geometry=shape(s);float gap=1e6f;
+    for(int b=0;b<3;++b) {
+        const auto& l=geometry.link[b];const V axis=l.q.rotate({1,0,0});
+        for(int sample=0;sample<arch_axial_samples;++sample) {
+            const float f=(sample-4)*.25f;const V point=l.center+axis*(f*l.length*.5f);V normal;
+            const float distance=boulder_distance(point/scale,h,&normal);
+            gap=fminf(gap,distance-arch_slice_support(l,b,f,normal)/scale);
+        }
+    }
+    return gap;
+}
+CUDARL_HD inline float obstacle_body_clearance(const BodyState& s,const Habitat& h,Basin basin={}) {
+    const float arch=arch_body_clearance(s,h);
+    return basin.layout==2?fminf(arch,boulder_body_clearance(s,h)):arch;
+}
 struct System {float M[dofs][dofs]{},R[dofs][dofs]{},C[dofs]{},force[dofs]{};bool arch_touched=false;};
 CUDARL_HD inline void resist(System& a,const V* J,V axis,float coefficient) {
     float j[dofs];for(int i=0;i<dofs;++i) j[i]=dot(J[i],axis);
@@ -284,14 +355,14 @@ CUDARL_HD inline void habitat_contact(System& a,const V* J,V point,V velocity,fl
     const float surface=-point.y-radius;
     if(surface<0) {load(a,J,{0,.8f*surface,0});if(velocity.y>0) resist(a,J,{0,-1,0},.006f);}
 }
-CUDARL_HD inline void arch_contact(System& a,const Link& l,int body,const float* velocity,const Habitat& h) {
-    if(!h.arch) return;
+CUDARL_HD inline void arch_contact(System& a,const Link& l,int body,const float* velocity,const Habitat& h,Basin basin={}) {
+    if(!h.arch && basin.layout!=2) return;
     const V axis=l.q.rotate({1,0,0});
     for(int sample=0;sample<arch_axial_samples;++sample) {
         const float f=(sample-4)*.25f;const V r=axis*(f*l.length*.5f);V normal;
         // Populate the normal before evaluating cross-section support. The
         // operands of subtraction may be evaluated in either order on CPU/CUDA.
-        const float distance=arch_distance((l.center+r)/scale,h,&normal);
+        const float distance=obstacle_distance((l.center+r)/scale,h,basin,&normal);
         const float gap=distance*scale-arch_slice_support(l,body,f,normal);
         if(gap<0) {
             a.arch_touched=true;
@@ -345,7 +416,7 @@ CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
                 else contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.pond);
             }
         }
-        if(physics.boundaries && physics.habitat.arch) arch_contact(a,l,b,s.velocity,physics.habitat);
+        if(physics.boundaries && (physics.habitat.arch || physics.basin.layout==2)) arch_contact(a,l,b,s.velocity,physics.habitat,physics.basin);
         for(int k=0;k<3;++k) resist(a,l.angular,axis[k],submersion*8.f*3.14159265f*physics.viscosity*powf(b==0?.008f:.002f,3.f));
     }
     return a;

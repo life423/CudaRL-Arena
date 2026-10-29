@@ -16,10 +16,12 @@ var status: Label
 var opening := false
 var content: VBoxContainer
 var header: VBoxContainer
+var primary_demo := "pond_feeding"
 
 func _ready() -> void:
 	get_window().title = "Tadpole Pond · CudaRL"
 	RenderingServer.set_default_clear_color(BG)
+	primary_demo = DemoLaunch.primary_pond()
 	_build()
 	resized.connect(_fit_layout)
 	_fit_layout()
@@ -73,7 +75,9 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 	elif demo in ["deep_water", "pond_live", "pond_feeding"]:
 		button.tooltip_text = "Open a live physical simulation controlled by the saved neural networks."
 		if demo == "pond_feeding":
-			button.tooltip_text = "Drop sinking food while native CUDA PPO practices and validates improved swimming."
+			button.tooltip_text = "Drop sinking food while PPO practices locally and validates improved swimming."
+	elif demo == "pond_boulder":
+		button.tooltip_text = "Resume the latest boulder pond and its saved learning. Food appears automatically; the current remains under your control."
 	button.pressed.connect(func(): _open(demo, watch))
 	buttons.append(button)
 	return button
@@ -108,14 +112,15 @@ func _build() -> void:
 	header.add_child(subtitle)
 	content.add_child(header)
 	# Keep legacy scenes, policies and routing intact; the product entry is the pond.
-	var demos := [["pond", "Feed your swimmer", "Drop food into the water and watch it sink and drift. The creature chooses its own targets while native PPO practices in the background."]]
+	var latest := primary_demo == "pond_boulder"
+	var demos := [["pond", "Boulder pond" if latest else "Feed your swimmer", "Your swimmer explores the arch, boulder and cove. Food appears automatically. Change the current while it keeps learning in the background. Saved progress resumes when you return." if latest else "Drop food into the water and watch it sink and drift. The creature chooses its own targets while native PPO practices in the background."]]
 	for spec in demos:
 		var row := BoxContainer.new()
 		row.name = spec[0] + "_row"
 		row.add_theme_constant_override("separation", 28)
 		content.add_child(row)
 		var preview := Preview.new()
-		preview.demo = spec[0]
+		preview.demo = "pond_boulder" if latest else spec[0]
 		row.add_child(preview)
 		var details := VBoxContainer.new()
 		details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -134,7 +139,7 @@ func _build() -> void:
 		actions.add_theme_constant_override("separation", 12)
 		details.add_child(actions)
 		if spec[0] == "pond":
-			actions.add_child(_button("Open pond", "pond_feeding", true, true))
+			actions.add_child(_button("Open pond", primary_demo, true, true))
 		else:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))
@@ -145,19 +150,20 @@ func _build() -> void:
 	content.add_child(status)
 
 func _fit_layout() -> void:
-	var padding := 48 if size.x >= 1440 else (32 if size.x >= 700 else 24)
+	var compact_landscape := size.y < 520 and size.x >= 700
+	var padding := 16 if compact_landscape else (48 if size.x >= 1440 else (32 if size.x >= 700 else 24))
 	for side in ["left", "right", "top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, padding)
 	for label in title_labels:
-		label.add_theme_font_size_override("font_size", 52 if size.x >= 1440 else (44 if size.x >= 700 else 30))
+		label.add_theme_font_size_override("font_size", 32 if compact_landscape else (52 if size.x >= 1440 else (44 if size.x >= 700 else 30)))
 	var width := size.x - padding * 2
-	var wide := width >= 1000
+	var wide := width >= 1000 or compact_landscape
 	content.add_theme_constant_override("separation", 16 if wide else 24)
-	var preview_height := clampf(size.y - padding * 2 - 200, 280, 440)
+	var preview_height := clampf(size.y - padding * 2 - 112, 160, 320) if compact_landscape else clampf(size.y - padding * 2 - 200, 280, 440)
 	for data in rows:
 		var row: BoxContainer = data.row
 		row.vertical = not wide
-		row.add_theme_constant_override("separation", 28 if wide else 16)
+		row.add_theme_constant_override("separation", 20 if compact_landscape else (28 if wide else 16))
 		var preview: Control = data.preview
 		preview.custom_minimum_size = Vector2(width * 0.56, preview_height) if wide else Vector2(0, clampf(width / 1.65, 180, 360))
 		preview.size_flags_horizontal = Control.SIZE_FILL if wide else Control.SIZE_EXPAND_FILL
@@ -176,7 +182,7 @@ func _open(demo: String, watch: bool) -> void:
 	opening = true
 	for button in buttons:
 		button.disabled = true
-	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Shallow-water learning", "pond_live": "Live pond", "deep_water": "Original swimmer"}.get(demo, demo)
+	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Shallow-water learning", "pond_live": "Live pond", "pond_feeding": "the feeding pond", "pond_boulder": "the boulder pond", "deep_water": "Original swimmer"}.get(demo, demo)
 	status.add_theme_color_override("font_color", MUTED)
 	status.visible = true
 	await get_tree().process_frame

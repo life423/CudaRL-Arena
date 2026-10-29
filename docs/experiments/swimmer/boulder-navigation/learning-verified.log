@@ -1,0 +1,3 @@
+ARCH_PRACTICE_INTEGRITY source bad=0/1024 steps_min=1024 max=1024 context=3 layout=1
+ARCH_PRACTICE_INTEGRITY trained bad=0/1024 steps_min=976 max=976 context=7 layout=2
+ARCH_LEARNING_VERIFY source_update=5491 saved_update=5509 changed_actor_parameters=2980/2980 max_absolute_change=0.00817558169 PASS

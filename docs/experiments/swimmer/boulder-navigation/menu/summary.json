@@ -1,0 +1,14 @@
+{
+	"checkpoint": "C:/Users/aiand/Documents/programming/CudaRL-Arena/godot-project/../build/boulder-menu-checks/reviewed/menu-boulder-29252-690562.bin",
+	"checks": 101,
+	"failures": 0,
+	"loaded_update": 6861,
+	"preview": "",
+	"sizes": [
+		"(1280, 720)",
+		"(768, 1024)",
+		"(390, 844)",
+		"(844, 390)"
+	],
+	"source_sha256": "9ffcb45d954f277c52c4fba1de52b3eabcf4841535ea3bb72cffa59a1b062304"
+}

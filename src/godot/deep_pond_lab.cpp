@@ -43,6 +43,11 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_arch_geometry"),&DeepPondLab::get_arch_geometry);
     ClassDB::bind_method(D_METHOD("start_cove_learning","source_checkpoint","checkpoint","environments","backend"),&DeepPondLab::start_cove_learning,DEFVAL(1024),DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("get_cove_geometry"),&DeepPondLab::get_cove_geometry);
+    ClassDB::bind_method(D_METHOD("start_boulder_learning","source_checkpoint","checkpoint","environments","backend"),&DeepPondLab::start_boulder_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("start_predator_learning","source_checkpoint","checkpoint","environments","backend"),&DeepPondLab::start_predator_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("trigger_predator"),&DeepPondLab::trigger_predator);
+    ClassDB::bind_method(D_METHOD("start_hold_learning","source_motor_run","checkpoint","environments","backend"),&DeepPondLab::start_hold_learning,DEFVAL(1024),DEFVAL("auto"));
+    ClassDB::bind_method(D_METHOD("get_boulder_geometry"),&DeepPondLab::get_boulder_geometry);
     ClassDB::bind_method(D_METHOD("sample_cove_terrain","positions"),&DeepPondLab::sample_cove_terrain);
     ClassDB::bind_method(D_METHOD("get_arch_flow_vectors","positions"),&DeepPondLab::get_arch_flow_vectors);
     ClassDB::bind_method(D_METHOD("advect_arch_tracers","positions","seconds"),&DeepPondLab::advect_arch_tracers);
@@ -210,6 +215,65 @@ bool DeepPondLab::start_cove_learning(String source_checkpoint,String checkpoint
 #endif
     } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
 }
+bool DeepPondLab::start_boulder_learning(String source_checkpoint,String checkpoint,int environments,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown boulder backend");
+        if(backend=="cpu") throw std::runtime_error("Boulder learning currently requires NVIDIA CUDA. The existing feeding pond supports CPU learning.");
+#if CUDARL_WITH_CUDA
+        const auto device=cudarl::probe_device();
+        if(!device.available) throw std::runtime_error("Boulder learning requires a healthy CUDA device: "+device.error);
+        const auto source_path=ProjectSettings::get_singleton()->globalize_path(source_checkpoint).utf8();
+        const auto save_path=ProjectSettings::get_singleton()->globalize_path(checkpoint).utf8();
+        feeding_=cudarl::demos::create_boulder_session(source_path.get_data(),save_path.get_data(),environments);
+        controller_path_=checkpoint;controller_backend_="cuda";
+        UtilityFunctions::print("BOULDER_LEARNING CUDA imported_update=",feeding_->stats().parent_stage_update," worlds=",environments);
+        return true;
+#else
+        (void)source_checkpoint;(void)checkpoint;(void)environments;
+        throw std::runtime_error("This build supports CPU feeding learning; the boulder prototype requires the CUDA developer build.");
+#endif
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+bool DeepPondLab::start_predator_learning(String source_checkpoint,String checkpoint,int environments,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown shelter backend");
+        if(backend=="cpu") throw std::runtime_error("The predator prototype requires CUDA; the existing feeding pond retains CPU learning.");
+#if CUDARL_WITH_CUDA
+        const auto device=cudarl::probe_device();
+        if(!device.available) throw std::runtime_error("Shelter learning needs a healthy CUDA device: "+device.error);
+        const auto source_path=ProjectSettings::get_singleton()->globalize_path(source_checkpoint).utf8();
+        const auto save_path=ProjectSettings::get_singleton()->globalize_path(checkpoint).utf8();
+        feeding_=cudarl::demos::create_shelter_session(source_path.get_data(),save_path.get_data(),environments);
+        controller_path_=checkpoint;controller_backend_="cuda";return true;
+#else
+        (void)source_checkpoint;(void)checkpoint;(void)environments;
+        throw std::runtime_error("The predator prototype requires the CUDA developer build.");
+#endif
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+bool DeepPondLab::trigger_predator() {
+    return feeding_ && feeding_->trigger_predator();
+}
+bool DeepPondLab::start_hold_learning(String source_motor_run,String checkpoint,int environments,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown holding backend");
+        if(backend=="cpu") throw std::runtime_error("This holding research scene needs CUDA; ordinary feeding still supports CPU learning.");
+#if CUDARL_WITH_CUDA
+        const auto device=cudarl::probe_device();
+        if(!device.available) throw std::runtime_error("Holding practice needs a healthy CUDA device: "+device.error);
+        const auto source=ProjectSettings::get_singleton()->globalize_path(source_motor_run).utf8();
+        const auto save=ProjectSettings::get_singleton()->globalize_path(checkpoint).utf8();
+        feeding_=cudarl::demos::create_hold_session(source.get_data(),save.get_data(),environments);
+        controller_path_=checkpoint;controller_backend_="cuda";return true;
+#else
+        (void)source_motor_run;(void)checkpoint;(void)environments;
+        throw std::runtime_error("This holding research scene needs the CUDA developer build.");
+#endif
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
 Dictionary DeepPondLab::get_cove_geometry() const {
     auto d=get_arch_geometry();const auto h=cudarl::arch::geometry();const cudarl::deep::Basin basin{1};
     PackedVector3Array outline;Vector2 minimum(1000,1000),maximum(-1000,-1000);
@@ -223,6 +287,14 @@ Dictionary DeepPondLab::get_cove_geometry() const {
     d["layout_id"]=1;d["layout_name"]="cove-basin-v1";d["shore_outline"]=outline;
     d["bounds_min"]=minimum;d["bounds_max"]=maximum;d["cove_center"]=Vector3(center.x,center.y,center.z);
     d["cove_radii"]=Vector2(radii.x,radii.z);d["cove_depth"]=3.;d["blend_width"]=.35;
+    return d;
+}
+Dictionary DeepPondLab::get_boulder_geometry() const {
+    auto d=get_cove_geometry();const auto habitat=cudarl::arch::geometry();
+    const auto center=cudarl::deep::boulder_center(habitat);
+    d["layout_id"]=2;d["layout_name"]="cove-boulder-v1";
+    d["boulder_center"]=Vector3(center.x,center.y,center.z);
+    d["boulder_radius"]=cudarl::deep::boulder_radius(habitat);
     return d;
 }
 PackedVector3Array DeepPondLab::sample_cove_terrain(const PackedVector3Array& positions) const {
@@ -363,7 +435,20 @@ Dictionary DeepPondLab::get_state() const {
         d["seconds_since_food"]=s.since_food*cudarl::deep::dt;d["depth_cm"]=-p.y*4.;d["speed_cm_s"]=100.*cudarl::deep::norm({s.body.velocity[0],s.body.velocity[1],s.body.velocity[2]});
         const auto geometry=cudarl::deep::shape(s.body);Array links;
         for(const auto& link:geometry.link) {Dictionary item;const auto c=link.center/cudarl::deep::scale;const auto& r=link.q;item["position"]=Vector3(c.x,c.y,c.z);item["orientation"]=Quaternion(r.x,r.y,r.z,r.w);links.push_back(item);}
-        d["links"]=links;return d;
+        d["links"]=links;
+        if(feeding_->stats().layout_id==2) d["boulder_clearance"]=cudarl::deep::boulder_body_clearance(s.body,cudarl::arch::geometry());
+        const auto threat=feeding_->predator_info();
+        if(threat.enabled) {
+            d["predator_position"]=Vector3(threat.position.x,threat.position.y,threat.position.z);
+            d["predator_shadow_position"]=Vector3(threat.shadow.x,threat.shadow.y,threat.shadow.z);
+            d["predator_direction"]=Vector3(threat.direction.x,threat.direction.y,threat.direction.z);
+            d["predator_phase"]=threat.warning?"warning":(threat.active?"passing":"calm");
+            d["threat_level"]=threat.strength;d["body_exposure"]=threat.exposure;
+            d["goal_kind"]=threat.cover_goal?"cover":"food";d["goal_position"]=Vector3(threat.goal.x,threat.goal.y,threat.goal.z);
+            d["safe_hold_seconds"]=threat.held_seconds;d["longest_safe_hold_seconds"]=threat.longest_safe_seconds;
+            d["body_clearance"]=threat.clearance;d["goal_distance_cm"]=threat.goal_distance*4.;
+        }
+        return d;
     }
     Dictionary d;d["ready"]=static_cast<bool>(actor_) || static_cast<bool>(playback_);if(!actor_ && !playback_) return d;
     const auto& p=state_.body.position;const auto& q=state_.body.orientation;
@@ -397,10 +482,15 @@ Dictionary DeepPondLab::get_stats() {
         d["arch_current_food_per_minute"]=s.arch_current_score;d["evaluated_context_version"]=s.evaluated_context;
         d["layout_id"]=s.layout_id;d["habitat_name"]=s.habitat_name.c_str();d["parent_stage_update"]=s.parent_stage_update;
         d["imported_full_state"]=s.imported_full_state;d["habitat_food_per_minute"]=s.habitat_score;
+        d["cove_retention_food_per_minute"]=s.cove_retention_score;
+        d["cove_retention_reference_food_per_minute"]=s.cove_retention_reference_score;
+        d["shelter_mode"]=s.shelter_mode;d["shelter_exposure"]=s.shelter_exposure;
+        d["hold_practice_mode"]=s.hold_practice_mode;
+        d["shelter_reference_exposure"]=s.shelter_reference_exposure;d["calm_retention_food_per_minute"]=s.calm_retention_score;
         d["watching_best"]=true;d["policy_update"]=s.arch_mode?s.parent_update:controller_.motor_update;
         d["selector_update"]=s.arch_mode?s.parent_selector_update:controller_.update;
         d["decision_steps"]=20;d["update"]=s.update;
-        d["env_steps"]=static_cast<int64_t>(s.update)*s.worlds*64;d["update_ms"]=s.update_ms;d["training_seconds"]=0.;d["background_swimmers"]=s.worlds;
+        d["env_steps"]=static_cast<int64_t>(s.update)*s.worlds*(s.shelter_mode?640:64);d["update_ms"]=s.update_ms;d["training_seconds"]=0.;d["background_swimmers"]=s.worlds;
         d["current_food_per_minute"]=s.candidate_score;d["best_food_per_minute"]=s.adopted_score;d["best_update"]=s.adopted_update;d["evaluation_count"]=s.evaluations;d["checkpoint_path"]=controller_path_;
         d["learning_ready"]=s.ready;d["learning_active"]=s.training && !s.paused;d["learning_error"]=s.error.c_str();d["adopted_update"]=s.applied_update;d["approved_update"]=s.adopted_update;d["learner_weights_changed"]=s.learner_changed;
         d["original_food_per_minute"]=s.original_score;d["context_version"]=s.context_version;d["trained_context_version"]=s.trained_context;return d;

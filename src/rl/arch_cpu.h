@@ -13,6 +13,12 @@ namespace cudarl::arch {
 // scoring and time-limit observation ordering as the CUDA arch batch.
 class CpuBatch {
     nn::CpuMlp<float> selector_{rl::progress_selector_spec()};
+    bool practice_mode_=true;
+    deep::Basin effective_basin(const State& state,bool practice) const {
+        if(state.pond.retention || (practice && state.pond.environment%4u==1u)) return {};
+        if(practice && context.basin.layout==2 && state.pond.environment%4u==2u) return {1};
+        return context.basin;
+    }
     static size_t population(int n) {
         if(n<1 || n>2048) throw std::invalid_argument("Invalid CPU arch population");
         return static_cast<size_t>(n);
@@ -26,13 +32,15 @@ public:
         states(population(n)),observations(states.size()*kObs),seed(key),context(current) {
         if(selector.size()!=static_cast<size_t>(selector_.spec().num_params()))
             throw std::invalid_argument("Invalid CPU arch selector dimensions");
-        if(!std::isfinite(deep::norm(context.current)) || deep::norm(context.current)>.0075001f || fabsf(context.current.y)>1e-8f || context.version<0 || context.basin.layout<0 || context.basin.layout>1)
+        if(!std::isfinite(deep::norm(context.current)) || deep::norm(context.current)>.0075001f || fabsf(context.current.y)>1e-8f || context.version<0 || context.basin.layout<0 || context.basin.layout>2)
             throw std::invalid_argument("Invalid CPU arch current context");
         selector_.params()=selector;reset();
     }
     void reset() {
+        practice_mode_=true;
         for(size_t i=0;i<states.size();++i) {
-            const auto basin=i%4<2?deep::Basin{}:context.basin;
+            const auto basin=i%4<2?deep::Basin{}:
+                (context.basin.layout==2 && i%4==2?deep::Basin{1}:context.basin);
             states[i]=initial(seed,static_cast<uint32_t>(i),0,i%4==0,basin);
         }
         prepare();
@@ -57,13 +65,14 @@ public:
             }
         }
         for(size_t i=0;i<states.size();++i) {
-            states[i].pond.decision=false;arch::observe(states[i],observations.data()+i*kObs);
+            states[i].pond.decision=false;arch::observe(states[i],observations.data()+i*kObs,effective_basin(states[i],practice_mode_));
         }
     }
     void step(const float* actions,float* rewards=nullptr,float* done=nullptr,float* final_obs=nullptr,bool autoreset=true,bool practice=true) {
+        practice_mode_=practice;
         for(size_t i=0;i<states.size();++i) {
             const V current=practice?practice_current(states[i],context):(states[i].pond.retention?V{}:context.current);
-            const auto basin=states[i].pond.retention || (practice && states[i].pond.environment%4u==1u)?deep::Basin{}:context.basin;
+            const auto basin=effective_basin(states[i],practice);
             const float reward=arch::advance(states[i],actions+i*kAct,current,basin);
             const bool timeout=states[i].pond.steps>=kEpisodeSteps;
             if(rewards) rewards[i]=reward;
@@ -77,7 +86,7 @@ public:
                 if(final_obs) std::copy_n(observations.data()+i*kObs,kObs,final_obs+i*kObs);
                 const uint32_t key=states[i].pond.seed,environment=states[i].pond.environment,episode=states[i].pond.episode;
                 const bool retention=states[i].pond.retention;
-                const auto basin=retention || environment%4u==1u?deep::Basin{}:context.basin;
+                const auto basin=effective_basin(states[i],true);
                 states[i]=initial(key,environment,episode+1,retention,basin);
                 reset_any=true;
             }

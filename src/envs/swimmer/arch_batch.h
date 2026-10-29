@@ -12,6 +12,7 @@ class Batch {
     device_ptr<float> observations_,features_;
     nn::GpuMlp selector_;
     Context context_{};
+    bool practice_mode_=true;
     void prepare(cudaStream_t stream);
 public:
     Batch(int n,uint32_t seed,swimmer::Body unused={});

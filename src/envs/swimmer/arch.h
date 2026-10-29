@@ -22,7 +22,7 @@ CUDARL_HD inline float radial(V p,const deep::Habitat& h) {
 }
 CUDARL_HD inline bool water(V p,const deep::Habitat& h,float clearance=.3f,deep::Basin basin={}) {
     return (basin.layout!=0 || radial(p,h)<.86f*.86f) && p.y<-.35f &&
-        p.y>deep::habitat_floor(p.x,p.z,h,basin)+clearance && deep::arch_distance(p,h)>clearance;
+        p.y>deep::habitat_floor(p.x,p.z,h,basin)+clearance && deep::obstacle_distance(p,h,basin)>clearance;
 }
 // Passive, neutrally buoyant food/tracers use the same imposed local velocity
 // as articulated drag. Only particles receive geometric solid contact; the
@@ -30,7 +30,7 @@ CUDARL_HD inline bool water(V p,const deep::Habitat& h,float clearance=.3f,deep:
 CUDARL_HD inline V particle_contact(V p,const deep::Habitat& h,deep::Basin basin={}) {
     constexpr float r=feeding::radius/deep::scale;
     for(int iteration=0;iteration<4;++iteration) {
-        V normal;const float rock=deep::arch_distance(p,h,&normal);
+        V normal;const float rock=deep::obstacle_distance(p,h,basin,&normal);
         if(rock<r) p+=normal*(r-rock+1e-5f);
         const V gradient=deep::habitat_gradient(p.x,p.z,h,basin);
         const float length=sqrtf(1+gradient.x*gradient.x+gradient.z*gradient.z);
@@ -62,7 +62,8 @@ CUDARL_HD inline V practice_current(const State& s,const Context& context) {
     const float maximum=deep::norm(context.current);
     if(s.pond.retention || s.pond.environment%4u==1u || !(maximum>0)) return {};
     const V direction=context.current/maximum;const auto& pond=s.pond;
-    if(pond.environment%4u==2u) {
+    const bool steady=context.basin.layout==2?pond.environment%8u<4u:pond.environment%4u==2u;
+    if(steady) {
         const uint32_t key=feeding::practice_key(pond,0,0xA2C457EDu);
         return direction*(maximum*rng::uniform(pond.seed,pond.environment,key));
     }
@@ -82,20 +83,20 @@ CUDARL_HD inline V ray_direction(int ray) {
     if(ray==14) return {-d,d,0};if(ray==15) return {-d,-d,0};
     return ray==16?V{0,1,0}:V{0,-1,0};
 }
-CUDARL_HD inline float proximity(V origin,V direction,const deep::Habitat& h) {
-    if(!h.arch) return 0;
+CUDARL_HD inline float proximity(V origin,V direction,const deep::Habitat& h,deep::Basin basin={}) {
+    if(!h.arch && basin.layout!=2) return 0;
     float travel=0;
     for(int step=0;step<32 && travel<sensing_range;++step) {
-        const float gap=deep::arch_distance(origin+direction*travel,h);
+        const float gap=deep::obstacle_distance(origin+direction*travel,h,basin);
         if(gap<.025f) return 1.f-travel/sensing_range;
         travel+=fmaxf(.01f,gap*.9f);
     }
     return 0;
 }
-CUDARL_HD inline void observe(const State& s,float* out) {
+CUDARL_HD inline void observe(const State& s,float* out,deep::Basin basin={}) {
     feeding::motor_observe(s.pond,out);
     for(int ray=0;ray<18;++ray)
-        out[feeding::kObs+ray]=proximity(s.pond.body.position,s.pond.body.orientation.rotate(ray_direction(ray)),s.habitat);
+        out[feeding::kObs+ray]=proximity(s.pond.body.position,s.pond.body.orientation.rotate(ray_direction(ray)),s.habitat,basin);
 }
 CUDARL_HD inline bool cove_food_clear(const State& s,int slot,V position,deep::Basin basin) {
     if(!water(position,s.habitat,.4f,basin) || deep::norm(position-s.pond.body.position)<.8f) return false;
@@ -115,15 +116,22 @@ CUDARL_HD inline void place(State& s,int slot,int side,deep::Basin basin={}) {
         // Successive replacements exercise both original sides and the new
         // cove. A blocked placement can use another reachable region; food is
         // never placed inside the animal to enforce a particular visit.
-        for(uint32_t trial=0;trial<192;++trial) {
-            const int region=static_cast<int>((s.pond.next_id-1u+trial/64u)%3u);
+        const uint32_t region_trials=basin.layout==2?128u:64u;
+        for(uint32_t trial=0;trial<3u*region_trials;++trial) {
+            const int region=static_cast<int>((s.pond.next_id-1u+trial/region_trials)%3u);
             const float x=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u)*2-1;
             const float y=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u+1u)*2-1;
             const float z=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u+2u)*2-1;
             V position;
             if(region==2) {
                 const V center=deep::cove_center(s.habitat),radii=deep::cove_radii(s.habitat);
-                position={center.x+radii.x*(.45f+.15f*x),-1.65f+.35f*y,center.z+radii.z*.23f*z};
+                // The boulder task must keep renewing the cove even while
+                // another cove pellet remains. Its wider envelope admits two
+                // foods with the same physical/separation clearance. Layout 1
+                // retains its original sequence and exact arithmetic.
+                if(basin.layout==2)
+                    position={center.x+radii.x*(.4f+.28f*x),-1.65f+.35f*y,center.z+radii.z*.38f*z};
+                else position={center.x+radii.x*(.45f+.15f*x),-1.65f+.35f*y,center.z+radii.z*.23f*z};
             } else position=deep::arch_to_world({x*.8f,y*.28f,(region==0?-1.f:1.f)*(2.65f+.35f*z)},s.habitat);
             if(!cove_food_clear(s,slot,position,basin)) continue;
             auto& p=s.pond.pellets[slot];p={};p.active=true;p.settling=false;p.position=position;p.id=s.pond.next_id++;
@@ -229,7 +237,7 @@ CUDARL_HD inline float advance(State& s,const float* action,V current={},deep::B
     if(deep::norm(p.body.position-p.anchor)>.1f || !targeted) {p.anchor=p.body.position;p.still_steps=0;}
     else {++p.still_steps;p.max_still=p.still_steps>p.max_still?p.still_steps:p.max_still;}
     if(targeted) reward+=3.f*(before-deep::norm(p.pellets[p.target].position-p.body.position));
-    const float gap=deep::arch_body_clearance(p.body,s.habitat);
+    const float gap=deep::obstacle_body_clearance(p.body,s.habitat,basin);
     if(contact) {++s.contacts;reward-=.005f+.015f*deep::clamp(-gap/.1f,0,1);}
     record_passage(s,contact);
     for(int j=0;j<4;++j) {const float a=deep::clamp(action[j],-1,1),d=a-p.last_action[j];reward-=.003f*d*d;p.last_action[j]=a;}

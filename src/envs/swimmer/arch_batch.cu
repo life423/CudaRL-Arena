@@ -1,4 +1,5 @@
 #include "arch_batch.h"
+#include <string>
 
 namespace cudarl::arch {
 namespace {
@@ -7,13 +8,18 @@ int population(int n) {
     return n;
 }
 __device__ deep::Basin effective_basin(const State& state,const Context& context,bool practice) {
-    return state.pond.retention || (practice && state.pond.environment%4u==1u)?deep::Basin{}:context.basin;
+    if(state.pond.retention || (practice && state.pond.environment%4u==1u)) return {};
+    // The boulder stage keeps a distinct cove-retention quarter, rather than
+    // replacing all earlier cove practice with the new solid obstacle.
+    if(practice && context.basin.layout==2 && state.pond.environment%4u==2u) return {1};
+    return context.basin;
 }
 __global__ void initialize(State* states,int n,uint32_t seed,Context context) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;
     if(i<n) {
         const bool retention=i%4==0;
-        const deep::Basin basin=retention || i%4==1?deep::Basin{}:context.basin;
+        const deep::Basin basin=retention || i%4==1?deep::Basin{}:
+            (context.basin.layout==2 && i%4==2?deep::Basin{1}:context.basin);
         states[i]=initial(seed,static_cast<uint32_t>(i),0,retention,basin);
     }
 }
@@ -26,7 +32,7 @@ __global__ void make_features(State* states,float* features,int n) {
     if(pond.decision && pond.pellets[food].active) feeding::features(pond,food,out);
     else for(int j=0;j<progress_selector::kFeatures;++j) out[j]=0;
 }
-__global__ void choose(State* states,const float* scores,float* observations,int n) {
+__global__ void choose(State* states,const float* scores,float* observations,int n,Context context,bool practice) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;
     if(i>=n) return;
     auto& state=states[i];auto& pond=state.pond;
@@ -38,7 +44,7 @@ __global__ void choose(State* states,const float* scores,float* observations,int
         }
         pond.decision=false;
     }
-    arch::observe(state,observations+i*kObs);
+    arch::observe(state,observations+i*kObs,effective_basin(state,context,practice));
 }
 __global__ void advance_kernel(State* states,const float* actions,swimmer::Outputs out,int n,bool autoreset,Context context,bool practice) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;
@@ -79,24 +85,25 @@ Batch::Batch(int n,uint32_t seed,swimmer::Body unused):n_(population(n)),seed_(s
 void Batch::prepare(cudaStream_t stream) {
     make_features<<<(n_*feeding::capacity+127)/128,128,0,stream>>>(states_.get(),features_.get(),n_);CUDA_CHECK_THROW(cudaGetLastError());
     selector_.forward(features_.get(),n_*feeding::capacity,stream);
-    choose<<<(n_+63)/64,64,0,stream>>>(states_.get(),selector_.output(),observations_.get(),n_);CUDA_CHECK_THROW(cudaGetLastError());
+    choose<<<(n_+63)/64,64,0,stream>>>(states_.get(),selector_.output(),observations_.get(),n_,context_,practice_mode_);CUDA_CHECK_THROW(cudaGetLastError());
 }
 void Batch::configure(const std::vector<float>& selector,cudaStream_t stream,bool reset) {
     configure(selector,context_,stream,reset);
 }
 void Batch::configure(const std::vector<float>& selector,const Context& context,cudaStream_t stream,bool reset) {
     const float speed=deep::norm(context.current);
-    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context.current.y)>1e-8f || context.version<0 || context.basin.layout<0 || context.basin.layout>1)
+    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context.current.y)>1e-8f || context.version<0 || context.basin.layout<0 || context.basin.layout>2)
         throw std::invalid_argument("Invalid arch current context");
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream));selector_.set_params(selector);
     context_=context;
     if(reset) {
-        ticks_=0;
+        ticks_=0;practice_mode_=true;
         initialize<<<(n_+63)/64,64,0,stream>>>(states_.get(),n_,seed_,context_);CUDA_CHECK_THROW(cudaGetLastError());
     }
     prepare(stream);
 }
 void Batch::step(const float* actions,swimmer::Outputs out,cudaStream_t stream,bool autoreset,bool practice) {
+    practice_mode_=practice;
     advance_kernel<<<(n_+63)/64,64,0,stream>>>(states_.get(),actions,out,n_,autoreset,context_,practice);CUDA_CHECK_THROW(cudaGetLastError());
     prepare(stream);
     if(autoreset && ++ticks_>=kEpisodeSteps) {
@@ -112,7 +119,7 @@ State Batch::state(cudaStream_t stream) const {
 }
 void Batch::set_state(const State& state,cudaStream_t stream) {
     if(n_!=1) throw std::runtime_error("Single-world restore requested from arch training batch");
-    ticks_=state.pond.steps;
+    ticks_=state.pond.steps;practice_mode_=false;
     CUDA_CHECK_THROW(cudaMemcpyAsync(states_.get(),&state,sizeof(state),cudaMemcpyHostToDevice,stream));
     prepare(stream);CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
 }
@@ -123,12 +130,16 @@ void Batch::load(checkpoint::Reader& in,uint32_t saved_version) {
     if(saved_version<1 || saved_version>3) throw std::runtime_error("Unsupported arch practice checkpoint version");
     const auto states=in.array<State>(static_cast<size_t>(n_));
     if(states.size()!=static_cast<size_t>(n_)) throw std::runtime_error("Invalid arch world count");
-    for(const auto& state:states) {
+    for(size_t index=0;index<states.size();++index) {
+        const auto& state=states[index];
         const auto& pond=state.pond;
         if(pond.steps<0 || pond.steps>=kEpisodeSteps || pond.steps!=states[0].pond.steps ||
            pond.target<-1 || pond.target>=feeding::capacity || !std::isfinite(pond.body.position.x) ||
            !std::isfinite(pond.body.position.y) || !std::isfinite(pond.body.position.z))
-            throw std::runtime_error("Invalid arch practice state");
+            throw std::runtime_error("Invalid arch practice state at world "+std::to_string(index)+
+                ": steps="+std::to_string(pond.steps)+", expected="+std::to_string(states[0].pond.steps)+
+                ", target="+std::to_string(pond.target)+", position=("+std::to_string(pond.body.position.x)+
+                ","+std::to_string(pond.body.position.y)+","+std::to_string(pond.body.position.z)+")");
     }
     context_={};
     if(saved_version==2) {
@@ -137,9 +148,14 @@ void Batch::load(checkpoint::Reader& in,uint32_t saved_version) {
         const auto old=in.value<LegacyContext>();context_.current=old.current;context_.version=old.version;
     } else if(saved_version==3) context_=in.value<Context>();
     const float speed=deep::norm(context_.current);
-    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context_.current.y)>1e-8f || context_.version<0 || context_.basin.layout<0 || context_.basin.layout>1)
+    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context_.current.y)>1e-8f || context_.version<0 || context_.basin.layout<0 || context_.basin.layout>2)
         throw std::runtime_error("Invalid saved arch current context");
-    ticks_=states[0].pond.steps;states_.copy_from_host(states.data(),states.size());
+    // A preceding configure/reset may still be initializing these same worlds
+    // on a nonblocking training stream. A synchronous default-stream copy does
+    // not order that producer: it can overwrite restored clocks with zeros.
+    // Restore is infrequent; fence all pending work before replacing its data.
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    ticks_=states[0].pond.steps;practice_mode_=true;states_.copy_from_host(states.data(),states.size());
     prepare(nullptr);CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }
 }

@@ -1,5 +1,89 @@
 # Latest stopping point — October 29, 2026
 
+**Current continuation: actuator calibration is verified, calm holding is the
+unfinished next lesson.** The user requested a checkpoint commit/note, then
+explicitly revoked stopping and asked to continue. Read
+[the exact resume instructions](experiments/swimmer/predator-shelter/RESUME.md)
+first. Protocol-3 calibrated PPO passes 14 focused GPU checks but its first
+300-update approach/current trial still has 0/24 five-second holds. Protocol4
+now narrows unseen practice to exact/tiny-perturbed calm holding while retaining
+food practice. Its research trial and live holding viewer are still to finish.
+No failed actor replaces the working boulder pond. No push/merge was requested.
+
+**Passing-predator pilot is implemented locally but NOT ready for the main
+creature:** user selected the predator shadow over the proposed surge, then
+asked about visible shelter such as lily pads. [Full report](experiments/swimmer/predator-shelter/README.md).
+The actual boulder game was closed normally at learner **7,856**, applied actor
+**7,568**. Its protected full copy is
+`build/predator-shelter/source-boulder.bin`, SHA-256
+`d9a5c0fd07163c6558fb11c30e6db9cd65ca98dd5711f20e631f080ce668d8a6`.
+Native sight obstruction uses the real sphere/torus and 216 head/tail surface
+samples. A separate source-driven bird/shadow prototype, shared goal scorer,
+55→59 motor transfer, full task-PPO persistence and strict adoption are added;
+no source save or physical equation is overwritten. The normal menu remains
+the working boulder pond, and no shelter actor has been applied.
+
+Corrected frozen motor test: **18/24 cover arrivals, 0/24 five-second holds**.
+Two independent 300-update, 1,024-world motor trials (binary and smooth holding
+reward) both finish with **0/24 holds**, 19 arrivals, finite states and retained
+food performance. Protocol 2 is separately versioned/saved; all 3,108 actor
+parameters changed, which does not demonstrate the absent skill. A CPU
+feasibility diagnostic holds all four nominal poses for ten calm seconds with
+zero torques, establishing an attainable equilibrium. Actual neural inference
+instead requests a joint command around 99–119 at those poses (range −1..1),
+with large saturation through the subsequent trajectory. This is a concrete
+next action-parameterization/transfer investigation; do not simply lengthen
+training or relax the strict whole-body hiding criteria. A separate mismatch
+between physical bed-tail contact and fin-envelope clearance is documented,
+not silently changed.
+
+Final native protocol-2 regression: **229/229 GPU-required, zero skips**;
+portable **2/2**; focused shelter **9/9**; Godot native readiness rejection
+**11/11**, original/candidate unchanged, no misleading shelter save created.
+Godot source import passes. Real Forward+ visual/rejection fixtures pass
+**115/115** across 1280×720, 768×1024, 390×844 and 844×390, with protected hashes
+unchanged. The unavailable scene presents a clear menu recovery view instead
+of frozen gameplay. The predator scene is absent from the main menu; static
+cue fixtures are explicitly labelled QA, not evidence of a learned reaction.
+All new work remains local/uncommitted on `codex/autonomous-pond-practice`
+alongside the earlier boulder/menu edits. No push/merge/public release was
+requested. Current training CLI processes have ended and their complete
+failed checkpoints/logs remain under ignored `build/predator-shelter/`.
+
+**Later personal-save audit:** the mutable boulder save has advanced
+7,856→7,872 with consistent full 1,024-world state and changed original
+55-input actor parameters. A normal boulder startup appears in the app log;
+its writer was not attributed. The newer valid save is preserved, not rolled
+back. SHA-256 `f8bfa0f8db893df71fb7268b14145c7bde684d72a25bc3d1361cb3d6f0eaf10d`,
+backup `build/predator-shelter/personal-boulder-observed.bin`; read-only audit
+`personal-save-audit.log`. The immutable research source remains the original
+D9A5… snapshot, and no failed 59-input shelter actor was applied to the
+55-input boulder learner. Do not claim the mutable personal save was unchanged
+through the entire verification session.
+
+The working Godot **pond menu** is reopened after verification (PID 32696 at
+launch); **Open pond** resumes the boulder save. It does not launch the failed
+shelter actor. Final visual-check stderr is empty. No research CLI is left
+running. The remaining predator behavior is explicitly unfinished, with the
+actuator-range diagnosis recorded before further training/architecture work.
+
+Next discuss the actuator saturation fix and a manageable shelter layout.
+Two lily pads plus an open-sided stone ledge are recommendations only; roots,
+a short hollow log and sparse aquatic leaves are other options. Preserve two
+decision controllers, native PPO, existing swimming and genuine learning.
+
+**Latest work is now reachable from the local Godot menu:** user requested updating the menu/GUI. The main **Open pond** action routes to `pond/boulder_pond.tscn` on this healthy local CUDA setup with existing full saves. Its new actual-scene preview and automatic-food wording match the boulder/arch/cove task. **Pond menu → Open pond** resumes the same boulder learner. Public release builds, CPU selection, unavailable CUDA and missing parent/child saves retain feeding learning; no experiments/help/legacy-game buttons were reintroduced. A compact landscape layout keeps the action visible. Details now call the applied controller a validated swimmer rather than a validated arch.
+
+The previous actual boulder window was closed normally and saved at **6,861**; its complete checkpoint is backed up under ignored `build/boulder-menu-checks/personal-before.bin` with SHA-256 `9ffcb45d954f277c52c4fba1de52b3eabcf4841535ea3bb72cffa59a1b062304`. Tests work on copies and leave this personal file unchanged. Final GUI evidence: **101 rendered latest-route checks**, **100 retained developer-route checks**, **73 CPU reference-navigation checks**, **40 rendered CPU feeding checks**, zero failures. Four representative sizes, keyboard, save/return/resume and new preview were inspected; see [menu workflow](demo_menu.md). One initial comparison allowed a physics frame before the resumed snapshot; its test fixture now disables physics on the scene's ready signal, without changing runtime behavior. Native physics/networks/PPO are unchanged by this turn. Menu work remains local and uncommitted alongside the boulder changes; no commit, push, merge or website/installer update was requested. The startup menu is opened for the user; click Open pond to continue learning.
+
+**Boulder stage implemented and open live:** cove/current work is committed locally as **`8fee3b4`**. The following boulder work is local and uncommitted on `codex/autonomous-pond-practice`; no push, merge or public release was requested. Run `godot-project/pond/boulder_pond.tscn`. It imports the complete good cove learner at update **5,491**, approved/applied actor **5,136**, into `user://pond-policies/boulder-navigation-v1/training.bin`, preserving original body/foods/clock and **0.75 cm/s** setting. The actual Godot 4.4.1 window is responsive, error-free and training with **1,024** background swimmers. Normal close saves/stops; reopening resumes the child. Native sphere contact, generic solid sensing, food clearance and exact rendered geometry agree. Bounded downstream wakes affect body-relative drag, food and tracers; the measured point pair is **0.50→0.248 cm/s**. This is a prescribed mean-flow approximation, not CFD or a propagating surge. No shelter decision/reward/event, cluster, tunnel or limbs were added.
+
+Final evidence in [the boulder report](experiments/swimmer/boulder-navigation/README.md): **216/216 GPU-required native tests**, **8/8 focused**, **2/2 portable**, **22 byte-level import checks**, and **62/62 rendered checks**, with full resume continuing **5,508→5,509**. The initialization/restore race described below is fixed by a one-time load fence; the deterministic delayed-producer regression preserves 1,024 world clocks through the timeout boundary and rejects real corruption. The actual user's subsequent autosave at **6,003** has **zero inconsistent practice worlds** and all **2,980 learner actor parameters changed** from the inherited 5,491 learner. Matched live gates accepted updates including **5,600 and 5,680**; this is bounded adoption evidence, not independently established broad improvement. Wider cove spawning resolves the sparse-coverage case. Three final five-minute frozen probes collect **59/46/46** foods and **15/16/17** cove foods in calm/0.5/0.75 cm/s. The stronger condition still has a **31.7-second food gap** and **3.85-second measured immobility**; keep current-navigation practice/reliability work open. Foreground-bank occlusion and small portrait overview are known presentation limits; Closer view remains available. The eleven frozen references and both cove/arch parent saves are unchanged. A mutable feeding save differs from the older cove audit; it was retained as found, separately snapshotted and not counted as unchanged. Review this live prototype before the next proposed rock cluster. Earlier in-progress/failure notes below describe development history, not a remaining restore blocker.
+
+**Boulder follow-up in progress after cove commit `8fee3b4`:** user authorized one boulder, then explicitly required weaker physical flow downstream for the future surge/shelter idea. Layout 2 and `pond/boulder_pond.tscn` now add an exact native/render sphere, shared obstacle sensing/contact/food/current, bounded directional wakes and separate full cove import. Original cove was saved normally at learner **5,491**, approved/applied **5,136**; protected source is `build/boulder-navigation/source-cove.bin`, SHA-256 `7a6185f0c730be97cf15ac31dbe7c56eef00a7ec139fc6060c02a7f624e0941d`. No user boulder window/save has been opened yet. Parent saves remain intact. Native 215/215 and portable 2/2 passed before the final resume fix, and import byte checks pass 22. A longer frozen probe found sparse cove food coverage; the stage-2-only envelope was widened, with 512 separation/clearance regressions passing. Final five-minute cases collect 59/46/46 foods and 15/16/17 cove foods in calm/0.5/0.75 cm/s, but stronger current still has a 31.7 s food gap and 3.85 s measured immobility; do not claim reliable current mastery.
+
+**Current blocker being fixed before opening:** final rendered coverage check failed learner resume at saved update 5,508: `Invalid arch practice state`. Diagnostics show 39/1,024 practice clocks differ (912 versus 1,088), with finite states, while the protected source has all clocks 1,024. Root cause is async initialization on the nonblocking trainer stream racing default-stream state restore. The session agent is adding a one-time fence at `Batch::load` and a deterministic delayed-producer/episode-boundary regression. Preserve the failed QA checkpoint referenced by `build/boulder-navigation/rendered-coverage/summary.json`; do not silently repair its clocks or reset the visible creature. Rebuild, run the new regression/full suite, repeat import and rendered save/resume, then open a fresh personal boulder child from the original good cove. The read-only tool `arch_resume_verify ... compare-learning` directly confirms all 2,980 PPO actor parameters changed from update 5,491 to 5,508. Report [`boulder-navigation`](experiments/swimmer/boulder-navigation/README.md) is being finalized and still contains preliminary probe/gate values. New work is uncommitted, with no push/merge/public release requested. Prior entries below are historical.
+
 **Natural cove stage implemented and open live:** user approved stage 1 of [HABITAT_PLAN.md](HABITAT_PLAN.md). Run `godot-project/pond/cove_pond.tscn`: outward asymmetric cove, shared native/render terrain and shoreline, matching contacts/current/food/tracers, automatic food across main pond and cove. Main central depths and all old water volume are preserved; the original arch remains. No boulder, cluster, tunnel, shelter or limbs were added. Separate `user://pond-policies/cove-navigation-v1/training.bin` imports the actual full parent arch learner at **4,539**, approved/applied actor **4,352**, retaining optimizer/practice worlds, visible body/foods/clock and saved **0.75 cm/s** current. The parent arch and feeding saves remain unchanged; ARCH v3 reads v1/v2 without changing raw world-state layout. The user's own responsive Godot **4.4.1** window is running real 1,024-world PPO, not a recording or QA checkpoint. Close normally to save/stop; reopen this scene to resume. Early candidates are correctly rejected by the existing retention/contact gates; do not claim a learned improvement yet.
 
 [Cove verification report](experiments/swimmer/cove-navigation/README.md): **208/208 GPU-required native tests**, **2/2 portable suites**, full-parent import **22 checks** and older v1 migration **21**, rendered cove **52/52 on both 4.4.1 and 4.7.2**, legacy arch **52**, ordinary feeding CPU/CUDA **32 each**, empty error logs and eleven protected inputs unchanged. The inherited actor reaches/eats cove food in brief calm/0.5/0.75 cm/s frozen probes; maxima of measured immobility are 0.25/0.55/0.50 s. These single-start minute-long cases are bounded usability evidence, not broad robustness or learning gains. Longer and withheld-layout reliability remains open. Current field remains prescribed, not CFD/wakes or proven shelter. Review the cove before choosing the next boulder stage. Work is uncommitted on `codex/autonomous-pond-practice` after `fc65b72`; no push, merge, public installer or website update was requested. Previous plan-only entries below are historical.

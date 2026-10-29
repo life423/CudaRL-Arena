@@ -1,0 +1,11 @@
+Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
+
+BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
+ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=12.000 passages=4 contacts=9 valid=1
+CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)
+CUDA ready: NVIDIA GeForce RTX 5070 (sm_120, 48 SMs, 11.9 GiB)
+BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
+ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=12.000 passages=4 contacts=9 valid=1
+POND_LIVE update=0 background=1024 food=0 finished=false
+POND_LIVE update=2 background=1024 food=0 finished=false
+DEMO_MENU_SMOKE 100 checks, 0 failures

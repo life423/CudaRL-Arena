@@ -1,5 +1,18 @@
 # Approved creature experience and working roadmap
 
+**Latest shelter decision — October 29:** the user chose a **passing predator
+shadow**, rather than a current surge, as the first event for prioritizing
+cover over food. The [bounded pilot](experiments/swimmer/predator-shelter/README.md)
+has native whole-body occlusion, separate full saves and gated two-controller
+PPO, but has **not passed holding readiness or replaced the boulder swimmer**.
+Both brief body-training trials retain feeding but achieve 0/24 five-second
+holds. Diagnosis shows strongly saturated raw joint commands in this new task;
+review action parameterization/transfer before more training. Preserve the
+strict tests and source actor. Lily pads, an open-sided stone ledge, a hollow
+log, exposed roots and sparse leaf cover are discussed options for visible
+shelter, not authorization to add every object. Keep the creature visible to
+the camera while native predator sight obstruction remains real.
+
 Saved October 27, 2026 at the user's explicit request. This is the guiding product plan, superseding an experience centered on watching prolonged untrained flailing or treating research metrics as sufficient release quality. Existing experiment reports remain historical evidence.
 
 > A dependable young swimmer → increasingly challenging interactions → genuine measured adaptation → physical growth and new movement skills.
@@ -50,7 +63,11 @@ Define rewards, observations and supported tasks deliberately; the agent will no
 
 **Shoreline stage implemented locally October 29:** the user approved the first step of the habitat plan. `pond/cove_pond.tscn` now adds an outward asymmetric cove while retaining the main central depth profile and all previous water volume. Native terrain/contact, food clearance, current boundaries and Godot geometry share the versioned basin definition. Automatic food draws the inherited swimmer through the main pond and cove. The new separate full save imports the parent arch learner at update **4,539** and its approved actor **4,352**, retaining actor/critic/optimizer, practice worlds and visible state; the parent save is unchanged. [Verification](experiments/swimmer/cove-navigation/README.md) includes native CPU/CUDA agreement, old-save migration, rendered/live learning checks and brief frozen-actor collection in the cove at calm/0.5/0.75 cm/s. Longer and withheld-layout reliability remains open; no new-policy improvement or physically calmer shelter is claimed. No boulder, new depth route or limbs are added in this step.
 
-The requested [obstacle habitat plan](HABITAT_PLAN.md) records the manageable sequence: outward irregular shoreline/cove with existing main depths → one boulder → small rock cluster with a safe gap → short hollow log/tunnel → depth/layout variation and reliability → physically useful shelter behavior. Each stage has geometry, save-preservation and learning gates, and a live Godot review. The shoreline/cove is implemented locally; later obstacles and shelter remain proposed. Review this working stage before choosing the next addition.
+The requested [obstacle habitat plan](HABITAT_PLAN.md) records the manageable sequence: outward irregular shoreline/cove with existing main depths → one boulder → small rock cluster with a safe gap → short hollow log/tunnel → depth/layout variation and reliability → physically useful shelter behavior. Each stage has geometry, save-preservation and learning gates, and a live Godot review. The shoreline/cove and one boulder are implemented locally; the cluster, tunnel and shelter remain proposed. Review this working stage before choosing the next addition.
+
+**Next stage authorized October 29:** commit the verified cove, then add one solid boulder while carrying forward its entire current learner. The suggested later shelter event is a brief signaled current surge. The user specifically requires weaker downstream flow to affect actual physics. The boulder work therefore includes a bounded shared wake model and checks its physical effect; this does not implement the surge event or teach shelter-seeking yet. Keep navigation, physical shelter and learning when to shelter as distinct verified steps.
+
+**Boulder implemented locally:** `pond/boulder_pond.tscn` imports the full cove learner at update 5,491/applied actor 5,136 into its own save. One bed-rooted sphere has shared native contact/rays/food/current and exact rendered dimensions. Bounded directional wakes affect body-relative drag, food and tracers; a tested point pair reads 0.50→0.248 cm/s. Actual PPO, retained cove checks, widened food coverage and honest per-visit metrics are included. Verification caught and fixed a nonblocking CUDA initialization/restore race without resetting the visible creature or relaxing save validation. [The report](experiments/swimmer/boulder-navigation/README.md) records geometry, byte preservation, actual weight changes and residual stronger-current gaps. Physical low-flow shelter is now approximated; the surge event and the decision to seek shelter are still later work.
 
 Retain the approved creature identity across aquatic baby, new-limb stage and eventual upright adult. Growth changes the real articulated body, mass, inertia, drag and contacts. Extend/fine-tune a copy of the body controller with new joint observations and torque outputs; test how much learned swimming transfers. Train swimming alongside new capabilities to retain it. A controller operating multiple body stages needs appropriate body/limb-presence information and training coverage.
 

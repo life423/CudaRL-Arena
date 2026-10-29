@@ -1,0 +1,56 @@
+{
+	"boulder_mode": true,
+	"cases": [
+		{
+			"actor_update": 5136,
+			"contact_steps": 53,
+			"cove_foods_collected": 1,
+			"cove_visited": true,
+			"finite": true,
+			"foods": 70,
+			"max_food_gap_seconds": 8.15,
+			"max_immobility_seconds": 0.75,
+			"minimum_boulder_clearance": 0.0622722059488297,
+			"passages": 36,
+			"passed": true,
+			"seconds": 300.0,
+			"speed_cm_s": 0.0
+		},
+		{
+			"actor_update": 5136,
+			"contact_steps": 152,
+			"cove_foods_collected": 18,
+			"cove_visited": true,
+			"finite": true,
+			"foods": 52,
+			"max_food_gap_seconds": 10.2,
+			"max_immobility_seconds": 0.7,
+			"minimum_boulder_clearance": -0.0418010130524635,
+			"passages": 11,
+			"passed": true,
+			"seconds": 300.0,
+			"speed_cm_s": 0.5
+		},
+		{
+			"actor_update": 5136,
+			"contact_steps": 178,
+			"cove_foods_collected": 16,
+			"cove_visited": true,
+			"finite": true,
+			"foods": 50,
+			"max_food_gap_seconds": 13.4,
+			"max_immobility_seconds": 0.7,
+			"minimum_boulder_clearance": -0.0409251525998116,
+			"passages": 2,
+			"passed": true,
+			"seconds": 300.0,
+			"speed_cm_s": 0.75
+		}
+	],
+	"cove_mode": false,
+	"failures": 0,
+	"frozen_inference": true,
+	"source_sha256": "7a6185f0c730be97cf15ac31dbe7c56eef00a7ec139fc6060c02a7f624e0941d",
+	"source_unchanged": true,
+	"training_paused": true
+}

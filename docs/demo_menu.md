@@ -1,3 +1,13 @@
+# Current local Godot menu — October 29, 2026
+
+**Open pond** now selects `pond/boulder_pond.tscn` in this local CUDA project when a full boulder or cove save exists. The menu describes automatic food, the arch/boulder/cove and continued learning, with an actual native 3D viewport capture as its preview. Returning with **Pond menu** and reopening resumes the same full boulder checkpoint. Start the project (F5) to reach this menu; no manual scene selection is needed. The learner, physics and save paths are unchanged by this navigation update.
+
+Selection uses the existing real CUDA device/kernel probe and native API availability. Released builds (`cudarl/release_build=true`), explicit CPU mode, missing saved state or unavailable CUDA retain the existing feeding route. That route still supports genuine CPU learning. CartPole/Racing and developer routes remain in code; Experiments and Help/training stay absent from the player interface. The public installer and website were not rebuilt or deployed.
+
+The existing charcoal/orange style and single primary action are retained. A compact landscape layout keeps **Open pond** above the fold at 844×390. In-game headings, live-actor labels, automatic-food controls and per-visit graph match the latest environment. The old running window was saved normally; all navigation tests use private copies of its full checkpoint.
+
+Verification: **101 rendered latest-menu checks**, **100 retained-route checks**, **73 CPU reference-navigation checks** and **40 rendered CPU feeding checks**, with zero reported failures. Representative 1280×720, 768×1024, 390×844 and 844×390 menus and pond views were inspected, including keyboard activation, return, full resume and details. Logs/captures are under ignored `build/boulder-menu-checks/`. The earlier 216-test native validation remains evidence for unchanged physics, not a new native run for this GUI-only change. Internal review: usability, hierarchy, consistency, responsiveness and feedback 9/10; accessibility verification 8/10, with real touch/assistive input still to test. Small portrait swimmer framing and obstacle/bank occlusion remain existing pond limitations, separate from this menu route update.
+
 # Current Windows player menu
 
 The Windows preview now has one **Open pond** action. It opens the newest sinking-food learner, preferring CUDA and falling back to genuine CPU PPO. Experiments and Help/training no longer appear in the menu or pond. Feeding, current/camera controls, Pause learning, save and optional AI details remain in the pond. Backend/developer routes and CartPole/Racing are retained. Standalone packaging, CPU differences and current verification: [Windows release](windows_release.md).

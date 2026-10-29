@@ -1,0 +1,9 @@
+Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
+Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070
+
+BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
+ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=12.000 passages=4 contacts=9 valid=1
+ARCH_EVAL update=5504 context=7 speed_cm_s=0.500 seed=2730801793 original=12.500 incumbent=12.500 candidate=12.500 old_calm=38/38 arch_calm=35/35 cove=22/24 contacts=82/90 passages=27 clean=15 accepted=0
+BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
+ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=12.000 passages=5 contacts=14 valid=1
+BOULDER_POND_SMOKE {"checkpoint":"C:/Users/aiand/Documents/programming/CudaRL-Arena/godot-project/../build/boulder-navigation/rendered-fixed/boulder-training-9752-721343.bin","checks":62,"failures":0,"initial_controller":{"cove_food_seen":true,"cove_visit":true,"foods_collected":8,"max_immobility_seconds":0.8,"minimum_boulder_clearance_model":0.00509004294872284},"loaded_parent":5491.0,"native_wake_probe":{"downstream_m_s":0.00247982703149319,"ratio":0.495965417384328,"upstream_m_s":0.00499999988824129},"population":1024,"resumed_boulder":5508,"source_sha256":"7a6185f0c730be97cf15ac31dbe7c56eef00a7ec139fc6060c02a7f624e0941d","update":5509}

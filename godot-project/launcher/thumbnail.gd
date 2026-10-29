@@ -8,7 +8,10 @@ var texture: Texture2D
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if demo == "pond":
+	if demo == "pond_boulder":
+		var path := "res://launcher/assets/boulder-pond.png"
+		texture = load(path) if ResourceLoader.exists(path) else preload("res://launcher/assets/tadpole-pond.png")
+	elif demo == "pond":
 		texture = preload("res://launcher/assets/tadpole-pond.png")
 	else:
 		var atlas := AtlasTexture.new()

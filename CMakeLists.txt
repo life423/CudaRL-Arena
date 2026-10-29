@@ -78,8 +78,14 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/progress_selector.cu
     src/envs/swimmer/feeding.cu
     src/envs/swimmer/arch_batch.cu
+    src/envs/swimmer/shelter_motor.cu
+    src/rl/shelter_action.cu
+    src/envs/swimmer/shelter_batch.cu
     src/demos/feeding_session.cu
     src/demos/arch_session.cu
+    src/demos/shelter_session.cu
+    src/demos/holding_session.cu
+    src/rl/shelter_probe.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
@@ -176,6 +182,13 @@ add_executable(cudarl_tests
     tests/test_arch_navigation.cpp
     tests/test_arch_current.cpp
     tests/test_cove_geometry.cpp
+    tests/test_boulder_geometry.cpp
+    tests/test_boulder_resume.cpp
+    tests/test_predator_geometry.cpp
+    tests/test_shelter_motor.cpp
+    tests/test_shelter_action.cpp
+    tests/test_shelter_hold.cpp
+    tests/test_shelter_selector.cpp
     tests/test_fixed_target.cpp
     tests/test_progress_selector.cpp
     tests/test_pond_selector.cpp
@@ -192,6 +205,15 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    add_executable(predator_hold_diagnostic tools/predator_hold_diagnostic.cpp)
+    target_link_libraries(predator_hold_diagnostic PRIVATE cudarl_core)
+    cudarl_strict_warnings(predator_hold_diagnostic)
+    add_executable(shelter_motor_train tools/shelter_motor_train.cu)
+    target_link_libraries(shelter_motor_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(shelter_motor_train)
+    add_executable(predator_motor_probe tools/predator_motor_probe.cu)
+    target_link_libraries(predator_motor_probe PRIVATE cudarl_core)
+    cudarl_strict_warnings(predator_motor_probe)
     add_executable(arch_resume_verify tools/arch_resume_verify.cpp)
     target_link_libraries(arch_resume_verify PRIVATE cudarl_core)
     cudarl_strict_warnings(arch_resume_verify)

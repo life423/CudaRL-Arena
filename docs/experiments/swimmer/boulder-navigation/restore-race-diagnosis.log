@@ -1,0 +1,11 @@
+ARCH_PRACTICE_INTEGRITY source bad=0/1024 steps_min=1024 max=1024 context=3 layout=1
+ARCH_PRACTICE_BAD trained world=889 steps=912 target=1 position=(-0.752732098,-1.63847172,-1.98070109) invalid=0
+ARCH_PRACTICE_BAD trained world=890 steps=912 target=0 position=(-0.759491086,-2.19158506,-2.15653968) invalid=0
+ARCH_PRACTICE_BAD trained world=891 steps=912 target=1 position=(4.61237288,-2.07069445,-2.62201858) invalid=0
+ARCH_PRACTICE_BAD trained world=892 steps=912 target=0 position=(2.26834083,-2.01511621,0.726613581) invalid=0
+ARCH_PRACTICE_BAD trained world=893 steps=912 target=1 position=(-0.444191992,-1.9635253,-1.09259248) invalid=0
+ARCH_PRACTICE_BAD trained world=894 steps=912 target=1 position=(-0.588712215,-2.30871654,-2.33017898) invalid=0
+ARCH_PRACTICE_BAD trained world=895 steps=912 target=1 position=(-0.416971952,-2.24193764,0.844672203) invalid=0
+ARCH_PRACTICE_BAD trained world=992 steps=912 target=0 position=(-1.06967282,-2.17838955,0.0174507629) invalid=0
+ARCH_PRACTICE_INTEGRITY trained bad=39/1024 steps_min=912 max=1088 context=7 layout=2
+ARCH_LEARNING_VERIFY source_update=5491 saved_update=5508 changed_actor_parameters=2980/2980 max_absolute_change=0.00839972496 PASS

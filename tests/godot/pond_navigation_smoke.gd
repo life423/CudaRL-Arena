@@ -47,7 +47,7 @@ func _run() -> void:
 		root.size = dimensions
 		await settle()
 		var menu = current_scene
-		var open: Button = menu.find_child("pond_feeding_watch", true, false)
+		var open: Button = menu.find_child(menu.primary_demo + "_watch", true, false)
 		check(open != null and open.text == "Open pond", "Main pond route is not the live agent")
 		var menu_scroll: ScrollContainer = menu.find_child("DemoScroll", true, false)
 		menu_scroll.ensure_control_visible(open)

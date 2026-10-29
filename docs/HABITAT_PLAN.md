@@ -1,10 +1,18 @@
 # Obstacle habitat plan
 
-Prepared October 29, 2026 at the user's request. Stage 1 is now implemented locally and open for live review; later stages remain proposals. The immediate scope is a believable, navigable underwater habitat. Shelter-seeking follows the obstacle work; limbs and land movement remain later.
+**Later user steering:** a passing predator shadow is now the selected first
+shelter event, superseding the suggested surge. Its [research pilot](experiments/swimmer/predator-shelter/README.md)
+is isolated and unpromoted: the body still fails sustained-cover tests. Future
+lily pads/open overhangs/roots/logs should offer native predator occlusion with
+open camera sightlines; visual transparency must not change physical cover.
+These remain design options. Do not automatically build the whole obstacle
+sequence or add limbs while this control task remains unresolved.
+
+Prepared October 29, 2026 at the user's request. Stages 1 and 2 are implemented locally for live review; later stages remain proposals. The immediate scope is a believable, navigable underwater habitat. Shelter-seeking follows the obstacle work; limbs and land movement remain later.
 
 ## Starting point
 
-The local scene already has a larger basin, one physical rock arch, native C++/CUDA PPO, inherited swimming and food-selection controllers, real learning/save/resume, and bounded 0/0.5/0.75 cm/s current controls. The pre-current checkpoint is commit `fc65b72`; the current follow-up is still uncommitted. See [the current report](experiments/swimmer/arch-current/README.md). Preserve the working scene, full learner and approved actors before geometry changes.
+The local scene already has a larger basin, one physical rock arch, native C++/CUDA PPO, inherited swimming and food-selection controllers, real learning/save/resume, and bounded 0/0.5/0.75 cm/s current controls. The pre-current checkpoint is commit `fc65b72`; the verified current/cove follow-up is committed locally as `8fee3b4`. See [the current report](experiments/swimmer/arch-current/README.md). Preserve the working scene, full learner and approved actors before geometry changes.
 
 **Stage 1 delivered:** `pond/cove_pond.tscn` adds an outward asymmetric cove with shared native bed/contact, current, food and rendered geometry. The main central depth profile is retained and no old water volume is cut away. Automatic food covers the main pond and cove. The separate child imports the entire parent arch learner at update **4,539**, including the approved actor **4,352**, optimizer, practice worlds and visible physical state. The parent save remains unchanged. Native geometry/parity, full-save migration and rendered checks pass; the inherited actor visits and collects food in the cove in brief calm/0.5/0.75 cm/s probes. This establishes a working local stage, not broad reliability or a measured learned improvement. See [the cove report](experiments/swimmer/cove-navigation/README.md). Public feeding/download builds remain separate.
 
@@ -19,7 +27,13 @@ The local scene already has a larger basin, one physical rock arch, native C++/C
 | 5. Depth and layout variation | Vary safe obstacle positions, opening heights, food locations and routes through the habitat; introduce a depth-defined route separately from the initial shoreline change. | Navigate unfamiliar arrangements in three dimensions and use the broader pond. | Separate practice, candidate-gate and withheld final layouts; retained old swimming and current tests; longer actual live sessions. |
 | 6. Shelter behavior | Identify or build a physically useful protected area, then teach when to reach/use it. | Add a purpose beyond food collection using the completed habitat. | The refuge actually reduces the declared disturbance; learned response is measured separately from reactive inference. |
 
-Stage 1 is implemented and shown live. Review this stage and its remaining reliability checks before placing the boulder. Each later stage introduces one challenge rather than adding the entire habitat at once.
+Stage 1 was reviewed and committed. Stage 2 now has one physical boulder, matching obstacle sensing/contact/food and a bounded downstream wake. See [boulder evidence and remaining limits](experiments/swimmer/boulder-navigation/README.md). Review the live boulder before choosing the cluster stage. Each later stage introduces one challenge rather than adding the entire habitat at once.
+
+**Stage 2 authorized October 29:** the user requested committing the cove and starting the boulder. Add one bed-rooted solid with matching native contact, sensing, food/current and rendered geometry, two safe routes and a separate child of the current full cove save. Keep the arch and cove. Do not restart from the old feeding actor or install an experimental latest actor as the live controller.
+
+## Shelter event and physical prerequisite
+
+The proposed first shelter event is a brief signaled increase in current, followed by a return to ordinary feeding conditions. The user explicitly requires the surge to be **weaker downstream of obstacles in the physical model**, not just quieter-looking water. Establish and measure that local flow/body-force reduction first. The current boulder pass adds a bounded prescribed downstream wake shared by body drag, food and tracers; it is not full CFD, a pressure solution or a transient surge simulator. A later event needs its own supported intensity/timing and controller observations/goals. No trained shelter-seeking behavior is implied by a reduced-flow region, and no new strong-current control or surge event is part of this navigation stage.
 
 ## First stage in concrete terms
 
