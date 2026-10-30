@@ -114,7 +114,7 @@ endif()
 
 include(CTest)
 if(BUILD_TESTING)
-add_executable(foundation_tests tests/test_main.cpp tests/test_physics.cpp tests/test_mlp_cpu.cpp tests/test_checkpoint.cpp)
+add_executable(foundation_tests tests/test_main.cpp tests/test_check.cpp tests/test_physics.cpp tests/test_mlp_cpu.cpp tests/test_checkpoint.cpp)
 target_include_directories(foundation_tests PRIVATE tests)
 target_link_libraries(foundation_tests PRIVATE creature_physics)
 if(CUDARL_ENABLE_CUDA)

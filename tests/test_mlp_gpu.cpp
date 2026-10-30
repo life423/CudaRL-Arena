@@ -133,6 +133,40 @@ GPU_TEST_CASE("gpu_mlp: gradients accumulate until zero_grad") {
     CHECK_CLOSE(twice, doubled, 1e-6);
 }
 
+GPU_TEST_CASE("gpu_mlp: constructor gradients are ready for first nonblocking use") {
+    const MlpSpec spec({7, 13, 5, 3}, {Activation::Tanh, Activation::ReLU, Activation::Identity});
+    constexpr int batch = 37;
+    constexpr uint32_t seed = 321;
+    const auto params = init_params(spec, seed);
+    const auto x = random_floats(batch * spec.input_size(), seed + 1);
+    const auto dy = random_floats(batch * spec.output_size(), seed + 2);
+    CpuMlp<double> reference(spec);
+    reference.params().assign(params.begin(), params.end());
+    const std::vector<double> input(x.begin(), x.end()), gradient(dy.begin(), dy.end());
+    std::vector<double> expected_dx(x.size());
+    reference.forward(input.data(), batch);
+    reference.zero_grad();
+    reference.backward(gradient.data(), batch, expected_dx.data());
+    const std::vector<double> expected_output(reference.output(), reference.output() + dy.size());
+
+    // Allocate/upload BEFORE construction: no later allocation, parameter copy
+    // or explicit zero_grad may accidentally order its default-stream memset.
+    auto device_x = to_device(x), device_dy = to_device(dy);
+    device_ptr<float> device_dx(x.size());
+    cudaStream_t stream = nullptr;
+    CUDA_CHECK_THROW(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));
+    try {
+        GpuMlp net(spec, batch, seed);
+        net.forward(device_x.get(), batch, stream);
+        net.backward(device_dy.get(), batch, device_dx.get(), stream);
+        CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
+        CHECK_CLOSE(to_host(net.output(), dy.size()), expected_output, 1e-5);
+        CHECK_CLOSE(net.get_grads(), reference.grads(), 1e-4);
+        CHECK_CLOSE(to_host(device_dx, x.size()), expected_dx, 1e-5);
+    } catch (...) { cudaStreamDestroy(stream); throw; }
+    CUDA_CHECK_THROW(cudaStreamDestroy(stream));
+}
+
 GPU_TEST_CASE("gpu_mlp: rejects bad batch sizes") {
     GpuMlp net(MlpSpec({2, 2}, {Activation::Identity}), 8, 1);
     auto x = to_device(random_floats(32, 1));

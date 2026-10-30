@@ -13,8 +13,8 @@
 namespace cudarl::nn {
 
 // MLP whose parameters, gradients, and activations all live on the GPU.
-// Every call is asynchronous on the given stream; nothing synchronizes except
-// the explicit host copies (get_params / get_grads / set_params). Results are
+// Construction completes initialization. Compute calls are asynchronous on the
+// given stream; explicit host copies synchronize as needed. Results are
 // bit-identical run to run: no atomics anywhere in forward or backward.
 class GpuMlp {
 public:

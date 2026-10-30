@@ -99,6 +99,9 @@ GpuMlp::GpuMlp(MlpSpec spec, int max_batch, uint32_t seed, GemmKernel kernel)
 
     set_params(init_params(spec_, seed));
     zero_grad();
+    // Construction must finish initialization before a first use on an
+    // unrelated nonblocking stream. Compute calls remain asynchronous.
+    CUDA_CHECK_THROW(cudaStreamSynchronize(nullptr));
 }
 
 void GpuMlp::check_batch(int batch) const {

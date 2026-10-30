@@ -672,3 +672,82 @@ Mandatory equation checks inside a charged physical trial belong to that trial;
 they are not additional standalone reference/diagnostic queries. No cap increase.
 The candidate's derived storage-aware checker must also reject those raw and
 stored corruptions; this is validation only, not another integration variant.
+
+## Coding takeover - completed correction preserved; two numerical repairs
+
+The user confirmed the previous coding AI was paused before this work began.
+Takeover baseline is `e5b8c8d3514fd7e86899060b9202a000b1ddc23d`.
+Its already-executed rotating result is preserved at
+`build/contact-events/2026-10-30-v1/rotating.json`: the sole20ms CPU/CUDA
+fixture passed with508 rotating charges and3,201 total charges of7,004.
+Maximum penetration was31.963um; raw/stored momentum scores .1706/.6802,
+parity score .0266, no recorded energy gain,16/16 corruption controls rejected.
+The authorized correction is complete and closed; its3,803 unused charges do
+not authorize another case or longer run. This short result is not full contact
+acceptance, swimming, runtime adoption or permission for PPO. No study was rerun.
+
+Two isolated fixes now make future numerical checks more reliable:
+
+- Vector comparisons reject unequal lengths and nonfinite actual/reference
+  values before indexing or reduction, rather than silently ignoring NaNs.
+  Three CPU regressions cover finite/empty behavior, NaN/infinities and both
+  mismatch directions.
+- GPU MLP construction waits for its default-stream gradient initialization
+  before returning. Subsequent compute remains asynchronous. A new regression
+  allocates/uploads inputs before construction and compares first forward,
+  backward and input gradients on a nonblocking stream with the CPU reference,
+  without a caller-side gradient clear or parameter copy masking initialization.
+
+Strict CPU-only and CUDA test-target builds passed. The sandbox initially
+blocked MSBuild's Windows SDK registry lookup; the authorized builds completed
+through the normal approval flow. No build or warning setting was weakened.
+Selected CPU-only checks:11/11,0 skipped. Selected CUDA-build numerical checks:
+50/50,0 skipped with `CUDARL_REQUIRE_GPU=1` and a real device, including the new
+nonblocking regression and existing GEMM/Adam/PPO/Gaussian checks. Filters were
+`check:`, `cpu_mlp:`, `gpu_mlp:`, `gemm:`, `adam:`, `ppo:` and `gaussian:`;
+the CPU-only binary ran the first two. These are numerical unit checks, not
+creature training or physical acceptance. No creature integration, Godot launch,
+closed experiment, full CTest invocation or new physical study ran. Logs are in
+`build/takeover-checks/`. Event source/result hashes were unchanged.
+
+The next proposed physical step still requires its own bounded authorization:
+calm-water contact acceptance, then one reusable motor beginning with controlled
+forward movement, followed by turning/braking/holding. Food, current, obstacles
+and chooser work are deferred from the first demo; their eventual requirements
+remain. No new physical budget, learner run, runtime/save migration, commit,
+merge, push or deployment is included in these repairs.
+
+## Original rolled-pose check - approved registration before execution
+
+The user approved exactly the proposed0.25s original rolled fixture on CPU/CUDA,
+calm water and zero actuation, within6,000 total entries/trial advances and no
+retries. See `docs/ROLLED_CONTACT_CHECK.md`. This is a new bounded check; the
+earlier correction and all other studies remain closed. Reuse the unchanged
+event/midpoint body implementation and exact archived initial case5. Freeze the
+numeric protocol, executable and source hashes before the sole invocation.
+Failure stops the check rather than tuning, retrying or spending another case.
+No longer support, runtime/save adoption, training, merge or deployment follows
+automatically. Existing seven-file numerical repairs remain intact/uncommitted.
+
+## Original rolled-pose check - passed and closed
+
+The sole approved0.25s original case5 check passed on CPU/CUDA, using5,448 of
+6,000 total entry/trial advances (2,724 per backend), with100 outer calls,
+5,012 accepted internal segments,14 events and336 charged bisections. No retry,
+retuning or extra fixture ran. All200 inherited corruption controls rejected.
+Maximum penetration31.8885um stayed below500um. Raw/stored momentum maxima
+.178467/.817585 and normalized backend comparison .00374249 stayed below1.
+Maximum energy gain1.94273e-11J stayed within the frozen allowance. See
+`docs/ROLLED_CONTACT_CHECK.md` and `build/contact-rolled/2026-10-30-v1/` for the
+immutable registration/source copy, executable, complete outer trace and result.
+
+All92 frozen source files were unchanged through execution;350 files across
+the four prior closed-study directories remained hash-identical. The original
+checkout remained clean. The optional study build was restored OFF afterward.
+The new run is CLOSED;552 unused advances are unavailable automatically. This
+is a passive original-start contact pass, not settled support or learned
+swimming. Runtime physics2, saved states and the earlier numerical fixes remain
+unchanged. No full support, free-water, PPO, runtime adoption, merge or deployment
+was executed. The next small coding decision is a calm-water forward-only motor
+task/evaluation contract, with its physical-readiness and any training budget
+explicitly decided before execution; food/current/chooser work stays deferred.

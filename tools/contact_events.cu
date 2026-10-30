@@ -2,6 +2,7 @@
 #include "physics/contact_events.h"
 #include "contact_validation_reference.h"
 #include "contact_pilot_cases.h"
+#include "contact_probe_cases.h"
 #include "core/checkpoint.h"
 #include "contact_momentum_audit.h"
 #include <cuda_runtime.h>
@@ -115,25 +116,53 @@ int momentum(const fs::path& root){
     std::cout<<"Audit: native raw="<<jobs[0].result.maximum_raw_normalized<<'/'<<jobs[1].result.maximum_raw_normalized<<", CPU-M/GPU stored="<<host_gpu_old<<", negatives="<<rejected<<"/40\n";return passed&&rejected==40?0:3;
 }
 std::array<float,23> body_fields(const p::BodyState& b){std::array<float,23> x{};int n=0;for(float v:{b.position.x,b.position.y,b.position.z,b.orientation.x,b.orientation.y,b.orientation.z,b.orientation.w})x[static_cast<size_t>(n++)]=v;for(float v:b.angle)x[static_cast<size_t>(n++)]=v;for(float v:b.velocity)x[static_cast<size_t>(n++)]=v;x[21]=b.work;x[22]=b.travel;return x;}
-int rotating(const fs::path& root){
-    int scalar_charges=0,reference_queries=0,gate=0;std::ifstream scalar_counts(root/"remaining-counts.txt");scalar_counts>>scalar_charges>>reference_queries>>gate;
-    std::ifstream audit_file(root/"momentum.json");const std::string audit_json((std::istreambuf_iterator<char>(audit_file)),{});
-    if(!scalar_counts||!gate||scalar_charges>3000||reference_queries>256||audit_json.find("\"passed\":true")==std::string::npos)throw std::runtime_error("Scalar or audit prerequisite failed");
-    if(fs::exists(root/"rotating.csv"))throw std::runtime_error("Rotating stage already attempted; no retries");
-    std::ofstream trace(root/"rotating.csv"),report(root/"rotating.json");trace.exceptions(std::ios::badbit|std::ios::failbit);report.exceptions(std::ios::badbit|std::ios::failbit);
+std::vector<uint8_t> rolled_binding(){
+    const auto fixture=cudarl::contact_probe::detail::archived(5);cp::Writer out;
+    out.value(uint32_t{0x43524F4C});out.value(uint32_t{1});cudarl::contact_pilot_spec::detail::write_body(out,fixture.initial);
+    for(float v:{fixture.fluid.density,fixture.fluid.viscosity,fixture.fluid.gravity,fixture.current.x,fixture.current.y,fixture.current.z})out.value(v);
+    for(float v:fixture.action)out.value(v);
+    out.value(6000);out.value(50);
+    for(double v:{.005,.25,e::kMaximumInternalStep,e::kSpring,e::kDamper,.0005,1e-10,.001,2e-4,2e-3,2e-6})out.value(v);
+    out.value(e::kReleaseBisections);out.value(e::kMaximumEvents);return out.data;
+}
+int prepare_rolled(const fs::path& root){
+    fs::create_directories(root);
+    if(fs::exists(root/"protocol.bin")||fs::exists(root/"protocol.json")||fs::exists(root/"run-started"))throw std::runtime_error("Rolled protocol already prepared or attempted; no overwrite");
+    const auto fixture=cudarl::contact_probe::detail::archived(5);const auto bytes=rolled_binding();
+    cp::write_atomic((root/"protocol.bin").string(),bytes);
+    std::ofstream out(root/"protocol.json");out.exceptions(std::ios::badbit|std::ios::failbit);
+    out<<std::setprecision(17)<<"{\"study\":\"original-rolled-quarter-second-1\",\"fixture_source_case\":5,\"physical_attempt_cap_total\":6000,\"allocation\":\"one shared cap, CPU then CUDA, no reallocation from closed studies\",\"backends\":[\"CPU\",\"CUDA nonblocking\"],\"outer_steps_each\":50,\"outer_step_s\":0.005,\"horizon_s_each\":0.25,\"internal_max_s\":"<<e::kMaximumInternalStep<<",\"event_bisections\":"<<e::kReleaseBisections<<",\"initial_body_fields\":[";
+    const auto fields=body_fields(fixture.initial);for(size_t i=0;i<fields.size();++i){if(i)out<<',';out<<fields[i];}
+    out<<"],\"fluid_density_viscosity_gravity\":["<<fixture.fluid.density<<','<<fixture.fluid.viscosity<<','<<fixture.fluid.gravity<<"],\"current_m_s\":[0,0,0],\"action\":[0,0,0,0],\"stiffness_N_m\":"<<e::kSpring<<",\"damping_N_s_m\":"<<e::kDamper<<",\"safety_gap_m\":0.0005,\"energy_absolute_J\":1e-10,\"energy_relative\":0.001,\"state_parity_absolute\":0.0002,\"parity_relative\":0.002,\"gap_force_parity_absolute\":0.000002,\"certificate\":\"unchanged raw physical gate plus derived half-ULP storage bound\",\"stop\":\"any budget, finite, solver, momentum, geometry, nonadhesion, energy, integrity or parity failure ends this sole run; no retries or tuning\",\"binding_checksum\":"<<cp::checksum(bytes)<<"}\n";
+    std::cout<<"Prepared original rolled fixture; zero advances; total cap6000.\n";return 0;
+}
+int rotating(const fs::path& root,bool original=false){
+    int scalar_charges=0,reference_queries=0,gate=0;
+    const int cap=original?6000:4000,steps=original?50:4;
+    const std::string prefix=original?"rolled":"rotating";
+    if(original){
+        if(cp::read((root/"protocol.bin").string())!=rolled_binding())throw std::runtime_error("Frozen rolled protocol differs from executable");
+        if(!fs::create_directory(root/"run-started"))throw std::runtime_error("Rolled check already attempted; no retries");
+    }else{
+        std::ifstream scalar_counts(root/"remaining-counts.txt");scalar_counts>>scalar_charges>>reference_queries>>gate;
+        std::ifstream audit_file(root/"momentum.json");const std::string audit_json((std::istreambuf_iterator<char>(audit_file)),{});
+        if(!scalar_counts||!gate||scalar_charges>3000||reference_queries>256||audit_json.find("\"passed\":true")==std::string::npos)throw std::runtime_error("Scalar or audit prerequisite failed");
+    }
+    if(fs::exists(root/(prefix+".csv")))throw std::runtime_error("Rotating stage already attempted; no retries");
+    std::ofstream trace(root/(prefix+".csv")),report(root/(prefix+".json"));trace.exceptions(std::ios::badbit|std::ios::failbit);report.exceptions(std::ios::badbit|std::ios::failbit);
     trace<<std::setprecision(17)<<"backend,tick,ok,charged,accepted_segments,events,bisections,min_gap_m,energy_start_J,energy_end_J,max_energy_J,energy_gain_J,raw_momentum_score,stored_momentum_score,storage_bound,solver,momentum,geometry,energy,negativeforce,floor_impulse_N_s";for(int k=0;k<23;++k)trace<<",body_"<<k;trace<<'\n';
-    const auto initial=cudarl::contact_pilot_spec::reference_states()[0];BodyJob cpu[4];int spent=0,outer=0;bool passed=true;std::string failure;
+    const auto initial=original?cudarl::contact_probe::detail::archived(5).initial:cudarl::contact_pilot_spec::reference_states()[0];std::vector<BodyJob> cpu(static_cast<size_t>(steps));int spent=0,outer=0;bool passed=true;std::string failure;
     double minimum=1,maximum_raw=0,maximum_stored=0,max_energy_gain=-1e300,initial_energy=0,max_parity=0;int accepted=0,events=0,bisections=0,negatives=0;
     Device<BodyJob> device;const float zero[4]{};
     for(int backend=0;backend<2&&passed;++backend){BodyJob job;job.state=initial;
-        for(int tick=0;tick<4&&passed;++tick){if(spent>=4000)throw std::runtime_error("Rotating budget exhausted");++spent;++outer;job.counter={0,static_cast<uint64_t>(4000-spent+1)};const auto before=job.state;
+        for(int tick=0;tick<steps&&passed;++tick){if(spent>=cap){passed=false;failure="physical_attempt_cap";break;}++spent;++outer;job.counter={0,static_cast<uint64_t>(cap-spent+1)};const auto before=job.state;
             if(backend)job=device.step(job);else{job.before=job.state;job.ok=e::body_step(job.state,zero,.005,{990,.001f,9.81f},{},job.stats,job.counter);}
             spent+=static_cast<int>(job.counter.used)-1;accepted+=job.stats.accepted_segments;events+=job.stats.events;bisections+=job.stats.bisections;negatives+=job.stats.negative_controls;
             if(std::memcmp(&job.before,&before,sizeof(before))!=0)throw std::runtime_error("Body input echo failed");
             if(tick==0)initial_energy=job.stats.energy_start;
             const auto& s=job.stats;minimum=std::min(minimum,s.min_gap);maximum_raw=std::max(maximum_raw,s.momentum_raw_score);maximum_stored=std::max(maximum_stored,s.momentum_stored_score);max_energy_gain=std::max(max_energy_gain,s.max_energy-initial_energy);
             passed=job.ok&&s.finite&&s.completed&&s.solver&&s.momentum&&s.geometry&&s.energy&&!s.negativeforce&&s.min_gap>=-.0005&&s.max_energy<=initial_energy+std::max(1e-10,.001*std::abs(initial_energy));
-            if(!passed)failure="native_physical_or_numerical_gate";
+            if(!passed){failure=s.budget_exhausted?"physical_attempt_cap":(!s.finite?"nonfinite":(!s.solver?"solver":(!s.momentum?"momentum":(!s.geometry?"geometry":(!s.energy?"energy":(s.negativeforce?"negative_normal_force":(s.event_limit?"event_limit":"native_physical_or_numerical_gate")))))));}
             if(backend&&passed){const auto a=body_fields(cpu[tick].state),b=body_fields(job.state);for(size_t k=0;k<a.size();++k){const double score=std::abs(double(a[k])-b[k])/(2e-4+2e-3*std::abs(a[k]));max_parity=std::max(max_parity,score);if(score>1)passed=false;}
                 const auto ca=cudarl::contact::inspect(cpu[tick].state),cb=cudarl::contact::inspect(job.state);if(ca.invalid!=cb.invalid||ca.excessive!=cb.excessive||ca.escape!=cb.escape||ca.floor_contact!=cb.floor_contact||ca.contact!=cb.contact)passed=false;
                 const double gap_score=std::abs(cpu[tick].stats.min_gap-s.min_gap)/(2e-6+2e-3*std::abs(cpu[tick].stats.min_gap));max_parity=std::max(max_parity,gap_score);if(gap_score>1)passed=false;
@@ -142,11 +171,11 @@ int rotating(const fs::path& root){
             if(!backend)cpu[tick]=job;
             trace<<backend<<','<<(tick+1)<<','<<job.ok<<','<<job.counter.used<<','<<s.accepted_segments<<','<<s.events<<','<<s.bisections<<','<<s.min_gap<<','<<s.energy_start<<','<<s.energy_end<<','<<s.max_energy<<','<<(s.max_energy-initial_energy)<<','<<s.momentum_raw_score<<','<<s.momentum_stored_score<<','<<s.storage_bound<<','<<s.solver<<','<<s.momentum<<','<<s.geometry<<','<<s.energy<<','<<s.negativeforce<<','<<s.impulsefloor;
             for(float v:body_fields(s.completed?job.state:s.trial))trace<<','<<v;trace<<'\n';trace.flush();
-            if(!passed){cp::Writer out;out.value(uint32_t{0x43455646});out.value(uint32_t{1});cudarl::contact_pilot_spec::detail::write_body(out,before);cudarl::contact_pilot_spec::detail::write_body(out,job.state);cudarl::contact_pilot_spec::detail::write_body(out,s.trial);out.value(s);cp::write_atomic((root/"rotating-first-failure.bin").string(),out.data);}
+            if(!passed){cp::Writer out;out.value(uint32_t{0x43455646});out.value(uint32_t{1});cudarl::contact_pilot_spec::detail::write_body(out,before);cudarl::contact_pilot_spec::detail::write_body(out,job.state);cudarl::contact_pilot_spec::detail::write_body(out,s.trial);out.value(s);cp::write_atomic((root/(prefix+"-first-failure.bin")).string(),out.data);}
         }
     }
-    report<<std::setprecision(17)<<"{\"passed\":"<<(passed?"true":"false")<<",\"failure\":\""<<failure<<"\",\"rotation_charged\":"<<spent<<",\"outer_calls\":"<<outer<<",\"accepted_segments\":"<<accepted<<",\"events\":"<<events<<",\"bisections\":"<<bisections<<",\"negative_controls_rejected\":"<<negatives<<",\"total_charged\":"<<(scalar_charges+4+spent)<<",\"total_cap\":7004,\"minimum_gap_m\":"<<minimum<<",\"maximum_raw_momentum_score\":"<<maximum_raw<<",\"maximum_stored_momentum_score\":"<<maximum_stored<<",\"maximum_energy_gain_J\":"<<max_energy_gain<<",\"maximum_parity_score\":"<<max_parity<<"}\n";
-    std::cout<<"Rotating: pass="<<passed<<", spent="<<spent<<"/4000, total="<<(scalar_charges+4+spent)<<"/7004, failure="<<failure<<'\n';return passed?0:3;
+    report<<std::setprecision(17)<<"{\"passed\":"<<(passed?"true":"false")<<",\"failure\":\""<<failure<<"\",\"original_start\":"<<(original?"true":"false")<<",\"rotation_charged\":"<<spent<<",\"outer_calls\":"<<outer<<",\"accepted_segments\":"<<accepted<<",\"events\":"<<events<<",\"bisections\":"<<bisections<<",\"negative_controls_rejected\":"<<negatives<<",\"total_charged\":"<<(scalar_charges+(original?0:4)+spent)<<",\"total_cap\":"<<(original?6000:7004)<<",\"minimum_gap_m\":"<<minimum<<",\"maximum_raw_momentum_score\":"<<maximum_raw<<",\"maximum_stored_momentum_score\":"<<maximum_stored<<",\"maximum_energy_gain_J\":"<<max_energy_gain<<",\"maximum_parity_score\":"<<max_parity<<"}\n";
+    std::cout<<prefix<<": pass="<<passed<<", spent="<<spent<<'/'<<cap<<", failure="<<failure<<'\n';return passed?0:3;
 }
 }
-int main(int argc,char** argv){try{if(argc!=3)throw std::runtime_error("Use --impact/--remaining/--audit/--rotate DIR");const std::string mode=argv[1];if(mode=="--impact")return scalar(argv[2],true);if(mode=="--remaining")return scalar(argv[2],false);if(mode=="--audit")return momentum(argv[2]);if(mode=="--rotate")return rotating(argv[2]);throw std::runtime_error("Unknown mode");}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 2;}}
+int main(int argc,char** argv){try{if(argc!=3)throw std::runtime_error("Use --impact/--remaining/--audit/--rotate/--prepare-rolled/--rolled DIR");const std::string mode=argv[1];if(mode=="--impact")return scalar(argv[2],true);if(mode=="--remaining")return scalar(argv[2],false);if(mode=="--audit")return momentum(argv[2]);if(mode=="--rotate")return rotating(argv[2]);if(mode=="--prepare-rolled")return prepare_rolled(argv[2]);if(mode=="--rolled")return rotating(argv[2],true);throw std::runtime_error("Unknown mode");}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 2;}}
