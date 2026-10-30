@@ -1,2 +1,0 @@
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=5 contacts=9 valid=1
-ARCH_RESUME_VERIFY checks=22 learner_update=4539 adopted=4352 applied=4352 worlds=1024 original_trainer_bytes=6067096 migrated_trainer_bytes=6067100 original_file_fingerprint=99921790570083601 PASS

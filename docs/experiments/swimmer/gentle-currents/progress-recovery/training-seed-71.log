@@ -1,6 +1,0 @@
-PROGRESS seed=71 envs=8192 update=0 calm=17.7656 current_px=14.6406 current_diagonal=13.9688 elapsed=1.2
-PROGRESS seed=71 envs=8192 update=32 calm=17.8281 current_px=14.6719 current_diagonal=13.8750 elapsed=30.1
-PROGRESS seed=71 envs=8192 update=64 calm=17.8594 current_px=14.8125 current_diagonal=13.9844 elapsed=59.5
-PROGRESS seed=71 envs=8192 update=96 calm=17.7500 current_px=14.6406 current_diagonal=13.9375 elapsed=89.3
-PROGRESS seed=71 envs=8192 update=128 calm=17.9062 current_px=14.6719 current_diagonal=13.9688 elapsed=119.6
-SAVED update=128 additional=128 motor_unchanged=true source_unchanged=true

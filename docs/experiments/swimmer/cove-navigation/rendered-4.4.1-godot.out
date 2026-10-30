@@ -1,9 +1,0 @@
-Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
-Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070
-
-COVE_LEARNING CUDA imported_update=4539 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=5 contacts=9 valid=1
-ARCH_EVAL update=4544 context=6 speed_cm_s=0.500 seed=2730800833 original=12.500 incumbent=12.000 candidate=12.250 old_calm=35/36 arch_calm=32/34 contacts=84/77 passages=25 clean=11 accepted=0
-COVE_LEARNING CUDA imported_update=4539 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=5 contacts=7 valid=1
-COVE_POND_SMOKE {"checkpoint":"C:/Users/aiand/Documents/programming/CudaRL-Arena/godot-project/../build/cove-navigation/rendered-4.4.1/cove-training-4340-673136.bin","checks":52,"failures":0,"initial_controller":{"cove_food_seen":true,"cove_visit":true,"foods_collected":12,"max_immobility_seconds":0.55},"loaded_parent":4539.0,"population":1024,"resumed_cove":4548,"source_sha256":"5f3ac35d996ce4500875031cc26c1d1e34ab7b83c4df9bc090b14dbbe9985665","update":4549}

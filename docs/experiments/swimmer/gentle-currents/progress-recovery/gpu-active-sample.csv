@@ -1,2 +1,0 @@
-timestamp, name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], power.draw [W]
-2026/10/27 12:52:10.649, NVIDIA GeForce RTX 5070, 99 %, 33 %, 3003 MiB, 167.43 W

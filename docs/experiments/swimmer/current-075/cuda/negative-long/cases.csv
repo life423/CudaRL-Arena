@@ -1,3 +1,0 @@
-seed,environment,backend,minutes,foods,food_per_minute,max_food_gap_s,immobility_events,max_immobility_s,invalid_states,invalid_foods,nonsequential_steps,passes,current_x_cm_s,switch_seconds,drifting_food,rotation_seconds,bank_visits,sustained_bank_visits,sustained_bank_cleared,sustained_bank_open,bank_contact_s,max_bank_contact_s,sustained_bank_food20_eligible,sustained_bank_food20,bank_food_censored,bank_slow_contact_s,max_bank_clear_s
-3235826945,0,CUDA,15,262,17.46666667,8.400000572,0,0,0,0,0,1,0.75,-1,1,-120,109,30,29,1,87.25,3.85,30,30,0,0.15,10.15
-3235826946,0,CUDA,15,253,16.86666667,10.05000019,0,0,0,0,0,1,0.75,-1,1,-120,118,26,26,0,80.7,2.2,26,26,0,0.05,7.35

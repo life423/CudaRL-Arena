@@ -1,6 +1,0 @@
-Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
-
-POND_FEEDING CUDA live + PPO source selector=320
-FEEDING_BRIEF_REFERENCE worlds=8 seconds=10 food_min=16.000 valid=1
-HISTORICAL_FEEDING resumed=true loaded=4751 continued=4752 physical_unchanged=true
-FEEDING_EVAL update=4752 context=25 seed=4276991889 original=16.667 incumbent=17.333 candidate=17.500 progress_gain=8.21889 calm=38 original_calm=38 accepted=1

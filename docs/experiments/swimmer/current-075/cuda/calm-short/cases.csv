@@ -1,9 +1,0 @@
-seed,environment,backend,minutes,foods,food_per_minute,max_food_gap_s,immobility_events,max_immobility_s,invalid_states,invalid_foods,nonsequential_steps,passes,current_x_cm_s,switch_seconds,drifting_food,rotation_seconds,bank_visits,sustained_bank_visits,sustained_bank_cleared,sustained_bank_open,bank_contact_s,max_bank_contact_s,sustained_bank_food20_eligible,sustained_bank_food20,bank_food_censored,bank_slow_contact_s,max_bank_clear_s
-3235826945,0,CUDA,5,87,17.4,5.75,0,0,0,0,0,1,0,-1,1,0,29,0,0,0,9.7,0.9,0,0,0,0,0
-3235826946,0,CUDA,5,88,17.6,7.200000286,0,0,0,0,0,1,0,-1,1,0,33,1,1,0,12.45,1.05,1,1,0,0,4.45
-3235826947,0,CUDA,5,87,17.4,6.950000286,0,0,0,0,0,1,0,-1,1,0,40,0,0,0,14.35,0.9,0,0,0,0,0
-3235826948,0,CUDA,5,92,18.4,6,0,0,0,0,0,1,0,-1,1,0,29,0,0,0,8.7,0.9,0,0,0,0,0
-3235826949,0,CUDA,5,89,17.8,10,0,0,0,0,0,1,0,-1,1,0,32,1,1,0,9.6,1,1,1,0,0,3.55
-3235826950,0,CUDA,5,91,18.2,6.700000286,0,0,0,0,0,1,0,-1,1,0,33,0,0,0,8.45,0.65,0,0,0,0,0
-3235826951,0,CUDA,5,88,17.6,8.850000381,0,0,0,0,0,1,0,-1,1,0,30,0,0,0,9.5,0.7,0,0,0,0,0
-3235826952,0,CUDA,5,89,17.8,6.050000191,0,0,0,0,0,1,0,-1,1,0,29,1,1,0,9.65,1.05,1,1,0,0,4.9

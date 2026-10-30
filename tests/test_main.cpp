@@ -4,7 +4,9 @@
 #include <cstring>
 #include <exception>
 
+#if CUDARL_WITH_CUDA
 #include <cuda_runtime.h>
+#endif
 
 #include "check.h"
 
@@ -24,10 +26,14 @@ bool env_flag_set(const char* name) {
 }
 
 bool cuda_device_present() {
+#if CUDARL_WITH_CUDA
     int count = 0;
     const bool ok = cudaGetDeviceCount(&count) == cudaSuccess && count > 0;
     cudaGetLastError();   // clear the error a missing driver leaves behind
     return ok;
+#else
+    return false;
+#endif
 }
 
 } // namespace

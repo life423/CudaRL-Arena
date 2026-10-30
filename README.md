@@ -1,51 +1,12 @@
-# CudaRL-Arena · Tadpole Pond
+# CudaRL · Minimal creature foundation
 
-A physically simulated creature that learns through our own C++/CUDA PPO system, with Godot providing the world, player interaction and inspection tools. No Python or PyTorch is used for training or runtime.
+One physical creature, one native world and one Godot inspection scene. This is the reduced foundation for a creature that will learn through our own C++/CUDA PPO system. **It currently runs diagnostic actuator inputs, not a learned motor.**
 
-The pond tadpole is the first stage. The longer-term direction is dependable swimming → measured adaptation during player interaction → physical growth and underwater limbs → crawling and leaving the pond → walking and eventual manipulation. Those later stages are not implemented.
+The product direction remains capable swimming → player interaction and measured real-time adaptation → growth and limbs → leaving water, walking and eventual manipulation. Those later stages are not implemented. [Master direction](docs/CREATURE_PLAN.md) · [Ownership/request interface](docs/CREATURE_CONTROLLER_INTERFACE.md) · [Current checkpoint](docs/SESSION_CHECKPOINT.md)
 
-[Download website](https://cudarl.drewclark.io) · [Master plan](docs/CREATURE_PLAN.md) · [Current local checkpoint](docs/SESSION_CHECKPOINT.md)
+## Start here
 
-## Current status
-
-The existing pond supports live physical swimming, sinking food, currents, local PPO practice and saved progress. CUDA is preferred after a real device/kernel probe; the portable feeding session also supports CPU learning. This inherited swimmer remains in place while its replacement is evaluated.
-
-**Dependable replacement movement is not established.** The latest isolated motor comparison stopped at its contact-readiness gate before either new policy trained. Geometry checks and CPU/CUDA agreement passed for the executed portion, but a rolled-head support case exceeded the registered overlap allowance. No replacement, further training or relaxed gate follows automatically from cleanup. See [the contact report](docs/MOTOR_V2_RESULTS.md).
-
-The current cleanup removes retired demos and repeated orchestration while preserving native physics, learning, saved controllers and reproducibility. CartPole and Racing have been retired from the active source. Historical reports remain evidence about their original commits, not instructions for running the current app.
-
-## Behavioral architecture
-
-Keep two learned behavioral policies:
-
-- **Goal chooser:** selects a persistent intention such as feeding, seeking safety, exploring or holding/resting.
-- **Reusable movement motor:** executes a destination, desired terminal velocity and heading. One motor must support turning, braking, arrival and holding; there is no motor network per ability.
-
-PPO critics estimate value during training; they are not additional behavioral controllers. The replacement motor experiment receives movement requests directly, without a chooser. The existing food scorer does not yet implement the full future intention set.
-
-A joint-target motor requests four angles for the current body's two universal joints, each with two controlled axes. A deterministic physical servo converts those targets into limited joint torques every 5 ms. It does not provide extra whole-body forces or rescue actions. Direct torque remains the registered comparison arm. Servo regulation alone does not establish swimming.
-
-See [request units, ownership and future body changes](docs/CREATURE_CONTROLLER_INTERFACE.md).
-
-## Execution paths
-
-| Layer | Responsibility and source |
-| --- | --- |
-| Godot launcher | Selects the saved boulder learner locally when CUDA and its source save are available; otherwise opens portable feeding. `godot-project/launcher/` |
-| Pond presentation | UI, camera, geometry and native state display. `godot-project/pond/` |
-| GDExtension | `DeepPondLab` owns the selected native session/playback. `src/godot/deep_pond_lab.*` |
-| Native sessions | Visible simulation, background practice, checkpoint leases, comparison and adoption. `src/demos/feeding*`, `arch_session.cu`, `overhang_session.cu` |
-| Physics/environments | Shared body, hydrodynamics, contact and task state. `src/envs/swimmer/` |
-| Learning | Actors, critics, PPO math, action probabilities and optimizer continuation. `src/rl/`, `src/nn/` |
-| Checkpoints | Versioned/checksummed complete saves. `src/core/checkpoint.*` and task-specific serializers |
-
-Godot does not perform neural training or secretly propel the creature. Player changes are passed to native code. Learning updates, validated adoption and reactions from frozen weights must be labelled separately.
-
-The two motor benches currently inspect different stopped protocols: the original command/paired-motor study and the later contact-v2 study. They are development tools, not two behavioral motors deployed in the creature. Their callers, schemas and evidence must be reconciled before retiring a path.
-
-## Windows development
-
-Requires Visual Studio 2022 C++ tools, CMake 3.24+, a compatible CUDA toolkit for the developer CUDA build, and a matching Godot 4.4 `godot-cpp` release library under `external/godot-cpp/bin/`. The default CUDA architecture is `120`; override `CMAKE_CUDA_ARCHITECTURES` for another GPU.
+Build in this worktree, then open `godot-project/project.godot` in Godot4.4 and run its main scene:
 
 ```powershell
 cmake --preset windows
@@ -53,38 +14,62 @@ cmake --build --preset release
 ctest --preset release
 ```
 
-Open `godot-project/project.godot` in Godot and run its main scene. Native DLLs cannot be replaced while an app/editor process is holding them. A separate output directory can be selected with `CUDARL_ADDON_BIN` for isolated verification.
+The scene starts paused. Choose joint-target or direct-torque mode, set the four axis commands, then select **Single step** or **Run**. Pause before changing modes. Reset is an explicit diagnostic reset, never a deployed recovery mechanism. The viewer displays the physical links returned by native code.
 
-The application name/save namespace remains **CudaRL Arena** to preserve personal progress. Do not delete or repurpose `user://pond-policies/` during cleanup. Consumer downloads are installer-first and do not require Godot or the CUDA toolkit. [Windows packaging and release instructions](docs/windows_release.md).
+**Save state / Load state** use only `user://foundation/diagnostic-state.bin`, a new versioned/checksummed physical-state format. Old pond learner files are neither loaded nor migrated. The Godot application name remains `CudaRL Arena` to avoid repurposing existing user data.
 
-The portable CPU build is separate:
+The CUDA build requires CMake3.24+, Visual Studio2022 C++ tools and a CUDA toolkit. The default architecture is120; override `CMAKE_CUDA_ARCHITECTURES` for another GPU. Set `CUDARL_GODOT_CPP_ROOT` and `CUDARL_GODOT_CPP_LIBRARY` to matching Godot4.4 C++ bindings. This worktree can reuse the original checkout's existing `external/godot-cpp` dependency.
 
-```powershell
-cmake --preset portable
-cmake --build --preset portable
-ctest --preset portable
-```
-
-## Focused validation and optional research tools
-
-Default native checks cover numerical kernels, PPO/action probabilities, session publication, checkpoint integrity, contact response and CPU/CUDA current agreement. GPU checks explicitly skip on systems without a device; set `CUDARL_REQUIRE_GPU=1` when a missing GPU must fail.
-
-Longer simulator/training regressions and research executables are opt-in:
+For headless CPU validation without Godot or CUDA build dependencies:
 
 ```powershell
-cmake --preset windows -DCUDARL_BUILD_EXTENDED_TESTS=ON
-cmake --preset windows -DCUDARL_BUILD_RESEARCH_TOOLS=ON
-cmake --preset windows -DCUDARL_BUILD_BENCH=ON
+cmake --preset cpu
+cmake --build --preset cpu
+ctest --preset cpu
 ```
 
-These switches enable building tools; they do not authorize repeating a stopped experiment. `nn_bench` additionally uses cuBLAS as a reference. Keep registered research budgets and withheld evaluation cases intact.
+The visible single-world diagnostic currently uses native CPU physics. CUDA runs the same physical stepping checks and retains the numerical primitives for later parallel learning. Godot rendering uses the available graphics hardware; no cloud service is involved.
 
-Fast Godot checks load resources or use fake sessions, without starting a creature learner:
+## Execution path
 
-```powershell
-Godot_console.exe --headless --path godot-project --script ../tests/godot/project_resource_audit.gd
-Godot_console.exe --headless --path godot-project --script ../tests/godot/pond_lifecycle_smoke.gd
-Godot_console.exe --headless --path godot-project --script ../tests/godot/habitat_mode_config_smoke.gd
+```text
+godot-project/main.tscn → main.gd → CreatureLab
+                                   ↓
+                         simulation::PhysicalWorld
+                                   ↓
+                       physics/dynamics + contact
+                                   ↓
+                          versioned physical state
 ```
 
-Behavioral acceptance remains separate: purposeful movement, turning, real braking, slow controlled arrival and ten-second position/heading holding. Unsupported calm-water holding, pond-relative holding against a specified validated current and supported bottom rest are different tests. Active joint movement is allowed. Food collection, fitting error, component checks and update counters do not prove these skills.
+| Location | Concrete responsibility |
+| --- | --- |
+| `src/physics/` | Articulated body, shared physical equations and complete body/fin contact envelope |
+| `src/simulation/` | Physical state, current, bounded actuator interface/servo, stepping and save/load |
+| `src/godot/` | One world owner exposed as `CreatureLab`; Godot value conversion |
+| `godot-project/` | One scene, diagnostic controls, stable camera and native-pose mesh |
+| `src/nn/`, `src/rl/`, `src/cuda/` | Retained FP32 MLP/backprop/Adam, PPO/GAE/Gaussian math and GPU utilities; no active curriculum or learner session |
+| `tests/` | Focused geometry/contact, torque/state, CPU/CUDA and numerical checks |
+
+Physics is independent of both Godot and the learning algorithm. The body still has two universal joints with two controlled axes each. Actuator torque remains limited to±10µN·m. The optional deterministic servo requests joint angles and supplies limited internal joint torques every5ms; it adds no body forces or kinematic stabilization. Water uses the existing reduced-order force model, not CFD.
+
+The intended behavioral system has **one learned goal chooser and one reusable movement motor** receiving persistent destination, desired terminal velocity and heading requests. Critics support training. Neither behavioral policy is implemented in this reduced runtime yet. The previous task/policy/session designs are retired rather than treated as specifications that must be imitated.
+
+## The unresolved physical gate
+
+Full-envelope geometry and contact-force queries are aligned, but the retained contact response is **not fully validated**. In the preserved study, a rolled head lost contact and recontacted while rotating, exceeding the registered0.5mm allowance near0.185s at all three tested timesteps. Geometry133/133 and2,400 executed CPU/CUDA comparisons passed; complete support and final timestep/free-water acceptance did not finish. Both new PPO arms have zero updates.
+
+The warning stays visible in this viewer. Cleanup does not retune that response, weaken the allowance or authorize another experiment. Diagnostic movement, servo regulation and passing component checks do not establish dependable swimming, braking or holding.
+
+## Baseline and removed paths
+
+Original commit: `e5e9bd1db7e442715ac8ba3a5f5030c0ede26430`.
+Annotated tag: `baseline/pre-minimal-foundation-2026-10-30`.
+Original branch: `codex/autonomous-pond-practice`.
+This branch: `codex/minimal-foundation`.
+
+The original checkout remains available for comparison, including its pond, old benches and ignored experiment results. Its `build/foundation-baseline/2026-10-30/` contains separate verified backups of25 personal saves and artifact manifests. Tags do not back up ignored files.
+
+This active tree removes the historical demo scenes, inheritance ladders, duplicated motor benches, old task/policy variants, session orchestration, training tools, release website and their obsolete tests. Historical source and detailed protocols remain recoverable at the baseline tag; results and personal data in the original checkout are untouched. The deployed website/download is not changed by this branch.
+
+No replacement learning, extended research budget, production adoption, merge or deployment is part of this cleanup. The next physical correction and motor-learning protocol require a separate bounded decision.

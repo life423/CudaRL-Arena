@@ -1,9 +1,0 @@
-Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
-
-COVE_LEARNING CUDA imported_update=4539 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=6 contacts=2 valid=1
-COVE_LEARNING CUDA imported_update=4539 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=5 contacts=7 valid=1
-COVE_LEARNING CUDA imported_update=4539 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=5 contacts=9 valid=1
-ARCH_CURRENT_FROZEN_PROBE {"cases":[{"actor_update":4352,"contact_steps":17,"cove_foods_collected":2,"cove_visited":true,"finite":true,"foods":13,"max_food_gap_seconds":7.9,"max_immobility_seconds":0.25,"passages":5,"passed":true,"seconds":60,"speed_cm_s":0.0},{"actor_update":4352,"contact_steps":20,"cove_foods_collected":3,"cove_visited":true,"finite":true,"foods":12,"max_food_gap_seconds":7.6,"max_immobility_seconds":0.55,"passages":4,"passed":true,"seconds":60,"speed_cm_s":0.5},{"actor_update":4352,"contact_steps":28,"cove_foods_collected":2,"cove_visited":true,"finite":true,"foods":11,"max_food_gap_seconds":10.4,"max_immobility_seconds":0.5,"passages":1,"passed":true,"seconds":60,"speed_cm_s":0.75}],"cove_mode":true,"failures":0,"frozen_inference":true,"source_sha256":"5f3ac35d996ce4500875031cc26c1d1e34ab7b83c4df9bc090b14dbbe9985665","source_unchanged":true,"training_paused":true}

@@ -1,9 +1,0 @@
-Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
-
-BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=13.000 passages=6 contacts=0 valid=1
-BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=12.000 passages=5 contacts=14 valid=1
-BOULDER_LEARNING CUDA imported_update=5491 worlds=1024
-ARCH_BRIEF_REFERENCE parent=10000 fingerprint=3865294816218556214 worlds=8 seconds=10 food_min=12.000 passages=4 contacts=9 valid=1
-ARCH_CURRENT_FROZEN_PROBE {"boulder_mode":true,"cases":[{"actor_update":5136,"contact_steps":60,"cove_foods_collected":15,"cove_visited":true,"finite":true,"foods":59,"max_food_gap_seconds":8.34999999999999,"max_immobility_seconds":0.6,"minimum_boulder_clearance":-0.0427603498101234,"passages":25,"passed":true,"seconds":300.0,"speed_cm_s":0.0},{"actor_update":5136,"contact_steps":198,"cove_foods_collected":16,"cove_visited":true,"finite":true,"foods":46,"max_food_gap_seconds":10.55,"max_immobility_seconds":0.8,"minimum_boulder_clearance":-0.0480499714612961,"passages":8,"passed":true,"seconds":300.0,"speed_cm_s":0.5},{"actor_update":5136,"contact_steps":206,"cove_foods_collected":17,"cove_visited":true,"finite":true,"foods":46,"max_food_gap_seconds":31.7,"max_immobility_seconds":3.85,"minimum_boulder_clearance":-0.0540359616279602,"passages":2,"passed":true,"seconds":300.0,"speed_cm_s":0.75}],"cove_mode":false,"failures":0,"frozen_inference":true,"source_sha256":"7a6185f0c730be97cf15ac31dbe7c56eef00a7ec139fc6060c02a7f624e0941d","source_unchanged":true,"training_paused":true}

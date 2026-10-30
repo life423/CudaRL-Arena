@@ -1,8 +1,0 @@
-Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org
-Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5070
-
-POND_FEEDING CUDA live + PPO source selector=320
-FEEDING_BRIEF_REFERENCE worlds=8 seconds=10 food_min=16.000 valid=1
-FEEDING_EVAL update=4752 context=25 seed=4276991889 original=16.667 incumbent=17.333 candidate=17.500 progress_gain=8.21889 calm=38 original_calm=38 accepted=1
-LOCAL_AUTO_POND backend=CUDA resumed=true loaded=4751 update=4764 auto=true drops=1 error=
-FEEDING_EVAL update=4768 context=26 seed=4276991905 original=17.167 incumbent=18.833 candidate=19.000 progress_gain=17.73107 calm=36 original_calm=36 accepted=1

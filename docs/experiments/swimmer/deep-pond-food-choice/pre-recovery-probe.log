@@ -1,9 +1,0 @@
-STALL env=8 steps=3538 since_food=20.0 selected=0 angles=-1.065,-1.100,-1.100,-1.016
-RECOVERY mode=0 foods=0 first_food_seconds=-1.00 final_since_food=50.00
-RECOVERY mode=1 foods=0 first_food_seconds=-1.00 final_since_food=50.00
-RECOVERY mode=2 foods=0 first_food_seconds=-1.00 final_since_food=50.00
-RECOVERY mode=3 foods=7 first_food_seconds=5.75 final_since_food=3.75
-RECOVERY mode=4 foods=9 first_food_seconds=4.65 final_since_food=0.60
-RECOVERY mode=5 foods=0 first_food_seconds=-1.00 final_since_food=50.00
-RECOVERY mode=6 foods=7 first_food_seconds=5.05 final_since_food=3.55
-RECOVERY mode=7 foods=7 first_food_seconds=4.65 final_since_food=0.80

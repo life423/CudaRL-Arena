@@ -1,0 +1,6 @@
+[configuration]
+entry_symbol = "creature_library_init"
+compatibility_minimum = "4.4"
+
+[libraries]
+windows.x86_64 = "res://addons/creature_foundation/bin/creature_foundation.dll"

@@ -1,521 +1,101 @@
-# Latest stopping point — October 30, 2026
-
-**Latest scope supersedes incremental architecture preservation:** the user now
-requests a minimal active foundation in a separate branch/worktree of this same
-repository after committing/tagging this baseline. The original checkout and
-ignored saves/results remain available for comparison. Physical body dimensions,
-four actuator axes, limits and water equations anchor the reduced system. The
-contact-v2 correction has not passed its dynamic gate. Learning design may be
-revised substantially, but no replacement training, extra study budget or
-checkpoint overwrite is authorized. The reduced entry must step explicit bounded
-diagnostic actions, show native physical state and save/load its own schema.
-Diagnostic commands are not learned behavior. Historical code need not remain in
-the reduced tree merely because it existed. See the minimal worktree's current
-README/plan for the resulting path; this checkout is the comparison baseline.
-
-## Active cleanup checkpoint — local checkout verified October 30
-
-Branch `codex/autonomous-pond-practice`, HEAD
-`dbbcf7b0caf2dadbfd14f08523415dea8d524f01`; the contact-v2 study and current
-cleanup are uncommitted. This is the local checkout, not a remote snapshot.
-No trainer is running. The mandatory contact gate remains failed, with zero
-new motor PPO updates, no final-policy evaluation and no adopted replacement.
-Do not rerun or extend it as part of cleanup.
-
-The master direction is restored at the top of CREATURE_PLAN.md: capable
-swimming, real interaction-driven PPO adaptation, then physical growth, limbs,
-leaving water, walking and eventual manipulation. Keep two behavioral policies
-and the native simulation/learning system; chooser excluded from motor study.
-
-Configured player route: launcher → saved boulder learner locally when its
-save/CUDA are available, otherwise portable feeding learner → DeepPondLab →
-native session → shared physics/PPO/checkpoint code. Save namespaces remain
-unchanged. Native cleanup binaries are built in `build/cleanup-validation/native`
-because the user's Godot editor is open; its loaded DLL is not overwritten.
-
-First coherent group removes explicitly retired CartPole/Racing domains while
-preserving their reusable Gaussian/PPO math and session-publication protections.
-Native core/extension/tests/NN benchmark build passed. Focused Gaussian5/5,
-PPO9/9 and fake-session4/4 checks passed. Godot resource/configuration and
-feeding startup/error checks use no native learner or physical steps. Historical
-motor benches remain separate until their actual callers and protocol roles
-are checked. Canonical motor code is a migration candidate, not an adopted actor.
-
-Current source-confirmed presentation defect: multiple habitat `_ready` chains
-repeat virtual startup/poll work. One shared lifecycle and named view hooks are
-being verified before changing habitat entry routes. Missing/outdated native
-modules must show a recoverable error rather than a frozen pond. Broad native
-class deletion and broad validation-changing rewrites were rejected; work is
-proceeding through narrow dependency-proved groups without those changes.
-
-**Newest: contact physics v2 failed its mandatory gate; no new motor trained.**
-Read [MOTOR_V2_RESULTS.md](MOTOR_V2_RESULTS.md) and the new preregistration.
-The opt-in full-envelope correction allows registered compliant contact through
-0.5 mm. Geometry passed 133 checks and CPU/CUDA agreed on 2,400 comparisons,
-but the rolled fixture's **head** exceeded the allowance at every tested
-substep near 0.185 s. The old fin discrepancy and this new head recontact are
-different events. Actual contact spend: 4,440 substeps, 2,220 per backend.
-The support window, final timestep acceptance and free-water comparison were
-not completed. Motor readiness controls, PPO updates and final evaluations are
-all zero. CPU-only preparation registered 64 fixtures without dynamics.
-
-Offline saved-state analysis shows passive buoyancy righting, rapid body roll,
-loss of contact and recontact as the head's vertical extent expands. No learned
-actor caused this gate failure. Preserve the shared stop, original results,
-body/actuator limits and historical servo gains. Discuss a bounded contact-only
-normal-response correction before further experiments; do not automatically
-retune thresholds, repeat the run or launch PPO. Baseline remains commit
-`dbbcf7b`; the new work is uncommitted. The separately authorized whole-Godot
-audit/cleanup is active presentation work, not permission to resume training.
-
-**Break checkpoint requested by the user:** commit the current source and
-documentation on the existing branch, then stop. No push, merge, new training
-or physics change is requested. On return, start with the completed paired
-results below and discuss the fin/contact mismatch before authorizing another
-experiment. Preserve the global stop and all local experiment/save artifacts.
-
-**Newest: paired motor v1 executed and STOPPED on training safety.** Read
-[PAIRED_MOTOR_RESULTS.md](PAIRED_MOTOR_RESULTS.md). New versioned torque and
-5ms joint-target-servo interfaces, action/effort/save semantics and actual-policy
-viewer are implemented. Exactly3200 joint-regulation controls passed8/8 on CPU
-and8/8 CUDA; recorded-data readiness added0physicalsteps/updates and passed.
-Torque PPO completed6updates/196608controls/192Adamsteps per optimizer.
-Rollout7 integrated32710controls, then was rejected beforeGAE/Adam for one
-finite world's distal-fin/bed breach:−0.19335mm full-envelope clearance, despite
-native contact proxy+4.61863mm.58 later slots froze. Totaltraining229318controls.
-The lastgood fullsave and exported6-update actor matchthe pre-update bytes.
-Joint-target actor has0updates.64 final fixtures were saved with314controls of
-preserved-swimmer capture, but0finalpolicytests; no interfacewinner or movement
-acceptance. Do not automatically resume eitherarm, tune successfulgains,
-changecontact or enlarge thisspentstudy. The proposed nextdecision is fin/contact
-geometry consistency under a new authorization, not a broader rewrite.
-
-Evidence and rollback: `build/paired-motor/2026-10-29-v1/`, including executed
-binaries/source hashes, pre-edit files, failedrollout and offline inspection.
-The isolated Godot motorbench loads the actual6/64 file paused and leaves the
-untrainedarm empty;93checks and rendered1280×720/1024×768/780×1000 pass. These
-are GUI checks, not withheldbehavioral success. Workingpond/mainmenu, physical
-equations/actuatorcaps, originals, personal saves and old128protocol remain.
-No merge/deployment. Goalchooser contract documented; no chooser integrated.
-
-**Latest user steering:** wait to replace the old tadpole or move the new one
-into a larger body of water until the new motor works better. UI retirement was
-paused before production edits; launcher/router/thumbnail hashes match the
-pre-turn snapshot. No new environment or learner was added. Inspection/snapshot
-notes remain under `build/retire-legacy-swimmer/2026-10-29/paused-status.json`.
-Keep the existing pond and saves. Motor probe results and budget limits below
-are unchanged; no additional interface experiment was authorized by this pause.
-
-**Newest: the newly authorized bounded braking probe is COMPLETE and FAILED
-research readiness.** Read [MOTOR_BRAKING_RESULTS.md](MOTOR_BRAKING_RESULTS.md)
-and its immutable preregistration. The user removed the conventional16/16
-research prerequisite, without relaxing final acceptance. One two-capture
-direct-torque search spent61,440 steps plus exactly1,600 paired replay steps.
-Best sequences are zero torque; stop dwells finish9.35/11.35s at52.83/77.98mm,
-both safe but neither quiet for10–20s. Three nonzero slow-start candidates show
-translational braking with a moving tail; they were not given extra replays.
-No additional search, PPO pilot, network, interface redesign or promotion ran.
-
-Actual nonblocking stream checks pass: the current H2D→observe dependency was
-already correct. Keep failed test assumptions/logs (Windows concurrency and
-cross-kernel bit identity) separate from production defects. Actual production
-checkpoint continuation remains bit-exact. The final scratch data path passes
-likelihood/CPU-GPU physics/terminal/GAE/gather/normalization/full-save checks.
-It exposed a real pre-state safety-accounting gap, now fixed. Protocol2 retains
-first pre/post breaches and rejects before GAE/Adam;600ticks is true terminal,
-not truncation bootstrap. Four legacy resume/integrity checks pass. No command
-PPO updates or Adam steps. Original numerical evidence is unchanged.
-
-All evidence/rollback is in `build/motor-braking/2026-10-29-v1/`; old reference
-gate remains false and final cases remain untouched. Discuss one bounded
-joint-target/fast physical-servo interface comparison next, same four-output
-PPO and torque caps; do not presume stable gains or rewrite physics. This is
-a hypothesis, not proof the old interface is inadequate. No run extension or
-whole-app rewrite. Preserve personal saves and parked overhang work.
-
-Preservation audit:221 immutable artifacts unchanged; one personal boulder save
-changed on the user's confirmed close of the old pond at19:06:33, before the
-probe/regressions. Its newer bytes are retained and separately copied; do not
-restore an older file over that progress. Tool-path audit finds no personal-save
-writer in these diagnostics. No frozen research input/result changed.
-
-**Newest completed bounded milestone: motor numerical check + physical reference
-+ isolated command task/trainer + live Godot bench.** Read
-[MOTOR_CONTROL_RESULTS.md](MOTOR_CONTROL_RESULTS.md) first. Numerical CPU-double/
-GPU saved-actor loss, gradients, six finite differences and fresh Adam pass.
-The32-trial physical reference budget is spent: passive2/16 complete passes,
-fixed conventional0/16. Actual swimming supplied all eight braking starts;
-passive stopping took4.9–11.3s against the proposed3s envelope. This failed
-reference does not establish uncontrollability. No PPO pilot ran or actor was
-adopted. All180 original protected artifacts match their hashes.
-
-New sources are frozen. `command_motor_train --prepare` generated CPU-only
-initialization/protocol under `build/motor-control/2026-10-29/pilot-v1/`; an
-explicit attempt with the false reference gate rejected before CUDA/training.
-The128-update cap remains conditional, not permission to bypass the gate.
-Reference artifacts/executed binary and a separately labelled offline stronger
-head-clearance review are preserved. Do not rerun the spent reference budget.
-
-`godot-project/motor_bench/motor_bench.tscn` is a separate **live physical frozen
-comparison**, not a video, new trained motor or predator success. Original55,
-calibrated59, zero and conventional are available; new experimental motor stays
-disabled.63 functional/render checks pass at1280×720,1024×768,780×1000. The working
-pond/menu/extension and parked overhang work are unchanged. No commit/push here.
-Next discuss the existing four-torque braking/reference boundary using saved
-traces; no training sweep, gain/reward patch, thresholds relaxation or app rewrite.
-
-The older entries below are retained history; their pending/not-run statements
-are superseded by this entry and the completed results document.
-
-**Latest priority: motor replan, not another food/shelter reward patch.** Read
-[MOTOR_CONTROL_PLAN.md](MOTOR_CONTROL_PLAN.md). The user no longer treats the old
-motor behavior or food rate as an untouchable specification; rollback remains
-mandatory. Recommend an isolated persistent-command motor task using the same
-native simulator/PPO/MLP/Godot infrastructure and separate goal chooser. First
-milestone is actual move→brake→stop→ten-second hold in calm open water, then
-strict existing shelter tests. No architecture expansion, new numerical check,
-physical-reference run or PPO pilot has been executed for this plan.
-
-The previously authorized supervised study **did run** (supersedes the older
-not-run notes below): exactly3×1,000 fresh-Adam steps, original accepted food
-teacher, trajectory-separated datasets, qualified stationary zero targets.
-Cover-only holds5/16 unseen starts and loses feeding; joint holds1/16 and
-retains feeding; both hold0/4 familiar nominals and fail the full gates. Data,
-all three checksummed actor/Adam states and traces remain at
-`build/holding-supervised/2026-10-29-v5/run-v1/`. All helper checks passed, but
-the independently implemented real saved-actor CPU-double loss/parameter-gradient/
-Adam comparison is still pending; do not imply it has run.
-
-Existing traces show cover-only nominal3 command magnitude growing from.00424
-to.142 while head displacement is only.143mm, with changed joints/rates and
-previous-action inputs. Exposure fails at2s before penetration. Static TRAIN
-prediction tolerances did not establish a stable feedback controller; no
-particular input, capacity limit or numerical-core defect is isolated.
-
-Rollback snapshot `build/motor-replan/2026-10-29/` contains46 current dirty
-working-file copies plus the complete patch/status and a180-artifact hash
-manifest. All160 earlier protected files still match. Preserve parked overhang
-work, personal saves and all failed studies. No candidate was adopted and no
-learning process is running. Proposed pilot cap is128 PPO updates×512×64, but
-physical feasibility and acceptance thresholds must be frozen before it starts;
-the numerical and reference preflights are bounded separately in the plan.
-
-**Controlled diagnosis completed; holding remains failed.** Read
-[holding-diagnosis.md](experiments/swimmer/predator-shelter/holding-diagnosis.md)
-and the registered bounded follow-up before another learning change. The
-diagnostic upload ordering fault is fixed; likelihood/means/GAE replay,
-gradient additivity, full Adam restoration and repeated full updates pass.
-Required food gain Jacobians are correct and unchanged. The four-arm study ran
-exactly 16 iterations each (48 total PPO updates across three learning arms),
-with final-only blind evaluation. Every arm finishes **0/4 exact and 0/24 near
-five-second holds**. Holding-only modestly improves short streaks/return but
-reduces reference feeding to **1.5/min calm, 1.875/min current**. Combined retains
-feeding in the small paired screen but does not learn holding. No actor adopted.
-
-Preselected final holding-only/combined noise and velocity traces also fail
-0/44 under every action mode. Of 38 initially safe starts, first exposure/margin
-failure always precedes penetration. Six blind near fixtures are already
-exposed; distinguish their recovery attempts from holding. Zero torque holds
-all four exact/18 initially safe blind near poses and 11/16 mild velocity cases,
-and earns higher deterministic return in 44/44 pairs. No architecture/optimizer
-cause has been uniquely isolated; don't call the failed finite budget a capacity
-proof. No further trial is running or automatically authorized by this checkpoint.
-
-Only diagnostic tools/docs were changed for this investigation. All 51 protected
-source/save/result files match the manifest. Full raw evidence, immutable
-sources and copies remain under ignored
-`build/holding-diagnosis/2026-10-29-protocol5/`. The next proposed discriminator is
-a frozen-observation safe-cover/food-retention fitting diagnostic, **not run**;
-discuss any larger controller redesign first. Do not change rewards, remove
-required gains, loosen safety or deploy rescue behavior. Preserve parked
-overhang work/default-menu request and the working personal pond.
-
-**Current priority: controlled protocol-5 holding diagnosis.** The latest user
-request explicitly pauses architecture changes, reward tuning and large runs.
-HEAD is still `5ea5d452589c70418836209c00921b84ddcb9dc2` on
-`codex/autonomous-pond-practice`; preserve all dirty protocol-5 and overhang work.
-Protocol 5 already reconditions the final layer and uses matching food-gradient
-gains. Do not repeat that fix. The two diagnostic tools compare identical
-complete shelter states and audit fixed PPO data on disposable copies; the
-results above supersede earlier pending-work descriptions. Protected-file hashes and the pre-diagnosis diff are under
-`build/holding-diagnosis/2026-10-29-protocol5/`. No failed actor is adopted.
-
-The overhang has native layout-3 geometry plus a live frozen-inference viewer;
-the requested Open pond default change and visual improvement remain unfinished.
-The later larger-bevel native shape edit is preserved but unverified. No more
-overhang changes should interrupt the requested holding diagnosis. Existing
-layout-2 sources, personal saves and experiment logs remain authoritative.
-
-**Latest object request:** the user chose an overhanging rock before lily pads.
-Implement isolated layout 3 (existing cove/boulder plus an open-sided bank
-ledge), native collision/visibility and a matching Godot mesh. Preserve normal
-layout-2 learning and checkpoints. No new PPO/reward/network trial is authorized
-by the geometry change. Open the predator demo only after learned hiding passes;
-static geometry QA must be labelled as such. See `docs/overhang_shelter.md`.
-
-**Latest user steering: pause expansion and diagnose the holding failure.**
-Read the newest section in
-[RESUME.md](experiments/swimmer/predator-shelter/RESUME.md). Protocols 4/5 both
-failed 0/24 near-calm five-second holds after 300 updates; protocol 5 also loses
-some calm feeding performance. Static zero-torque holding works at four nominal
-calm poses, but controlled braking/initial-velocity feasibility is still untested.
-The protocol-6 multi-head idea is design only. No new architecture, reward trial
-or live candidate adoption should proceed before the diagnostic comparison and
-discussion. The earlier work is committed as `5ea5d45`; later edits remain local.
-
-**Current continuation: actuator calibration is verified, calm holding is the
-unfinished next lesson.** The user requested a checkpoint commit/note, then
-explicitly revoked stopping and asked to continue. Read
-[the exact resume instructions](experiments/swimmer/predator-shelter/RESUME.md)
-first. Protocol-3 calibrated PPO passes 14 focused GPU checks but its first
-300-update approach/current trial still has 0/24 five-second holds. Protocol4
-now narrows unseen practice to exact/tiny-perturbed calm holding while retaining
-food practice. Its research trial and live holding viewer are still to finish.
-No failed actor replaces the working boulder pond. No push/merge was requested.
-
-**Passing-predator pilot is implemented locally but NOT ready for the main
-creature:** user selected the predator shadow over the proposed surge, then
-asked about visible shelter such as lily pads. [Full report](experiments/swimmer/predator-shelter/README.md).
-The actual boulder game was closed normally at learner **7,856**, applied actor
-**7,568**. Its protected full copy is
-`build/predator-shelter/source-boulder.bin`, SHA-256
-`d9a5c0fd07163c6558fb11c30e6db9cd65ca98dd5711f20e631f080ce668d8a6`.
-Native sight obstruction uses the real sphere/torus and 216 head/tail surface
-samples. A separate source-driven bird/shadow prototype, shared goal scorer,
-55→59 motor transfer, full task-PPO persistence and strict adoption are added;
-no source save or physical equation is overwritten. The normal menu remains
-the working boulder pond, and no shelter actor has been applied.
-
-Corrected frozen motor test: **18/24 cover arrivals, 0/24 five-second holds**.
-Two independent 300-update, 1,024-world motor trials (binary and smooth holding
-reward) both finish with **0/24 holds**, 19 arrivals, finite states and retained
-food performance. Protocol 2 is separately versioned/saved; all 3,108 actor
-parameters changed, which does not demonstrate the absent skill. A CPU
-feasibility diagnostic holds all four nominal poses for ten calm seconds with
-zero torques, establishing an attainable equilibrium. Actual neural inference
-instead requests a joint command around 99–119 at those poses (range −1..1),
-with large saturation through the subsequent trajectory. This is a concrete
-next action-parameterization/transfer investigation; do not simply lengthen
-training or relax the strict whole-body hiding criteria. A separate mismatch
-between physical bed-tail contact and fin-envelope clearance is documented,
-not silently changed.
-
-Final native protocol-2 regression: **229/229 GPU-required, zero skips**;
-portable **2/2**; focused shelter **9/9**; Godot native readiness rejection
-**11/11**, original/candidate unchanged, no misleading shelter save created.
-Godot source import passes. Real Forward+ visual/rejection fixtures pass
-**115/115** across 1280×720, 768×1024, 390×844 and 844×390, with protected hashes
-unchanged. The unavailable scene presents a clear menu recovery view instead
-of frozen gameplay. The predator scene is absent from the main menu; static
-cue fixtures are explicitly labelled QA, not evidence of a learned reaction.
-All new work remains local/uncommitted on `codex/autonomous-pond-practice`
-alongside the earlier boulder/menu edits. No push/merge/public release was
-requested. Current training CLI processes have ended and their complete
-failed checkpoints/logs remain under ignored `build/predator-shelter/`.
-
-**Later personal-save audit:** the mutable boulder save has advanced
-7,856→7,872 with consistent full 1,024-world state and changed original
-55-input actor parameters. A normal boulder startup appears in the app log;
-its writer was not attributed. The newer valid save is preserved, not rolled
-back. SHA-256 `f8bfa0f8db893df71fb7268b14145c7bde684d72a25bc3d1361cb3d6f0eaf10d`,
-backup `build/predator-shelter/personal-boulder-observed.bin`; read-only audit
-`personal-save-audit.log`. The immutable research source remains the original
-D9A5… snapshot, and no failed 59-input shelter actor was applied to the
-55-input boulder learner. Do not claim the mutable personal save was unchanged
-through the entire verification session.
-
-The working Godot **pond menu** is reopened after verification (PID 32696 at
-launch); **Open pond** resumes the boulder save. It does not launch the failed
-shelter actor. Final visual-check stderr is empty. No research CLI is left
-running. The remaining predator behavior is explicitly unfinished, with the
-actuator-range diagnosis recorded before further training/architecture work.
-
-Next discuss the actuator saturation fix and a manageable shelter layout.
-Two lily pads plus an open-sided stone ledge are recommendations only; roots,
-a short hollow log and sparse aquatic leaves are other options. Preserve two
-decision controllers, native PPO, existing swimming and genuine learning.
-
-**Latest work is now reachable from the local Godot menu:** user requested updating the menu/GUI. The main **Open pond** action routes to `pond/boulder_pond.tscn` on this healthy local CUDA setup with existing full saves. Its new actual-scene preview and automatic-food wording match the boulder/arch/cove task. **Pond menu → Open pond** resumes the same boulder learner. Public release builds, CPU selection, unavailable CUDA and missing parent/child saves retain feeding learning; no experiments/help/legacy-game buttons were reintroduced. A compact landscape layout keeps the action visible. Details now call the applied controller a validated swimmer rather than a validated arch.
-
-The previous actual boulder window was closed normally and saved at **6,861**; its complete checkpoint is backed up under ignored `build/boulder-menu-checks/personal-before.bin` with SHA-256 `9ffcb45d954f277c52c4fba1de52b3eabcf4841535ea3bb72cffa59a1b062304`. Tests work on copies and leave this personal file unchanged. Final GUI evidence: **101 rendered latest-route checks**, **100 retained developer-route checks**, **73 CPU reference-navigation checks**, **40 rendered CPU feeding checks**, zero failures. Four representative sizes, keyboard, save/return/resume and new preview were inspected; see [menu workflow](demo_menu.md). One initial comparison allowed a physics frame before the resumed snapshot; its test fixture now disables physics on the scene's ready signal, without changing runtime behavior. Native physics/networks/PPO are unchanged by this turn. Menu work remains local and uncommitted alongside the boulder changes; no commit, push, merge or website/installer update was requested. The startup menu is opened for the user; click Open pond to continue learning.
-
-**Boulder stage implemented and open live:** cove/current work is committed locally as **`8fee3b4`**. The following boulder work is local and uncommitted on `codex/autonomous-pond-practice`; no push, merge or public release was requested. Run `godot-project/pond/boulder_pond.tscn`. It imports the complete good cove learner at update **5,491**, approved/applied actor **5,136**, into `user://pond-policies/boulder-navigation-v1/training.bin`, preserving original body/foods/clock and **0.75 cm/s** setting. The actual Godot 4.4.1 window is responsive, error-free and training with **1,024** background swimmers. Normal close saves/stops; reopening resumes the child. Native sphere contact, generic solid sensing, food clearance and exact rendered geometry agree. Bounded downstream wakes affect body-relative drag, food and tracers; the measured point pair is **0.50→0.248 cm/s**. This is a prescribed mean-flow approximation, not CFD or a propagating surge. No shelter decision/reward/event, cluster, tunnel or limbs were added.
-
-Final evidence in [the boulder report](experiments/swimmer/boulder-navigation/README.md): **216/216 GPU-required native tests**, **8/8 focused**, **2/2 portable**, **22 byte-level import checks**, and **62/62 rendered checks**, with full resume continuing **5,508→5,509**. The initialization/restore race described below is fixed by a one-time load fence; the deterministic delayed-producer regression preserves 1,024 world clocks through the timeout boundary and rejects real corruption. The actual user's subsequent autosave at **6,003** has **zero inconsistent practice worlds** and all **2,980 learner actor parameters changed** from the inherited 5,491 learner. Matched live gates accepted updates including **5,600 and 5,680**; this is bounded adoption evidence, not independently established broad improvement. Wider cove spawning resolves the sparse-coverage case. Three final five-minute frozen probes collect **59/46/46** foods and **15/16/17** cove foods in calm/0.5/0.75 cm/s. The stronger condition still has a **31.7-second food gap** and **3.85-second measured immobility**; keep current-navigation practice/reliability work open. Foreground-bank occlusion and small portrait overview are known presentation limits; Closer view remains available. The eleven frozen references and both cove/arch parent saves are unchanged. A mutable feeding save differs from the older cove audit; it was retained as found, separately snapshotted and not counted as unchanged. Review this live prototype before the next proposed rock cluster. Earlier in-progress/failure notes below describe development history, not a remaining restore blocker.
-
-**Boulder follow-up in progress after cove commit `8fee3b4`:** user authorized one boulder, then explicitly required weaker physical flow downstream for the future surge/shelter idea. Layout 2 and `pond/boulder_pond.tscn` now add an exact native/render sphere, shared obstacle sensing/contact/food/current, bounded directional wakes and separate full cove import. Original cove was saved normally at learner **5,491**, approved/applied **5,136**; protected source is `build/boulder-navigation/source-cove.bin`, SHA-256 `7a6185f0c730be97cf15ac31dbe7c56eef00a7ec139fc6060c02a7f624e0941d`. No user boulder window/save has been opened yet. Parent saves remain intact. Native 215/215 and portable 2/2 passed before the final resume fix, and import byte checks pass 22. A longer frozen probe found sparse cove food coverage; the stage-2-only envelope was widened, with 512 separation/clearance regressions passing. Final five-minute cases collect 59/46/46 foods and 15/16/17 cove foods in calm/0.5/0.75 cm/s, but stronger current still has a 31.7 s food gap and 3.85 s measured immobility; do not claim reliable current mastery.
-
-**Current blocker being fixed before opening:** final rendered coverage check failed learner resume at saved update 5,508: `Invalid arch practice state`. Diagnostics show 39/1,024 practice clocks differ (912 versus 1,088), with finite states, while the protected source has all clocks 1,024. Root cause is async initialization on the nonblocking trainer stream racing default-stream state restore. The session agent is adding a one-time fence at `Batch::load` and a deterministic delayed-producer/episode-boundary regression. Preserve the failed QA checkpoint referenced by `build/boulder-navigation/rendered-coverage/summary.json`; do not silently repair its clocks or reset the visible creature. Rebuild, run the new regression/full suite, repeat import and rendered save/resume, then open a fresh personal boulder child from the original good cove. The read-only tool `arch_resume_verify ... compare-learning` directly confirms all 2,980 PPO actor parameters changed from update 5,491 to 5,508. Report [`boulder-navigation`](experiments/swimmer/boulder-navigation/README.md) is being finalized and still contains preliminary probe/gate values. New work is uncommitted, with no push/merge/public release requested. Prior entries below are historical.
-
-**Natural cove stage implemented and open live:** user approved stage 1 of [HABITAT_PLAN.md](HABITAT_PLAN.md). Run `godot-project/pond/cove_pond.tscn`: outward asymmetric cove, shared native/render terrain and shoreline, matching contacts/current/food/tracers, automatic food across main pond and cove. Main central depths and all old water volume are preserved; the original arch remains. No boulder, cluster, tunnel, shelter or limbs were added. Separate `user://pond-policies/cove-navigation-v1/training.bin` imports the actual full parent arch learner at **4,539**, approved/applied actor **4,352**, retaining optimizer/practice worlds, visible body/foods/clock and saved **0.75 cm/s** current. The parent arch and feeding saves remain unchanged; ARCH v3 reads v1/v2 without changing raw world-state layout. The user's own responsive Godot **4.4.1** window is running real 1,024-world PPO, not a recording or QA checkpoint. Close normally to save/stop; reopen this scene to resume. Early candidates are correctly rejected by the existing retention/contact gates; do not claim a learned improvement yet.
-
-[Cove verification report](experiments/swimmer/cove-navigation/README.md): **208/208 GPU-required native tests**, **2/2 portable suites**, full-parent import **22 checks** and older v1 migration **21**, rendered cove **52/52 on both 4.4.1 and 4.7.2**, legacy arch **52**, ordinary feeding CPU/CUDA **32 each**, empty error logs and eleven protected inputs unchanged. The inherited actor reaches/eats cove food in brief calm/0.5/0.75 cm/s frozen probes; maxima of measured immobility are 0.25/0.55/0.50 s. These single-start minute-long cases are bounded usability evidence, not broad robustness or learning gains. Longer and withheld-layout reliability remains open. Current field remains prescribed, not CFD/wakes or proven shelter. Review the cove before choosing the next boulder stage. Work is uncommitted on `codex/autonomous-pond-practice` after `fc65b72`; no push, merge, public installer or website update was requested. Previous plan-only entries below are historical.
-
-**Older Markdown plans reviewed before habitat implementation:** the user requested checking for useful old ideas. Findings are saved in [HABITAT_PLAN.md → useful recovered ideas](HABITAT_PLAN.md#useful-ideas-recovered-from-the-older-plans), with original document references and current/superseded status. Strongest recommendations: collect authentic difficult encounters for fresh on-policy recovery practice; increase obstacle difficulty after competence; make food exercise the cove/whole habitat early; diagnose goal-choice versus motor failures. Also retain obstacle-order invariance, movement-quality metrics and existing render-only visibility aids. No new obstacle types or immediate shelter/limb/graphics/optimization work was introduced. Earlier audit/README missing-feature claims are historical; current live PPO, currents, save continuation and shared many-food scoring remain implemented. This review changes planning documents only and leaves the running learner alone.
-
-**Habitat plan prepared at the user's request:** [HABITAT_PLAN.md](HABITAT_PLAN.md) records the proposed sequence and acceptance checks: outward asymmetric shoreline/cove while preserving main depths, one boulder, a small rock cluster/gap, a short hollow log/tunnel, depth/layout variation and reliability, then shelter. First implementation after agreement is shoreline/cove only, with a shared native/visual habitat and tested full-save migration. Native torus-only sensing and raw Habitat serialization need deliberate extension before more obstacle types; do not silently break saved training or treat a visual cove as proven calm shelter. No implementation, process restart or training change was made for the planning request. The existing current-learning window may continue as previously authorized.
-
-**Current discussion priority:** user agrees shelter-seeking is interesting, but explicitly wants the planned pond obstacles and navigation finished first. Save shelter as the next behavior after that habitat work; do not pivot to station holding, threats, limbs or a new skill now. The larger pond, one arch and bounded currents are implemented; broader route choices and navigation reliability remain. Next proposed manageable addition is a solid boulder with a safe alternate route, with matching native contacts/perception/current/tracers and preserved learned weights. This turn records planning only; no new obstacle code or training change has been made.
-
-**Latest habitat request:** add an irregular natural shoreline so the pond no longer looks perfectly circular. Native swimming/food/current boundaries must match the visible outline. Main pool plus a small cove/depth route is a proposed bounded layout; settle the outline before final obstacle placement. Only the plan is updated here; no shoreline implementation or new morphology is claimed.
-
-**Checkpoint committed; currents restored locally:** user requested committing the verified arch stage, then adding current. Commit **`fc65b72`** on `codex/autonomous-pond-practice` contains the prior verified autonomous practice/heldout/arch work; no push or main merge requested. [Current implementation/evidence](experiments/swimmer/arch-current/README.md). Current on/off and0.5/0.75cm/s are restored in the arch scene. Shared bounded boundary-aware prescribed flow drives every body drag sample, suspended food and native visual tracers; surface appearance changes. Flow is zero inside solids but is not CFD, an incompressibility solution, wake or turbulence model. Body physics/PPO/two-controller design and55inputs remain; there is no scripted rescue.
-
-**Training progress preserved:** the agent-opened prior window was closed normally, saving learner **1,468**, approved/applied actor **1,376**,235food and831.900024s. Fullv1/binaries backed up under ignored `build/arch-current/preserved-20261029104613/`. ARCHv2 reads the same rawState and preserves all old network/Adam/practice bytes; **21 zero-update migration checks pass**, complete oldtrainer6,067,080bytes is an exact prefix of newtrainer6,067,096bytes with only16bytecalmContext appended. Desired/practiced contexts and a frozen pre-current calm-reference actor are stored outside the old state. Existing personal feeding source remains unchanged. Current edits reach practice at rollout boundaries without world resets; original calm and calm-arch retention are gated separately, and stale-context evaluations cannot publish candidates.
-
-**Current verification:** **202/202 native, GPU required/zero skips** (17arch/currentcases); portable **2/2**; rendered current/migration **52/52**, empty stderr, four viewports and calm/current captures inspected; default feeding **32/32 CPU and32/32 CUDA**, empty stderr. Real current-context PPO gate1472 rejects a candidate despite improved current collection because both calm groups lose skill. A frozen actual-live-path probe of approved1376 from the same saved start collects20/16/16foods in60s for0/.5/.75cm/s, with maximum immobility.25/.6/1.2s and no nonfinite state. This finite single-start probe is not broad/long-run reliability or a current-training improvement claim.
-
-**User current scene reopened:** visible `pond/arch_pond.tscn`, PID25628 at launch, 0.5cm/s enabled using `--gentle-current`, actual personal v1 save resumed and upgraded, noQAcheckpoint substituted. Window responsive/errorlogempty; ignored `build/arch-current/user-live.out` confirms resumed updates1472–1536 practicing context1. Ongoing1,024-world PPO/autosave is intentional; normal close saves/stops. The new current code is **uncommitted** after checkpointfc65b72; public site/installer/main unchanged. Source/environment limits and preservation evidence are in the report. Stronger flow, more complex fluids, arms and growth remain later.
-
-## Earlier calm arch stage
-
-**Arch stage integrated and verified locally:** [usage](arch_navigation.md), [results and raw evidence](experiments/swimmer/arch-navigation/README.md). Native geometry, contact, observation and task integration are now complete, superseding the missing-integration notes below. A 1.5× wider basin and one real torus rock arch use matching Godot/native geometry. The validated feeding motor at update 10,000 expands 37→55 inputs without changing inherited actions; 18 body-relative proximity rays inform native CUDA PPO in 1,024 worlds, with old calm retention worlds and frozen inherited food selection. Automatic safe suspended food is supplied on opposite sides. Separate full arch saves embed source provenance and preserve actor/critic/Adam/practice/live state. No body resets, scripted routes or teleports hide contact failures.
-
-Final verification: **196/196 native tests, GPU required/zero skips**, including all **11 arch cases**; portable **2/2**; rendered production **62/62**, empty stderr, four viewport screenshots plus details inspected. Actual update16 passes matched food/contact/calm retention gates; update32 is also accepted via declared progress/clean-passage gates (food-rate tie to incumbent). Approved32 reaches the same live body without resetting time. Full save36 restores exact physical state and continues37. All11 protected reference inputs and the current personal feeding save hash are unchanged. A real contact-normal operand-order bug was found by native force/parity tests and fixed; contact counters now include any of ten physical substeps, rather than missing brief resolved contacts. Only corrected-contact evidence is final. Default feeding scene regression also passes **32/32 CPU and 32/32 CUDA**, both with empty stderr and full restore at33; normal controls/rendering remain intact.
-
-**User view opened:** the actual `pond/arch_pond.tscn` is running in a normal visible Godot window, PID13360 at launch, title `Tadpole Pond · Rock arch learning · CudaRL`. It starts fresh from the personal validated feeding actor10,000 with its own `user://pond-policies/arch-navigation-v1/training.bin`; no QA checkpoint/actor is substituted. Actual1,024-world PPO and accepted update16 are confirmed in ignored `build/arch-navigation/user-live.out`, error log empty, window responsive. Ongoing training/autosave in this explicitly requested live demonstration is intentional; normal close saves and stops, reopening the arch scene resumes. Original feeding source hash remains unchanged after launch. Work remains uncommitted/unpushed on `codex/autonomous-pond-practice`; public installer/site/main unchanged. Longer reliability/held-out layout evidence remains pending, so the default pond is preserved. New arch PPO is CUDA-only in this first prototype; existing CPU feeding support remains.
-
-## Historical sleep handoff, before integration
-
-**Larger pond / first rock arch authorized; partial implementation saved locally.** The user approved the first larger-habitat step, asked for a live Godot view when ready, then requested a sleep checkpoint. Work stopped at safe file boundaries. On returning, the working files are present on `codex/autonomous-pond-practice`; they are uncommitted/unpushed. No Godot game, training worker or evaluator is running at the return check. The public installer/site and main have not been changed by this work.
-
-Approved next milestone: a pond with 1.5× horizontal radii, one submerged rock arch with an actual opening, and automatically supplied food on both sides. Start in calm water. Preserve learned swimming, native C++/CUDA PPO, two decision controllers, original policies/full saves and the working default pond. Add obstacle observations to a copy of the inherited motor; do not script navigation or reset the live body to hide failures. Open the new scene for the user only after native integration and live/rendered checks. No limbs, local flow around rocks or further distribution work in this first step.
-
-**Written but not built/verified:** `src/envs/swimmer/deep_physics.h` has an opt-in `deep::Habitat`, scaled basin helpers, analytic torus distance/normal and compliant articulated-body rock contact. Legacy default contact arithmetic is retained. `tests/test_arch_geometry.cpp` covers geometry/contact/default-path preservation but is not wired into CMake. New GPU/CPU reference wrappers are `src/envs/swimmer/arch_batch.h`, `arch_batch.cu`, `src/rl/arch_cpu.h`. New `godot-project/pond/arch_pond.gd/.tscn` reads native geometry and uses a matching TorusMesh; base pond radius/camera hooks and an optional fin-height setting preserve old defaults. The menu/default scene is unchanged. These are incomplete source components, not a runnable obstacle-learning feature.
-
-**Missing integration:** `src/envs/swimmer/arch.h` and `src/demos/arch_session.cu` do not yet exist. Implement environment/task/rewards/observations, inherited-weight expansion, separate resumable PPO session, `DeepPondLab` bindings/statistics and CMake integration. Then build, test CPU/CUDA agreement, old-pond preservation, transfer/resume and actual passage/contact behavior, inspect rendered scene and open live Godot. Earlier 185/185 native and 2/2 portable results below predate the arch edits; do not cite them as arch validation.
-
-Implementation handoff:
-
-- Native habitat: `deep::Habitat {scale=1, arch=false, center={0,-2.25,0}, major=1.35, minor=.5, yaw=0}`. Arch scene uses scale 1.5, arch true, radii `(6.9,5.25)`, same depth/creature size. Torus axis local Z; hole radius `.85`, top `-.4`, lower section buried at the bed. Geometry/clearances are model units; 1 model unit is `.04 m`. Shared helpers: `habitat_floor`, `habitat_gradient`, `arch_to_local/world`, `arch_distance`, `arch_body_clearance`. Contact uses 9 samples/link, existing generalized-force solver, `.8 N/m` stiffness, `.006 Ns/m` damping, no body position projection. Arch-only visible fin half-height `.15` model matches the 6 mm contact envelope.
-- Agreed wrapper contract: `arch::State {feeding::State pond; deep::Habitat habitat; int contacts, passages, clean_passages, pending_side, last_full_side; bool contacted_in_passage;}`; `initial(seed,environment,episode,retention=false)`, `observe(state,float*)`, `advance(state,actions)`, `replenish(state)`; `kObs=55`, `kAct=4`, `kEpisodeSteps=1200`. Initialize all state fields. GPU `Batch(n,seed,swimmer::Body={})`, `configure(selector,stream,reset=false)`, `step(actions,outputs,stream,autoreset=true)`. Every fourth practice world is old calm-water retention. Live/evaluation replenishes food even with autoreset false and never resets the creature. CPU reference mirrors this; new CPU PPO/session is not implemented.
-- Proposed motor observations: existing 37 feeding inputs plus 18 body-relative obstacle proximity rays. Expand the validated inherited 37-input actor to 55 by copying old parameters with correct first-layer stride and zero new input weights, preserving its initial function. Keep the inherited shared food selector frozen and score all active slots. Fresh optimizer for this separate stage is acceptable; preserve the parent's full training file. Critic is a PPO helper, not a third decision controller.
-- Proposed first task: two safe suspended foods on opposite sides, automatic replenishment away from the previous side; vary safe arch/food layouts in practice and retain old calm worlds. Match native rock/bed clearance, distinguish collecting food around the rock from a genuine whole-body passage through its opening. Count actual contact/passage outcomes. Particle collision can project particles out of solids; never teleport the body. Do not promise the inherited swimmer already knows obstacle navigation.
-- Source checkpoint for new stage: `user://pond-policies/feeding-learning-v1/training.bin`. Read its outer **validated 37-input adopted motor**, not the unvalidated inner latest actor or the older packaged 33-input motor. Existing CUDA feeding full-save payload: magic `0x46454544`, version 2, sizeof(feeding::State), world count, ProgressPolicy, visible feeding::State, feeding::Context, adopted motor array, adopted update, nested trainer bytes. Protect/copy it before testing. New stage save: `user://pond-policies/arch-navigation-v1/training.bin`, separate format/lease storing source provenance, expanded/adopted actor, full learner/optimizer/world/live state. Resume from its embedded source, not a later-changing personal feeding save.
-- Required Godot API: `DeepPondLab.start_arch_learning(source_full_feeding_save, new_checkpoint, environments=1024, backend="auto") -> bool` and `get_arch_geometry() -> Dictionary` callable before start. Geometry keys: radii, center, major_radius, tube_radius, yaw, scale, opening_radius. Existing feeding state keys remain; stats add arch_mode, arch_passages, arch_contacts, policy_inputs=55, parent_update. Scene hides current/manual feeding for this controlled automatic-food task; use an explicit unsupported message if new arch training requires CUDA. Existing CPU feeding support must remain intact.
-- Build after integration: `cmake --build --preset release --target cudarl cudarl_tests --parallel 6`; require GPU execution for relevant native checks. Portable regression: `cmake --build --preset portable --target cudarl_cpu_feeding_tests cudarl_portable_tests --parallel 6`, then portable ctest. Godot executable `C:/Users/aiand/Godot/Godot.exe`. Back up current extension before replacing it. Do not publish the partial arch source or overwrite the default/released pond with an unvalidated candidate.
-
-# Earlier core AI work — October 28, 2026
-
-**Frozen held-out comparison complete; larger habitat proposed next:** user approved comparing preserved before/current validated actors, then proposed a bigger pond with obstacles (including a rock with a hole), explicitly not limited to that example. [Protocol, results and frozen actor exports](experiments/swimmer/autonomous-heldout/README.md). Saved validated actor4,688 (learner4,751) vsactor9,216 (learner9,218), eight new seeds×16worlds×120s/actor:256trials/512simulatedminutes. No gradients, policy replacement or stopping of the live learner is performed by this test. All subgroup food-rate intervals include zero change; overall15.328→15.352/minute (+0.153%) is inconclusive. Calm sinking14.531→14.531, steady14.156→13.984, fluctuating14.391→14.359; old calm/static18.234→18.531. No confirmed5sfood-present/no-collection immobility or invalid body/food cases, no practice-cap occupancy in this finite suite. Dropped-food groups collect about96%of createdpellets, suggesting limited mild-task food-count headroom; no optimality/general-robustness claim. Identical-policy check, passive-monitor25positive-control assertions, strict paired-data/foodconservation checks and frozen snapshot/actor hashes pass. A50mscompleted-gap counter correction was rerun on exactly the same snapshots/seeds; primary outcomes are identical. Source/evidence remain local and uncommitted on `codex/autonomous-pond-practice`, no public release change. At the final process check the live game window is no longer present; only the Godot project manager remains, its last learner save is updated and the game error log is empty. The evaluator is stopped. Next discuss a larger habitat with real contacts and neural obstacle sensing, route choices and retained swimming; no obstacle/body-growth code is implemented yet. Do not silently proceed with stronger currents, denser feeding or anatomy from these test results.
-
-**Autonomous feeding/current practice implemented locally:** user returned to core AI work, requested unattended food generation and approved random current speeds, smooth fluctuations and no-current cases. Work is uncommitted on `codex/autonomous-pond-practice`; [protocol/evidence](experiments/swimmer/autonomous-practice/README.md). Seeded timed food arrivals mix broad pond locations with recent player spots. Practice contains four equal groups: original calm/static retention, calm sinking food, random steady speeds, and smoothly varying speeds with true calm intervals, bounded at 0.75 cm/s. Context edits preserve practice clocks; matched candidate evaluation uses the schedules without autoresets. Body/particle forces, two decision controllers, PPO settings, 37 motor inputs and raw State/Context save layouts remain unchanged. Visible **Auto feed** is optional/default-off (or `--auto-feed`), using real simulation time and native particles; visible currents remain manual while practice varies independently. Full native suite **185/185 GPU-required, zero skips**; portable **2/2**; rendered CPU/CUDA **32/32 checks each**, four viewports inspected and final stderr empty. A protected copy of the historical learner resumes **4,751→4,752** without moving/resetting its visible body. All eleven protected policy/full-save checks and the personal feeding save match before/after QA. Short CUDA gate examples reject a candidate that loses calm skill, then approve update32 (17.0 vs16.5 food/min, calm37/37); this is implementation evidence, not broad generalization. Original feeding save and prior extension DLLs are backed up under ignored `build/autonomous-practice/`. The actual local source pond is open with Auto feed and the existing full CUDA learner (restored update 4,751; live updates and automatic drops confirmed, startup errors empty); ongoing PPO/autosave in this user demonstration is intentional. No new public installer, website deployment, commit, push or merge is part of this step.
-
-**Previous distribution task completed:** main/source `2524748ecebcd1816e9ed5d0c88921c133f0a11d` is pushed, all feature commits are integrated, and exact main CI run **40809661753** passed both hosted jobs. The redundant same-SHA feature run was canceled after main passed. `v0.1.0-preview.2` is public with the setup EXE/checksum, and https://cudarl.drewclark.io now has the verified installer links (87 hosted browser checks). Public EXE hash `a2eb6b6371ed3fb5d08137d2279388c103d35a408f1c80507196d1c6398ffe47` was downloaded unauthenticated, installed and passed 41 CPU learning/resume checks. The temporary preview.1 404 was corrected by replacing website links with the new installer. Microsoft Store/MSIX signing was discussed as a future free route to avoid SmartScreen; the user explicitly deferred it. Earlier publication-pending entries below are historical and must not trigger duplicate release work.
-
-**Installer-first release follow-up:** user rejected ZIP extraction and exposed DLL/PCK folders, then confirmed the local app works after briefly reporting a duplicate-save lock. Do not reset models or treat the retracted report as an AI failure. Branch `codex/windows-installer` adds an NSIS 3.13 per-user setup EXE with desktop/Start Menu shortcuts, automatic launch, Windows uninstall registration and preserved app-data training. AI and physics are unchanged. Dirty local installer verification passes 30 checks plus the installed CPU learner's 42 checks, including full resume; uninstall preserves an unrelated file. The site now targets `v0.1.0-preview.2/TadpolePondSetup.exe`; browser interaction/layout checks pass 77 before the new download assertions. The earlier preview.1 release was temporarily made draft during the reported failure; finish publishing the new installer and deploy its matching links, rather than leaving a broken CTA. Main 961b429 is pushed; exact CI 40807037478 is still pending CUDA toolkit installation. Installer branch/main CI and clean packaging/public file-hash checks remain required. Preserve the user's currently running Godot window and personal saves.
-
-**Website design frozen; finish publication:** user asked to wrap up design and finish the overall task. Final page integrates the explanation with the existing full-width layout, removes empty steps/FAQ sidebars, uses a real GitHub source button with matched 232×48 controls, and includes a truthful, keyboard-accessible four-stage learning/backend walkthrough. Interactive browser checks pass 77 across five widths; baseline page checks pass 42 with zero errors. `https://cudarl.drewclark.io` is the requested canonical address: exact public CNAME and valid HTTPS verified, Azure custom-domain status Ready. No GPU server is provisioned. The later $15/month enforced-cap browser-GPU idea is saved/deferred in CREATURE_PLAN; do not expand scope now. Native release commit `0a9e89fda2096dc75232470a887cc640b880e5b1` passed both hosted jobs in run 40804327443. Its clean ZIP cold-extraction verifies 13 file hashes and passes 41 further CPU feeding/resume checks without editor/toolkit paths. Remaining work is commit/push the final site changes, merge/push main, follow both exact new commits' CI through completion, package from clean main, publish versioned GitHub ZIP/checksum, deploy directly to Azure and verify the public site/download/hash. Do not report completion while CI/publication is pending. No further design additions are needed in this pass.
-
-**Windows release verified locally; publish/integration next:** exported CPU learning passes 194 checks; CUDA passes 172 with update-16 validated adoption; complete native suite 180/180 GPU-required/zero skips; C++-only portable suites 2/2; developer menus 104 and reference navigation 81, final stderr empty. New simplified menu passes 41 across four sizes. Website Chrome checks pass 42 across five widths with keyboard/reduced-motion checks; real newest pond capture inspected. Eleven protected policy/save hashes remain unchanged. [Release guide](windows_release.md), [local evidence](experiments/swimmer/windows-release/summary.json). Clean release packaging now records source commit/dirty state and uses fresh output folders; never publish -AllowDirty artifacts or QA leftovers. CUDA release architectures are sm80/86/89/120; no older-GPU acceleration is claimed. Azure Free static site is provisioned at `https://gray-pond-0d7501010.2.azurestaticapps.net` with only one Microsoft.Web/staticSites resource. GitHub-token transfer was rejected by automatic review and not performed; use `tools/deploy_download_site.ps1` for direct local-to-Azure publishing with credential only in process memory. Website and versioned ZIP/checksum are not yet public. User renewed commit/push/main-merge authorization. Commit this release work, verify exact branch CI, merge/push main and verify its CI, then package from the clean checked commit, publish GitHub release assets, deploy the static page and verify both public endpoints. Existing user training window remains running; personal saves are excluded.
-
-**Windows release and public download site authorized:** user chose Windows first, explicitly requested genuine CPU learning for users without NVIDIA, and approved inexpensive Azure hosting while rejecting GPU-server spending. Use Azure Static Web Apps Free for the static landing page and public GitHub Releases for the ZIP; no GPU VM/server. macOS/browser game ports are deferred. Remove Experiments and Help/training from player navigation while preserving backend/developer routes. Feeding CPU implementation now builds in the no-CUDA portable target, shares particle/body physics and Gaussian PPO math, uses 16 practice worlds, and saves full training separately as `training-cpu.bin`. Initial CPU correctness/continuation check passes 12,946 assertions, ~93 ms per 16×64 update on this machine, update-16 validation executed (tie rejected). Broad hardware/performance, rendered CPU/CUDA release, packaging and deployment checks remain. CUDA release extension is building separately for sm75/86/89/120 to avoid replacing the running source DLL. Feature commit `6fcb85e` is pushed and its exact CI succeeded (run 40799283300); later release/UI work is uncommitted. Main remains unmerged. Finish verification, exact-commit CI/integration, downloadable release and public site before reporting done. Do not publish evolving personal learner checkpoints.
-
-**Commit/push/main integration authorized:** user requested publishing the completed feeding work and merging it into main. Integration checks now pass: complete native suite **180/180 with GPU required and zero skips**, preserved C++-only runtime test and portable Godot extension build. The earlier rendered feeding, actual PPO/adoption/resume, menu and reference-navigation evidence remains unchanged; all eleven protected policy/save references match. The active user feeding window remains running; its evolving learning checkpoint stays outside Git and is not replaced by this code integration. Commit the feeding implementation on `codex/live-sinking-food`, push that exact commit and follow both hosted jobs to completion before merging. Then push the main merge and follow its own exact-commit jobs before reporting integration finished. Earlier local commits `ad783d0` and `9fa88dc` are ancestors and are included in this publication. No additional training experiment, model replacement or gameplay change is part of this integration request.
-
-**Final feeding preservation check / user review opened:** all eleven protected policy/full-save references match their expected hashes after verification. Evidence, source fingerprints and final logs are archived under `experiments/swimmer/live-sinking-food/`. Final brief rendered check passes 41 assertions including continued PPO after restore; the default-population check above passes 171, menu/developer regression 99, reference navigation 145, and thirteen focused native cases with no skips. The new learning pond is opened directly in a visible Godot window with its actual 1,024-world CUDA learner and separate user checkpoint; no test actor is imported. Unlike earlier stopping checkpoints, ongoing PPO in this explicitly user-requested pond is intentional. Close/leave saves and stops; reopening resumes. Work stays local on `codex/live-sinking-food`, uncommitted/unpushed.
-
-**Live sinking-food loop implemented and verified locally:** user's latest instruction authorizes eating user-dropped sinking pellets to be learned during play, with a brief starting test and no three-food replacement rule. Branch `codex/live-sinking-food`; [usage/architecture/limits](live_feeding.md), [protocol](experiments/swimmer/live-sinking-food/PROTOCOL.md). The new `pond/feeding_pond.tscn` is the healthy-CUDA menu entry; frozen CPU/CUDA reference stays in Experiments, and unavailable CUDA selects that reference. Native particles use gravity/buoyancy/drag/bed contact; 128 active slots are a resource guard, every valid drop adds food and the shared inherited selector scores all active pellets. The motor expands 33→37 with preserved initial function and is fine-tuned through the existing native Gaussian PPO in 1,024 background worlds using recent user-drop/current contexts plus calm retention worlds. Original selector stays frozen in this stage. Eight ten-second simulated trials are the brief initial reference. Actual learner updates, practiced context, approved/applied policy versions are distinct; compatible validated motor snapshots reach the same body without a reset. Separate v2 full feeding save includes actor/critic/stds/optimizers/worlds/context, adopted actor and visible body/pellets; source files/layouts are untouched. Default-population rendered verification passes 171 assertions: update-16 check 9.833→10.333 food/min with calm 12/12 is accepted/applied; update-32 tie rejected; restored update 35. A separate brief check explicitly resumes and continues PPO. Native feeding four cases plus nine prior current/playback regressions pass with GPU required, zero skips. Menu/developer-demo 99 and rendered reference/menu navigation 145 pass; final stderr logs empty. Four rendered viewport sizes inspected. Full native suite and broad robustness not rerun/claimed. No long offline pretraining or test actor is deployed. Final original-policy/full-save hash verification and opening the user learning pond follow this checkpoint. Work remains uncommitted and unpushed.
-
-**Sinking-food learning implementation in progress:** user now authorizes implementation, requests a brief starting test, rejects a three-pellet UI limit and requires eating user-dropped sinking food to be learned during play. Work is on `codex/live-sinking-food`, retaining earlier uncommitted planning edits. New opt-in native feeding environment/session and Godot scene are being added; original reference pond, source policies and old checkpoint layouts remain separate. Protocol: `experiments/swimmer/live-sinking-food/PROTOCOL.md`. Design uses a reported 128-active-pellet resource bound without replacement, existing shared selector scores all active pellets, and motor expansion 33→37 with function-preserving zero new input weights. Native Gaussian PPO trains the motor concurrently in user-influenced scenarios; selector remains the inherited goal chooser in this stage. Full separate learning checkpoint, measured candidate gating and no-reset application are implemented provisionally but still require build/runtime/checkpoint/visual verification. Do not describe this prototype as delivered until those checks pass; no new pretrained sinking actor has been prepared. Current source-app window was closed normally for the extension rebuild; project manager remains. Preserve the user's brief-test/live-learning requirements and finish the current task.
-
-**Brainstorming correction: genuine learning during interaction is essential.** User reminded us the tadpole is meant to learn in real time while they interact. Saved as an explicit requirement in `CREATURE_PLAN.md` and `AGENTS.md`. The current live pond still uses frozen inference; concurrent background PPO linked to player-created conditions, candidate validation/skill retention and policy adoption by the same running visible creature remain to build. Food placement and current controls are supported-interaction ideas, not sufficient completion of the learning loop. Preserve original reference weights and distinguish active training, candidate evaluation, adopted updates and measured improvement. No code, training process or new interaction is started in this discussion; the user's don't-code-yet instruction remains active. Latest local implementation commits are `ad783d0` and `9fa88dc`, unpushed. Only planning documents change in this turn.
-
-**Committed checkpoint and next live interaction:** user requested committing the current work and carrying on. Commit `ad783d0` on `codex/pond-rotating-current-test` saves the 0.5/0.75 frozen-current experiments, pond-focused UI and preservation evidence. No push/merge was requested. The next bounded step now adds [live current-strength selection](pond_current_controls.md): Current on/off plus 0.5/0.75 cm/s choices, steady +X only. The new bounded Godot API reuses existing playback forces/food advection; old `set_gentle_current` remains compatible. Switching strength preserves physical/session state, and untrained comparison preserves the flow with its existing deliberate reset. No network updates, policy replacement, new physical equation, rotating UI or rock disturbance. Native extension build succeeds; new 41 CPU/45 CUDA assertions, existing 51 CUDA current checks and 141 CUDA navigation checks pass with no script errors. All four rendered viewport sizes were inspected. Full native suite is not rerun for the wrapper/UI change. All eleven protected source-policy/full-save references are rechecked unchanged, with final logs and summary under `experiments/swimmer/live-current-strength/`. The latest live CUDA pond has been reopened with the new selector, initially at 0.5 cm/s, for user review. The step is saved in a separate local commit on the same branch; no push/merge or ongoing learner is part of this request.
-
-**User review opened:** after the checks above/below, the previous source-app window was closed normally and the updated Tadpole Pond menu opened successfully. The Godot project manager was left alone. Open pond will show the newest frozen agent with the existing gentle steady flow enabled; no learner or headless study is running. The stronger-current report and UI changes remain local on the existing research branch.
-
-**0.75 cm/s frozen-agent follow-up and pond-focused UI:** user authorized the stronger-current test with both controllers frozen, preserving original trained policies, and requested removing CartPole/Racing from the UI while retaining their implementations. On local `codex/pond-rotating-current-test`, [protocol and results](experiments/swimmer/current-075/README.md) record 100 strict CPU/CUDA sessions / 700 simulated minutes: calm, steady 0.5 reference, and 0.75 steady/turning in either direction, all with food-drift mode. Zero confirmed immobility/invalid state/food/skipped steps, max food gap 17.00 s, stronger-condition means 96.07%–101.13% of matched steady-0.5 means. Stronger conditions have 705 sustained sampled bank visits: 702 clear before trial end and three are censored; all 705 collect food within 20 s of entry, separately from clearance. No new PPO updates, source policy replacements or physical equations; eleven protected policy/full-save references remain unchanged. The default menu is now Tadpole Pond with Open pond, Experiments, Help & training and a fresh render of the actual deep pond. Legacy code/scenes/policies/training/developer routing remain intact. Pond return buttons say Pond menu; Escape cleanup handles input before scene removal. The underlying Godot config name remains stable to preserve save paths. Rendered CUDA navigation 141, CPU headless 125, retained-demo regression 99 checks pass, final script-error logs empty; nine focused GPU-required native checks pass without skips. No full native-suite rerun is claimed. User-facing current remains the steady 0.5 switch; turning/0.75 conditions remain research-only, not a whirlpool. A rock impact needs a future local disturbance/contact model, varied practice and held-out testing; arbitrary-water competence and automatic growth are not delivered. No learner or study process is left running. Reopen the updated pond menu for user review after checks. Work is local and uncommitted; no push/merge requested for this step.
-
-**Frozen-agent slowly changing current experiment:** user approved the next bounded current test. Local branch `codex/pond-rotating-current-test` adds a simulation-time signed rotation schedule to `pond_reliability` and passive bank/trace diagnostics; no physical equations, networks, policy files or Godot gameplay change. The [predeclared protocol and report](experiments/swimmer/rotating-current/README.md) cover 60 fresh-layout CPU/CUDA sessions / 420 simulated minutes: steady and both turning directions at 0.5 cm/s, one turn per 120 s, food drifting in all conditions. Zero confirmed immobility/invalid state/food/skipped steps; max food gap 17.95 s. Rotating collection means retain 99.05%–102.70% of matched steady means. There are 366 sustained sampled bank visits, 364 cleared and two censored at trial end; every sustained visit has a food collection within 20 s, which is reported separately from clearance. Original difficult bank-start regressions remain unresolved by this ordinary-layout suite. Both runners reproduce the earlier 89-food steady reference; nine focused native tests pass with GPU required and no skips; all eleven protected policy/save references are unchanged. No full native-suite rerun is claimed. No training or trial process remains running, and the user's existing pond window was kept open. Results show existing-skill response to gentle changing flow, not new learning. Next proposed discussion is a bounded 0.75 cm/s frozen-agent probe with calm/gentle retention references before selecting PPO practice; it has not been started. This work has not been committed, pushed or merged.
-
-**Prior integration CI confirmed:** main `1ea09ee12f73b8f7aa0c5a2aed8d2ddff985c984` passed both hosted jobs in [run 40753699453](https://github.com/life423/CudaRL-Arena/actions/runs/40753699453); feature `66d0808dab032d48a39458b33706d30eaeb7cdcb` passed both jobs in [run 40753101866](https://github.com/life423/CudaRL-Arena/actions/runs/40753101866). These are the completed checks for the preceding UI/flowing-food integration, separate from this new local research tooling.
-
-**UI and flowing-food integration into main:** the user authorized committing, pushing and merging the current work. Feature branch `codex/pond-ui-navigation` is pushed at `66d0808dab032d48a39458b33706d30eaeb7cdcb`, including UI commit `2db9df8`. The main merge preserves that implementation exactly; this checkpoint is the only added change. Local evidence is the complete 173/173 GPU-required native suite, 20 matched response sessions / 140 simulated minutes, CPU/CUDA visual/control checks and preserved policy/full-save hashes as documented below. Both the feature push and the resulting main push require their own exact-commit GitHub Actions runs to complete successfully before reporting integration finished. No new training, policy replacement or gameplay change is part of this integration request.
-
-**Visible current and drifting food:** the user asked that food follow the current and that the water visibly change when Gentle current is on. Implemented locally on `codex/pond-ui-navigation`, following UI commit `2db9df8`: live current now enables opt-in native suspended-food advection and visible surface/underwater flow tied to the same physical vector and simulation clock. Original stationary-food callers, swimming equations, saved networks and full saves are preserved. [Protocol, all response cases and model limits](experiments/swimmer/drifting-food/README.md). The unchanged latest agent passes 20 CPU/CUDA response sessions / 140 simulated minutes with zero confirmed immobility/invalid states/invalid food/skipped steps; max food gap 13.25 s. Full release build and 173/173 GPU-required native tests pass, zero skips; old/new optional-module checks pass 3,309 assertions; final CUDA rendered flow checks pass 69 with existing navigation/comparison/demo regressions passing. Higher collection under moving food is a changed-task result, not new learning. No PPO practice or new neural weights are added. The current remains steady +X 0.5 cm/s, not arbitrary water. This feature is local; main remains the preceding verified merge. Reopen the newest live scene with `--gentle-current` for user review.
-
-**Navigation cleanup after verified main integration:** main merge `32d5e243ab9ca550301eb51d6533ed96195cffea` is pushed and both jobs passed in [run 40736593290](https://github.com/life423/CudaRL-Arena/actions/runs/40736593290). The user then reported that Watch current test opens a recording and requested a menu/GUI cleanup plus Git-tree cleanup. UI work is saved locally on `codex/pond-ui-navigation`: Open pond routes directly to the newest live saved agent; shared Experiments/Help dialogs distinguish live inference, actual shallow PPO training and recorded diagnostics; primary pond controls stay together, AI details collapses, and both live saved-agent graphs report actual session collection instead of a single validation point. Final rendered CUDA navigation passes 141 checks; CPU headless navigation passes 121, with current, original/untrained playback, recording and demo regressions passing as recorded in [menu workflow and review](demo_menu.md). Protected policies/full saves match their saved hashes. The live agent is opened with gentle current enabled for user review. No physics, saved weights, new training method or flowing-water animation is added. The user discussed showing current visually: future visuals should use the same physical flow vector; changing appearance alone does not change neural-network training. Twelve local branches fully merged into main were deleted with normal merge-safe Git deletion; main, the active UI branch, remote branches and complete history remain. This UI work is separate from the already verified main merge and has not been pushed or merged into main.
-
-**Main integration requested and prepared:** the user subsequently authorized merging `codex/pond-gentle-current` into `main` and pushing, with all checks required to pass. Feature commit `85bf043e9d1bd8d17bab3a5f4715fea8a70f6d68` passed both hosted jobs in [run 40733179888](https://github.com/life423/CudaRL-Arena/actions/runs/40733179888), following the recorded 169/169 local GPU-required tests and CPU/CUDA Godot checks. The merge preserves that verified implementation; this checkpoint is the only additional change. Follow the new main commit's own GitHub Actions run through completion before reporting integration finished. No new training, policy replacement or further environment work is included in this merge request.
-
-**Live gentle-current interaction delivered:** user approved continuing the next bounded step. [Implementation, use and measured response](experiments/swimmer/live-gentle-current/README.md). `pond/latest_agent.tscn` now has a Calm/Gentle control for steady +X 0.5 cm/s flow, with actual CPU/CUDA water-relative drag and unchanged physical equations/saved policies. Switching preserves creature/food/counters/graph; trained/random comparison preserves the flow while retaining its existing reset semantics. Four fresh seeds × three five-minute conditions × CPU/CUDA yield 24 sessions/two simulated hours with no confirmed immobility or >20 s food gap. CUDA means: calm 18.05, steady gentle 17.25, switch at 60 s 17.65 food/min. No retraining is justified by this small gentle suite alone; difficult bank states and future practice/promotion remain unresolved. No new network, observations, rewards, limbs or online learning. Original optional-module ABI remains compatible through an extra current-control interface; old modules retain calm CUDA and safely continue on CPU when flow is requested in automatic mode. Missing configured playback policies now error instead of silently starting legacy training. All 169 native GPU-required tests, full release build, portable reference/module checks and rendered CPU/CUDA control checks pass; saved source hashes remain intact. The user requested committing and pushing `codex/pond-gentle-current`; no merge into main is requested. The live user-requested GPU scene is opened with `--gentle-current`; no learner is running. Verify the exact pushed commit's hosted CI through completion before reporting integration finished. Main's preceding CI repair at `7ed0f80` is separately verified successful on both hosted jobs.
-
-**CI correction after the sleep push:** the user found failed GitHub Actions runs `40616501246` (main `a255f06`) and `40615888761` (feature `57c0a24`). Both fail during the CUDA Build step in `tools/pond_progress_profile.cpp:5`: `C1083`, missing `cuda_profiler_api.h`. Portable CPU jobs pass. The local full toolkit included this header; the hosted minimal component list did not include `cuda_profiler_api_13.2`. The workflow now requests that component and checks for the header immediately after installation. No learning code, physics, policy or saves change. Root instructions now require checking exact-commit remote CI before declaring a push/merge finished. The correction's actual GitHub run must be followed to completion; the previous local 167-test success did not establish hosted success. This repair does not authorize the next current/recovery experiment or any overnight training.
-
-**Integration completed for sleep:** `codex/portable-pond` was committed and pushed at `57c0a24`, then merged into `main` as `f455f24` and pushed to GitHub. The merge tree matched the verified feature branch exactly. This final documentation-only checkpoint follows that merge; current branch is `main`. No training helper is running; only the user's Godot project manager was present at the stopping check. Four full local learner saves were backed up and hash-verified as described below. Stop here: next work is discussion of one bounded interaction/current/recovery experiment, with no new implementation or training started overnight. The fresh audit's 167 native tests and CPU/CUDA live checks passed; GitHub's separate hosted CI is not claimed complete by this checkpoint.
-
-**Sleep checkpoint — user requested commit, merge to main and push:** preserve this stopping point; do not begin another current/recovery experiment, implement gameplay or leave background training running. The implementation through `a64fcc2` and the new [codebase audit](CODEBASE_AUDIT.md) are being saved from `codex/portable-pond` and integrated into `main`; the actual final commit and remote status must be verified from Git. No gentle current was added to live playback. The newest candidate remains available in `pond/latest_agent.tscn` (selector 320, retained motor 64,350, calm live simulation, fixed saved weights), with the original default preserved. Audit proposals remain proposals: interactive feeding, recovery goals, practice with skill retention, later two-leg underwater bracing, crawling and land movement. Next session should discuss one bounded recovery/current step; one-network consolidation is undecided and no limbs are authorized yet. Original motor/selector and both bank-pilot full saves have hash-verified local backups under ignored `build/sleep-checkpoint-2026-10-27-a64fcc2/`, with `manifest.json`; GitHub commits contain selected policies/evidence/code, not these full learner saves. Fresh audit checks: native 167/167 with GPU required and zero skips, headless live CPU 28/28 and CUDA 28/28, portable playback pass; protected policies/saves unchanged. Remaining audit findings, including missing-policy startup routing and disconnected training workflows, are documented, not fixed. Keep optimization, packaging and cosmetic expansion parked.
-
-**Latest audit/planning checkpoint:** current implemented code is committed locally as `a64fcc2` on `codex/portable-pond`; the working tree was clean before this audit. The user stopped current implementation and requested an end-to-end code audit plus fresh creature ideas. [Audit, architecture map, prioritized findings and proposals](CODEBASE_AUDIT.md) covers all first-party subsystems with detailed pond/recovery review. Fresh 167/167 native GPU-required tests, 28-check CPU and 28-check CUDA headless live integrations, and portable playback pass; seven protected sources and the selected bank candidate remain unchanged. No gameplay/physics/current/trainer changes, new persistent training run, push or merge were performed for the audit. The audit document is new uncommitted work. A missing configured original policy can route into legacy training; newest-agent and menu training workflows are separate; live flow/capture/restore/promotion remain to implement. Recovery, practice, food interaction, goal-conditioned escape and later leg bracing are proposals for discussion, not blanket coding approval. The user reopened the one-network question; no decision to replace the working two-policy architecture has been made.
-
-**Latest delivery:** [actual playback reliability and live candidate viewer](creature_reliability.md). Original and bank-trained selectors each complete four thirty-minute calm sessions on CPU and CUDA: sixteen sessions/eight simulated hours, zero qualifying immobility events or invalid state/food. This finite calm suite does not establish all-current reliability. Runtime now supports progress-aware saved selectors; the original default stays intact. User clarified that they want the latest agent running live, not only a recording. `pond/latest_agent.tscn` now runs the selected update-320 bank-trained selector with motor 64,350, live physics/food collection, GPU preference and a truthful session collection graph. The conditional **Latest trained agent** sidebar button reopens it from the deep pond. Original and full saves are preserved; no training starts in this view. A separate frozen recording illustrates one held-out current recovery (zero vs thirteen foods/minute, first arrival 3.85 s), explicitly labeled recorded. Interactive current controls, genuine online adaptation and growth remain later stages. Native 167/167 and C++-only playback regression pass; rendered live GPU and headless CPU integration checks pass. See report for layouts, limitations and exact evidence. The live user-requested Godot window is intentionally left open; no headless trainer is running. Work remains uncommitted on `codex/portable-pond`; no merge/push this turn.
-
-**Latest approved product direction:** user explicitly requested remembering and beginning **a dependable young swimmer → increasingly challenging interactions → genuine measured adaptation → physical growth and new movement skills**. [Authoritative roadmap](CREATURE_PLAN.md), also linked from root `AGENTS.md`. The main experience begins competent; optional untrained demonstrations remain distinct. First current milestone is actual single-creature playback reliability, including progress-aware selector support and a stricter visible-immobility gate. No arms, new interaction UI, online learner or automatic growth is implied completed. Retain two decision controllers, shared physics and all trained/source saves. Optimization/distribution/cosmetics remain parked.
-
-**Latest authorized training completed:** [food-selector bank recovery](experiments/swimmer/gentle-currents/bank-recovery/README.md). User keeps two controllers, original swimming actor and physical equations, no arms; food must remain underwater. Five disjoint source seeds yield 95 train / 51 development / 86 holdout authentic bank-contact states; all food passes the existing underwater/bottom-clearance rules. Two copied full-state pilots run 256 additional PPO updates at 8,192 worlds and stop at update 384 with resumable version-2 saves (curriculum included). Selected seed 71/update 320 is saved separately, SHA 4186F47471EDE2D0034EB566EFA1EC959B03D0A015E686FFA5F4262FCEB4A563. Fresh 20-second bank recovery is 83/86 versus prior pilot 62/86 and original 40/86; no previously successful paired case is lost. New 1 cm/s short-trial mean is 14.511 vs original 14.326 food/min; long probes remain mixed (two new >20 s gap cases versus one original, three pilot). **Original Godot policy remains active; candidate is not automatically deployed or claimed robust to all currents.** All 164 native tests pass; both real new saves restore byte-identically; all seven protected source policies/full saves and physics source remain unchanged. No helpers running. New work is uncommitted; prior checkpoint 2af8c6d, no merge/push. Next bounded stages can investigate recorded residual cases and changing currents, keeping performance work parked and arms deferred.
-
-**Latest authorized diagnostic completed:** [fixed-target frozen-motor current test](experiments/swimmer/gentle-currents/fixed-target/README.md). Two fresh seeds / 256 layouts, normal and ±0.98-radian folded starts, calm and 0.5/1 cm/s upstream/downstream/both cross-currents. All 4,608 learned trials arrive by 30.35 seconds; passive controls reach 140/4,608. There are ten transient ≥10-second no-progress spans and one ≥10-second low-speed span, all recovered. No food selector, gradients, new sensor, policy update or rescue is used. This supports retaining the motor and next discussing selector/bank recovery, while not ruling out the known settled bank/contact trap absent from central starts. All 163 native tests pass; all seven protected policy/full saves are unchanged. New tool/results are uncommitted; previous checkpoint is commit `2af8c6d`, no merge/push. No background training or viewer was started. Further training/curriculum is a proposal requiring the next agreed bounded experiment. GPU optimization remains parked in [the saved backlog](gpu_optimization.md).
-
-**Previous direction, completed in commit 2af8c6d:** commit this validated branch checkpoint locally, remember optimization for later, and return to discussing current-swimming AI. No push, merge, new training run or next optimization was requested. [Durable optimization backlog](gpu_optimization.md) retains the measured bottleneck, accepted +4.29% change, remaining register/private-memory limits and validation gates. The existing branch also contains the earlier portable playback/untrained comparison, current diagnosis/replay and recovery pilot; preserve that complete working state. Distribution remains paused. Before training another swimmer, discuss a bounded diagnostic separating motor ability to reach a fixed target in currents from food-selector recovery. This diagnostic is a proposal, not an implemented or approved new experiment.
-
-**Latest authorized optimization completed:** [solver workspace reuse and evidence](experiments/swimmer/gentle-currents/progress-recovery/solver-workspace/README.md). Reusing consumed resistance entries for the Cholesky factor removes 400 bytes/thread: compiled stack 3,536→3,136 bytes (−11.31%), registers remain 255. Alternating old/new restored-checkpoint runs (three invocations / 18 measured updates per variant at 8,192 worlds) measure 835.44→801.06 ms/update, 6.276→6.545M steps/s (+4.29% throughput). Retained dense solver matches all checked CPU and five-minute water CUDA states bit-for-bit; a real update-128→129 continuation produces identical full-state and policy hashes. All 161 native tests and existing CPU playback reference pass; Godot extension rebuilt. Original policies and all protected training saves remain unchanged. No viewer or background training left running. No merge/push; work stays uncommitted with earlier changes on `codex/portable-pond`. Register pressure remains; further packing/geometry changes are proposals, not implemented.
-
-**Profiling baseline, before the workspace optimization above:** [Measured report and evidence](experiments/swimmer/gentle-currents/progress-recovery/profiling/README.md). Nsight Systems at 8,192 worlds shows 98.6% captured GPU activity, physics 89.5% of kernel time, and memory copies/memset about 0.01% of wall span. Substantial work is queued ahead of execution; CPU starvation is not the principal measured limit. Nsight Compute at 8,192/32,768 worlds shows 255 registers/thread, 3,536-byte private stack, 16.67% theoretical occupancy, about 10% compute throughput and 77% L2 throughput. Large physics-private arrays/local-memory traffic are the first optimization target. More worlds alone do not fix it. Recommended next experiment: reduce per-thread solver/matrix working set and compare with retained reference physics; this optimization is **not implemented**. Optional instrumentation/harness/analysis added; all 159 native tests pass, zero skipped. Seven protected policy/full saves remain unchanged. Temporary administrator profiling succeeded without persistent security changes. No training/profiling helper remains running; work is uncommitted, no merge/push.
-
-**Latest saved stopping point:** the user approved the first progress-aware current-recovery pilot, then asked to discuss GPU/CPU optimization after a checkpoint. [Pilot report and preserved candidate](experiments/swimmer/gentle-currents/progress-recovery/README.md). Two seeds (71/109), 128 updates each at 8,192 worlds, are complete and stopped. Seed 71/update 128 recovers the known stall within 15 seconds and collects eight foods in its next minute; original gets none. Fresh 1 cm/s collection improves about 1%, but stall reduction is not established (three vs two >20-second gaps in the short suite; two each in +X long swims). **Do not deploy the candidate or claim reliable arbitrary-water swimming.** Original motor, packaged controller and both original full saves remain unchanged. Full candidate state is local under `build/pond-progress-study/seed-*`; the selected new-format policy is archived with the report. Real-save zero-update resume is byte-identical; all 159 native tests pass.
-
-Hardware results before profiling: 1,024/4,096/8,192 worlds measure 2.16/4.61/6.27M steps/s; the user requested going beyond this, and 16,384/32,768 measure 5.57/6.38M. Larger batches alone show little extra gain in this short sample. Training-time NVIDIA activity sampled 99%, which measures kernel-active time rather than peak compute efficiency. User optimization notes are saved in the pilot report. Baseline CPU playback is tested; new candidate long-run CPU evaluation is not. The later authorized profiling above supersedes the prior proposal to profile next. Work remains uncommitted alongside prior changes on `codex/portable-pond`; no merge or push.
-
-**Latest diagnosis and replay:** the user requested investigating and viewing the stronger-current stall. [Diagnostic findings](experiments/swimmer/gentle-currents/diagnosis/README.md) reproduce the original eight-food/265.6-second gap. At a common 60-second state, the original and current-removed branches collect zero new foods; selecting Food 3 for one second then restoring learned choice collects 15 in the next minute with unchanged weights/current. The body settles near the bank with folded joints and unchanged Food 2 selection. The selector has no elapsed-progress input or memory. This suggests a target/recovery trap, but no trained fix is implemented. A labeled recorded Godot replay offers seeking and comparison branches; the user saw it and explicitly asked to close it, which was done normally. Do not reopen without a new request. Original model/full-save hashes are unchanged. The user also questioned low GPU use: this diagnostic uses only 64 worlds with per-step readback; it is not maximum-throughput training. Profiling batch sizes/readback is a future performance discussion, not an authorized new training run.
-
-**Latest completed experiment:** the user approved testing the frozen trained controller in gentle currents before further training and preserving the original policy. The [gentle-current report](experiments/swimmer/gentle-currents/README.md) includes a separate frozen bundle, raw per-world results, protocol and hash verification. In 2,176 one-minute trials, calm measured 17.46875 food/minute, 0.5 cm/s averaged 16.93652 (−3.05%) and 1.0 cm/s averaged 14.24121 (−18.48%) across eight directions. New five-minute confirmation exposed one 265.6-second food gap at 1.0 cm/s, seed 3228672513 / environment 24, direction −X/−Z. There were no >20-second gaps in the tested 0.5 cm/s trials. Frozen weights were not trained; packaged weights and both full local saves are unchanged. Shared physics now accepts an optional imposed water velocity through relative drag, defaulting to zero; Godot remains calm and no new controls/observations were added. All 157 native tests and the legacy portable calm reference pass. Next discussion should diagnose the preserved current-stall case before selecting motor/selector adaptation; no further training is authorized by this completed test alone.
-
-Before the current baseline, the user returned to core AI discussion and selected a changing pond (currents, later obstacles) as the next direction. They first explicitly requested **Show untrained policy** in the existing deep pond. This comparison is implemented: both networks use deterministic random PPO initialization; switching either way restarts the same initial pond; trained weights and training saves remain intact. See [deep pond controls](deep_pond.md). No current UI, adaptation training, legs or further distribution work have been added.
-
-The comparison passed 191 rendered checks on each of CPU and CUDA, 3,298 native CPU/CUDA initialization/physics checks and all 374 existing Godot checks. Rendered desktop/tablet/phone layouts and keyboard operation were checked. Model/save hashes were preserved. Changes remain uncommitted on `codex/portable-pond`, alongside the paused prototype; nothing new has been merged or pushed.
-
-## Earlier stopping point — portability paused
-
-The user asked to stop the portability idea because it may be a rabbit hole. Do not continue CPU training, Mac support, broader GPU packaging, installers or other distribution work without a new explicit request. The Windows preview is a bounded prototype, not the next project priority.
-
-- The current preview runs the saved pond AI and shared physics, prefers healthy CUDA on the RTX 5070 and falls back to CPU. It does not provide portable live PPO training or creature growth.
-- Native GPU tests, portable runtime checks, rendered fallback checks and all 374 existing Godot checks passed before stopping. No implementation changes were made for this stopping-point request.
-- Work remains uncommitted on `codex/portable-pond`; nothing from this branch has been merged or pushed. Preserve the working tree, generated previews and existing model/training saves.
-- Preview ZIPs remain in `build/portable/`. The implementation and launch instructions are in [the portable pond guide](portable_pond.md).
-- At the stop check, the Godot project manager and a user-opened extracted `engine.exe` on the Desktop were present. Leave the user's window alone; no agent-owned background training is intended to remain running.
-
-When the user wants to return to the core AI work, discuss one bounded next experiment toward retained swimming, two limbs, crawling and eventual upright walking. Those stages remain unimplemented. Do not start that experiment as part of this stopping request.
-
-## Portable prototype delivered before stopping
-
-The user subsequently requested a CPU-capable pond build while retaining GPU use on their NVIDIA PC. Work is on `codex/portable-pond`, not yet committed or merged. The [portable pond guide](portable_pond.md) records the implementation, launch/build commands, verification and limits. The new player automatically selects a healthy CUDA module and falls back to CPU; graphics still use Godot's graphics hardware. This is saved-policy pond playback, not CPU PPO training or creature growth. Existing GPU training and trained weights are preserved. Further portable demos, live CPU training and Mac packaging remain follow-ups.
-
-The historical sleep checkpoint below remains useful for model provenance and local save locations. The newer stopping instruction above is authoritative.
-
-# Earlier stopping point — October 27, 2026
-
-The user requested committing the food-selection work to its branch, merging into main, and a stopping point for sleep. Do not start another experiment, leave training running, or schedule background work on their behalf.
-
-## Delivered
-
-- Deep water plays the packaged learned food selector paired with the retained update-64,350 swimming network. Four tail torques, shared physical dynamics and the existing scene are preserved.
-- The selector chooses among all three foods using a shared scoring network trained with native categorical PPO. Recovery training uses independently sampled resting joints and longer episodes. The original training save is intact; deployment has no rescue, teleport or training reset.
-- Fresh results: 17.5625 versus 15.363281 food/minute across 512 one-minute worlds; 17.834375 versus 15.690625 across 128 five-minute worlds. This is the strongest tested controller, not proof of global optimality or a guarantee against every future stall.
-- [Raw results, failed-candidate evidence and provenance](experiments/swimmer/deep-pond-food-choice/README.md); [architecture and usage](pond_food_selection.md).
-
-## Saved progress and reopening
-
-- Open **Tadpole Pond → Deep water** for saved-controller playback. It is explicitly labeled as trained inference, with no background learning.
-- The packaged controller and recorded-stall fixture are versioned under `godot-project/pond/policies/deep_selector*.bin`.
-- Full resumable selector training is at `user://pond-policies/deep-pond-selector-v1/training.bin`: current phase update **800**, best phase update **250**, seed **47**, frozen motor update **64,350**. This local full save includes optimizer/world state and is outside Git. The menu Training guide resumes it headlessly; further candidates do not replace the packaged model automatically.
-- Original motor training remains at `user://pond-policies/deep-pond-v1/training.bin`. Both full saves were copied into a verified `pond-policies/sleep-checkpoint-2026-10-27-*` backup folder before committing. Preserve these local files.
-- No Godot game or native headless trainer was running at the stopping-point process check; only the Godot project manager remained. No ongoing training is required to preserve the saved progress.
-
-## Verification
-
-Release build passed. **154/154 native tests**, GPU required, no skips. **374 Godot checks** passed: saved controller 27, original deep-pond training/resume 67, presentation 138, menu 103, original deep water 39. Packaged-only evaluation reproduced holdout A's cases byte for byte. A separate copy resumed from selector update 800 to 801; the installed save remained at 800. Rendering/layout checks covered desktop, tablet, portrait phone and landscape phone; physical touch/assistive-device checks remain pending.
-
-## Next discussion
-
-Keep cosmetic work deferred. The larger goal remains a consistent fictional creature that retains swimming while developing two weight-bearing legs, then learns crawling and eventually upright locomotion with PPO and native neural networks. Legs, shoreline crossing and walking have not been implemented or authorized as the next coding task. Review the current controller briefly, then agree on one bounded anatomy/physics/retention experiment before coding the next stage. Avoid restarting existing skills from random weights or claiming biological evolution from designed growth stages.
+# Minimal foundation checkpoint — October30,2026
+
+## Checkout and preservation
+
+Original checkout: branch `codex/autonomous-pond-practice`, baseline commit
+`e5e9bd1db7e442715ac8ba3a5f5030c0ede26430`, annotated tag
+`baseline/pre-minimal-foundation-2026-10-30`.
+New worktree: `.worktrees/minimal-foundation`, branch `codex/minimal-foundation`.
+The original checkout remains available and its editor was not closed.
+
+Original ignored `build/foundation-baseline/2026-10-30/` contains verified
+separate backups of25 personal saves (~68.2MB), prior477 protected-file records,
+and39 current contact-study artifact hashes. One boulder save had changed since
+its older protected snapshot; the earlier study copy and the new personal backup
+both remain. Other476 protected artifacts were unchanged. Git history alone is
+not a backup of these ignored/user files.
+
+## Active execution path
+
+`main.tscn → main.gd → CreatureLab → simulation::PhysicalWorld → physics`.
+One world owner, one scene, no autoload or script-inheritance chain. The new
+scene starts paused. Four explicit diagnostic inputs select joint targets or
+direct torque; all physical torques stay within±10µN·m. No learner, food,
+rewards, rescue, network inference or implicit warmup exists in this runtime.
+The future persistent request retains destination, terminal velocity and heading.
+
+Godot displays native links, position/heading, head/COM speeds, applied torques,
+clock and clearance. The physical engine is independent of Godot/learning.
+The optional CUDA wrapper steps the same native state on the caller's stream.
+FP32 MLP/backprop/Adam and PPO/GAE/Gaussian primitives remain for future learning;
+old motor policies/curricula/session ownership are retired.
+
+New state format: diagnostic magic/version1 plus physics/actuator contract and
+checksum. It stores the body, fluid/current, interface, fixed gains, held/raw
+last-applied inputs, applied/requested torque traces, work, clocks, safety flags
+and contact telemetry. It rejects old learner files atomically. UI uses only
+`user://foundation/diagnostic-state.bin`; personal pond saves are not migrated.
+Load pauses explicitly. Unapplied slider edits are not saved; this is stated in
+the UI tooltip. This is a physical-state checkpoint, not a future learner save.
+
+## Verified so far
+
+- Strict native physics/Godot/CUDA builds passed; independent CPU-only build passed.
+- Focused full native suite:49/49 passed,0 skipped, real GPU required,~1.18s.
+- Four independent original-physics oracle cases compare body/link geometry,
+  M/R/C/forces and pre-solve RHS without integration. Source is preserved baseline
+  `src/envs/swimmer/deep_physics.h`, SHA256
+  `b2d6dc10481db9a25d5c700b1d1fce62e39cb5eb17b44ee5585bc8060d2142a9`.
+- CPU/CUDA:4 matched CPU states +8 GPU controls (including exact GPU replay),
+  max defined-field difference1.90734863e−6. Actual-torque bounds retained.
+- Total native physical validation:8CPU controls,8CUDA controls, plus37CPU
+  substeps preserving the archived contact failure. No additional research run.
+- CPU-only executable:6/6 MLP and1/1 checksum/atomic-replacement checks passed
+  without repeating physical cases.
+- Godot import/resource compilation passed. Rendered UI:43 checks passed with
+  exactly2 explicit controls, no save/load/learning. Desktop1280×720,
+  tablet768×1024 and phone390×844 screenshots inspected. Viewport sizing and
+  narrow camera framing were corrected; final38/38 rendered checks passed with
+  zero extra controls, no warnings and all tank corners framed. Keyboard focus
+  scrolls the existing controls into view. Real touch input and a complete
+  keyboard traversal were not manually playtested.
+- Final zero-integration follow-ups passed: full-envelope tilted tail/fin
+  support against an independent closed form on all six planes; format checks
+  reject impossible safe/failed clocks, including integer-overflow edge cases,
+  without mutating the world. The CPU-only hardened format check also passed.
+- The active tree contains72 project files, compared with1,314 at baseline;
+  code/resource files fell from362 to51. Each retained file has an explicit role
+  in `build/active-file-review.json`. This is not a line-by-line proof of every
+  historical implementation; those paths have been retired through checked
+  dependency groups rather than carried forward unexamined.
+
+Logs, screenshots, budgets and retention manifests are under this worktree's
+ignored `build/`. The default test suite is fast; no full learner training or
+historical study is part of it. Further format/static-geometry checks consume
+zero integration steps and are recorded separately.
+
+## Concrete physical gate remains unresolved
+
+The new contact support geometry uses the full body/fin envelope, but the
+registered dynamic gate is NOT passed. The retained zero-command rolled-head
+replay still reaches−0.00058811903m floor gap after37substeps. That exceeds the
+unchanged0.5mm allowance. The unit test passes by preserving and explicitly
+identifying this known failure; it is not successful contact validation.
+
+Historical contact-v2 study:133 geometry checks and2,400 executed CPU/CUDA
+comparisons passed;4,440 total substeps ran. Full support/free-water/final
+step-size acceptance did not finish. New motor readiness, PPO and policy
+comparison counts all remain zero. The earlier paired-motor study is distinct:
+its torque arm stopped after6updates on a distal-fin/contact-proxy discrepancy;
+its servo arm had0updates. Detailed source/protocol/results remain at baseline
+and in the original ignored studies; neither is resumed here.
+
+## Next decision
+
+A separately bounded contact-response correction is needed before declaring
+physical readiness. Then design the motor task around turning, braking, slow
+arrival and sustained position/heading holding, with unsupported calm/current
+holding and supported bottom rest scored separately. Existing learning design
+may change substantially; no replacement learning budget is authorized yet.
+Chooser training, production adoption, growth/limbs, land movement, merging and
+deployment remain outside this structural work.

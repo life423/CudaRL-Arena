@@ -1,6 +1,0 @@
-[configuration]
-entry_symbol = "cudarl_gdextension_library_init"
-compatibility_minimum = "4.4"
-
-[libraries]
-windows.x86_64 = "res://addons/cudarl/bin/cudarl.dll"

@@ -1,4 +1,0 @@
-FEEDING_CPU_REFERENCE worlds=8 seconds=10 food_min=14.000 valid=1
-FEEDING_CPU_EVAL update=16 original=10.500 incumbent=10.500 candidate=10.500 accepted=0
-FEEDING_CPU_REFERENCE worlds=8 seconds=10 food_min=14.000 valid=1
-CPU_FEEDING checks=12946 update_ms=92.7 steps_per_second=11042 validations=1 adopted=0 PASS

@@ -1,58 +1,15 @@
 {
   "version": 3,
   "configurePresets": [
-    {
-      "name": "portable",
-      "displayName": "Portable pond (C++ only, no CUDA toolkit)",
-      "generator": "Visual Studio 17 2022",
-      "architecture": "x64",
-      "binaryDir": "${sourceDir}/build/portable",
-      "cacheVariables": {"CUDARL_ENABLE_CUDA": "OFF", "CUDARL_BUILD_BENCH": "OFF"}
-    },
-    {
-      "name": "windows",
-      "displayName": "Windows x64 (Visual Studio 2022)",
-      "generator": "Visual Studio 17 2022",
-      "architecture": "x64",
-      "binaryDir": "${sourceDir}/build"
-    },
-    {
-      "name": "ci",
-      "inherits": "windows",
-      "displayName": "CI: core, tests and benchmark, without the Godot extension",
-      "binaryDir": "${sourceDir}/build/ci",
-      "cacheVariables": {
-        "CUDARL_BUILD_GODOT": "OFF"
-      }
-    }
+    {"name": "windows", "generator": "Visual Studio 17 2022", "architecture": "x64", "binaryDir": "${sourceDir}/build", "cacheVariables": {"CUDARL_ENABLE_CUDA": "ON"}},
+    {"name": "cpu", "inherits": "windows", "binaryDir": "${sourceDir}/build/cpu", "cacheVariables": {"CUDARL_ENABLE_CUDA": "OFF", "CUDARL_BUILD_GODOT": "OFF"}}
   ],
   "buildPresets": [
-    {"name": "portable", "configurePreset": "portable", "configuration": "Release"},
-    {
-      "name": "release",
-      "displayName": "Release",
-      "configurePreset": "windows",
-      "configuration": "Release"
-    },
-    {
-      "name": "ci",
-      "configurePreset": "ci",
-      "configuration": "Release"
-    }
+    {"name": "release", "configurePreset": "windows", "configuration": "Release"},
+    {"name": "cpu", "configurePreset": "cpu", "configuration": "Release"}
   ],
   "testPresets": [
-    {"name": "portable", "configurePreset": "portable", "configuration": "Release", "output": {"outputOnFailure": true}},
-    {
-      "name": "release",
-      "configurePreset": "windows",
-      "configuration": "Release",
-      "output": { "outputOnFailure": true, "verbosity": "verbose" }
-    },
-    {
-      "name": "ci",
-      "configurePreset": "ci",
-      "configuration": "Release",
-      "output": { "outputOnFailure": true, "verbosity": "verbose" }
-    }
+    {"name": "release", "configurePreset": "windows", "configuration": "Release", "output": {"outputOnFailure": true}},
+    {"name": "cpu", "configurePreset": "cpu", "configuration": "Release", "output": {"outputOnFailure": true}}
   ]
 }

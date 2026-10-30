@@ -1,5 +1,0 @@
-mode,seed,trials,seconds,food_per_minute,mean_low_speed_seconds,mean_no_food_10_seconds,mean_uncollected_target_switches,slot0,slot1,slot2
-canonical,384901731,64,60,15.296875,0.04765625,0,0,976,3,0
-nearest,384901731,64,60,16.828125,0.56015625,0.3953125,1.9375,359,355,363
-held_nearest,384901731,64,60,15.546875,0.6375,0.5890625,10.921875,316,347,332
-learned_selector,384901731,64,60,17.328125,0.0609375,0,8.1875,328,404,377
