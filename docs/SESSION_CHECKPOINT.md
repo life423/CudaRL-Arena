@@ -168,3 +168,74 @@ The retained-file review now contains75 project files, including three focused
 validation additions. This checkpoint describes local work on
 `codex/minimal-foundation`; it is saved as a separate local rollback commit
 before the contact-response experiment. No push or merge is included.
+
+## Bounded contact comparison — registration before execution
+
+The user authorized the next recommended work after reverification. Local audit
+rollback commit: `0eb4cfcab986a41da4ee0036d17602a692ddfbde`.
+This is one opt-in physical comparison, not another learner or motor curriculum.
+Baseline `contact::substep` and the live world remain unchanged. Candidate
+`contact_response::substep` is reachable only from the optional probe executable.
+Body/mass/inertia, water/drag/buoyancy, four actuators, soft stops and torque
+limits remain unchanged. No runtime/save version migration, projection, rescue,
+new geometry or contact-tolerance change is allowed. Candidate contact dynamics
+DO change: predicted contact and unilateral implicit spring/damping replace
+old-gap explicit spring/conditionally implicit damping in the probe only.
+
+One fixed candidate uses the same per-link spring0.8N/m and
+`2*sqrt(0.8*link_mass)` damping, split equally over two tail endpoints.
+Inward normal velocity is positive when separating. For gap g and step h,
+normal force is `max(0,-k*(g+h*J*v_new)-c*J*v_new)`. With free system
+`A=M+h*R`, solve the coupled nonnegative impulse problem using Cholesky
+response solves and projected Gauss–Seidel. Fixed maximum64 sweeps per
+activation pass, at most4 monotone passes. Activation uses existing overlap or
+predicted linear/nonlinear free-drift crossing; no distant damping plane.
+Projected velocity residual must satisfy `1e-6 + 1e-5*max(abs(J*u),abs(b))`.
+Solver failure is reported, never hidden. No-contact branches retain exact
+baseline arithmetic. Independent scalar/two-row reference checks precede any
+physical integration; these are zero-integration preflight checks.
+
+The immutable numeric catalog is written by `--prepare` before `--run`; its hash
+and exact executed source/executable hashes are recorded in a new ignored study
+directory. Preparation consumes zero integration. All cases have fixed numeric
+states/actions; no random sampling or seed search occurs. The primary catalog
+reuses the eight archived contact fixtures, including the protected fin failure
+and rolled-head regression. It does not reuse withheld motor evaluation states.
+
+| Stage | Fixed scope | Both responses × CPU/CUDA maximum substeps |
+| --- | --- | --- |
+| Primary |8 archived fixture types,1.5s at5ms |9,600 |
+| Refinement | Primary IDs1/3/5,1.5s at2.5ms and1.25ms |21,600 |
+| Withheld |8 fixed perturbed contact starts,1.5s at5ms |9,600 |
+| Free water |8 prescribed calm/current cases,0.25s at5ms |1,600 |
+| Passivity |3 zero-gravity/fluid/actuator cases,0.5s at5ms |1,200 |
+| Total | No rerun, sweep or automatic extension |43,600 |
+
+Safety is checked at the start and every substep: finite state, no escape and
+no signed full-envelope gap below−0.0005m. Finite physical failure stops its
+trajectory; remaining independent registered cases may run to diagnose the
+response. Any nonfinite, solver, stream or data-integrity failure stops the
+entire probe. Any candidate gate failure prevents acceptance. No parameter or
+fixture edits between stages and no held-out tuning.
+
+Density990 support cases require actual floor contact at every sample of the
+last0.5s, mean actual normal floor force≥80% known buoyancy deficit, and
+maximum absolute vertical head speed≤0.0005m/s in that window. Force includes
+the actual damping/impulse contribution, separately from spring-only telemetry.
+This short support criterion is not the old5s gate or ten-second motor holding.
+Refinement5ms-versus1.25ms differences: maximum penetration≤0.0001m,
+final head position≤0.0005m. CPU/CUDA defined physical floats use the existing
+`2e-4+2e-3*abs(reference)` tolerance; gap/force use`2e-6+2e-3*abs(reference)`;
+safety flags and executed counts must match exactly. Free-water defined states
+must be bit-exact between responses on each backend and stay>2mm from contact.
+Passivity starts cover compressed release, closing impact and separating
+contact with zero gravity/fluid/commands. Kinetic+spring+joint-stop energy must
+remain≤initial energy+`max(1e-10J,0.001*initial energy)`; normal force≥−1e-9N.
+No energy tolerance will be relaxed after observing results.
+
+Store all real substep states, force/impulse/solver diagnostics and first failure
+conditions. Report safety, response, support, parity, free-water equivalence,
+passivity and timestep sensitivity separately. Even a complete pass would only
+support this contact correction on these cases; it would not establish learned
+swimming, braking, unsupported station keeping or predator avoidance. No PPO,
+production adoption, merge or deployment is included.
