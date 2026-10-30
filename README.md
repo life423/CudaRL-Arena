@@ -80,6 +80,8 @@ The subsequent bounded contact-response comparison is isolated behind `CUDARL_BU
 
 That one-shot comparison stopped after 22,649 attempts and rejected the candidate: both responses failed the bent, pitched and rolled primary cases. A legacy CPU/CUDA damping-branch mismatch ended the run before free-water and passivity checks. The candidate is retained only as reproducible experiment code, not enabled behavior. Do not resume it or treat the remaining budget as authorization for another run.
 
+The subsequent approved calibrated-compliance versus hard-contact pilot is also isolated (`CUDARL_BUILD_CONTACT_PILOT`, default OFF). It finished at 1,626/2,024 attempted advances. Calibrated compliance passed all its short cases; hard contact failed its stricter nonlinear geometry consistency gate and was quarantined. Neither is enabled in Godot. This was a 0.25-second screen, not sustained support, motor training or production readiness. Its protocol, source snapshot and results are preserved under ignored `build/contact-pilot/2026-10-30-v1/`; see the latest checkpoint before further work.
+
 ## Baseline and removed paths
 
 Original commit: `e5e9bd1db7e442715ac8ba3a5f5030c0ede26430`.

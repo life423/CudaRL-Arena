@@ -414,3 +414,89 @@ can reject an approach or justify another decision; they cannot pass the prior
 Old inspected withheld states are regressions; fresh endpoints are not used to
 choose coefficients. No automatic follow-up, PPO, new chooser/limbs, engine
 migration, merge, deployment or production adoption is authorized.
+
+## 2,024-ceiling pilot result — completed screen, no adoption
+
+Exact executed source: `4488a1cbc332bc25acde58e5f34f524838845ab5`.
+Both strict CUDA builds passed; preparation froze all fixtures, laws, coefficients,
+tolerances and stop rules before any reference query or physical call. The sole
+run is preserved at `build/contact-pilot/2026-10-30-v1/` with executable, all82
+source files, source/protocol SHA manifests, immutable numeric registration,
+static-reference output, algebra/point/step traces and rejected-pose binaries.
+No coefficient changes, tuning, reruns or retries occurred.
+
+Actual1,626 attempted physical advances:1,000 A,602 B and24 old-law parity.
+CPU813/CUDA813;1,624 poses committed and2 rejected B proposals retained.
+Stage charges: parity24, scalar600, free400, passive302, rolling100, fresh200.
+Unused398 advances were NOT reused. Zero PPO, actor adoption or engine changes.
+Static counts were129 geometry/FK,170 kinetic,76 matrix/LCP queries, within
+their256/256/96 caps. The pilot is closed, not resumable.
+
+| Check | A: calibrated compliant | B: zero-compliance constraint |
+| --- | --- | --- |
+| Scalar support/impact/separation |6/6 CPU/CUDA cases pass |6/6 pass |
+| Scalar50mm/s restitution |0.0305022 (limit≤0.15) |0 |
+| Scalar impact maximum compression |20.6776µm | Numerical zero |
+| Free water |4/4 pass; per-backend A/B bit-exact |4/4 pass |
+| Passive zero-energy touch |2/2 pass |2/2 pass |
+| Passive rolling,0.25s |2/2 pass | Both stop after first5ms proposal |
+| Recorded loaded rolling,0.25s |2/2 pass; max11.4441µm compression | Not run after prerequisite failure |
+| Two fresh conditions,0.25s |4/4 pass; max11.8613/11.0418µm | Not run |
+| Overall scheduled short cases |20/20 pass |12 pass,2 fail,6 not run |
+
+A is more promising for the next validation, under its explicitly compliant law.
+This is NOT evidence that it has universally superior collision geometry: B's
+first failure penetrated LESS than A, but violated its own zero-compliance claim.
+B's actual nonlinear gap was−3.7252903µm on both backends, past its preregistered
+−2µm consistency bound while still safely inside the unchanged−500µm global
+safety limit. Its linear head gap was approximately−1.11e−11m CPU/+7.48e−12m
+CUDA, solver residual0/8.07e−19, rank1/one basis iteration. The compressive
+impulse69.8193µN·s reduced frozen-M kinetic energy by1.52853µJ. This was
+rotating-geometry linearization drift, not solver nonconvergence, adhesion,
+energy injection or a hidden relaxation of the0.5mm rule. Caller states were
+not committed; first rejected proposals remain visible in binary and CSV.
+
+Independent3-state verification passed. Maximum normalized M error1.479e−6,
+maximum effective-mass relative error7.576e−7, maximum native/reference gap
+error18.68nm. All finite-difference J gates passed. Maximum inertial normal mass
+2.1961g stayed under3g; rolling available calm energy8.7671µJ stayed under25µJ.
+Fresh-calm initial energy bound8.8850µJ passed; the fresh-current initial8.6523µJ
+was explicitly NOT a calm-work guarantee. Hybrid M+hR checks still reuse native
+R; independent M/J agreement does not validate all hydrodynamics or Coriolis.
+
+All24 cross-backend SAME-input legacy/v3 parity steps passed, including the six
+frozen origin/velocity-offset inputs. Thus this test found no identical-input
+CPU/CUDA defect; it supports the previous diagnosis of sensitivity accumulated
+along different trajectories at the legacy damping switch. It is not a proof
+of long-trajectory parity in every contact condition.
+
+All1,000 A advances passed the registered finite, nonadhesion, energy, numerical
+and reached CPU/CUDA checks. Maximum scaled momentum residual0.19653<1;
+maximum independent constitutive residual4.677e−7m/s. Stored energy used320N/m
+patch springs for A, no contact spring for B, and joint-stop potential for both.
+Scalar total energy included its actual external-load potential; applied-load
+work, numerical free-kick work and contact-M substage work are distinct fields.
+Pure passive full-pose energy checks passed where run. Complete gravity/current
+world-work accuracy remains unproved and was not silently called passivity.
+
+The measured scalar rebound0.0305 is substantially below the continuous-time
+critical unilateral value~0.135. It meets the registered low-rebound band, but
+shows timestep-dependent numerical damping that needs validation. A also
+changes endpoint patch calibration and uses the new common operator split;
+this screen is not an ablation isolating stiffness, damping, weighting or split.
+
+No old primary bent/pitched catalog, sustained5s support, timestep convergence,
+ten-second unsupported holding, learned movement or predator behavior has been
+established for A. These two fresh screen cases are now inspected regressions,
+not new final held-out conditions. The original pond/runtime and saved actors
+remain untouched. Post-run hashes verify477 protected records,39 old contact
+artifacts and25 personal saves/backups unchanged; original checkout is clean.
+Pilot option restored OFF; default CTest still only contains the small suite.
+
+Recommended smallest next step, NOT executed or authorized here: keep A fixed
+and preregister one longer loaded-support validation over the prior bent,
+pitched and rolled failures, with fresh withheld conditions and an explicit
+check of its new stiffness/timestep-dependent damping. This would decide
+whether contact can support the reusable turn→brake→controlled arrival→hold
+motor lesson. Do not extend this screen, tune A/B, promote either law or start
+PPO merely because the short A cases pass. No merge, push or deployment.
