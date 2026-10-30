@@ -18,6 +18,32 @@ running the creature. The chooser is not instantiated or trained in that study.
 
 ## Persistent goal and movement request
 
+Ownership is explicit:
+
+| Owner | Responsibility |
+| --- | --- |
+| Godot scene/view | Draw native state, accept player actions, camera/UI; no body forces or learner ownership |
+| GDExtension `DeepPondLab` | Own the selected native session/playback and route typed interaction/state calls |
+| Native session | Own background trainer, visible simulation, checkpoint lease, snapshots and adoption checks |
+| Goal chooser | Own persistent intention and requested destination, terminal velocity and heading |
+| Movement motor | Sample four actuator actions conditioned on body state and the current request |
+| Physical servo, when selected | Convert joint-angle requests into limited internal joint torques every5ms; no extra body stabilization |
+| Shared simulator | Apply actual torques, drag, buoyancy and contact; report resulting state and work |
+| PPO trainer/checkpoint | Own critics, sampled actions/log probabilities, optimizer/random state and complete continuation state |
+
+The chooser-to-motor contract is the replacement design, not a claim that the
+current production food scorer already supports every intention. Motor benches
+supply requests directly and keep chooser learning outside their protocol.
+
+The current body has two universal joints with two controlled axes each: four
+actuator outputs. A joint-target motor requests four axis angles. Its physical
+servo is an actuator interface, not another learned policy. Future body-layout
+and controller-schema identifiers must fence changes in actuator count/sensing.
+Growing limbs requires explicit compatible policy/observation transfer and new
+physical tests; it does not require one motor network per skill. The geometric
+destination/velocity/heading request remains reusable. No growth, limbs or
+manipulation are implemented in the current motor experiment.
+
 The existing `command_motor::Request` contains:
 
 - `position`: destination in existing model/world coordinates (4cm per unit);

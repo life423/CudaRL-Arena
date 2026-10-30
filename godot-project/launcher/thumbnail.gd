@@ -1,9 +1,7 @@
 extends Control
 
-# Preserve the approved CartPole/Racing illustrations with atlas regions.
-# Tadpole Pond uses a render captured from the actual scene. Text/buttons are native UI.
-const SOURCE: Texture2D = preload("res://launcher/assets/demo-preview-source.png")
-var demo := "cartpole"
+# Pond previews are captures from the actual scene. Text/buttons are native UI.
+var demo := "pond"
 var texture: Texture2D
 
 func _ready() -> void:
@@ -11,14 +9,8 @@ func _ready() -> void:
 	if demo == "pond_boulder":
 		var path := "res://launcher/assets/boulder-pond.png"
 		texture = load(path) if ResourceLoader.exists(path) else preload("res://launcher/assets/tadpole-pond.png")
-	elif demo == "pond":
-		texture = preload("res://launcher/assets/tadpole-pond.png")
 	else:
-		var atlas := AtlasTexture.new()
-		atlas.atlas = SOURCE
-		atlas.region = Rect2(45, 194, 667, 185) if demo == "cartpole" else Rect2(45, 413, 667, 204)
-		atlas.filter_clip = true
-		texture = atlas
+		texture = preload("res://launcher/assets/tadpole-pond.png")
 	resized.connect(queue_redraw)
 
 func _draw() -> void:

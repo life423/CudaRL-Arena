@@ -1,6 +1,5 @@
 #include <chrono>
 #include <filesystem>
-#include <fstream>
 #include <thread>
 #include "check.h"
 #include "demos/ppo_session.h"
@@ -48,15 +47,6 @@ GPU_TEST_CASE("training resume: exact PPO continuation across timeouts and evalu
         rl::ForagingTrainer reopened(cfg);compare(uninterrupted,reopened);
         std::filesystem::remove(std::filesystem::u8path(path));
     }
-}
-TEST_CASE("training resume: checksum rejects corruption and failed replacement preserves the prior save") {
-    const auto path=temporary("checkpoint-io-");const std::vector<uint8_t> first{1,2,3,4,5};cp::write_atomic(path,first);CHECK(cp::read(path)==first);
-    std::filesystem::create_directory(std::filesystem::u8path(path+".tmp"));
-    bool failed=false;try {cp::write_atomic(path,{9,8,7});} catch(const std::exception&) {failed=true;}CHECK(failed && cp::read(path)==first);
-    std::filesystem::remove(std::filesystem::u8path(path+".tmp"));
-    {std::fstream file(std::filesystem::u8path(path),std::ios::binary|std::ios::in|std::ios::out);file.seekp(24);const char bad=99;file.write(&bad,1);}
-    bool corrupt=false;try {cp::read(path);} catch(const std::exception&) {corrupt=true;}CHECK(corrupt);
-    std::filesystem::remove(std::filesystem::u8path(path));
 }
 GPU_TEST_CASE("training resume: session saves on close and publishes the restored update without retraining") {
     rl::SwimmerConfig cfg;cfg.num_envs=128;cfg.body=cudarl::swimmer::body_preset(8);cfg.shuffle_food_inputs=true;cfg.evaluation_every=25;

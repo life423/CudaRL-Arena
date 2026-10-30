@@ -1,5 +1,7 @@
 extends Control
 
+const NativeLabFactory = preload("res://shared/native_lab_factory.gd")
+
 # Live view of a neural network learning a curve. Every frame the GPU runs a
 # batch of training steps (src/demos/function_fit), and this script draws the
 # network's prediction over the target plus a loss history. The UI is built in
@@ -16,7 +18,7 @@ const TARGET_COLOR := Color(0.55, 0.57, 0.62, 0.55)
 const PREDICTION_COLOR := Color(0.25, 0.80, 0.95)
 const LOSS_COLOR := Color(0.98, 0.65, 0.25)
 
-var trainer := NetworkTrainer.new()
+var trainer
 var xs := PackedFloat32Array()
 var target_ys := PackedFloat32Array()
 var pred_ys := PackedFloat32Array()
@@ -39,14 +41,31 @@ var plot: Control
 var loss_plot: Control
 
 func _ready() -> void:
+	var native := NativeLabFactory.create("NetworkTrainer", ["get_x_min", "get_x_max", "get_target_names", "configure", "is_ready", "train", "predict", "get_error", "target_values", "get_num_params"])
+	trainer = native.instance
 	_build_ui()
+	if trainer == null:
+		status_label.text = native.error
+		NativeLabFactory.disable_controls(self)
+		set_process(false)
+		return
 	xs.resize(PLOT_POINTS)
 	for i in PLOT_POINTS:
 		xs[i] = lerpf(trainer.get_x_min(), trainer.get_x_max(), float(i) / (PLOT_POINTS - 1))
-	print(CudaDevice.new().describe())
+	print(NativeLabFactory.device_description())
 	_restart()
 
+func _exit_tree() -> void:
+	trainer = null
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		DemoLaunch.show_menu()
+
 func _process(_delta: float) -> void:
+	if trainer == null:
+		return
 	if trainer.is_ready() and not paused:
 		stats = trainer.train(int(speed_slider.value))
 		if stats.has("loss"):
@@ -61,9 +80,11 @@ func _process(_delta: float) -> void:
 	loss_plot.queue_redraw()
 
 func _restart() -> void:
+	if trainer == null:
+		return
 	loss_history.clear()
 	stats = {}
-	var ok := trainer.configure(target_option.selected, int(width_spin.value), int(depth_spin.value),
+	var ok: bool = trainer.configure(target_option.selected, int(width_spin.value), int(depth_spin.value),
 			activation_option.get_selected_id(), _learning_rate())
 	target_ys = trainer.target_values(xs)
 	pred_ys = trainer.predict(xs) if ok else PackedFloat32Array()
@@ -89,14 +110,22 @@ func _build_ui() -> void:
 	var controls := VBoxContainer.new()
 	controls.add_theme_constant_override("separation", 8)
 	margin.add_child(controls)
+	var back := Button.new()
+	back.name = "BackToDemos"
+	back.text = "Pond menu"
+	back.custom_minimum_size.y = 44
+	back.pressed.connect(DemoLaunch.show_menu)
+	controls.add_child(back)
 
 	controls.add_child(_heading("Neural network, trained live on the GPU"))
 	controls.add_child(_note("Hand-written CUDA: forward, backprop and Adam. No ML framework."))
 
 	target_option = OptionButton.new()
-	for target_name in trainer.get_target_names():
-		target_option.add_item(target_name)
-	target_option.select(1)   # Wiggle: takes a few seconds, so the learning is visible
+	if trainer != null:
+		for target_name in trainer.get_target_names():
+			target_option.add_item(target_name)
+	if target_option.item_count > 1:
+		target_option.select(1)   # Wiggle: takes a few seconds, so the learning is visible
 	target_option.item_selected.connect(func(_i): _restart())
 	controls.add_child(_labeled("Target function", target_option))
 
@@ -161,6 +190,8 @@ func _build_ui() -> void:
 	_update_slider_labels()
 
 func _toggle_pause() -> void:
+	if trainer == null:
+		return
 	paused = not paused
 	pause_button.text = "Resume" if paused else "Pause"
 

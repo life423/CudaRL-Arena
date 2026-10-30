@@ -33,13 +33,11 @@ func _init() -> void:
 	camera_direction = Vector3(0.22, 0.55, 0.81).normalized()
 	overview_distance = 13.8
 
-func _ready() -> void:
-	super._ready()
+func _after_lab_started() -> void:
+	super._after_lab_started()
 	get_window().title = "CudaRL · Original swimmer · live" if stats.get("playback_mode", false) else "CudaRL · Deep pond · training"
-	(sidebar_scroll.get_child(0).get_child(0) as Label).text = "Tadpole pond"
+	sidebar_title.text = "Tadpole pond"
 	camera_button.text = "Closer view"
-	camera_button.pressed.disconnect(camera_button.pressed.get_connections()[0].callable)
-	camera_button.pressed.connect(func(): overview = not overview; camera_button.text = "Closer view" if overview else "Pond overview")
 	camera_button.tooltip_text = "Pond overview is stationary. Closer view uses a steady three-quarter angle and fixed zoom with gentle tracking."
 	curve.empty_message = "Evaluating transferred swimming on three foods…"
 	curve.watch_button.visible = true
@@ -48,10 +46,13 @@ func _ready() -> void:
 	curve.watch_button.text = "Watch latest"
 	curve.watch_button.tooltip_text = "The pond shows the strongest evaluated controller while training continues. Switch to inspect the latest learner."
 	curve.watch_button.toggled.connect(func(enabled: bool): lab.set_watch_best(enabled))
-	_poll()
+
+func _toggle_camera() -> void:
+	overview = not overview
+	camera_button.text = "Closer view" if overview else "Pond overview"
 
 func _create_lab() -> RefCounted:
-	return DeepPondLab.new()
+	return _create_native_lab("DeepPondLab", ["get_error", "get_state", "get_stats", "step", "stop", "set_paused", "set_updates_per_second", "save_training_now", "get_evaluation_history", "set_watch_best", "set_untrained"])
 
 func _build_ui() -> void:
 	super._build_ui()

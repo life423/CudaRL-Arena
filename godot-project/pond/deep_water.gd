@@ -6,6 +6,7 @@ const MUTED := Color("b8cbc4")
 const ACCENT := Color("faa640")
 const LearningCurve = preload("res://pond/pond_curve.gd")
 const Creature = preload("res://pond/deep_creature.gd")
+const NativeLabs = preload("res://shared/native_lab_factory.gd")
 @export var checkpoint_path := "user://pond-policies/deep-v1/training.bin"
 @export var population := 1024
 @export var training_seed := 7
@@ -15,6 +16,8 @@ var overview_distance := 17.0
 var layout: BoxContainer
 var sidebar: PanelContainer
 var sidebar_scroll: ScrollContainer
+var sidebar_title: Label
+var sidebar_controls: VBoxContainer
 var visual: VBoxContainer
 var viewport_container: SubViewportContainer
 var viewport: SubViewport
@@ -44,25 +47,67 @@ var paused := false
 var overview := false
 var evaluation_count := 0
 var error_reported := false
+var startup_error := ""
+var startup_succeeded := false
 
 func _ready() -> void:
 	Engine.max_fps = 60
 	DisplayServer.window_set_title("CudaRL · Deep-water swimming")
+	# One lifecycle owns construction/startup. Modes supply data and hooks;
+	# a derived scene must not pre-start a session through a super._ready chain.
+	lab = _create_lab()
+	var prepared := lab != null and _prepare_lab()
 	_build_ui()
-	_build_world()
+	if prepared:
+		_build_world()
 	resized.connect(_fit)
 	_fit()
-	lab = _create_lab()
-	if not _start_lab():
-		title_status.text = lab.get_error()
+	if not prepared:
+		_show_startup_error()
 		return
+	if not _start_lab():
+		if startup_error.is_empty():
+			startup_error = lab.get_error()
+		_show_startup_error()
+		return
+	startup_succeeded = true
 	state = lab.get_state()
+	stats = lab.get_stats()
 	previous = state.duplicate(true)
+	_after_lab_started()
 	_poll()
-	_apply_pose(1.0)
+	if not state.is_empty():
+		_apply_pose(1.0)
+
+func _prepare_lab() -> bool:
+	return true
+
+func _after_lab_started() -> void:
+	pass
+
+func _create_native_lab(type_name: String, required_methods: Array[String] = []) -> RefCounted:
+	var result := NativeLabs.create(type_name, required_methods)
+	startup_error = str(result.error)
+	return result.instance as RefCounted
+
+func _show_startup_error() -> void:
+	startup_succeeded = false
+	set_process(false)
+	set_physics_process(false)
+	if startup_error.is_empty():
+		startup_error = "The simulation could not start. Return to the pond menu and try again."
+	title_status.text = "Pond unavailable"
+	save_status.text = startup_error
+	viewport_container.hide()
+	curve.hide()
+	var message := _label("The pond could not start.\n\n" + startup_error, 20)
+	message.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	visual.add_child(message)
+	NativeLabs.disable_controls(self)
 
 func _create_lab() -> RefCounted:
-	return ClassDB.instantiate("DeepWaterLab")
+	return _create_native_lab("DeepWaterLab", ["start_training", "get_error", "get_state", "get_stats", "step", "stop"])
 
 func _start_lab() -> bool:
 	return lab.start_training(population, training_seed, checkpoint_path)
@@ -117,11 +162,13 @@ func _build_ui() -> void:
 	sidebar_scroll = ScrollContainer.new()
 	sidebar_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	sidebar.add_child(sidebar_scroll)
-	var controls := VBoxContainer.new()
+	sidebar_controls = VBoxContainer.new()
+	var controls := sidebar_controls
 	controls.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	controls.add_theme_constant_override("separation", 10)
 	sidebar_scroll.add_child(controls)
-	controls.add_child(_label("Deep-water lab", 25))
+	sidebar_title = _label("Deep-water lab", 25)
+	controls.add_child(sidebar_title)
 	title_status = _label("Preparing native PPO…", 14, MUTED)
 	controls.add_child(title_status)
 	var back := _button("Pond menu")
@@ -141,7 +188,7 @@ func _build_ui() -> void:
 	swimmer_stats = _label("", 16)
 	controls.add_child(swimmer_stats)
 	camera_button = _button("Whole tank view")
-	camera_button.pressed.connect(func(): overview = not overview; camera_button.text = "Follow swimmer" if overview else "Whole tank view")
+	camera_button.pressed.connect(_toggle_camera)
 	controls.add_child(camera_button)
 	controls.add_child(HSeparator.new())
 	training_heading = _label("Background training", 18)
@@ -309,6 +356,10 @@ func _toggle_pause() -> void:
 	paused = not paused
 	lab.set_paused(paused)
 	pause_button.text = "Resume learning" if paused else "Pause learning"
+
+func _toggle_camera() -> void:
+	overview = not overview
+	camera_button.text = "Follow swimmer" if overview else "Whole tank view"
 
 func _physics_process(delta: float) -> void:
 	if not lab or state.is_empty() or not released:

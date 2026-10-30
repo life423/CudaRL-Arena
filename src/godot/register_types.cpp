@@ -7,8 +7,6 @@
 #include "cuda_device.h"
 #include "maze_arena.h"
 #include "network_trainer.h"
-#include "ppo_lab.h"
-#include "racing_lab.h"
 #include "tadpole_lab.h"
 #include "deep_water_lab.h"
 #endif
@@ -24,8 +22,6 @@ void initialize_cudarl_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<CudaDevice>();
     ClassDB::register_class<MazeArena>();
     ClassDB::register_class<NetworkTrainer>();
-    ClassDB::register_class<PpoLab>();
-    ClassDB::register_class<RacingLab>();
     ClassDB::register_class<TadpoleLab>();
     ClassDB::register_class<DeepWaterLab>();
 #endif

@@ -2,6 +2,7 @@ extends Node3D
 
 const PondCamera = preload("res://pond/pond_camera.gd")
 const PondRipples = preload("res://pond/pond_ripples.gd")
+const NativeLabFactory = preload("res://shared/native_lab_factory.gd")
 
 const RX := 4.6
 const RZ := 3.5
@@ -20,7 +21,7 @@ const ACCENT := Color("faa640")
 @export var close_camera := true
 @export var water_disturbances := true
 var ripples: PondRipples
-var lab := TadpoleLab.new()
+var lab
 var current: Dictionary = {}
 var previous: Dictionary = {}
 var blend := 1.0
@@ -46,6 +47,7 @@ var sparks: Array[MeshInstance3D] = []
 var spark_origin := Vector3.ZERO
 var spark_age := 1.0
 var old_tick_rate := 60
+var owns_tick_rate := false
 var ready_policy := false
 var warmup_timer: Timer
 var last_reported_update := -50
@@ -77,14 +79,25 @@ var back_button: Button
 var training_save: Label
 
 func _ready() -> void:
+	var native := NativeLabFactory.create("TadpoleLab", ["stop", "set_paused", "set_watch_best", "set_updates_per_second", "watch_foraging_checkpoint", "get_error", "get_state", "start_training", "watch_policy", "reset", "move_food", "get_stats", "step", "get_evaluation_history"])
+	lab = native.instance
 	if not embedded_view:
 		get_window().title = "CudaRL · Tadpole pond"
-	old_tick_rate = Engine.physics_ticks_per_second
-	Engine.physics_ticks_per_second = 20
+		if lab != null:
+			old_tick_rate = Engine.physics_ticks_per_second
+			Engine.physics_ticks_per_second = 20
+			owns_tick_rate = true
 	get_viewport().msaa_3d = Viewport.MSAA_4X
 	_build_world()
 	_build_tadpole()
 	_build_ui()
+	if lab == null:
+		status.text = native.error
+		training_save.text = "The simulation could not start. Saved training was not changed."
+		NativeLabFactory.disable_controls(ui_layout)
+		set_process(false)
+		set_physics_process(false)
+		return
 	warmup_timer = Timer.new()
 	warmup_timer.one_shot = true
 	warmup_timer.timeout.connect(_resume_learning)
@@ -94,9 +107,15 @@ func _ready() -> void:
 	_start_pond.call_deferred()
 
 func _exit_tree() -> void:
-	lab.stop()
-	if not embedded_view:
+	if warmup_timer != null:
+		warmup_timer.stop()
+	if lab != null:
+		lab.stop()
+		lab = null
+	ready_policy = false
+	if owns_tick_rate:
 		Engine.physics_ticks_per_second = old_tick_rate
+		owns_tick_rate = false
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -581,12 +600,17 @@ func _fit_layout() -> void:
 	_fit_camera()
 
 func _toggle_pause() -> void:
+	if lab == null:
+		return
 	user_paused = not user_paused
 	warmup_timer.stop()
 	lab.set_paused(user_paused)
 	_update_learning_status()
 
 func _watch_best(enabled: bool) -> void:
+	if lab == null:
+		curve_view.watch_button.set_pressed_no_signal(false)
+		return
 	if not lab.set_watch_best(enabled):
 		curve_view.watch_button.set_pressed_no_signal(false)
 	_update_learning_status()
@@ -597,9 +621,12 @@ func _set_training_speed(value: float) -> void:
 	training_updates_per_second = 0.0 if maximum_speed.button_pressed else value
 	speed_slider.editable = not maximum_speed.button_pressed
 	speed_label.text = "Training speed · maximum" if maximum_speed.button_pressed else "Training speed · %d updates/s" % int(value)
-	lab.set_updates_per_second(training_updates_per_second)
+	if lab != null:
+		lab.set_updates_per_second(training_updates_per_second)
 
 func _start_pond() -> void:
+	if lab == null or not is_inside_tree():
+		return
 	if not playback_checkpoint.is_empty():
 		ready_policy = lab.watch_foraging_checkpoint(playback_checkpoint, 1)
 		if not ready_policy:
@@ -615,6 +642,8 @@ func _start_pond() -> void:
 		_load_saved_policy()
 
 func _begin_learning(resume_saved := true) -> void:
+	if lab == null or not is_inside_tree():
+		return
 	camera.reset_subject()
 	ripples.clear()
 	last_reported_update = -50
@@ -646,10 +675,12 @@ func _begin_learning(resume_saved := true) -> void:
 	warmup_timer.start(2.0)
 
 func _resume_learning() -> void:
-	if live_learning and ready_policy and not user_paused:
+	if lab != null and is_inside_tree() and live_learning and ready_policy and not user_paused:
 		lab.set_paused(false)
 
 func _load_saved_policy() -> void:
+	if lab == null:
+		return
 	var file := FileAccess.open("res://pond/policies/tadpole.json", FileAccess.READ)
 	if file == null:
 		status.text = "The saved tadpole policy could not be opened."
@@ -668,6 +699,8 @@ func _load_saved_policy() -> void:
 	_place_food_visual(false)
 
 func _restart() -> void:
+	if lab == null:
+		return
 	camera.reset_subject()
 	ripples.clear()
 	if live_learning:
@@ -685,6 +718,8 @@ func _restart() -> void:
 	_place_food_visual(true)
 
 func _move_food() -> void:
+	if lab == null or not ready_policy:
+		return
 	lab.move_food()
 	current = lab.get_state()
 	_place_food_visual(true)
@@ -703,7 +738,7 @@ func _place_food_visual(animate: bool, changed_slot := -1) -> void:
 			food_tweens[i].tween_property(foods[i], "scale", Vector3.ONE, 0.22).set_trans(Tween.TRANS_SINE)
 
 func _physics_process(_delta: float) -> void:
-	if not ready_policy:
+	if lab == null or not ready_policy:
 		return
 	if live_learning and not lab.get_stats().training_ready:
 		var startup_error: String = lab.get_error()
@@ -715,7 +750,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	previous = current.duplicate()
 	current = lab.step()
-	var error := lab.get_error()
+	var error: String = lab.get_error()
 	if not error.is_empty():
 		ready_policy = false
 		status.text = error
@@ -738,10 +773,12 @@ func _physics_process(_delta: float) -> void:
 	_update_learning_status()
 
 func _update_learning_status() -> void:
+	if lab == null:
+		return
 	if not live_learning:
 		status.text = "Try another food position" if move_button.visible else "Trained controller · shallow water"
 		return
-	var training := lab.get_stats()
+	var training: Dictionary = lab.get_stats()
 	if not training.training_ready:
 		status.text = "Restoring training…"
 		return
@@ -773,7 +810,7 @@ func _update_learning_status() -> void:
 		throughput_value.text = ("%.2fM steps / second" % (rate / 1000000.0)) if rate >= 1000000 else ("%.0f steps / second" % rate)
 		rate_steps = int(training.env_steps)
 		rate_timestamp = now
-	var samples := lab.get_evaluation_history(evaluation_points)
+	var samples: Array = lab.get_evaluation_history(evaluation_points)
 	for sample in samples:
 		curve_view.points.append(Vector2(int(sample.update), float(sample.food_per_minute)))
 		curve_view.best_points.append(Vector2(int(sample.update), float(sample.best_food_per_minute)))

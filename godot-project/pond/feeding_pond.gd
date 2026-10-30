@@ -1,4 +1,12 @@
-extends "res://pond/latest_agent.gd"
+extends "res://pond/deep_pond.gd"
+const LATEST_POLICY := "res://../docs/experiments/swimmer/gentle-currents/bank-recovery/selected-policy.bin"
+const CurrentControls = preload("res://pond/pond_current_controls.gd")
+const WaterController = preload("res://pond/pond_water_controller.gd")
+var water_controller := WaterController.new()
+var current_switch: CheckButton
+var current_strength: OptionButton
+var water_status: Label
+var flow: Node3D
 @export var feeding_checkpoint_path := "user://pond-policies/feeding-learning-v1/training.bin"
 var pellet_pool: MultiMeshInstance3D
 var feed_feedback: Label
@@ -27,6 +35,12 @@ func _start_lab() -> bool:
 
 func _build_ui() -> void:
 	super._build_ui()
+	var water: Dictionary = CurrentControls.build(self, sidebar_controls, camera_button)
+	current_switch = water.switch
+	current_strength = water.strength
+	water_status = water.status
+	water_controller.configure(lab, water)
+	water_controller.changed.connect(_poll)
 	untrained_button.hide()
 	current_switch.tooltip_text = "Apply steady flow to this pond. Background practice independently includes calm, steady and varying currents."
 	current_strength.tooltip_text = "Choose this pond's steady current. Background practice varies between calm water and 0.75 cm/s."
@@ -69,6 +83,10 @@ func _build_ui() -> void:
 
 func _build_world() -> void:
 	super._build_world()
+	flow = preload("res://pond/current_flow.gd").new()
+	flow.configure(water_surface.material_override)
+	world.add_child(flow)
+	water_controller.flow = flow
 	for nodes in [foods, markers, lines, depth_labels]:
 		for node: Node3D in nodes:
 			node.hide()
@@ -91,12 +109,11 @@ func _build_world() -> void:
 	pellet_pool.multimesh = pool
 	world.add_child(pellet_pool)
 
-func _ready() -> void:
-	super._ready()
+func _after_lab_started() -> void:
+	super._after_lab_started()
 	if lab and lab.get_error().is_empty():
 		released = true
 	get_window().title = "Tadpole Pond · Feed and learn · CudaRL"
-	_poll()
 	if "--auto-feed" in OS.get_cmdline_user_args():
 		auto_feed_button.button_pressed = true
 
@@ -114,8 +131,25 @@ func _set_auto_feed(enabled: bool) -> void:
 	_poll()
 
 func _physics_process(delta: float) -> void:
+	var before: float = state.get("elapsed", 0)
 	super._physics_process(delta)
+	if flow:
+		flow.advance(float(state.get("elapsed", 0)) - before)
 	_advance_auto_feed()
+
+func _set_current(enabled: bool) -> void:
+	water_controller.set_enabled(enabled)
+
+func _select_strength(index: int) -> void:
+	water_controller.select_strength(index, stats)
+
+func _fit() -> void:
+	super._fit()
+	if not layout.vertical and size.y < 500:
+		curve.custom_minimum_size.y = 148
+	if layout.vertical:
+		sidebar.custom_minimum_size.y = 242
+		sidebar_scroll.custom_minimum_size.y = 206
 
 func _advance_auto_feed() -> void:
 	if not auto_feed_enabled or not lab or state.is_empty() or not stats.get("feeding_mode", false):
@@ -225,6 +259,7 @@ func _poll() -> void:
 		return
 	if not stats.get("feeding_mode", false):
 		return
+	water_controller.refresh(stats)
 	untrained_button.hide()
 	if Time.get_ticks_msec() > feedback_until:
 		if auto_feed_enabled and state.foods.size() >= int(stats.get("food_capacity", 128)):

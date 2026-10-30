@@ -36,3 +36,6 @@ godot-project/addons/cudarl/bin/
 Thumbs.db
 *~
 *.swp
+
+# Separate foundation worktrees
+.worktrees/

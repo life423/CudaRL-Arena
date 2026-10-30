@@ -12,14 +12,13 @@
 #include <utility>
 #include <vector>
 
-#include "rl/ppo.h"
 #include "rl/evaluated_policy.h"
 #include "core/checkpoint.h"
 
 // Runs a trainer on a background thread so a renderer stays responsive, and
 // publishes each update's stats and a host copy of the policy. Training can be
-// throttled (updates per second) so that learning which takes a third of a
-// second at full speed becomes something you can watch. Works with any trainer
+// throttled (updates per second) so that background learning can be observed
+// without blocking presentation. Works with any trainer
 // that has Config and Stats types, update(), and actor_params().
 namespace cudarl::demos {
 
@@ -172,8 +171,6 @@ private:
     uint64_t                best_policy_version_=0;
     std::thread             thread_;   // last: starts after every member above is initialized
 };
-
-using PpoSession = TrainingSession<rl::PpoTrainer>;
 
 } // namespace cudarl::demos
 

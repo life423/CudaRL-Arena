@@ -14,7 +14,9 @@ endif()
 # Godot is the real-time frontend and is built by default. CI turns it off to
 # build and test the core without the prebuilt godot-cpp library.
 option(CUDARL_BUILD_GODOT "Build the Godot extension (needs a prebuilt godot-cpp)" ON)
-option(CUDARL_BUILD_BENCH "Build benchmarks (nn_bench needs the toolkit's cuBLAS component)" ON)
+option(CUDARL_BUILD_BENCH "Build the optional NN benchmark (requires cuBLAS)" OFF)
+option(CUDARL_BUILD_RESEARCH_TOOLS "Build the explicitly invoked experiment/profile tools" OFF)
+option(CUDARL_BUILD_EXTENDED_TESTS "Include longer simulator/training regression checks" OFF)
 option(CUDARL_WARNINGS_AS_ERRORS "Treat warnings in this project's code as errors" ON)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -68,8 +70,6 @@ endif()
 add_library(cudarl_core STATIC
     src/cuda/device.cu
     src/envs/maze/maze_env.cpp
-    src/envs/cartpole/cartpole.cu
-    src/envs/racing/racing.cu
     src/envs/swimmer/swimmer.cu
     src/envs/swimmer/foraging.cu
     src/envs/swimmer/deep.cu
@@ -81,6 +81,7 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/shelter_motor.cu
     src/envs/swimmer/command_motor.cu
     src/envs/swimmer/paired_motor.cu
+    src/envs/swimmer/motor_v2.cu
     src/rl/shelter_action.cu
     src/envs/swimmer/shelter_batch.cu
     src/demos/feeding_session.cu
@@ -90,9 +91,7 @@ add_library(cudarl_core STATIC
     src/demos/overhang_session.cu
     src/rl/shelter_probe.cu
     src/rl/ppo_kernels.cu
-    src/rl/ppo.cpp
     src/rl/gaussian_kernels.cu
-    src/rl/racing_ppo.cpp
     src/nn/gemm.cu
     src/nn/gemm_bf16.cu
     src/nn/attention.cu
@@ -101,13 +100,22 @@ add_library(cudarl_core STATIC
     src/nn/adam.cu
     src/nn/loss.cu
     src/demos/function_fit.cpp
-    src/demos/cartpole_showcase.cpp
-    src/demos/racing_showcase.cpp
 )
 target_include_directories(cudarl_core PUBLIC src)
 target_link_libraries(cudarl_core PUBLIC cudarl_runtime CUDA::cudart_static)
 target_compile_definitions(cudarl_core PUBLIC CUDARL_WITH_CUDA=1)
 cudarl_strict_warnings(cudarl_core)
+
+# Explicit migration checks. These are excluded from ordinary builds and never
+# run a training study. Keep the historical callers until readback is proved.
+add_library(cudarl_motor OBJECT EXCLUDE_FROM_ALL src/envs/swimmer/motor.cu)
+target_link_libraries(cudarl_motor PRIVATE cudarl_core)
+cudarl_strict_warnings(cudarl_motor)
+add_executable(motor_contract EXCLUDE_FROM_ALL tests/motor_contract.cpp)
+target_include_directories(motor_contract PRIVATE tools)
+target_link_libraries(motor_contract PRIVATE cudarl_runtime)
+target_compile_definitions(motor_contract PRIVATE CUDARL_WITH_CUDA=0)
+cudarl_strict_warnings(motor_contract)
 
 add_library(cudarl_pond_cuda SHARED src/demos/pond_playback_cuda.cu)
 target_link_libraries(cudarl_pond_cuda PRIVATE cudarl_core)
@@ -137,8 +145,6 @@ if(CUDARL_BUILD_GODOT)
         src/godot/cuda_device.cpp
         src/godot/maze_arena.cpp
         src/godot/network_trainer.cpp
-        src/godot/ppo_lab.cpp
-        src/godot/racing_lab.cpp
         src/godot/tadpole_lab.cpp
         src/godot/deep_water_lab.cpp
         src/godot/deep_pond_lab.cpp
@@ -162,6 +168,13 @@ if(CUDARL_BUILD_GODOT)
     cudarl_strict_warnings(motor_bench)
     set_target_properties(motor_bench PROPERTIES PREFIX ""
         RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/motor_bench/bin")
+    add_library(motor_v2_bench SHARED src/godot/motor_v2_register.cpp src/godot/motor_v2_lab.cpp)
+    target_include_directories(motor_v2_bench PRIVATE tools)
+    target_link_libraries(motor_v2_bench PRIVATE cudarl_runtime godot-cpp)
+    target_compile_definitions(motor_v2_bench PRIVATE CUDARL_WITH_CUDA=0 TYPED_METHOD_BIND WINDOWS_ENABLED)
+    cudarl_strict_warnings(motor_v2_bench)
+    set_target_properties(motor_v2_bench PROPERTIES PREFIX ""
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/motor_v2_bench/bin")
 endif()
 
 # --- Tests (run with: ctest --preset release) ---------------------------------
@@ -177,20 +190,23 @@ add_executable(cudarl_tests
     tests/test_attention_bf16.cpp
     tests/test_mlp_gpu.cpp
     tests/test_adam.cpp
-    tests/test_function_fit.cpp
-    tests/test_cartpole.cpp
     tests/test_ppo.cpp
-    tests/test_ppo_demo.cpp
-    tests/test_racing.cpp
+    tests/test_gaussian_ppo.cpp
+    tests/test_training_session.cpp
+    tests/test_checkpoint.cpp
+    tests/test_arch_geometry.cpp
+    tests/test_pond_current.cpp
+)
+if(CUDARL_BUILD_EXTENDED_TESTS)
+target_sources(cudarl_tests PRIVATE
+    tests/test_function_fit.cpp
     tests/test_swimmer.cpp
     tests/test_swimmer_inertial.cpp
     tests/test_foraging.cpp
     tests/test_deep_water.cpp
     tests/test_deep_solver.cu
     tests/test_deep_pond.cpp
-    tests/test_pond_current.cpp
     tests/test_pond_playback_reliability.cpp
-    tests/test_arch_geometry.cpp
     tests/test_arch_navigation.cpp
     tests/test_arch_current.cpp
     tests/test_cove_geometry.cpp
@@ -207,9 +223,8 @@ add_executable(cudarl_tests
     tests/test_progress_selector.cpp
     tests/test_pond_selector.cpp
     tests/test_training_resume.cpp
-    tests/test_race.cpp
-    tests/test_racing_ppo.cpp
 )
+endif()
 target_include_directories(cudarl_tests PRIVATE tests)
 target_link_libraries(cudarl_tests PRIVATE cudarl_core)
 add_dependencies(cudarl_tests cudarl_pond_cuda)
@@ -217,8 +232,20 @@ target_compile_definitions(cudarl_tests PRIVATE CUDARL_POND_MODULE="$<TARGET_FIL
 cudarl_strict_warnings(cudarl_tests)
 add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
-# --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
-if(CUDARL_BUILD_BENCH)
+# Research executables are opt-in; ordinary builds must not compile every old
+# study. Their versioned protocols/results remain available for reproducibility.
+if(CUDARL_BUILD_RESEARCH_TOOLS)
+    add_executable(motor_contact_v2_inspect tools/motor_contact_v2_inspect.cpp)
+    target_link_libraries(motor_contact_v2_inspect PRIVATE cudarl_runtime)
+    target_compile_definitions(motor_contact_v2_inspect PRIVATE CUDARL_WITH_CUDA=0)
+    cudarl_strict_warnings(motor_contact_v2_inspect)
+    add_executable(motor_v2_train tools/motor_v2_train.cu)
+    target_include_directories(motor_v2_train PRIVATE tools)
+    target_link_libraries(motor_v2_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(motor_v2_train)
+    add_executable(motor_contact_v2_check tools/motor_contact_v2_check.cu)
+    target_link_libraries(motor_contact_v2_check PRIVATE cudarl_core)
+    cudarl_strict_warnings(motor_contact_v2_check)
     # Read-only evidence decoder: no CUDA library, inference or integration.
     add_executable(paired_motor_failure tools/paired_motor_failure.cpp)
     target_include_directories(paired_motor_failure PRIVATE tools)
@@ -334,13 +361,10 @@ if(CUDARL_BUILD_BENCH)
     add_executable(paired_pond_eval tools/paired_pond_eval.cpp)
     target_link_libraries(paired_pond_eval PRIVATE cudarl_core)
     cudarl_strict_warnings(paired_pond_eval)
-    add_executable(export_demo_policies tools/export_demo_policies.cpp)
-    target_link_libraries(export_demo_policies PRIVATE cudarl_core)
-    cudarl_strict_warnings(export_demo_policies)
-    # End-to-end racing benchmark uses only our core and the CUDA runtime.
-    add_executable(racing_bench tools/racing_bench.cpp)
-    target_link_libraries(racing_bench PRIVATE cudarl_core)
-    cudarl_strict_warnings(racing_bench)
+endif()
+
+# Only the optional NN benchmark links cuBLAS as a reference implementation.
+if(CUDARL_BUILD_BENCH)
     add_executable(nn_bench tools/nn_bench.cpp tools/attention_baseline.cu)
     target_link_libraries(nn_bench PRIVATE cudarl_core CUDA::cublas)
     cudarl_strict_warnings(nn_bench)

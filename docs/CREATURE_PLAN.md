@@ -1,5 +1,53 @@
 # Approved creature experience and working roadmap
 
+## Master direction — restored October 30, 2026
+
+Build a physically simulated creature that learns increasingly capable behavior
+through our own C++/CUDA PPO system. Godot owns presentation, interaction and
+inspection, not hidden propulsion or a replacement learning runtime. Python and
+PyTorch are not being introduced as training/runtime replacements.
+
+The pond tadpole is the first body stage. The product journey is dependable
+swimming → meaningful player interaction and measured real-time adaptation →
+physical growth and underwater limbs → shallow crawling and leaving the pond →
+walking and eventual manipulation. Those later stages remain unimplemented.
+Changing anatomy requires real mass/drag/joints/contact and explicit compatible
+policy/schema transfer, followed by tests of retained skills.
+
+Keep exactly two learned behavioral policies: a goal chooser for feeding,
+safety, exploration and holding/rest, and one reusable movement motor. PPO
+critics support training; they are not behavioral controllers. The chooser owns
+persistent intentions; the motor executes destination, terminal velocity and
+heading requests. See [the ownership/request contract](CREATURE_CONTROLLER_INTERFACE.md).
+Supply requests directly in the current motor study; do not train the chooser.
+
+Movement acceptance covers purposeful travel, turning, braking, controlled
+arrival and sustained position/heading holding. Report unsupported calm holding,
+holding relative to the pond against a specified validated current, and
+supported bottom rest separately. Active joint motion is allowed. Food rate,
+servo regulation, imitation error and training counters do not establish these
+skills. Preserve the registered tolerances, actuator limits and study budgets.
+
+Cleanup serves this direction: simplify scene/session ownership, remove proven
+obsolete paths and duplicated orchestration in buildable groups, and preserve
+the simulator/PPO foundation, personal saves and reproducibility. Organization
+problems are not proof of the cause of a learning failure. The current contact
+gate failure below remains a separate physical issue; no new learning is running.
+
+**Newest physical prerequisite — October 30:** contact physics v2 is implemented
+as an isolated research path, but its mandatory dynamic gate failed before any
+new motor learning. [MOTOR_V2_RESULTS.md](MOTOR_V2_RESULTS.md) separates the
+133 geometry and 2,400 CPU/CUDA comparison passes from the rolled-head recontact
+failure at all three timesteps. Bottom contact is now allowed within the fixed
+0.5 mm allowance; excessive overlap and escape remain failures. Only 4,440
+contact substeps ran. Support-window/free-water/final timestep acceptance are
+uncompleted; readiness, PPO and policy evaluations are zero. No new interface
+winner or dependable movement claim exists. The next research decision is a
+bounded contact-only normal-response correction, requiring new authorization.
+Keep the two-policy design, old swimmer, historical servo gains and all saves.
+The later whole-Godot audit/cleanup is separately authorized presentation work;
+it does not reopen the stopped contact or learning experiment.
+
 **Newest motor comparison — October29:** keep exactly two learned behavioral
 policies: goal chooser and one reusable motor, with PPO critics explained
 separately. [The request contract](CREATURE_CONTROLLER_INTERFACE.md) is now

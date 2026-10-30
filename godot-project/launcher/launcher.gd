@@ -113,7 +113,7 @@ func _build() -> void:
 	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	header.add_child(subtitle)
 	content.add_child(header)
-	# Keep legacy scenes, policies and routing intact; the product entry is the pond.
+	# The product entry is the working pond; motor benches are developer tools.
 	var latest := primary_demo == "pond_boulder"
 	var demos := [["pond", "Boulder pond" if latest else "Feed your swimmer", "Your swimmer explores the arch, boulder and cove. Food appears automatically. Change the current while it keeps learning in the background. Saved progress resumes when you return." if latest else "Drop food into the water and watch it sink and drift. The creature chooses its own targets while native PPO practices in the background."]]
 	for spec in demos:
@@ -186,7 +186,7 @@ func _open(demo: String, watch: bool) -> void:
 	opening = true
 	for button in buttons:
 		button.disabled = true
-	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Shallow-water learning", "pond_live": "Live pond", "pond_feeding": "the feeding pond", "pond_boulder": "the boulder pond", "pond_overhang": "the rock ledge", "deep_water": "Original swimmer"}.get(demo, demo)
+	status.text = "Opening %s…" % {"pond": "Shallow-water learning", "pond_live": "Live pond", "pond_feeding": "the feeding pond", "pond_boulder": "the boulder pond", "pond_overhang": "the rock ledge", "deep_water": "Original swimmer"}.get(demo, demo)
 	status.add_theme_color_override("font_color", MUTED)
 	status.visible = true
 	await get_tree().process_frame

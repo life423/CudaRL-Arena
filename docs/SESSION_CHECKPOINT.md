@@ -1,4 +1,72 @@
-# Latest stopping point — October 29, 2026
+# Latest stopping point — October 30, 2026
+
+**Latest scope supersedes incremental architecture preservation:** the user now
+requests a minimal active foundation in a separate branch/worktree of this same
+repository after committing/tagging this baseline. The original checkout and
+ignored saves/results remain available for comparison. Physical body dimensions,
+four actuator axes, limits and water equations anchor the reduced system. The
+contact-v2 correction has not passed its dynamic gate. Learning design may be
+revised substantially, but no replacement training, extra study budget or
+checkpoint overwrite is authorized. The reduced entry must step explicit bounded
+diagnostic actions, show native physical state and save/load its own schema.
+Diagnostic commands are not learned behavior. Historical code need not remain in
+the reduced tree merely because it existed. See the minimal worktree's current
+README/plan for the resulting path; this checkout is the comparison baseline.
+
+## Active cleanup checkpoint — local checkout verified October 30
+
+Branch `codex/autonomous-pond-practice`, HEAD
+`dbbcf7b0caf2dadbfd14f08523415dea8d524f01`; the contact-v2 study and current
+cleanup are uncommitted. This is the local checkout, not a remote snapshot.
+No trainer is running. The mandatory contact gate remains failed, with zero
+new motor PPO updates, no final-policy evaluation and no adopted replacement.
+Do not rerun or extend it as part of cleanup.
+
+The master direction is restored at the top of CREATURE_PLAN.md: capable
+swimming, real interaction-driven PPO adaptation, then physical growth, limbs,
+leaving water, walking and eventual manipulation. Keep two behavioral policies
+and the native simulation/learning system; chooser excluded from motor study.
+
+Configured player route: launcher → saved boulder learner locally when its
+save/CUDA are available, otherwise portable feeding learner → DeepPondLab →
+native session → shared physics/PPO/checkpoint code. Save namespaces remain
+unchanged. Native cleanup binaries are built in `build/cleanup-validation/native`
+because the user's Godot editor is open; its loaded DLL is not overwritten.
+
+First coherent group removes explicitly retired CartPole/Racing domains while
+preserving their reusable Gaussian/PPO math and session-publication protections.
+Native core/extension/tests/NN benchmark build passed. Focused Gaussian5/5,
+PPO9/9 and fake-session4/4 checks passed. Godot resource/configuration and
+feeding startup/error checks use no native learner or physical steps. Historical
+motor benches remain separate until their actual callers and protocol roles
+are checked. Canonical motor code is a migration candidate, not an adopted actor.
+
+Current source-confirmed presentation defect: multiple habitat `_ready` chains
+repeat virtual startup/poll work. One shared lifecycle and named view hooks are
+being verified before changing habitat entry routes. Missing/outdated native
+modules must show a recoverable error rather than a frozen pond. Broad native
+class deletion and broad validation-changing rewrites were rejected; work is
+proceeding through narrow dependency-proved groups without those changes.
+
+**Newest: contact physics v2 failed its mandatory gate; no new motor trained.**
+Read [MOTOR_V2_RESULTS.md](MOTOR_V2_RESULTS.md) and the new preregistration.
+The opt-in full-envelope correction allows registered compliant contact through
+0.5 mm. Geometry passed 133 checks and CPU/CUDA agreed on 2,400 comparisons,
+but the rolled fixture's **head** exceeded the allowance at every tested
+substep near 0.185 s. The old fin discrepancy and this new head recontact are
+different events. Actual contact spend: 4,440 substeps, 2,220 per backend.
+The support window, final timestep acceptance and free-water comparison were
+not completed. Motor readiness controls, PPO updates and final evaluations are
+all zero. CPU-only preparation registered 64 fixtures without dynamics.
+
+Offline saved-state analysis shows passive buoyancy righting, rapid body roll,
+loss of contact and recontact as the head's vertical extent expands. No learned
+actor caused this gate failure. Preserve the shared stop, original results,
+body/actuator limits and historical servo gains. Discuss a bounded contact-only
+normal-response correction before further experiments; do not automatically
+retune thresholds, repeat the run or launch PPO. Baseline remains commit
+`dbbcf7b`; the new work is uncommitted. The separately authorized whole-Godot
+audit/cleanup is active presentation work, not permission to resume training.
 
 **Break checkpoint requested by the user:** commit the current source and
 documentation on the existing branch, then stop. No push, merge, new training
