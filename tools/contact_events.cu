@@ -123,12 +123,12 @@ int rotating(const fs::path& root){
     std::ofstream trace(root/"rotating.csv"),report(root/"rotating.json");trace.exceptions(std::ios::badbit|std::ios::failbit);report.exceptions(std::ios::badbit|std::ios::failbit);
     trace<<std::setprecision(17)<<"backend,tick,ok,charged,accepted_segments,events,bisections,min_gap_m,energy_start_J,energy_end_J,max_energy_J,energy_gain_J,raw_momentum_score,stored_momentum_score,storage_bound,solver,momentum,geometry,energy,negativeforce,floor_impulse_N_s";for(int k=0;k<23;++k)trace<<",body_"<<k;trace<<'\n';
     const auto initial=cudarl::contact_pilot_spec::reference_states()[0];BodyJob cpu[4];int spent=0,outer=0;bool passed=true;std::string failure;
-    double minimum=1,maximum_raw=0,maximum_stored=0,max_energy_gain=-1e300,initial_energy=0,max_parity=0;int accepted=0,events=0,bisections=0;
+    double minimum=1,maximum_raw=0,maximum_stored=0,max_energy_gain=-1e300,initial_energy=0,max_parity=0;int accepted=0,events=0,bisections=0,negatives=0;
     Device<BodyJob> device;const float zero[4]{};
     for(int backend=0;backend<2&&passed;++backend){BodyJob job;job.state=initial;
         for(int tick=0;tick<4&&passed;++tick){if(spent>=4000)throw std::runtime_error("Rotating budget exhausted");++spent;++outer;job.counter={0,static_cast<uint64_t>(4000-spent+1)};const auto before=job.state;
             if(backend)job=device.step(job);else{job.before=job.state;job.ok=e::body_step(job.state,zero,.005,{990,.001f,9.81f},{},job.stats,job.counter);}
-            spent+=static_cast<int>(job.counter.used)-1;accepted+=job.stats.accepted_segments;events+=job.stats.events;bisections+=job.stats.bisections;
+            spent+=static_cast<int>(job.counter.used)-1;accepted+=job.stats.accepted_segments;events+=job.stats.events;bisections+=job.stats.bisections;negatives+=job.stats.negative_controls;
             if(std::memcmp(&job.before,&before,sizeof(before))!=0)throw std::runtime_error("Body input echo failed");
             if(tick==0)initial_energy=job.stats.energy_start;
             const auto& s=job.stats;minimum=std::min(minimum,s.min_gap);maximum_raw=std::max(maximum_raw,s.momentum_raw_score);maximum_stored=std::max(maximum_stored,s.momentum_stored_score);max_energy_gain=std::max(max_energy_gain,s.max_energy-initial_energy);
@@ -145,7 +145,7 @@ int rotating(const fs::path& root){
             if(!passed){cp::Writer out;out.value(uint32_t{0x43455646});out.value(uint32_t{1});cudarl::contact_pilot_spec::detail::write_body(out,before);cudarl::contact_pilot_spec::detail::write_body(out,job.state);cudarl::contact_pilot_spec::detail::write_body(out,s.trial);out.value(s);cp::write_atomic((root/"rotating-first-failure.bin").string(),out.data);}
         }
     }
-    report<<std::setprecision(17)<<"{\"passed\":"<<(passed?"true":"false")<<",\"failure\":\""<<failure<<"\",\"rotation_charged\":"<<spent<<",\"outer_calls\":"<<outer<<",\"accepted_segments\":"<<accepted<<",\"events\":"<<events<<",\"bisections\":"<<bisections<<",\"total_charged\":"<<(scalar_charges+4+spent)<<",\"total_cap\":7004,\"minimum_gap_m\":"<<minimum<<",\"maximum_raw_momentum_score\":"<<maximum_raw<<",\"maximum_stored_momentum_score\":"<<maximum_stored<<",\"maximum_energy_gain_J\":"<<max_energy_gain<<",\"maximum_parity_score\":"<<max_parity<<"}\n";
+    report<<std::setprecision(17)<<"{\"passed\":"<<(passed?"true":"false")<<",\"failure\":\""<<failure<<"\",\"rotation_charged\":"<<spent<<",\"outer_calls\":"<<outer<<",\"accepted_segments\":"<<accepted<<",\"events\":"<<events<<",\"bisections\":"<<bisections<<",\"negative_controls_rejected\":"<<negatives<<",\"total_charged\":"<<(scalar_charges+4+spent)<<",\"total_cap\":7004,\"minimum_gap_m\":"<<minimum<<",\"maximum_raw_momentum_score\":"<<maximum_raw<<",\"maximum_stored_momentum_score\":"<<maximum_stored<<",\"maximum_energy_gain_J\":"<<max_energy_gain<<",\"maximum_parity_score\":"<<max_parity<<"}\n";
     std::cout<<"Rotating: pass="<<passed<<", spent="<<spent<<"/4000, total="<<(scalar_charges+4+spent)<<"/7004, failure="<<failure<<'\n';return passed?0:3;
 }
 }

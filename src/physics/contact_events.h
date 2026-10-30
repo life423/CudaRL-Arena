@@ -168,7 +168,7 @@ struct BodyStats {
     bool finite=true,completed=false,solver=true,momentum=true,geometry=true,energy=true;
     bool budget_exhausted=false,event_limit=false,negativeforce=false;
     std::uint64_t trials=0;
-    int outer_calls=0,accepted_segments=0,events=0,bisections=0,arrivals=0,releases=0,reactivations=0,solver_iterations=0;
+    int outer_calls=0,accepted_segments=0,events=0,bisections=0,arrivals=0,releases=0,reactivations=0,solver_iterations=0,negative_controls=0;
     double elapsed=0,min_gap=1,min_trial_gap=1,minforce=0,impulsefloor=0,impulse_total=0;
     double energy_start=0,energy_end=0,max_energy=0,max_energy_gain=0,frozen_energy_residual=0;
     double momentum_raw_score=0,momentum_stored_score=0,storage_bound=0;
@@ -306,7 +306,16 @@ CUDARL_HD inline bool integrate(const Frame& f,const float* action,double h,Tria
         t.force[i]=-kSpring*t.gap[i]-kDamper*velocity;contact_work+=t.impulse[i]*dot(row.jacobian,mid);
         stats.min_trial_gap=fmin(stats.min_trial_gap,t.gap[i]);}
     stats.frozen_energy_residual=fmax(stats.frozen_energy_residual,fabs(kinetic_delta-force_work-contact_work));
-    return certify(f,t,h,stats);
+    if(!certify(f,t,h,stats))return false;
+    // Two algebra-only corruptions on the first trial of each outer request.
+    // No new force solve, pose advance or contact trial is performed.
+    if(stats.trials==1){
+        Trial bad=t;bad.velocity[0]+=.0001;bad.after.velocity[0]=static_cast<float>(bad.velocity[0]);BodyStats check_raw;
+        if(certify(f,bad,h,check_raw)){stats.momentum=false;return false;}++stats.negative_controls;
+        bad=t;bad.after.velocity[0]+=.0001f;BodyStats check_stored;
+        if(certify(f,bad,h,check_stored)){stats.momentum=false;return false;}++stats.negative_controls;
+    }
+    return true;
 }
 CUDARL_HD inline int event_kind(const Frame& f,const Trial& trial,int row) {
     if(!f.active[row]&&f.row[row].gap>0&&trial.gap[row]<=0)return 1;

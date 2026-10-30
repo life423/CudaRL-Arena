@@ -664,3 +664,11 @@ within its4,000entry/trial allocation, is next. Scalar method/prefix is unchange
 new coupled midpoint body path adds no coefficients, cases, forces or budgets.
 Reuse saved geometry, nonblocking CUDA and strict energy/momentum/parity gates.
 No long support, free-water validation, motor training or runtime adoption.
+
+Before the sole rotating execution: standalone algebra cap64 covers the46
+saved-state audit certifications (including40negative controls) plus at most16
+candidate-checker corruptions (raw/stored velocity, once per outer/backend).
+Mandatory equation checks inside a charged physical trial belong to that trial;
+they are not additional standalone reference/diagnostic queries. No cap increase.
+The candidate's derived storage-aware checker must also reject those raw and
+stored corruptions; this is validation only, not another integration variant.
