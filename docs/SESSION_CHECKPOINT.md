@@ -641,3 +641,26 @@ narrow B revision or tiny established native-solver reference, without running
 it. Report fixed/failed/untested separately. Keep all previous artifacts and
 personal saves. Baseline at this registration: minimal branch 7f4cc19; original
 checkout stays at e5e9bd1. No physical calls have occurred during implementation.
+
+### Focused correction: scalar/audit gates passed; conditional rotation frozen
+
+Executed scalar/audit source 3824d8c. All twelve 20 ms scalar trajectories pass
+existing limits, including arrivals at 0.2/0.5/1.7/4.3 ms on CPU/CUDA. Original
+impact rebound .135383 vs .135335; peak 56.3254 vs 56.3198 um. Worst reference
+errors: gap 29.13 nm, velocity 4.765 um/s. Actual scalar charges 2,689 (48 entries,
+2,641 internal/event trials), reference queries 88. No repeated scalar test.
+
+Saved-state replay reproduces old GPU output BIT EXACT and the old host-M score
+1.099127512. Native raw solve scores CPU7.59e-5/CUDA1.118e-5; storage-aware
+scores .3553/.4234. Vertical impulse residual is dominated by -2.073e-12 N*s
+from FP32 velocity conversion, versus raw 4.55e-21 N*s. Host/native M difference
+contributes only about1.68e-17 N*s. The derived half-ULP bound explains this
+false failure without changing the raw gate;40/40 deliberately corrupted
+updates are rejected. Exactly two audit advances plus entries=4 charges.
+
+The conditional articulated code is now implemented and source-reviewed, not
+yet executed. Only the already registered ONE20ms rotating CPU/CUDA fixture,
+within its4,000entry/trial allocation, is next. Scalar method/prefix is unchanged;
+new coupled midpoint body path adds no coefficients, cases, forces or budgets.
+Reuse saved geometry, nonblocking CUDA and strict energy/momentum/parity gates.
+No long support, free-water validation, motor training or runtime adoption.
