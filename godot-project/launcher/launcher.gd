@@ -53,7 +53,7 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 	button.text = value
 	button.custom_minimum_size = Vector2(156 if watch else 188, 48)
 	button.add_theme_font_size_override("font_size", 16)
-	var filled := watch or primary
+	var filled := primary or (watch and demo != "pond_overhang")
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		var fill := ACCENT if filled else BG
 		if state == "hover":
@@ -78,6 +78,8 @@ func _button(value: String, demo: String, watch: bool, primary := false) -> Butt
 			button.tooltip_text = "Drop sinking food while PPO practices locally and validates improved swimming."
 	elif demo == "pond_boulder":
 		button.tooltip_text = "Resume the latest boulder pond and its saved learning. Food appears automatically; the current remains under your control."
+	elif demo == "pond_overhang":
+		button.tooltip_text = "See the new physical rock ledge with your saved swimmer running live. This viewer does not train or overwrite your saved learner; predator hiding is still being tested."
 	button.pressed.connect(func(): _open(demo, watch))
 	buttons.append(button)
 	return button
@@ -140,6 +142,8 @@ func _build() -> void:
 		details.add_child(actions)
 		if spec[0] == "pond":
 			actions.add_child(_button("Open pond", primary_demo, true, true))
+			if latest and ClassDB.class_has_method("DeepPondLab", "watch_overhang") and FileAccess.file_exists("user://pond-policies/boulder-navigation-v1/training.bin"):
+				actions.add_child(_button("View rock ledge", "pond_overhang", true))
 		else:
 			actions.add_child(_button("Watch trained", spec[0], true))
 			actions.add_child(_button("Train from scratch", spec[0], false))
@@ -182,7 +186,7 @@ func _open(demo: String, watch: bool) -> void:
 	opening = true
 	for button in buttons:
 		button.disabled = true
-	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Shallow-water learning", "pond_live": "Live pond", "pond_feeding": "the feeding pond", "pond_boulder": "the boulder pond", "deep_water": "Original swimmer"}.get(demo, demo)
+	status.text = "Opening %s…" % {"cartpole": "CartPole", "racing": "Racing", "pond": "Shallow-water learning", "pond_live": "Live pond", "pond_feeding": "the feeding pond", "pond_boulder": "the boulder pond", "pond_overhang": "the rock ledge", "deep_water": "Original swimmer"}.get(demo, demo)
 	status.add_theme_color_override("font_color", MUTED)
 	status.visible = true
 	await get_tree().process_frame

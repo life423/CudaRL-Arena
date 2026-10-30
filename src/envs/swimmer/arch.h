@@ -84,7 +84,7 @@ CUDARL_HD inline V ray_direction(int ray) {
     return ray==16?V{0,1,0}:V{0,-1,0};
 }
 CUDARL_HD inline float proximity(V origin,V direction,const deep::Habitat& h,deep::Basin basin={}) {
-    if(!h.arch && basin.layout!=2) return 0;
+    if(!h.arch && basin.layout!=2 && basin.layout!=3) return 0;
     float travel=0;
     for(int step=0;step<32 && travel<sensing_range;++step) {
         const float gap=deep::obstacle_distance(origin+direction*travel,h,basin);
@@ -116,7 +116,7 @@ CUDARL_HD inline void place(State& s,int slot,int side,deep::Basin basin={}) {
         // Successive replacements exercise both original sides and the new
         // cove. A blocked placement can use another reachable region; food is
         // never placed inside the animal to enforce a particular visit.
-        const uint32_t region_trials=basin.layout==2?128u:64u;
+        const uint32_t region_trials=basin.layout==2 || basin.layout==3?128u:64u;
         for(uint32_t trial=0;trial<3u*region_trials;++trial) {
             const int region=static_cast<int>((s.pond.next_id-1u+trial/region_trials)%3u);
             const float x=rng::uniform(s.pond.seed,s.pond.environment,key+trial*3u)*2-1;
@@ -129,7 +129,7 @@ CUDARL_HD inline void place(State& s,int slot,int side,deep::Basin basin={}) {
                 // another cove pellet remains. Its wider envelope admits two
                 // foods with the same physical/separation clearance. Layout 1
                 // retains its original sequence and exact arithmetic.
-                if(basin.layout==2)
+                if(basin.layout==2 || basin.layout==3)
                     position={center.x+radii.x*(.4f+.28f*x),-1.65f+.35f*y,center.z+radii.z*.38f*z};
                 else position={center.x+radii.x*(.45f+.15f*x),-1.65f+.35f*y,center.z+radii.z*.23f*z};
             } else position=deep::arch_to_world({x*.8f,y*.28f,(region==0?-1.f:1.f)*(2.65f+.35f*z)},s.habitat);

@@ -9,6 +9,7 @@ const SCENES := {
 	"pond_live": "res://pond/latest_agent.tscn",
 	"pond_feeding": "res://pond/feeding_pond.tscn",
 	"pond_boulder": "res://pond/boulder_pond.tscn",
+	"pond_overhang": "res://pond/overhang_pond.tscn",
 	"pond_current_replay": "res://pond/current_replay.tscn",
 	"pond_recovery": "res://pond/bank_preview.tscn",
 }

@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <type_traits>
 #include "envs/swimmer/swimmer.h"
 #include "envs/swimmer/foraging.h"
 #include "envs/swimmer/deep.h"
@@ -79,6 +80,9 @@ struct DeepPondTask {
     static constexpr float entropy=.005f;
     static int collected(const State& state) {return state.eaten;}
 };
+// Research-only task checks compile away for every existing production task.
+template<class Task,class=void> struct HasResearchChecks:std::false_type {};
+template<class Task> struct HasResearchChecks<Task,std::void_t<decltype(Task::research_checks)>>:std::true_type {};
 template<class Task>
 struct BasicSwimmerTrainer {
     using Config=SwimmerConfig;
@@ -287,6 +291,8 @@ struct BasicSwimmerTrainer {
             critic.forward(input,n,s);swimmer_copy(values.get()+row,critic.output(),n,s);
             env.step(actions.get()+row*kActions,{rewards.get()+row,done.get()+row,truncated.get()+row,final_obs.get()+row*kInputs},s);
         }
+        if constexpr(HasResearchChecks<Task>::value)
+            Task::validate_collected(env,obs.get(),actions.get(),logp.get(),values.get(),rewards.get(),done.get(),truncated.get(),batch,s);
         const float* bootstrap=env.obs();
         if constexpr(kInputs==foraging::kObs) if(shuffle_inputs) {
             swimmer_copy(bootstrap_obs.get(),env.obs(),static_cast<size_t>(n)*kInputs,s);
@@ -304,6 +310,9 @@ struct BasicSwimmerTrainer {
         critic.forward(final_obs.get(),batch,s);swimmer_copy(final_values.get(),critic.output(),batch,s);
         rl::compute_gae(rollout,n,rewards.get(),values.get(),done.get(),truncated.get(),final_values.get(),last_values.get(),
             0.99f,0.95f,adv.get(),returns.get(),s);
+        if constexpr(HasResearchChecks<Task>::value) {
+            Task::validate_buffer(adv.get(),batch,s,"advantages");Task::validate_buffer(returns.get(),batch,s,"returns");
+        }
         CUDA_CHECK_THROW(cudaMemsetAsync(stats.get(),0,stats.size_bytes(),s));
         for(int epoch=0;epoch<epochs;++epoch) {
             const auto perm=rl::make_permutation(static_cast<uint32_t>(batch),rng::bits(seed,static_cast<uint32_t>(update_id),static_cast<uint32_t>(epoch)));
@@ -319,10 +328,16 @@ struct BasicSwimmerTrainer {
                 rl::gaussian_ppo_loss_grad(actor.output(),log_std.get(),critic.output(),mb,kActions,
                     mb_actions.get(),mb_logp.get(),mb_adv.get(),mb_ret.get(),adv_stats.get(),{0.2f,Task::entropy,0.5f},
                     dmean.get(),dstd.get(),dvalue.get(),row_stats.get(),stats.get(),s);
-                actor.zero_grad(s);actor.backward(dmean.get(),mb,nullptr,s);actor_opt.step(actor.params(),actor.grads(),s);
+                actor.zero_grad(s);actor.backward(dmean.get(),mb,nullptr,s);
+                if constexpr(HasResearchChecks<Task>::value) Task::validate_buffer(actor.grads(),actor.num_params(),s,"actor gradient");
+                actor_opt.step(actor.params(),actor.grads(),s);
                 CUDA_CHECK_THROW(cudaMemsetAsync(std_grad.get(),0,std_grad.size_bytes(),s));
-                rl::sum_columns(dstd.get(),mb,kActions,std_grad.get(),s);std_opt.step(log_std.get(),std_grad.get(),s);
-                critic.zero_grad(s);critic.backward(dvalue.get(),mb,nullptr,s);critic_opt.step(critic.params(),critic.grads(),s);
+                rl::sum_columns(dstd.get(),mb,kActions,std_grad.get(),s);
+                if constexpr(HasResearchChecks<Task>::value) Task::validate_buffer(std_grad.get(),kActions,s,"exploration gradient");
+                std_opt.step(log_std.get(),std_grad.get(),s);
+                critic.zero_grad(s);critic.backward(dvalue.get(),mb,nullptr,s);
+                if constexpr(HasResearchChecks<Task>::value) Task::validate_buffer(critic.grads(),critic.num_params(),s,"critic gradient");
+                critic_opt.step(critic.params(),critic.grads(),s);
             }
         }
         CUDA_CHECK_THROW(cudaStreamSynchronize(s));++update_id;return std::chrono::duration<double>(Clock::now()-start).count();

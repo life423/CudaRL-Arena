@@ -4,16 +4,16 @@
 #include "envs/swimmer/shelter_motor.h"
 
 namespace cudarl::rl {
-constexpr uint32_t shelter_motor_protocol=4;
+constexpr uint32_t shelter_motor_protocol=5;
 struct ShelterMotorTask {
     using Batch=shelter_motor::Batch;using State=shelter_motor::State;
     static constexpr int inputs=shelter_motor::kObs,actions=shelter_motor::kAct,evaluation_steps=1200;
     static constexpr float entropy=.002f;
     static int collected(const State& state) {return state.state.pond.eaten;}
 };
-// This task normalizes only the cover policy's mean into physical actuator
-// units. Gaussian samples, log probabilities and standard deviations all stay
-// in those same physical units. Ordinary food inference remains unchanged.
+// The actor's last layer is expressed in cover actuator units. Food means
+// recover their inherited gain; cover means need no post-network division.
+// Gaussian samples, likelihoods and deviations all remain physical quantities.
 // Keep the old tasks' BasicSwimmerTrainer path byte-for-byte untouched.
 struct ShelterMotorTrainer:BasicSwimmerTrainer<ShelterMotorTask> {
     using Base=BasicSwimmerTrainer<ShelterMotorTask>;
@@ -59,8 +59,9 @@ struct ShelterMotorTrainer:BasicSwimmerTrainer<ShelterMotorTask> {
                 gaussian_ppo_loss_grad(physical_means.get(),log_std.get(),critic.output(),mb,kActions,
                     mb_actions.get(),mb_logp.get(),mb_adv.get(),mb_ret.get(),adv_stats.get(),{.2f,ShelterMotorTask::entropy,.5f},
                     dmean.get(),dstd.get(),dvalue.get(),row_stats.get(),stats.get(),s);
-                // dL/d(raw_mean) = dL/d(physical_mean) / scale for cover.
-                // There is no sample transform or log-Jacobian correction.
+                // Cover gradients already have physical actor units. Food
+                // gradients include the inherited output gain. This is still
+                // a Gaussian mean transform, not an action sample transform.
                 shelter_motor::policy_mean_grad(dmean.get(),mb_obs.get(),mb,scales,s);
                 actor.zero_grad(s);actor.backward(dmean.get(),mb,nullptr,s);actor_opt.step(actor.params(),actor.grads(),s);
                 CUDA_CHECK_THROW(cudaMemsetAsync(std_grad.get(),0,std_grad.size_bytes(),s));
@@ -91,6 +92,27 @@ inline std::vector<float> transfer_shelter_motor(const std::vector<float>& old,i
         for(int row=0;row<before.out(layer);++row) result[after.bias_offset(layer)+row]=old[before.bias_offset(layer)+row];
     }
     return result;
+}
+// Reparameterize only the final linear layer. With the saved gain restored for
+// food, this is algebraically the same initial physical policy as protocol 4,
+// but Adam now moves cover output parameters in actuator rather than inherited
+// raw-output units. Power-of-two gains also preserve the transfer's float scale
+// exactly in the ordinary range; runtime retention tests remain mandatory.
+inline std::vector<float> normalized_shelter_actor(const std::vector<float>& legacy59,shelter_motor::ActuatorScale scales) {
+    const auto spec=swimmer_specification(shelter_motor::kAct,shelter_motor::kObs);
+    if(legacy59.size()!=static_cast<size_t>(spec.num_params()))
+        throw std::invalid_argument("Shelter conditioning requires a 59-input four-output actor");
+    for(float value:legacy59) if(!std::isfinite(value)) throw std::invalid_argument("Non-finite source shelter actor");
+    for(float value:scales.value) if(!std::isfinite(value) || value<1.f || value>1048576.f)
+        throw std::invalid_argument("Invalid shelter actor output calibration");
+    auto actor=legacy59;const int last=spec.num_layers()-1;
+    for(int row=0;row<spec.out(last);++row) {
+        const float gain=scales.value[row];
+        for(int column=0;column<spec.in(last);++column)
+            actor[spec.weight_offset(last)+row*spec.in(last)+column]/=gain;
+        actor[spec.bias_offset(last)+row]/=gain;
+    }
+    return actor;
 }
 inline std::vector<uint8_t> shelter_motor_snapshot(const ShelterMotorTrainer& trainer) {
     CUDA_CHECK_THROW(cudaStreamSynchronize(trainer.stream.value));checkpoint::Writer out;

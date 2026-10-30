@@ -1,5 +1,200 @@
 # Latest stopping point — October 29, 2026
 
+**Break checkpoint requested by the user:** commit the current source and
+documentation on the existing branch, then stop. No push, merge, new training
+or physics change is requested. On return, start with the completed paired
+results below and discuss the fin/contact mismatch before authorizing another
+experiment. Preserve the global stop and all local experiment/save artifacts.
+
+**Newest: paired motor v1 executed and STOPPED on training safety.** Read
+[PAIRED_MOTOR_RESULTS.md](PAIRED_MOTOR_RESULTS.md). New versioned torque and
+5ms joint-target-servo interfaces, action/effort/save semantics and actual-policy
+viewer are implemented. Exactly3200 joint-regulation controls passed8/8 on CPU
+and8/8 CUDA; recorded-data readiness added0physicalsteps/updates and passed.
+Torque PPO completed6updates/196608controls/192Adamsteps per optimizer.
+Rollout7 integrated32710controls, then was rejected beforeGAE/Adam for one
+finite world's distal-fin/bed breach:−0.19335mm full-envelope clearance, despite
+native contact proxy+4.61863mm.58 later slots froze. Totaltraining229318controls.
+The lastgood fullsave and exported6-update actor matchthe pre-update bytes.
+Joint-target actor has0updates.64 final fixtures were saved with314controls of
+preserved-swimmer capture, but0finalpolicytests; no interfacewinner or movement
+acceptance. Do not automatically resume eitherarm, tune successfulgains,
+changecontact or enlarge thisspentstudy. The proposed nextdecision is fin/contact
+geometry consistency under a new authorization, not a broader rewrite.
+
+Evidence and rollback: `build/paired-motor/2026-10-29-v1/`, including executed
+binaries/source hashes, pre-edit files, failedrollout and offline inspection.
+The isolated Godot motorbench loads the actual6/64 file paused and leaves the
+untrainedarm empty;93checks and rendered1280×720/1024×768/780×1000 pass. These
+are GUI checks, not withheldbehavioral success. Workingpond/mainmenu, physical
+equations/actuatorcaps, originals, personal saves and old128protocol remain.
+No merge/deployment. Goalchooser contract documented; no chooser integrated.
+
+**Latest user steering:** wait to replace the old tadpole or move the new one
+into a larger body of water until the new motor works better. UI retirement was
+paused before production edits; launcher/router/thumbnail hashes match the
+pre-turn snapshot. No new environment or learner was added. Inspection/snapshot
+notes remain under `build/retire-legacy-swimmer/2026-10-29/paused-status.json`.
+Keep the existing pond and saves. Motor probe results and budget limits below
+are unchanged; no additional interface experiment was authorized by this pause.
+
+**Newest: the newly authorized bounded braking probe is COMPLETE and FAILED
+research readiness.** Read [MOTOR_BRAKING_RESULTS.md](MOTOR_BRAKING_RESULTS.md)
+and its immutable preregistration. The user removed the conventional16/16
+research prerequisite, without relaxing final acceptance. One two-capture
+direct-torque search spent61,440 steps plus exactly1,600 paired replay steps.
+Best sequences are zero torque; stop dwells finish9.35/11.35s at52.83/77.98mm,
+both safe but neither quiet for10–20s. Three nonzero slow-start candidates show
+translational braking with a moving tail; they were not given extra replays.
+No additional search, PPO pilot, network, interface redesign or promotion ran.
+
+Actual nonblocking stream checks pass: the current H2D→observe dependency was
+already correct. Keep failed test assumptions/logs (Windows concurrency and
+cross-kernel bit identity) separate from production defects. Actual production
+checkpoint continuation remains bit-exact. The final scratch data path passes
+likelihood/CPU-GPU physics/terminal/GAE/gather/normalization/full-save checks.
+It exposed a real pre-state safety-accounting gap, now fixed. Protocol2 retains
+first pre/post breaches and rejects before GAE/Adam;600ticks is true terminal,
+not truncation bootstrap. Four legacy resume/integrity checks pass. No command
+PPO updates or Adam steps. Original numerical evidence is unchanged.
+
+All evidence/rollback is in `build/motor-braking/2026-10-29-v1/`; old reference
+gate remains false and final cases remain untouched. Discuss one bounded
+joint-target/fast physical-servo interface comparison next, same four-output
+PPO and torque caps; do not presume stable gains or rewrite physics. This is
+a hypothesis, not proof the old interface is inadequate. No run extension or
+whole-app rewrite. Preserve personal saves and parked overhang work.
+
+Preservation audit:221 immutable artifacts unchanged; one personal boulder save
+changed on the user's confirmed close of the old pond at19:06:33, before the
+probe/regressions. Its newer bytes are retained and separately copied; do not
+restore an older file over that progress. Tool-path audit finds no personal-save
+writer in these diagnostics. No frozen research input/result changed.
+
+**Newest completed bounded milestone: motor numerical check + physical reference
++ isolated command task/trainer + live Godot bench.** Read
+[MOTOR_CONTROL_RESULTS.md](MOTOR_CONTROL_RESULTS.md) first. Numerical CPU-double/
+GPU saved-actor loss, gradients, six finite differences and fresh Adam pass.
+The32-trial physical reference budget is spent: passive2/16 complete passes,
+fixed conventional0/16. Actual swimming supplied all eight braking starts;
+passive stopping took4.9–11.3s against the proposed3s envelope. This failed
+reference does not establish uncontrollability. No PPO pilot ran or actor was
+adopted. All180 original protected artifacts match their hashes.
+
+New sources are frozen. `command_motor_train --prepare` generated CPU-only
+initialization/protocol under `build/motor-control/2026-10-29/pilot-v1/`; an
+explicit attempt with the false reference gate rejected before CUDA/training.
+The128-update cap remains conditional, not permission to bypass the gate.
+Reference artifacts/executed binary and a separately labelled offline stronger
+head-clearance review are preserved. Do not rerun the spent reference budget.
+
+`godot-project/motor_bench/motor_bench.tscn` is a separate **live physical frozen
+comparison**, not a video, new trained motor or predator success. Original55,
+calibrated59, zero and conventional are available; new experimental motor stays
+disabled.63 functional/render checks pass at1280×720,1024×768,780×1000. The working
+pond/menu/extension and parked overhang work are unchanged. No commit/push here.
+Next discuss the existing four-torque braking/reference boundary using saved
+traces; no training sweep, gain/reward patch, thresholds relaxation or app rewrite.
+
+The older entries below are retained history; their pending/not-run statements
+are superseded by this entry and the completed results document.
+
+**Latest priority: motor replan, not another food/shelter reward patch.** Read
+[MOTOR_CONTROL_PLAN.md](MOTOR_CONTROL_PLAN.md). The user no longer treats the old
+motor behavior or food rate as an untouchable specification; rollback remains
+mandatory. Recommend an isolated persistent-command motor task using the same
+native simulator/PPO/MLP/Godot infrastructure and separate goal chooser. First
+milestone is actual move→brake→stop→ten-second hold in calm open water, then
+strict existing shelter tests. No architecture expansion, new numerical check,
+physical-reference run or PPO pilot has been executed for this plan.
+
+The previously authorized supervised study **did run** (supersedes the older
+not-run notes below): exactly3×1,000 fresh-Adam steps, original accepted food
+teacher, trajectory-separated datasets, qualified stationary zero targets.
+Cover-only holds5/16 unseen starts and loses feeding; joint holds1/16 and
+retains feeding; both hold0/4 familiar nominals and fail the full gates. Data,
+all three checksummed actor/Adam states and traces remain at
+`build/holding-supervised/2026-10-29-v5/run-v1/`. All helper checks passed, but
+the independently implemented real saved-actor CPU-double loss/parameter-gradient/
+Adam comparison is still pending; do not imply it has run.
+
+Existing traces show cover-only nominal3 command magnitude growing from.00424
+to.142 while head displacement is only.143mm, with changed joints/rates and
+previous-action inputs. Exposure fails at2s before penetration. Static TRAIN
+prediction tolerances did not establish a stable feedback controller; no
+particular input, capacity limit or numerical-core defect is isolated.
+
+Rollback snapshot `build/motor-replan/2026-10-29/` contains46 current dirty
+working-file copies plus the complete patch/status and a180-artifact hash
+manifest. All160 earlier protected files still match. Preserve parked overhang
+work, personal saves and all failed studies. No candidate was adopted and no
+learning process is running. Proposed pilot cap is128 PPO updates×512×64, but
+physical feasibility and acceptance thresholds must be frozen before it starts;
+the numerical and reference preflights are bounded separately in the plan.
+
+**Controlled diagnosis completed; holding remains failed.** Read
+[holding-diagnosis.md](experiments/swimmer/predator-shelter/holding-diagnosis.md)
+and the registered bounded follow-up before another learning change. The
+diagnostic upload ordering fault is fixed; likelihood/means/GAE replay,
+gradient additivity, full Adam restoration and repeated full updates pass.
+Required food gain Jacobians are correct and unchanged. The four-arm study ran
+exactly 16 iterations each (48 total PPO updates across three learning arms),
+with final-only blind evaluation. Every arm finishes **0/4 exact and 0/24 near
+five-second holds**. Holding-only modestly improves short streaks/return but
+reduces reference feeding to **1.5/min calm, 1.875/min current**. Combined retains
+feeding in the small paired screen but does not learn holding. No actor adopted.
+
+Preselected final holding-only/combined noise and velocity traces also fail
+0/44 under every action mode. Of 38 initially safe starts, first exposure/margin
+failure always precedes penetration. Six blind near fixtures are already
+exposed; distinguish their recovery attempts from holding. Zero torque holds
+all four exact/18 initially safe blind near poses and 11/16 mild velocity cases,
+and earns higher deterministic return in 44/44 pairs. No architecture/optimizer
+cause has been uniquely isolated; don't call the failed finite budget a capacity
+proof. No further trial is running or automatically authorized by this checkpoint.
+
+Only diagnostic tools/docs were changed for this investigation. All 51 protected
+source/save/result files match the manifest. Full raw evidence, immutable
+sources and copies remain under ignored
+`build/holding-diagnosis/2026-10-29-protocol5/`. The next proposed discriminator is
+a frozen-observation safe-cover/food-retention fitting diagnostic, **not run**;
+discuss any larger controller redesign first. Do not change rewards, remove
+required gains, loosen safety or deploy rescue behavior. Preserve parked
+overhang work/default-menu request and the working personal pond.
+
+**Current priority: controlled protocol-5 holding diagnosis.** The latest user
+request explicitly pauses architecture changes, reward tuning and large runs.
+HEAD is still `5ea5d452589c70418836209c00921b84ddcb9dc2` on
+`codex/autonomous-pond-practice`; preserve all dirty protocol-5 and overhang work.
+Protocol 5 already reconditions the final layer and uses matching food-gradient
+gains. Do not repeat that fix. The two diagnostic tools compare identical
+complete shelter states and audit fixed PPO data on disposable copies; the
+results above supersede earlier pending-work descriptions. Protected-file hashes and the pre-diagnosis diff are under
+`build/holding-diagnosis/2026-10-29-protocol5/`. No failed actor is adopted.
+
+The overhang has native layout-3 geometry plus a live frozen-inference viewer;
+the requested Open pond default change and visual improvement remain unfinished.
+The later larger-bevel native shape edit is preserved but unverified. No more
+overhang changes should interrupt the requested holding diagnosis. Existing
+layout-2 sources, personal saves and experiment logs remain authoritative.
+
+**Latest object request:** the user chose an overhanging rock before lily pads.
+Implement isolated layout 3 (existing cove/boulder plus an open-sided bank
+ledge), native collision/visibility and a matching Godot mesh. Preserve normal
+layout-2 learning and checkpoints. No new PPO/reward/network trial is authorized
+by the geometry change. Open the predator demo only after learned hiding passes;
+static geometry QA must be labelled as such. See `docs/overhang_shelter.md`.
+
+**Latest user steering: pause expansion and diagnose the holding failure.**
+Read the newest section in
+[RESUME.md](experiments/swimmer/predator-shelter/RESUME.md). Protocols 4/5 both
+failed 0/24 near-calm five-second holds after 300 updates; protocol 5 also loses
+some calm feeding performance. Static zero-torque holding works at four nominal
+calm poses, but controlled braking/initial-velocity feasibility is still untested.
+The protocol-6 multi-head idea is design only. No new architecture, reward trial
+or live candidate adoption should proceed before the diagnostic comparison and
+discussion. The earlier work is committed as `5ea5d45`; later edits remain local.
+
 **Current continuation: actuator calibration is verified, calm holding is the
 unfinished next lesson.** The user requested a checkpoint commit/note, then
 explicitly revoked stopping and asked to continue. Read

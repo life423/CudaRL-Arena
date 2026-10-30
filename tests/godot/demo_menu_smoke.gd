@@ -45,15 +45,20 @@ func _run() -> void:
 	check(ProjectSettings.get_setting("application/run/main_scene") == "res://launcher/launcher.tscn", "Menu must be the startup scene")
 	change_scene_to_file("res://launcher/launcher.tscn")
 	await settle()
-	check(current_scene.rows.size() == 1 and current_scene.buttons.size() == 1, "Menu must have one clear pond action")
+	var ledge := current_scene.find_child("pond_overhang_watch", true, false) as Button
+	check(current_scene.rows.size() == 1 and current_scene.buttons.size() == (2 if ledge != null else 1), "Menu must keep one primary pond action and only the available secondary shelter view")
 	for legacy in ["cartpole_watch", "cartpole_train", "racing_watch", "racing_train"]:
 		check(current_scene.find_child(legacy, true, false) == null, "Legacy demonstration still appears in the pond UI")
 	for removed in ["pond_experiments_train", "guide_train"]:
 		check(current_scene.find_child(removed, true, false) == null, "Developer sections remain in the player menu")
-	for expected in [current_scene.primary_demo + "_watch"]:
-		check(root.gui_get_focus_owner().name == expected, "Keyboard focus order is incorrect")
+	check(root.gui_get_focus_owner().name == current_scene.primary_demo + "_watch", "Primary pond must receive initial keyboard focus")
+	if ledge != null:
 		input_action("ui_focus_next")
 		await settle()
+		check(root.gui_get_focus_owner() == ledge, "Secondary shelter action is not reachable by keyboard")
+	input_action("ui_focus_next")
+	await settle()
+	check(root.gui_get_focus_owner().name == current_scene.primary_demo + "_watch", "Keyboard navigation must return to the primary pond")
 	input_action("ui_accept")
 	await settle()
 	check(current_scene.stats.get("progress_controller", false), "Keyboard activation did not open the latest live pond")

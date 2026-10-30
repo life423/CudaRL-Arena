@@ -60,19 +60,22 @@ CUDARL_HD inline bool sphere_segment(V start,V end,V center,float radius) {
     const V nearest=relative+direction*t;
     return deep::dot(nearest,nearest)<=radius*radius;
 }
-// Rays use the same exact sphere/torus solids as contact. Water and decorative
+// Rays use the same exact sphere/torus/ledge solids as contact. Water and decorative
 // plants are transparent in this simplified detection model. Terrain supplies
 // physical clearance, but is not an additional opaque cover primitive here.
 CUDARL_HD inline bool occluded(V point,V eye,const deep::Habitat& h,deep::Basin basin={2}) {
-    if(basin.layout==2 && sphere_segment(point,eye,deep::boulder_center(h),deep::boulder_radius(h))) return true;
-    if(!h.arch) return false;
+    if((basin.layout==2 || basin.layout==3) && sphere_segment(point,eye,deep::boulder_center(h),deep::boulder_radius(h))) return true;
+    if(!h.arch && basin.layout!=3) return false;
     const V delta=eye-point;const float length=deep::norm(delta);
-    if(!(length>1e-6f)) return deep::arch_distance(point,h)<=kRayTolerance;
+    if(!(length>1e-6f)) return (basin.layout==3?fminf(deep::arch_distance(point,h),deep::overhang_distance(point,h)):
+                                               deep::arch_distance(point,h))<=kRayTolerance;
     const V direction=delta/length;float travel=0;
     // The exact torus SDF is 1-Lipschitz. A 0.9 safety factor cannot step
     // through a tube; the finite budget reports unresolved tangencies visible.
     for(int step=0;step<128 && travel<=length;++step) {
-        const float gap=deep::arch_distance(point+direction*travel,h);
+        const V at=point+direction*travel;
+        const float arch=deep::arch_distance(at,h);
+        const float gap=basin.layout==3?fminf(arch,deep::overhang_distance(at,h)):arch;
         if(gap<=kRayTolerance) return true;
         travel+=fmaxf(.0005f,gap*.9f);
     }
@@ -149,6 +152,18 @@ CUDARL_HD inline Cover cover(int index,V eye,const deep::Habitat& h,deep::Basin 
     if(index==1) {c.position={5.5f*factor,-2.5f,-.8f*factor};c.yaw=-1.5707963267948966f;}
     if(index==2) {c.position={5.4f*factor,-2.65f,-.7f*factor};c.yaw=-1.5707963267948966f;}
     if(index==3) {c.position={5.5f*factor,-2.5f,-1.8f*factor};c.yaw=1.5707963267948966f;}
+    const auto body=cover_pose(c);c.clearance=body_clearance(body,h,basin);
+    c.exposure=predator::exposure(body,eye,h,basin);c.valid=c.clearance>.08f;return c;
+}
+// Static front-opening poses for geometry validation, not a movement policy.
+// They do not track the bird, teleport the creature, or claim learned shelter.
+CUDARL_HD inline Cover overhang_cover(int index,V eye,const deep::Habitat& h,deep::Basin basin={3}) {
+    Cover c;if(index<0 || index>=kCoverCount || basin.layout!=3) return c;
+    const float factor=h.scale/1.5f;
+    if(index==0) c.position={-2.25f*factor,-2.10f,-2.40f*factor};
+    if(index==1) c.position={-2.10f*factor,-2.15f,-2.35f*factor};
+    if(index==2) c.position={-2.40f*factor,-2.15f,-2.45f*factor};
+    if(index==3) c.position={-2.25f*factor,-2.20f,-2.50f*factor};
     const auto body=cover_pose(c);c.clearance=body_clearance(body,h,basin);
     c.exposure=predator::exposure(body,eye,h,basin);c.valid=c.clearance>.08f;return c;
 }

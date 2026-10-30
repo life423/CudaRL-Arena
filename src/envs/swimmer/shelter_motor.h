@@ -11,7 +11,7 @@ namespace cudarl::shelter_motor {
 constexpr int kObs=59,kAct=4,kCoverEpisode=400;
 struct ActuatorScale {float value[kAct]{1,1,1,1};};
 CUDARL_HD inline float action_mean(float raw,bool cover,int joint,const ActuatorScale& scale) {
-    return cover?raw/scale.value[joint]:raw;
+    return cover?raw:raw*scale.value[joint];
 }
 struct Request {
     shelter::Goal goal{};

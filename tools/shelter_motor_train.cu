@@ -18,7 +18,9 @@ int main(int argc,char** argv) {
         constexpr uint32_t seed=73;auto context=source.context;context.current={.0075f,0,0};
         rl::ShelterActionCalibration calibration;
         const auto calibrated=rl::calibrate_shelter_actions(source,&calibration);
-        rl::ShelterMotorTrainer trainer(worlds,seed);trainer.actor.set_params(rl::transfer_shelter_motor(source.motor));
+        const auto legacy_actor=rl::transfer_shelter_motor(source.motor);
+        const auto initial_actor=rl::normalized_shelter_actor(legacy_actor,calibrated);
+        rl::ShelterMotorTrainer trainer(worlds,seed);trainer.actor.set_params(initial_actor);
         trainer.actor_opt.set_learning_rate(.0001f);trainer.critic_opt.set_learning_rate(.0003f);trainer.std_opt.set_learning_rate(.0001f);
         const std::vector<float> deviations(4,-1.5f);trainer.log_std.copy_from_host(deviations.data(),deviations.size());
         trainer.env.configure(source.ancestry.policy.actor,context,trainer.stream.value,true);
@@ -30,7 +32,7 @@ int main(int argc,char** argv) {
             rl::restore_shelter_motor(trainer,saved.training);
             for(int j=0;j<4;++j) if(saved.scales.value[j]!=calibrated.value[j]) throw std::runtime_error("Action calibration protocol changed");
         }
-        const auto inherited=rl::transfer_shelter_motor(source.motor);const auto start=trainer.actor.get_params();
+        const auto inherited=initial_actor;const auto start=trainer.actor.get_params();
         for(int j=0;j<4;++j) std::printf("SHELTER_CALIBRATION joint=%d scale=%.9g median=%.9g p95=%.9g maximum=%.9g static_max=%.9g samples=%d fingerprint=%llu\n",
             j,calibrated.value[j],calibration.median[j],calibration.p95[j],calibration.maximum[j],calibration.static_maximum[j],calibration.samples,
             static_cast<unsigned long long>(calibration.fingerprint));
@@ -66,6 +68,8 @@ int main(int argc,char** argv) {
             }
         }
         rl::save_shelter_motor_run(path,source,trainer);const auto learned=trainer.actor.get_params();int changed=0,changed_run=0;
+        float learned_std[4];trainer.log_std.copy_to_host(learned_std,4);
+        std::printf("SHELTER_EXPLORATION log_std=(%.6f,%.6f,%.6f,%.6f) sigma=(%.6f,%.6f,%.6f,%.6f)\n",learned_std[0],learned_std[1],learned_std[2],learned_std[3],expf(learned_std[0]),expf(learned_std[1]),expf(learned_std[2]),expf(learned_std[3]));
         for(size_t i=0;i<learned.size();++i) {changed+=learned[i]!=inherited[i];changed_run+=learned[i]!=start[i];}
         const uint32_t comparison_seed=0x571EF001u,holdout_seed=0x571EF101u;
         const auto probe=rl::probe_shelter_motor(learned,rl::shelter_motor_probe_cases(source.frame,holdout_seed),240,100,trainer.env.action_scales());
@@ -75,9 +79,9 @@ int main(int argc,char** argv) {
             std::printf("SHELTER_MOTOR_HOLDOUT case=%zu arrived=%d full_five_second_hold=%d longest_hold_s=%.2f mean_exposure=%.4f final_goal_distance=%.4f clearance=%.4f finite=%d\n",
                 i,r.arrival_step>=0?1:0,r.longest_safe_dwell_ticks>=100?1:0,r.longest_safe_dwell_ticks*deep::dt,r.mean_exposure,r.final_goal_distance,r.minimum_clearance,r.finite?1:0);
         }
-        const double base_calm=rl::shelter_motor_food_rate(inherited,source,comparison_seed),calm=rl::shelter_motor_food_rate(learned,source,comparison_seed);
-        const double base_flow=rl::shelter_motor_food_rate(inherited,source,comparison_seed,16,600,{.0075f,0,0});
-        const double flow=rl::shelter_motor_food_rate(learned,source,comparison_seed,16,600,{.0075f,0,0});
+        const double base_calm=rl::shelter_motor_food_rate(legacy_actor,source,comparison_seed),calm=rl::shelter_motor_food_rate(learned,source,comparison_seed,16,600,{},trainer.env.action_scales());
+        const double base_flow=rl::shelter_motor_food_rate(legacy_actor,source,comparison_seed,16,600,{.0075f,0,0});
+        const double flow=rl::shelter_motor_food_rate(learned,source,comparison_seed,16,600,{.0075f,0,0},trainer.env.action_scales());
         const auto holding=rl::probe_shelter_motor(learned,hold_cases,1,200,trainer.env.action_scales());
         int holding_success=0;double longest_total=0;
         for(size_t i=0;i<holding.size();++i) {

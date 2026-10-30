@@ -48,7 +48,8 @@ struct Habitat {
 };
 // Layout identity is external to Habitat/BodyState: old raw world snapshots
 // remain readable. Layout 1 is the fixed outward cove; layout 2 adds one
-// bed-rooted spherical boulder without changing the saved basin/world layout.
+// bed-rooted spherical boulder. Layout 3 additionally opts into a bank ledge;
+// none of these identities changes the saved basin/world struct layout.
 struct Basin {int layout=0;};
 struct Physics {
     float density=1000,viscosity=.001f,gravity=9.81f;
@@ -155,13 +156,63 @@ CUDARL_HD inline float boulder_distance(V point,const Habitat& h,V* normal=nullp
     if(normal) *normal=length>1e-8f?delta/length:V{1,0,0};
     return length-boulder_radius(h);
 }
+// The two exact rounded-box solids are shared with the rendered ledge. half
+// is the CORE box half extent: bevel is a Minkowski radius outside that box.
+// The shore root closes the back; the underwater opening faces world +Z.
+struct OverhangPart {V center{},half{};Q rotation{};float bevel=0;};
+constexpr int overhang_parts=2;
+CUDARL_HD inline OverhangPart overhang_part(int index,const Habitat& h) {
+    const float factor=h.scale/1.5f;OverhangPart p;
+    if(index==0) {
+        p.center={-3.55f*factor,-.69f,-3.30f*factor};
+        // Broad rounding replaces the slab's manufactured-looking corners.
+        // The outer extent stays (1.60,.76,1.45), including the -1.45
+        // underside, so the opening height and footprint do not grow.
+        p.half=V{1.05f,.21f,.90f}*factor;p.bevel=.55f*factor;
+    } else if(index==1) {
+        p.center={-3.55f*factor,-1.05f,-4.45f*factor};
+        // The rounded bank-root has the same (1.60,1.80,.50) outer extent.
+        p.half=V{1.15f,1.35f,.05f}*factor;p.bevel=.45f*factor;
+    } else return p;
+    return p;
+}
+// Exact oriented rounded-box SDF with an outward unit normal. At a core
+// medial-axis tie, X then Y then Z selects a deterministic supporting face.
+CUDARL_HD inline float rounded_box_distance(V point,const OverhangPart& p,V* normal=nullptr) {
+    const V local=p.rotation.inverse(point-p.center);
+    const V delta{fabsf(local.x)-p.half.x,fabsf(local.y)-p.half.y,fabsf(local.z)-p.half.z};
+    const V outside{fmaxf(delta.x,0),fmaxf(delta.y,0),fmaxf(delta.z,0)};
+    const float length=norm(outside);
+    if(normal) {
+        V n;
+        if(length>1e-8f) n={outside.x*(local.x<0?-1.f:1.f)/length,
+                            outside.y*(local.y<0?-1.f:1.f)/length,
+                            outside.z*(local.z<0?-1.f:1.f)/length};
+        else if(delta.x>=delta.y && delta.x>=delta.z) n={local.x<0?-1.f:1.f,0,0};
+        else if(delta.y>=delta.z) n={0,local.y<0?-1.f:1.f,0};
+        else n={0,0,local.z<0?-1.f:1.f};
+        *normal=p.rotation.rotate(n);
+    }
+    return length+fminf(fmaxf(delta.x,fmaxf(delta.y,delta.z)),0)-p.bevel;
+}
+CUDARL_HD inline float overhang_distance(V point,const Habitat& h,V* normal=nullptr) {
+    float distance=rounded_box_distance(point,overhang_part(0,h),normal);
+    V candidate_normal;const float candidate=rounded_box_distance(point,overhang_part(1,h),normal?&candidate_normal:nullptr);
+    if(candidate<distance) {distance=candidate;if(normal) *normal=candidate_normal;}
+    return distance;
+}
 // Shared signed distance to all active solid obstacles. Legacy callers take
-// the identical torus arithmetic path; the new stage adds one exact sphere.
+// the identical torus/sphere arithmetic path; layout 3 adds the exact ledge.
 // Strict comparison gives the arch a deterministic normal on an equal tie.
 CUDARL_HD inline float obstacle_distance(V point,const Habitat& h,Basin basin={},V* normal=nullptr) {
-    const float arch=arch_distance(point,h,normal);if(basin.layout!=2) return arch;
+    const float arch=arch_distance(point,h,normal);if(basin.layout!=2 && basin.layout!=3) return arch;
     V sphere_normal;const float sphere=boulder_distance(point,h,normal?&sphere_normal:nullptr);
-    if(sphere<arch) {if(normal) *normal=sphere_normal;return sphere;}return arch;
+    if(basin.layout==2) {
+        if(sphere<arch) {if(normal) *normal=sphere_normal;return sphere;}return arch;
+    }
+    float nearest=arch;if(sphere<nearest) {nearest=sphere;if(normal) *normal=sphere_normal;}
+    V ledge_normal;const float ledge=overhang_distance(point,h,normal?&ledge_normal:nullptr);
+    if(ledge<nearest) {nearest=ledge;if(normal) *normal=ledge_normal;}return nearest;
 }
 // A prescribed, bounded boundary-aware current, not a pressure/CFD solver.
 // Model-unit distances define a smooth free-slip projection near the arch and
@@ -185,7 +236,7 @@ CUDARL_HD inline float sphere_wake_deficit(V delta,V direction,float radius) {
     return .72f*flow_smooth(downstream/(.5f*radius))*lateral*recovery*recovery;
 }
 CUDARL_HD inline float obstacle_wake_factor(V point,const Habitat& h,V imposed,Basin basin={}) {
-    if(basin.layout!=2) return 1;
+    if(basin.layout!=2 && basin.layout!=3) return 1;
     const float speed=norm(imposed);if(!(speed>0)) return 1;
     const V direction=imposed/speed;
     float deficit=sphere_wake_deficit(point-boulder_center(h),direction,boulder_radius(h));
@@ -222,7 +273,7 @@ CUDARL_HD inline V habitat_flow(V point,const Habitat& h,V imposed,Basin basin={
     // the selected speed. This final layer also prevents leakage where the
     // individual projected boundary normals are not orthogonal.
     const V bounded=velocity*(flow_smooth(rock/.05f)*flow_smooth(bed/.05f)*flow_smooth(surface/.05f));
-    return basin.layout==2?bounded*obstacle_wake_factor(point,h,imposed,basin):bounded;
+    return basin.layout==2 || basin.layout==3?bounded*obstacle_wake_factor(point,h,imposed,basin):bounded;
 }
 struct Link {
     Q q;
@@ -314,8 +365,21 @@ CUDARL_HD inline float boulder_body_clearance(const BodyState& s,const Habitat& 
     }
     return gap;
 }
+CUDARL_HD inline float overhang_body_clearance(const BodyState& s,const Habitat& h) {
+    const auto geometry=shape(s);float gap=1e6f;
+    for(int b=0;b<3;++b) {
+        const auto& l=geometry.link[b];const V axis=l.q.rotate({1,0,0});
+        for(int sample=0;sample<arch_axial_samples;++sample) {
+            const float f=(sample-4)*.25f;const V point=l.center+axis*(f*l.length*.5f);V normal;
+            const float distance=overhang_distance(point/scale,h,&normal);
+            gap=fminf(gap,distance-arch_slice_support(l,b,f,normal)/scale);
+        }
+    }
+    return gap;
+}
 CUDARL_HD inline float obstacle_body_clearance(const BodyState& s,const Habitat& h,Basin basin={}) {
     const float arch=arch_body_clearance(s,h);
+    if(basin.layout==3) return fminf(fminf(arch,boulder_body_clearance(s,h)),overhang_body_clearance(s,h));
     return basin.layout==2?fminf(arch,boulder_body_clearance(s,h)):arch;
 }
 struct System {float M[dofs][dofs]{},R[dofs][dofs]{},C[dofs]{},force[dofs]{};bool arch_touched=false;};
@@ -356,7 +420,7 @@ CUDARL_HD inline void habitat_contact(System& a,const V* J,V point,V velocity,fl
     if(surface<0) {load(a,J,{0,.8f*surface,0});if(velocity.y>0) resist(a,J,{0,-1,0},.006f);}
 }
 CUDARL_HD inline void arch_contact(System& a,const Link& l,int body,const float* velocity,const Habitat& h,Basin basin={}) {
-    if(!h.arch && basin.layout!=2) return;
+    if(!h.arch && basin.layout!=2 && basin.layout!=3) return;
     const V axis=l.q.rotate({1,0,0});
     for(int sample=0;sample<arch_axial_samples;++sample) {
         const float f=(sample-4)*.25f;const V r=axis*(f*l.length*.5f);V normal;
@@ -416,7 +480,7 @@ CUDARL_HD inline System assemble(const BodyState& s,Physics physics={}) {
                 else contact(a,J,l.center+r,v,b==0?.0064f:.002f,physics.pond);
             }
         }
-        if(physics.boundaries && (physics.habitat.arch || physics.basin.layout==2)) arch_contact(a,l,b,s.velocity,physics.habitat,physics.basin);
+        if(physics.boundaries && (physics.habitat.arch || physics.basin.layout==2 || physics.basin.layout==3)) arch_contact(a,l,b,s.velocity,physics.habitat,physics.basin);
         for(int k=0;k<3;++k) resist(a,l.angular,axis[k],submersion*8.f*3.14159265f*physics.viscosity*powf(b==0?.008f:.002f,3.f));
     }
     return a;

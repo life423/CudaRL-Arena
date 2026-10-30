@@ -1,5 +1,62 @@
 # Approved creature experience and working roadmap
 
+**Newest motor comparison — October29:** keep exactly two learned behavioral
+policies: goal chooser and one reusable motor, with PPO critics explained
+separately. [The request contract](CREATURE_CONTROLLER_INTERFACE.md) is now
+documented; chooser training remains excluded. The new isolated torque/fast-servo
+experiment ran under [its preregistration](PAIRED_MOTOR_PROTOCOL.md).
+Joint regulation passed8/8 on CPU andCUDA and data readiness passed. Torque PPO
+stopped after6completed updates when rollout7 crossed the strict distal-fin/bed
+clearance while native contact proxies remained clear. Joint-target PPO has
+0updates; no final behavioral comparisons ran and no candidate is accepted.
+Read [PAIRED_MOTOR_RESULTS.md](PAIRED_MOTOR_RESULTS.md) for actual budgets and
+the exact geometry mismatch. Preserveglobal-stop, successfulservo gains, the
+working pond/body/saves and previous results. No additional run or contact
+change is authorized automatically; discuss the narrow geometry-consistency
+decision before another study. Feeding, safety choice, exploration/rest and
+growth remain behind dependable move→brake→stop→hold.
+
+**Latest presentation decision — October29:** retain the current pond and old
+tadpole while improving the new motor. The user deferred removal/replacement and
+a larger water environment until the new creature works better. No production
+UI change or replacement was made. Keep research comparisons separate and do
+not turn this timing decision into permission for a new training sweep.
+
+**Newest bounded motor result — October29:** numerical and actual stream/data
+checks pass, but the newly authorized two-capture braking probe fails readiness.
+The full conventional16/16 prerequisite was removed for research; its old failure
+remains historical. Exact61,440+1,600 search/replay steps found no safe braking
+plus10s quiet hold; no PPO launched. Read [motor braking results](MOTOR_BRAKING_RESULTS.md).
+Discuss one bounded joint-target/fast-servo interface comparison; do not add
+another brain, extend the search or weaken final movement gates. No redesign
+is implemented by that recommendation. Goal selection remains separate.
+
+**Latest motor replan — October 29:** dependable physical movement is the next
+gate, not food rate, imitation accuracy or counters. The user permits replacing
+the motor/training setup while preserving all old work for rollback. Keep goal
+choice separate from one reusable body controller; no network per skill.
+[The motor plan](MOTOR_CONTROL_PLAN.md) recommends a persistent-command locomotion
+task and calm open-water move→brake→stop→hold before shelter and predator choice.
+The supervised pilot held5/16 unseen cases with cover-only fitting (feeding
+regressed),1/16 with joint fitting (feeding retained), and0/4 familiar nominal
+starts for both. None passes the full gate. Small residual commands amplify
+after creating joint/rate/previous-action states absent from the stationary
+labels. This is not a capacity proof or a diagnosis of a broken numerical core.
+The tiny independent real-actor check now passes. The32-trial physical preflight
+does not: fixed conventional0/16 full passes, passive2/16. The isolated task,
+bounded trainer and live motor bench are implemented, but **zero PPO pilot
+updates ran** because the physical gate remains false. Read
+[motor results](MOTOR_CONTROL_RESULTS.md). Resolve braking/reference adequacy
+before expanding trials; no new motor is adopted and no app rewrite has started.
+
+**Latest shelter-object order — October 29:** add an open-sided rock ledge
+leaning out from the back bank **before lily pads**. Native collision and
+predator sight obstruction must match the displayed solid, with an opening
+facing the viewer. Keep this opt-in habitat separate from the working boulder
+learner and its saves. The user asked to open the predator demonstration only
+after its hiding test passes. Adding cover geometry is not learned hiding;
+the control/action-path diagnosis remains pending before further PPO variants.
+
 **Latest shelter decision — October 29:** the user chose a **passing predator
 shadow**, rather than a current surge, as the first event for prioritizing
 cover over food. The [bounded pilot](experiments/swimmer/predator-shelter/README.md)

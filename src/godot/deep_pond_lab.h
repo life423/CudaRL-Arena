@@ -6,6 +6,7 @@
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
+#include <godot_cpp/variant/packed_float32_array.hpp>
 #include "demos/pond_playback.h"
 #include "nn/mlp_cpu.h"
 #include "demos/feeding_session.h"
@@ -38,6 +39,9 @@ public:
     Dictionary get_arch_geometry() const;
     Dictionary get_cove_geometry() const;
     Dictionary get_boulder_geometry() const;
+    Dictionary get_overhang_geometry() const;
+    PackedFloat32Array sample_overhang_solid(const PackedVector3Array& positions) const;
+    bool watch_overhang(String source_checkpoint,String backend="auto");
     PackedVector3Array sample_cove_terrain(const PackedVector3Array& positions) const;
     PackedVector3Array get_arch_flow_vectors(const PackedVector3Array& positions) const;
     PackedVector3Array advect_arch_tracers(const PackedVector3Array& positions,double seconds) const;

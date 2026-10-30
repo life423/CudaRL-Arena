@@ -119,7 +119,9 @@ func run() -> void:
 		root.size = dimensions
 		await settle()
 		var menu = current_scene
-		check(menu.buttons.size() == 1, "Latest pond menu has competing primary actions")
+		check(menu.buttons.size() == 2, "Local pond menu must offer learning and the secondary rock ledge view")
+		var ledge: Button = menu.find_child("pond_overhang_watch", true, false)
+		check(ledge != null and ledge.text == "View rock ledge" and ledge.size.y >= 44, "The new physical shelter cannot be opened from the local menu")
 		var action: Button = menu.find_child("pond_boulder_watch", true, false)
 		check(action != null and action.text == "Open pond", "Open pond still points to the older feeding environment")
 		if action == null:

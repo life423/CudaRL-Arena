@@ -1,0 +1,391 @@
+{
+  "source_protocol": 5,
+  "source_update": 300,
+  "cases": 44,
+  "ticks": 200,
+  "autoreset": false,
+  "practice": false,
+  "ppo_updates": 0,
+  "source_bytes_unchanged": true,
+  "aggregates": [
+    {
+      "controller": "zero_torque",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 4,
+      "geometry_near_5s": 4,
+      "mean_longest_geometry_s": 10,
+      "mean_discounted_return": 10.67490324,
+      "max_reward_residual": 0
+    },
+    {
+      "controller": "zero_torque",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 20,
+      "geometry_near_5s": 20,
+      "mean_longest_geometry_s": 8.333333333,
+      "mean_discounted_return": 10.1808297,
+      "max_reward_residual": 1.490116119E-08
+    },
+    {
+      "controller": "zero_torque",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 11,
+      "geometry_near_5s": 11,
+      "mean_longest_geometry_s": 6.693750065,
+      "mean_discounted_return": 8.52266047,
+      "max_reward_residual": 1.788139343E-07
+    },
+    {
+      "controller": "calibrated_inherited",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.7000000104,
+      "mean_discounted_return": -1.029456232,
+      "max_reward_residual": 3.61353159E-07
+    },
+    {
+      "controller": "calibrated_inherited",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.6354166754,
+      "mean_discounted_return": -0.6894769549,
+      "max_reward_residual": 7.133930922E-07
+    },
+    {
+      "controller": "calibrated_inherited",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.6375000142,
+      "mean_discounted_return": -1.147514137,
+      "max_reward_residual": 3.650784492E-07
+    },
+    {
+      "controller": "frozen_v5",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.462500006,
+      "mean_discounted_return": 2.152144739,
+      "max_reward_residual": 3.604218364E-07
+    },
+    {
+      "controller": "frozen_v5",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.4958333435,
+      "mean_discounted_return": 2.456973196,
+      "max_reward_residual": 3.464519978E-07
+    },
+    {
+      "controller": "frozen_v5",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.4718750082,
+      "mean_discounted_return": 2.04199577,
+      "max_reward_residual": 3.594905138E-07
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 1.68750006,
+      "mean_discounted_return": 5.332961991,
+      "max_reward_residual": 3.24100256E-07
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 1.675000041,
+      "mean_discounted_return": 5.159250448,
+      "max_reward_residual": 5.140900612E-07
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 2,
+      "geometry_near_5s": 2,
+      "mean_longest_geometry_s": 2.468750045,
+      "mean_discounted_return": 5.353258817,
+      "max_reward_residual": 6.258487701E-07
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.6625000164,
+      "mean_discounted_return": -0.9485008372,
+      "max_reward_residual": 3.650784492E-07
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.8041666821,
+      "mean_discounted_return": -0.5622326021,
+      "max_reward_residual": 7.152557373E-07
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.9343750197,
+      "mean_discounted_return": -1.044918142,
+      "max_reward_residual": 4.470348358E-07
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.462500006,
+      "mean_discounted_return": 2.121809145,
+      "max_reward_residual": 2.235174179E-07
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.5687500071,
+      "mean_discounted_return": 2.453084341,
+      "max_reward_residual": 3.725290298E-07
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.6437500138,
+      "mean_discounted_return": 2.238499662,
+      "max_reward_residual": 3.692694008E-07
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "group": "nominal_rest",
+      "cases": 4,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.4875000119,
+      "mean_discounted_return": 2.09269857,
+      "max_reward_residual": 3.501772881E-07
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "group": "near_rest",
+      "cases": 24,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.6104166781,
+      "mean_discounted_return": 2.789414536,
+      "max_reward_residual": 4.805624485E-07
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "group": "initial_velocity",
+      "cases": 16,
+      "geometry_5s": 0,
+      "geometry_near_5s": 0,
+      "mean_longest_geometry_s": 0.581250011,
+      "mean_discounted_return": 2.663725518,
+      "max_reward_residual": 3.017485142E-07
+    }
+  ],
+  "failure_counts": [
+    {
+      "controller": "calibrated_inherited",
+      "condition": "bed_clearance_below_0.08",
+      "count": 12
+    },
+    {
+      "controller": "calibrated_inherited",
+      "condition": "boulder_clearance_below_0.08",
+      "count": 1
+    },
+    {
+      "controller": "calibrated_inherited",
+      "condition": "exposure_above_0.05",
+      "count": 31
+    },
+    {
+      "controller": "frozen_v5",
+      "condition": "bed_clearance_below_0.08",
+      "count": 2
+    },
+    {
+      "controller": "frozen_v5",
+      "condition": "boulder_clearance_below_0.08",
+      "count": 1
+    },
+    {
+      "controller": "frozen_v5",
+      "condition": "exposure_above_0.05",
+      "count": 41
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "condition": "bed_clearance_below_0.08",
+      "count": 6
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "condition": "boulder_clearance_below_0.08",
+      "count": 2
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "condition": "exposure_above_0.05",
+      "count": 36
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "condition": "bed_clearance_below_0.08",
+      "count": 6
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "condition": "boulder_clearance_below_0.08",
+      "count": 3
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "condition": "exposure_above_0.05",
+      "count": 35
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "condition": "bed_clearance_below_0.08",
+      "count": 16
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "condition": "boulder_clearance_below_0.08",
+      "count": 4
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "condition": "exposure_above_0.05",
+      "count": 24
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "condition": "bed_clearance_below_0.08",
+      "count": 21
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "condition": "boulder_clearance_below_0.08",
+      "count": 5
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "condition": "exposure_above_0.05",
+      "count": 18
+    },
+    {
+      "controller": "zero_torque",
+      "condition": "exposure_above_0.05",
+      "count": 13
+    },
+    {
+      "controller": "zero_torque",
+      "condition": "none",
+      "count": 31
+    }
+  ],
+  "penetration_counts": [
+    {
+      "controller": "calibrated_inherited",
+      "condition": "bed_penetration",
+      "count": 44
+    },
+    {
+      "controller": "frozen_v5",
+      "condition": "bed_penetration",
+      "count": 33
+    },
+    {
+      "controller": "frozen_v5",
+      "condition": "boulder_penetration",
+      "count": 11
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "condition": "bed_penetration",
+      "count": 30
+    },
+    {
+      "controller": "frozen_v5_saved_noise",
+      "condition": "boulder_penetration",
+      "count": 14
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "condition": "bed_penetration",
+      "count": 27
+    },
+    {
+      "controller": "frozen_v5_shared_noise",
+      "condition": "boulder_penetration",
+      "count": 17
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "condition": "bed_penetration",
+      "count": 40
+    },
+    {
+      "controller": "inherited_shared_noise",
+      "condition": "boulder_penetration",
+      "count": 4
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "condition": "bed_penetration",
+      "count": 31
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "condition": "boulder_penetration",
+      "count": 3
+    },
+    {
+      "controller": "zero_mean_shared_noise",
+      "condition": "none",
+      "count": 10
+    },
+    {
+      "controller": "zero_torque",
+      "condition": "none",
+      "count": 44
+    }
+  ]
+}

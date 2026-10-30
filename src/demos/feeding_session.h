@@ -50,6 +50,7 @@ std::unique_ptr<FeedingSession> create_cpu_feeding_session(const std::string& po
 std::unique_ptr<FeedingSession> create_arch_session(const std::string& source_full_save,const std::string& checkpoint,int worlds=1024);
 std::unique_ptr<FeedingSession> create_cove_session(const std::string& source_arch_save,const std::string& checkpoint,int worlds=1024);
 std::unique_ptr<FeedingSession> create_boulder_session(const std::string& source_cove_save,const std::string& checkpoint,int worlds=1024);
+std::unique_ptr<FeedingSession> create_overhang_session(const std::string& source_boulder_full_save);
 std::unique_ptr<FeedingSession> create_shelter_session(const std::string& source_boulder_save,const std::string& checkpoint,int worlds=1024);
 std::unique_ptr<FeedingSession> create_hold_session(const std::string& source_motor_run,const std::string& checkpoint,int worlds=1024);
 }

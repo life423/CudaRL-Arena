@@ -1,0 +1,6 @@
+[configuration]
+entry_symbol = "motor_bench_library_init"
+compatibility_minimum = "4.4"
+
+[libraries]
+windows.x86_64 = "res://addons/motor_bench/bin/motor_bench.dll"

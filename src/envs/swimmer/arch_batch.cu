@@ -92,7 +92,7 @@ void Batch::configure(const std::vector<float>& selector,cudaStream_t stream,boo
 }
 void Batch::configure(const std::vector<float>& selector,const Context& context,cudaStream_t stream,bool reset) {
     const float speed=deep::norm(context.current);
-    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context.current.y)>1e-8f || context.version<0 || context.basin.layout<0 || context.basin.layout>2)
+    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context.current.y)>1e-8f || context.version<0 || context.basin.layout<0 || context.basin.layout>3)
         throw std::invalid_argument("Invalid arch current context");
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream));selector_.set_params(selector);
     context_=context;
@@ -148,7 +148,7 @@ void Batch::load(checkpoint::Reader& in,uint32_t saved_version) {
         const auto old=in.value<LegacyContext>();context_.current=old.current;context_.version=old.version;
     } else if(saved_version==3) context_=in.value<Context>();
     const float speed=deep::norm(context_.current);
-    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context_.current.y)>1e-8f || context_.version<0 || context_.basin.layout<0 || context_.basin.layout>2)
+    if(!std::isfinite(speed) || speed>.0075001f || fabsf(context_.current.y)>1e-8f || context_.version<0 || context_.basin.layout<0 || context_.basin.layout>3)
         throw std::runtime_error("Invalid saved arch current context");
     // A preceding configure/reset may still be initializing these same worlds
     // on a nonblocking training stream. A synchronous default-stream copy does

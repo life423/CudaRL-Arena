@@ -79,12 +79,15 @@ add_library(cudarl_core STATIC
     src/envs/swimmer/feeding.cu
     src/envs/swimmer/arch_batch.cu
     src/envs/swimmer/shelter_motor.cu
+    src/envs/swimmer/command_motor.cu
+    src/envs/swimmer/paired_motor.cu
     src/rl/shelter_action.cu
     src/envs/swimmer/shelter_batch.cu
     src/demos/feeding_session.cu
     src/demos/arch_session.cu
     src/demos/shelter_session.cu
     src/demos/holding_session.cu
+    src/demos/overhang_session.cu
     src/rl/shelter_probe.cu
     src/rl/ppo_kernels.cu
     src/rl/ppo.cpp
@@ -150,6 +153,15 @@ if(CUDARL_BUILD_GODOT)
         RUNTIME_OUTPUT_DIRECTORY         "${CUDARL_ADDON_BIN}"
         RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CUDARL_ADDON_BIN}"
     )
+    # Isolated diagnostic viewer: same portable equations, no player save lease
+    # and no replacement of the working CUDA extension or its controllers.
+    add_library(motor_bench SHARED src/godot/motor_control_register.cpp src/godot/motor_control_lab.cpp)
+    target_include_directories(motor_bench PRIVATE tools)
+    target_link_libraries(motor_bench PRIVATE cudarl_runtime godot-cpp)
+    target_compile_definitions(motor_bench PRIVATE CUDARL_WITH_CUDA=0 TYPED_METHOD_BIND WINDOWS_ENABLED)
+    cudarl_strict_warnings(motor_bench)
+    set_target_properties(motor_bench PROPERTIES PREFIX ""
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/motor_bench/bin")
 endif()
 
 # --- Tests (run with: ctest --preset release) ---------------------------------
@@ -185,6 +197,8 @@ add_executable(cudarl_tests
     tests/test_boulder_geometry.cpp
     tests/test_boulder_resume.cpp
     tests/test_predator_geometry.cpp
+    tests/test_overhang_geometry.cpp
+    tests/overhang_geometry_gpu.cu
     tests/test_shelter_motor.cpp
     tests/test_shelter_action.cpp
     tests/test_shelter_hold.cpp
@@ -205,6 +219,52 @@ add_test(NAME cudarl_tests COMMAND cudarl_tests)
 
 # --- Benchmarks (only nn_bench links cuBLAS, as a reference) -------------------
 if(CUDARL_BUILD_BENCH)
+    # Read-only evidence decoder: no CUDA library, inference or integration.
+    add_executable(paired_motor_failure tools/paired_motor_failure.cpp)
+    target_include_directories(paired_motor_failure PRIVATE tools)
+    target_link_libraries(paired_motor_failure PRIVATE cudarl_runtime)
+    target_compile_definitions(paired_motor_failure PRIVATE CUDARL_WITH_CUDA=0)
+    cudarl_strict_warnings(paired_motor_failure)
+    add_executable(paired_motor_regulation tools/paired_motor_regulation.cu)
+    target_include_directories(paired_motor_regulation PRIVATE tools)
+    target_link_libraries(paired_motor_regulation PRIVATE cudarl_core)
+    cudarl_strict_warnings(paired_motor_regulation)
+    add_executable(paired_motor_train tools/paired_motor_train.cu)
+    target_include_directories(paired_motor_train PRIVATE tools)
+    target_link_libraries(paired_motor_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(paired_motor_train)
+    add_executable(command_motor_stream tests/command_motor_stream.cu)
+    target_link_libraries(command_motor_stream PRIVATE cudarl_core)
+    cudarl_strict_warnings(command_motor_stream)
+    add_executable(command_motor_readiness tests/command_motor_readiness.cu)
+    target_include_directories(command_motor_readiness PRIVATE tools)
+    target_link_libraries(command_motor_readiness PRIVATE cudarl_core)
+    cudarl_strict_warnings(command_motor_readiness)
+    add_executable(motor_braking_probe tools/motor_braking_probe.cu)
+    target_include_directories(motor_braking_probe PRIVATE tools)
+    target_link_libraries(motor_braking_probe PRIVATE cudarl_core)
+    cudarl_strict_warnings(motor_braking_probe)
+    add_executable(command_motor_train tools/command_motor_train.cu)
+    target_include_directories(command_motor_train PRIVATE tools)
+    target_link_libraries(command_motor_train PRIVATE cudarl_core)
+    cudarl_strict_warnings(command_motor_train)
+    add_executable(motor_reference tools/motor_reference.cpp)
+    target_include_directories(motor_reference PRIVATE tools)
+    target_link_libraries(motor_reference PRIVATE cudarl_runtime)
+    target_compile_definitions(motor_reference PRIVATE CUDARL_WITH_CUDA=0)
+    cudarl_strict_warnings(motor_reference)
+    add_executable(motor_numerical_check tools/motor_numerical_check.cu)
+    target_link_libraries(motor_numerical_check PRIVATE cudarl_core)
+    cudarl_strict_warnings(motor_numerical_check)
+    add_executable(holding_supervised_fit tools/holding_supervised_fit.cu)
+    target_link_libraries(holding_supervised_fit PRIVATE cudarl_core)
+    cudarl_strict_warnings(holding_supervised_fit)
+    add_executable(holding_diagnose tools/holding_diagnose.cu)
+    target_link_libraries(holding_diagnose PRIVATE cudarl_core)
+    cudarl_strict_warnings(holding_diagnose)
+    add_executable(holding_update_diagnose tools/holding_update_diagnose.cu)
+    target_link_libraries(holding_update_diagnose PRIVATE cudarl_core)
+    cudarl_strict_warnings(holding_update_diagnose)
     add_executable(predator_hold_diagnostic tools/predator_hold_diagnostic.cpp)
     target_link_libraries(predator_hold_diagnostic PRIVATE cudarl_core)
     cudarl_strict_warnings(predator_hold_diagnostic)

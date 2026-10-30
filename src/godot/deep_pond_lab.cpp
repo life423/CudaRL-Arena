@@ -1,5 +1,6 @@
 #include "deep_pond_lab.h"
 #include "envs/swimmer/arch.h"
+#include "envs/swimmer/predator.h"
 #include <exception>
 #include <filesystem>
 #include <godot_cpp/classes/os.hpp>
@@ -48,6 +49,9 @@ void DeepPondLab::_bind_methods() {
     ClassDB::bind_method(D_METHOD("trigger_predator"),&DeepPondLab::trigger_predator);
     ClassDB::bind_method(D_METHOD("start_hold_learning","source_motor_run","checkpoint","environments","backend"),&DeepPondLab::start_hold_learning,DEFVAL(1024),DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("get_boulder_geometry"),&DeepPondLab::get_boulder_geometry);
+    ClassDB::bind_method(D_METHOD("get_overhang_geometry"),&DeepPondLab::get_overhang_geometry);
+    ClassDB::bind_method(D_METHOD("sample_overhang_solid","positions"),&DeepPondLab::sample_overhang_solid);
+    ClassDB::bind_method(D_METHOD("watch_overhang","source_checkpoint","backend"),&DeepPondLab::watch_overhang,DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("sample_cove_terrain","positions"),&DeepPondLab::sample_cove_terrain);
     ClassDB::bind_method(D_METHOD("get_arch_flow_vectors","positions"),&DeepPondLab::get_arch_flow_vectors);
     ClassDB::bind_method(D_METHOD("advect_arch_tracers","positions","seconds"),&DeepPondLab::advect_arch_tracers);
@@ -297,6 +301,64 @@ Dictionary DeepPondLab::get_boulder_geometry() const {
     d["boulder_radius"]=cudarl::deep::boulder_radius(habitat);
     return d;
 }
+Dictionary DeepPondLab::get_overhang_geometry() const {
+    auto d=get_boulder_geometry();const auto habitat=cudarl::arch::geometry();
+    d["layout_id"]=3;d["layout_name"]="cove-overhang-v1";
+    // Read-only geometry. This does not start a learner, migrate a save or
+    // certify that a controller can approach, hold or choose this shelter.
+    d["hiding_validated"]=false;
+    Array parts;
+    for(int i=0;i<cudarl::deep::overhang_parts;++i) {
+        const auto p=cudarl::deep::overhang_part(i,habitat);Dictionary item;
+        item["center"]=Vector3(p.center.x,p.center.y,p.center.z);
+        item["half_extent"]=Vector3(p.half.x,p.half.y,p.half.z);
+        item["orientation"]=Quaternion(p.rotation.x,p.rotation.y,p.rotation.z,p.rotation.w);
+        item["bevel"]=p.bevel;parts.push_back(item);
+    }
+    d["overhang_parts"]=parts;
+    Array poses;
+    for(int i=0;i<4;++i) {
+        const auto c=cudarl::predator::overhang_cover(i,{-8,4,-1.25f},habitat);
+        const auto body=cudarl::predator::cover_pose(c);Dictionary item;
+        item["position"]=Vector3(body.position.x,body.position.y,body.position.z);
+        item["orientation"]=Quaternion(body.orientation.x,body.orientation.y,body.orientation.z,body.orientation.w);
+        item["clearance"]=c.clearance;item["exposure"]=c.exposure;item["valid"]=c.valid;
+        Array links;
+        for(const auto& link:cudarl::deep::shape(body).link) {
+            Dictionary part;const auto p=link.center/cudarl::deep::scale;const auto q=link.q;
+            part["position"]=Vector3(p.x,p.y,p.z);part["orientation"]=Quaternion(q.x,q.y,q.z,q.w);links.push_back(part);
+        }
+        item["links"]=links;poses.push_back(item);
+    }
+    d["cover_poses"]=poses;return d;
+}
+bool DeepPondLab::watch_overhang(String source_checkpoint,String backend) {
+    stop();error_=String();
+    try {
+        if(backend!="auto" && backend!="cpu" && backend!="cuda") throw std::invalid_argument("Unknown overhang viewer backend");
+#if CUDARL_WITH_CUDA
+        if(backend=="cpu") throw std::runtime_error("This new habitat viewer currently needs the CUDA developer build.");
+        const auto device=cudarl::probe_device();
+        if(!device.available) throw std::runtime_error("The overhang viewer needs a healthy CUDA device: "+device.error);
+        const auto source_path=ProjectSettings::get_singleton()->globalize_path(source_checkpoint).utf8();
+        feeding_=cudarl::demos::create_overhang_session(source_path.get_data());
+        return true;
+#else
+        (void)source_checkpoint;
+        throw std::runtime_error("The overhang viewer needs the CUDA developer build; the existing feeding pond retains CPU learning.");
+#endif
+    } catch(const std::exception& e) {feeding_.reset();error_=e.what();return false;}
+}
+PackedFloat32Array DeepPondLab::sample_overhang_solid(const PackedVector3Array& positions) const {
+    PackedFloat32Array out;if(positions.size()>65536) return out;out.resize(positions.size());
+    const auto h=cudarl::arch::geometry();
+    for(int64_t i=0;i<positions.size();++i) {
+        const auto p=positions[i];
+        out.set(i,std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z)?
+            cudarl::deep::overhang_distance({static_cast<float>(p.x),static_cast<float>(p.y),static_cast<float>(p.z)},h):1e6f);
+    }
+    return out;
+}
 PackedVector3Array DeepPondLab::sample_cove_terrain(const PackedVector3Array& positions) const {
     PackedVector3Array out;if(positions.size()>65536) return out;out.resize(positions.size());
     const auto h=cudarl::arch::geometry();const cudarl::deep::Basin basin{1};
@@ -437,6 +499,10 @@ Dictionary DeepPondLab::get_state() const {
         for(const auto& link:geometry.link) {Dictionary item;const auto c=link.center/cudarl::deep::scale;const auto& r=link.q;item["position"]=Vector3(c.x,c.y,c.z);item["orientation"]=Quaternion(r.x,r.y,r.z,r.w);links.push_back(item);}
         d["links"]=links;
         if(feeding_->stats().layout_id==2) d["boulder_clearance"]=cudarl::deep::boulder_body_clearance(s.body,cudarl::arch::geometry());
+        if(feeding_->stats().layout_id==3) {
+            d["overhang_clearance"]=cudarl::deep::overhang_body_clearance(s.body,cudarl::arch::geometry());
+            d["body_clearance"]=cudarl::predator::body_clearance(s.body,cudarl::arch::geometry(),{3});
+        }
         const auto threat=feeding_->predator_info();
         if(threat.enabled) {
             d["predator_position"]=Vector3(threat.position.x,threat.position.y,threat.position.z);
@@ -474,7 +540,9 @@ Dictionary DeepPondLab::get_stats() {
         const auto s=feeding_->stats();const auto current=feeding_->current();
         d["feeding_mode"]=true;d["playback_mode"]=true;d["showcase_untrained"]=false;d["validated_controller"]=false;d["progress_controller"]=true;
         d["water_current_cm_s"]=100.*cudarl::deep::norm(current);d["water_current"]=Vector3(current.x,current.y,current.z);d["food_drifting"]=cudarl::deep::norm(current)>0;
-        d["compute_backend"]=s.backend.c_str();d["compute_detail"]="Native local physics/inference and concurrent PPO";d["training_ready"]=true;d["paused"]=s.paused;
+        d["compute_backend"]=s.backend.c_str();d["compute_detail"]=s.layout_id==3?
+            "Live native physics and saved neural inference; no learning updates":"Native local physics/inference and concurrent PPO";
+        d["frozen_policy"]=s.layout_id==3;d["training_ready"]=true;d["paused"]=s.paused;
         d["resumed"]=s.resumed;d["loaded_update"]=s.loaded_update;d["saved_update"]=s.saved_update;d["save_error"]=s.save_error.c_str();d["transferred"]=false;
         d["food_count"]=cudarl::feeding::count(feeding_->state());d["food_capacity"]=cudarl::feeding::capacity;d["policy_inputs"]=s.input_count;
         d["arch_mode"]=s.arch_mode;d["arch_contacts"]=s.arch_contacts;d["arch_passages"]=s.arch_passages;d["arch_clean_passages"]=s.arch_clean_passages;d["parent_update"]=s.parent_update;

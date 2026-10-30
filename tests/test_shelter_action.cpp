@@ -35,17 +35,18 @@ TEST_CASE("shelter action calibration rejects nonfinite source parameters") {
     bool rejected=false;try {(void)rl::calibrate_shelter_actions(source);} catch(const std::exception&) {rejected=true;}CHECK(rejected);
 }
 GPU_TEST_CASE("shelter action normalization preserves food sampling and restores physical exploration") {
-    constexpr int n=256;std::vector<float> raw(n*4),input(n*shelter_motor::kObs,0),gradient(n*4,1.f);
+    constexpr int n=256;std::vector<float> raw(n*4),legacy(n*4),input(n*shelter_motor::kObs,0),gradient(n*4,1.f);
     shelter_motor::ActuatorScale scale;scale.value[0]=2;scale.value[1]=1;scale.value[2]=128;scale.value[3]=4;
     const float command[4]={.4f,-.1f,100.f,-.5f};
-    for(int i=0;i<n;++i) {input[static_cast<size_t>(i)*shelter_motor::kObs+55]=i%2?1.f:0.f;for(int j=0;j<4;++j) raw[static_cast<size_t>(i)*4+j]=command[j];}
+    for(int i=0;i<n;++i) {input[static_cast<size_t>(i)*shelter_motor::kObs+55]=i%2?1.f:0.f;for(int j=0;j<4;++j) {legacy[static_cast<size_t>(i)*4+j]=command[j];raw[static_cast<size_t>(i)*4+j]=command[j]/scale.value[j];}}
     device_ptr<float> d_raw(raw.size()),d_input(input.size()),d_mean(raw.size()),d_grad(gradient.size()),d_std(4),d_action(raw.size()),d_reference(raw.size()),d_logp(n),d_reference_logp(n);
     d_raw.copy_from_host(raw.data(),raw.size());d_input.copy_from_host(input.data(),input.size());d_grad.copy_from_host(gradient.data(),gradient.size());
     const float deviations[4]={-1.5f,-1.5f,-1.5f,-1.5f};d_std.copy_from_host(deviations,4);rl::SwimmerStream stream;
     shelter_motor::policy_means(d_raw.get(),d_input.get(),d_mean.get(),n,scale,stream.value);
     shelter_motor::policy_mean_grad(d_grad.get(),d_input.get(),n,scale,stream.value);
     rl::sample_gaussian(d_mean.get(),d_std.get(),n,4,71,2,d_action.get(),d_logp.get(),stream.value);
-    rl::sample_gaussian(d_raw.get(),d_std.get(),n,4,71,2,d_reference.get(),d_reference_logp.get(),stream.value);
+    device_ptr<float> d_legacy(legacy.size());d_legacy.copy_from_host(legacy.data(),legacy.size());
+    rl::sample_gaussian(d_legacy.get(),d_std.get(),n,4,71,2,d_reference.get(),d_reference_logp.get(),stream.value);
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));
     std::vector<float> means(raw.size()),grad(raw.size()),actions(raw.size()),original(raw.size()),logp(n),original_logp(n);
     d_mean.copy_to_host(means.data(),means.size());d_grad.copy_to_host(grad.data(),grad.size());d_action.copy_to_host(actions.data(),actions.size());
@@ -53,21 +54,25 @@ GPU_TEST_CASE("shelter action normalization preserves food sampling and restores
     float minimum=1,maximum=-1;int unclipped=0;
     for(int i=0;i<n;++i) for(int j=0;j<4;++j) {
         const size_t k=static_cast<size_t>(i)*4+j;const bool cover=i%2!=0;
-        CHECK(means[k]==shelter_motor::action_mean(raw[k],cover,j,scale));CHECK(grad[k]==(cover?1.f/scale.value[j]:1.f));
+        CHECK(means[k]==shelter_motor::action_mean(raw[k],cover,j,scale));CHECK(grad[k]==(cover?1.f:scale.value[j]));
+        CHECK(means[k]==(cover?legacy[k]/scale.value[j]:legacy[k]));
         if(!cover) {CHECK(actions[k]==original[k]);CHECK(logp[static_cast<size_t>(i)]==original_logp[static_cast<size_t>(i)]);}
         if(cover && j==2) {
             const float applied=deep::clamp(actions[k],-1,1);minimum=std::min(minimum,applied);maximum=std::max(maximum,applied);
             unclipped+=fabsf(actions[k])<1?1:0;CHECK(deep::clamp(original[k],-1,1)==1.f);
-            CHECK(fabsf((actions[k]-means[k])-(original[k]-raw[k]))<1e-5f);
+            CHECK(fabsf((actions[k]-means[k])-(original[k]-legacy[k]))<1e-5f);
         }
     }
     CHECK(maximum-minimum>.3f);CHECK(unclipped>32);
 }
 GPU_TEST_CASE("shelter action PPO raw-mean gradient agrees with finite differences") {
-    const std::vector<float> raw={.4f,-.1f,100.f,-.5f},action={.3f,.1f,.6f,-.2f};
-    const std::vector<float> deviations={-1.4f,-1.6f,-1.2f,-1.8f};std::vector<float> input(shelter_motor::kObs,0.f);input[55]=1;
+    const std::vector<float> raw={.2f,-.1f,.78125f,-.125f};
+    const std::vector<float> deviations={-1.4f,-1.6f,-1.2f,-1.8f};
     shelter_motor::ActuatorScale scale;scale.value[0]=2;scale.value[1]=1;scale.value[2]=128;scale.value[3]=4;
-    float mean[4];for(int j=0;j<4;++j) mean[j]=raw[static_cast<size_t>(j)]/scale.value[j];
+    for(bool cover:{false,true}) {
+    std::vector<float> input(shelter_motor::kObs,0.f);input[55]=cover?1.f:0.f;
+    float mean[4];std::vector<float> action(4);const float error[4]={.1f,.2f,-.18f,.075f};
+    for(int j=0;j<4;++j) {mean[j]=shelter_motor::action_mean(raw[static_cast<size_t>(j)],cover,j,scale);action[static_cast<size_t>(j)]=mean[j]+error[j];}
     const float old_logp=rl::gaussian_logp(mean,deviations.data(),action.data(),4);
     device_ptr<float> d_raw(4),d_input(input.size()),d_mean(4),d_std(4),d_value(1),d_action(4),d_old(1),d_adv(1),d_return(1),d_adv_stats(2),d_gradient(4),d_std_gradient(4),d_value_gradient(1),d_rows(rl::kGaussianStats),d_stats(rl::kGaussianStats);
     const float zero=0,one=1,adv_stats[2]={0,1};
@@ -80,8 +85,9 @@ GPU_TEST_CASE("shelter action PPO raw-mean gradient agrees with finite differenc
     float actual[4];d_gradient.copy_to_host(actual,4);
     const auto loss=[&](int changed,double delta) {
         double mu[4],sigma[4],a[4],dm[4],ds[4],dv=0;
-        for(int j=0;j<4;++j) {mu[j]=(static_cast<double>(raw[static_cast<size_t>(j)])+(j==changed?delta:0.0))/scale.value[j];sigma[j]=deviations[static_cast<size_t>(j)];a[j]=action[static_cast<size_t>(j)];}
+        for(int j=0;j<4;++j) {mu[j]=(static_cast<double>(raw[static_cast<size_t>(j)])+(j==changed?delta:0.0))*(cover?1.0:static_cast<double>(scale.value[j]));sigma[j]=deviations[static_cast<size_t>(j)];a[j]=action[static_cast<size_t>(j)];}
         return rl::ppo_gaussian_row(mu,sigma,4,a,static_cast<double>(old_logp),1.0,0.0,0.0,{.2f,0.f,.5f},1.0,dm,ds,&dv).pg_loss;
     };
-    for(int j=0;j<4;++j) {const double epsilon=1e-4,finite=(loss(j,epsilon)-loss(j,-epsilon))/(2*epsilon);CHECK(std::fabs(finite-actual[j])<2e-4*(1+std::fabs(finite)));}
+    for(int j=0;j<4;++j) {const double epsilon=1e-6,finite=(loss(j,epsilon)-loss(j,-epsilon))/(2*epsilon);CHECK(std::fabs(finite-actual[j])<2e-4*(1+std::fabs(finite)));}
+    }
 }
