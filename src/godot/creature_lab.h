@@ -20,6 +20,7 @@ protected:
 public:
     CreatureLab();
     ~CreatureLab() override;
+    Dictionary get_config() const;
     Dictionary get_state() const;
     bool set_commands(PackedFloat32Array commands);
     bool set_mode(int mode);

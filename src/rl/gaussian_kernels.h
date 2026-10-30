@@ -37,12 +37,6 @@ void sum_columns(const float* x, int rows, int cols, float* out, cudaStream_t st
 void gather_rows(const Permutation& perm, int first, int count, int width, const float* src, float* dst,
                  cudaStream_t stream);
 
-// Episode totals over n environments, each entry of which is zero unless its episode ended:
-// out[0] += sum of lengths, out[1] += sum of laps, out[2] += episodes ended,
-// out[3] += episodes ended by a crash (done and not truncated).
-void episode_totals(const float* lengths, const float* laps, const float* done, const float* truncated, int n,
-                    float* out, cudaStream_t stream);
-
 } // namespace cudarl::rl
 
 #endif // CUDARL_RL_GAUSSIAN_KERNELS_H

@@ -3,6 +3,7 @@
 
 #include <cuda_runtime.h>
 #include <memory>
+#include <limits>
 #include <stdexcept>
 #include <string>
 
@@ -39,8 +40,9 @@ public:
     device_ptr() = default;
     
     explicit device_ptr(size_t count) : count_(count) {
+        const size_t bytes = checked_size_bytes(count);
         if (count > 0) {
-            CUDA_CHECK_THROW(cudaMalloc(&ptr_, count * sizeof(T)));
+            CUDA_CHECK_THROW(cudaMalloc(&ptr_, bytes));
         }
     }
     
@@ -82,10 +84,11 @@ public:
     
     // Allocate new memory
     void allocate(size_t new_count) {
+        const size_t bytes = checked_size_bytes(new_count);
         reset();
         count_ = new_count;
         if (count_ > 0) {
-            CUDA_CHECK_THROW(cudaMalloc(&ptr_, count_ * sizeof(T)));
+            CUDA_CHECK_THROW(cudaMalloc(&ptr_, bytes));
         }
     }
     
@@ -112,6 +115,13 @@ public:
     const T* get() const { return ptr_; }
     size_t size() const { return count_; }
     size_t size_bytes() const { return count_ * sizeof(T); }
+
+    // Pure sizing check, also usable before touching a CUDA context.
+    static size_t checked_size_bytes(size_t count) {
+        if (count > std::numeric_limits<size_t>::max() / sizeof(T))
+            throw std::length_error("Device allocation byte count overflows size_t");
+        return count * sizeof(T);
+    }
     
     // Conversion to raw pointer for kernel calls
     operator T*() { return ptr_; }

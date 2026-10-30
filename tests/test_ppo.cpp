@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -21,6 +22,26 @@ using cudarl::test::to_device;
 using cudarl::test::to_host;
 
 // --- Shuffle -----------------------------------------------------------------
+
+TEST_CASE("ppo: categorical shape guards reject invalid inputs before CUDA launch") {
+    const int invalid[][2] = {{0, 2}, {-1, 2}, {1, 0}, {1, -1}, {1, kMaxActions + 1},
+                              {std::numeric_limits<int>::max(), kMaxActions}};
+    for (const auto& shape : invalid) {
+        bool sampled = false, loss = false;
+        try { sample_actions(nullptr, shape[0], shape[1], 1, 0, false, nullptr, nullptr, nullptr); }
+        catch (const std::invalid_argument&) { sampled = true; }
+        try { ppo_loss_grad(nullptr, nullptr, shape[0], shape[1], nullptr, nullptr, nullptr, nullptr, nullptr,
+                             { .2f, .01f, .5f }, nullptr, nullptr, nullptr, nullptr, nullptr); }
+        catch (const std::invalid_argument&) { loss = true; }
+        CHECK(sampled && loss);
+    }
+    bool stats_overflow = false;
+    try { ppo_loss_grad(nullptr, nullptr, std::numeric_limits<int>::max() / kPpoStats + 1, 1,
+                         nullptr, nullptr, nullptr, nullptr, nullptr, { .2f, .01f, .5f },
+                         nullptr, nullptr, nullptr, nullptr, nullptr); }
+    catch (const std::invalid_argument&) { stats_overflow = true; }
+    CHECK(stats_overflow);
+}
 
 TEST_CASE("ppo: Feistel shuffle is a permutation for any size") {
     for (uint32_t n : {1u, 2u, 3u, 7u, 1000u, 4096u, 100003u}) {

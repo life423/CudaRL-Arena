@@ -30,6 +30,21 @@ ctest --preset cpu
 
 The visible single-world diagnostic currently uses native CPU physics. CUDA runs the same physical stepping checks and retains the numerical primitives for later parallel learning. Godot rendering uses the available graphics hardware; no cloud service is involved.
 
+For local GPU verification, set `$env:CUDARL_REQUIRE_GPU=1` before `ctest --preset release`; unavailable hardware then fails instead of silently skipping GPU checks. The CPU-only preset remains independent of CUDA.
+
+Godot checks are separate from CTest. With `Godot_console.exe` on PATH:
+
+```powershell
+Godot_console.exe --headless --path godot-project --script ../tests/godot/foundation_contract_smoke.gd
+Godot_console.exe --path godot-project --script ../tests/godot/foundation_ui_smoke.gd -- --foundation-layout-only
+```
+
+The first uses frozen backend stubs to check startup and error handling without physical steps or files. The second renders the real extension at desktop, tablet and phone sizes without stepping or saving. Omitting `--foundation-layout-only` additionally tests exactly two diagnostic control intervals. Close the editor before rebuilding its loaded extension; `CUDARL_GODOT_OUTPUT_DIR` can redirect a build for isolated verification.
+
+`foundation_persistence_smoke.gd` tests real Save/Load buttons, write failures and corrupt files with zero physical steps. Run it only in a disposable copy of the project and sibling `tests/godot/` directory. In that copy, set `application/config/use_custom_user_dir=true` and `application/config/custom_user_dir_name` to a unique test directory, then pass the exact same value as `--audit-user-dir=<directory>` after `--`. The script checks the resolved user directory and refuses to replace a pre-existing save. Do not point this test at personal data.
+
+The latest audit passed 58 GPU-required native checks, 17 CPU-only checks, 66 frozen-backend checks, 43 rendered checks and 19 isolated persistence checks. A final layout check against the installed extension also passed 35 checks without stepping or saving. These are component/integration checks; the contact and learned-movement gates below remain unresolved. Detailed evidence is in [the checkpoint](docs/SESSION_CHECKPOINT.md).
+
 ## Execution path
 
 ```text

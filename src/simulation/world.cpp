@@ -7,10 +7,6 @@ namespace cudarl::simulation {
 namespace {
 namespace cp=checkpoint;
 constexpr uint32_t magic=0x46574C44u,version=1;
-uint64_t hash(const std::vector<uint8_t>& bytes) {
-    uint64_t h=14695981039346656037ull;
-    for(uint8_t b:bytes) {h^=b;h*=1099511628211ull;}return h;
-}
 void vector(cp::Writer& out,physics::V v) {out.value(v.x);out.value(v.y);out.value(v.z);}
 physics::V vector(cp::Reader& in) {return {in.value<float>(),in.value<float>(),in.value<float>()};}
 void body(cp::Writer& out,const physics::BodyState& b) {
@@ -36,16 +32,16 @@ contact::Inspection inspect(cp::Reader& in) {
 uint64_t contract() {
     cp::Writer w;w.value(contact::kPhysicsVersion);w.value(contact::kOverlapTolerance);w.value(contact::kContactStiffness);
     w.value(contact::kContactDampingRatio);w.value(contact::kSubstep);
-    for(float f:{physics::scale,physics::limit,physics::torque,.020f,.026f,.026f,.0064f,.008f,.0015f,.006f,4.5f,4.f,3.5f}) w.value(f);
-    const Gains g;for(float f:g.kp) w.value(f);for(float f:g.kd) w.value(f);return hash(w.data);
+    const auto head=physics::body_geometry(0),tail=physics::body_geometry(1),fin=physics::body_geometry(2);
+    const auto lo=contact::bounds_min_model();
+    for(float f:{physics::scale,physics::limit,physics::torque,head.length,tail.length,fin.length,
+        head.half_height,head.half_width,tail.half_height,fin.half_height,-lo.x,-lo.y,-lo.z}) w.value(f);
+    const Gains g;for(float f:g.kp) w.value(f);for(float f:g.kd) w.value(f);return cp::checksum(w.data);
 }
 void validate(const WorldState& s) {
-    if(!finite_state(s)||s.current.y!=0||physics::norm(s.current)>.007500001f)
+    if(!finite_state(s))
         throw std::runtime_error("Invalid diagnostic physical state");
-    const Gains fixed;
     for(int j=0;j<4;++j) {
-        if(s.gains.kp[j]!=fixed.kp[j]||s.gains.kd[j]!=fixed.kd[j])
-            throw std::runtime_error("Diagnostic actuator gains differ");
         for(float v:{s.held_targets[j],s.last_actual_torques[j],s.raw_action[j]})
             if(!physics::finite_number(v)) throw std::runtime_error("Nonfinite diagnostic actuator state");
         if(fabsf(s.held_targets[j])>physics::limit||fabsf(s.last_actual_torques[j])>1)
@@ -54,7 +50,7 @@ void validate(const WorldState& s) {
     for(float v:s.actual_torques) if(!physics::finite_number(v)||fabsf(v)>1) throw std::runtime_error("Invalid actual torque");
     for(float v:s.requested_torques) if(!physics::finite_number(v)) throw std::runtime_error("Invalid requested torque");
     const auto& t=s.telemetry;
-    for(float v:{s.mean_squared_torque,t.minimum_floor_gap,t.minimum_other_gap,t.floor_force_max,t.total_force_max,
+    for(float v:{s.mean_squared_torque,t.minimum_floor_gap,t.minimum_other_gap,t.floor_spring_force_max,t.total_spring_force_max,
         t.inspection.floor_gap,t.inspection.min_other_gap,t.inspection.min_gap,t.inspection.max_floor_gap})
         if(!physics::finite_number(v)) throw std::runtime_error("Invalid diagnostic telemetry");
     // Only a stopped unsafe/invalid world can contain a partial final control.
@@ -79,7 +75,8 @@ void PhysicalWorld::reset(const physics::BodyState& initial) {
     state_=next;
 }
 void PhysicalWorld::set_current(physics::V current) {
-    if(!physics::finite_vector(current)||current.y!=0||physics::norm(current)>.007500001f)
+    auto settings=state_;settings.current=current;
+    if(!valid_settings(settings))
         throw std::runtime_error("Current must be horizontal and at most 0.75 cm/s");
     state_.current=current;
 }
@@ -99,14 +96,14 @@ std::vector<uint8_t> PhysicalWorld::serialize() const {
     out.value(s.control_steps);out.value(s.substeps);out.value(s.time_seconds);
     boolean(out,s.paused);boolean(out,s.unsafe);boolean(out,s.invalid);
     const auto& t=s.telemetry;inspect(out,t.inspection);out.value(t.minimum_floor_gap);out.value(t.minimum_other_gap);
-    out.value(t.floor_force_max);out.value(t.total_force_max);out.value(t.contact_samples);out.value(t.executed_substeps);out.value(t.first_unsafe_substep);
-    out.value(hash(out.data));return out.data;
+    out.value(t.floor_spring_force_max);out.value(t.total_spring_force_max);out.value(t.contact_samples);out.value(t.executed_substeps);out.value(t.first_unsafe_substep);
+    out.value(cp::checksum(out.data));return out.data;
 }
 void PhysicalWorld::restore(const std::vector<uint8_t>& bytes) {
     if(bytes.size()<24) throw std::runtime_error("Not a foundation diagnostic state");
     std::vector<uint8_t> payload(bytes.begin(),bytes.end()-sizeof(uint64_t));
     uint64_t saved_hash=0;std::memcpy(&saved_hash,bytes.data()+payload.size(),sizeof(saved_hash));
-    if(hash(payload)!=saved_hash) throw std::runtime_error("Diagnostic state checksum differs");
+    if(cp::checksum(payload)!=saved_hash) throw std::runtime_error("Diagnostic state checksum differs");
     cp::Reader in{payload};
     if(in.value<uint32_t>()!=magic||in.value<uint32_t>()!=version||in.value<uint64_t>()!=contract())
         throw std::runtime_error("Incompatible diagnostic state; learner checkpoints are not accepted");
@@ -117,7 +114,7 @@ void PhysicalWorld::restore(const std::vector<uint8_t>& bytes) {
     s.control_steps=in.value<uint64_t>();s.substeps=in.value<uint64_t>();s.time_seconds=in.value<double>();
     s.paused=boolean(in);s.unsafe=boolean(in);s.invalid=boolean(in);
     auto& t=s.telemetry;t.inspection=inspect(in);t.minimum_floor_gap=in.value<float>();t.minimum_other_gap=in.value<float>();
-    t.floor_force_max=in.value<float>();t.total_force_max=in.value<float>();t.contact_samples=in.value<int>();t.executed_substeps=in.value<int>();t.first_unsafe_substep=in.value<int>();
+    t.floor_spring_force_max=in.value<float>();t.total_spring_force_max=in.value<float>();t.contact_samples=in.value<int>();t.executed_substeps=in.value<int>();t.first_unsafe_substep=in.value<int>();
     in.finish();validate(s);state_=s;
 }
 void PhysicalWorld::save(const std::string& path) const {checkpoint::write_atomic(path,serialize());}

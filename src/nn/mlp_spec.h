@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -43,12 +44,11 @@ struct MlpSpec {
 
     MlpSpec(std::vector<int> layer_sizes, std::vector<Activation> layer_activations)
         : sizes(std::move(layer_sizes)), activations(std::move(layer_activations)) {
-        if (sizes.size() < 2 || activations.size() != sizes.size() - 1) {
+        if (sizes.size() < 2 || activations.size() != sizes.size() - 1 ||
+            activations.size() > static_cast<size_t>(std::numeric_limits<int>::max())) {
             throw std::invalid_argument("MlpSpec: need >= 2 sizes and one activation per layer");
         }
-        for (int s : sizes) {
-            if (s <= 0) throw std::invalid_argument("MlpSpec: layer sizes must be positive");
-        }
+        (void)num_params(); // Validate every layer before any parameter allocation.
     }
 
     int num_layers() const { return static_cast<int>(activations.size()); }
@@ -65,12 +65,26 @@ struct MlpSpec {
 
     // Offset of W_l in the flat parameter buffer; b_l follows at weight_offset(l) + out*in.
     int weight_offset(int l) const {
+        if (l < 0 || l > num_layers()) throw std::out_of_range("MlpSpec: layer offset");
         int off = 0;
-        for (int i = 0; i < l; ++i) off += out(i) * in(i) + out(i);
+        for (int i = 0; i < l; ++i) off = checked_layer_end(off, in(i), out(i));
         return off;
     }
-    int bias_offset(int l) const { return weight_offset(l) + out(l) * in(l); }
+    int bias_offset(int l) const {
+        if (l < 0 || l >= num_layers()) throw std::out_of_range("MlpSpec: bias layer");
+        return checked_layer_end(weight_offset(l), in(l), out(l)) - out(l);
+    }
     int num_params() const { return weight_offset(num_layers()); }
+
+private:
+    static int checked_layer_end(int start, int inputs, int outputs) {
+        if (inputs <= 0 || outputs <= 0)
+            throw std::invalid_argument("MlpSpec: layer sizes must be positive");
+        const int64_t end = int64_t(start) + (int64_t(inputs) + 1) * int64_t(outputs);
+        if (end > std::numeric_limits<int>::max())
+            throw std::invalid_argument("MlpSpec: parameter layout exceeds int index range");
+        return static_cast<int>(end);
+    }
 };
 
 // Weights ~ N(0, 1/fan_in) (LeCun normal), biases zero. Deterministic in seed.

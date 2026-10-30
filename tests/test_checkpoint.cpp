@@ -7,13 +7,13 @@
 namespace {
 namespace cp=cudarl::checkpoint;
 std::string temporary(const char* tag) {
-    const auto directory=std::filesystem::path(__FILE__).parent_path().parent_path()/"build"/"pond-learning-checks";
+    const auto directory=std::filesystem::path(__FILE__).parent_path().parent_path()/"build"/"checkpoint-checks";
     std::filesystem::create_directories(directory);
-    return (directory/(std::string(tag)+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count())+".training")).u8string();
+    return (directory/(std::string(tag)+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count())+".checkpoint")).u8string();
 }
 }
 
-TEST_CASE("training resume: checksum rejects corruption and failed replacement preserves the prior save") {
+TEST_CASE("checkpoint: checksum rejects corruption and failed replacement preserves the prior save") {
     const auto path=temporary("checkpoint-io-");const std::vector<uint8_t> first{1,2,3,4,5};cp::write_atomic(path,first);CHECK(cp::read(path)==first);
     std::filesystem::create_directory(std::filesystem::u8path(path+".tmp"));
     bool failed=false;try {cp::write_atomic(path,{9,8,7});} catch(const std::exception&) {failed=true;}CHECK(failed && cp::read(path)==first);
@@ -21,4 +21,22 @@ TEST_CASE("training resume: checksum rejects corruption and failed replacement p
     {std::fstream file(std::filesystem::u8path(path),std::ios::binary|std::ios::in|std::ios::out);file.seekp(24);const char bad=99;file.write(&bad,1);}
     bool corrupt=false;try {cp::read(path);} catch(const std::exception&) {corrupt=true;}CHECK(corrupt);
     std::filesystem::remove(std::filesystem::u8path(path));
+}
+
+TEST_CASE("checkpoint: a competing writer cannot alter the prior save") {
+    const auto path=temporary("checkpoint-writers-");
+    const std::vector<uint8_t> first{1,2,3},second{4,5,6};
+    cp::write_atomic(path,first);
+    {
+        cp::Lease owner(path);
+        bool busy=false;
+        try {cp::write_atomic(path,second);} catch(const cp::Busy&) {busy=true;}
+        CHECK(busy);
+        CHECK(cp::read(path)==first);
+        CHECK(!std::filesystem::exists(std::filesystem::u8path(path+".tmp")));
+    }
+    cp::write_atomic(path,second);
+    CHECK(cp::read(path)==second);
+    std::filesystem::remove(std::filesystem::u8path(path));
+    std::filesystem::remove(std::filesystem::u8path(path+".lock"));
 }

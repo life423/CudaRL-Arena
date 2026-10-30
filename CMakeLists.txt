@@ -72,9 +72,10 @@ if(CUDARL_BUILD_GODOT)
     add_library(creature_foundation SHARED src/godot/register_types.cpp src/godot/creature_lab.cpp)
     target_link_libraries(creature_foundation PRIVATE creature_physics godot_cpp)
     target_compile_definitions(creature_foundation PRIVATE TYPED_METHOD_BIND $<$<PLATFORM_ID:Windows>:WINDOWS_ENABLED>)
+    set(CUDARL_GODOT_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/godot-project/addons/creature_foundation/bin" CACHE PATH "Native extension output; override for isolated verification while Godot is open")
     set_target_properties(creature_foundation PROPERTIES PREFIX ""
-        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/creature_foundation/bin"
-        LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/godot-project/addons/creature_foundation/bin")
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CUDARL_GODOT_OUTPUT_DIR}"
+        LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CUDARL_GODOT_OUTPUT_DIR}")
     project_warnings(creature_foundation)
 endif()
 

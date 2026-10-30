@@ -14,6 +14,7 @@ namespace cudarl::nn {
 // reduction uses a fixed grid, making results bit-identical across runs.
 class GpuAdam {
 public:
+    // Initialization completes before return, including for first use on a nonblocking stream.
     GpuAdam(int num_params, AdamConfig cfg);
 
     void step(float* d_params, const float* d_grads, cudaStream_t stream = nullptr);
@@ -24,6 +25,8 @@ public:
     // Norm of the gradients seen by the last step (before clipping). Synchronizes;
     // only computed when clipping is enabled.
     float last_grad_norm() const;
+    // Checkpoint boundaries fence the device, including nonblocking streams.
+    // Calls must be serialized by the owner; no fence is added to step().
     void save(checkpoint::Writer& out) const;
     void load(checkpoint::Reader& in);
 

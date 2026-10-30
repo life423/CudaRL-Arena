@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://to3xnh0w0nee"]
 
-[ext_resource type="Script" path="res://main.gd" id="1"]
+[ext_resource type="Script" uid="uid://i57osfdxg8l2" path="res://main.gd" id="1"]
 
 [node name="CreatureFoundation" type="Control"]
 layout_mode = 3

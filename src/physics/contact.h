@@ -15,21 +15,30 @@ struct Inspection {
     float floor_gap=1e6f,min_other_gap=1e6f,min_gap=1e6f,max_floor_gap=-1e6f;
     bool contact=false,floor_contact=false,excessive=false,escape=false,invalid=false;
 };
-struct Telemetry {float floor_force=0,total_force=0;int points=0;};
+// Explicit spring component only; the implicit damping response is not included.
+struct Telemetry {float floor_spring_force=0,total_spring_force=0;int points=0;};
+CUDARL_HD constexpr physics::V bounds_min_model() {return {-4.5f,-4.f,-3.5f};}
+CUDARL_HD constexpr physics::V bounds_max_model() {return {4.5f,0.f,3.5f};}
 CUDARL_HD inline physics::V normal(int face) {
     switch(face) {case 0:return {1,0,0};case 1:return {-1,0,0};case 2:return {0,1,0};case 3:return {0,-1,0};case 4:return {0,0,1};default:return {0,0,-1};}
 }
-CUDARL_HD inline float offset(int face) {return face<2?4.5f*physics::scale:(face==2?4.f*physics::scale:(face==3?0.f:3.5f*physics::scale));}
+CUDARL_HD inline float offset(int face) {
+    const auto lo=bounds_min_model(),hi=bounds_max_model();
+    switch(face) {case 0:return -lo.x*physics::scale;case 1:return hi.x*physics::scale;
+        case 2:return -lo.y*physics::scale;case 3:return hi.y*physics::scale;
+        case 4:return -lo.z*physics::scale;default:return hi.z*physics::scale;}
+}
 // Minimum-support point of the existing ellipsoid / elliptical cylinder.
 // Tail ends are not interior axial samples, and radial support is directional.
 CUDARL_HD inline physics::V support_offset(const physics::Link& link,int body,physics::V n,int endpoint=0) {
+    const auto geometry=physics::body_geometry(body);
     const auto u=link.q.inverse(n);physics::V local{};
     if(body==0) {
-        const float a=link.length*.5f,b=.0064f,c=.008f;
+        const float a=link.length*.5f,b=geometry.half_height,c=geometry.half_width;
         const float d=sqrtf(a*a*u.x*u.x+b*b*u.y*u.y+c*c*u.z*u.z);
         if(d>0) local={-a*a*u.x/d,-b*b*u.y/d,-c*c*u.z/d};
     } else {
-        const float ry=body==2?.006f:.0015f,rz=.0015f;
+        const float ry=geometry.half_height,rz=geometry.half_width;
         const float d=sqrtf(ry*ry*u.y*u.y+rz*rz*u.z*u.z);
         local.x=(endpoint==0?-.5f:.5f)*link.length;
         if(d>0) {local.y=-ry*ry*u.y/d;local.z=-rz*rz*u.z/d;}
@@ -71,7 +80,7 @@ CUDARL_HD inline physics::System assemble(const physics::BodyState& state,physic
                 physics::V J[physics::dofs];for(int i=0;i<physics::dofs;++i) J[i]=link.linear[i]+physics::cross(link.angular[i],r);
                 const float force=-stiffness*gap;physics::load(system,J,n*force);
                 if(physics::dot(physics::multiply(J,state.velocity),n)<0) physics::resist(system,J,n,damping);
-                if(telemetry) {telemetry->total_force+=force;++telemetry->points;if(face==2) telemetry->floor_force+=force;}
+                if(telemetry) {telemetry->total_spring_force+=force;++telemetry->points;if(face==2) telemetry->floor_spring_force+=force;}
             }
         }
     }

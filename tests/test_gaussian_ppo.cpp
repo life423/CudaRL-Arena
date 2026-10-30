@@ -1,6 +1,6 @@
 // The Gaussian policy: log-probabilities and sampling statistics, the PPO loss
 // gradient against finite differences, the GPU kernels against the host math,
-// and shared row gathering and episode aggregation.
+// and shared row gathering.
 
 #include <algorithm>
 #include <cmath>
@@ -210,7 +210,7 @@ GPU_TEST_CASE("gaussian: GPU loss gradient matches the host math") {
     CHECK_CLOSE(to_host(shared, dim), sum_ls, 1e-4);
 }
 
-GPU_TEST_CASE("gaussian: gather_rows follows the permutation and episode_totals sums correctly") {
+GPU_TEST_CASE("gaussian: gather_rows follows the permutation") {
     const int rows = 1000, width = 3, first = 300, count = 200;
     const auto src_host = random_floats(size_t(rows) * width, 41);
     auto src = to_device(src_host);
@@ -226,29 +226,4 @@ GPU_TEST_CASE("gaussian: gather_rows follows the permutation and episode_totals 
     }
     CHECK(ok);
 
-    const int n = 37;
-    std::vector<float> len(n, 0.f), laps(n, 0.f), done(n, 0.f), trunc(n, 0.f);
-    double want_len = 0, want_laps = 0, want_ended = 0, want_crash = 0;
-    for (int i = 0; i < n; ++i) {
-        const bool ended = rng::uniform(42, 0, i) < 0.5f;
-        if (!ended) continue;
-        const bool truncated = rng::uniform(43, 0, i) < 0.3f;
-        len[i]   = 10.f + i;
-        laps[i]  = 0.1f * i;
-        done[i]  = 1.f;
-        trunc[i] = truncated ? 1.f : 0.f;
-        want_len += len[i];
-        want_laps += laps[i];
-        want_ended += 1;
-        want_crash += truncated ? 0 : 1;
-    }
-    auto d_len = to_device(len), d_laps = to_device(laps), d_done = to_device(done), d_trunc = to_device(trunc);
-    device_ptr<float> totals(4);
-    CUDA_CHECK_THROW(cudaMemset(totals.get(), 0, totals.size_bytes()));
-    episode_totals(d_len.get(), d_laps.get(), d_done.get(), d_trunc.get(), n, totals.get(), nullptr);
-    const auto t = to_host(totals, 4);
-    CHECK(std::fabs(t[0] - want_len) < 1e-3);
-    CHECK(std::fabs(t[1] - want_laps) < 1e-3);
-    CHECK(std::fabs(t[2] - want_ended) < 1e-6);
-    CHECK(std::fabs(t[3] - want_crash) < 1e-6);
 }

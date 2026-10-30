@@ -67,27 +67,6 @@ __global__ void gather_rows_kernel(Permutation perm, int first, int count, int w
     dst[idx]           = src[static_cast<int>(row) * width + col];
 }
 
-__global__ void episode_totals_kernel(const float* __restrict__ lengths, const float* __restrict__ laps,
-                                      const float* __restrict__ done, const float* __restrict__ truncated, int n,
-                                      float* __restrict__ out) {
-    __shared__ float scratch[kReduceThreads];
-    float length_sum = 0.f, laps_sum = 0.f, ended = 0.f, crashed = 0.f;
-    for (int i = threadIdx.x; i < n; i += kReduceThreads) {
-        length_sum += lengths[i];
-        laps_sum += laps[i];
-        const bool is_done = done[i] > 0.5f;
-        ended += is_done ? 1.f : 0.f;
-        crashed += (is_done && truncated[i] < 0.5f) ? 1.f : 0.f;
-    }
-    const float totals[4] = {block_reduce_sum<kReduceThreads>(length_sum, scratch),
-                             block_reduce_sum<kReduceThreads>(laps_sum, scratch),
-                             block_reduce_sum<kReduceThreads>(ended, scratch),
-                             block_reduce_sum<kReduceThreads>(crashed, scratch)};
-    if (threadIdx.x == 0) {
-        for (int k = 0; k < 4; ++k) out[k] += totals[k];
-    }
-}
-
 } // namespace
 
 void sample_gaussian(const float* mean, const float* log_std, int n, int dim, uint32_t seed, uint32_t stream_id,
@@ -116,12 +95,6 @@ void gather_rows(const Permutation& perm, int first, int count, int width, const
                  cudaStream_t stream) {
     const int total = count * width;
     gather_rows_kernel<<<blocks_for(total), kThreads, 0, stream>>>(perm, first, count, width, src, dst);
-    CUDA_CHECK_THROW(cudaGetLastError());
-}
-
-void episode_totals(const float* lengths, const float* laps, const float* done, const float* truncated, int n,
-                    float* out, cudaStream_t stream) {
-    episode_totals_kernel<<<1, kReduceThreads, 0, stream>>>(lengths, laps, done, truncated, n, out);
     CUDA_CHECK_THROW(cudaGetLastError());
 }
 

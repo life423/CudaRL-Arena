@@ -17,7 +17,7 @@ struct Gains {
 struct ContactTelemetry {
     contact::Inspection inspection{};
     float minimum_floor_gap=1e6f,minimum_other_gap=1e6f;
-    float floor_force_max=0,total_force_max=0;
+    float floor_spring_force_max=0,total_spring_force_max=0; // N; damping excluded
     int contact_samples=0,executed_substeps=0,first_unsafe_substep=-1;
 };
 struct WorldState {
@@ -37,15 +37,18 @@ struct WorldState {
     bool paused=true,unsafe=false,invalid=false;
     ContactTelemetry telemetry{};
 };
-CUDARL_HD inline bool finite_state(const WorldState& s) {
-    if(!physics::finite_body(s.body)||!physics::finite_vector(s.current)) return false;
+CUDARL_HD inline bool valid_settings(const WorldState& s) {
+    if(!physics::finite_vector(s.current)||s.current.y!=0||physics::norm(s.current)>.007500001f) return false;
     if(s.actuation!=Actuation::Torque&&s.actuation!=Actuation::JointTarget) return false;
     if(!physics::finite_number(s.fluid.density)||s.fluid.density<0||
        !physics::finite_number(s.fluid.viscosity)||s.fluid.viscosity<0||
        !physics::finite_number(s.fluid.gravity)||s.fluid.gravity<0) return false;
-    for(int j=0;j<4;++j) if(!physics::finite_number(s.gains.kp[j])||s.gains.kp[j]<0||
-        !physics::finite_number(s.gains.kd[j])||s.gains.kd[j]<0) return false;
+    const Gains fixed;
+    for(int j=0;j<4;++j) if(s.gains.kp[j]!=fixed.kp[j]||s.gains.kd[j]!=fixed.kd[j]) return false;
     return true;
+}
+CUDARL_HD inline bool finite_state(const WorldState& s) {
+    return valid_settings(s)&&physics::finite_body(s.body);
 }
 // One 50ms interval, at most ten 5ms physical substeps. Actuation only supplies
 // internal torques. Safety freezes an unsafe world; it never projects or rescues it.
@@ -80,8 +83,8 @@ CUDARL_HD inline bool step_state(WorldState& s,const float* input) {
         contact::substep(s.body,actual,contact::kSubstep,s.fluid,s.current,&force);
         ++s.substeps;++s.telemetry.executed_substeps;
         s.time_seconds=static_cast<double>(s.substeps)*static_cast<double>(contact::kSubstep);
-        s.telemetry.floor_force_max=fmaxf(s.telemetry.floor_force_max,force.floor_force);
-        s.telemetry.total_force_max=fmaxf(s.telemetry.total_force_max,force.total_force);
+        s.telemetry.floor_spring_force_max=fmaxf(s.telemetry.floor_spring_force_max,force.floor_spring_force);
+        s.telemetry.total_spring_force_max=fmaxf(s.telemetry.total_spring_force_max,force.total_spring_force);
         s.telemetry.contact_samples+=force.points;
         const auto inspection=contact::inspect(s.body);
         s.telemetry.inspection=inspection;

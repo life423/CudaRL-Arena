@@ -17,7 +17,7 @@ std::vector<float> fields(const s::WorldState& w) {
     for(float v:w.held_targets) out.push_back(v);for(float v:w.raw_action) out.push_back(v);
     for(float v:w.last_actual_torques) out.push_back(v);
     for(float v:w.actual_torques) out.push_back(v);for(float v:w.requested_torques) out.push_back(v);
-    for(float v:{i.floor_gap,i.min_other_gap,i.min_gap,i.max_floor_gap,t.minimum_floor_gap,t.minimum_other_gap,t.floor_force_max,t.total_force_max}) out.push_back(v);
+    for(float v:{i.floor_gap,i.min_other_gap,i.min_gap,i.max_floor_gap,t.minimum_floor_gap,t.minimum_other_gap,t.floor_spring_force_max,t.total_spring_force_max}) out.push_back(v);
     return out;
 }
 void discrete(const s::WorldState& a,const s::WorldState& b) {
@@ -28,6 +28,24 @@ void discrete(const s::WorldState& a,const s::WorldState& b) {
     const auto& p=x.inspection;const auto& q=y.inspection;
     CHECK(p.contact==q.contact&&p.floor_contact==q.floor_contact&&p.excessive==q.excessive&&p.escape==q.escape&&p.invalid==q.invalid);
 }
+}
+GPU_TEST_CASE("physics CUDA: invalid shared settings reject before integration (zero integration)") {
+    std::vector<s::WorldState> states(8);for(auto& state:states) state.paused=false;
+    states[0].current.y=.001f;states[1].current.x=.008f;
+    states[2].gains.kp[0]*=2;states[3].gains.kd[3]*=2;
+    states[4].fluid.density=-1;states[5].fluid.viscosity=-.001f;
+    states[6].fluid.gravity=-1;states[7].actuation=static_cast<s::Actuation>(9);
+    const auto before=states;std::vector<std::array<float,4>> input(states.size());
+    cudaStream_t stream=nullptr;
+    if(cudaStreamCreateWithFlags(&stream,cudaStreamNonBlocking)!=cudaSuccess) throw std::runtime_error("Cannot create settings-check stream");
+    try {s::cuda_step(states,input,stream);} catch(...) {cudaStreamDestroy(stream);throw;}
+    cudaStreamDestroy(stream);
+    for(size_t row=0;row<states.size();++row) {
+        const auto& rejected=states[row];CHECK(rejected.invalid&&!s::valid_settings(rejected));
+        CHECK(rejected.substeps==0&&rejected.control_steps==0&&rejected.time_seconds==0&&rejected.telemetry.executed_substeps==0);
+        const auto old_fields=fields(before[row]),new_fields=fields(rejected);
+        CHECK(old_fields==new_fields); // no physical/body or command changes
+    }
 }
 GPU_TEST_CASE("physics CUDA: same-stream CPU agreement and exact GPU replay (4CPU+8GPU controls)") {
     std::vector<s::WorldState> initial(4);

@@ -39,6 +39,11 @@ struct BodyState {
     float work=0,travel=0; // positive actuator work in joules; travel in model units
 };
 struct Parameters {float density=1000,viscosity=.001f,gravity=9.81f;};
+struct BodyGeometry {float length,half_height,half_width;}; // SI metres
+CUDARL_HD constexpr BodyGeometry body_geometry(int body) {
+    return body==0?BodyGeometry{.020f,.0064f,.008f}:
+        (body==1?BodyGeometry{.026f,.0015f,.0015f}:BodyGeometry{.026f,.006f,.0015f});
+}
 CUDARL_HD inline bool finite_number(float v) {return v==v&&fabsf(v)<1e30f;}
 CUDARL_HD inline bool finite_vector(V v) {return finite_number(v.x)&&finite_number(v.y)&&finite_number(v.z);}
 CUDARL_HD inline bool finite_body(const BodyState& b) {
@@ -56,15 +61,6 @@ struct Link {
     float length=0,mass=0,volume=0,vertical_radius=0;
 };
 struct Shape {Link link[3];};
-constexpr int surface_axial_samples=9;
-// Each axial slice has an elliptical cross section; support is projected on
-// the contact normal in that link's frame, including the distal tail fin.
-CUDARL_HD inline float slice_support(const Link& l,int body,float fraction,V normal) {
-    const float profile=body==0?sqrtf(fmaxf(0.f,1.f-fraction*fraction)):1.f;
-    const float ry=(body==0?.0064f:(body==2?.006f:.0015f))*profile;
-    const float rz=(body==0?.008f:.0015f)*profile;const V n=l.q.inverse(normal);
-    return sqrtf(n.y*n.y*ry*ry+n.z*n.z*rz*rz);
-}
 CUDARL_HD inline V inertial(const Link& l,V v) {
     const V u=l.q.inverse(v);return l.q.rotate({u.x*l.inertia.x,u.y*l.inertia.y,u.z*l.inertia.z});
 }
@@ -72,10 +68,10 @@ CUDARL_HD inline V multiply(const V* J,const float* velocity) {V v;for(int i=0;i
 CUDARL_HD inline Shape shape(const BodyState& s) {
     Shape out;
     const V basis[3]={{1,0,0},{0,1,0},{0,0,1}};
-    const float lengths[3]={.020f,.026f,.026f};
     V anchors[2],yaw_axes[2],pitch_axes[2];
     for(int b=0;b<3;++b) {
-        auto& l=out.link[b];l.length=lengths[b];
+        const auto geometry=body_geometry(b);
+        auto& l=out.link[b];l.length=geometry.length;
         if(b==0) {l.q=s.orientation;l.center=s.position*scale;l.omega={s.velocity[3],s.velocity[4],s.velocity[5]};}
         else {
             const auto& p=out.link[b-1];const int j=(b-1)*2;
@@ -101,15 +97,15 @@ CUDARL_HD inline Shape shape(const BodyState& s) {
         }
         constexpr float pi=3.141592653589793f;
         if(b==0) {
-            const float a=.01f,h=.0064f,w=.008f;l.volume=4.f*pi*a*h*w/3.f;l.mass=l.volume*1000.f;
+            const float a=geometry.length*.5f,h=geometry.half_height,w=geometry.half_width;l.volume=4.f*pi*a*h*w/3.f;l.mass=l.volume*1000.f;
             l.inertia={l.mass*(h*h+w*w)/5.f,l.mass*(a*a+w*w)/5.f,l.mass*(a*a+h*h)/5.f};
             l.vertical_radius=h;
         } else {
-            constexpr float r=.0015f,membrane=.0097f;
+            const float r=geometry.half_width;constexpr float membrane=.0097f;
             l.volume=pi*r*r*l.length+(b==2?membrane*l.length*.0001f:0.f);l.mass=l.volume*1000.f;
             const float axial=l.mass*(r*r+(b==2?membrane*membrane/12.f:0.f))*.5f;
             const float transverse=l.mass*(l.length*l.length+3*r*r)/12.f;
-            l.inertia={axial,transverse,transverse};l.vertical_radius=b==2?.006f:r;
+            l.inertia={axial,transverse,transverse};l.vertical_radius=geometry.half_height;
         }
     }
     return out;

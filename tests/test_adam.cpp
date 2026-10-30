@@ -122,3 +122,59 @@ GPU_TEST_CASE("adam: training is bit-identical run to run") {
         else CHECK(p == first);
     }
 }
+
+GPU_TEST_CASE("adam: checkpoint fences nonblocking updates and preserves tiny continuation") {
+    constexpr int n = 8;
+    const auto cfg = adam_config(.003f, .25f);
+    const std::vector<float> initial{.1f,-.2f,.3f,-.4f,.5f,-.6f,.7f,-.8f};
+    const std::vector<std::vector<float>> gradients{
+        {.1f,-.2f,.3f,-.4f,.2f,-.1f,.15f,-.25f},
+        {-.3f,.15f,-.2f,.1f,-.4f,.25f,-.1f,.2f},
+        {.2f,.1f,-.15f,-.25f,.3f,-.2f,.4f,-.1f}};
+    auto parameters = to_device(initial);
+    auto g0 = to_device(gradients[0]), g1 = to_device(gradients[1]), g2 = to_device(gradients[2]);
+    GpuAdam original(n, cfg);
+    CpuAdam<double> reference(n, cfg);
+    std::vector<double> expected_parameters(initial.begin(), initial.end());
+    cudaStream_t stream = nullptr;
+    CUDA_CHECK_THROW(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));
+    try {
+        original.step(parameters.get(), g0.get(), stream);
+        original.step(parameters.get(), g1.get(), stream);
+        for(int i=0;i<2;++i)
+            reference.step(expected_parameters, std::vector<double>(gradients[i].begin(), gradients[i].end()));
+
+        // There is deliberately no caller-side stream synchronization before
+        // this single checkpoint. Its moments must include both queued steps.
+        cudarl::checkpoint::Writer checkpoint, expected;
+        original.save(checkpoint);
+        reference.save(expected);
+        cudarl::checkpoint::Reader saved{checkpoint.data}, cpu{expected.data};
+        const auto saved_config=saved.value<AdamConfig>(), cpu_config=cpu.value<AdamConfig>();
+        CHECK(saved_config.lr==cpu_config.lr&&saved_config.beta1==cpu_config.beta1&&saved_config.beta2==cpu_config.beta2&&
+              saved_config.eps==cpu_config.eps&&saved_config.max_grad_norm==cpu_config.max_grad_norm);
+        CHECK(saved.value<int>()==2&&cpu.value<int>()==2);
+        const auto m=saved.array<float>(n), v=saved.array<float>(n);
+        const auto expected_m=cpu.array<double>(n), expected_v=cpu.array<double>(n);
+        saved.finish();cpu.finish();
+        CHECK_CLOSE(m, expected_m, 1e-5);
+        CHECK_CLOSE(v, expected_v, 1e-5);
+        std::vector<float> saved_parameters(n);
+        parameters.copy_to_host(saved_parameters.data(), saved_parameters.size());
+        auto restored_parameters=to_device(saved_parameters);
+        GpuAdam restored(n, cfg);
+        cudarl::checkpoint::Reader restore{checkpoint.data};
+        restored.load(restore);restore.finish();
+
+        // Third fixed gradient: uninterrupted and restored paths must agree.
+        original.step(parameters.get(), g2.get(), stream);
+        restored.step(restored_parameters.get(), g2.get(), stream);
+        reference.step(expected_parameters, std::vector<double>(gradients[2].begin(), gradients[2].end()));
+        CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
+        const auto result=to_host(parameters, n), resumed=to_host(restored_parameters, n);
+        CHECK(original.steps()==3&&restored.steps()==3&&reference.steps()==3);
+        CHECK(result==resumed);
+        CHECK_CLOSE(result, expected_parameters, 1e-5);
+    } catch(...) {cudaStreamDestroy(stream);throw;}
+    CUDA_CHECK_THROW(cudaStreamDestroy(stream));
+}

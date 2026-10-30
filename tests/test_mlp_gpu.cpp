@@ -2,6 +2,7 @@
 // input gradients), plus run-to-run determinism.
 
 #include <vector>
+#include <limits>
 
 #include "check.h"
 #include "gpu_util.h"
@@ -12,6 +13,22 @@ using namespace cudarl::nn;
 using cudarl::test::random_floats;
 using cudarl::test::to_device;
 using cudarl::test::to_host;
+
+TEST_CASE("cuda memory: byte overflow is rejected before any allocation") {
+    using Buffer = device_ptr<uint64_t>;
+    const size_t maximum = std::numeric_limits<size_t>::max() / sizeof(uint64_t);
+    CHECK(Buffer::checked_size_bytes(0) == 0);
+    CHECK(Buffer::checked_size_bytes(maximum) == maximum * sizeof(uint64_t));
+    bool constructor_rejected = false;
+    try { Buffer impossible(maximum + 1); }
+    catch (const std::length_error&) { constructor_rejected = true; }
+    CHECK(constructor_rejected);
+    Buffer empty;
+    bool replacement_rejected = false;
+    try { empty.allocate(maximum + 1); }
+    catch (const std::length_error&) { replacement_rejected = true; }
+    CHECK(replacement_rejected && empty.get() == nullptr && empty.size() == 0);
+}
 
 namespace {
 

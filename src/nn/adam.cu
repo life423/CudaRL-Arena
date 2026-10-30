@@ -61,6 +61,8 @@ GpuAdam::GpuAdam(int num_params, AdamConfig cfg)
     CUDA_CHECK_THROW(cudaMemset(m_.get(), 0, m_.size_bytes()));
     CUDA_CHECK_THROW(cudaMemset(v_.get(), 0, v_.size_bytes()));
     CUDA_CHECK_THROW(cudaMemset(norm_.get(), 0, norm_.size_bytes()));
+    // A first step may use a nonblocking stream unrelated to the default stream.
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }
 
 void GpuAdam::step(float* d_params, const float* d_grads, cudaStream_t stream) {
@@ -85,6 +87,7 @@ float GpuAdam::last_grad_norm() const {
     return norm;
 }
 void GpuAdam::save(checkpoint::Writer& out) const {
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
     out.value(cfg_);out.value(t_);
     std::vector<float> m(n_),v(n_);m_.copy_to_host(m.data(),m.size());v_.copy_to_host(v.data(),v.size());
     out.array(m);out.array(v);
@@ -96,7 +99,9 @@ void GpuAdam::load(checkpoint::Reader& in) {
        cfg.beta1!=cfg_.beta1 || cfg.beta2!=cfg_.beta2 || cfg.eps!=cfg_.eps || cfg.max_grad_norm!=cfg_.max_grad_norm)
         throw std::runtime_error("Incompatible Adam checkpoint");
     for(size_t i=0;i<m.size();++i) if(!std::isfinite(m[i]) || !std::isfinite(v[i]) || v[i]<0) throw std::runtime_error("Invalid Adam moments");
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
     cfg_=cfg;t_=steps;m_.copy_from_host(m.data(),m.size());v_.copy_from_host(v.data(),v.size());
+    CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }
 
 } // namespace cudarl::nn

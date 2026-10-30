@@ -1,6 +1,8 @@
 #include "check.h"
 #include "simulation/world.h"
+#include "core/checkpoint.h"
 #include "fixtures/physics_baseline.h"
+#include "fixtures/diagnostic_v1.h"
 #include <cstring>
 #include <exception>
 #include <limits>
@@ -46,8 +48,12 @@ TEST_CASE("physics: full-envelope floor geometry and spring-force oracle (zero i
     b.position.y=(-.16f+.0062f)/p::scale;
     const auto proof=c::inspect(b);CHECK(near(proof.floor_gap,-.0002f,2e-8f));CHECK(proof.floor_contact);CHECK(!proof.excessive);
     c::Telemetry force;const auto system=c::assemble(b,{0,0,0},{},&force);
-    CHECK(near(force.floor_force,.8f*.0002f,2e-8f));CHECK(force.points==1);
-    CHECK(near(system.force[1],force.floor_force,2e-8f));CHECK(near(system.force[0],0));CHECK(near(system.force[2],0));
+    CHECK(near(force.floor_spring_force,.8f*.0002f,2e-8f));CHECK(force.points==1);
+    CHECK(near(system.force[1],force.floor_spring_force,2e-8f));CHECK(near(system.force[0],0));CHECK(near(system.force[2],0));
+    auto closing=b;closing.velocity[1]=-.001f;
+    c::Telemetry closing_spring;const auto damped=c::assemble(closing,{0,0,0},{},&closing_spring);
+    CHECK(near(closing_spring.floor_spring_force,force.floor_spring_force,2e-8f));
+    CHECK(damped.R[1][1]>system.R[1][1]); // damping exists but is NOT labelled spring force
     b.position.y-=.0004f/p::scale;CHECK(c::inspect(b).excessive);
     // A 90-degree roll changes the head's downward support from6.4 to8mm.
     b={};b.orientation=p::axis_rotation({1,0,0},1.5707963267948966f);
@@ -72,6 +78,45 @@ TEST_CASE("physics: full-envelope floor geometry and spring-force oracle (zero i
         for(int end=0;end<2;++end) actual=std::fmin(actual,
             p::dot(normal,cylinder.center+c::support_offset(cylinder,link,normal,end))+c::offset(face));
         CHECK(std::fabs(double(actual)-expected)<=2e-8+5e-6*std::fabs(expected));
+    }
+}
+TEST_CASE("physics: shared geometry and unchanged diagnostic contract (zero integration)") {
+    constexpr auto head=p::body_geometry(0),tail=p::body_geometry(1),fin=p::body_geometry(2);
+    static_assert(head.length==.020f&&head.half_height==.0064f&&head.half_width==.008f);
+    static_assert(tail.length==.026f&&tail.half_height==.0015f&&tail.half_width==.0015f);
+    static_assert(fin.length==.026f&&fin.half_height==.006f&&fin.half_width==.0015f);
+    constexpr auto lo=c::bounds_min_model(),hi=c::bounds_max_model();
+    static_assert(lo.x==-4.5f&&lo.y==-4.f&&lo.z==-3.5f&&hi.x==4.5f&&hi.y==0&&hi.z==3.5f);
+    // This independently reconstructs the ORIGINAL schema1 contract bytes.
+    // Helper extraction/field naming must not silently invalidate valid saves.
+    cudarl::checkpoint::Writer original;
+    original.value(uint32_t{2});
+    for(float v:{.0005f,.8f,1.f,.005f,.04f,1.f,1e-5f,.020f,.026f,.026f,
+        .0064f,.008f,.0015f,.006f,4.5f,4.f,3.5f}) original.value(v);
+    const uint32_t gain_bits[8]{0x36772E0B,0x366077A1,0x357478F5,0x35C0F964,0x351D5C0E,0x350EE67B,0x341BA2D2,0x3475B3CD};
+    for(uint32_t value:gain_bits) original.value(value);
+    s::PhysicalWorld world;const auto saved=world.serialize();
+    CHECK(saved.size()==624);
+    cudarl::checkpoint::Reader record{saved};
+    CHECK(record.value<uint32_t>()==0x46574C44u);CHECK(record.value<uint32_t>()==1u);
+    CHECK(record.value<uint64_t>()==cudarl::checkpoint::checksum(original.data));
+    s::PhysicalWorld restored;restored.restore(saved);CHECK(restored.serialize()==saved);
+}
+TEST_CASE("physics: invalid shared CPU settings reject before integration (zero integration)") {
+    s::WorldState baseline;baseline.paused=false;CHECK(s::valid_settings(baseline));
+    auto zero_fluid=baseline;zero_fluid.fluid={0,0,0};CHECK(s::valid_settings(zero_fluid));
+    std::array<s::WorldState,8> cases;cases.fill(baseline);
+    cases[0].current.y=.001f;cases[1].current.x=.008f;
+    cases[2].gains.kp[0]*=2;cases[3].gains.kd[3]*=2;
+    cases[4].fluid.density=-1;cases[5].fluid.viscosity=-.001f;
+    cases[6].fluid.gravity=-1;cases[7].actuation=static_cast<s::Actuation>(9);
+    const float zero[4]{};
+    for(auto& invalid:cases) {
+        CHECK(!s::valid_settings(invalid));CHECK(!s::step_state(invalid,zero));
+        CHECK(invalid.invalid&&invalid.substeps==0&&invalid.control_steps==0&&invalid.time_seconds==0);
+        CHECK(invalid.body.position.x==baseline.body.position.x&&invalid.body.position.y==baseline.body.position.y&&invalid.body.position.z==baseline.body.position.z);
+        for(int axis=0;axis<10;++axis) CHECK(invalid.body.velocity[axis]==baseline.body.velocity[axis]);
+        CHECK(invalid.telemetry.executed_substeps==0);
     }
 }
 TEST_CASE("physics: manual world pause, fixed actuator units and exact diagnostic continuation") {
@@ -99,6 +144,10 @@ TEST_CASE("physics: manual world pause, fixed actuator units and exact diagnosti
 }
 TEST_CASE("physics: diagnostic format rejects corruption and learner bytes atomically (zero integration)") {
     s::PhysicalWorld w;const auto saved=w.serialize();auto damaged=saved;damaged[32]^=1;
+    const std::vector<uint8_t> baseline_bytes(diagnostic_v1::bytes.begin(),diagnostic_v1::bytes.end());
+    CHECK(saved==baseline_bytes);
+    s::PhysicalWorld baseline_copy;baseline_copy.restore(baseline_bytes);
+    CHECK(baseline_copy.serialize()==baseline_bytes);
     bool rejected=false;try {w.restore(damaged);} catch(const std::exception&) {rejected=true;}
     CHECK(rejected&&w.serialize()==saved);
     rejected=false;try {w.restore(std::vector<uint8_t>(128,0));} catch(const std::exception&) {rejected=true;}
@@ -117,8 +166,8 @@ TEST_CASE("physics: diagnostic format rejects corruption and learner bytes atomi
         // Keep the complete physical/actuator state unchanged and supply a
         // legitimate checksum, so rejection exercises clock/schema validation.
         CHECK(std::memcmp(record.data()+16,saved.data()+16,clock_offset-16)==0);
-        uint64_t checksum=14695981039346656037ull;
-        for(size_t i=0;i<record.size()-sizeof(uint64_t);++i) {checksum^=record[i];checksum*=1099511628211ull;}
+        const std::vector<uint8_t> payload(record.begin(),record.end()-sizeof(uint64_t));
+        const uint64_t checksum=cudarl::checkpoint::checksum(payload);
         std::memcpy(record.data()+record.size()-sizeof(uint64_t),&checksum,sizeof(checksum));
         bool refused=false;try {w.restore(record);} catch(const std::exception&) {refused=true;}
         CHECK(refused&&w.serialize()==saved);
@@ -128,6 +177,27 @@ TEST_CASE("physics: diagnostic format rejects corruption and learner bytes atomi
     rejects_clock(1,11,true,false);  // unsafe partial final control needs ceil(11/10)
     rejects_clock(0,10,false,true);  // invalid flag does not excuse an impossible count
     rejects_clock(0,std::numeric_limits<uint64_t>::max(),false,true); // ceil must not wrap
+    auto rejects_setting=[&](size_t offset,float value) {
+        auto record=saved;std::memcpy(record.data()+offset,&value,sizeof(value));
+        const std::vector<uint8_t> payload(record.begin(),record.end()-sizeof(uint64_t));
+        const uint64_t checksum=cudarl::checkpoint::checksum(payload);
+        std::memcpy(record.data()+record.size()-sizeof(uint64_t),&checksum,sizeof(checksum));
+        bool refused=false;try {w.restore(record);} catch(const std::exception&) {refused=true;}
+        CHECK(refused&&w.serialize()==saved);
+    };
+    constexpr size_t fluid_offset=16+23*sizeof(float),current_offset=fluid_offset+3*sizeof(float);
+    constexpr size_t gain_offset=current_offset+3*sizeof(float)+sizeof(uint32_t);
+    rejects_setting(fluid_offset,-1);rejects_setting(fluid_offset+sizeof(float),-.001f);
+    rejects_setting(fluid_offset+2*sizeof(float),-1);
+    rejects_setting(current_offset,.008f);rejects_setting(current_offset+sizeof(float),.001f);
+    rejects_setting(gain_offset,1e-4f);rejects_setting(gain_offset+7*sizeof(float),1e-4f);
+    auto zero_fluid_record=saved;const float zero_fluid_value=0;
+    for(size_t axis=0;axis<3;++axis) std::memcpy(zero_fluid_record.data()+fluid_offset+axis*sizeof(float),&zero_fluid_value,sizeof(float));
+    const std::vector<uint8_t> zero_payload(zero_fluid_record.begin(),zero_fluid_record.end()-sizeof(uint64_t));
+    const uint64_t zero_checksum=cudarl::checkpoint::checksum(zero_payload);
+    std::memcpy(zero_fluid_record.data()+zero_fluid_record.size()-sizeof(uint64_t),&zero_checksum,sizeof(zero_checksum));
+    s::PhysicalWorld zero_fluid_world;zero_fluid_world.restore(zero_fluid_record);
+    CHECK(zero_fluid_world.serialize()==zero_fluid_record);CHECK(w.serialize()==saved);
     rejected=false;try {w.set_current({0,.001f,0});} catch(const std::exception&) {rejected=true;}CHECK(rejected&&w.serialize()==saved);
     auto invalid=w.state();invalid.paused=false;invalid.body.position.y=1;
     CHECK(!s::step_state(invalid,std::array<float,4>{0,0,0,0}.data()));CHECK(invalid.unsafe&&invalid.substeps==0);

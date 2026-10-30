@@ -12,6 +12,7 @@
 namespace cudarl::rl {
 
 // One action per row of logits [n x k]: sampled with uniforms from (seed, stream_id, row), or the argmax.
+// Requires n > 0, 1 <= k <= kMaxActions and int-representable row indexing.
 void sample_actions(const float* logits, int n, int k, uint32_t seed, uint32_t stream_id, bool greedy, int* actions,
                     float* logp, cudaStream_t stream);
 
@@ -32,6 +33,7 @@ void mean_std(const float* x, int n, float* out, cudaStream_t stream);
 // PPO loss gradient for a minibatch. Advantages are normalized with
 // adv_stats = (mean, std) first. Writes dlogits [n x k], dvalues [n], and adds
 // this minibatch's summed (pg_loss, v_loss, entropy, approx_kl, clipped) to stats[0..5).
+// Same shape contract as sample_actions; stored action indices must be in [0,k).
 constexpr int kPpoStats = 5;
 void ppo_loss_grad(const float* logits, const float* values, int n, int k, const int* actions, const float* old_logp,
                    const float* advantages, const float* returns, const float* adv_stats, PpoCoefficients coeffs,

@@ -99,3 +99,72 @@ holding and supported bottom rest scored separately. Existing learning design
 may change substantially; no replacement learning budget is authorized yet.
 Chooser training, production adoption, growth/limbs, land movement, merging and
 deployment remain outside this structural work.
+
+## Reverification and targeted repairs — October30,2026
+
+User requested another clean/DRY/working audit before the contact correction.
+Audited the reduced local tree at `06c14eed0e024355b1b4928d0ca3750cdbe4a314`;
+no new contact response, motor trial or PPO training ran. The original checkout
+is still clean at the preserved baseline. Independent final reviews found no
+remaining actionable blockers in the changed core, numerical, physics/world,
+Godot bridge or resource/build paths. This is bounded verification, not a proof
+that every possible input or physical behavior is correct.
+
+Concrete changes:
+
+- Shared native body geometry, tank bounds, settings validation and checksum
+  code replace duplicate definitions. Removed unused checkpoint helpers and
+  the racing-only episode aggregate; retained general PPO/Gaussian utilities.
+- Atomic writes acquire an exclusive lease before opening the shared temporary
+  file. Competing writes fail without changing the previous save.
+- Guard MLP call order/batch/layout overflow, device allocation overflow and
+  categorical kernel dimensions before indexed reads or launches. Valid-input
+  arithmetic is unchanged. Adam synchronizes only at construction and save/load
+  boundaries, with explicit nonblocking-stream continuation coverage.
+- Godot validates its native startup/state contract before enabling controls.
+  One metadata source supplies dimensions, limits and timing. Control readback
+  never issues new commands. Saved custom currents remain unchanged and visibly
+  identified; derived clipped next inputs are disclosed. Failure messages remain
+  visible and Reset stays available for invalid physical states.
+- Contact force telemetry explicitly reports the spring component; it does not
+  claim to include damping or prove load balance. No force equation changed.
+- Physical schema1 is byte-for-byte compatible with an independently captured
+  624-byte state from the old compiled library; restore/reserialize is exact.
+  Field renames did not alter ordering, units, checksum or physics contract.
+
+| Final check | Result | Scope |
+| --- | --- | --- |
+| Strict CUDA/native/Godot build | Passed | Fresh extension installed into the normal project after user closed its editor |
+| GPU-required native suite |58/58,0 skipped,1.16s | Real GPU execution; no creature learning |
+| Independent CPU-only build/suite |17/17,0 skipped,0.10s | No CUDA dependency |
+| Frozen-backend Godot contract |66/66 | Zero physical steps/files; missing/stale API and error states |
+| Rendered real-extension UI |43/43 |1280×720,768×1024,390×844; exactly2 explicit controls, no saves |
+| Isolated actual save/load |19/19 | Zero physical steps; prior-file survival, corruption rejection, transactional load |
+| Final normal-project layout |35/35 | Installed extension; zero controls or saves |
+| Preservation hashes |477+39 records and25 personal saves/backups unchanged | Original ignored results and source saves retained |
+
+Tests and screenshots use a disposable project/user directory; actual personal
+saves are never failure-test fixtures. The normal project was freshly imported
+after installing the final DLL. Old native/editor bookkeeping changes were
+reviewed: matching resource UIDs and standard config formatting are retained.
+Visual inspection confirms all three sizes frame the tank and retain reachable
+scrolling controls. Real touch and complete keyboard playtesting remain unproved.
+The creature is intentionally small at whole-tank scale; close inspection is a
+future usability improvement, not a new feature added during this audit.
+
+New checks focus on concrete failures, not duplicate learner tests. The native
+suite still reproduces the known rolled-contact failure at37substeps; its PASS
+means the failure has not been concealed, not that contact is fixed. No safety
+thresholds/body/actuator limits were changed. Unsupported holding, braking and
+autonomous predator avoidance remain unproved; no trained replacement exists.
+
+Evidence: ignored `build/reverify/` contains build/test/import logs, three rendered
+screenshots, the baseline capture, isolated user-directory metadata and refreshed
+preservation verification. `build/active-file-review.json` is refreshed for all
+retained project files. No merge, push, deployment or production replacement.
+The next substantive work remains the separately bounded contact correction.
+
+The retained-file review now contains75 project files, including three focused
+validation additions. This checkpoint describes local work on
+`codex/minimal-foundation`; it is saved as a separate local rollback commit
+before the contact-response experiment. No push or merge is included.
