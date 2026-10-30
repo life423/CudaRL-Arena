@@ -82,6 +82,8 @@ That one-shot comparison stopped after 22,649 attempts and rejected the candidat
 
 The subsequent approved calibrated-compliance versus hard-contact pilot is also isolated (`CUDARL_BUILD_CONTACT_PILOT`, default OFF). It finished at 1,626/2,024 attempted advances. Calibrated compliance passed all its short cases; hard contact failed its stricter nonlinear geometry consistency gate and was quarantined. Neither is enabled in Godot. This was a 0.25-second screen, not sustained support, motor training or production readiness. Its protocol, source snapshot and results are preserved under ignored `build/contact-pilot/2026-10-30-v1/`; see the latest checkpoint before further work.
 
+The separately authorized fixed-A validation is opt-in (`CUDARL_BUILD_CONTACT_VALIDATION`, default OFF). Its independent continuous-law accuracy gate precedes longer support and fresh acceptance tests. Its own ceiling is18,200 total CPU/CUDA physical attempts, with no retries or budget reuse. See [the frozen protocol](docs/CONTACT_VALIDATION_PROTOCOL.md); this tool cannot start PPO or change the live contact law.
+
 ## Baseline and removed paths
 
 Original commit: `e5e9bd1db7e442715ac8ba3a5f5030c0ede26430`.

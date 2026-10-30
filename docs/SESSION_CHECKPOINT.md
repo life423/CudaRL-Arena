@@ -500,3 +500,27 @@ check of its new stiffness/timestep-dependent damping. This would decide
 whether contact can support the reusable turn→brake→controlled arrival→hold
 motor lesson. Do not extend this screen, tune A/B, promote either law or start
 PPO merely because the short A cases pass. No merge, push or deployment.
+
+## Fixed-A validation preregistration — accuracy before longer support
+
+New authorization is one separately bounded validation of the existing contact-A
+law, not a continuation of the closed2,024-call pilot. Read
+`docs/CONTACT_VALIDATION_PROTOCOL.md`. Fixed contact4 coefficients320N/m and
+1.9595918N·s/m, operator split, body, water and actuator limits remain unchanged.
+New ceiling18,200 TOTAL physical attempts, including CPU/CUDA and failures;
+no retries, reallocation, tuning or automatic timestep adoption. Scalar accuracy
+uses three exact-double fixtures at5/2.5/1.25ms against an independent analytic
+continuous unilateral law. One saved positive-gap rolling state uses four fixed
+steps down to0.625ms for a finite-resolution comparison. Aggregate accuracy
+failures complete only this registered diagnostic ladder; physical/numerical
+failures stop A. Failed5ms accuracy blocks all later5s original support,
+free-water preservation, passive and fresh withheld stages. No PPO, runtime
+adoption, merge or deployment. Existing law B remains available.
+
+Build-only preparation fixed a local name collision and constexpr warning;
+those compiler attempts made ZERO physical calls. The strict CUDA target now
+builds without weakening warnings. Before execution, original hashes verified
+477 protected records,39 old contact files and25 personal saves plus25 backups.
+The executable/numeric protocol/source manifest are to be frozen under ignored
+`build/contact-validation/2026-10-30-v1/` before the sole run. Live physics2 and
+the original checkout stay unchanged. A component/build pass is not accuracy.
