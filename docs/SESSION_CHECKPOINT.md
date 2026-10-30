@@ -317,3 +317,100 @@ bounds dynamic compression. Keep body/water/actuator limits fixed and retain
 the successful numerical machinery where justified. A revised physical
 coefficient/model comparison needs a new preregistration and budget; no automatic
 gain sweep, remaining-case replay, PPO run or whole-app rewrite is authorized.
+
+## Approved2,024-advance contact pilot — registration before execution
+
+Baseline checkout is clean `6750500aefb667f0b3e3b08d5fde7cebe0eedece`.
+User explicitly approved implementation/execution of one bounded SCREEN,
+not a training-readiness claim. Existing studies stay closed. New sources are
+isolated opt-in tools; live contact2, geometry, mass/inertia, water forces,
+two universal joints/four outputs and±10µN·m limits remain unchanged.
+
+New physical version4 identifies two distinct laws. Both first compute the
+unchanged free implicit-water/actuator velocity, then normal impulses through
+the bare physical mass matrix M. This common operator split is an explicit
+contact-integration change from prior candidate3, which used M+hR for contact.
+Neither law adds propulsion, a target controller, tangential force or rescue.
+
+A is unilateral implicit Kelvin–Voigt with ONE fixed full contact-PATCH
+calibration: k=320N/m and c=1.9595918N·s/m at every analytic contact row.
+Endpoints are no longer half-weighted; geometric points themselves do not
+change. Declared reference envelope: m_eff≤3g, normal speed≤50mm/s, load≤0.3mN,
+available kinetic+convertible potential energy≤25µJ, design compression0.4mm.
+The unchanged safety rejection remains0.5mm. The conservative undamped bound
+requires k≥2*25µJ/(0.4mm)^2+2*0.3mN/(0.4mm)=314N/m;320 rounds upward.
+c=2sqrt(k*3g) sets the reference scalar critical damping. Scalar restitution
+must be≤0.15; critical unilateral release predicts about0.135 in continuous
+time, not zero. No claim of critical damping in every coupled contact mode.
+Independent mass/available-energy checks gate this calibration; no automatic
+coefficient increase is permitted. The25µJ available-energy proof is confined
+to its fully submerged, calm, passive domain. Current-driven fresh cases add
+fluid work and do not inherit that proof.
+
+B removes compliance entirely: H=J*M^-1*Jᵀ, no spring, damper or diagonal ridge.
+Zero restitution, compressive impulses and rank-aware deterministic dual-basis
+updates (rank≤10, at most64 basis iterations). Velocity constraints are
+Jv≥-max(g,0)/h. Saved starts are clear. Existing negative gaps no worse than2µm
+receive zero separation bias, never positive Baumgarte velocity. No position
+projection, teleport or stabilization fallback. Actual nonlinear proposed gaps
+must remain≥−2µm, an additional hard-model consistency check; the0.5mm safety
+threshold is not loosened. Frozen-M contact projection must not increase
+physical kinetic energy; there is NO hard-contact spring energy.
+
+A uses≤128 projected sweeps and≤4 monotone activation passes. Both numerical
+residual limits are1e−6+1e−5*max normal free speed. B rank detection1e−10 of
+the Gram diagonal is rank bookkeeping, not compliance; impulse roundoff1e−14
+never changes H. All failure proposals are retained separately from unchanged
+caller states, and every attempted advance is charged before dispatch.
+
+Independent CPU-double FK/geometry derivatives and recursive rigid-link kinetic
+energy polarization verify J and M before dynamics. Exactly3 saved prestates:
+legacy CPU rolled primary5 post33 (+22µm whole-body clearance), and legacy
+heldout6 CPU/CUDA post76. Inputs are round-trip FP32 copies of the old trace,
+SHA256 `F132FA41908D3E792852FE9F7F999E3881E51A7280B506965579A512FF83297D`.
+No new capture, translation or projection. FD translation steps10/5µm;
+world rotation/joint steps1e−4/5e−5rad. Gap tolerance2µm; J absolute tolerances
+1e−5 for translations and2e−7m/rad for rotations, plus1e−4 relative. Normalized
+M error≤1e−4, kinetic/meff relative error≤1e−4, normalized mass pivot>1e−12.
+All5 floor rows and their full coupling are checked. Hybrid M+hR checks reuse
+native R explicitly; they are not an independent drag/Coriolis oracle.
+Separate static caps:256 geometry queries,256 kinetic evaluations,96 matrix/LCP
+queries. Expected reference counts129/170/60, plus16 zero-advance algebra
+oracles. Actual counts and prerequisite failures must be recorded.
+
+| Stage, all at5ms | Allocation across both relevant responses/backends |
+| --- | --- |
+| Matched-prestate old-law parity |24:2 source states×3 base-vy offsets(−5/0/+5µm/s)×legacy2/candidate3×CPU/CUDA×1step |
+| Scalar loaded support/50mm/s impact/separation |600:3×50×newA/B×CPU/CUDA |
+| Calm/current free-water equivalence |400:2×50×A/B×CPU/CUDA |
+| Zero-energy touch/passive rolling |400:2×50×A/B×CPU/CUDA |
+| Common saved rolling recontact |200:1×50×A/B×CPU/CUDA |
+| Two fresh sealed momentum/current conditions |400:2×50×A/B×CPU/CUDA |
+| TOTAL CEILING, no reallocation |2,024 |
+
+No retries are planned; any retry would still consume this same total ceiling,
+not open another allowance. Numerical/algebra and actual physical passivity
+are separate prerequisites. Scalar energy includes signed external-load
+potential; A includes its actual320N/m patch springs, B does not. Both include
+the common joint-stop potential when applicable. Passive whole-system energy
+may not exceed initial+max(1e−10J,0.001*abs(initial)). Frozen-M contact-stage
+energy and full actual-pose energy are logged separately. Gravity/buoyancy or
+prescribed-current work must not be mislabeled as unexplained passive energy.
+
+CPU/CUDA tolerances remain2e−4+2e−3*abs(reference) for defined physical fields,
+and2e−6+2e−3*abs(reference) for gaps/net forces. Verify input hashes, exact
+safety flags and attempt counts. B dual point impulses can be nonunique;
+compare physical generalized/net reaction, not an arbitrary dual distribution.
+Same-backend free-water A/B states must be bit-exact with zero contact impulses.
+No uncharged third baseline rollout is allowed.
+
+Shared reference/integrity/stream failures stop shared work. An old reference
+law parity failure can quarantine that law only if shared checks remain sound.
+A/B-specific cheap or physical failures stop that arm's later work; all attempts
+and first rejected poses remain recorded. No hidden retry, extra timestep,
+fixture change, energy allowance change or parameter tuning. The0.25s episodes
+can reject an approach or justify another decision; they cannot pass the prior
+1.5s/5s support gates, timestep convergence or ten-second motor holding.
+Old inspected withheld states are regressions; fresh endpoints are not used to
+choose coefficients. No automatic follow-up, PPO, new chooser/limbs, engine
+migration, merge, deployment or production adoption is authorized.
