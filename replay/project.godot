@@ -1,0 +1,15 @@
+config_version=5
+
+[application]
+config/name="CudaRL Recorded Movement"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1100
+window/size/viewport_height=760
+window/size/min_width=360
+window/size/min_height=480
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

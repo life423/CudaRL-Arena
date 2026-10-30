@@ -6,6 +6,12 @@ The product direction remains capable swimming → player interaction and measur
 
 ## Start here
 
+The separate, verified **live frozen learned swimmer** is ready in `live/`:
+run `./tools/view-live.ps1` (or `-SkipBuild` after building). It starts paused
+and runs native model6 physics with frozen learned stroke strength/frequency,
+then auto-pauses after4seconds. [Live demo instructions and limits](docs/LIVE_DEMO.md).
+The diagnostic project below remains physics2; recorded playback is separate.
+
 Build in this worktree, then open `godot-project/project.godot` in Godot4.4 and run its main scene:
 
 ```powershell

@@ -751,3 +751,163 @@ unchanged. No full support, free-water, PPO, runtime adoption, merge or deployme
 was executed. The next small coding decision is a calm-water forward-only motor
 task/evaluation contract, with its physical-readiness and any training budget
 explicitly decided before execution; food/current/chooser work stays deferred.
+
+## Verified checkpoint commit and forward-only task preparation
+
+At the user's explicit request, local commit `3e0e4ab` saves only the verified
+numerical fixes/regressions and completed rolled-check code/registration/result
+summaries. Ignored binaries and large evidence were not staged. No push or merge.
+Unfinished forward helpers were excluded from that checkpoint.
+
+Subsequent pure code in `src/motor/forward_task.h` reuses `MotorRequest` and
+`WorldState` without owning or advancing a world. It latches a2cm-ahead COM
+destination, terminal velocity and heading; computes36 body-frame features,
+bounded four-axis command mapping, actual-effort reward, consecutive controlled
+forward-travel acceptance, finite-horizon termination and invalid/domain/clock
+rejection. Gaussian latent samples remain distinct from commands/torques.
+Seven synthetic-state CPU checks passed (7/7,0 skipped), including no credit
+for head-only motion, request persistence, units/rotation, effort, domain failure
+and latent replay semantics. Strict CPU test-target build passed. No creature
+integration, GPU task kernel, inference, optimizer or Godot launch ran.
+
+See `docs/FORWARD_MOTOR_TASK.md` for the compact contract and precise next-run
+proposal. Runtime is still physics2; the event path is not adopted. An explicit
+interior free-water-only physics2 scope avoids pretending the support gate is
+validated, while preserving contact and stopping collection on a clearance
+breach. A learned demo still lacks the native rollout/update adapter and complete
+learner continuation; reusable MLP/Adam/Gaussian/GAE primitives are present.
+No old session hierarchy was restored. The minimum readiness proposal is32
+controls/320 native substeps; a small conditional learner/evaluation proposal is
+2,720 total controls/27,200 substeps. Neither has run or been frozen as an
+execution protocol by this preparation. These helpers remain uncommitted.
+
+## First bounded forward pilot: executed and closed
+
+The user authorized a quick smallest demonstration after checkpoint3e0e4ab.
+`docs/FORWARD_DEMO_PROTOCOL.md` and numeric/source/executable snapshots were
+frozen before the sole run. `tools/forward_demo.cu` reuses the existing native
+world, MLP, Gaussian/GAE/Adam kernels in one opt-in fixed pilot, without restoring
+the old session hierarchy or changing the Godot runtime/contact/save contract.
+Strict CUDA build and7/7 synthetic forward-task checks passed before execution.
+
+The run completed32 readiness,2048 training and640 before/after evaluation
+controls:2720controls/27200native5ms advances, four PPO updates,16 Adam steps
+per network. Real CUDA ran. Readiness, zero contact,10mm sampled clearance,
+finite/torque/clock checks all passed. Wall time reported0.429s. Movement FAILED:
+0/4 controlled-travel successes, mean after forward COM displacement-.003764mm
+against a20mm goal, compared with+.000157mm before. No swimming claim is valid.
+No retry/retuning/new budget follows. Full protocol/source, initial weights,
+four checksummed update artifacts,640 trace rows and counts are preserved in
+`build/forward-demo/2026-10-30-v1/`; see `docs/FORWARD_DEMO_RESULTS.md`.
+
+All83 frozen first-party files and458 prior evidence files were hash-unchanged
+during execution; original checkout stayed clean. The pilot is CLOSED, with
+the entire27200advance cap spent. New forward task/tool/docs remain uncommitted;
+the previously requested verified checkpoint is3e0e4ab. No push/merge/deploy,
+live controller adoption, contact migration, new current/food/chooser or further
+training occurred. Snapshot bytes/checksum were checked, continuation was not.
+
+## Explicitly approved 256-update unchanged-task trial: closed
+
+User approved the131744control cap at21:33:17. One fresh-seed run used the SAME
+initial actor weights, task/physics/gates and optimizer/exploration settings as
+the four-update pilot; only update/budget declarations changed. Strict target
+build passed. Preparation44.277s; native execution8.595s. Full approved budget
+spent:32 readiness+131072 training+640 evaluation=131744controls/1317440native
+substeps.256 PPO updates/1024 Adam steps each. Readiness and all safety/domain
+checks passed.0/4 movement successes; mean forward travel-.067067mm against20mm.
+Joints bent up to.538rad but traces show no sustained stroke cycle. More updates
+alone did not deliver swimming. No retry, tuning, extension or adoption.
+
+Evidence/source/256 research snapshots preserved under
+`build/forward-demo/2026-10-30-256-v1/`; see `FORWARD_256_PROTOCOL.md` and
+`FORWARD_256_RESULTS.md`.85 frozen sources and561 previous evidence files
+unchanged during execution; original checkout clean. Target restored OFF.
+Changes remain uncommitted after3e0e4ab. This trial is CLOSED; no further
+physical/training execution authorized automatically.
+
+## Approved prescribed stroke versus rest: passed and closed
+
+User approved21:37:33. One fixed four-cycle0.5Hz prescribed yaw stroke versus
+matched zero-target rest ran CPU/CUDA under `STROKE_PROTOCOL.md`, with unchanged
+body/physics/servo/limits.640controls/6400native substeps spent; no retry/PPO.
+Native0.333s, preparation114.173s. Net whole-COM forward travel1.087461mm,
+rest exactly stationary; both interior cycles positive. Lateral drift-.046708mm,
+vertical drift0, minimum sampled clearance73.6mm; safety/parity passed. Peak
+torque1.020725microNm, positive actuator work3.006031microJ. Actual yaw sinusoid
+amplitudes.323289/.162265rad versus.5rad targets with49.354/70.459degree lag.
+
+`build/stroke/2026-10-30-v1/` preserves exact registration/source/executable,
+all640 measured trace rows, summary and offline tracking analysis. See
+`STROKE_RESULTS.md`.87 frozen sources/917 prior evidence files unchanged during
+execution; original checkout clean. Target restored OFF. The body CAN propel
+itself in these equations with a coordinated diagnostic stroke; this is not a
+learned swimmer or desired-speed acceptance. No redesign/training/adoption
+authorized automatically. Changes remain uncommitted after3e0e4ab.
+
+## Movement replacement implemented; first validation stopped
+
+User approved coherent movement replacement and quick checks21:49:06. New
+`src/motor/movement_model.h` and `tools/movement_probe.cu` implement experimental
+model6, without adopting it into runtime physics2. See
+`MOVEMENT_REPLACEMENT_PROTOCOL.md` for geometry/controller/water choices and
+the frozen22400substep/10s comparison. Strict CUDA build/static prerequisites
+passed. The sole physical run stopped first interval:140charged/136attempted
+substeps, CPU70/CUDA66, native.254s; CUDAfine case attempt16 rejected. No
+meaningful speed/tracking window was reached, no learning. Closed unused22260
+slots are unavailable automatically. Exact failure reason was not instrumented.
+
+Current source corrects a discovered float-matrix symmetry/operator mismatch
+and adds failure codes/residuals.32/32CPU/CUDA zero-advance synthetic matrix
+cases pass (corrected residual2.895e-16); physical correction not rerun and prior
+failure attribution unproved. See `MOVEMENT_REPLACEMENT_RESULTS.md` and
+`build/movement-model/2026-10-30-v1/`.91source/1017prior evidence files unchanged
+through the physical run; original checkout clean. Changes remain uncommitted;
+no runtime adoption, PPO, merge or deployment. Target restored OFF.
+
+## Current movement handoff (latest state)
+
+See `docs/CURRENT_MOVEMENT.md` for completed model6 mechanics, task3/task4
+results, the one full-return correction, current passing default and opening the
+standalone recorded Godot viewer. Default task4 controller passes4/4 at8.326mm/s;
+the full-return candidate0/4 at8.871mm/s was rejected; passing default retained.
+No further experiment/training is running or implied. Live runtime is still
+physics2. All movement additions remain uncommitted after3e0e4ab.
+
+## Latest completed reward2 learner and selected recording
+
+Reward2 tracks speed/path only in the agreed2..4s window, charges effort over
+all4s, and retains full-episode causal credit/safety/work accounting. One approved
+fresh trial completed32672controls/326720steps in3.264s, no retries/faults:
+learned4/4 versus default4/4, mean7.958mm/s, RMSE1.805mm/s, work8.149microJ.
+Selected `build/straight-motor/2026-10-30-task4-steady-reward-v2/update-25.bin`,
+SHA25631C9982778F32A5E0F421CDBA88AF4431ED27431A355C66D9E290D60EDC97092.
+Passing default/older failures preserved.44source and1220prior-evidence hashes
+verified; original tree clean. No live runtime change/commit/push/merge/deploy.
+See `docs/CURRENT_MOVEMENT.md`; recorded viewer defaults to winning evaluation.
+No further physical/training run is started or implied by this handoff.
+
+## Live frozen model6 demo verified
+
+User23:08 authorized a separate live Godot demo and conditional local commit.
+Implemented one shared frozen-controller native core and a separate Godot adapter;
+no optimizer/training in the demo. It loads the selected update25 actor through a
+small portable checksummed/source-bound asset, rejects incompatible/corrupt data,
+starts paused, exposes Start/Pause/Reset and speed, and auto-pauses at4seconds.
+Existing physics2 project, recorded viewer and original checkout are preserved.
+
+Strict build and Godot parse passed. Frozen native4/4 exactly matched320reference
+rows,3,200steps/.061s. Actual Godot extension4/4 matched320rows within tolerance,
+3,200steps/.069s. Rendered720x1080 run captured the live world at2.5seconds then
+passed/auto-paused,800steps/4.427s. Total7,200/9,600registered substeps; no retries,
+no PPO,2,400reserve unused. Evidence: build/live-demo/2026-10-30-v1/.
+Screenshot saved in Library as libfile_2af75f0392ec8191bcb33972d6fbf786; upload
+succeeded, local xattrs unsupported by this Windows Python. Godot shader-cache
+warning did not prevent rendering. No material verification failure occurred.
+
+Open ./tools/view-live.ps1 -SkipBuild locally, or build via that script without
+SkipBuild. The demo uses native CPU physics/inference with frozen C++/CUDA-trained
+weights; it is neither recorded playback nor live learning. See docs/LIVE_DEMO.md.
+Only short straight calm-water swimming is established. Contact/current/turning/
+braking/arrival remain future work; known head yaw and dry drift remain disclosed.
+No push/merge/deploy or main-runtime replacement. Local verified commit authorized.
