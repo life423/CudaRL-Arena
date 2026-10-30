@@ -239,3 +239,81 @@ passivity and timestep sensitivity separately. Even a complete pass would only
 support this contact correction on these cases; it would not establish learned
 swimming, braking, unsupported station keeping or predator avoidance. No PPO,
 production adoption, merge or deployment is included.
+
+## Contact comparison result — stopped, candidate rejected
+
+Exact pre-run source commit: `984b9cdf6474b6b24a1a00d354a648aa47a293c5`.
+Strict CUDA build passed. The sole prepared run is preserved at
+`build/contact-response/2026-10-30-v1/`, including executable/source snapshots,
+SHA manifests, numeric protocol, every-substep body/link trace, contact-point
+impulses and independent analyses. No parameter edits or repeat occurred.
+
+Actual dispatches/committed poses:22,649 of the43,600 cap, comprising11,436 CPU
+and11,213 CUDA. Stage charges: primary7,284; refinement10,618; withheld4,747;
+free-water0; passivity0. There are82 recorded model/backend cases of132 planned;
+the last is an interrupted legacy case. No unused budget may be repurposed.
+
+| Evidence | Baseline | Candidate |
+| --- | --- | --- |
+| Primary contact cases, each backend |5/8 pass |5/8 pass |
+| Bent / pitched / rolled primary cases | All breach0.5mm | All breach0.5mm |
+| Bent / rolled refinements at2.5 and1.25ms | Still breach | Still breach |
+| Completed20mm/s impact,1.5s maximum penetration |0.4501mm |0.3688mm |
+| Level loaded support, last0.5s of1.5s | Pass | Pass |
+| Withheld cases0–5, complete matched pairs |2/6 pass |3/6 pass |
+| Free-water and passivity stages | Not reached | Not reached |
+
+The protected fin fixture passed this bounded contact test for both responses.
+The candidate also passed withheld case2 where baseline failed, but these
+partial improvements do not satisfy the registered gates. Failed-case minima
+are FIRST-BREACH-CENSORED, not complete-trajectory maximum penetration. Do not
+claim a rolled peak-penetration improvement from different stopping states.
+At5ms the rolled baseline breaches after37steps/0.185s at−0.588119mm;
+candidate after38steps/0.190s at−0.549510mm. At1.25ms both breach at0.18625s.
+This rules out the proposed time-discretization correction ALONE as sufficient
+for the tested contact contract. It does not prove physical uncontrollability.
+
+The rolled recontact is materially faster than the old allowance's20mm/s
+assumption. Candidate5ms head-floor activation at step34 starts14.05µm clear
+with normal closing speed39.46mm/s, row effective mass2.013g, and13.965µN·s
+actual impulse (2.793mN over5ms). At2.5/1.25ms, incident speeds are38.93/39.20
+mm/s. The response-adjusted effective mass/damping timescale is about24ms,
+not the10ms used for two timestep travels. Thus the solver is applying braking,
+but the selected material response does not meet the fixed compression limit
+for these coupled rolling impacts. Effective mass here is from the implicit
+free response, not an independent inertial/material measurement. This supports
+recalibrating contact material against measured impact conditions, not treating
+more PPO or another policy network as a fix for this zero-actuation failure.
+
+Zero-integration independent scalar/two-row algebra checks passed10/10 rows on
+CPU/CUDA. All11,394 reached candidate substeps passed solver/finite/nonadhesive
+and independent equation/momentum checks: maximum independent normal-equation
+residual1.32244e−6m/s, maximum residual/tolerance0.994982, maximum scaled
+generalized momentum residual0.122127<1. These are checks of the registered
+FLOAT-assembled equation with independent double accumulation, not an
+independently derived all-double simulator or a proof of physical correctness.
+
+The global stop was withheld case6, BASELINE CUDA, step77/0.385s. Fourth joint
+rate: CPU−0.0159115531 versus CUDA−0.0154108349rad/s; difference0.0005007181
+exceeds the fixed0.0002318231 tolerance. Geometry flags remained equal, gap
+difference1.49e−8m and floor-force difference1.23e−7N passed their limits.
+The fin endpoint's approaching-motion damping branch differed: CPU separating
+~+2.01µm/s, CUDA closing~−1.71µm/s. This supports accumulated floating-point
+sensitivity at the legacy discontinuous damping switch, not candidate
+nonconvergence. All reached candidate CPU/CUDA comparisons passed. Candidate
+withheld6/7, remaining baseline7, free-water and passivity remain UNPROVED.
+
+No motor/chooser training, reward change, network redesign, scripted rescue,
+threshold weakening, saved-state migration or viewer change occurred. Default
+probe build option restored OFF; CTest inventory still contains only the small
+foundation suite. Post-run hashes confirm all477 protected records,39 original
+contact artifacts and25 personal saves plus backups are unchanged. Original
+checkout remains clean. The live foundation still uses physics2 and its warning.
+
+Narrow next decision: calibrate normal-contact compliance/damping against the
+actual rotating/articulated contact loads and stopping distance under the fixed
+0.5mm limit, rather than assume static deflection plus two timestep travels
+bounds dynamic compression. Keep body/water/actuator limits fixed and retain
+the successful numerical machinery where justified. A revised physical
+coefficient/model comparison needs a new preregistration and budget; no automatic
+gain sweep, remaining-case replay, PPO run or whole-app rewrite is authorized.

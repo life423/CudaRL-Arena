@@ -78,6 +78,8 @@ The warning stays visible in this viewer. Cleanup does not retune that response,
 
 The subsequent bounded contact-response comparison is isolated behind `CUDARL_BUILD_CONTACT_PROBE=ON`; it is excluded from CTest and the live world. Its prepare/run modes record immutable fixtures and enforce a single-run physical-call cap. The current registration and actual results belong in the checkpoint. Building this tool does not enable the candidate in Godot, migrate saves or start learning.
 
+That one-shot comparison stopped after 22,649 attempts and rejected the candidate: both responses failed the bent, pitched and rolled primary cases. A legacy CPU/CUDA damping-branch mismatch ended the run before free-water and passivity checks. The candidate is retained only as reproducible experiment code, not enabled behavior. Do not resume it or treat the remaining budget as authorization for another run.
+
 ## Baseline and removed paths
 
 Original commit: `e5e9bd1db7e442715ac8ba3a5f5030c0ede26430`.

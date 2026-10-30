@@ -22,6 +22,7 @@ Keep one learned goal chooser and one reusable movement motor. Critics are train
 - Diagnostic actuator inputs and paused playback are not learned movement. Servo regulation does not prove swimming. Unsupported calm holding, pond-relative holding in a specified validated current and supported bottom rest are separate future behavior tests.
 - No replacement training, extra experiment budget, checkpoint overwrite, merging, deployment, new limbs or production replacement is authorized by cleanup.
 - Latest follow-up authorizes one opt-in contact-response comparison after the verified cleanup rollback commit. Maximum43,600 physical substeps across both responses/backends; preparation/settings and exact cases must be frozen before the single run. No motor training or live-runtime/contact-save migration is included. See the latest checkpoint.
+- That comparison is now STOPPED, not resumable:22,649 attempts, candidate rejected. Both responses pass5/8 primary cases; bent/pitched/rolled exceed0.5mm, bent/rolled also at finer steps. Legacy damping branch caused the final held-out CPU/CUDA rate mismatch. No free-water/passivity stage or new learning ran. Keep runtime physics2 and saved states unchanged; discuss a physically calibrated contact-response change before another run.
 - Diagnostic state has its own versioned/checksummed schema and `user://foundation/` namespace. It must reject legacy learner saves without altering them.
 
 ## Implementation and checks
