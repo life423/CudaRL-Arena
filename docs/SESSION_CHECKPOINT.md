@@ -576,3 +576,68 @@ plus 25 backups; original checkout remains clean at baseline. B, runtime physics
 OFF; CTest -N lists only foundation without executing extra physical advances.
 No PPO, adoption, merge, push or deployment. Two local compilation defects were
 corrected before freeze; failed builds consumed zero physical calls.
+
+## Focused event-integration correction — preregistered before execution
+
+New user authorization is ONE correction, with smallest-case rejection first,
+independent saved-state momentum diagnosis, and only a conditional short rotating
+check. Previous runs remain CLOSED. No coefficient, body, joint, actuator,
+reward, 0.5 mm safety, runtime/save, PPO, merge or deployment changes.
+
+Fixed method: exact constant-load free flight; geometric arrival and clipped
+normal-force release split within each outer 5 ms step; implicit midpoint during
+engaged contact, maximum internal duration 100 us. Release root uses exactly
+24 bounded bisections. Count every entry, accepted/trial integration and event
+bisection attempt before evaluation; no retry, gain sweep or budget extension.
+Midpoint reduces the backward-Euler damping between events; splitting alone
+would not address the measured rebound error. Spring/damper remain the EXACT
+existing FP32 values 320 N/m and 1.9595918 N*s/m promoted consistently.
+
+NEW TOTAL CEILING: 7,004 charged entries/physical trial advances, across all
+CPU/CUDA, failed trials and event subdivisions. Allocation: scalar 3,000;
+saved-state audit 4 (two entries plus two legacy replays); rotating 4,000.
+No unallocated reserve or reuse. Scalar reference cap 256 analytic queries;
+momentum certification/negative-control algebra cap 64, separately counted.
+Compiler attempts and immutable-file/hash reads advance no physical time.
+
+First rejection test: existing 3 g scalar impact, initial gap 25 um, velocity
+-50 mm/s, CPU only, 20 ms total (four 5 ms outer steps). Stop on failed accuracy,
+finite/0.5 mm/nonadhesion/energy criterion; do not build articulated solver first.
+If it passes, complete the same six-case CPU/CUDA slate (first case not repeated):
+original support, impact, separation, plus impacts with exact arrival times
+0.2, 1.7 and 4.3 ms (gaps velocity*arrival). Total twelve trajectories, no old-law
+rerun. Reuse the independent continuous oracle; optional gap parameter preserves
+its old API. Record internal accepted compression peak, not just outer samples.
+Keep existing accuracy limits: compression max(2 um,5%), restitution error .02,
+impulse max(1e-8 N*s,5%), time-aligned gap 10 um and speed 1 mm/s. Physical
+energy allowance stays max(1e-10 J,.001*abs(initial)); check all internal maxima.
+CPU/CUDA use same starts; compare all stored matched outer rows at existing
+state tolerances before any articulated step. No tuning from these cases.
+
+Momentum audit is independent: replay the saved prestate of old validation's
+1.25 ms CUDA step 8, once per backend. Capture M/J, raw solved velocities and
+impulses, FP32 casts, signed conversion errors, each coordinate's residual,
+normalization and arithmetic bound. Compare executing-backend M versus CPU M
+used by the old checker. Revised certificate retains the old raw physical
+residual gate and adds ONLY analytically propagated half-ULP storage error plus
+double gamma bound; verify exact casts and detect deliberately bad raw/stored
+updates on disposable copies (40 negatives, no extra physical advances).
+No tolerance multiplication. Keep old results/checker source preserved.
+
+ONLY IF all scalar cases and the auditable numerical path pass: same saved
+positive-gap rotating fixture, 20 ms CPU/CUDA, zero actuator commands, density
+990, no current. Implement the SAME event/midpoint method for frozen per-segment
+M/R/J, with A=M+dt*R/2, u=A^-1[(M-dt*R/2)v0+dt(F-C)],
+b=c/2+k*dt/4, H=J*A^-1*J^T+diag(1/(dt*b)), q=J(v0+u)+k*g0/b.
+Pose uses midpoint velocity; terminal stored velocity is v1. No added forces,
+projection or rescue. Refresh nonlinear coefficients only at accepted starts;
+this is not a claim of globally second-order nonlinear dynamics. Fixed 100 us
+max interval and 24 bisections, actual gap/force event boundaries, strict finite,
+geometry, nonadhesion, CPU/CUDA, physical energy and raw/bounded momentum checks.
+Stop after this one short fixture; no longer support/free-water validation.
+
+If correction fails: stop extending the custom approach and recommend one
+narrow B revision or tiny established native-solver reference, without running
+it. Report fixed/failed/untested separately. Keep all previous artifacts and
+personal saves. Baseline at this registration: minimal branch 7f4cc19; original
+checkout stays at e5e9bd1. No physical calls have occurred during implementation.

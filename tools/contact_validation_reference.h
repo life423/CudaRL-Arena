@@ -171,7 +171,7 @@ class Reference {
     }
 
 public:
-    explicit Reference(Case value) {
+    explicit Reference(Case value,double impact_gap=kImpactGap) {
         report_.case_id=value;
         switch(value) {
         case Case::Support:
@@ -179,13 +179,17 @@ public:
             report_.max_compression_time_s=kHorizon;
             break;
         case Case::Impact: {
-            report_.initial_gap_m=kImpactGap;report_.initial_velocity_m_s=kImpactVelocity;
-            report_.contact_start_time_s=-kImpactGap/kImpactVelocity;
+            if(!std::isfinite(impact_gap)||impact_gap<0)
+                throw std::invalid_argument("Impact gap must be finite and nonnegative");
+            report_.initial_gap_m=impact_gap;report_.initial_velocity_m_s=kImpactVelocity;
+            report_.contact_start_time_s=-report_.initial_gap_m/kImpactVelocity;
             const double a=kDamping/(2*kMass);
             peak_contact_time_=detail::event_time(a);
             const double release_time=detail::event_time(a-kStiffness/kDamping);
             report_.max_compression_time_s=report_.contact_start_time_s+peak_contact_time_;
             report_.force_release_time_s=report_.contact_start_time_s+release_time;
+            if(report_.force_release_time_s>kHorizon)
+                throw std::invalid_argument("Impact release must lie within the registered reference horizon");
             release_=contact(release_time);
             report_.release_gap_m=release_.gap;report_.release_velocity_m_s=release_.velocity;
             report_.restitution_defined=true;
