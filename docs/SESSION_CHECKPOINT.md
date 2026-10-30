@@ -524,3 +524,55 @@ builds without weakening warnings. Before execution, original hashes verified
 The executable/numeric protocol/source manifest are to be frozen under ignored
 `build/contact-validation/2026-10-30-v1/` before the sole run. Live physics2 and
 the original checkout stay unchanged. A component/build pass is not accuracy.
+
+## Fixed-A validation result — closed, accuracy rejected before longer tests
+
+Preregistered source `7d6b53ff06bf5b5b9cd647db94d9cfabbd26a3e8` and numeric
+registration were frozen before the sole run. Read
+`docs/CONTACT_VALIDATION_RESULTS.md` for the decision, full tolerances and data.
+Ignored evidence: `build/contact-validation/2026-10-30-v1/`, including the frozen
+executable, 86-file source snapshot/hashes, protocol.bin/JSON, independent static
+and continuous-reference reports, all 2,608 trace rows/contact impulses, first
+failed pose and derived offline analyses. No physical rerun or tuning occurred.
+
+The run is CLOSED at 2,608/18,200 attempts: CPU 1,400 / CUDA 1,208, all native
+trial proposals committed locally. Stage charges: 2,100 scalar + 508 rotation;
+all other stages zero. Independent static counts: 137 geometry (including eight
+fixture placements), 168 kinetic, 60 matrix; continuous queries: 2,135. No old
+unused budget was reused; this run's 15,592 unused calls cannot automatically
+be spent later.
+
+A at 5 ms is REJECTED for physical accuracy. Independent impact truth is
+56.3198 um peak compression, restitution 0.135335 and 170.3003 uN*s impulse.
+A at 5/2.5/1.25 ms gives 20.6776/27.3219/31.4106 um, restitution
+0.030502/0.046323/0.063539 and impulse 154.5753/156.9485/159.5309 uN*s.
+Every impact fails all five
+accuracy criteria; this is excessive numerical dissipation, not merely low
+bounce or a missed sampled peak. Scalar support 6/6 and separation 6/6 pass.
+
+All reached states are finite, nonadhesive and inside 0.5 mm. Rotating 5/2.5 ms
+pairs complete 0.25 s; 1.25 ms CPU completes but CUDA step 8 (at 10 ms) hits
+normalized momentum certificate 1.0991275 > 1 and stops all further calls.
+Gap -7.48038 um, constitutive 7.1843e-10 m/s and energy checks pass. Rounded
+FP32 velocity/impulse
+storage may explain a tiny-impulse certificate failure, but unrounded/per-DOF
+residual data are absent, so that cause is NOT established. No criterion relaxed.
+0.625 ms never ran; formal rotating accuracy/convergence is unproved. Original
+5 s bent/pitched/rolled support, original-free preservation, additional
+passivity and fresh 5 s withheld acceptance are all BLOCKED/UNRUN, not passes
+or new failures.
+
+The narrow next decision is contact temporal integration and activation/release
+of the SAME law, with auditable momentum arithmetic. Not another coefficient,
+PPO/reward/NN/body change or engine rewrite. Finer 1.25 ms is not accurate enough
+and was not adopted. Before motor training, accuracy and the blocked contact
+acceptance stages still must pass under a new authorized bounded protocol.
+No follow-up or new budget is authorized by this recommendation.
+
+Source/physics hashes were unchanged through execution. Post-run preservation
+again verified 477 protected records, 39 old contact files and 25 personal saves
+plus 25 backups; original checkout remains clean at baseline. B, runtime physics
+2, Godot and all saved controllers remain unchanged. Validation option restored
+OFF; CTest -N lists only foundation without executing extra physical advances.
+No PPO, adoption, merge, push or deployment. Two local compilation defects were
+corrected before freeze; failed builds consumed zero physical calls.

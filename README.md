@@ -84,6 +84,8 @@ The subsequent approved calibrated-compliance versus hard-contact pilot is also 
 
 The separately authorized fixed-A validation is opt-in (`CUDARL_BUILD_CONTACT_VALIDATION`, default OFF). Its independent continuous-law accuracy gate precedes longer support and fresh acceptance tests. Its own ceiling is18,200 total CPU/CUDA physical attempts, with no retries or budget reuse. See [the frozen protocol](docs/CONTACT_VALIDATION_PROTOCOL.md); this tool cannot start PPO or change the live contact law.
 
+That validation is now closed at2,608 attempts: **A at5ms is rejected for physical accuracy**. Scalar support/separation pass, but impact compression and restitution differ greatly from the independent continuous law, including at the finer tested steps. Rotating refinement then stops on a numerical momentum certificate. Longer support, free-water and withheld stages remain unrun. See [the result and narrow next requirement](docs/CONTACT_VALIDATION_RESULTS.md); neither A nor B is adopted.
+
 ## Baseline and removed paths
 
 Original commit: `e5e9bd1db7e442715ac8ba3a5f5030c0ede26430`.
