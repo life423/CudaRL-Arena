@@ -1,91 +1,63 @@
 # CudaRL creature motor
 
-A native C++/CUDA physically simulated creature with one Godot viewer. The motor
-learns stroke strength/frequency; an explicit oscillator drives torque-limited
-internal joints. Godot displays native poses and never supplies propulsion.
+Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
+motion comes from torque-limited internal joints and water forces; Godot supplies
+presentation only. The motor controls stroke strength and signed cadence.
 
-## Run and current limits
+## Current state
+
+The prior imitation-trained controllers and dedicated supervised training paths
+were removed by user request. No verified PPO checkpoint is installed. The viewer
+shows the native creature paused with its motion controls unavailable. It does
+not substitute random weights, a teacher or another algorithm.
+
+The native PPO primitives live in src/rl: Gaussian sampling/log probabilities,
+clipped policy loss, GAE and minibatch gathers. Shared MLP, Adam, GEMM and critic
+loss code lives in src/nn. The ppo_motor executable trains a fresh actor/critic
+on the forward8mm/s lesson. Training worlds and rollout/update buffers stay on
+the GPU; frozen evaluation uses the same motor equations on the CPU.
 
 ```powershell
-./tools/view-live.ps1             # build the extension and open paused
-./tools/view-live.ps1 -SkipBuild  # use the already-built extension
+./tools/view-live.ps1             # incremental native build; open the viewer
+./tools/view-live.ps1 -SkipBuild  # use the existing extension
 ```
 
-Press Start once, then change the4�8mm/s request while it swims. Requests preserve
-body velocity, oscillator/filter state and running status. A paused request stays
-paused; Start resumes. Reset is explicit. The same frozen signed-cadence network
-controls both forward strokes and braking; there is no training in Godot.
-
-Continuous viewing remains on by default, with visible resets near the finite
-pond edge (20mm clearance). The viewer uses1.2x0.8m horizontal bounds and0.16m
-depth; original benchmarks retain0.36x0.28m bounds. Uncheck Continuous for a
-four-second segment/auto-pause.
-Safety failures stop execution. Longer viewing is not indefinite-stability proof.
-Full stopping, heading hold, currents, contact and arbitrary transition sequences
-remain unvalidated. The evaluated transitions were4->8->4 with separate settling.
-An added4->8->4->8 sequence failed its last upshift speed/RMSE gates despite
-no edge reset; enlarging the pond does not repair that policy limitation.
-
-Accepted baseline: signed-transitions-v1/update-600, SHA256
-18346C676CF3E12283C51129C1224B3CEDEAC8C2FA22BDC1C1E826A6EFE5BE72.
-Frozen inference passed10constant cases,2held-out warmups,4transitions and4holds.
-The original automatic selection rejected a5.53%increase in modeled actuator
-work/metre at8mm/s; the user explicitly accepted that tradeoff. The original
-rejection remains unchanged in the saved evidence.
-
-- [Explicit acceptance and limitations](assets/signed-speed-v1/acceptance.json)
-- [Original selection result](assets/signed-speed-v1/original-selection-result.json)
-- [Frozen neural evaluation](assets/signed-speed-v1/frozen-evaluation.csv)
-- [Live actor identity and source contract](live/assets/controller-provenance.json)
-
-The exact research checkpoint and protocol are pinned in assets/signed-speed-v1.
-The portable actor exports only those same2498parameters, with an explicit action
-mapping and source hashes; it contains no optimizer or resumable physical world.
-The prior forward actor, portable export and accepted examples remain under
-assets/steady-speed-v1, with Git checkpoint e484667 available for rollback. No
-old/new-controller toggle or alternate viewer is active.
-
-All prior training/physical budgets are closed. Full local evidence remains in
-ignored build/; Git does not preserve ignored files. New runs need explicit scope.
-
-## Build and focused checks
-
-Requires CMake3.24+, Visual Studio2022 C++ tools, CUDA for learning and matching
-Godot C++ bindings. Tested Godot4.7.2 with existing4.4 bindings. Configure
-CUDARL_GODOT_CPP_ROOT/LIBRARY for another dependency location. The cpu preset
-builds without CUDA or Godot dependencies.
+CMake3.24+, Visual Studio2022 C++ tools, CUDA for learning and matching prebuilt
+Godot C++ bindings are required. Live stepping and numerical kernels are native;
+there is no Python runtime or exporter in the active project.
 
 ```powershell
 cmake --preset windows
 cmake --build --preset release
-./build/Release/foundation_tests.exe demonstration
-./build/Release/foundation_tests.exe speed_request
+./build/Release/foundation_tests.exe gaussian:
+./build/Release/foundation_tests.exe ppo:
+./tools/run-ppo.ps1 -Name NEW_UNIQUE_NAME # build, zero-step checks, freeze inputs
+# Its -Run switch executes that identity only after an explicit bounded approval.
 ```
 
-The opt-in zero-step viewer check is:
-`Godot_console.exe --headless --path live --script ../tests/godot/viewer_controls.gd`
-(use the installed Godot console executable). It disables automatic processing.
-The single learning runner tools/run-straight.ps1 prepares a frozen trial without
-stepping or fitting. Its explicit -Run switch starts the separately authorized
-bounded collection, fitting and frozen evaluation; it never adopts a candidate.
-Training is not part of CTest. Do not launch it during structural/document cleanup.
+The zero-step viewer check is:
+`Godot_console.exe --headless --path live --script ../tests/godot/viewer_controls.gd`.
+It verifies the missing-policy state and never advances physics. New physical or
+training runs require their own finite approved protocol; all old budgets closed.
 
-## Ownership and direction
+## Architecture and limitations
 
-live/main.gd directly extends built-in Node3D; main.tscn is one plain scene.
-FrozenSwimmer is one RefCounted bridge composed with FrozenController, which owns
-one world, task and actor. Shared motor code lives in src/nn/motor; physical equations
-in src/physics; numerical learning primitives in src/nn, src/rl and src/cuda.
-UI nesting is node composition, not custom script/scene inheritance. Keep one viewer
-and one shared motor path rather than adding wrappers or a network per ability.
+One native world owner, one bridge and one plain scene. live/main.gd directly
+extends Node3D; FrozenSwimmer composes FrozenController. Shared motor code lives
+in src/nn/motor and physics in src/physics. Keep training independent of Godot.
+Preserve model6, two universal joints/four axes and +/-10microN*m torque limits.
+Contact, current, stopping/holding and arbitrary transitions remain unvalidated.
 
-The intended system is one learned goal chooser and one reusable motor receiving
-persistent destination, desired terminal velocity in SI m/s and unit heading;
-world/model conversion is1unit=4cm. Only the current speed lesson is implemented.
-Future work is competent swimming/adaptation, then growth/limbs, leaving water,
-walking and manipulation. Preserve model6 body/water/torque limits unless an
-explicitly authorized model change is made; no artificial body push or rescue.
+Tracked historical source/assets remain recoverable through Git (a812960 and
+prior checkpoints). Unique local research results/checkpoints remain in ignored
+build/ as evidence, not runtime dependencies. Git does not save ignored evidence.
+The removal inventory is build/supervised-removal-inventory.json. The first fresh
+PPO result is pinned in assets/ppo-forward-v1:64updates,4/4four-second frozen
+forward cases, with no imported weights/examples. Provenance, fresh initial state,
+protocol and compact results accompany the checkpoint. Full ignored evidence is
+in build/ppo/fresh-forward-ppo-v1. This is a research checkpoint, not a Godot
+inference asset; it has not been installed in the viewer. Speed changes remain a
+later lesson.
 
-Follow [AGENTS.md](AGENTS.md) for worktree/data preservation and execution scope.
-Third-party legal notices remain in docs/third-party/. The original checkout,
-personal saves, checkpoints and non-Markdown evidence must not be purged.
+Follow [AGENTS.md](AGENTS.md). Preserve the original checkout, editor changes and
+personal data. Third-party notices remain in docs/third-party/.

@@ -2,6 +2,17 @@
 #include "motor/straight_task.h"
 #include "rl/ppo_math.h"
 namespace st=cudarl::straight_motor;namespace p=cudarl::physics;
+TEST_CASE("straight_recovery: copied prefix preserves original deadline observations safety and work (zero integration)") {
+    st::World world;auto config=st::config_for_speed(.008f);st::ForwardTask task;CHECK(st::begin_forward(world,config,task));
+    world.physical.body.velocity[0]=.008f;
+    for(int n=1;n<=20;++n){world.physical.control_steps=n;CHECK(st::record_control(task,world,config).accepted);}
+    auto fork=world;auto recovery=task;fork.physical.body.work=.0001f;recovery.maximum_lateral=.003f;
+    float obs[42]{};CHECK(st::observe(recovery,fork,config,obs));CHECK(std::fabs(obs[34]-.75f)<1e-7f);
+    for(int n=21;n<=80;++n){fork.physical.control_steps=n;fork.physical.body.position.x=.008f*p::dt*float(n)/p::scale;CHECK(st::record_control(recovery,fork,config).accepted);}
+    CHECK(recovery.controls==80&&recovery.steady_samples==40&&recovery.outcome==st::Outcome::Timeout);
+    CHECK(recovery.start_work_J==0&&recovery.maximum_lateral==.003f&&task.controls==20);
+    CHECK(world.attempted_substeps==0&&fork.attempted_substeps==0);
+}
 TEST_CASE("straight_reward2: interval40 is warmup and41 is scored, effort always charged (zero integration)") {
     st::World world;st::ForwardConfig config;st::ForwardTask task;CHECK(st::begin_forward(world,config,task));
     task.controls=39;task.last_world_control=39;world.physical.control_steps=40;world.physical.mean_squared_torque=.5f;

@@ -6,6 +6,7 @@ var geometry: Dictionary = {}
 var status: Label
 var start_button: Button
 var pause_button: Button
+var reset_button: Button
 var accumulator := 0.0
 var state: Dictionary = {}
 var speed_control: SpinBox
@@ -55,7 +56,7 @@ func _layout_camera(camera: Camera3D) -> void:
 
 func _ready() -> void:
 	started_ms = Time.get_ticks_msec()
-	get_window().title = "CudaRL - LIVE model6 - frozen learned controller"
+	get_window().title = "CudaRL - native model6 - PPO"
 	for argument in OS.get_cmdline_user_args():
 		if argument == "--capture-paused": capture_paused = true
 		if argument.begins_with("--output="): output = argument.trim_prefix("--output=")
@@ -87,9 +88,9 @@ func _ready() -> void:
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",10)
 	margin.add_child(column)
-	column.add_child(_label("Live swimming",25))
-	column.add_child(_label("Frozen NN; no training. Viewer pond 1.2 x 0.8 m.\nStart once, then change 4-8 mm/s. Long runs unvalidated.",16))
-	status = _label("Loading verified actor...",16)
+	column.add_child(_label("CudaRL swimmer",25))
+	column.add_child(_label("Native model6 physics and PPO.\nA verified PPO checkpoint is required for swimming.",16))
+	status = _label("Checking PPO checkpoint...",16)
 	column.add_child(status)
 	speed_control = SpinBox.new()
 	speed_control.custom_minimum_size = Vector2(140,44)
@@ -119,7 +120,8 @@ func _ready() -> void:
 	pause_button = _button("Pause",_pause)
 	row.add_child(start_button)
 	row.add_child(pause_button)
-	row.add_child(_button("Reset",_reset))
+	reset_button = _button("Reset",_reset)
+	row.add_child(reset_button)
 	start_button.disabled = true
 	pause_button.disabled = true
 	if not ClassDB.class_exists("FrozenSwimmer"):
@@ -128,7 +130,20 @@ func _ready() -> void:
 			_fail("Native extension could not load; build frozen_swimmer first.")
 			return
 	swimmer = ClassDB.instantiate("FrozenSwimmer") as RefCounted
-	if swimmer == null or not bool(swimmer.call("load_controller")):
+	if swimmer == null:
+		_fail("Native controller class missing")
+		return
+	if not FileAccess.file_exists("res://assets/frozen-controller.bin"):
+		geometry = swimmer.call("get_geometry")
+		_build_creature()
+		_refresh()
+		speed_control.editable = false
+		continuous_control.disabled = true
+		reset_button.disabled = true
+		status.text = "No verified PPO checkpoint installed.\nSwimming and training are unavailable; physics has not advanced."
+		if not capture_path.is_empty(): _capture_still()
+		return
+	if not bool(swimmer.call("load_controller")):
 		_fail("Frozen actor load failed: " + (str(swimmer.call("get_error")) if swimmer else "class missing"))
 		return
 	swimmer.call("set_continuous",continuous_control.button_pressed)
@@ -204,6 +219,7 @@ func _refresh(snapshot: Dictionary = {}) -> void:
 	var active := not bool(state.paused)
 	start_button.disabled = not bool(state.loaded) or bool(state.finished) or active or not str(state.error).is_empty()
 	pause_button.disabled = not active
+	reset_button.disabled = not bool(state.loaded)
 	speed_control.set_value_no_signal(float(state.target_speed_m_s)*1000)
 	var prefix := "RUNNING" if active else ("COMPLETE / auto-paused" if bool(state.finished) else "PAUSED")
 	var benchmark := ("PASS" if bool(state.passed) else "FAIL") if bool(state.benchmark_complete) else "pending"
@@ -222,7 +238,7 @@ func _refresh(snapshot: Dictionary = {}) -> void:
 func _capture_still() -> void:
 	await _capture()
 	if not capture_saved: return
-	var saved := _write_result({"paused_layout_passed":bool(state.loaded) and bool(state.paused),"physical_substeps":total_substeps})
+	var saved := _write_result({"paused_layout_passed":bool(state.paused) and total_substeps == 0,"policy_loaded":bool(state.loaded),"physical_substeps":total_substeps})
 	get_tree().quit(0 if saved else 3)
 
 func _capture() -> void:

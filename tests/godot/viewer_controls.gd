@@ -1,55 +1,18 @@
 extends SceneTree
-# Opt-in UI contract check. Disable automatic processing before the viewer enters
-# the tree; never call its native step. This cannot become a physical trial.
+# Zero-step check for the explicit absence of a verified PPO checkpoint.
 var view: Node
-var checks := 0
-
 func _initialize() -> void:
-	view = load("res://main.tscn").instantiate()
-	view.process_mode = Node.PROCESS_MODE_DISABLED
-	root.add_child.call_deferred(view)
-	_check_controls.call_deferred()
-
-func _check(ok: bool, reason: String) -> bool:
-	checks += 1
-	if not ok:
-		if view.swimmer != null: view.swimmer.call("pause")
-		print(JSON.stringify({"error":reason,"checks":checks,"physical_substeps":view.total_substeps}))
-		quit(3)
-	return ok
-
-func _check_controls() -> void:
-	if not _check(view.swimmer != null and bool(view.state.get("loaded",false)),"Actor did not load"): return
-	if not _check(bool(view.state.paused) and int(view.state.substeps) == 0,"Startup must be paused"): return
-	var floor_matches := false
-	for child in view.get_children():
-		if child is MeshInstance3D and child.mesh is PlaneMesh:
-			floor_matches = child.mesh.size.is_equal_approx(Vector2(float(view.geometry.arena_width_m),float(view.geometry.arena_depth_m))/float(view.geometry.scale_m))
-	if not _check(floor_matches and is_equal_approx(float(view.state.arena_width_m),1.2) and is_equal_approx(float(view.state.arena_depth_m),0.8),"Rendered and physical viewer pond dimensions differ"): return
-	view._start()
-	if not _check(not bool(view.state.paused) and view.status.text.begins_with("RUNNING"),"Start disagrees with native pause state"): return
-	view._process(0.0)
-	view._pause()
-	if not _check(bool(view.state.paused) and view.pause_button.disabled and not view.start_button.disabled,"Pause/button state disagrees"): return
-	view._reset()
-	if not _check(bool(view.state.paused) and int(view.state.controls) == 0,"Reset did not restore paused state"): return
-	view._start()
-	view._fail("Expected viewer audit error")
-	if not _check(bool(view.state.paused) and view.start_button.disabled and view.pause_button.disabled,"UI failure did not pause native controller"): return
-	view._reset()
-	if not _check(view.status.text.begins_with("PAUSED") and not view.start_button.disabled,"Reset did not recover UI state"): return
-	for requested in [4.0,5.0,6.0,7.0,8.0]:
-		view._start()
-		view.speed_control.value = requested
-		if not _check(not bool(view.state.paused) and int(view.state.controls) == 0 and is_equal_approx(float(view.state.target_speed_m_s)*1000,requested),"Speed request must retain running state"): return
-	view._pause()
-	view.speed_control.value = 4
-	if not _check(bool(view.state.paused),"Paused speed change must remain paused"): return
-	if not _check(int(view.state.substeps) == 0 and view.total_substeps == 0,"Zero-step check advanced physics"): return
-	view._start()
-	view.continuous_control.button_pressed = false
-	if not _check(bool(view.state.paused) and not bool(view.state.continuous),"Mode change must pause without stepping"): return
-	view.continuous_control.button_pressed = true
-	if not _check(bool(view.state.paused) and bool(view.state.continuous) and int(view.state.substeps) == 0,"Continuous selection advanced physics"): return
-	print(JSON.stringify({"viewer_checks_passed":checks,"physical_substeps":0}))
-	quit()
+    view = load("res://main.tscn").instantiate()
+    view.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child.call_deferred(view)
+    _verify.call_deferred()
+func _verify() -> void:
+    var ok := view.swimmer != null and not bool(view.state.get("loaded",true))
+    ok = ok and view.start_button.disabled and view.pause_button.disabled and view.reset_button.disabled
+    ok = ok and not view.speed_control.editable and view.continuous_control.disabled
+    ok = ok and int(view.state.get("substeps",-1)) == 0 and view.total_substeps == 0
+    ok = ok and view.status.text.begins_with("No verified PPO checkpoint installed")
+    view._start()
+    ok = ok and int(view.swimmer.call("get_state").substeps) == 0
+    print(JSON.stringify({"missing_PPO_asset_check_passed":ok,"physical_substeps":0}))
+    quit(0 if ok else 3)

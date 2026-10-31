@@ -1,0 +1,38 @@
+{
+  "protocol_sha256": "692EDDFBA50A7F0B800003A10473192137CCADE994DEF4B4E8FF9BD724A8BB86",
+  "initialization": {
+    "moments_all_zero": true,
+    "mapping": 2,
+    "checkpoint_sha256": "55CC0C7BFA2BB6DFC854F7AE1740B44F9180BDD3FD91B59B6C0FD7C0B8174573",
+    "model": 6,
+    "optimizer_steps": [
+      0,
+      0
+    ],
+    "actor_sha256": "EEAD6167C32AB027BEB80507F6BED848D5DC07F98CD004A916D797EBA7CA1C44",
+    "update": 0,
+    "seed": 1347440433,
+    "critic_sha256": "6DFAC91BB3F6C80B374DCCD7369DEFC81E3718E16CDF7151721A010D0C144CC7"
+  },
+  "scope": "Four poses, four seconds from rest,8mm/s only; no transitions/long-run/current/contact claims",
+  "result_sha256": "FD029C175E80598972E233908A7B4674DDDB5386EF12BDE02DAC7B831BC430D0",
+  "training_imported_weights_or_examples": false,
+  "runtime_adopted": false,
+  "accepted": true,
+  "candidate": {
+    "moments_all_zero": false,
+    "mapping": 2,
+    "checkpoint_sha256": "DC000BBFA4548300980122311BC16FA7EB8837CBC02D3B4F3AAD9F59AAB7FD48",
+    "model": 6,
+    "optimizer_steps": [
+      1210,
+      1210
+    ],
+    "actor_sha256": "46177949CE3969DE7E04BF73EC0282100BC695D662DDA4789FB1C7D6C0EC21A8",
+    "update": 64,
+    "seed": 1347440433,
+    "critic_sha256": "6EB29E9747DE260233427D3BD186BD64C24B582561310C3E0365F9D60B591423"
+  },
+  "source_manifest_sha256": "DA27712B312570A754768D7FAC5439CA9799512BA4F9D0BEDABE25D8BC81DFAB",
+  "algorithm": "PPO"
+}
