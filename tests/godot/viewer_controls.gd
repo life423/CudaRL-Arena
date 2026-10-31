@@ -38,5 +38,10 @@ func _check_controls() -> void:
 		view.speed_control.value = requested
 		if not _check(bool(view.state.paused) and int(view.state.controls) == 0 and is_equal_approx(float(view.state.target_speed_m_s)*1000,requested),"Speed selection must reset to rest and pause: requested=%s target=%s paused=%s range=%s..%s" % [requested,view.state.target_speed_m_s,view.state.paused,view.speed_control.min_value,view.speed_control.max_value]): return
 	if not _check(int(view.state.substeps) == 0 and view.total_substeps == 0,"Zero-step check advanced physics"): return
+	view._start()
+	view.continuous_control.button_pressed = false
+	if not _check(bool(view.state.paused) and not bool(view.state.continuous),"Mode change must pause without stepping"): return
+	view.continuous_control.button_pressed = true
+	if not _check(bool(view.state.paused) and bool(view.state.continuous) and int(view.state.substeps) == 0,"Continuous selection advanced physics"): return
 	print(JSON.stringify({"viewer_checks_passed":checks,"physical_substeps":0}))
 	quit()

@@ -25,7 +25,7 @@ bool FrozenController::load(const std::string& path){loaded_=false;paused_=true;
     }catch(const std::exception& e){error_=e.what();return false;}
 }
 bool FrozenController::reset(int id){paused_=true;error_.clear();if(!loaded_){error_="Load the validated frozen actor first";return false;}if(id<0||id>3){error_="Case must be0..3";return false;}
-    case_=id;world_=sm::initial_world(id);
+    viewing_controls_=viewing_substeps_=loops_=0;case_=id;world_=sm::initial_world(id);
     task_={};if(!sm::begin_forward(world_,config_,task_)){error_="Invalid evaluation reset";return false;}return true;
 }
 bool FrozenController::set_speed(float speed){
@@ -36,10 +36,28 @@ bool FrozenController::set_speed(float speed){
 }
 bool FrozenController::start(){if(!loaded_||finished()||!error_.empty())return false;paused_=false;return true;}
 bool FrozenController::step(){if(!loaded_||paused_||finished()||!error_.empty())return false;
-    float observation[42]{};if(!sm::observe(task_,world_,config_,observation)){error_="Invalid observation";paused_=true;return false;}
+    // An explicit viewing loop restarts from rest before the finite pond edge.
+    // Invalid states still stop; a reset must never conceal a failed safety check.
+    if(!sm::in_domain(world_,config_)){error_="Viewing safety/domain stop";paused_=true;return false;}
+    if(continuous_&&movement::clearance(world_.physical.body)<.02f){
+        world_=sm::initial_world(case_);task_={};
+        if(!sm::begin_forward(world_,config_,task_)){error_="Viewing loop reset failed";paused_=true;return false;}
+        ++loops_;
+    }
+    // Freeze the original four-second score. Beyond it the trained time feature
+    // stays at zero; no new benchmark, reward, optimizer or physical rescue.
+    auto observation_task=task_;observation_task.outcome=sm::Outcome::Running;
+    float observation[42]{};if(!sm::observe(observation_task,world_,config_,observation)){error_="Invalid observation";paused_=true;return false;}
     actor_.forward(observation,1);sm::Action action;
-    if(!sm::action_from_latent(actor_.output(),action)||!sm::step_state(world_,action.command)){error_="Physical/controller failure code "+std::to_string(world_.failure_code);paused_=true;return false;}
-    const auto transition=sm::record_control(task_,world_,config_);if(!transition.accepted){error_="Task rejected native interval";paused_=true;return false;}
-    if(transition.done)paused_=true;return true;
+    const auto before=world_.attempted_substeps;
+    const bool advanced=sm::action_from_latent(actor_.output(),action)&&sm::step_state(world_,action.command);
+    viewing_substeps_+=world_.attempted_substeps-before;
+    if(!advanced){error_="Physical/controller failure code "+std::to_string(world_.failure_code);paused_=true;return false;}
+    ++viewing_controls_;
+    if(!benchmark_complete()){
+        const auto transition=sm::record_control(task_,world_,config_);if(!transition.accepted){error_="Task rejected native interval";paused_=true;return false;}
+        if(transition.done&&!continuous_)paused_=true;
+    }
+    return true;
 }
 }

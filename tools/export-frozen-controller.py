@@ -53,7 +53,8 @@ def export(args):
                     source_contract_sha256_normalized_lf=hashes, asset_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                     minimum_speed_m_s=args.minimum, maximum_speed_m_s=args.maximum,
                     reset="Actor only; fresh physical state, no optimizer or saved world continuation",
-                    speed_selection="Resets to rest and pauses; four-second constant requests only, no validated speed transitions")
+                    speed_selection="Resets to rest and pauses; only four-second constant requests validated, no validated speed transitions",
+                    continuous_viewing="Unvalidated beyond four seconds; unchanged inference with time feature held at zero; explicit reset at 20mm pond clearance, never safety-failure recovery")
     target.with_name("controller-provenance.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(json.dumps(dict(exported_bytes=target.stat().st_size, actor_checksum=metadata["actor_checksum_fnv64"], physical_advances=0)))
 

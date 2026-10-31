@@ -10,7 +10,8 @@ class FrozenController {
     straight_motor::ForwardTask task_{};
     straight_motor::ForwardConfig config_{};
     nn::CpuMlp<float> actor_;
-    bool loaded_=false,paused_=true;
+    bool loaded_=false,paused_=true,continuous_=false;
+    uint64_t viewing_controls_=0,viewing_substeps_=0,loops_=0;
     int case_=0;
     float minimum_speed_=.008f,maximum_speed_=.008f;
     std::string error_;
@@ -20,6 +21,12 @@ public:
     bool reset(int case_id=0);
     bool start();
     bool set_speed(float speed);
+    void set_continuous(bool enabled){pause();continuous_=enabled;}
+    bool continuous()const{return continuous_;}
+    uint64_t viewing_controls()const{return viewing_controls_;}
+    uint64_t viewing_substeps()const{return viewing_substeps_;}
+    uint64_t loops()const{return loops_;}
+    bool benchmark_complete()const{return task_.outcome!=straight_motor::Outcome::Running;}
     float target_speed()const{return config_.target_speed_m_s;}
     float minimum_speed()const{return minimum_speed_;}
     float maximum_speed()const{return maximum_speed_;}
@@ -28,7 +35,7 @@ public:
     bool step(); // exactly one50ms control; refuses paused/unloaded/finished
     bool loaded()const{return loaded_;}
     bool paused()const{return paused_;}
-    bool finished()const{return task_.outcome!=straight_motor::Outcome::Running;}
+    bool finished()const{return !continuous_&&benchmark_complete();}
     const std::string& error()const{return error_;}
     const straight_motor::World& world()const{return world_;}
     const straight_motor::ForwardTask& task()const{return task_;}

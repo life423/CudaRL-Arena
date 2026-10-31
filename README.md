@@ -14,7 +14,12 @@ internal joints. Godot displays native poses and never supplies propulsion.
 Start/Pause/Reset control the single native world. Choose4/5/6/7/8mm/s in the
 existing viewer, then Start. Selecting a speed resets to rest and pauses, including
 during a swim. The accepted constant-clone-v1/update-600 actor runs frozen and
-auto-pauses after4seconds. It does not train or demonstrate mid-swim slowdown.
+runs continuously by default. Pause/Reset remain available. The labeled
+Continuous checkbox permits viewing past4seconds and explicitly restarts from
+rest near the finite pond edge (20mm clearance); the reset counter is visible.
+Uncheck it for the original4second benchmark/auto-pause. Physical/numerical
+safety failures still stop. Longer viewing is unvalidated, and the4second score
+is frozen separately per swim. It does not train or demonstrate mid-swim slowdown.
 
 The separately saved supervised checkpoint passes10/10four-second constant
 requests from rest in two reset poses, including withheld5/7mm/s. Requested

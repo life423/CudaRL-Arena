@@ -9,6 +9,8 @@ var pause_button: Button
 var accumulator := 0.0
 var state: Dictionary = {}
 var speed_control: SpinBox
+var continuous_control: CheckBox
+var camera: Camera3D
 var output := ""
 var capture_path := ""
 var capture_queued := false
@@ -70,7 +72,7 @@ func _ready() -> void:
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-55, -30, 0)
 	add_child(light)
-	var camera := Camera3D.new()
+	camera = Camera3D.new()
 	camera.position = Vector3(0.5, 0, 3.6)
 	_layout_camera(camera)
 	add_child(camera)
@@ -88,8 +90,8 @@ func _ready() -> void:
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",10)
 	margin.add_child(column)
-	column.add_child(_label("Live swimming / frozen controller",25))
-	column.add_child(_label("Frozen NN + stroke, native model6. No training.\nNew speed resets to rest. Four-second swims; slowdown unvalidated.",16))
+	column.add_child(_label("Live swimming",25))
+	column.add_child(_label("Frozen NN + stroke. No training. New speed resets to rest. Beyond 4 s is unvalidated.",16))
 	status = _label("Loading verified actor...",16)
 	column.add_child(status)
 	speed_control = SpinBox.new()
@@ -102,6 +104,16 @@ func _ready() -> void:
 			accumulator = 0
 			_refresh())
 	column.add_child(speed_control)
+	continuous_control = CheckBox.new()
+	continuous_control.text = "Continuous (edge reset)"
+	continuous_control.custom_minimum_size.y = 44
+	continuous_control.button_pressed = capture_path.is_empty() or capture_paused
+	continuous_control.toggled.connect(func(enabled: bool):
+		if swimmer != null:
+			swimmer.call("set_continuous",enabled)
+			accumulator = 0
+			_refresh())
+	column.add_child(continuous_control)
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(spacer)
@@ -123,6 +135,7 @@ func _ready() -> void:
 	if swimmer == null or not bool(swimmer.call("load_controller")):
 		_fail("Frozen actor load failed: " + (str(swimmer.call("get_error")) if swimmer else "class missing"))
 		return
+	swimmer.call("set_continuous",continuous_control.button_pressed)
 	state = swimmer.call("get_state")
 	# Setting Range bounds can emit value_changed; initialization must not reset
 	# the native request before the verified snapshot has been installed.
@@ -194,12 +207,18 @@ func _refresh(snapshot: Dictionary = {}) -> void:
 	pause_button.disabled = not active
 	speed_control.set_value_no_signal(float(state.target_speed_m_s)*1000)
 	var prefix := "RUNNING" if active else ("COMPLETE / auto-paused" if bool(state.finished) else "PAUSED")
-	status.text = "%s | %.2f / 4.00 s\nCOM speed %.2f mm/s | target %.2f | steady %.2f mm/s\nStrength %.3f rad | cadence %.2f Hz | positive work %.2f microJ" % [prefix,float(state.segment_time_s),float(state.speed_m_s)*1000,float(state.target_speed_m_s)*1000,float(state.steady_speed_m_s)*1000,float(state.amplitude),float(state.frequency),float(state.positive_work_J)*1e6]
+	var benchmark := ("PASS" if bool(state.passed) else "FAIL") if bool(state.benchmark_complete) else "pending"
+	status.text = "%s | %.1f s | edge resets %d\nCOM %.2f mm/s | target %.1f\n4 s benchmark %s | steady %.2f mm/s\nStrength %.3f | %.2f Hz | work %.2f microJ" % [prefix,float(state.time_s),int(state.loops),float(state.speed_m_s)*1000,float(state.target_speed_m_s)*1000,benchmark,float(state.steady_speed_m_s)*1000,float(state.amplitude),float(state.frequency),float(state.positive_work_J)*1e6]
 	if not str(state.error).is_empty(): status.text += "\nERROR: " + str(state.error)
 	var poses: Array = state.links
 	for i in range(mini(links.size(),poses.size())):
 		links[i].position = poses[i].position
 		links[i].quaternion = poses[i].orientation
+	# Follow the rendered head so travel across the fixed pond stays visible.
+	# Camera movement never changes native coordinates, bounds or forces.
+	var focus := Vector3(float(state.head_x),-2,float(state.head_z))
+	camera.position = focus+Vector3(0.5,2,3.6)
+	camera.look_at(focus+Vector3(-0.35,0,0))
 
 func _capture_still() -> void:
 	await _capture()

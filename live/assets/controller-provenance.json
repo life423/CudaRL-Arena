@@ -15,17 +15,18 @@
     "src/nn/motor/stroke_motor.h": "79325c5968dd36b2f62c000e81d9f28c83d51462928eddac215acd4bdb11a1e3",
     "src/nn/motor/straight_task.h": "5c39a69fc95c066d46eb6d5da7bddb74e0083a436d62800420f7079cf3926c4e",
     "src/nn/motor/state.h": "7fb65afc14fc205f02615ec62742d847e60942be3c8f060f7512400e0628bc39",
-    "src/nn/motor/frozen_controller.cpp": "4e38e11eaf431b5118d3a431e0f7f48de8f66a0c5633a3eefde561b560be600c",
-    "src/nn/motor/frozen_controller.h": "ac5a5d92bbbd5fcd73b59488590f0558c87d807cdd7b0fb66f399e0a908a17c6",
+    "src/nn/motor/frozen_controller.cpp": "34007c68365d8a0b166ee7bc13a78ecf02c4f32d0e348b3dbbebf89c4c9d3102",
+    "src/nn/motor/frozen_controller.h": "2d37c90c3f8cba5f9926540f4821b2c8a3db81f837aeacd79a9fed3e6417f595",
     "src/physics/dynamics.h": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6",
     "src/physics/contact.h": "3a0b9e48cd34752d8ea05267e06491e2f7c65531fe7f0750079351b71cd548d8",
     "src/simulation/world.h": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3",
     "src/nn/mlp_cpu.h": "f848a64e32c0bbefdf418972d42e82eab7214195f574c0638e1cc85206eed9cb",
     "src/nn/mlp_spec.h": "086a3b10b170094c4d6eee5ee1175baec7cbd3f85670dc39207a3dd41b0ef7eb"
   },
-  "asset_sha256": "d0a197c73778d07ffe94fee58821357f822e0d7522a5c9c78c6424e9ad1e7624",
+  "asset_sha256": "f3ce8288b3e99d01d260f242fdae89e68aa8df442c5620aa9540862f75109334",
   "minimum_speed_m_s": 0.004,
   "maximum_speed_m_s": 0.008,
   "reset": "Actor only; fresh physical state, no optimizer or saved world continuation",
-  "speed_selection": "Resets to rest and pauses; four-second constant requests only, no validated speed transitions"
+  "speed_selection": "Resets to rest and pauses; only four-second constant requests validated, no validated speed transitions",
+  "continuous_viewing": "Unvalidated beyond four seconds; unchanged inference with time feature held at zero; explicit reset at 20mm pond clearance, never safety-failure recovery"
 }

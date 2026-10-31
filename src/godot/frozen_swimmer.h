@@ -13,6 +13,7 @@ public:
     FrozenSwimmer();~FrozenSwimmer()override;
     bool load_controller();bool reset(int case_id=0);bool start();
     bool set_speed(double speed);void pause();bool step();
+    void set_continuous(bool enabled);
     Dictionary get_state()const;Dictionary get_geometry()const;String get_error()const;
 };
 }
