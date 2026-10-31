@@ -911,3 +911,170 @@ weights; it is neither recorded playback nor live learning. See docs/LIVE_DEMO.m
 Only short straight calm-water swimming is established. Contact/current/turning/
 braking/arrival remain future work; known head yaw and dry drift remain disclosed.
 No push/merge/deploy or main-runtime replacement. Local verified commit authorized.
+
+
+## Variable-speed task5 and active-code cleanup
+
+User approved different speeds, DRY code and removal of dead/legacy active paths.
+HEAD rollback remains c0c0314; no new commit/push/merge/deploy. One shared request,
+observation/reward/acceptance path supports4..8mm/s; one trainer/scene only.
+Retired arrival task, diagnostic Godot adapter/project, replay, historical contact
+study implementations/tools and their CMake/test references removed. Active
+physical/numerical/persistence primitives remain referenced. Historical source is
+in Git; original checkout and ignored study/checkpoint/personal evidence untouched.
+
+One approved trial completed32,832controls/328,320steps,24updates,3.347s native,
+.582s setup. Warm-start selected reward2 actor; fresh critic/Adam. Train4/6/8,
+withheld5/7; paired two-pose constant evaluation plus continuous6->4->8 sequence.
+CPU/CUDA readiness passed; baseline8 matched160old frozen rows exactly before PPO.
+Candidate2/10constant and0/3switch passes; baseline2/10 and0/3. Candidate mean
+7.790,7.790,7.789,7.789,7.789mm/s for4/5/6/7/8 requests: conditioning failed.
+No integrity fault, no retries, full ceiling consumed, no additional training.
+Candidate rejected; selected8mm/s actor parameter checksum1699f42d0090c042 unchanged.
+Source-bound portable asset migrated to clean task5/schema2, permitting only8.
+13focused nonphysical checks passed. One build argument error was corrected before
+any physical run; strict trainer/extension/test builds and Godot parsing passed.
+Zero-step rendered360x640 layout passed and was visually inspected. Shader cache
+unavailable in sandbox, rendering succeeded. Exact evidence and frozen source:
+build/speed-motor/2026-10-30-variable-v1/. See CURRENT_MOVEMENT.md and
+SPEED_MOTOR_PROTOCOL.md. No extra run is authorized. No new commit made.
+
+
+## Reporting audit after closed variable trial
+
+Actual training began23:51:48UTC and trial closed23:51:50; start notification was
+missed at the conversation boundary. Native execution was3.347s, not prolonged
+training. App changes cannot solve agent-to-parent chat/voice delivery by themselves.
+Added atomic public status, PID/start/heartbeat/progress, explicit baseline/training/
+evaluation phases and terminal result/failure/failed-phase fields to the same runner.
+Nine zero-process status transitions and failure-preservation checks passed; strict
+native compilation passed. No new physical or training execution. Closed trial
+snapshot retained; reporting source intentionally changed after it. See RUN_STATUS.md.
+
+
+## Per-goal advantage correction prepared; not launched
+
+User authorized targeted correction preparation and nonphysical checks, requiring
+readiness notification before any next training. Implemented only per-goal actor
+advantage population normalization, before minibatch shuffle. Labels captured
+with each observation before reset; raw GAE critic targets and all mechanics,
+requests/rewards/gates/optimizer/exploration remain unchanged. No legacy flag.
+Actual raw advantage count/mean/std will be logged per speed in the next trial.
+
+Saved deterministic evaluation returns have84.89% between-goal mean variance;
+this supports the candidate, but actual prior stochastic advantages were not
+saved and the cause is unproved. Strict trainer/test builds passed after a test
+namespace typo was corrected. Four focused checks passed,0skipped, including
+real CUDA gradients with identity normalization and unchanged critic targets.
+Zero creature physical advances, no PPO or new model/checkpoint adoption.
+
+Ready protocol: docs/GOAL_ADVANTAGE_PROTOCOL.md. Machine readiness/hashes:
+build/speed-motor/goal-advantage-readiness.json. Proposed same24updates/32,832
+controls/328,320steps/20s native hard cap, train4/6/8, withheld5/7, paired frozen
+checks and switches, no retry. This new trial is NOT started or authorized by
+readiness. Await explicit launch approval. Closed prior trial frozen files,
+physical/observation/reward sources and original checkout verified unchanged.
+
+
+## Per-goal normalization trial closed
+
+User explicitly approved launch after readiness. Native start2026-10-31T00:12:47.489Z,
+training observed00:12:48, done00:12:50.829.24updates,32,832controls/328,320native
+steps,3.271s native/.407s setup. Readiness/reference match passed; no faults/retries.
+Candidate4/10constant cases (7/8mm/s only),0/3switches; not selected. Requests4..8
+produce7.495/7.501/7.507/7.513/7.519mm/s: still almost request-insensitive. Overlapping
+7/8tolerances explain the extra passes; do not call this learned variable speed.
+Original passing actor retained, frozen source/artifact hashes and original checkout
+verified unchanged. Actual per-goal raw advantage counts/means/std now recorded in
+training.csv. No automatic follow-up, commit or adoption. Evidence:
+build/speed-motor/2026-10-31-goal-advantage-v1/.
+
+
+## Demonstration-based speed initialization prepared, not launched
+
+User approved strategic preparation, retaining readiness-before-launch. One bounded
+feedback teacher reads only the same42NN observations, requests1Hz and bounded
+.05..65rad strength, no hidden integral or private state. Command-space feedforward
+28and feedback80rad^2*s/m are heuristic until physical calibration. No claim that
+slow speeds are feasible yet. Model6/body/water/limits/observation remain unchanged.
+
+The single runner now calibrates nine teacher profiles, then (only if all pass)
+fits the same two-output NN to1200real observation/applied-action pairs. No teacher
+or blend during frozen NN evaluation, no PPO or normalization compatibility flag.
+600Adam steps/batch256, same starting actor, fresh optimizer. All old studies and
+source remain archived; superseded uncommitted goal-normalization helper/tests also
+preserved in the closed run's retired-source folder before removal from active tree.
+Research schema2 stores actor+Adam; runtime portable actor remains unchanged.
+
+Strict build and4nonphysical checks pass, including real CUDA MSE gradient math;
+zero physical advances and no NN fitting. Protocol docs/DEMONSTRATION_PROTOCOL.md;
+readiness/hashes build/speed-motor/demonstration-readiness.json. Proposed total3312
+controls/33120steps inclusive,600fit steps,20s native cap, no retries/extensions.
+Teacher6constant8s cases score6..8s; three4s8->4->6 calibration switches. Frozen
+NN evaluation keeps original4s five-speed cases and6->4->8switches/gates unchanged.
+Any teacher failure skips fitting and closes the run. Await launch authorization.
+Passing actor, archived trial frozen hashes and original checkout verified unchanged.
+No new commit/push/merge/deploy or model adoption.
+
+
+## Demonstration trial1 closed: settled speeds pass, deceleration gate fails
+
+User explicitly approved the prepared trial. Actual native start2026-10-31T01:20:41.509Z,
+terminal failed2026-10-31T01:20:42.254Z. Native.668621s, setup.432s. Readiness passed.
+All six8second constant teacher profiles passed:4request->4.337mm/s,6->6.443,
+8->8.480 (cases0/3, score6..8s). First8mm/s switch segment passed8.182mm/s.
+Next8->4 segment failed: scored5.234mm/s vs3.6..4.4, RMSE1.315 vs1.25limit.
+Lateral.320mm/depth.000105mm/path1.17deg recorded; no numerical/safety stop.
+Teacher commanded minimum.05rad for56/80intervals; actual strength reached near
+minimum within1s. Input speed8.50->7.41->6.20->5.23->4.56mm/s over4s. This is
+slow deceleration with nearly stopped propulsion, not lack of settled slow speeds.
+
+Seven teacher profiles passed, one failed, final6mm/s segment unrun. Exactly1152
+controls/11520native substeps, no retries. Remaining2160controls/21600steps closed,
+not available automatically. No supervised fit/Adam, baseline/candidate evaluation,
+PPO, actor adoption or commit ran. Result arrays for unrun evaluations are explicitly
+flagged unrun; do not interpret their zeros as NN failure.1120examples archived,
+not used for fitting. Passing actor, frozen run sources/artifacts and original
+checkout verified unchanged. Evidence build/speed-motor/2026-10-31-demonstration-v1/.
+Next decision: keep the deceleration failure visible and separate constant-speed
+NN initialization from braking, or explicitly design braking if this switch deadline
+is required. Do not blindly increase teacher feedback: it was already at minimum
+command most of the slowdown. No follow-up is authorized by this result.
+
+
+## Narrow constant-speed clone accepted
+
+Explicit user approval01:42UTC. Verified original teacher data/gate SHA, frozen
+physical/observation/teacher source identity and six-profile interleaved row order.
+Reused only first960examples from accepted profiles0..5; excluded both switch
+profiles and kept the source whole trial FAILED. New loader rejects bad lineage,
+wrong dimensions/goals and labels differing from source. Six nonphysical checks
+passed, including actual CUDA MSE gradient math. No teacher physics rerun.
+
+One run2026-10-31-constant-clone-v1 started01:49:57.521UTC, done01:49:58.385.
+600supervised Adam steps,1632controls/16320physical steps, .793035native seconds,
+.521774setup seconds. Readiness and160row exact baseline match passed; no faults
+or retries. Frozen NN alone passed10/10constant cases (4/5/6/7/8mm/s, cases0/3).
+Measured4.350/5.318/6.259/7.115/7.843mm/s;5/7withheld from fitting.8mm/s RMSE
+1.805->1.351mm/s and work/metre.387932->.352561mJ/m. All fixed gates pass.
+Head yaw still reaches28.84degrees; no stable-head, turn, holding or contact claim.
+
+Checkpoint update-600.bin is selected ONLY for this constant-from-rest4s lesson.
+Main portable/live8mm/s actor remains unchanged. No switch evaluation, general
+persistent-speed adoption, slowdown claim, extra run, commit/push/merge/deploy.
+Old8->4gate remains failed. Frozen sources/artifacts and original checkout verified
+unchanged. Exact SHA/selection/scope: selected-controller.json in the run folder;
+protocol docs/CONSTANT_CLONE_PROTOCOL.md; native result/paired traces retained.
+
+
+## Authorized local steady-speed milestone commit
+
+User01:58UTC requested local commit. Curated assets/steady-speed-v1 contains exact
+update600actor+Adam checkpoint, narrow-scope provenance, accepted960row input slice,
+source teacher gates (including failure), case0/3baseline reference and frozen
+metrics. No bulk build outputs or failed-run dumps are staged. Active runner now
+uses these curated inputs, one path with no ignored-build fallback. Godot live
+asset weights/source contract remain unchanged by this packaging; no new physical
+or training execution. The narrow10/10four-second constant-from-rest/two-pose scope
+and unpassed slowdown/switch behavior remain explicit. Original checkout/evidence
+preserved; no push/merge/deployment. Previous rollback c0c0314 remains available.

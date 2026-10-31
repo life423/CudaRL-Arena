@@ -1,0 +1,29 @@
+{
+  "source_run": "build\\speed-motor\\2026-10-31-demonstration-v1",
+  "source_trial_accepted": false,
+  "source_gate": "failed8-to4switch; no fitting occurred",
+  "accepted_profiles": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "excluded_profiles": [
+    6,
+    7
+  ],
+  "accepted_rows": 960,
+  "source_rows": 1120,
+  "source_observation_order_verified": true,
+  "physics_observation_teacher_sources_identical": true,
+  "source_demonstrations_sha256": "79EF33B32865650A7E5B4B37A900CE7574DD84BEFCF033C5BF0414AF61490BC3",
+  "source_teacher_gates_sha256": "B24675B4DE9742D81A3508D038B5809EB5F62EF44139639E5B32AD64D976BC24",
+  "source_dataset_payload_FNV": "d342987c8ee69eb6",
+  "accepted_examples_sha256": "5638C685E3BB91ACFD6DE94916772FD155F92DA7435088B8508AFF23AD73BFE6",
+  "baseline_reference_sha256": "7947939CE3A6BDFDD948BB82DFE282F0A06855D173ABB43AEE9057AABC7E0850",
+  "curation": "Only accepted profiles0..5. Whole source trial remains failed. Original data verified before curating; no failed switch rows included.",
+  "curated_teacher_gates_sha256": "84A400E8DC54846984741F7D5BCB869C411E86C95BE1B451F660D81A93B797AC",
+  "curated_gate_normalization": "CRLF to LF only; original source SHA and FNV lineage retained"
+}

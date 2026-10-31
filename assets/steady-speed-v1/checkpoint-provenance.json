@@ -1,0 +1,47 @@
+{
+  "format": "Checksummed native research schema2: actor and Adam only; no saved physical world",
+  "model": 6,
+  "task": 5,
+  "observations": 42,
+  "actions": 2,
+  "network": [
+    42,
+    32,
+    32,
+    2
+  ],
+  "optimizer_steps": 600,
+  "checkpoint_sha256": "0A19AF86FBBDCD189A330547A281666B4D8C781922A7743C870E7A58D9FC6411",
+  "source_run": "build/speed-motor/2026-10-31-constant-clone-v1",
+  "scope": "4second constant requests from rest; neural inference alone; 5/7mm/s withheld from fitting",
+  "trained_speeds_mm_s": [
+    4,
+    6,
+    8
+  ],
+  "withheld_speeds_mm_s": [
+    5,
+    7
+  ],
+  "tested_reset_cases": [
+    0,
+    3
+  ],
+  "accepted_cases": 10,
+  "runtime_adopted": false,
+  "slowdown_switch_gate": "UNPASSED; previous8-to4teacher check failed",
+  "live_baseline_actor_checksum": "1699f42d0090c042",
+  "source_contract_sha256_normalized_lf": {
+    "src/motor/movement_model.h": "8b3a57796c46b6af585889c38fd6009a81aea96e4803edb5c7f083f5104100c6",
+    "src/motor/stroke_motor.h": "79325c5968dd36b2f62c000e81d9f28c83d51462928eddac215acd4bdb11a1e3",
+    "src/motor/straight_task.h": "5c39a69fc95c066d46eb6d5da7bddb74e0083a436d62800420f7079cf3926c4e",
+    "src/motor/state.h": "7fb65afc14fc205f02615ec62742d847e60942be3c8f060f7512400e0628bc39",
+    "src/motor/frozen_controller.cpp": "650c9be22a33420e296803a2d8ccb05f19fa4fa1fe4fd57302818bdd4fe41de3",
+    "src/motor/frozen_controller.h": "ac5a5d92bbbd5fcd73b59488590f0558c87d807cdd7b0fb66f399e0a908a17c6",
+    "src/physics/dynamics.h": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6",
+    "src/physics/contact.h": "3a0b9e48cd34752d8ea05267e06491e2f7c65531fe7f0750079351b71cd548d8",
+    "src/simulation/world.h": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3",
+    "src/nn/mlp_cpu.h": "f848a64e32c0bbefdf418972d42e82eab7214195f574c0638e1cc85206eed9cb",
+    "src/nn/mlp_spec.h": "086a3b10b170094c4d6eee5ee1175baec7cbd3f85670dc39207a3dd41b0ef7eb"
+  }
+}

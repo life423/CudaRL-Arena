@@ -5,7 +5,7 @@ $project = Join-Path $repo 'live'
 $godotCommand = Get-Command 'Godot*_win64.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
 if (-not $godotCommand) { throw 'Godot is not on PATH. Open live/project.godot after building frozen_swimmer.' }
 if (-not $SkipBuild) {
-    & cmake -S $repo -B (Join-Path $repo 'build') -DCUDARL_BUILD_LIVE_DEMO=ON
+    & cmake -S $repo -B (Join-Path $repo 'build') -DCUDARL_BUILD_GODOT=ON
     if ($LASTEXITCODE -ne 0) { throw 'Live demo configuration failed' }
     & cmake --build (Join-Path $repo 'build') --config Release --target frozen_swimmer --parallel 2
     if ($LASTEXITCODE -ne 0) { throw 'Live demo build failed' }

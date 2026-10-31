@@ -11,7 +11,8 @@ class FrozenSwimmer final:public RefCounted {
 protected:static void _bind_methods();
 public:
     FrozenSwimmer();~FrozenSwimmer()override;
-    bool load_controller();bool reset(int case_id=0);bool start();void pause();bool step();
+    bool load_controller();bool reset(int case_id=0);bool start();
+    bool set_speed(double speed);void pause();bool step();
     Dictionary get_state()const;Dictionary get_geometry()const;String get_error()const;
 };
 }

@@ -10,17 +10,19 @@ namespace godot {
 namespace p=cudarl::physics;namespace m=cudarl::movement;
 struct FrozenSwimmer::Impl {cudarl::motor::FrozenController controller;};
 FrozenSwimmer::FrozenSwimmer():impl_(std::make_unique<Impl>()){}FrozenSwimmer::~FrozenSwimmer()=default;
-void FrozenSwimmer::_bind_methods(){ClassDB::bind_method(D_METHOD("load_controller"),&FrozenSwimmer::load_controller);ClassDB::bind_method(D_METHOD("reset","case_id"),&FrozenSwimmer::reset,DEFVAL(0));
+void FrozenSwimmer::_bind_methods(){ClassDB::bind_method(D_METHOD("set_speed","speed_m_s"),&FrozenSwimmer::set_speed);ClassDB::bind_method(D_METHOD("load_controller"),&FrozenSwimmer::load_controller);ClassDB::bind_method(D_METHOD("reset","case_id"),&FrozenSwimmer::reset,DEFVAL(0));
     ClassDB::bind_method(D_METHOD("start"),&FrozenSwimmer::start);ClassDB::bind_method(D_METHOD("pause"),&FrozenSwimmer::pause);ClassDB::bind_method(D_METHOD("step"),&FrozenSwimmer::step);
     ClassDB::bind_method(D_METHOD("get_state"),&FrozenSwimmer::get_state);ClassDB::bind_method(D_METHOD("get_geometry"),&FrozenSwimmer::get_geometry);ClassDB::bind_method(D_METHOD("get_error"),&FrozenSwimmer::get_error);}
 bool FrozenSwimmer::load_controller(){return impl_->controller.load(ProjectSettings::get_singleton()->globalize_path("res://assets/frozen-controller.bin").utf8().get_data());}
+bool FrozenSwimmer::set_speed(double speed){return impl_->controller.set_speed(static_cast<float>(speed));}
 bool FrozenSwimmer::reset(int id){return impl_->controller.reset(id);}bool FrozenSwimmer::start(){return impl_->controller.start();}void FrozenSwimmer::pause(){impl_->controller.pause();}bool FrozenSwimmer::step(){return impl_->controller.step();}
 String FrozenSwimmer::get_error()const{return String(impl_->controller.error().c_str());}
 Dictionary FrozenSwimmer::get_geometry()const{Dictionary out;out["model"]=6;out["scale_m"]=p::scale;out["rod_radius_m"]=m::Geometry::rod_radius;out["fin_extension_m"]=m::Geometry::fin_extension;out["fin_thickness_m"]=m::Geometry::fin_thickness;
     Array links;for(int b=0;b<3;++b){const auto g=m::body_geometry(b);Dictionary d;d["length"]=g.length;d["half_height"]=g.half_height;d["half_width"]=g.half_width;links.append(d);}out["links"]=links;return out;}
 Dictionary FrozenSwimmer::get_state()const{const auto& c=impl_->controller;const auto& w=c.world();const auto& b=w.physical.body;const auto metrics=c.metrics();Dictionary out;
     out["loaded"]=c.loaded();out["paused"]=c.paused();out["finished"]=c.finished();out["error"]=get_error();out["model"]=6;out["training"]=false;
-    out["controls"]=static_cast<int64_t>(w.physical.control_steps);out["substeps"]=static_cast<int64_t>(w.attempted_substeps);out["time_s"]=w.physical.time_seconds;
+    out["segment_time_s"]=c.task().controls*p::dt;out["controls"]=static_cast<int64_t>(w.physical.control_steps);out["substeps"]=static_cast<int64_t>(w.attempted_substeps);out["time_s"]=w.physical.time_seconds;
+    out["target_speed_m_s"]=c.target_speed();out["minimum_speed_m_s"]=c.minimum_speed();out["maximum_speed_m_s"]=c.maximum_speed();
     out["case"]=c.case_id();out["passed"]=c.task().outcome==cudarl::straight_motor::Outcome::Success;out["forward_m"]=metrics.forward_m;out["depth_m"]=metrics.depth_m;out["lateral_m"]=metrics.lateral_m;
     out["speed_error_m_s"]=metrics.speed_error_m_s;out["speed_m_s"]=p::norm(cudarl::motor::motion(b).velocity_m_s);out["steady_speed_m_s"]=c.task().steady_speed_m_s;out["head_yaw_deg"]=metrics.head_yaw_deg;
     out["head_x"]=b.position.x;out["head_y"]=b.position.y;out["head_z"]=b.position.z;out["qx"]=b.orientation.x;out["qy"]=b.orientation.y;out["qz"]=b.orientation.z;out["qw"]=b.orientation.w;

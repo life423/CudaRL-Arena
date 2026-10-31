@@ -1,11 +1,10 @@
 #ifndef CUDARL_STROKE_MOTOR_H
 #define CUDARL_STROKE_MOTOR_H
-#include "motor/forward_task.h"
+#include "motor/state.h"
 #include "motor/movement_model.h"
 namespace cudarl::stroke_motor {
 namespace p=physics;namespace sim=simulation;namespace base=motor;namespace model=movement;
-using ForwardConfig=base::ForwardConfig;using ForwardTask=base::ForwardTask;using Outcome=base::Outcome;using Transition=base::Transition;
-constexpr int kTaskVersion=3,kObservations=42,kActions=2;
+constexpr int kObservations=42,kActions=2;
 struct Action {float latent[2]{},command[4]{};};
 struct World {
     sim::WorldState physical{};
@@ -16,27 +15,16 @@ struct World {
     double signed_work=0,positive_work=0,fluid_loss=0,numerical_loss=0,external_work=0,last_energy_error=0;
     int failure_code=0;
 };
-CUDARL_HD inline bool in_domain(const World& w,const ForwardConfig& c){
-    if(!base::in_domain(w.physical,c)||model::clearance(w.physical.body)<c.clearance_m||!p::finite_number(w.phase))return false;
+CUDARL_HD inline bool in_domain(const World& w,float clearance_m=.01f){
+    if(!base::in_domain(w.physical,clearance_m)||model::clearance(w.physical.body)<clearance_m||!p::finite_number(w.phase))return false;
     for(int j=0;j<2;++j)if(!p::finite_number(w.parameter[j])||!p::finite_number(w.rate[j]))return false;return true;
 }
-CUDARL_HD inline bool begin_forward(const World& w,const ForwardConfig& c,ForwardTask& t){return in_domain(w,c)&&base::begin_forward(w.physical,c,t);}
 CUDARL_HD inline bool action_from_latent(const float* z,Action& a){if(!z)return false;Action next;for(int j=0;j<2;++j){if(!p::finite_number(z[j]))return false;next.latent[j]=z[j];next.command[j]=tanhf(z[j]);}a=next;return true;}
-CUDARL_HD inline bool observe(const ForwardTask& t,const World& w,const ForwardConfig& c,float* out){
-    if(!in_domain(w,c)||!base::observe(t,w.physical,c,out))return false;
-    out[36]=sinf(w.phase);out[37]=cosf(w.phase);
-    const float scale[2]={.7f,1.5f};
-    for(int j=0;j<2;++j){out[38+j]=w.parameter[j]/scale[j];out[40+j]=w.rate[j]/(scale[j]*2*model::pi);}
-    return true;
-}
-CUDARL_HD inline base::Transition record_control(ForwardTask& t,const World& w,const ForwardConfig& c){
-    if(!in_domain(w,c)){auto invalid=w.physical;invalid.invalid=true;return base::record_control(t,invalid,c);}return base::record_control(t,w.physical,c);
-}
 // A smooth internal reference generator, not a body force. Its phase/parameters
 // and derivative state are observed and saved. Rate/acceleration references
 // drive only the four torque-limited joints in movement model6.
 CUDARL_HD inline bool step_state(World& w,const float* command){
-    ForwardConfig config;if(w.physical.paused||!in_domain(w,config))return false;
+    if(w.physical.paused||!in_domain(w))return false;
     for(int j=0;j<2;++j)if(!p::finite_number(command[j])||fabsf(command[j])>1)return false;
     const float desired[2]={.35f*(command[0]+1),.25f+.625f*(command[1]+1)};
     auto& state=w.physical;state.telemetry={};state.mean_squared_torque=0;
@@ -58,7 +46,7 @@ CUDARL_HD inline bool step_state(World& w,const float* command){
         for(int j=0;j<4;++j){state.held_targets[j]=reference.angle[j];const float normalized=telemetry.torque[j]/p::torque;
             state.last_actual_torques[j]=normalized;state.actual_torques[k*4+j]=normalized;state.requested_torques[k*4+j]=telemetry.requested[j];state.mean_squared_torque+=normalized*normalized;}
     }
-    state.mean_squared_torque/=40;++state.control_steps;return in_domain(w,config);
+    state.mean_squared_torque/=40;++state.control_steps;return in_domain(w);
 }
 }
 #endif

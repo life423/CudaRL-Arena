@@ -12,12 +12,18 @@ class FrozenController {
     nn::CpuMlp<float> actor_;
     bool loaded_=false,paused_=true;
     int case_=0;
+    float minimum_speed_=.008f,maximum_speed_=.008f;
     std::string error_;
 public:
     FrozenController();
     bool load(const std::string& path);
     bool reset(int case_id=0);
     bool start();
+    bool set_speed(float speed);
+    float target_speed()const{return config_.target_speed_m_s;}
+    float minimum_speed()const{return minimum_speed_;}
+    float maximum_speed()const{return maximum_speed_;}
+    const std::vector<float>& actor_parameters()const{return actor_.params();}
     void pause(){paused_=true;}
     bool step(); // exactly one50ms control; refuses paused/unloaded/finished
     bool loaded()const{return loaded_;}

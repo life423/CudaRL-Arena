@@ -1,7 +1,7 @@
 #include "check.h"
-#include "motor/stroke_motor.h"
+#include "motor/straight_task.h"
 #include <limits>
-namespace sm=cudarl::stroke_motor;
+namespace sm=cudarl::straight_motor;
 TEST_CASE("stroke_motor: oscillator phase and filter rates are observed without stepping") {
     sm::World world;sm::ForwardConfig config;sm::ForwardTask task;CHECK(sm::begin_forward(world,config,task));
     float before[sm::kObservations]{},after[sm::kObservations]{};CHECK(sm::observe(task,world,config,before));

@@ -9,11 +9,12 @@ var pause_button: Button
 var running := false
 var accumulator := 0.0
 var state: Dictionary = {}
-var reference := ""
+var speed_control: SpinBox
 var output := ""
 var capture_path := ""
 var capture_queued := false
 var capture_saved := false
+var capture_paused := false
 var total_substeps := 0
 var started_ms := 0
 func _material(color: Color) -> StandardMaterial3D:
@@ -50,7 +51,7 @@ func _ready() -> void:
 	started_ms = Time.get_ticks_msec()
 	get_window().title = "CudaRL - LIVE model6 - frozen learned controller"
 	for argument in OS.get_cmdline_user_args():
-		if argument.begins_with("--verify="): reference = argument.trim_prefix("--verify=")
+		if argument == "--capture-paused": capture_paused = true
 		if argument.begins_with("--output="): output = argument.trim_prefix("--output=")
 		if argument.begins_with("--capture="): capture_path = argument.trim_prefix("--capture=")
 	var environment := WorldEnvironment.new()
@@ -67,10 +68,13 @@ func _ready() -> void:
 	add_child(light)
 	var camera := Camera3D.new()
 	camera.position = Vector3(0.5, 0, 3.6)
-	camera.fov = 42
+	camera.fov = 72 if get_window().size.x < 500 else 42
+	camera.v_offset = 1.0 if get_window().size.x < 500 else 0.0
 	add_child(camera)
 	camera.look_at(Vector3(-0.35, -2, 0))
-	get_window().size_changed.connect(func(): camera.fov = 72 if get_window().size.x < 500 else 42)
+	get_window().size_changed.connect(func():
+		camera.fov = 72 if get_window().size.x < 500 else 42
+		camera.v_offset = 1.0 if get_window().size.x < 500 else 0.0)
 	var floor_mesh := PlaneMesh.new()
 	floor_mesh.size = Vector2(9, 7)
 	_piece(self, floor_mesh, Color("294b4d"), Vector3(0, -4, 0))
@@ -87,6 +91,14 @@ func _ready() -> void:
 	column.add_child(_label("Frozen learned strength and frequency; supplied stroke. Real native model6 physics. No training. Auto-pauses after4 seconds.",16))
 	status = _label("Loading verified actor...",16)
 	column.add_child(status)
+	speed_control = SpinBox.new()
+	speed_control.custom_minimum_size = Vector2(140,44)
+	speed_control.step = 0.5
+	speed_control.suffix = " mm/s"
+	speed_control.value_changed.connect(func(value: float):
+		if swimmer != null and bool(swimmer.call("set_speed",value/1000)):
+			_refresh())
+	column.add_child(speed_control)
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(spacer)
@@ -108,13 +120,17 @@ func _ready() -> void:
 	if swimmer == null or not bool(swimmer.call("load_controller")):
 		_fail("Frozen actor load failed: " + (str(swimmer.call("get_error")) if swimmer else "class missing"))
 		return
+	state = swimmer.call("get_state")
+	speed_control.min_value = float(state.minimum_speed_m_s)*1000
+	speed_control.max_value = float(state.maximum_speed_m_s)*1000
+	speed_control.set_value_no_signal(float(state.target_speed_m_s)*1000)
+	speed_control.editable = speed_control.min_value < speed_control.max_value
 	geometry = swimmer.call("get_geometry")
 	_build_creature()
 	_refresh()
-	if not reference.is_empty():
-		_verify()
-		return
-	if not capture_path.is_empty(): _start()
+	if not capture_path.is_empty():
+		if capture_paused: _capture_still()
+		else: _start()
 
 func _start() -> void:
 	if swimmer != null and bool(swimmer.call("start")):
@@ -138,7 +154,7 @@ func _reset() -> void:
 	_refresh()
 
 func _process(delta: float) -> void:
-	if not reference.is_empty() or swimmer == null: return
+	if swimmer == null: return
 	if not capture_path.is_empty() and Time.get_ticks_msec()-started_ms > 10000:
 		_fail("Live UI verification wall cap")
 		return
@@ -173,12 +189,19 @@ func _refresh() -> void:
 	start_button.disabled = not bool(state.loaded) or bool(state.finished) or running or not str(state.error).is_empty()
 	pause_button.disabled = not running
 	var prefix := "RUNNING" if running else ("COMPLETE / auto-paused" if bool(state.finished) else "PAUSED")
-	status.text = "%s | %.2f / 4.00 s\nCOM speed %.2f mm/s | target8.00 | steady %.2f mm/s\nStrength %.3f rad | cadence %.2f Hz | positive work %.2f microJ" % [prefix,float(state.time_s),float(state.speed_m_s)*1000,float(state.steady_speed_m_s)*1000,float(state.amplitude),float(state.frequency),float(state.positive_work_J)*1e6]
+	status.text = "%s | %.2f / 4.00 s\nCOM speed %.2f mm/s | target %.2f | steady %.2f mm/s\nStrength %.3f rad | cadence %.2f Hz | positive work %.2f microJ" % [prefix,float(state.segment_time_s),float(state.speed_m_s)*1000,float(state.target_speed_m_s)*1000,float(state.steady_speed_m_s)*1000,float(state.amplitude),float(state.frequency),float(state.positive_work_J)*1e6]
 	if not str(state.error).is_empty(): status.text += "\nERROR: " + str(state.error)
 	var poses: Array = state.links
 	for i in range(mini(links.size(),poses.size())):
 		links[i].position = poses[i].position
 		links[i].quaternion = poses[i].orientation
+
+func _capture_still() -> void:
+	await RenderingServer.frame_post_draw
+	_capture()
+	await RenderingServer.frame_post_draw
+	_write_result({"paused_layout_passed":bool(state.loaded) and bool(state.paused),"physical_substeps":total_substeps})
+	get_tree().quit()
 
 func _capture() -> void:
 	await RenderingServer.frame_post_draw
@@ -199,59 +222,9 @@ func _fail(reason: String) -> void:
 	running = false
 	if status != null: status.text = reason
 	push_error(reason)
-	if not reference.is_empty() or not capture_path.is_empty():
+	if not capture_path.is_empty():
 		_write_result({"error":reason,"physical_substeps":total_substeps})
 		get_tree().quit(3)
-
-func _verify() -> void:
-	var file := FileAccess.open(reference,FileAccess.READ)
-	if file == null:
-		_fail("Missing frozen native reference")
-		return
-	var header := file.get_csv_line()
-	var matched := 0
-	var maximum := 0.0
-	var passed := 0
-	var fields := ["head_x","head_y","head_z","qx","qy","qz","qw","j0","j1","j2","j3","phase","amplitude","frequency","positive_work_J","forward_m","lateral_m","depth_m","speed_error_m_s"]
-	for case_id in range(4):
-		if not bool(swimmer.call("reset",case_id)) or not bool(swimmer.call("start")):
-			_fail("Native reset/start failed")
-			return
-		for tick in range(1,81):
-			if total_substeps+10 > 3200 or Time.get_ticks_msec()-started_ms > 10000:
-				_fail("Godot parity budget/wall cap")
-				return
-			var before: Dictionary = swimmer.call("get_state")
-			var advanced := bool(swimmer.call("step"))
-			state = swimmer.call("get_state")
-			total_substeps += int(state.substeps)-int(before.substeps)
-			if not advanced:
-				_fail("Native step failed: " + str(state.error))
-				return
-			var values := file.get_csv_line()
-			if values.size() != header.size():
-				_fail("Malformed native reference row")
-				return
-			var expected := {}
-			for i in range(header.size()): expected[header[i]] = float(values[i])
-			if int(expected["case"]) != case_id or int(expected.tick) != tick:
-				_fail("Reference case/clock mismatch")
-				return
-			for key in fields:
-				var actual := float(state[key])
-				var ref := float(expected[key])
-				var score := absf(actual-ref)/(0.00001+0.00001*absf(ref))
-				if not is_finite(actual) or not is_finite(ref) or score > 1:
-					_fail("Godot/native mismatch at " + key)
-					return
-				maximum = maxf(maximum,score)
-			matched += 1
-		if not bool(state.finished) or not bool(state.paused) or not bool(state.passed):
-			_fail("Four-second acceptance/auto-pause failed")
-			return
-		passed += 1
-	_write_result({"godot_passed":passed,"matched_rows":matched,"physical_substeps":total_substeps,"max_normalized_difference":maximum,"frozen_no_training":true})
-	get_tree().quit()
 
 func _build_creature() -> void:
 	for index in range(3):

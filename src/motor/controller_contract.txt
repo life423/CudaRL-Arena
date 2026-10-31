@@ -1,0 +1,11 @@
+src/motor/movement_model.h
+src/motor/stroke_motor.h
+src/motor/straight_task.h
+src/motor/state.h
+src/motor/frozen_controller.cpp
+src/motor/frozen_controller.h
+src/physics/dynamics.h
+src/physics/contact.h
+src/simulation/world.h
+src/nn/mlp_cpu.h
+src/nn/mlp_spec.h
