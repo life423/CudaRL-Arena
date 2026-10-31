@@ -36,7 +36,7 @@ def export(args):
     params = data[pos + 8:pos + 8 + count * 4]
     if count != 2498 or len(params) != 9992 or not (.004 <= args.minimum <= args.maximum <= .008):
         raise ValueError("Wrong actor shape or supported range")
-    names = (ROOT / "src/motor/controller_contract.txt").read_text().splitlines()
+    names = (ROOT / "src/nn/motor/controller_contract.txt").read_text().splitlines()
     hashes = {name: hashlib.sha256((ROOT / name).read_bytes().replace(b"\r\n", b"\n")).hexdigest() for name in names}
     portable = struct.pack("<8I2f2QI", 0x36434D46, 2, 6, 5, 2, 42, 2, update,
                            args.minimum, args.maximum, checksum(binding), checksum(params), len(names))

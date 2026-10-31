@@ -5,10 +5,8 @@ $project = Join-Path $repo 'live'
 $godotCommand = Get-Command 'Godot*_win64.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
 if (-not $godotCommand) { throw 'Godot is not on PATH. Open live/project.godot after building frozen_swimmer.' }
 if (-not $SkipBuild) {
-    & cmake -S $repo -B (Join-Path $repo 'build') -DCUDARL_BUILD_GODOT=ON
-    if ($LASTEXITCODE -ne 0) { throw 'Live demo configuration failed' }
-    & cmake --build (Join-Path $repo 'build') --config Release --target frozen_swimmer --parallel 2
-    if ($LASTEXITCODE -ne 0) { throw 'Live demo build failed' }
+    $timing=& (Join-Path $PSScriptRoot 'build-native.ps1') -Target frozen_swimmer
+    Write-Host ('Native build: configure {0:N3}s; build {1:N3}s; explicit configure={2}' -f $timing.configure_seconds,$timing.build_seconds,$timing.explicit_configure)
 }
 if (-not (Test-Path -LiteralPath (Join-Path $project 'addons/frozen_swimmer/bin/frozen_swimmer.dll'))) { throw 'Build frozen_swimmer first' }
 # Interactive launch only: the scene starts paused; no verification or training runs.

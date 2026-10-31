@@ -1,4 +1,3 @@
 *.bin -text
 *.json text eol=lf
 *.csv text eol=lf
-*.md text eol=lf

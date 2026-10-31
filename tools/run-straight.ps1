@@ -13,6 +13,7 @@ $output=Join-Path $base $Name
 if(Test-Path -LiteralPath $output){throw 'Run identity exists; no retry/overwrite'}
 New-Item -ItemType Directory -Path $base -Force|Out-Null
 $latest=Join-Path $base 'latest-status.json'
+$buildTiming=[pscustomobject]@{explicit_configure=$false;configure_seconds=0.;build_seconds=0.}
 $script:currentPhase='preparing';$own=$null;$nativePid=$null;$nativeStart=$null;$lastProgress=@{}
 function Status([string]$Phase,[hashtable]$Extra=@{}){
     $script:currentPhase=$Phase
@@ -24,14 +25,11 @@ try {
 Status 'preparing'
 Status 'building'
 if(-not $SkipBuild){
-    & cmake -S $repo -B (Join-Path $repo 'build') -DCUDARL_BUILD_STROKE_MOTOR=ON
-    if($LASTEXITCODE -ne 0){throw 'Configuration failed; no physical run'}
-    & cmake --build (Join-Path $repo 'build') --config Release --target stroke_motor_demo --parallel 2
-    if($LASTEXITCODE -ne 0){throw 'Build failed; no physical run'}
+    $buildTiming=& (Join-Path $PSScriptRoot 'build-native.ps1') -Target stroke_motor_demo
 }
 Status 'checking'
 $exe=Get-Item -LiteralPath (Join-Path $repo 'build/Release/stroke_motor_demo.exe')
-$sources=@(Get-ChildItem (Join-Path $repo 'src') -Recurse -File)+@(Get-Item (Join-Path $repo 'tools/stroke_motor_demo.cu'),$PSCommandPath,(Join-Path $repo 'CMakeLists.txt'),(Join-Path $PSScriptRoot 'run-status.psm1'))
+$sources=@(Get-ChildItem (Join-Path $repo 'src') -Recurse -File)+@(Get-Item (Join-Path $repo 'tools/stroke_motor_demo.cu'),$PSCommandPath,(Join-Path $repo 'CMakeLists.txt'),(Join-Path $PSScriptRoot 'run-status.psm1'),(Join-Path $PSScriptRoot 'build-native.ps1'))
 $compiled=@($sources|Where-Object {$_.FullName -notmatch '[\\/]godot[\\/]' -and $_.Extension -in '.h','.cpp','.cu'})
 if(@($compiled|Where-Object LastWriteTimeUtc -gt $exe.LastWriteTimeUtc).Count){throw 'Executable older than native sources; build first'}
 New-Item -ItemType Directory -Path (Join-Path $output 'source') -Force|Out-Null
@@ -77,6 +75,10 @@ $summary=Join-Path $output 'summary.json'
 if(-not(Test-Path $summary)){Status 'no_summary';throw 'Run ended without summary; inspect evidence, no retry'}
 $result=Get-Content $summary -Raw|ConvertFrom-Json
 $result|Add-Member setup_seconds $setup
+$result|Add-Member explicit_configure $buildTiming.explicit_configure
+$result|Add-Member configure_seconds $buildTiming.configure_seconds
+$result|Add-Member build_seconds $buildTiming.build_seconds
+$result|Add-Member preparation_seconds ([Math]::Max(0,$setup-$buildTiming.configure_seconds-$buildTiming.build_seconds))
 $result|Add-Member process_seconds $processWatch.Elapsed.TotalSeconds
 $result|Add-Member run_path $output
 $result|ConvertTo-Json -Depth 8|Set-Content (Join-Path $output 'result.json')
