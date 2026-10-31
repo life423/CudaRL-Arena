@@ -1,95 +1,75 @@
 param(
-    [ValidatePattern('^[A-Za-z0-9._-]+$')][string]$Name=(Get-Date -AsUTC -Format 'yyyyMMdd-HHmmss'),
-    [ValidateRange(1,600)][int]$FitSteps=600,
-    [ValidateRange(1,20)][int]$WallSeconds=20,
+    [ValidatePattern('^[A-Za-z0-9._-]+$')][string]$Name='signed-transitions-v1',
+    [switch]$Run,
     [switch]$SkipBuild
 )
 $ErrorActionPreference='Stop'
 Import-Module (Join-Path $PSScriptRoot 'run-status.psm1') -Force
-$watch=[Diagnostics.Stopwatch]::StartNew()
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $base=Join-Path $repo 'build/speed-motor'
 $output=Join-Path $base $Name
-if(Test-Path -LiteralPath $output){throw 'Run identity exists; no retry/overwrite'}
-New-Item -ItemType Directory -Path $base -Force|Out-Null
 $latest=Join-Path $base 'latest-status.json'
-$buildTiming=[pscustomobject]@{explicit_configure=$false;configure_seconds=0.;build_seconds=0.}
-$script:currentPhase='preparing';$own=$null;$nativePid=$null;$nativeStart=$null;$lastProgress=@{}
-function Status([string]$Phase,[hashtable]$Extra=@{}){
-    $script:currentPhase=$Phase
-    $data=@{phase=$Phase;pid=$nativePid;launcher_pid=$PID;started_utc=$nativeStart;heartbeat_utc=(Get-Date -AsUTC -Format o);utc=(Get-Date -AsUTC -Format o);run=$output;control_cap=1632;substep_cap=16320;wall_cap_seconds=$WallSeconds}
-    foreach($key in $Extra.Keys){$data[$key]=$Extra[$key]}
-    Write-RunStatus -Path $latest -Value $data
+$prepareWatch=[Diagnostics.Stopwatch]::StartNew()
+$timing=[pscustomobject]@{explicit_configure=$false;configure_seconds=0.;build_seconds=0.}
+$nativePid=$null;$started=$null;$phase='preparing';$own=$null
+function Status([string]$Next,[hashtable]$Extra=@{}){
+    $script:phase=$Next
+    $value=@{phase=$Next;run=$output;pid=$nativePid;started_utc=$started;utc=[DateTime]::UtcNow.ToString('o');control_cap=3680;substep_cap=36800;optimizer_cap=600;native_wall_seconds=20;process_wall_seconds=25}
+    foreach($key in $Extra.Keys){$value[$key]=$Extra[$key]}
+    Write-RunStatus -Path $latest -Value $value
 }
 try {
-Status 'preparing'
-Status 'building'
-if(-not $SkipBuild){
-    $buildTiming=& (Join-Path $PSScriptRoot 'build-native.ps1') -Target stroke_motor_demo
-}
-Status 'checking'
-$exe=Get-Item -LiteralPath (Join-Path $repo 'build/Release/stroke_motor_demo.exe')
-$sources=@(Get-ChildItem (Join-Path $repo 'src') -Recurse -File)+@(Get-Item (Join-Path $repo 'tools/stroke_motor_demo.cu'),$PSCommandPath,(Join-Path $repo 'CMakeLists.txt'),(Join-Path $PSScriptRoot 'run-status.psm1'),(Join-Path $PSScriptRoot 'build-native.ps1'))
-$compiled=@($sources|Where-Object {$_.FullName -notmatch '[\\/]godot[\\/]' -and $_.Extension -in '.h','.cpp','.cu'})
-if(@($compiled|Where-Object LastWriteTimeUtc -gt $exe.LastWriteTimeUtc).Count){throw 'Executable older than native sources; build first'}
-New-Item -ItemType Directory -Path (Join-Path $output 'source') -Force|Out-Null
-$manifest=@()
-foreach($file in $sources){
-    $relative=[IO.Path]::GetRelativePath($repo,$file.FullName);$target=Join-Path (Join-Path $output 'source') $relative
-    New-Item -ItemType Directory -Path (Split-Path $target) -Force|Out-Null
-    Copy-Item -LiteralPath $file.FullName -Destination $target
-    $manifest+=@{path=$relative;sha256=(Get-FileHash -LiteralPath $file.FullName).Hash}
-}
-$manifest|ConvertTo-Json|Set-Content (Join-Path $output 'source-manifest.json')
-$actor=Join-Path $output 'initial-controller.bin';Copy-Item -LiteralPath (Join-Path $repo 'live/assets/frozen-controller.bin') -Destination $actor
-$reference=Join-Path $output 'reference-8mm.csv';Copy-Item -LiteralPath (Join-Path $repo 'assets/steady-speed-v1/baseline-reference.csv') -Destination $reference
-$exampleSource=Join-Path $repo 'assets/steady-speed-v1'
-$proof=Get-Content (Join-Path $exampleSource 'example-provenance.json') -Raw|ConvertFrom-Json
-if($proof.source_trial_accepted -or $proof.accepted_rows -ne 960 -or ($proof.accepted_profiles -join ',') -ne '0,1,2,3,4,5'){throw 'Accepted subset proof invalid'}
-if((Get-FileHash (Join-Path $exampleSource 'teacher-gates.json')).Hash -ne $proof.curated_teacher_gates_sha256){throw 'Curated source gate evidence changed'}
-if((Get-FileHash $reference).Hash -ne $proof.baseline_reference_sha256){throw 'Curated baseline reference changed'}
-$gates=Get-Content (Join-Path $exampleSource 'teacher-gates.json') -Raw|ConvertFrom-Json
-foreach($id in 0..5){if($gates[$id].profile -ne $id -or -not $gates[$id].passed){throw 'Source constant profile not accepted'}}
-if((Get-FileHash (Join-Path $exampleSource 'accepted-examples.bin')).Hash -ne $proof.accepted_examples_sha256){throw 'Accepted examples changed'}
-$examples=Join-Path $output 'accepted-examples.bin';Copy-Item -LiteralPath (Join-Path $exampleSource 'accepted-examples.bin') -Destination $examples
-Copy-Item -LiteralPath (Join-Path $exampleSource 'example-provenance.json') -Destination (Join-Path $output 'example-provenance.json')
-$frozenExe=Join-Path $output 'stroke_motor_demo.exe';Copy-Item -LiteralPath $exe.FullName -Destination $frozenExe
-$argsList=@('--examples',$examples,'--actor',$actor,'--reference',$reference,'--fit-steps',"$FitSteps",'--wall-seconds',"$WallSeconds")
-& $frozenExe --prepare $output @argsList
-if($LASTEXITCODE -ne 0){throw 'Registration failed; no physical run'}
-Get-FileHash $actor,$reference,$examples,(Join-Path $output 'example-provenance.json'),$frozenExe,(Join-Path $output 'protocol.bin'),(Join-Path $output 'source-manifest.json')|Select-Object Path,Hash|ConvertTo-Json|Set-Content (Join-Path $output 'frozen-hashes.json')
-$setup=$watch.Elapsed.TotalSeconds
-Status 'ready' @{setup_seconds=$setup;result_path=(Join-Path $output 'result.json')}
-$processWatch=[Diagnostics.Stopwatch]::StartNew()
-$processArgs=@('--run',('"'+$output+'"'),'--examples',('"'+$examples+'"'),'--actor',('"'+$actor+'"'),'--reference',('"'+$reference+'"'),'--fit-steps',"$FitSteps",'--wall-seconds',"$WallSeconds")
-$own=Start-Process -FilePath $frozenExe -ArgumentList $processArgs -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $output 'native.log') -RedirectStandardError (Join-Path $output 'native.err')
-$nativePid=$own.Id;$nativeStart=(Get-Date -AsUTC -Format o)
-Status 'running' @{setup_seconds=$setup;process_seconds=0}
-while(-not $own.WaitForExit(100)){
-    if($processWatch.Elapsed.TotalSeconds -gt $WallSeconds+5){Stop-Process -Id $own.Id;Status 'wrapper_timeout';throw 'Own bounded process stopped; no retry'}
-    $native=Join-Path $output 'status.json';$state=$null
-    if(Test-Path $native){try{$state=Get-Content $native -Raw|ConvertFrom-Json}catch{}}
-    if($null -ne $state){$lastProgress=@{setup_seconds=$setup;process_seconds=$processWatch.Elapsed.TotalSeconds;completed_updates=$state.completed_updates;controls=$state.controls;physical_substeps=$state.physical_substeps;result_path=(Join-Path $output 'result.json')};Status $state.phase $lastProgress}
-}
-$summary=Join-Path $output 'summary.json'
-if(-not(Test-Path $summary)){Status 'no_summary';throw 'Run ended without summary; inspect evidence, no retry'}
-$result=Get-Content $summary -Raw|ConvertFrom-Json
-$result|Add-Member setup_seconds $setup
-$result|Add-Member explicit_configure $buildTiming.explicit_configure
-$result|Add-Member configure_seconds $buildTiming.configure_seconds
-$result|Add-Member build_seconds $buildTiming.build_seconds
-$result|Add-Member preparation_seconds ([Math]::Max(0,$setup-$buildTiming.configure_seconds-$buildTiming.build_seconds))
-$result|Add-Member process_seconds $processWatch.Elapsed.TotalSeconds
-$result|Add-Member run_path $output
-$result|ConvertTo-Json -Depth 8|Set-Content (Join-Path $output 'result.json')
-$finalPhase=if([string]::IsNullOrEmpty($result.fault)){'done'}else{'failed'}
-Status $finalPhase @{setup_seconds=$setup;native_seconds=$result.wall_seconds;completed_updates=$result.supervised_steps;controls=$result.charged_controls;physical_substeps=$result.actual_native_substeps;result_path=(Join-Path $output 'result.json');selected_candidate=$result.selected_candidate;fault=$result.fault}
-$result|ConvertTo-Json -Depth 8 -Compress|Write-Output
-exit $own.ExitCode
+    New-Item -ItemType Directory -Force $base|Out-Null
+    if(-not $Run){
+        if(Test-Path -LiteralPath $output){throw 'Prepared identity exists; choose a new name, no overwrite'}
+        Status 'building'
+        if(-not $SkipBuild){$timing=& (Join-Path $PSScriptRoot 'build-native.ps1') -Target stroke_motor_demo}
+        Status 'checking'
+        $asset=Join-Path $repo 'assets/steady-speed-v1'
+        $proof=Get-Content (Join-Path $asset 'example-provenance.json') -Raw|ConvertFrom-Json
+        if($proof.source_trial_accepted -or $proof.accepted_rows -ne 960 -or ($proof.accepted_profiles -join ',') -ne '0,1,2,3,4,5'){throw 'Invalid accepted-source lineage'}
+        foreach($pair in @(@('accepted-examples.bin','accepted_examples_sha256'),@('teacher-gates.json','curated_teacher_gates_sha256'))){if((Get-FileHash (Join-Path $asset $pair[0])).Hash -ne $proof.($pair[1])){throw ('Source identity changed: '+$pair[0])}}
+        $gates=Get-Content (Join-Path $asset 'teacher-gates.json') -Raw|ConvertFrom-Json
+        foreach($id in 0..5){if($gates[$id].profile -ne $id -or -not $gates[$id].passed){throw 'Source constant gate is not accepted'}}
+        $exe=Get-Item (Join-Path $repo 'build/Release/stroke_motor_demo.exe')
+        $nativeSources=@(Get-ChildItem (Join-Path $repo 'src') -Recurse -File|Where-Object {$_.FullName -notmatch '[\\/]godot[\\/]' -and $_.Extension -in '.h','.cpp','.cu'})+@(Get-Item (Join-Path $PSScriptRoot 'stroke_motor_demo.cu'),(Join-Path $PSScriptRoot 'transition_motor.h'))
+        if(@($nativeSources|Where-Object LastWriteTimeUtc -gt $exe.LastWriteTimeUtc).Count){throw 'Native runner is stale; build first'}
+        New-Item -ItemType Directory -Path $output|Out-Null
+        Copy-Item $exe.FullName (Join-Path $output 'runner.exe')
+        Copy-Item (Join-Path $repo 'live/assets/frozen-controller.bin') (Join-Path $output 'initial-controller.bin')
+        Copy-Item (Join-Path $asset 'accepted-examples.bin') (Join-Path $output 'source-examples.bin')
+        Copy-Item (Join-Path $asset 'example-provenance.json') (Join-Path $output 'source-provenance.json')
+        $manifest=@()
+        foreach($file in $nativeSources){$relative=[IO.Path]::GetRelativePath($repo,$file.FullName);$destination=Join-Path (Join-Path $output 'source') $relative;New-Item -ItemType Directory -Force (Split-Path $destination)|Out-Null;Copy-Item $file.FullName $destination;$manifest+=@{path=$relative;sha256=(Get-FileHash $file.FullName).Hash}}
+        $manifest|ConvertTo-Json|Set-Content (Join-Path $output 'source-manifest.json')
+        & (Join-Path $output 'runner.exe') --prepare-transitions $output --actor (Join-Path $output 'initial-controller.bin') --examples (Join-Path $output 'source-examples.bin')
+        if($LASTEXITCODE){throw 'Nonphysical transition registration failed'}
+        Get-FileHash (Join-Path $output 'runner.exe'),(Join-Path $output 'initial-controller.bin'),(Join-Path $output 'source-examples.bin'),(Join-Path $output 'source-provenance.json'),(Join-Path $output 'source-manifest.json'),(Join-Path $output 'transition-protocol.bin')|Select-Object Path,Hash|ConvertTo-Json|Set-Content (Join-Path $output 'frozen-hashes.json')
+        $timing|Add-Member preparation_seconds ([Math]::Max(0.0,$prepareWatch.Elapsed.TotalSeconds-$timing.configure_seconds-$timing.build_seconds))
+        $timing|ConvertTo-Json|Set-Content (Join-Path $output 'preparation-timing.json')
+        Status 'ready' @{physical_substeps=0;optimizer_steps=0;preparation_seconds=$prepareWatch.Elapsed.TotalSeconds;run_command=('./tools/run-straight.ps1 -Name '+$Name+' -Run')}
+        return
+    }
+    if(-not(Test-Path (Join-Path $output 'transition-readiness.json'))){throw 'Prepare this identity before explicitly authorizing collection/fitting'}
+    if(Test-Path (Join-Path $output 'transition-started')){throw 'Trial already attempted; no retries'}
+    foreach($file in (Get-Content (Join-Path $output 'frozen-hashes.json') -Raw|ConvertFrom-Json)){if((Get-FileHash -LiteralPath $file.Path).Hash -ne $file.Hash){throw ('Frozen input changed: '+$file.Path)}}
+    $started=[DateTime]::UtcNow.ToString('o');$watch=[Diagnostics.Stopwatch]::StartNew()
+    $argsList=@('--run-transitions',('"'+$output+'"'),'--actor',('"'+(Join-Path $output 'initial-controller.bin')+'"'),'--examples',('"'+(Join-Path $output 'source-examples.bin')+'"'))
+    $own=Start-Process -FilePath (Join-Path $output 'runner.exe') -ArgumentList $argsList -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $output 'native.log') -RedirectStandardError (Join-Path $output 'native.err')
+    $nativePid=$own.Id;Status 'running';Write-Output ('STARTED '+$started+' pid='+$nativePid)
+    while(-not $own.WaitForExit(100)){
+        if($watch.Elapsed.TotalSeconds -ge 25){$own.Kill();throw 'Own process wall cap reached; no retry'}
+        $progress=$null;try{$progress=Get-Content (Join-Path $output 'transition-status.json') -Raw|ConvertFrom-Json}catch{}
+        if($null -ne $progress){Status $progress.phase @{controls=$progress.controls;physical_substeps=$progress.physical_substeps;optimizer_steps=$progress.optimizer_steps;native_phase_unix_seconds=$progress.unix_seconds}}
+    }
+    $result=Get-Content (Join-Path $output 'transition-result.json') -Raw|ConvertFrom-Json
+    $result|Add-Member started_utc $started;$result|Add-Member ended_utc ([DateTime]::UtcNow.ToString('o'));$result|Add-Member process_seconds $watch.Elapsed.TotalSeconds
+    $result|ConvertTo-Json -Depth 6|Set-Content (Join-Path $output 'result.json')
+    Status $(if($result.fault){'failed'}else{'done'}) @{controls=$result.controls;physical_substeps=$result.physical_substeps;optimizer_steps=$result.optimizer_steps;candidate_accepted=$result.candidate_accepted;fault=$result.fault}
+    $result|ConvertTo-Json -Compress|Write-Output
+    if($own.ExitCode){throw 'Bounded trial stopped; no retry'}
 } catch {
-    $failure=$_
-    if($null -ne $own -and -not $own.HasExited){Stop-Process -Id $own.Id}
-    Status 'failed' @{failed_phase=$script:currentPhase;error=$failure.Exception.Message;last_progress=$lastProgress;result_path=(Join-Path $output 'result.json')}
-    Write-Error $failure
-    exit 1
+    if($null -ne $own -and -not $own.HasExited){$own.Kill()}
+    Status 'failed' @{failed_phase=$phase;error=$_.Exception.Message}
+    throw
 }

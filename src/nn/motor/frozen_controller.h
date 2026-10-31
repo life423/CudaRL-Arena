@@ -13,6 +13,8 @@ class FrozenController {
     bool loaded_=false,paused_=true,continuous_=false;
     uint64_t viewing_controls_=0,viewing_substeps_=0,loops_=0;
     int case_=0;
+    stroke_motor::ActionMapping mapping_=stroke_motor::ActionMapping::Forward;
+    contact::Arena arena_{};
     float minimum_speed_=.008f,maximum_speed_=.008f;
     std::string error_;
 public:
@@ -21,6 +23,9 @@ public:
     bool reset(int case_id=0);
     bool start();
     bool set_speed(float speed);
+    bool configure_arena(contact::Arena arena){if(!loaded_||!paused_||viewing_controls_!=0||!contact::valid_arena(arena))return false;arena_=arena;world_.arena=arena;return true;}
+    contact::Arena arena()const{return arena_;}
+    uint32_t action_mapping()const{return static_cast<uint32_t>(mapping_);}
     void set_continuous(bool enabled){pause();continuous_=enabled;}
     bool continuous()const{return continuous_;}
     uint64_t viewing_controls()const{return viewing_controls_;}

@@ -1,0 +1,21 @@
+{
+  "accepted_utc": "2026-10-31T18:29:23.4291788Z",
+  "source_checkpoint_sha256": "18346C676CF3E12283C51129C1224B3CEDEAC8C2FA22BDC1C1E826A6EFE5BE72",
+  "heldout_transitions_passed": 4,
+  "work8_increase_percent": 5.533820470243578,
+  "work8_initial_mJ_per_m": 0.3526045,
+  "original_result_preserved": "original-selection-result.json",
+  "user_exception": "User explicitly accepted measured actuator-work/metre increase at8mm/s and chose this exact candidate as baseline; no further training",
+  "original_automatic_selection": false,
+  "authorization_source_thread": "01a18db2-3bf6-70f4-baca-a1358220e012",
+  "heldout_warmups_passed": 2,
+  "training": false,
+  "source_trial": "signed-transitions-v1",
+  "frozen_constants_passed": 10,
+  "accepted": true,
+  "work8_candidate_mJ_per_m": 0.372117,
+  "validated_scope": "Calm water4–8mm/s constants, heldout4-to8-to4 sequence; no full stop, heading hold, current or contact claim",
+  "acceptance": "explicit_user_efficiency_exception",
+  "heldout_holds_passed": 4,
+  "checkpoints_locked": true
+}

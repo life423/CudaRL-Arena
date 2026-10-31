@@ -21,6 +21,11 @@ func _check(ok: bool, reason: String) -> bool:
 func _check_controls() -> void:
 	if not _check(view.swimmer != null and bool(view.state.get("loaded",false)),"Actor did not load"): return
 	if not _check(bool(view.state.paused) and int(view.state.substeps) == 0,"Startup must be paused"): return
+	var floor_matches := false
+	for child in view.get_children():
+		if child is MeshInstance3D and child.mesh is PlaneMesh:
+			floor_matches = child.mesh.size.is_equal_approx(Vector2(float(view.geometry.arena_width_m),float(view.geometry.arena_depth_m))/float(view.geometry.scale_m))
+	if not _check(floor_matches and is_equal_approx(float(view.state.arena_width_m),1.2) and is_equal_approx(float(view.state.arena_depth_m),0.8),"Rendered and physical viewer pond dimensions differ"): return
 	view._start()
 	if not _check(not bool(view.state.paused) and view.status.text.begins_with("RUNNING"),"Start disagrees with native pause state"): return
 	view._process(0.0)
@@ -36,7 +41,10 @@ func _check_controls() -> void:
 	for requested in [4.0,5.0,6.0,7.0,8.0]:
 		view._start()
 		view.speed_control.value = requested
-		if not _check(bool(view.state.paused) and int(view.state.controls) == 0 and is_equal_approx(float(view.state.target_speed_m_s)*1000,requested),"Speed selection must reset to rest and pause: requested=%s target=%s paused=%s range=%s..%s" % [requested,view.state.target_speed_m_s,view.state.paused,view.speed_control.min_value,view.speed_control.max_value]): return
+		if not _check(not bool(view.state.paused) and int(view.state.controls) == 0 and is_equal_approx(float(view.state.target_speed_m_s)*1000,requested),"Speed request must retain running state"): return
+	view._pause()
+	view.speed_control.value = 4
+	if not _check(bool(view.state.paused),"Paused speed change must remain paused"): return
 	if not _check(int(view.state.substeps) == 0 and view.total_substeps == 0,"Zero-step check advanced physics"): return
 	view._start()
 	view.continuous_control.button_pressed = false

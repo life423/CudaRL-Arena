@@ -11,34 +11,42 @@ internal joints. Godot displays native poses and never supplies propulsion.
 ./tools/view-live.ps1 -SkipBuild  # use the already-built extension
 ```
 
-Start/Pause/Reset control the single native world. Choose4/5/6/7/8mm/s in the
-existing viewer, then Start. Selecting a speed resets to rest and pauses, including
-during a swim. The accepted constant-clone-v1/update-600 actor runs frozen and
-runs continuously by default. Pause/Reset remain available. The labeled
-Continuous checkbox permits viewing past4seconds and explicitly restarts from
-rest near the finite pond edge (20mm clearance); the reset counter is visible.
-Uncheck it for the original4second benchmark/auto-pause. Physical/numerical
-safety failures still stop. Longer viewing is unvalidated, and the4second score
-is frozen separately per swim. It does not train or demonstrate mid-swim slowdown.
+Press Start once, then change the4�8mm/s request while it swims. Requests preserve
+body velocity, oscillator/filter state and running status. A paused request stays
+paused; Start resumes. Reset is explicit. The same frozen signed-cadence network
+controls both forward strokes and braking; there is no training in Godot.
 
-The separately saved supervised checkpoint passes10/10four-second constant
-requests from rest in two reset poses, including withheld5/7mm/s. Requested
-4/5/6/7/8 produced4.350/5.318/6.259/7.115/7.843mm/s. Godot loads an actor-only
-export of this checkpoint. Slowdown/switches remain unpassed: the8->4teacher test scored5.234mm/s
-against a3.6..4.4limit. Turning, holding, current and contact remain unvalidated;
-head yaw can reach28.84degrees. This is not a generally validated movement motor.
+Continuous viewing remains on by default, with visible resets near the finite
+pond edge (20mm clearance). The viewer uses1.2x0.8m horizontal bounds and0.16m
+depth; original benchmarks retain0.36x0.28m bounds. Uncheck Continuous for a
+four-second segment/auto-pause.
+Safety failures stop execution. Longer viewing is not indefinite-stability proof.
+Full stopping, heading hold, currents, contact and arbitrary transition sequences
+remain unvalidated. The evaluated transitions were4->8->4 with separate settling.
+An added4->8->4->8 sequence failed its last upshift speed/RMSE gates despite
+no edge reset; enlarging the pond does not repair that policy limitation.
 
-- [Checkpoint identity and scope](assets/steady-speed-v1/checkpoint-provenance.json)
-- [Frozen evaluation metrics](assets/steady-speed-v1/evaluation.json)
-- [Accepted-example provenance](assets/steady-speed-v1/example-provenance.json)
-- [Teacher gates, including the failed slowdown](assets/steady-speed-v1/teacher-gates.json)
+Accepted baseline: signed-transitions-v1/update-600, SHA256
+18346C676CF3E12283C51129C1224B3CEDEAC8C2FA22BDC1C1E826A6EFE5BE72.
+Frozen inference passed10constant cases,2held-out warmups,4transitions and4holds.
+The original automatic selection rejected a5.53%increase in modeled actuator
+work/metre at8mm/s; the user explicitly accepted that tradeoff. The original
+rejection remains unchanged in the saved evidence.
 
-The same folder contains checkpoint.bin,960accepted observation/action examples
-and the baseline reference. The native research checkpoint contains actor+Adam,
-not a resumable physical world; only Windows x64/little-endian is verified.
-No failed switch examples are used for fitting. All experiment budgets are closed;
-unused steps are not permission for another run. Full saved data/evidence remains
-under ignored build/; historical source is available in Git.
+- [Explicit acceptance and limitations](assets/signed-speed-v1/acceptance.json)
+- [Original selection result](assets/signed-speed-v1/original-selection-result.json)
+- [Frozen neural evaluation](assets/signed-speed-v1/frozen-evaluation.csv)
+- [Live actor identity and source contract](live/assets/controller-provenance.json)
+
+The exact research checkpoint and protocol are pinned in assets/signed-speed-v1.
+The portable actor exports only those same2498parameters, with an explicit action
+mapping and source hashes; it contains no optimizer or resumable physical world.
+The prior forward actor, portable export and accepted examples remain under
+assets/steady-speed-v1, with Git checkpoint e484667 available for rollback. No
+old/new-controller toggle or alternate viewer is active.
+
+All prior training/physical budgets are closed. Full local evidence remains in
+ignored build/; Git does not preserve ignored files. New runs need explicit scope.
 
 ## Build and focused checks
 
@@ -57,8 +65,9 @@ cmake --build --preset release
 The opt-in zero-step viewer check is:
 `Godot_console.exe --headless --path live --script ../tests/godot/viewer_controls.gd`
 (use the installed Godot console executable). It disables automatic processing.
-The single learning runner tools/run-straight.ps1 consumes the curated examples;
-invoking it starts a NEW bounded fitting/evaluation trial and requires approval.
+The single learning runner tools/run-straight.ps1 prepares a frozen trial without
+stepping or fitting. Its explicit -Run switch starts the separately authorized
+bounded collection, fitting and frozen evaluation; it never adopts a candidate.
 Training is not part of CTest. Do not launch it during structural/document cleanup.
 
 ## Ownership and direction

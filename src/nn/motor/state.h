@@ -16,7 +16,7 @@ CUDARL_HD inline Motion motion(const p::BodyState& body) {
     result.com_model=result.com_model/(mass*p::scale);result.velocity_m_s=result.velocity_m_s/mass;
     return result;
 }
-CUDARL_HD inline bool in_domain(const sim::WorldState& w,float clearance_m=.01f) {
+CUDARL_HD inline bool in_domain(const sim::WorldState& w,float clearance_m=.01f,contact::Arena arena={}) {
     if(!p::finite_number(clearance_m)||clearance_m<.01f||!sim::finite_state(w)||w.unsafe||w.invalid||w.current.x!=0||w.current.y!=0||w.current.z!=0)return false;
     const p::Parameters calm;
     if(w.fluid.density!=calm.density||w.fluid.viscosity!=calm.viscosity||w.fluid.gravity!=calm.gravity)return false;
@@ -24,7 +24,7 @@ CUDARL_HD inline bool in_domain(const sim::WorldState& w,float clearance_m=.01f)
     for(int j=0;j<4;++j)
         if(!p::finite_number(w.last_actual_torques[j])||fabsf(w.last_actual_torques[j])>1||
             !p::finite_number(w.held_targets[j])||fabsf(w.held_targets[j])>p::limit)return false;
-    const auto gap=contact::inspect(w.body);
+    const auto gap=contact::inspect(w.body,arena);
     return !gap.invalid&&!gap.escape&&!gap.excessive&&gap.min_gap>=clearance_m&&
         p::finite_number(w.telemetry.minimum_floor_gap)&&p::finite_number(w.telemetry.minimum_other_gap)&&
         w.telemetry.minimum_floor_gap>=clearance_m&&w.telemetry.minimum_other_gap>=clearance_m;

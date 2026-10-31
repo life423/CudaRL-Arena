@@ -78,9 +78,6 @@ func _ready() -> void:
 	add_child(camera)
 	camera.look_at(Vector3(-0.35, -2, 0))
 	get_window().size_changed.connect(_layout_camera.bind(camera))
-	var floor_mesh := PlaneMesh.new()
-	floor_mesh.size = Vector2(9, 7)
-	_piece(self, floor_mesh, Color("294b4d"), Vector3(0, -4, 0))
 	var canvas := CanvasLayer.new()
 	add_child(canvas)
 	var margin := MarginContainer.new()
@@ -91,7 +88,7 @@ func _ready() -> void:
 	column.add_theme_constant_override("separation",10)
 	margin.add_child(column)
 	column.add_child(_label("Live swimming",25))
-	column.add_child(_label("Frozen NN + stroke. No training. New speed resets to rest. Beyond 4 s is unvalidated.",16))
+	column.add_child(_label("Frozen NN; no training. Viewer pond 1.2 x 0.8 m.\nStart once, then change 4-8 mm/s. Long runs unvalidated.",16))
 	status = _label("Loading verified actor...",16)
 	column.add_child(status)
 	speed_control = SpinBox.new()
@@ -101,7 +98,6 @@ func _ready() -> void:
 	speed_control.value_changed.connect(func(value: float):
 		if swimmer != null:
 			swimmer.call("set_speed",value/1000)
-			accumulator = 0
 			_refresh())
 	column.add_child(speed_control)
 	continuous_control = CheckBox.new()
@@ -146,6 +142,9 @@ func _ready() -> void:
 	speed_control.set_block_signals(false)
 	speed_control.editable = speed_control.min_value < speed_control.max_value
 	geometry = swimmer.call("get_geometry")
+	var floor_mesh := PlaneMesh.new()
+	floor_mesh.size = Vector2(float(geometry.arena_width_m),float(geometry.arena_depth_m))/float(geometry.scale_m)
+	_piece(self,floor_mesh,Color("294b4d"),Vector3(0,float(geometry.floor_y_m)/float(geometry.scale_m),0))
 	_build_creature()
 	_refresh(state)
 	if not capture_path.is_empty():

@@ -1,0 +1,32 @@
+{
+  "model": 6,
+  "task": 5,
+  "reward_version": 2,
+  "frozen": true,
+  "training": false,
+  "source_update": 600,
+  "source_checkpoint": "assets\\steady-speed-v1\\checkpoint.bin",
+  "source_checkpoint_sha256": "0A19AF86FBBDCD189A330547A281666B4D8C781922A7743C870E7A58D9FC6411",
+  "actor_parameters": 2498,
+  "actor_checksum_fnv64": "7667e40458082d25",
+  "source_protocol_checksum_fnv64": "51efe0a7a31dd56a",
+  "source_contract_sha256_normalized_lf": {
+    "src/nn/motor/movement_model.h": "8b3a57796c46b6af585889c38fd6009a81aea96e4803edb5c7f083f5104100c6",
+    "src/nn/motor/stroke_motor.h": "a1accd6d9abaf11cde54ea6a807ec2a4e16f5250a1a1769174d6392159c15e91",
+    "src/nn/motor/straight_task.h": "5c39a69fc95c066d46eb6d5da7bddb74e0083a436d62800420f7079cf3926c4e",
+    "src/nn/motor/state.h": "7fb65afc14fc205f02615ec62742d847e60942be3c8f060f7512400e0628bc39",
+    "src/nn/motor/frozen_controller.cpp": "34007c68365d8a0b166ee7bc13a78ecf02c4f32d0e348b3dbbebf89c4c9d3102",
+    "src/nn/motor/frozen_controller.h": "2d37c90c3f8cba5f9926540f4821b2c8a3db81f837aeacd79a9fed3e6417f595",
+    "src/physics/dynamics.h": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6",
+    "src/physics/contact.h": "3a0b9e48cd34752d8ea05267e06491e2f7c65531fe7f0750079351b71cd548d8",
+    "src/simulation/world.h": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3",
+    "src/nn/mlp_cpu.h": "f848a64e32c0bbefdf418972d42e82eab7214195f574c0638e1cc85206eed9cb",
+    "src/nn/mlp_spec.h": "086a3b10b170094c4d6eee5ee1175baec7cbd3f85670dc39207a3dd41b0ef7eb"
+  },
+  "asset_sha256": "8a5a888699f24ff35981c99c557d39880db1a83d065c4467287cf1a707a84001",
+  "minimum_speed_m_s": 0.004,
+  "maximum_speed_m_s": 0.008,
+  "reset": "Actor only; fresh physical state, no optimizer or saved world continuation",
+  "speed_selection": "Resets to rest and pauses; only four-second constant requests validated, no validated speed transitions",
+  "continuous_viewing": "Unvalidated beyond four seconds; unchanged inference with time feature held at zero; explicit reset at 20mm pond clearance, never safety-failure recovery"
+}

@@ -44,11 +44,12 @@ TEST_CASE("speed_request: segment effort excludes previous segments without eras
 TEST_CASE("speed_request: selected actor loads paused and unsupported requests fail closed (zero integration)") {
     const auto root=std::filesystem::path(__FILE__).parent_path().parent_path();cudarl::motor::FrozenController controller;
     CHECK(controller.load((root/"live/assets/frozen-controller.bin").string()));CHECK(controller.paused());
+    CHECK(controller.action_mapping()==2);
     CHECK(!controller.step()&&controller.world().attempted_substeps==0);
     CHECK(!controller.set_speed(.003f));CHECK(controller.target_speed()==.008f);
     for(float target:{.004f,.005f,.006f,.007f,.008f}){
         CHECK(controller.start());CHECK(controller.set_speed(target));
-        CHECK(controller.target_speed()==target&&controller.paused());
+        CHECK(controller.target_speed()==target&&!controller.paused());controller.pause();
         CHECK(controller.world().attempted_substeps==0&&controller.task().controls==0);
     }
     CHECK(controller.start());controller.pause();CHECK(!controller.step());

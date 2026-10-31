@@ -17,16 +17,20 @@ struct Inspection {
 };
 // Explicit spring component only; the implicit damping response is not included.
 struct Telemetry {float floor_spring_force=0,total_spring_force=0;int points=0;};
+// Default remains the original benchmark. Viewer model6 may enlarge only the
+// horizontal arena; floor/surface, body shape and force coefficients are fixed.
+struct Arena {float half_width_m=4.5f*physics::scale,half_depth_m=3.5f*physics::scale;};
+CUDARL_HD inline bool valid_arena(Arena arena){return physics::finite_number(arena.half_width_m)&&physics::finite_number(arena.half_depth_m)&&arena.half_width_m>=4.5f*physics::scale&&arena.half_depth_m>=3.5f*physics::scale;}
 CUDARL_HD constexpr physics::V bounds_min_model() {return {-4.5f,-4.f,-3.5f};}
 CUDARL_HD constexpr physics::V bounds_max_model() {return {4.5f,0.f,3.5f};}
 CUDARL_HD inline physics::V normal(int face) {
     switch(face) {case 0:return {1,0,0};case 1:return {-1,0,0};case 2:return {0,1,0};case 3:return {0,-1,0};case 4:return {0,0,1};default:return {0,0,-1};}
 }
-CUDARL_HD inline float offset(int face) {
+CUDARL_HD inline float offset(int face,Arena arena={}) {
     const auto lo=bounds_min_model(),hi=bounds_max_model();
-    switch(face) {case 0:return -lo.x*physics::scale;case 1:return hi.x*physics::scale;
+    switch(face) {case 0:return arena.half_width_m;case 1:return arena.half_width_m;
         case 2:return -lo.y*physics::scale;case 3:return hi.y*physics::scale;
-        case 4:return -lo.z*physics::scale;default:return hi.z*physics::scale;}
+        case 4:return arena.half_depth_m;default:return arena.half_depth_m;}
 }
 // Minimum-support point of the existing ellipsoid / elliptical cylinder.
 // Tail ends are not interior axial samples, and radial support is directional.
@@ -45,16 +49,16 @@ CUDARL_HD inline physics::V support_offset(const physics::Link& link,int body,ph
     }
     return link.q.rotate(local);
 }
-CUDARL_HD inline Inspection inspect(const physics::BodyState& state) {
-    Inspection out;out.invalid=!physics::finite_body(state);if(out.invalid) {out.excessive=true;return out;}
+CUDARL_HD inline Inspection inspect(const physics::BodyState& state,Arena arena={}) {
+    Inspection out;out.invalid=!physics::finite_body(state)||!valid_arena(arena);if(out.invalid) {out.excessive=true;return out;}
     const auto shape=physics::shape(state);float maximum[6]={-1e6f,-1e6f,-1e6f,-1e6f,-1e6f,-1e6f};
     for(int body=0;body<3;++body) {
         const auto& link=shape.link[body];
         for(int face=0;face<6;++face) {
             const auto n=normal(face);const int points=body==0?1:2;
             for(int end=0;end<points;++end) {
-                const float gap=physics::dot(n,link.center+support_offset(link,body,n,end))+offset(face);
-                const float high=physics::dot(n,link.center+support_offset(link,body,n*(-1.f),end))+offset(face);
+                const float gap=physics::dot(n,link.center+support_offset(link,body,n,end))+offset(face,arena);
+                const float high=physics::dot(n,link.center+support_offset(link,body,n*(-1.f),end))+offset(face,arena);
                 out.min_gap=fminf(out.min_gap,gap);maximum[face]=fmaxf(maximum[face],high);
                 if(face==2) {out.floor_gap=fminf(out.floor_gap,gap);out.max_floor_gap=fmaxf(out.max_floor_gap,high);}else out.min_other_gap=fminf(out.min_other_gap,gap);
                 if(gap<=0) {out.contact=true;if(face==2) out.floor_contact=true;}

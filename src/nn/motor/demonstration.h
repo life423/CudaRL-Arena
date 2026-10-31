@@ -27,5 +27,16 @@ inline bool label(const float* observation,Label& output){
     const float latent[2]{atanhf(command[0]),atanhf(command[1])};
     if(!task::action_from_latent(latent,next.action))return false;output=next;return true;
 }
+// Explicit reference teacher for one bounded braking proof, not the accepted
+// forward-only NN action mapping. Uses only the same current observation.
+struct BrakingLabel {float amplitude=0,cadence=1,brake_weight=0;};
+constexpr float kBrakingAmplitude=.60f;
+inline bool feedback_brake(const float* observation,BrakingLabel& output){
+    Label forward;if(!label(observation,forward))return false;
+    float blend=p::clamp((forward.forward_speed-forward.requested_speed)/(.1f*forward.requested_speed)-1.f,0.f,1.f);
+    blend=blend*blend*(3.f-2.f*blend);
+    output.amplitude=(1-blend)*forward.amplitude+blend*kBrakingAmplitude;
+    output.cadence=1-2*blend;output.brake_weight=blend;return true;
+}
 }
 #endif

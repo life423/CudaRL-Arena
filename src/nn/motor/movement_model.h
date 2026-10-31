@@ -28,15 +28,15 @@ CUDARL_HD inline p::Shape shape(const p::BodyState& state) {
 CUDARL_HD inline p::BodyGeometry body_geometry(int body) {
     auto g=p::body_geometry(body);if(body==2)g.half_height=Geometry::tail_height*.5f;return g;
 }
-CUDARL_HD inline float clearance(const p::BodyState& body,bool composite=true) {
-    if(!p::finite_body(body))return -1e6f;
+CUDARL_HD inline float clearance(const p::BodyState& body,bool composite=true,contact::Arena arena={}) {
+    if(!p::finite_body(body)||!contact::valid_arena(arena))return -1e6f;
     const auto links=composite?cudarl::movement::shape(body):p::shape(body);float gap=1e6f;
     for(int b=0;b<3;++b)for(int face=0;face<6;++face){const auto& link=links.link[b];
         const auto n=contact::normal(face),u=link.q.inverse(n);const auto g=composite?body_geometry(b):p::body_geometry(b);
         float support=0;
         if(b==0)support=sqrtf(g.length*g.length*.25f*u.x*u.x+g.half_height*g.half_height*u.y*u.y+g.half_width*g.half_width*u.z*u.z);
         else support=fabsf(u.x)*g.length*.5f+sqrtf(g.half_height*g.half_height*u.y*u.y+g.half_width*g.half_width*u.z*u.z);
-        gap=fminf(gap,p::dot(n,link.center)+contact::offset(face)-support);
+        gap=fminf(gap,p::dot(n,link.center)+contact::offset(face,arena)-support);
     }return gap;
 }
 CUDARL_HD inline p::System assemble(const p::BodyState& state,p::Parameters fluid={},bool composite=true) {
@@ -101,8 +101,8 @@ CUDARL_HD inline float kinetic(const p::BodyState& body,bool composite=true) {
     const auto a=assemble(body,{0,0,0},composite);double value=0;
     for(int i=0;i<10;++i)for(int j=0;j<10;++j)value+=.5*body.velocity[i]*a.M[i][j]*body.velocity[j];return static_cast<float>(value);
 }
-CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,float h,p::Parameters fluid,Telemetry& telemetry,bool composite=true) {
-    telemetry={};telemetry.failure_code=1;telemetry.minimum_gap=clearance(body,composite);
+CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,float h,p::Parameters fluid,Telemetry& telemetry,bool composite=true,contact::Arena arena={}) {
+    telemetry={};telemetry.failure_code=1;telemetry.minimum_gap=clearance(body,composite,arena);
     if(!(h>0)||h>.005001f||telemetry.minimum_gap<.01f)return false;
     telemetry.failure_code=2;
     for(int j=0;j<4;++j)if(!p::finite_number(reference.angle[j])||fabsf(reference.angle[j])>p::limit||
@@ -133,7 +133,7 @@ CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,floa
     telemetry.failure_code=7;for(int j=0;j<4;++j){candidate.angle[j]+=h*static_cast<float>(next[6+j]);telemetry.signed_work+=h*telemetry.torque[j]*next[6+j];telemetry.positive_work+=h*fmax(0.,telemetry.torque[j]*next[6+j]);if(fabsf(candidate.angle[j])>p::limit)return false;}
     candidate.work+=static_cast<float>(telemetry.positive_work);for(int i=0;i<10;++i)candidate.velocity[i]=static_cast<float>(next[i]);
     candidate.travel+=h*p::norm({candidate.velocity[0],candidate.velocity[1],candidate.velocity[2]})/p::scale;
-    telemetry.failure_code=8;telemetry.minimum_gap=fminf(telemetry.minimum_gap,clearance(candidate,composite));if(telemetry.minimum_gap<.01f)return false;
+    telemetry.failure_code=8;telemetry.minimum_gap=fminf(telemetry.minimum_gap,clearance(candidate,composite,arena));if(telemetry.minimum_gap<.01f)return false;
     body=candidate;telemetry.failure_code=0;return true;
 }
 // Smooth analytic reference used only by the prescribed mechanical diagnostic.

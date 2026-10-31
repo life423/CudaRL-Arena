@@ -2,6 +2,20 @@
 #include "motor/demonstration.h"
 #include <limits>
 namespace demo=cudarl::demonstration;namespace task=cudarl::straight_motor;
+TEST_CASE("demonstration_braking: reverse authority tapers continuously into forward regulation") {
+    float observation[42]{};observation[3]=.004f/.02f;observation[6]=1;
+    float previous=-2;
+    for(float velocity:{.008f,.0048f,.0046f,.0044f,.004f,.003f}){
+        observation[12]=velocity/.02f;demo::BrakingLabel out;
+        CHECK(demo::feedback_brake(observation,out));CHECK(out.cadence>=previous-1e-5f);
+        CHECK(out.amplitude>=.05f&&out.amplitude<=.65f&&out.cadence>=-1&&out.cadence<=1);
+        if(velocity>=.0048f)CHECK(std::fabs(out.cadence+1)<1e-5f&&std::fabs(out.amplitude-.6f)<1e-5f);
+        if(velocity<=.0044f)CHECK(std::fabs(out.cadence-1)<1e-5f);
+        previous=out.cadence;
+    }
+    observation[12]=std::numeric_limits<float>::quiet_NaN();demo::BrakingLabel rejected;
+    CHECK(!demo::feedback_brake(observation,rejected));
+}
 TEST_CASE("demonstration: feedback depends on requested and actual speed with finite physical commands") {
     auto world=task::initial_world(0);auto config=task::config_for_speed(.004f);task::ForwardTask request;
     CHECK(task::begin_forward(world,config,request));float observation[42]{};CHECK(task::observe(request,world,config,observation));
@@ -62,4 +76,43 @@ TEST_CASE("demonstration_data: exact accepted slice preserves goal order and lab
 TEST_CASE("demonstration_data: missing lineage or altered labels fail before any physical work") {
     for(const auto& invalid:{accepted_fixture(true),accepted_fixture(false,true)}){bool rejected=false;
         try{(void)demo::accepted_examples(invalid);}catch(const std::runtime_error&){rejected=true;}CHECK(rejected);}
+}
+
+#include "motor/transition_examples.h"
+#include "nn/mlp_cpu.h"
+namespace {
+demo::TransitionExamples transition_fixture(){
+    auto data=demo::reuse_compatible(demo::accepted_examples(accepted_fixture()));
+    float obs[42]{};obs[3]=.004f/.02f;obs[6]=1;
+    for(int row=0;row<demo::kTransitionRows;++row){obs[12]=(row%2?.004f:.008f)/.02f;demo::SignedReference action;CHECK(demo::signed_teacher(obs,action));demo::append_example(data,obs,action);++data.new_rows;}
+    data.accepted_segments=demo::kAcceptedTransitionMask;return data;
+}
+}
+TEST_CASE("transition_examples: signed mapping supports reversal and leaves forward source commands intact") {
+    float latent[2]{0,atanhf(-1.f/1.5f)};demo::SignedReference reverse;CHECK(demo::signed_action(latent,reverse));CHECK(std::fabs(reverse.cadence+1)<1e-6f&&reverse.amplitude==.35f);
+    const auto converted=demo::reuse_compatible(demo::accepted_examples(accepted_fixture()));CHECK(converted.reused_rows==960);
+    CHECK(std::fabs(converted.executed_commands[1]-.2f)<1e-6f);CHECK(std::fabs(tanhf(converted.data.target[1])-1.f/1.5f)<1e-6f);
+    CHECK(converted.source_action_mapping[0]==1);
+}
+TEST_CASE("transition_examples: braking label is observable without a hidden phase or hysteresis state") {
+    float a[42]{},b[42]{};a[3]=.004f/.02f;a[6]=1;a[12]=.008f/.02f;b[5]=a[3];b[8]=1;b[14]=a[12];b[34]=.7f;b[36]=1;b[39]=-1;
+    demo::SignedReference x,y;CHECK(demo::signed_teacher(a,x)&&demo::signed_teacher(b,y));CHECK(x.action.latent[0]==y.action.latent[0]&&x.action.latent[1]==y.action.latent[1]);
+}
+TEST_CASE("transition_examples: complete gated rows roundtrip with explicit source action mappings") {
+    const auto data=transition_fixture();const auto restored=demo::decode_transitions(demo::encode_transitions(data,123),123);
+    CHECK(restored.data.observation==data.data.observation&&restored.data.target==data.data.target&&restored.executed_commands==data.executed_commands);
+    CHECK(restored.new_rows==480&&restored.source_action_mapping.back()==2);
+    const auto training=demo::balanced_training(restored);int negative=0;for(int row=0;row<training.count();++row)if(training.target[row*2+1]<0)++negative;
+    CHECK(training.count()>=256&&negative*3==training.count());
+}
+TEST_CASE("transition_examples: missing gates changed actions and wrong protocol fail closed") {
+    for(int fault=0;fault<5;++fault){auto data=transition_fixture();if(fault==0)data.accepted_segments=7;if(fault==1)data.executed_commands.back()=0;if(fault==2)data.data.target.back()+=.1f;if(fault==3)data.source_action_mapping.back()=1;
+        bool rejected=false;try{(void)demo::decode_transitions(demo::encode_transitions(data,123),fault==4?124:123);}catch(const std::runtime_error&){rejected=true;}CHECK(rejected);}
+}
+TEST_CASE("transition_examples: signed initialization preserves strength and fixes cadence at one Hz") {
+    const cudarl::nn::MlpSpec spec{{42,32,32,2},{cudarl::nn::Activation::Tanh,cudarl::nn::Activation::Tanh,cudarl::nn::Activation::Identity}};
+    const auto original=cudarl::nn::init_params(spec,123);const auto initialized=demo::initialize_signed(original,spec);
+    cudarl::nn::CpuMlp<float> old_actor(spec),new_actor(spec);old_actor.params()=original;new_actor.params()=initialized;float obs[42]{};
+    for(int sample=0;sample<3;++sample){obs[12]=float(sample);old_actor.forward(obs,1);new_actor.forward(obs,1);demo::SignedReference action;CHECK(demo::signed_action(new_actor.output(),action));
+        CHECK(new_actor.output()[0]==old_actor.output()[0]);CHECK(std::fabs(action.cadence-1)<1e-6f);}
 }
