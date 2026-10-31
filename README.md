@@ -33,6 +33,8 @@ cmake --build --preset release
 ./build/Release/foundation_tests.exe ppo:
 ./tools/run-ppo.ps1 -Name NEW_UNIQUE_NAME # build, zero-step checks, freeze inputs
 # Its -Run switch executes that identity only after an explicit bounded approval.
+./tools/run-ppo.ps1 -Name NEW_EVALUATION_NAME -Evaluate # freeze saved-policy test
+# With explicit approval, add -Evaluate -Run for that evaluation identity.
 ```
 
 The zero-step viewer check is:
@@ -58,6 +60,14 @@ protocol and compact results accompany the checkpoint. Full ignored evidence is
 in build/ppo/fresh-forward-ppo-v1. This is a research checkpoint, not a Godot
 inference asset; it has not been installed in the viewer. Speed changes remain a
 later lesson.
+
+Frozen headless evaluation loads the exact PPO research checkpoint without
+restoring optimizers. The two60second cases use an explicit1.2x0.8m horizontal
+arena, with no wrapping or resets. First4second parity passed, but later speed,
+lane and COM-path gates failed; only2/30windows passed. The policy is therefore
+not validated for long-duration tracking. Compact evidence is long-evaluation.json
+and long-windows.csv beside the checkpoint; full control traces remain in ignored
+build/ppo/frozen-long-forward-v1. No weights changed during this check.
 
 Follow [AGENTS.md](AGENTS.md). Preserve the original checkout, editor changes and
 personal data. Third-party notices remain in docs/third-party/.

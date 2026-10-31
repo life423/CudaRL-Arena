@@ -1,16 +1,20 @@
-// One native PPO runner. No imported actor, teacher, data set or runtime fallback.
+// One native PPO runner. Training initializes fresh; frozen evaluation loads an
+// explicit validated PPO checkpoint. No optimizer runs in frozen evaluation.
 #include "motor/frozen_controller.h"
 #include "nn/adam.h"
 #include "nn/mlp_gpu.h"
 #include "rl/gaussian_kernels.h"
 #include "rl/gaussian_math.h"
 #include "rl/motor_rollout.cuh"
+#include "rl/ppo_checkpoint.h"
 #include "rl/ppo_kernels.h"
 #include <chrono>
+#include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 namespace {
 namespace fs = std::filesystem;
 namespace m = cudarl::straight_motor;
@@ -87,9 +91,13 @@ void finite(const std::vector<float> &values) {
 }
 struct Budget {
     int controls = 0, substeps = 0;
+    int maximum_controls = control_cap, maximum_substeps = substep_cap;
+    double seconds = wall_cap;
     void step(m::World &world, const float *command) {
-        wall_guard();
-        require(controls < control_cap && substeps + 10 <= substep_cap, "Physical budget exhausted");
+        require(std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count() < seconds,
+                "Physical evaluation wall cap reached");
+        require(controls < maximum_controls && substeps + 10 <= maximum_substeps,
+                "Physical budget exhausted");
         ++controls;
         const auto before = world.attempted_substeps;
         const bool ok = cudarl::stroke_motor::step_state(world, command,
@@ -501,9 +509,14 @@ int run(const fs::path &root) {
     std::cout << immediate.rdbuf() << std::flush;
     return fault.empty() ? 0 : 3;
 }
+#include "frozen_ppo_eval.h"
 } // namespace
 int main(int argc, char **argv) {
     try {
+        if (argc == 4 && std::string(argv[1]) == "--prepare-evaluation")
+            return frozen_evaluation::prepare(fs::absolute(argv[2]), fs::absolute(argv[3]));
+        if (argc == 4 && std::string(argv[1]) == "--evaluate")
+            return frozen_evaluation::run(fs::absolute(argv[2]), fs::absolute(argv[3]));
         require(argc == 3, "Use --prepare/--run DIR");
         const auto root = fs::absolute(argv[2]);
         if (std::string(argv[1]) == "--prepare")
