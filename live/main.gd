@@ -89,16 +89,17 @@ func _ready() -> void:
 	column.add_theme_constant_override("separation",10)
 	margin.add_child(column)
 	column.add_child(_label("Live swimming / frozen controller",25))
-	column.add_child(_label("Frozen learned strength and frequency; supplied stroke. Real native model6 physics. No training. Auto-pauses after4 seconds.",16))
+	column.add_child(_label("Frozen NN + stroke, native model6. No training.\nNew speed resets to rest. Four-second swims; slowdown unvalidated.",16))
 	status = _label("Loading verified actor...",16)
 	column.add_child(status)
 	speed_control = SpinBox.new()
 	speed_control.custom_minimum_size = Vector2(140,44)
-	speed_control.step = 0.5
+	speed_control.step = 1.0
 	speed_control.suffix = " mm/s"
 	speed_control.value_changed.connect(func(value: float):
 		if swimmer != null:
 			swimmer.call("set_speed",value/1000)
+			accumulator = 0
 			_refresh())
 	column.add_child(speed_control)
 	var spacer := Control.new()
@@ -123,9 +124,13 @@ func _ready() -> void:
 		_fail("Frozen actor load failed: " + (str(swimmer.call("get_error")) if swimmer else "class missing"))
 		return
 	state = swimmer.call("get_state")
-	speed_control.min_value = float(state.minimum_speed_m_s)*1000
-	speed_control.max_value = float(state.maximum_speed_m_s)*1000
+	# Setting Range bounds can emit value_changed; initialization must not reset
+	# the native request before the verified snapshot has been installed.
+	speed_control.set_block_signals(true)
+	speed_control.min_value = roundf(float(state.minimum_speed_m_s)*1000)
+	speed_control.max_value = roundf(float(state.maximum_speed_m_s)*1000)
 	speed_control.set_value_no_signal(float(state.target_speed_m_s)*1000)
+	speed_control.set_block_signals(false)
 	speed_control.editable = speed_control.min_value < speed_control.max_value
 	geometry = swimmer.call("get_geometry")
 	_build_creature()

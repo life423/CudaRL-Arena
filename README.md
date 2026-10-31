@@ -11,13 +11,15 @@ internal joints. Godot displays native poses and never supplies propulsion.
 ./tools/view-live.ps1 -SkipBuild  # use the already-built extension
 ```
 
-Start/Pause/Reset control the single native world. The live scene still uses the
-previous8mm/s frozen actor and auto-pauses after4seconds. It does not train.
+Start/Pause/Reset control the single native world. Choose4/5/6/7/8mm/s in the
+existing viewer, then Start. Selecting a speed resets to rest and pauses, including
+during a swim. The accepted constant-clone-v1/update-600 actor runs frozen and
+auto-pauses after4seconds. It does not train or demonstrate mid-swim slowdown.
 
 The separately saved supervised checkpoint passes10/10four-second constant
 requests from rest in two reset poses, including withheld5/7mm/s. Requested
-4/5/6/7/8 produced4.350/5.318/6.259/7.115/7.843mm/s. It is not auto-loaded into
-Godot. Slowdown/switches remain unpassed: the8->4teacher test scored5.234mm/s
+4/5/6/7/8 produced4.350/5.318/6.259/7.115/7.843mm/s. Godot loads an actor-only
+export of this checkpoint. Slowdown/switches remain unpassed: the8->4teacher test scored5.234mm/s
 against a3.6..4.4limit. Turning, holding, current and contact remain unvalidated;
 head yaw can reach28.84degrees. This is not a generally validated movement motor.
 

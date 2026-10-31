@@ -33,6 +33,10 @@ func _check_controls() -> void:
 	if not _check(bool(view.state.paused) and view.start_button.disabled and view.pause_button.disabled,"UI failure did not pause native controller"): return
 	view._reset()
 	if not _check(view.status.text.begins_with("PAUSED") and not view.start_button.disabled,"Reset did not recover UI state"): return
+	for requested in [4.0,5.0,6.0,7.0,8.0]:
+		view._start()
+		view.speed_control.value = requested
+		if not _check(bool(view.state.paused) and int(view.state.controls) == 0 and is_equal_approx(float(view.state.target_speed_m_s)*1000,requested),"Speed selection must reset to rest and pause: requested=%s target=%s paused=%s range=%s..%s" % [requested,view.state.target_speed_m_s,view.state.paused,view.speed_control.min_value,view.speed_control.max_value]): return
 	if not _check(int(view.state.substeps) == 0 and view.total_substeps == 0,"Zero-step check advanced physics"): return
 	print(JSON.stringify({"viewer_checks_passed":checks,"physical_substeps":0}))
 	quit()

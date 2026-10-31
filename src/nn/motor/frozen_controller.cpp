@@ -30,7 +30,9 @@ bool FrozenController::reset(int id){paused_=true;error_.clear();if(!loaded_){er
 }
 bool FrozenController::set_speed(float speed){
     if(!loaded_||!std::isfinite(speed)||speed<minimum_speed_||speed>maximum_speed_)return false;
-    return sm::request_speed(world_,speed,config_,task_);
+    // This viewer exposes constant requests from rest, not unvalidated transitions.
+    config_=sm::config_for_speed(speed);
+    return reset(case_);
 }
 bool FrozenController::start(){if(!loaded_||finished()||!error_.empty())return false;paused_=false;return true;}
 bool FrozenController::step(){if(!loaded_||paused_||finished()||!error_.empty())return false;

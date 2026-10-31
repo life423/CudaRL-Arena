@@ -45,8 +45,13 @@ TEST_CASE("speed_request: selected actor loads paused and unsupported requests f
     const auto root=std::filesystem::path(__FILE__).parent_path().parent_path();cudarl::motor::FrozenController controller;
     CHECK(controller.load((root/"live/assets/frozen-controller.bin").string()));CHECK(controller.paused());
     CHECK(!controller.step()&&controller.world().attempted_substeps==0);
-    CHECK(!controller.set_speed(.004f));CHECK(controller.target_speed()==.008f);
-    CHECK(controller.set_speed(.008f));CHECK(controller.start());controller.pause();CHECK(!controller.step());
+    CHECK(!controller.set_speed(.003f));CHECK(controller.target_speed()==.008f);
+    for(float target:{.004f,.005f,.006f,.007f,.008f}){
+        CHECK(controller.start());CHECK(controller.set_speed(target));
+        CHECK(controller.target_speed()==target&&controller.paused());
+        CHECK(controller.world().attempted_substeps==0&&controller.task().controls==0);
+    }
+    CHECK(controller.start());controller.pause();CHECK(!controller.step());
     CHECK(!controller.load((root/"CMakeLists.txt").string()));CHECK(!controller.start()&&!controller.step());
     CHECK(controller.world().attempted_substeps==0);
 }

@@ -46,13 +46,14 @@ def export(args):
     target = Path(args.output).resolve()
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(struct.pack("<QQQ", 0x31504B434C524443, len(portable), checksum(portable)) + portable)
-    metadata = dict(model=6, task=5, reward_version=2, frozen=True, training=False,
+    metadata = dict(model=6, task=5, reward_version=2, frozen=True, training=False, source_update=update,
                     source_checkpoint=str(source.relative_to(ROOT)), source_checkpoint_sha256=args.sha256.upper(),
                     actor_parameters=count, actor_checksum_fnv64=f"{checksum(params):016x}",
                     source_protocol_checksum_fnv64=f"{checksum(binding):016x}",
                     source_contract_sha256_normalized_lf=hashes, asset_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                     minimum_speed_m_s=args.minimum, maximum_speed_m_s=args.maximum,
-                    reset="Actor only; fresh physical state, no optimizer or saved world continuation")
+                    reset="Actor only; fresh physical state, no optimizer or saved world continuation",
+                    speed_selection="Resets to rest and pauses; four-second constant requests only, no validated speed transitions")
     target.with_name("controller-provenance.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(json.dumps(dict(exported_bytes=target.stat().st_size, actor_checksum=metadata["actor_checksum_fnv64"], physical_advances=0)))
 
