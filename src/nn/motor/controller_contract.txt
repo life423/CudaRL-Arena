@@ -1,5 +1,5 @@
 src/nn/motor/movement_model.h
-src/nn/motor/stroke_motor.h
+src/nn/motor/joint_motor.h
 src/nn/motor/straight_task.h
 src/nn/motor/state.h
 src/nn/motor/frozen_controller.cpp

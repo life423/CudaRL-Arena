@@ -223,7 +223,7 @@ func _refresh(snapshot: Dictionary = {}) -> void:
 	speed_control.set_value_no_signal(float(state.target_speed_m_s)*1000)
 	var prefix := "RUNNING" if active else ("COMPLETE / auto-paused" if bool(state.finished) else "PAUSED")
 	var benchmark := ("PASS" if bool(state.passed) else "FAIL") if bool(state.benchmark_complete) else "pending"
-	status.text = "%s | %.1f s | edge resets %d\nCOM %.2f mm/s | target %.1f\n4 s benchmark %s | steady %.2f mm/s\nStrength %.3f | %.2f Hz | work %.2f microJ" % [prefix,float(state.time_s),int(state.loops),float(state.speed_m_s)*1000,float(state.target_speed_m_s)*1000,benchmark,float(state.steady_speed_m_s)*1000,float(state.amplitude),float(state.frequency),float(state.positive_work_J)*1e6]
+	status.text = "%s | %.1f s | edge resets %d\nCOM %.2f mm/s | target %.1f\n8 s benchmark %s | steady %.2f mm/s\nTargets %.2f / %.2f / %.2f / %.2f rad | work %.2f microJ" % [prefix,float(state.time_s),int(state.loops),float(state.speed_m_s)*1000,float(state.target_speed_m_s)*1000,benchmark,float(state.steady_speed_m_s)*1000,float(state.target0),float(state.target1),float(state.target2),float(state.target3),float(state.positive_work_J)*1e6]
 	if not str(state.error).is_empty(): status.text += "\nERROR: " + str(state.error)
 	var poses: Array = state.links
 	for i in range(mini(links.size(),poses.size())):

@@ -40,7 +40,6 @@ Dictionary FrozenSwimmer::get_state()const{const auto& c=impl_->controller;const
     out["speed_error_m_s"]=metrics.speed_error_m_s;out["speed_m_s"]=p::norm(cudarl::motor::motion(b).velocity_m_s);out["steady_speed_m_s"]=c.task().steady_speed_m_s;out["head_yaw_deg"]=metrics.head_yaw_deg;
     out["head_x"]=b.position.x;out["head_y"]=b.position.y;out["head_z"]=b.position.z;out["qx"]=b.orientation.x;out["qy"]=b.orientation.y;out["qz"]=b.orientation.z;out["qw"]=b.orientation.w;
     for(int j=0;j<4;++j)out[String("j")+String::num_int64(j)]=b.angle[j];
-    out["phase"]=w.phase;out["amplitude"]=w.parameter[0];out["frequency"]=w.parameter[1];out["positive_work_J"]=b.work;
-    out["amplitude_rate"]=w.rate[0];out["frequency_rate"]=w.rate[1];
+    out["positive_work_J"]=b.work;for(int j=0;j<4;++j){out[String("target")+String::num_int64(j)]=w.physical.held_targets[j];out[String("target_rate")+String::num_int64(j)]=w.reference_rate[j];}
     Array links;for(const auto& link:m::shape(b).link){Dictionary d;d["position"]=Vector3(link.center.x/p::scale,link.center.y/p::scale,link.center.z/p::scale);d["orientation"]=Quaternion(link.q.x,link.q.y,link.q.z,link.q.w);links.append(d);}out["links"]=links;return out;}
 }

@@ -136,15 +136,5 @@ CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,floa
     telemetry.failure_code=8;telemetry.minimum_gap=fminf(telemetry.minimum_gap,clearance(candidate,composite,arena));if(telemetry.minimum_gap<.01f)return false;
     body=candidate;telemetry.failure_code=0;return true;
 }
-// Smooth analytic reference used only by the prescribed mechanical diagnostic.
-CUDARL_HD inline Reference prescribed(float time) {
-    const float frequency=1,amplitude=.6f,w=2*pi*frequency;float envelope=1,rate=0,acceleration=0;
-    if(time<2){envelope=.5f*(1-cosf(pi*time/2));rate=pi*.25f*sinf(pi*time/2);acceleration=pi*pi*.125f*cosf(pi*time/2);}
-    else if(time>6){const float t=8-time;envelope=.5f*(1-cosf(pi*t/2));rate=-pi*.25f*sinf(pi*t/2);acceleration=pi*pi*.125f*cosf(pi*t/2);}
-    Reference out;for(int j=0;j<4;j+=2){const float phase=w*time-(j==2?pi/2:0),s=sinf(phase),c=cosf(phase);
-        out.angle[j]=amplitude*envelope*s;out.rate[j]=amplitude*(rate*s+envelope*w*c);
-        out.acceleration[j]=amplitude*(acceleration*s+2*rate*w*c-envelope*w*w*s);}
-    return out;
-}
 }
 #endif

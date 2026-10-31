@@ -103,7 +103,7 @@ endif()
 
 include(CTest)
 if(BUILD_TESTING)
-add_executable(foundation_tests tests/test_main.cpp tests/test_check.cpp tests/test_stroke_motor.cpp tests/test_straight_task.cpp tests/test_speed_request.cpp tests/test_physics.cpp tests/test_mlp_cpu.cpp tests/test_checkpoint.cpp tests/test_ppo_checkpoint.cpp)
+add_executable(foundation_tests tests/test_main.cpp tests/test_check.cpp tests/test_joint_motor.cpp tests/test_straight_task.cpp tests/test_speed_request.cpp tests/test_physics.cpp tests/test_mlp_cpu.cpp tests/test_checkpoint.cpp tests/test_ppo_checkpoint.cpp)
 target_include_directories(foundation_tests PRIVATE tests)
 target_link_libraries(foundation_tests PRIVATE creature_physics frozen_controller)
 if(CUDARL_ENABLE_CUDA)

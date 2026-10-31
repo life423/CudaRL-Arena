@@ -27,9 +27,9 @@ __global__ void observe(const m::World *worlds, const m::ForwardTask *tasks, flo
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i >= n)
         return;
-    float *row = output + i * 42;
+    float *row = output + i * m::kObservations;
     if (*fault) {
-        for (int j = 0; j < 42; ++j)
+        for (int j = 0; j < m::kObservations; ++j)
             row[j] = 0;
         return;
     }
@@ -46,14 +46,13 @@ __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *la
     if (*fault)
         return;
     m::Action action;
-    if (!m::action_from_latent(latent + i * 2, action)) {
+    if (!m::action_from_latent(latent + i * m::kActions, action)) {
         atomicExch(fault, 3);
         return;
     }
     const auto before = worlds[i].attempted_substeps;
     ++counts[i].controls;
-    const bool ok =
-        stroke_motor::step_state(worlds[i], action.command, stroke_motor::ActionMapping::SignedCadence);
+    const bool ok = joint_motor::step_state(worlds[i], action.command);
     const auto attempted = worlds[i].attempted_substeps - before;
     counts[i].substeps += attempted;
     if (!ok || attempted != 10) {

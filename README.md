@@ -2,9 +2,17 @@
 
 Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
 motion comes from torque-limited internal joints and water forces; Godot supplies
-presentation only. The motor controls stroke strength and signed cadence.
+presentation only. The motor supplies four independent joint-angle targets through bounded servos.
 
 ## Current state
+
+The four-axis PPO interface is implemented and CPU/CUDA actuator checks pass.
+The first fresh128-update trial was rejected:0/4eight-second cases and0/30
+sustained windows; mean steady speed0.409mm/s versus8mm/s requested. Both
+60second evaluations completed without resets or numerical/domain failures,
+but the policy rolled to about90degrees. Tilt is gated but currently has no
+direct reward penalty; no second run or policy adoption occurred. Exact frozen
+inputs, checkpoints and results remain in build/ppo/joint-target-ppo-v1.
 
 The prior imitation-trained controllers and dedicated supervised training paths
 were removed by user request. No verified PPO checkpoint is installed. The viewer
@@ -14,7 +22,9 @@ not substitute random weights, a teacher or another algorithm.
 The native PPO primitives live in src/rl: Gaussian sampling/log probabilities,
 clipped policy loss, GAE and minibatch gathers. Shared MLP, Adam, GEMM and critic
 loss code lives in src/nn. The ppo_motor executable trains a fresh actor/critic
-on the forward8mm/s lesson. Training worlds and rollout/update buffers stay on
+on the forward8mm/s lesson:40observations, four outputs, eight-second episodes.
+There is no oscillator in this action path. Old two-output checkpoints are
+preserved as evidence and rejected by the new explicit schema. Training worlds and rollout/update buffers stay on
 the GPU; frozen evaluation uses the same motor equations on the CPU.
 
 ```powershell
@@ -33,8 +43,6 @@ cmake --build --preset release
 ./build/Release/foundation_tests.exe ppo:
 ./tools/run-ppo.ps1 -Name NEW_UNIQUE_NAME # build, zero-step checks, freeze inputs
 # Its -Run switch executes that identity only after an explicit bounded approval.
-./tools/run-ppo.ps1 -Name NEW_EVALUATION_NAME -Evaluate # freeze saved-policy test
-# With explicit approval, add -Evaluate -Run for that evaluation identity.
 ```
 
 The zero-step viewer check is:
@@ -61,8 +69,8 @@ in build/ppo/fresh-forward-ppo-v1. This is a research checkpoint, not a Godot
 inference asset; it has not been installed in the viewer. Speed changes remain a
 later lesson.
 
-Frozen headless evaluation loads the exact PPO research checkpoint without
-restoring optimizers. The two60second cases use an explicit1.2x0.8m horizontal
+The historical frozen headless evaluation loaded the exact prior PPO checkpoint
+without restoring optimizers. The two60second cases use an explicit1.2x0.8m horizontal
 arena, with no wrapping or resets. First4second parity passed, but later speed,
 lane and COM-path gates failed; only2/30windows passed. The policy is therefore
 not validated for long-duration tracking. Compact evidence is long-evaluation.json
