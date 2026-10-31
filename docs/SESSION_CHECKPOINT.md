@@ -1078,3 +1078,35 @@ asset weights/source contract remain unchanged by this packaging; no new physica
 or training execution. The narrow10/10four-second constant-from-rest/two-pose scope
 and unpassed slowdown/switch behavior remain explicit. Original checkout/evidence
 preserved; no push/merge/deployment. Previous rollback c0c0314 remains available.
+
+
+## Godot structure audit and focused cleanup
+
+User requested current Godot audit, then authorized cleanup as issues were found.
+Started clean at e84db5f. One production GDScript directly extends built-in Node3D,
+one plain main scene, one RefCounted native bridge owning one FrozenController.
+No custom script/scene inheritance ladder or duplicate Godot physics/policy owner.
+
+Removed shadow running flag/redundant state reads and repeated camera setup;
+fixed paused-capture false-success and ignored result-file write errors; failures
+pause native state. Removed unused bridge include. Kept one viewer, same actor,
+physics and speed behavior. Added one opt-in zero-step SceneTree test driver only.
+Godot parse and strict bridge build passed;8control checks and four rendered/error
+checks passed, all0physical substeps.360/1100width renders inspected. Captured-error
+cases intentionally exited3. Live actor/provenance and11native contract sources
+unchanged. No training, expanded physical trial, new variable-speed integration,
+commit/push/merge/deploy. Full scope/line evidence/limits: docs/GODOT_AUDIT.md.
+Current edits remain uncommitted; original checkout and personal saves preserved.
+
+
+## Godot cleanup commit and feature-branch publication authorized
+
+User16:29UTC explicitly authorized committing the verified Godot cleanup and
+pushing codex/minimal-foundation. This supersedes keep-local for this feature
+branch only. No main push/merge, PR, deployment or new training/physical run.
+Verified current branch and e84db5f base; origin is life423/CudaRL-Arena on GitHub.
+Remote feature branch absent before publication; main was2524748ecebcd1816e9ed5d0c88921c133f0a11d.
+Only main.gd cleanup, unused bridge include removal, zero-step control test and
+audit/checkpoint notes included. Previously completed parse/build/zero-step UI
+checks apply unchanged. Exact committed/remote SHA and CI state reported after
+publication; prior e84db5f milestone and current live policy remain preserved.

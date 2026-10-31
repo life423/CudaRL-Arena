@@ -6,7 +6,6 @@ var geometry: Dictionary = {}
 var status: Label
 var start_button: Button
 var pause_button: Button
-var running := false
 var accumulator := 0.0
 var state: Dictionary = {}
 var speed_control: SpinBox
@@ -47,6 +46,11 @@ func _button(value: String, action: Callable) -> Button:
 	return button
 
 
+func _layout_camera(camera: Camera3D) -> void:
+	var narrow := get_window().size.x < 500
+	camera.fov = 72 if narrow else 42
+	camera.v_offset = 1.0 if narrow else 0.0
+
 func _ready() -> void:
 	started_ms = Time.get_ticks_msec()
 	get_window().title = "CudaRL - LIVE model6 - frozen learned controller"
@@ -68,13 +72,10 @@ func _ready() -> void:
 	add_child(light)
 	var camera := Camera3D.new()
 	camera.position = Vector3(0.5, 0, 3.6)
-	camera.fov = 72 if get_window().size.x < 500 else 42
-	camera.v_offset = 1.0 if get_window().size.x < 500 else 0.0
+	_layout_camera(camera)
 	add_child(camera)
 	camera.look_at(Vector3(-0.35, -2, 0))
-	get_window().size_changed.connect(func():
-		camera.fov = 72 if get_window().size.x < 500 else 42
-		camera.v_offset = 1.0 if get_window().size.x < 500 else 0.0)
+	get_window().size_changed.connect(_layout_camera.bind(camera))
 	var floor_mesh := PlaneMesh.new()
 	floor_mesh.size = Vector2(9, 7)
 	_piece(self, floor_mesh, Color("294b4d"), Vector3(0, -4, 0))
@@ -96,7 +97,8 @@ func _ready() -> void:
 	speed_control.step = 0.5
 	speed_control.suffix = " mm/s"
 	speed_control.value_changed.connect(func(value: float):
-		if swimmer != null and bool(swimmer.call("set_speed",value/1000)):
+		if swimmer != null:
+			swimmer.call("set_speed",value/1000)
 			_refresh())
 	column.add_child(speed_control)
 	var spacer := Control.new()
@@ -127,26 +129,23 @@ func _ready() -> void:
 	speed_control.editable = speed_control.min_value < speed_control.max_value
 	geometry = swimmer.call("get_geometry")
 	_build_creature()
-	_refresh()
+	_refresh(state)
 	if not capture_path.is_empty():
 		if capture_paused: _capture_still()
 		else: _start()
 
 func _start() -> void:
 	if swimmer != null and bool(swimmer.call("start")):
-		running = true
 		accumulator = 0
 		_refresh()
 
 func _pause() -> void:
 	if swimmer != null: swimmer.call("pause")
-	running = false
 	accumulator = 0
 	_refresh()
 
 func _reset() -> void:
 	if swimmer == null: return
-	running = false
 	accumulator = 0
 	if not bool(swimmer.call("reset",0)):
 		_fail(str(swimmer.call("get_error")))
@@ -154,41 +153,42 @@ func _reset() -> void:
 	_refresh()
 
 func _process(delta: float) -> void:
-	if swimmer == null: return
+	if swimmer == null or state.is_empty() or not bool(state.loaded): return
 	if not capture_path.is_empty() and Time.get_ticks_msec()-started_ms > 10000:
 		_fail("Live UI verification wall cap")
 		return
-	if running:
+	if not bool(state.paused):
 		accumulator += delta
 		var tick_count := 0
-		while accumulator >= 0.05 and tick_count < 4 and running:
-			var before: Dictionary = swimmer.call("get_state")
+		while accumulator >= 0.05 and tick_count < 4 and not bool(state.paused):
+			var before_substeps := int(state.substeps)
 			if not capture_path.is_empty() and total_substeps+10 > 800:
 				_fail("Live UI substep cap")
 				return
 			var advanced := bool(swimmer.call("step"))
 			state = swimmer.call("get_state")
-			total_substeps += int(state.substeps)-int(before.substeps)
+			total_substeps += int(state.substeps)-before_substeps
 			if not advanced:
 				_fail(str(state.error))
 				return
 			accumulator -= 0.05
 			tick_count += 1
-			if bool(state.finished): running = false
-		_refresh()
+		_refresh(state)
 	if not capture_path.is_empty() and int(state.get("controls",0)) >= 50 and not capture_queued:
 		capture_queued = true
 		_capture()
 	if not capture_path.is_empty() and bool(state.get("finished",false)) and capture_saved:
-		_write_result({"ui_passed":bool(state.passed),"physical_substeps":total_substeps,"controls":state.controls,"auto_paused":state.paused,"screenshot":capture_path})
-		get_tree().quit(0 if bool(state.passed) else 3)
+		var saved := _write_result({"ui_passed":bool(state.passed),"physical_substeps":total_substeps,"controls":state.controls,"auto_paused":state.paused,"screenshot":capture_path})
+		get_tree().quit(0 if saved and bool(state.passed) else 3)
 
-func _refresh() -> void:
+func _refresh(snapshot: Dictionary = {}) -> void:
 	if swimmer == null: return
-	state = swimmer.call("get_state")
-	start_button.disabled = not bool(state.loaded) or bool(state.finished) or running or not str(state.error).is_empty()
-	pause_button.disabled = not running
-	var prefix := "RUNNING" if running else ("COMPLETE / auto-paused" if bool(state.finished) else "PAUSED")
+	state = swimmer.call("get_state") if snapshot.is_empty() else snapshot
+	var active := not bool(state.paused)
+	start_button.disabled = not bool(state.loaded) or bool(state.finished) or active or not str(state.error).is_empty()
+	pause_button.disabled = not active
+	speed_control.set_value_no_signal(float(state.target_speed_m_s)*1000)
+	var prefix := "RUNNING" if active else ("COMPLETE / auto-paused" if bool(state.finished) else "PAUSED")
 	status.text = "%s | %.2f / 4.00 s\nCOM speed %.2f mm/s | target %.2f | steady %.2f mm/s\nStrength %.3f rad | cadence %.2f Hz | positive work %.2f microJ" % [prefix,float(state.segment_time_s),float(state.speed_m_s)*1000,float(state.target_speed_m_s)*1000,float(state.steady_speed_m_s)*1000,float(state.amplitude),float(state.frequency),float(state.positive_work_J)*1e6]
 	if not str(state.error).is_empty(): status.text += "\nERROR: " + str(state.error)
 	var poses: Array = state.links
@@ -197,11 +197,10 @@ func _refresh() -> void:
 		links[i].quaternion = poses[i].orientation
 
 func _capture_still() -> void:
-	await RenderingServer.frame_post_draw
-	_capture()
-	await RenderingServer.frame_post_draw
-	_write_result({"paused_layout_passed":bool(state.loaded) and bool(state.paused),"physical_substeps":total_substeps})
-	get_tree().quit()
+	await _capture()
+	if not capture_saved: return
+	var saved := _write_result({"paused_layout_passed":bool(state.loaded) and bool(state.paused),"physical_substeps":total_substeps})
+	get_tree().quit(0 if saved else 3)
 
 func _capture() -> void:
 	await RenderingServer.frame_post_draw
@@ -211,15 +210,30 @@ func _capture() -> void:
 		return
 	capture_saved = true
 
-func _write_result(result: Dictionary) -> void:
+func _write_result(result: Dictionary) -> bool:
 	result["wall_seconds"] = float(Time.get_ticks_msec()-started_ms)/1000
 	if not output.is_empty():
 		var file := FileAccess.open(output,FileAccess.WRITE)
-		if file: file.store_string(JSON.stringify(result))
+		var error := FileAccess.get_open_error()
+		if file:
+			file.store_string(JSON.stringify(result))
+			file.flush()
+			error = file.get_error()
+		if error != OK:
+			var reason := "Could not write verification result: " + error_string(error)
+			push_error(reason)
+			print(JSON.stringify({"error":reason,"physical_substeps":total_substeps}))
+			return false
 	print(JSON.stringify(result))
+	return true
 
 func _fail(reason: String) -> void:
-	running = false
+	if swimmer != null:
+		swimmer.call("pause")
+		_refresh()
+	accumulator = 0
+	if start_button != null: start_button.disabled = true
+	if pause_button != null: pause_button.disabled = true
 	if status != null: status.text = reason
 	push_error(reason)
 	if not capture_path.is_empty():
