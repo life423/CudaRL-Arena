@@ -101,7 +101,8 @@ CUDARL_HD inline float kinetic(const p::BodyState& body,bool composite=true) {
     const auto a=assemble(body,{0,0,0},composite);double value=0;
     for(int i=0;i<10;++i)for(int j=0;j<10;++j)value+=.5*body.velocity[i]*a.M[i][j]*body.velocity[j];return static_cast<float>(value);
 }
-CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,float h,p::Parameters fluid,Telemetry& telemetry,bool composite=true,contact::Arena arena={}) {
+CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,float h,p::Parameters fluid,Telemetry& telemetry,bool composite=true,contact::Arena arena={},p::BodyState* attempted=nullptr) {
+    if(attempted)*attempted=body; // Optional diagnostic copy; never changes the accepted state.
     telemetry={};telemetry.failure_code=1;telemetry.minimum_gap=clearance(body,composite,arena);
     if(!(h>0)||h>.005001f||telemetry.minimum_gap<.01f)return false;
     telemetry.failure_code=2;
@@ -130,9 +131,10 @@ CUDARL_HD inline bool substep(p::BodyState& body,const Reference& reference,floa
     auto candidate=body;candidate.position+=p::V{static_cast<float>(next[0]),static_cast<float>(next[1]),static_cast<float>(next[2])}*(h/p::scale);
     const p::V angular{static_cast<float>(next[3]),static_cast<float>(next[4]),static_cast<float>(next[5])};const float speed=p::norm(angular);
     if(speed>1e-10f)candidate.orientation=p::axis_rotation(angular/speed,h*speed)*candidate.orientation;candidate.orientation.normalize();
-    telemetry.failure_code=7;for(int j=0;j<4;++j){candidate.angle[j]+=h*static_cast<float>(next[6+j]);telemetry.signed_work+=h*telemetry.torque[j]*next[6+j];telemetry.positive_work+=h*fmax(0.,telemetry.torque[j]*next[6+j]);if(fabsf(candidate.angle[j])>p::limit)return false;}
+    telemetry.failure_code=7;for(int j=0;j<4;++j){candidate.angle[j]+=h*static_cast<float>(next[6+j]);telemetry.signed_work+=h*telemetry.torque[j]*next[6+j];telemetry.positive_work+=h*fmax(0.,telemetry.torque[j]*next[6+j]);if(attempted)*attempted=candidate;if(fabsf(candidate.angle[j])>p::limit)return false;}
     candidate.work+=static_cast<float>(telemetry.positive_work);for(int i=0;i<10;++i)candidate.velocity[i]=static_cast<float>(next[i]);
     candidate.travel+=h*p::norm({candidate.velocity[0],candidate.velocity[1],candidate.velocity[2]})/p::scale;
+    if(attempted)*attempted=candidate;
     telemetry.failure_code=8;telemetry.minimum_gap=fminf(telemetry.minimum_gap,clearance(candidate,composite,arena));if(telemetry.minimum_gap<.01f)return false;
     body=candidate;telemetry.failure_code=0;return true;
 }

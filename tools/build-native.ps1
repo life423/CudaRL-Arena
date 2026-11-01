@@ -1,9 +1,9 @@
-param([Parameter(Mandatory)][ValidateSet('frozen_swimmer','ppo_motor')][string]$Target)
+param([Parameter(Mandatory)][ValidateSet('frozen_swimmer','ppo_motor','motor_compare')][string]$Target)
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $build=Join-Path $repo 'build'
 $cache=Join-Path $build 'CMakeCache.txt'
-$required=if($Target -eq 'frozen_swimmer'){@{CUDARL_BUILD_GODOT='ON'}}else{@{CUDARL_BUILD_PPO='ON';CUDARL_ENABLE_CUDA='ON'}}
+$required=if($Target -eq 'frozen_swimmer'){@{CUDARL_BUILD_GODOT='ON'}}elseif($Target -eq 'ppo_motor'){@{CUDARL_BUILD_PPO='ON';CUDARL_ENABLE_CUDA='ON'}}else{@{}}
 $configure=-not(Test-Path -LiteralPath $cache)
 foreach($entry in $required.GetEnumerator()){
     if(-not $configure -and -not(Select-String -LiteralPath $cache -Pattern ('^'+$entry.Key+':BOOL='+$entry.Value+'$') -Quiet)){$configure=$true}

@@ -45,12 +45,15 @@ CUDARL_HD inline bool action_from_latent(const float *z, Action &a) {
 }
 // Four independent bounded ANGLE targets [rad], not torques or a gait. Filter
 // angle is physical.held_targets; filter rate is explicit observed state.
+template <int NaturalFrequencyHz = 1>
 CUDARL_HD inline bool filter_targets(float *angle, float *rate, const float *command,
                                      model::Reference &output) {
     if (!angle || !rate || !command)
         return false;
     model::Reference next;
-    const float h = .005f, omega = 2 * model::pi;
+    static_assert(NaturalFrequencyHz == 1 || NaturalFrequencyHz == 3,
+                  "Only default or registered harness bandwidth");
+    const float h = .005f, omega = 2 * model::pi * NaturalFrequencyHz;
     for (int j = 0; j < 4; ++j) {
         if (!p::finite_number(command[j]) || fabsf(command[j]) > 1 || !p::finite_number(angle[j]) ||
             fabsf(angle[j]) > p::limit || !p::finite_number(rate[j]) || fabsf(rate[j]) > 12)
@@ -69,7 +72,9 @@ CUDARL_HD inline bool filter_targets(float *angle, float *rate, const float *com
     output = next;
     return true;
 }
-CUDARL_HD inline bool step_state(World &w, const float *command) {
+template <int NaturalFrequencyHz = 1>
+CUDARL_HD inline bool step_state(World &w, const float *command, model::Telemetry *diagnostic = nullptr,
+                                 p::BodyState *before_substep = nullptr, p::BodyState *attempted = nullptr) {
     if (!command || w.physical.paused || !in_domain(w))
         return false;
     for (int j = 0; j < 4; ++j)
@@ -81,16 +86,22 @@ CUDARL_HD inline bool step_state(World &w, const float *command) {
     for (int j = 0; j < 4; ++j)
         state.raw_action[j] = command[j];
     for (int k = 0; k < 10; ++k) {
+        if (before_substep)
+            *before_substep = state.body;
         const float h = .005f;
         model::Reference reference;
-        if (!filter_targets(state.held_targets, w.reference_rate, command, reference)) {
+        if (!filter_targets<NaturalFrequencyHz>(state.held_targets, w.reference_rate, command, reference)) {
             w.failure_code = 10;
             state.invalid = true;
             return false;
         }
         model::Telemetry telemetry;
         ++w.attempted_substeps;
-        if (!model::substep(state.body, reference, h, state.fluid, telemetry, true, w.arena)) {
+        const bool advanced =
+            model::substep(state.body, reference, h, state.fluid, telemetry, true, w.arena, attempted);
+        if (diagnostic)
+            *diagnostic = telemetry;
+        if (!advanced) {
             w.failure_code = telemetry.failure_code;
             state.invalid = true;
             return false;

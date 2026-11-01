@@ -7,7 +7,7 @@ namespace cudarl::motor {
 namespace sm = straight_motor;
 namespace cp = checkpoint;
 namespace p = physics;
-static_assert(movement::kVersion == 6 && sm::kTaskVersion == 6 && sm::kRewardVersion == 3,
+static_assert(movement::kVersion == 6 && sm::kTaskVersion == 6 && sm::kRewardVersion == 4,
               "Frozen actor contract changed");
 FrozenController::FrozenController()
     : actor_({{40, 32, 32, 4}, {nn::Activation::Tanh, nn::Activation::Tanh, nn::Activation::Identity}}) {}
@@ -23,7 +23,7 @@ bool FrozenController::load(const std::string &path) {
         const auto schema = r.value<uint32_t>();
         if (schema != 4)
             throw std::runtime_error("Unsupported frozen controller schema");
-        if (r.value<uint32_t>() != 6 || r.value<uint32_t>() != 6 || r.value<uint32_t>() != 3 ||
+        if (r.value<uint32_t>() != 6 || r.value<uint32_t>() != 6 || r.value<uint32_t>() != 4 ||
             r.value<uint32_t>() != 40 || r.value<uint32_t>() != 4)
             throw std::runtime_error("Wrong frozen controller schema/model/task/shape");
         (void)r.value<uint32_t>(); // training update provenance; no optimizer loaded
