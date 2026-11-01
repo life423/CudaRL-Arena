@@ -6,11 +6,17 @@ presentation only. The motor supplies four independent joint-angle targets throu
 
 ## Current state
 
-Training is stopped at update352. The best research checkpoint remains update288:
-4/4 eight-second swims and8/30 long windows; sustained depth tracking still fails.
-The best new32-second-training checkpoint passes2/4 short swims and was not adopted.
-See [HANDOFF.md](HANDOFF.md) for durable checkpoints, hashes, results and resume usage.
-Reward4 includes head posture, lane and depth costs from the first control.
+Training is stopped. Original update288 remains preserved with4/4 eight-second
+swims and8/30 long windows. The newer reward5/path-scale experiment is saved in
+`assets/ppo-four-axis-checkpoints/update-320-path-scale`:4/4 short swims and all
+three ordinary32-second swimming cases pass, but both offset recovery/settling
+cases fail. It was not adopted and did not qualify for the conditional long test.
+Its JSON provenance records hashes, exact protocol, converted parent, results and
+optimizer caveats. [HANDOFF.md](HANDOFF.md) describes the earlier baseline campaign.
+Reward5 separates roll/pitch and scores depth-dependent vertical settling from
+the first control. Observation schema2 scales all three body-frame path-error
+inputs by2mm; old checkpoints retain explicit72mm scaling. Checkpoint schema4
+records that choice and rejects mismatched frozen evaluators.
 
 The prior imitation-trained controllers and dedicated supervised training paths
 were removed by user request. No verified PPO checkpoint is installed. The viewer

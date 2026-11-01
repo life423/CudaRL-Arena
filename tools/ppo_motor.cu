@@ -8,6 +8,7 @@
 #include "rl/gaussian_math.h"
 #include "rl/motor_rollout.cuh"
 #include "rl/ppo_checkpoint.h"
+#include "rl/ppo_diagnostics.h"
 #include "rl/ppo_kernels.h"
 #include <chrono>
 #include <ctime>
@@ -35,11 +36,13 @@ int updates = 128;
 int training_cap = updates * rows, control_cap = training_cap + 64 + 1280 + 2400,
     substep_cap = control_cap * 10;
 bool &tilt_mixture = training_episode.tilt_mixture;
+bool &depth_offsets = training_episode.fixed_depth_offsets;
 int optimizer_steps_per_update() { return epochs * (rows / minibatch); }
 size_t rollout_elements(int components = 1) { return static_cast<size_t>(rows) * components; }
 uint32_t seed = 0x4a544731u;
 float correlation = 0;
 std::optional<rl::PpoTrainingState> resume_state;
+std::optional<float> actor_lr_override;
 fs::path parent_checkpoint_path, parent_protocol_path;
 std::vector<uint8_t> parent_checkpoint_payload, parent_protocol_payload;
 double active_wall_cap = 60;
@@ -74,12 +77,16 @@ std::vector<float> policy_sigma() {
     return resume_state ? resume_state->actor.log_sigma : std::vector<float>(actions, log_sigma);
 }
 nn::AdamConfig initial_optimizer_config(bool actor) {
-    if (resume_state)
-        return actor ? resume_state->actor_adam.config : resume_state->critic_adam.config;
     nn::AdamConfig config;
-    config.lr = .001f;
-    config.eps = .00001f;
-    config.max_grad_norm = .5f;
+    if (resume_state)
+        config = actor ? resume_state->actor_adam.config : resume_state->critic_adam.config;
+    else {
+        config.lr = .001f;
+        config.eps = .00001f;
+        config.max_grad_norm = .5f;
+    }
+    if (actor && actor_lr_override)
+        config.lr = *actor_lr_override;
     return config;
 }
 rl::PpoAdamState initial_optimizer(bool actor) {
@@ -102,6 +109,7 @@ void load_resume_source(const fs::path &checkpoint, const fs::path &source_proto
     require(!rho_explicit || correlation == state.actor.correlation, "Explicit rho differs from PPO parent");
     require(state.actor.update <= static_cast<int>(std::numeric_limits<uint32_t>::max() / horizon) - updates,
             "Resume update exceeds RNG counter range");
+    training_episode.observation_schema = state.actor.observation_schema;
     seed = state.actor.seed;
     correlation = state.actor.correlation;
     parent_checkpoint_path = fs::absolute(checkpoint);
@@ -120,6 +128,8 @@ void restore_training(const rl::PpoTrainingState &state, nn::GpuMlp &actor, nn::
     critic.set_params(state.critic);
     restore_optimizer(actor_opt, state.actor_adam);
     restore_optimizer(critic_opt, state.critic_adam);
+    if (actor_lr_override)
+        actor_opt.set_learning_rate(*actor_lr_override);
     require(actor_opt.steps() == state.actor.actor_steps && critic_opt.steps() == state.actor.critic_steps,
             "Restored Adam counters differ");
 }
@@ -167,14 +177,15 @@ struct Budget {
     int controls = 0, substeps = 0;
     int maximum_controls = control_cap, maximum_substeps = substep_cap;
     double seconds = wall_cap;
-    void step(m::World &world, const float *command) {
+    void step(m::World &world, const float *command, cudarl::movement::Telemetry *diagnostic = nullptr,
+              p::BodyState *before_state = nullptr, p::BodyState *candidate = nullptr) {
         require(std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count() < seconds,
                 "Physical evaluation wall cap reached");
         require(controls < maximum_controls && substeps + 10 <= maximum_substeps,
                 "Physical budget exhausted");
         ++controls;
         const auto before = world.attempted_substeps;
-        const bool ok = cudarl::joint_motor::step_state(world, command);
+        const bool ok = cudarl::joint_motor::step_state(world, command, diagnostic, before_state, candidate);
         substeps += static_cast<int>(world.attempted_substeps - before);
         if (!ok || world.attempted_substeps - before != 10)
             throw std::runtime_error(
@@ -214,7 +225,16 @@ struct Batches {
 std::vector<uint8_t> protocol() {
     cp::Writer out;
     out.value(uint32_t{0x3150504d});
-    out.value(uint32_t{8});
+    out.value(uint32_t{11});
+    out.value(training_episode.observation_schema);
+    out.value(cudarl::motor_observation::path_scale_m(training_episode.observation_schema));
+    out.value(uint32_t{actor_lr_override ? 1u : 0u});
+    out.value(actor_lr_override.value_or(0));
+    out.value(uint32_t{depth_offsets ? 1u : 0u});
+    out.value(.0005f); // Symmetric fixed-target starts; pair-group phase = global update %3.
+    out.value(resume_state ? resume_state->actor.reward_version : uint32_t{m::kRewardVersion});
+    for (float v : {m::kDepthSettlingSeconds, m::kRecoverySpeedLimit, m::kRollCost, m::kPitchCost})
+        out.value(v);
     out.value(training_episode.arena().half_width_m);
     out.value(training_episode.arena().half_depth_m);
     out.value(uint32_t{1}); // Gate long evaluation on four short passes.
@@ -279,7 +299,8 @@ void check_initialization() {
         m::World world;
         m::ForwardTask task;
         require(m::begin_training_episode(i, tilt_mixture, training_episode.task_config(), world, task,
-                                          training_episode.arena()),
+                                          training_episode.arena(),
+                                          training_episode.initial_vertical_offset(i)),
                 "CPU initialization failed");
         require(setup_worlds[i].arena.half_width_m == world.arena.half_width_m &&
                     setup_worlds[i].arena.half_depth_m == world.arena.half_depth_m,
@@ -338,8 +359,8 @@ int prepare(const fs::path &root) {
         << ",\"starting_update\":" << starting_update()
         << ",\"starting_actor_steps\":" << initial_optimizer(true).steps
         << ",\"starting_critic_steps\":" << initial_optimizer(false).steps
-        << ",\"actor_shape\":[40,32,32,4],\"critic_shape\":[40,32,32,1],\"checkpoint_schema\":3,\"action_"
-           "mapping\":3,\"task\":6,\"reward\":4,\"model\":6,\"fresh_episode_rollout\":true,\"teacher_"
+        << ",\"actor_shape\":[40,32,32,4],\"critic_shape\":[40,32,32,1],\"checkpoint_schema\":4,\"action_"
+           "mapping\":3,\"task\":6,\"reward\":5,\"model\":6,\"fresh_episode_rollout\":true,\"teacher_"
            "examples\":false,\"preset_oscillator\":false,\"target_mm_s\":8,\"environments\":32,\"rollout_"
            "controls\":"
         << horizon << ",\"episode_seconds\":" << horizon * .05
@@ -352,10 +373,16 @@ int prepare(const fs::path &root) {
         << ",\"controls_cap\":" << (verification_mode ? rows : control_cap)
         << ",\"substeps_cap\":" << (verification_mode ? rows * 10 : substep_cap)
         << ",\"tilt_mixture\":" << (tilt_mixture ? "true" : "false")
+        << ",\"fixed_depth_offsets\":" << (depth_offsets ? "true" : "false")
+        << ",\"actor_learning_rate\":" << initial_optimizer_config(true).lr
+        << ",\"critic_learning_rate\":" << initial_optimizer_config(false).lr
         << ",\"long_evaluation_requires_short4of4\":true"
         << ",\"native_wall_seconds\":" << (verification_mode ? 10 : active_wall_cap)
         << ",\"process_wall_seconds\":"
-        << (verification_mode ? 15 : (horizon == 640 ? 35 : ((tilt_mixture || updates <= 32) ? 25 : 75)))
+        << (depth_offsets
+                ? 75
+                : (verification_mode ? 15
+                                     : (horizon == 640 ? 35 : ((tilt_mixture || updates <= 32) ? 25 : 75))))
         << ",\"physical_steps\":0,\"optimizer_steps_"
            "performed\":0,\"runtime_adoption\":false,\"retries\":0,\"log_std\":[";
     const auto sigma = policy_sigma();
@@ -464,6 +491,7 @@ Sustained sustained(const std::vector<float> &params, const fs::path &root, Budg
         auto world = m::initial_world(pose);
         world.arena = m::long_swim_arena();
         auto config = m::config_for_speed(.008f);
+        config.observation_schema = training_episode.observation_schema;
         config.maximum_controls = 1200;
         m::ForwardTask task;
         require(m::begin_forward(world, config, task), "Long evaluation initialization failed");
@@ -564,6 +592,7 @@ Evaluation evaluate(const std::vector<float> &params, const fs::path &root, cons
         float forward_at_four = 0;
         auto world = m::initial_world(pose);
         auto config = m::config_for_speed(.008f);
+        config.observation_schema = training_episode.observation_schema;
         m::ForwardTask task;
         require(m::begin_forward(world, config, task), "Frozen evaluation initialization failed");
         for (int t = 0; t < config.maximum_controls; ++t) {
@@ -603,7 +632,7 @@ void snapshot(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &c
               nn::GpuAdam &critic_opt) {
     cp::Writer out;
     out.value(uint32_t{0x31525050});
-    out.value(uint32_t{3});
+    out.value(uint32_t{4});
     out.value(seed);
     out.value(cp::checksum(protocol()));
     out.value(update);
@@ -615,6 +644,7 @@ void snapshot(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &c
     out.value(uint32_t{actions});
     out.value(uint32_t{1}); // history-conditioned Gaussian stochastic-policy schema
     out.value(correlation);
+    out.value(training_episode.observation_schema);
     out.array(actor.get_params());
     out.array(critic.get_params());
     out.array(policy_sigma());
@@ -634,6 +664,672 @@ void state_json(std::ostream &out, const p::BodyState &body) {
         out << (j ? "," : "") << body.velocity[j];
     out << "],\"finite\":" << (p::finite_body(body) ? "true" : "false") << '}';
 }
+// Fixed world-space COM target; translating a start must not translate its lesson.
+// Harness only: all four actions still come from the unchanged frozen actor.
+int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_budget = nullptr,
+                       bool *recovered = nullptr, int expected_update = 288) {
+    const auto original = cp::read((root / "checkpoint.bin").string());
+    const auto policy = rl::read_ppo_actor(original, cp::checksum(cp::read((root / "protocol.bin").string())),
+                                           seed, training_episode.observation_schema);
+    require(policy.update == expected_update && policy.correlation == .8f,
+            "Depth diagnostic policy mismatch");
+    nn::CpuMlp<float> actor(spec(actions));
+    actor.params() = policy.parameters;
+    auto base = m::initial_world(0);
+    base.arena = m::long_swim_arena();
+    auto config = m::config_for_speed(.008f);
+    config.observation_schema = training_episode.observation_schema;
+    config.maximum_controls = 640;
+    m::ForwardTask base_task;
+    require(m::begin_forward(base, config, base_task), "Depth base setup invalid");
+    const auto target = base_task.start_com_model;
+    require(base_task.request.heading.y == 0 && base_task.request.position.y == target.y,
+            "Depth target is not the fixed horizontal level");
+    const char *names[] = {"centered", "below", "above"};
+    const float offsets[] = {0, -.5f, .5f};
+    m::World worlds[3];
+    m::ForwardTask tasks[3];
+    float initial_obs[3][observations]{};
+    std::ofstream setup(root / "setup.json");
+    setup << std::setprecision(17) << "{\"target_model_y\":" << target.y
+          << ",\"target_m_y\":" << target.y * p::scale << ",\"physical_steps\":0,\"cases\":[";
+    auto error_mm = [&](const m::World &w) {
+        return (cudarl::motor::motion(w.physical.body).com_model.y - target.y) * p::scale * 1000;
+    };
+    for (int c = 0; c < 3; ++c) {
+        worlds[c] = base;
+        tasks[c] = base_task;
+        require(m::offset_episode_start(worlds[c], tasks[c], config, offsets[c] / 1000),
+                "Translated setup invalid");
+        require(m::observe(tasks[c], worlds[c], config, initial_obs[c]), "Translated observation invalid");
+        const auto *o = initial_obs[c];
+        const float decoded_depth =
+            (-1000 * cudarl::motor_observation::path_scale_m(config.observation_schema)) *
+            (o[0] * o[9] + o[1] * o[10] + o[2] * o[11]);
+        const float decoded_vy = 20 * (o[12] * o[9] + o[13] * o[10] + o[14] * o[11]);
+        require(fabsf(decoded_depth - error_mm(worlds[c])) < .0001f && decoded_vy == 0,
+                "Depth/vertical velocity observation decoding failed");
+        for (int j = 3; j < observations; ++j)
+            require(o[j] == initial_obs[0][j], "Translation altered a non-position observation");
+        setup << (c ? "," : "") << "{\"name\":" << std::quoted(names[c])
+              << ",\"translation_mm\":" << offsets[c] << ",\"actual_error_mm\":" << error_mm(worlds[c])
+              << ",\"decoded_error_mm\":" << decoded_depth << ",\"decoded_vy_mm_s\":" << decoded_vy
+              << ",\"task_target_model_y\":" << tasks[c].start_com_model.y
+              << ",\"request_target_model_y\":" << tasks[c].request.position.y << '}';
+    }
+    setup << "]}\n";
+    setup.close();
+    if (setup_only) {
+        std::cout << "FIXED_DEPTH_SETUP_PASS cases=3 physical_steps=0 target_m_y=" << std::setprecision(12)
+                  << target.y * p::scale << std::endl;
+        return 0;
+    }
+    require(fs::create_directory(root / "run-started"), "Depth diagnostic already attempted; no retries");
+    if (!shared_budget)
+        started = std::chrono::steady_clock::now();
+    const auto utc = [] {
+        return std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+    };
+    const double begin = utc();
+    const auto case_clock = std::chrono::steady_clock::now();
+    Budget local_budget;
+    if (!shared_budget) {
+        local_budget.maximum_controls = 1920;
+        local_budget.maximum_substeps = 19200;
+        local_budget.seconds = 5;
+    }
+    Budget &budget = shared_budget ? *shared_budget : local_budget;
+    std::ofstream trace(root / "controls.csv");
+    trace << std::setprecision(12)
+          << "case,control,time_s,error_mm,vy_mm_s,forward_mm,forward_velocity_mm_s,lane_mm,tilt_deg,reward,"
+             "speed_cost,lane_cost,depth_cost,posture_cost,effort_cost,horizontal_cost,recovery_cost,roll_"
+             "cost,pitch_cost";
+    for (const char *field : {"command", "filtered", "angle", "rate"})
+        for (int j = 0; j < 4; ++j)
+            trace << ',' << field << j;
+    trace << '\n';
+    std::cout << std::setprecision(17) << "FIXED_DEPTH_STARTED unix_seconds=" << begin << std::endl;
+    int completed = 0;
+    std::string fault;
+    bool recovery_ok = true;
+    std::ofstream recovery_summary(root / "recovery-gates.csv");
+    recovery_summary << "case,existing32s_gates_pass,final8s_within_half_initial_error,passed\n";
+    for (int c = 0; c < 3 && fault.empty(); ++c) {
+        auto &world = worlds[c];
+        auto &task = tasks[c];
+        bool final8_closer = true;
+        const float half_initial_error = fabsf(error_mm(world)) * .5f;
+        auto row = [&](int control, const m::Transition &interval, const float *commands) {
+            const auto motion = cudarl::motor::motion(world.physical.body);
+            const auto metrics = m::measure(task, world);
+            trace << names[c] << ',' << control << ',' << control * .05 << ',' << error_mm(world) << ','
+                  << motion.velocity_m_s.y * 1000 << ',' << metrics.forward_m * 1000 << ','
+                  << p::dot(motion.velocity_m_s, task.request.heading) * 1000 << ','
+                  << metrics.lateral_m * 1000 << ',' << metrics.tilt_deg << ',' << interval.reward;
+            for (float cost : {interval.costs.speed, interval.costs.lane, interval.costs.depth,
+                               interval.costs.posture, interval.costs.effort})
+                trace << ',' << cost;
+            for (float detail : {interval.costs.horizontal, interval.costs.recovery, interval.costs.roll,
+                                 interval.costs.pitch})
+                trace << ',' << detail;
+            for (int j = 0; j < 4; ++j)
+                trace << ',' << commands[j];
+            for (float x : world.physical.held_targets)
+                trace << ',' << x;
+            for (float x : world.physical.body.angle)
+                trace << ',' << x;
+            for (int j = 0; j < 4; ++j)
+                trace << ',' << world.physical.body.velocity[6 + j];
+            trace << '\n';
+        };
+        const float zeros[4]{};
+        row(0, {}, zeros);
+        for (int t = 0; t < 640; ++t) {
+            p::BodyState before{}, candidate{};
+            cudarl::movement::Telemetry telemetry{};
+            try {
+                require(task.start_com_model.y == target.y && task.request.position.y == target.y,
+                        "Fixed depth target drifted");
+                float obs[observations];
+                require(m::observe(task, world, config, obs), "Depth replay observation failed");
+                actor.forward(obs, 1);
+                m::Action action;
+                require(m::action_from_latent(actor.output(), action), "Depth replay action failed");
+                budget.step(world, action.command, &telemetry, &before, &candidate);
+                const auto interval = m::record_control(task, world, config);
+                require(interval.accepted, "Depth replay task rejected");
+                row(t + 1, interval, action.command);
+                if (c != 0 && t >= 480 && fabsf(error_mm(world)) >= half_initial_error)
+                    final8_closer = false;
+            } catch (const std::exception &e) {
+                fault = e.what();
+                std::ofstream failure(root / "failure.json");
+                failure << std::setprecision(17) << "{\"case\":" << std::quoted(names[c])
+                        << ",\"control\":" << t + 1
+                        << ",\"attempted_physics_time_s\":" << world.attempted_substeps * .005
+                        << ",\"code\":" << world.failure_code << ",\"fault\":" << std::quoted(fault)
+                        << ",\"before_failed_substep\":";
+                state_json(failure, before);
+                failure << ",\"candidate_NOT_committed\":";
+                state_json(failure, candidate);
+                failure << ",\"last_accepted\":";
+                state_json(failure, world.physical.body);
+                failure << "}\n";
+                break;
+            }
+        }
+        trace.flush();
+        if (fault.empty()) {
+            ++completed;
+            const bool passed = task.outcome == m::Outcome::Success && (c == 0 || final8_closer);
+            recovery_ok = recovery_ok && passed;
+            recovery_summary << names[c] << ',' << (task.outcome == m::Outcome::Success) << ','
+                             << (c == 0 || final8_closer) << ',' << passed << '\n';
+        }
+    }
+    require(cp::read((root / "checkpoint.bin").string()) == original, "Depth checkpoint changed");
+    if (recovered)
+        *recovered = fault.empty() && completed == 3 && recovery_ok;
+    std::ofstream result(root / "result.json");
+    result << std::setprecision(17) << "{\"start_unix_seconds\":" << begin
+           << ",\"end_unix_seconds\":" << utc() << ",\"completed_cases\":" << completed
+           << ",\"controls\":" << budget.controls << ",\"substeps\":" << budget.substeps
+           << ",\"fault\":" << std::quoted(fault) << ",\"native_seconds\":"
+           << std::chrono::duration<double>(std::chrono::steady_clock::now() - case_clock).count()
+           << ",\"checkpoint_unchanged\":true,\"training_updates\":0,\"closed\":true}\n";
+    result.close();
+    std::ifstream immediate(root / "result.json");
+    std::cout << immediate.rdbuf() << std::flush;
+    return fault.empty() ? 0 : 3;
+}
+// Zero optimizer updates. Original trajectories only recover production observations;
+// converted actor/critic are compared on identical observations, never used as assistance.
+int verify_path_scale(const fs::path &root) {
+    require(fs::create_directory(root / "run-started"), "Path-scale verification already attempted");
+    active_wall_cap = 15;
+    Budget budget;
+    budget.maximum_controls = 320;
+    budget.maximum_substeps = 3200;
+    budget.seconds = 15;
+    std::ofstream report(root / "equivalence.csv");
+    report << std::setprecision(12)
+           << "policy,rows,latent_max,angle_max,value_max,logp_max,gpu_latent_max,gpu_value_max,reproduction_"
+              "max\n";
+    for (int version : {288, 320}) {
+        const auto suffix = std::to_string(version);
+        const auto original = cp::read((root / ("policy-" + suffix + ".bin")).string());
+        const auto old_protocol = cp::read((root / ("protocol-" + suffix + ".bin")).string());
+        const auto old = rl::read_ppo_training_state(original, cp::checksum(old_protocol), seed, 1);
+        auto converted = rl::rescale_ppo_path_inputs(old);
+        cp::Writer provenance;
+        provenance.value(uint32_t{0x32534f50});
+        provenance.value(uint32_t{1});
+        provenance.value(cp::checksum(original));
+        provenance.value(cp::checksum(old_protocol));
+        provenance.value(uint32_t{1});
+        provenance.value(uint32_t{2});
+        provenance.value(36.f);
+        converted.source_protocol = cp::checksum(provenance.data);
+        const auto encoded = rl::write_ppo_training_state(converted);
+        const auto back = rl::read_ppo_training_state(encoded, converted.source_protocol, seed, 2);
+        require(rl::write_ppo_training_state(back) == encoded, "Scaled checkpoint roundtrip failed");
+        bool rejected = false;
+        try {
+            (void)rl::read_ppo_actor(encoded, converted.source_protocol, seed);
+        } catch (const std::runtime_error &) {
+            rejected = true;
+        }
+        require(rejected, "Legacy evaluator accepted scaled observations");
+        nn::CpuMlp<float> actor(spec(4)), next_actor(spec(4)), critic(spec(1)), next_critic(spec(1));
+        actor.params() = old.actor.parameters;
+        next_actor.params() = back.actor.parameters;
+        critic.params() = old.critic;
+        next_critic.params() = back.critic;
+        std::vector<float> inputs, next_inputs, means, next_means, values, next_values;
+        float latent_max = 0, angle_max = 0, value_max = 0, logp_max = 0, reproduction_max = 0;
+        auto compare = [&](const float *x, const float *y) {
+            inputs.insert(inputs.end(), x, x + observations);
+            next_inputs.insert(next_inputs.end(), y, y + observations);
+            actor.forward(x, 1);
+            next_actor.forward(y, 1);
+            critic.forward(x, 1);
+            next_critic.forward(y, 1);
+            for (int j = 0; j < 4; ++j) {
+                latent_max = std::max(latent_max, fabsf(actor.output()[j] - next_actor.output()[j]));
+                angle_max =
+                    std::max(angle_max, fabsf(tanhf(actor.output()[j]) - tanhf(next_actor.output()[j])));
+                means.push_back(actor.output()[j]);
+                next_means.push_back(next_actor.output()[j]);
+            }
+            value_max = std::max(value_max, fabsf(critic.output()[0] - next_critic.output()[0]));
+            values.push_back(critic.output()[0]);
+            next_values.push_back(next_critic.output()[0]);
+        };
+        auto config = m::config_for_speed(.008f), next_config = config;
+        config.maximum_controls = next_config.maximum_controls = 640;
+        next_config.observation_schema = 2;
+        auto world = m::initial_world(0);
+        world.arena = m::long_swim_arena();
+        m::ForwardTask task;
+        require(m::begin_forward(world, config, task), "Scale reconstruction initialization");
+        std::ifstream expected(root / ("expected-" + suffix + ".csv"));
+        std::string line;
+        std::getline(expected, line);
+        for (int control = 1; control <= 160; ++control) {
+            wall_guard();
+            float base_obs[observations];
+            require(m::observe(task, world, config, base_obs), "Scale baseline observation");
+            actor.forward(base_obs, 1);
+            m::Action action;
+            require(m::action_from_latent(actor.output(), action), "Scale baseline action");
+            for (int probe = 0; probe < 7; ++probe) {
+                auto w = world;
+                const auto motion = cudarl::motor::motion(w.physical.body);
+                if (probe >= 1 && probe <= 3)
+                    w.physical.body.position.y += (float(probe - 2) * .0005f -
+                                                   (motion.com_model.y - task.start_com_model.y) * p::scale) /
+                                                  p::scale;
+                if (probe >= 4)
+                    w.physical.body.velocity[1] += float(probe - 5) * .0005f - motion.velocity_m_s.y;
+                float x[observations], y[observations];
+                require(m::observe(task, w, config, x) && m::observe(task, w, next_config, y),
+                        "Scale probe observation");
+                compare(x, y);
+            }
+            budget.step(world, action.command);
+            require(m::record_control(task, world, config).accepted, "Scale reconstruction task");
+            require(bool(std::getline(expected, line)), "Missing saved scale reconstruction row");
+            std::stringstream row(line);
+            std::string field;
+            std::vector<float> saved;
+            while (std::getline(row, field, ','))
+                saved.push_back(std::stof(field));
+            const auto motion = cudarl::motor::motion(world.physical.body);
+            const auto metrics = m::measure(task, world);
+            std::vector<float> actual{float(control),
+                                      metrics.signed_depth_m * 1000,
+                                      motion.velocity_m_s.y * 1000,
+                                      metrics.forward_m * 1000,
+                                      metrics.tilt_deg,
+                                      metrics.lateral_m * 1000};
+            for (float v : action.command)
+                actual.push_back(v);
+            for (float v : world.physical.held_targets)
+                actual.push_back(v);
+            for (float v : world.physical.body.angle)
+                actual.push_back(v);
+            for (int j = 0; j < 4; ++j)
+                actual.push_back(world.physical.body.velocity[6 + j]);
+            require(actual.size() == saved.size(), "Scale reconstruction row shape");
+            for (size_t i = 0; i < actual.size(); ++i)
+                reproduction_max = std::max(reproduction_max, fabsf(actual[i] - saved[i]));
+        }
+        // Broader deterministic numerical probes, explicitly synthetic observations.
+        for (int row = 0; row < 256; ++row) {
+            float x[observations], y[observations];
+            for (int j = 0; j < observations; ++j) {
+                x[j] = .5f * sinf(float(row * 41 + j));
+                if (j < 3)
+                    x[j] *= .05f;
+                y[j] = j < 3 ? x[j] * 36.f : x[j];
+            }
+            compare(x, y);
+        }
+        const int count = static_cast<int>(values.size());
+        for (int row = 0; row < count; ++row) {
+            const int previous = row ? row - 1 : 0;
+            float z[4], zp[4];
+            for (int j = 0; j < 4; ++j) {
+                z[j] = means[row * 4 + j] + .15f;
+                zp[j] = means[previous * 4 + j] - .1f;
+            }
+            const auto lp = rl::ar_logp(&means[row * 4], &means[previous * 4], zp, old.actor.log_sigma.data(),
+                                        4, .8f, row != 0, z);
+            const auto nq = rl::ar_logp(&next_means[row * 4], &next_means[previous * 4], zp,
+                                        back.actor.log_sigma.data(), 4, .8f, row != 0, z);
+            logp_max = std::max(logp_max, fabsf(lp - nq));
+        }
+        float gpu_latent_max = 0, gpu_value_max = 0;
+        device_ptr<float> device_x(inputs.size());
+        for (int network : {4, 1}) {
+            nn::GpuMlp gpu_old(spec(network), count, seed), gpu_new(spec(network), count, seed);
+            gpu_old.set_params(network == 4 ? old.actor.parameters : old.critic);
+            gpu_new.set_params(network == 4 ? back.actor.parameters : back.critic);
+            device_x.copy_from_host(inputs.data(), inputs.size());
+            gpu_old.forward(device_x.get(), count);
+            const auto a = download(gpu_old.output(), count * network, nullptr);
+            device_x.copy_from_host(next_inputs.data(), next_inputs.size());
+            gpu_new.forward(device_x.get(), count);
+            const auto b = download(gpu_new.output(), count * network, nullptr);
+            for (size_t i = 0; i < a.size(); ++i) {
+                auto &maximum = network == 4 ? gpu_latent_max : gpu_value_max;
+                maximum = std::max(maximum, fabsf(a[i] - b[i]));
+            }
+        }
+        require(latent_max < 1e-5f && angle_max < 1e-5f && value_max < 1e-5f && logp_max < 1e-4f &&
+                    gpu_latent_max < 1e-5f && gpu_value_max < 1e-5f && reproduction_max < 1e-5f,
+                "Path-scale equivalence exceeded preregistered numerical limits");
+        cp::write_atomic((root / ("scaled-protocol-" + suffix + ".bin")).string(), provenance.data);
+        cp::write_atomic((root / ("scaled-policy-" + suffix + ".bin")).string(), encoded);
+        require(cp::read((root / ("policy-" + suffix + ".bin")).string()) == original,
+                "Source checkpoint changed");
+        report << version << ',' << count << ',' << latent_max << ',' << angle_max << ',' << value_max << ','
+               << logp_max << ',' << gpu_latent_max << ',' << gpu_value_max << ',' << reproduction_max
+               << '\n';
+        report.flush();
+    }
+    std::ofstream(root / "result.json")
+        << "{\"passed\":true,\"controls\":" << budget.controls << ",\"substeps\":" << budget.substeps
+        << ",\"optimizer_steps\":0,\"GPU_executed\":true}\n";
+    return 0;
+}
+// Bounded frozen diagnostic. World-space perturbations only; no policy assistance.
+int depth_sensitivity(const fs::path &root, bool continuation = false) {
+    const int versions[2] = {288, 320}, phases[2][4] = {{81, 85, 88, 92}, {78, 82, 85, 89}};
+    std::vector<uint8_t> payload[2];
+    nn::CpuMlp<float> actors[2] = {nn::CpuMlp<float>(spec(actions)), nn::CpuMlp<float>(spec(actions))};
+    std::vector<std::vector<float>> expected[2];
+    for (int pidx = 0; pidx < 2; ++pidx) {
+        const auto suffix = std::to_string(versions[pidx]);
+        payload[pidx] = cp::read((root / ("policy-" + suffix + ".bin")).string());
+        const auto policy = rl::read_ppo_actor(
+            payload[pidx], cp::checksum(cp::read((root / ("protocol-" + suffix + ".bin")).string())), seed);
+        require(policy.update == versions[pidx] && policy.correlation == .8f,
+                "Sensitivity policy identity mismatch");
+        actors[pidx].params() = policy.parameters;
+        std::ifstream input(root / ("expected-" + suffix + ".csv"));
+        std::string line;
+        std::getline(input, line);
+        while (std::getline(input, line)) {
+            std::stringstream in(line);
+            std::string field;
+            std::vector<float> row;
+            while (std::getline(in, field, ','))
+                row.push_back(std::stof(field));
+            require(row.size() == 22, "Saved sensitivity trace has wrong columns");
+            expected[pidx].push_back(row);
+        }
+        require(expected[pidx].size() == 160, "Saved sensitivity trace does not cover8s");
+    }
+    struct Snapshot {
+        m::World world;
+        m::ForwardTask task;
+    };
+    Snapshot snapshots[2][4];
+    auto config = m::config_for_speed(.008f);
+    config.observation_schema = training_episode.observation_schema;
+    config.maximum_controls = 640;
+    require(fs::create_directory(root / "run-started"), "Sensitivity diagnostic already attempted");
+    started = std::chrono::steady_clock::now();
+    const auto utc = []() {
+        return std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+    };
+    const double begin = utc();
+    Budget budget;
+    budget.maximum_controls = 680;
+    budget.maximum_substeps = 6800;
+    budget.seconds = 5;
+    if (continuation) {
+        std::ifstream proof(root / "prior-result.json");
+        const std::string text((std::istreambuf_iterator<char>(proof)), {});
+        require(text.find("\"controls\":320,") != std::string::npos &&
+                    text.find("\"completed_replays\":0,") != std::string::npos &&
+                    text.find("Sensitivity perturbation altered unrelated observation") != std::string::npos,
+                "Sensitivity continuation lacks completed reconstruction evidence");
+        budget.controls = 320;
+        budget.substeps = 3200;
+    }
+    std::cout << std::setprecision(17) << "SENSITIVITY_STARTED unix_seconds=" << begin << std::endl;
+    std::ofstream reproduction(root / "reproduction.csv");
+    reproduction << "policy,controls,max_defined_field_difference,passed\n";
+    std::string fault;
+    int completed_replays = 0, sensitivity_rows = 0;
+    auto observe = [&](const Snapshot &s, float *obs) {
+        require(m::observe(s.task, s.world, config, obs), "Sensitivity observation rejected");
+        const auto motion = cudarl::motor::motion(s.world.physical.body);
+        const float e = (motion.com_model.y - s.task.start_com_model.y) * p::scale * 1000;
+        const float decoded = (-1000 * cudarl::motor_observation::path_scale_m(config.observation_schema)) *
+                              (obs[0] * obs[9] + obs[1] * obs[10] + obs[2] * obs[11]);
+        const float vy = motion.velocity_m_s.y * 1000,
+                    decoded_vy = 20 * (obs[12] * obs[9] + obs[13] * obs[10] + obs[14] * obs[11]);
+        require(fabsf(e - decoded) < .0001f && fabsf(vy - decoded_vy) < .0001f,
+                "Sensitivity encoded depth/velocity mismatch");
+    };
+    auto move_depth = [&](Snapshot &s, float e_mm) {
+        const auto motion = cudarl::motor::motion(s.world.physical.body);
+        s.world.physical.body.position.y +=
+            (e_mm / 1000 - (motion.com_model.y - s.task.start_com_model.y) * p::scale) / p::scale;
+    };
+    auto fields = [&](const Snapshot &s, int control, const float *command) {
+        const auto motion = cudarl::motor::motion(s.world.physical.body);
+        const auto metrics = m::measure(s.task, s.world);
+        std::vector<float> out{float(control),
+                               metrics.signed_depth_m * 1000,
+                               motion.velocity_m_s.y * 1000,
+                               metrics.forward_m * 1000,
+                               metrics.tilt_deg,
+                               metrics.lateral_m * 1000};
+        for (int j = 0; j < 4; ++j)
+            out.push_back(command[j]);
+        for (float v : s.world.physical.held_targets)
+            out.push_back(v);
+        for (float v : s.world.physical.body.angle)
+            out.push_back(v);
+        for (int j = 0; j < 4; ++j)
+            out.push_back(s.world.physical.body.velocity[6 + j]);
+        return out;
+    };
+    try {
+        for (int pidx = 0; pidx < (continuation ? 1 : 2); ++pidx) {
+            Snapshot state;
+            state.world = m::initial_world(0);
+            state.world.arena = m::long_swim_arena();
+            require(m::begin_forward(state.world, config, state.task),
+                    "Sensitivity reconstruction initial state");
+            float maximum = 0;
+            const int last_control = continuation ? 92 : 160;
+            for (int t = 1; t <= last_control; ++t) {
+                float obs[observations];
+                observe(state, obs);
+                actors[pidx].forward(obs, 1);
+                m::Action action;
+                require(m::action_from_latent(actors[pidx].output(), action),
+                        "Sensitivity reconstruction action");
+                budget.step(state.world, action.command);
+                require(m::record_control(state.task, state.world, config).accepted,
+                        "Sensitivity reconstruction task");
+                const auto actual = fields(state, t, action.command);
+                require(expected[pidx][t - 1][0] == t, "Sensitivity saved control ordering");
+                for (size_t j = 0; j < actual.size(); ++j) {
+                    maximum = fmaxf(maximum, fabsf(actual[j] - expected[pidx][t - 1][j]));
+                    require(fabsf(actual[j] - expected[pidx][t - 1][j]) < .0001f,
+                            "Baseline reconstruction differs from saved swim; no counterfactuals");
+                }
+                for (int phase = 0; phase < 4; ++phase)
+                    if (t == phases[pidx][phase])
+                        snapshots[pidx][phase] = state;
+            }
+            reproduction << versions[pidx] << ',' << last_control << ',' << std::setprecision(12) << maximum
+                         << ",1\n";
+            reproduction.flush();
+        }
+        std::cout << "RECONSTRUCTION_VERIFIED both_policies controls=" << budget.controls << std::endl;
+        std::ofstream table(root / "sensitivity.csv");
+        table << std::setprecision(12)
+              << "source_policy,source_control,time_s,tested_policy,variant,error_mm,vy_mm_s,decoded_error_"
+                 "mm,decoded_vy_mm_s";
+        for (int j : {0, 1, 2, 9, 10, 11, 12, 13, 14})
+            table << ",obs" << j;
+        for (const char *name : {"latent", "command"})
+            for (int j = 0; j < 4; ++j)
+                table << ',' << name << j;
+        table << '\n';
+        const char *variants[] = {"original", "depth_minus", "depth_zero", "depth_plus",
+                                  "vy_minus", "vy_zero",     "vy_plus"};
+        double maximum_unrelated_roundoff = 0;
+        for (int source = 0; source < (continuation ? 1 : 2); ++source)
+            for (int phase = 0; phase < 4; ++phase) {
+                const auto &baseline = snapshots[source][phase];
+                float original_obs[observations];
+                observe(baseline, original_obs);
+                for (int kind = 0; kind < 7; ++kind) {
+                    auto state = baseline;
+                    if (kind >= 1 && kind <= 3)
+                        move_depth(state, (kind - 2) * .5f);
+                    if (kind >= 4) {
+                        const auto motion = cudarl::motor::motion(state.world.physical.body);
+                        state.world.physical.body.velocity[1] += (kind - 5) * .0005f - motion.velocity_m_s.y;
+                    }
+                    float obs[observations];
+                    observe(state, obs);
+                    for (int j = 0; j < observations; ++j) {
+                        const bool changed =
+                            (kind >= 1 && kind <= 3) ? j < 3 : (kind >= 4 && j >= 12 && j < 15);
+                        if (!changed)
+                            maximum_unrelated_roundoff =
+                                std::max(maximum_unrelated_roundoff, fabs(double(obs[j]) - original_obs[j]));
+                    }
+                    // Primitive state is copied, then ONLY root Y or root Vy is changed.
+                    // COM Jacobians can differ by a few FP32 ULPs after translation;
+                    // measure this rather than requiring cross-derived values bitwise equal.
+                    for (int j = 0; j < 4; ++j)
+                        require(state.world.physical.body.angle[j] == baseline.world.physical.body.angle[j] &&
+                                    state.world.physical.held_targets[j] ==
+                                        baseline.world.physical.held_targets[j] &&
+                                    state.world.reference_rate[j] == baseline.world.reference_rate[j],
+                                "Perturbation changed joint/filter state");
+                    for (int j = 0; j < 10; ++j)
+                        if (!(kind >= 4 && j == 1))
+                            require(state.world.physical.body.velocity[j] ==
+                                        baseline.world.physical.body.velocity[j],
+                                    "Perturbation changed angular/joint velocity");
+                    const auto motion = cudarl::motor::motion(state.world.physical.body);
+                    const float error = (motion.com_model.y - state.task.start_com_model.y) * p::scale * 1000;
+                    for (int subject = 0; subject < 2; ++subject) {
+                        actors[subject].forward(obs, 1);
+                        m::Action action;
+                        require(m::action_from_latent(actors[subject].output(), action),
+                                "Sensitivity action");
+                        table << versions[source] << ',' << state.task.controls << ','
+                              << state.task.controls * .05 << ',' << versions[subject] << ','
+                              << variants[kind] << ',' << error << ',' << motion.velocity_m_s.y * 1000 << ','
+                              << (-1000 *
+                                  cudarl::motor_observation::path_scale_m(config.observation_schema)) *
+                                     (obs[0] * obs[9] + obs[1] * obs[10] + obs[2] * obs[11])
+                              << ',' << 20 * (obs[12] * obs[9] + obs[13] * obs[10] + obs[14] * obs[11]);
+                        for (int j : {0, 1, 2, 9, 10, 11, 12, 13, 14})
+                            table << ',' << obs[j];
+                        for (float v : action.latent)
+                            table << ',' << v;
+                        for (float v : action.command)
+                            table << ',' << v;
+                        table << '\n';
+                        ++sensitivity_rows;
+                    }
+                }
+            }
+        table.close();
+        std::ofstream observation_report(root / "observation-verification.json");
+        observation_report
+            << std::setprecision(17)
+            << "{\"max_unrelated_derived_observation_roundoff\":" << maximum_unrelated_roundoff
+            << ",\"joint_filter_and_angular_states_exact\":true,\"signed_decoding_verified\":true}\n";
+        std::ofstream trace(root / "paired-controls.csv");
+        trace << std::setprecision(12)
+              << "policy,start_error_mm,step,relative_s,absolute_s,error_mm,vy_mm_s,forward_mm,forward_"
+                 "velocity_mm_s,tilt_deg,lane_mm,reward";
+        for (const char *name : {"command", "filtered", "angle", "rate", "torque"})
+            for (int j = 0; j < 4; ++j)
+                trace << ',' << name << j;
+        trace << '\n';
+        for (int subject = 0; subject < 2; ++subject)
+            for (float offset : {-.5f, 0.f, .5f}) {
+                auto state = snapshots[continuation ? 0 : subject][0];
+                move_depth(state, offset);
+                const auto origin = cudarl::motor::motion(state.world.physical.body).com_model;
+                const int control0 = state.task.controls;
+                auto row = [&](int n, const m::Transition &interval, const float *command) {
+                    const auto motion = cudarl::motor::motion(state.world.physical.body);
+                    const auto metrics = m::measure(state.task, state.world);
+                    trace << versions[subject] << ',' << offset << ',' << n << ',' << n * .05 << ','
+                          << state.task.controls * .05 << ',' << metrics.signed_depth_m * 1000 << ','
+                          << motion.velocity_m_s.y * 1000 << ','
+                          << p::dot((motion.com_model - origin) * p::scale, state.task.request.heading) * 1000
+                          << ',' << p::dot(motion.velocity_m_s, state.task.request.heading) * 1000 << ','
+                          << metrics.tilt_deg << ',' << metrics.lateral_m * 1000 << ',' << interval.reward;
+                    for (int j = 0; j < 4; ++j)
+                        trace << ',' << command[j];
+                    for (float v : state.world.physical.held_targets)
+                        trace << ',' << v;
+                    for (float v : state.world.physical.body.angle)
+                        trace << ',' << v;
+                    for (int j = 0; j < 4; ++j)
+                        trace << ',' << state.world.physical.body.velocity[6 + j];
+                    for (int j = 0; j < 4; ++j) {
+                        float peak = 0;
+                        for (int k = 0; k < 10; ++k)
+                            peak = fmaxf(peak, fabsf(state.world.physical.actual_torques[k * 4 + j]));
+                        trace << ',' << peak * p::torque;
+                    }
+                    trace << '\n';
+                };
+                float obs[observations];
+                observe(state, obs);
+                actors[subject].forward(obs, 1);
+                m::Action action;
+                require(m::action_from_latent(actors[subject].output(), action), "Paired initial action");
+                row(0, {}, action.command);
+                for (int n = 1; n <= (continuation ? 40 : 60); ++n) {
+                    observe(state, obs);
+                    actors[subject].forward(obs, 1);
+                    require(m::action_from_latent(actors[subject].output(), action), "Paired action");
+                    p::BodyState before{}, candidate{};
+                    cudarl::movement::Telemetry telemetry{};
+                    try {
+                        budget.step(state.world, action.command, &telemetry, &before, &candidate);
+                    } catch (const std::exception &e) {
+                        std::ofstream failure(root / "failure.json");
+                        failure << std::setprecision(17) << "{\"policy\":" << versions[subject]
+                                << ",\"offset_mm\":" << offset << ",\"relative_attempted_s\":"
+                                << (state.world.attempted_substeps - control0 * 10) * .005
+                                << ",\"code\":" << state.world.failure_code
+                                << ",\"fault\":" << std::quoted(e.what()) << ",\"before\":";
+                        state_json(failure, before);
+                        failure << ",\"candidate\":";
+                        state_json(failure, candidate);
+                        failure << "}\n";
+                        throw;
+                    }
+                    const auto interval = m::record_control(state.task, state.world, config);
+                    require(interval.accepted, "Paired task rejected");
+                    row(n, interval, action.command);
+                }
+                trace.flush();
+                ++completed_replays;
+            }
+        require(budget.controls == (continuation ? 652 : 680) &&
+                    budget.substeps == (continuation ? 6520 : 6800) &&
+                    sensitivity_rows == (continuation ? 56 : 112) && completed_replays == 6,
+                "Sensitivity accounting mismatch");
+    } catch (const std::exception &e) {
+        fault = e.what();
+    }
+    for (int i = 0; i < 2; ++i)
+        require(cp::read((root / ("policy-" + std::to_string(versions[i]) + ".bin")).string()) == payload[i],
+                "Sensitivity checkpoint changed");
+    std::ofstream result(root / "result.json");
+    result << std::setprecision(17) << "{\"start_unix_seconds\":" << begin
+           << ",\"end_unix_seconds\":" << utc() << ",\"controls\":" << budget.controls
+           << ",\"substeps\":" << budget.substeps << ",\"sensitivity_rows\":" << sensitivity_rows
+           << ",\"completed_replays\":" << completed_replays << ",\"fault\":" << std::quoted(fault)
+           << ",\"training_updates\":0,\"checkpoints_unchanged\":true,\"native_seconds\":"
+           << std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count()
+           << ",\"closed\":true}\n";
+    result.close();
+    std::ifstream immediate(root / "result.json");
+    std::cout << immediate.rdbuf() << std::flush;
+    return fault.empty() ? 0 : 3;
+}
 int diagnose_safety(const fs::path &root) {
     require(seed == 1247037242 || seed == 1247037243, "Only declared safety cases");
     const int cap = seed == 1247037242 ? 630 : 1129;
@@ -648,6 +1344,7 @@ int diagnose_safety(const fs::path &root) {
     auto world = m::initial_world(0);
     world.arena = m::long_swim_arena();
     auto config = m::config_for_speed(.008f);
+    config.observation_schema = training_episode.observation_schema;
     config.maximum_controls = 1200;
     m::ForwardTask task;
     require(m::begin_forward(world, config, task), "Safety replay initial state");
@@ -824,6 +1521,7 @@ int neutral_pitch_replay(const fs::path &root, bool continue_recorded = false) {
     budget.seconds = 5;
     started = std::chrono::steady_clock::now();
     auto config = m::config_for_speed(.008f);
+    config.observation_schema = training_episode.observation_schema;
     config.maximum_controls = 320;
     auto reference = m::initial_world(0);
     m::ForwardTask reference_task;
@@ -1039,9 +1737,40 @@ int neutral_pitch_replay(const fs::path &root, bool continue_recorded = false) {
     return 0;
 }
 // Shared by production training and the save/reload verification: no shadow updater.
-void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout &data, cudaStream_t stream) {
+void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout &data, cudaStream_t stream,
+                     const fs::path &diagnostics = {}) {
+    training_episode.offset_phase = update % 3;
     gpu::initialize<<<1, 32, 0, stream>>>(data.worlds.get(), data.tasks.get(), environments, data.fault.get(),
                                           training_episode);
+    if (depth_offsets) {
+        const auto worlds = download(data.worlds.get(), environments, stream);
+        const auto tasks = download(data.tasks.get(), environments, stream);
+        const bool header = !diagnostics.empty() && !fs::exists(diagnostics / "gpu-reset-starts.csv");
+        std::ofstream reset_log;
+        if (!diagnostics.empty())
+            reset_log.open(diagnostics / "gpu-reset-starts.csv", std::ios::app);
+        if (header)
+            reset_log << "update,world,pose,offset_mm,target_model_y,request_model_y,actual_error_mm\n";
+        reset_log << std::setprecision(12);
+        for (int i = 0; i < environments; ++i) {
+            int centered = i % 2;
+            while (training_episode.initial_vertical_offset(centered) != 0)
+                centered += 2;
+            const auto target = tasks[centered].start_com_model;
+            const auto actual = cudarl::motor::motion(worlds[i].physical.body).com_model;
+            require(target.y == -2 && p::norm(tasks[i].start_com_model - target) == 0 &&
+                        p::norm(tasks[i].request.position - tasks[centered].request.position) == 0 &&
+                        tasks[i].request.position.y == target.y &&
+                        fabsf((actual.y - target.y) * p::scale -
+                              training_episode.initial_vertical_offset(i)) < 1e-8f,
+                    "Device reset rebased fixed depth target");
+            if (reset_log)
+                reset_log << update << ',' << i << ',' << (i % 2 ? 3 : 0) << ','
+                          << training_episode.initial_vertical_offset(i) * 1000 << ',' << target.y << ','
+                          << tasks[i].request.position.y << ',' << (actual.y - target.y) * p::scale * 1000
+                          << '\n';
+        }
+    }
     for (int t = 0; t < horizon; ++t) {
         const int offset = t * environments;
         float *obs = data.obs.get() + offset * observations;
@@ -1184,6 +1913,10 @@ void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, 
               << " post8_rows=15360 minibatch_late_rows=" << late_rows
               << " gradient_rows=" << late_rows_with_gradient << std::endl;
 }
+std::vector<float> score_batch(nn::GpuMlp &actor, Rollout &data, Batches &batch, cudaStream_t stream);
+void rollout_diagnostics(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &critic,
+                         Rollout &data, Batches &batch, cudaStream_t stream, const double *pooled,
+                         int optimizer_rows, int actor_steps, int critic_steps);
 double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::GpuAdam &actor_opt,
                         nn::GpuAdam &critic_opt, Rollout &data, Batches &batch, cudaStream_t stream,
                         const fs::path &diagnostics = {}) {
@@ -1191,6 +1924,20 @@ double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::G
                     data.zeros.get(), data.zeros.get(), data.last.get(), .99f, 1.f, data.advantage.get(),
                     data.returns.get(), stream);
     rl::mean_std(data.advantage.get(), rows, data.adv_stats.get(), stream);
+    const int actor_before = actor_opt.steps(), critic_before = critic_opt.steps();
+    double pooled[5]{};
+    int optimizer_rows = 0;
+    if (actor_lr_override && update == starting_update()) {
+        const auto rescore = score_batch(actor, data, batch, stream);
+        const auto saved = download(data.logp.get(), rows, stream);
+        float maximum = 0;
+        for (int i = 0; i < rows; ++i)
+            maximum = fmaxf(maximum, fabsf(rescore[i] - saved[i]));
+        require(maximum < 1e-4f, "Old rollout policy rescore mismatch before optimizer");
+        std::ofstream proof(diagnostics / "old-policy-rescore.json");
+        proof << std::setprecision(12) << "{\"rows\":" << rows << ",\"max_abs_logp_error\":" << maximum
+              << ",\"same_recorded_latents_and_AR_history\":true,\"before_first_optimizer\":true}\n";
+    }
     double last_kl = 0;
     for (int epoch = 0; epoch < epochs; ++epoch) {
         CUDA_CHECK_THROW(cudaMemsetAsync(batch.stats.get(), 0, batch.stats.size_bytes(), stream));
@@ -1234,6 +1981,9 @@ double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::G
 
         const auto metrics = download(batch.stats.get(), 5, stream);
         finite(metrics);
+        for (int i = 0; i < 5; ++i)
+            pooled[i] += metrics[i];
+        optimizer_rows += rows;
         last_kl = metrics[3] / rows;
         if (last_kl > .01)
             break;
@@ -1243,6 +1993,10 @@ double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::G
     gpu::finite_parameters<<<(critic.num_params() + 255) / 256, 256, 0, stream>>>(
         critic.params(), critic.num_params(), data.fault.get());
     CUDA_CHECK_THROW(cudaGetLastError());
+    if (actor_lr_override && !diagnostics.empty())
+        rollout_diagnostics(diagnostics, update + 1, actor, critic, data, batch, stream, pooled,
+                            optimizer_rows, actor_opt.steps() - actor_before,
+                            critic_opt.steps() - critic_before);
 
     return last_kl;
 }
@@ -1272,7 +2026,46 @@ std::vector<float> score_batch(nn::GpuMlp &actor, Rollout &data, Batches &batch,
             batch.action.get(), minibatch, correlation, scores.get() + first);
         CUDA_CHECK_THROW(cudaGetLastError());
     }
-    return download(scores.get(), rows, stream);
+    return rl::diagnostic_original_order(download(scores.get(), rows, stream), permutation);
+}
+void rollout_diagnostics(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &critic,
+                         Rollout &data, Batches &batch, cudaStream_t stream, const double *pooled,
+                         int optimizer_rows, int actor_steps, int critic_steps) {
+    const auto oldp = download(data.logp.get(), rows, stream), newp = score_batch(actor, data, batch, stream);
+    const auto returns = download(data.returns.get(), rows, stream),
+               advantages = download(data.advantage.get(), rows, stream),
+               values = download(data.value.get(), rows, stream),
+               adv_stats = download(data.adv_stats.get(), 2, stream);
+    critic.forward(data.obs.get(), rows, stream);
+    const auto after = download(critic.output(), rows, stream);
+    const auto before_value = rl::diagnostic_value(values, returns),
+               after_value = rl::diagnostic_value(after, returns);
+    const auto ratio = rl::diagnostic_ratios(oldp, newp, .2);
+    std::vector<float> normalized(rows);
+    for (int i = 0; i < rows; ++i)
+        normalized[i] = (advantages[i] - adv_stats[0]) / (adv_stats[1] + 1e-8f);
+    std::ofstream out(root / "ppo-diagnostics.jsonl", std::ios::app);
+    out << std::setprecision(12) << "{\"update\":" << update << ",\"rows\":" << rows
+        << ",\"actor_steps\":" << actor_steps << ",\"critic_steps\":" << critic_steps
+        << ",\"pooled_during_epoch_KL\":" << pooled[3] / optimizer_rows
+        << ",\"pooled_clip_fraction\":" << pooled[4] / optimizer_rows
+        << ",\"pooled_value_half_MSE\":" << pooled[1] / optimizer_rows
+        << ",\"latent_conditional_entropy_nats\":" << pooled[2] / optimizer_rows
+        << ",\"final_same_batch_KL_k1\":" << ratio.k1 << ",\"final_same_batch_KL_k3\":" << ratio.k3
+        << ",\"final_same_batch_clip_fraction\":" << ratio.clipped_fraction
+        << ",\"critic_before_half_MSE\":" << before_value.half_mse
+        << ",\"critic_after_half_MSE\":" << after_value.half_mse
+        << ",\"critic_before_EV\":" << before_value.explained_variance
+        << ",\"critic_after_EV\":" << after_value.explained_variance;
+    auto moments = [&](const char *name, const std::vector<float> &v) {
+        const auto m = rl::diagnostic_moments(v);
+        out << ",\"" << name << "\":{\"mean\":" << m.mean << ",\"std\":" << m.stddev()
+            << ",\"min\":" << m.minimum << ",\"max\":" << m.maximum << '}';
+    };
+    moments("returns", returns);
+    moments("raw_advantages", advantages);
+    moments("normalized_advantages", normalized);
+    out << ",\"counter_rng_unchanged\":true,\"AR_history_rescored\":true}\n";
 }
 std::vector<uint8_t> recorded_batch(Rollout &data, cudaStream_t stream) {
     cp::Writer out;
@@ -1432,8 +2225,22 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 cp::read((root / "initialization.bin").string()) == initialization(),
             "Frozen PPO identity changed");
     if (continue_pre_training) {
-        require(fs::exists(root / "run-started") && !fs::exists(root / "training.csv"),
+        require((depth_offsets || fs::exists(root / "run-started")) && !fs::exists(root / "training.csv"),
                 "Training already started or first phase absent");
+        if (depth_offsets) {
+            std::ifstream evidence_file(root / "baseline-result.json");
+            const std::string evidence((std::istreambuf_iterator<char>(evidence_file)), {});
+            require(evidence.find("\"additional_updates\":0,") != std::string::npos &&
+                        evidence.find("\"controls\":2624,") != std::string::npos &&
+                        evidence.find("\"physical_substeps\":26240,") != std::string::npos &&
+                        evidence.find("\"fault\":\"Device reset rebased fixed depth target\"") !=
+                            std::string::npos &&
+                        (actor_lr_override
+                             ? cp::read((root / "baseline-parent.bin").string()) == parent_checkpoint_payload
+                             : cp::read((root / "baseline-protocol.bin").string()) == protocol()),
+                    "Recovery continuation lacks compatible zero-update baseline evidence");
+            require(fs::create_directory(root / "run-started"), "Recovery continuation already attempted");
+        }
         require(fs::create_directory(root / "training-started"), "Training continuation already attempted");
     } else
         require(fs::create_directory(root / "run-started"), "Run already attempted; no retries");
@@ -1441,15 +2248,26 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     Budget budget;
     budget.seconds = active_wall_cap;
     Evaluation before, after;
+    bool initial_recovery_pass = false, final_recovery_pass = false;
+    auto recovery_evaluation = [&](const fs::path &directory, const fs::path &checkpoint,
+                                   const fs::path &source_protocol, int expected_update, bool &passed) {
+        require(fs::create_directory(directory), "Recovery evaluation identity already exists");
+        fs::copy_file(checkpoint, directory / "checkpoint.bin");
+        fs::copy_file(source_protocol, directory / "protocol.bin");
+        require(fixed_depth_replay(directory, false, &budget, &passed, expected_update) == 0,
+                "Recovery evaluation physical/execution stop; no continuation");
+    };
     if (continue_pre_training) {
         std::ifstream spent(root / "pre-training-continuation.txt");
         double elapsed = 0;
         spent >> budget.controls >> budget.substeps >> elapsed >> before.passed >> before.speed >>
             before.rmse >> before.work_per_m;
-        require(spent && budget.controls == 224 && budget.substeps == 2240 && elapsed >= 0 && elapsed < 1 &&
-                    before.passed == 4,
+        const int expected_spent = depth_offsets ? 2624 : 224;
+        require(spent && budget.controls == expected_spent && budget.substeps == expected_spent * 10 &&
+                    elapsed >= 0 && elapsed < 5 && before.passed == 4,
                 "Invalid pretraining continuation evidence");
-        require(starting_update() == 288 && horizon == 640 && updates == 16, "Wrong continuation protocol");
+        require(starting_update() == 288 && horizon == 640 && updates == (depth_offsets ? 32 : 16),
+                "Wrong continuation protocol");
         started -= std::chrono::duration_cast<std::chrono::steady_clock::duration>(
             std::chrono::duration<double>(elapsed));
     }
@@ -1465,6 +2283,9 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         if (!continue_pre_training) {
             parity(budget, stream.value);
             before = evaluate(initial_actor(), root, "initial", budget);
+            if (depth_offsets)
+                recovery_evaluation(root / "initial-recovery", parent_checkpoint_path, parent_protocol_path,
+                                    base_update, initial_recovery_pass);
         }
         nn::GpuMlp actor(spec(actions), rows, seed), critic(spec(1), rows, seed + 1);
         actor.set_params(initial_actor());
@@ -1473,6 +2294,25 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             critic_opt(critic.num_params(), initial_optimizer_config(false));
         if (resume_state)
             restore_training(*resume_state, actor, critic, actor_opt, critic_opt);
+        if (actor_lr_override) {
+            require(resume_state.has_value(), "Matched rate trial requires restored state");
+            auto expected_actor = resume_state->actor_adam;
+            expected_actor.config.lr = *actor_lr_override;
+            cp::Writer actual_actor, actual_critic;
+            actor_opt.save(actual_actor);
+            critic_opt.save(actual_critic);
+            require(actual_actor.data == rl::adam_payload(expected_actor) &&
+                        actual_critic.data == rl::adam_payload(resume_state->critic_adam) &&
+                        actor.get_params() == resume_state->actor.parameters &&
+                        critic.get_params() == resume_state->critic,
+                    "Rate override changed restored parameters or optimizer state beyond actorLR");
+            std::ofstream proof(root / "effective-restoration.json");
+            proof << std::setprecision(12) << "{\"actor_lr_after_restore\":" << actor_opt.config().lr
+                  << ",\"critic_lr_after_restore\":" << critic_opt.config().lr
+                  << ",\"actor_steps\":" << actor_opt.steps() << ",\"critic_steps\":" << critic_opt.steps()
+                  << ",\"actor_and_critic_parameters_exact\":true,\"both_Adam_moments_exact\":true,"
+                     "\"critic_config_exact\":true,\"only_actor_lr_changed\":true}\n";
+        }
         require(actor_opt.steps() == base_actor_steps && critic_opt.steps() == base_critic_steps,
                 "Initial optimizer counters differ");
         snapshot(root, base_update, actor, critic, actor_opt, critic_opt);
@@ -1489,7 +2329,8 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                "cumulative_speed_cost,cumulative_lane_cost,cumulative_depth_cost,cumulative_posture_cost,"
                "cumulative_effort_cost,command_RMS0,command_RMS1,command_RMS2,command_RMS3,joint_min0,joint_"
                "max0,joint_min1,joint_max1,joint_min2,joint_max2,joint_min3,joint_max3,maximum_tilt_deg,"
-               "saturated_axis_substeps\n";
+               "saturated_axis_substeps,cumulative_horizontal_cost,cumulative_recovery_cost,"
+               "cumulative_roll_cost,cumulative_pitch_cost\n";
         const auto training_started = std::chrono::steady_clock::now();
         training_started_unix_seconds =
             std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -1504,7 +2345,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             wall_guard();
             status(root, "training", budget, completed);
             timer.begin(stream.value);
-            collect_rollout(update, actor, critic, data, stream.value);
+            collect_rollout(update, actor, critic, data, stream.value, root);
             const double elapsed_rollout = timer.end(stream.value);
             rollout_ms += elapsed_rollout;
             const auto counts = download(data.counts.get(), environments, stream.value);
@@ -1612,13 +2453,14 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 snapshot(root, completed, actor, critic, actor_opt, critic_opt);
             log << completed << ',' << controls << ',' << actor_steps << ',' << critic_steps << ',' << last_kl
                 << ',' << elapsed_rollout << ',' << elapsed_update;
-            double cost[5]{}, squares[4]{};
+            double cost[5]{}, squares[4]{}, details[4]{};
             float low[4]{}, high[4]{}, tilt = 0;
             unsigned long long saturations = 0;
             for (const auto &count : counts) {
                 for (int j = 0; j < 5; ++j)
                     cost[j] += count.cost_integral[j];
                 for (int j = 0; j < 4; ++j) {
+                    details[j] += count.reward_detail_integral[j];
                     squares[j] += count.command_square[j];
                     low[j] = fminf(low[j], count.joint_min[j]);
                     high[j] = fmaxf(high[j], count.joint_max[j]);
@@ -1632,19 +2474,53 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 log << ',' << sqrt(v / controls);
             for (int j = 0; j < 4; ++j)
                 log << ',' << low[j] << ',' << high[j];
-            log << ',' << tilt << ',' << saturations << '\n';
+            log << ',' << tilt << ',' << saturations;
+            for (double v : details)
+                log << ',' << v;
+            log << '\n';
             log.flush();
+            if (actor_lr_override && (completed - base_update == 8 || completed - base_update == 16)) {
+                const auto directory = root / ("checkpoint-" + std::to_string(completed));
+                require(fs::create_directory(directory), "Intermediate evaluation already exists");
+                const auto actor_before_eval = actor.get_params(), critic_before_eval = critic.get_params();
+                cp::Writer optimizer_before, optimizer_after;
+                actor_opt.save(optimizer_before);
+                critic_opt.save(optimizer_before);
+                const auto short_result = evaluate(actor_before_eval, directory, "frozen", budget);
+                bool recovery = false;
+                recovery_evaluation(directory / "recovery",
+                                    root / ("ppo-update-" + std::to_string(completed) + ".bin"),
+                                    root / "protocol.bin", completed, recovery);
+                actor_opt.save(optimizer_after);
+                critic_opt.save(optimizer_after);
+                require(actor.get_params() == actor_before_eval &&
+                            critic.get_params() == critic_before_eval &&
+                            optimizer_before.data == optimizer_after.data,
+                        "Frozen evaluation changed training state");
+                std::ofstream summary(directory / "summary.json");
+                summary
+                    << "{\"update\":" << completed << ",\"short_passes\":" << short_result.passed
+                    << ",\"recovery_pass\":" << (recovery ? "true" : "false")
+                    << ",\"parameters_and_optimizers_unchanged\":true,\"sampling_counter_unchanged\":true}\n";
+                std::cout << "INTERMEDIATE_EVALUATED update=" << completed
+                          << " short_passes=" << short_result.passed << " recovery=" << recovery << std::endl;
+            }
         }
         training_seconds =
             std::chrono::duration<double>(std::chrono::steady_clock::now() - training_started).count();
         status(root, "frozen_evaluation", budget, completed);
         after = evaluate(actor.get_params(), root, "frozen", budget);
-        const bool run_long = after.passed == 4;
+        if (depth_offsets)
+            recovery_evaluation(root / "final-recovery",
+                                root / ("ppo-update-" + std::to_string(completed) + ".bin"),
+                                root / "protocol.bin", completed, final_recovery_pass);
+        const bool run_long = after.passed == 4 && (!depth_offsets || final_recovery_pass);
         if (run_long) {
             status(root, "long_evaluation", budget, completed);
             long_result = sustained(actor.get_params(), root, budget);
         }
-        const int expected_controls = control_cap - (run_long ? 0 : 2400) - (continue_pre_training ? 480 : 0);
+        const int expected_controls =
+            control_cap - (run_long ? 0 : 2400) - (continue_pre_training && !depth_offsets ? 480 : 0);
         require((long_result.safety_fault.empty() && budget.controls == expected_controls &&
                  budget.substeps == expected_controls * 10) ||
                     (!long_result.safety_fault.empty() && budget.controls <= control_cap &&
@@ -1656,18 +2532,21 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     const bool accepted =
         fault.empty() && after.passed == 4 && after.rmse < before.rmse && long_result.passed == 2;
     std::ofstream out(root / "result.json");
-    out << std::setprecision(9)
-        << "{\"algorithm\":\"PPO\",\"fresh_initialization\":" << (resume_state ? "false" : "true")
-        << ",\"seed\":" << seed << ",\"starting_update\":" << base_update
-        << ",\"additional_updates\":" << completed - base_update << ",\"rho\":" << correlation
-        << ",\"fault\":" << std::quoted(fault) << ",\"completed_updates\":" << completed
-        << ",\"actor_optimizer_steps\":" << actor_steps << ",\"critic_optimizer_steps\":" << critic_steps
-        << ",\"controls\":" << budget.controls << ",\"physical_substeps\":" << budget.substeps
-        << ",\"initial_passes\":" << before.passed << ",\"frozen_passes\":" << after.passed
-        << ",\"sustained_passes\":" << long_result.passed
+    out << std::setprecision(9) << "{\"algorithm\":\"PPO\",\"reward_version\":" << m::kRewardVersion
+        << ",\"parent_reward_version\":"
+        << (resume_state ? resume_state->actor.reward_version : m::kRewardVersion)
+        << ",\"fresh_initialization\":" << (resume_state ? "false" : "true") << ",\"seed\":" << seed
+        << ",\"starting_update\":" << base_update << ",\"additional_updates\":" << completed - base_update
+        << ",\"rho\":" << correlation << ",\"fault\":" << std::quoted(fault)
+        << ",\"completed_updates\":" << completed << ",\"actor_optimizer_steps\":" << actor_steps
+        << ",\"critic_optimizer_steps\":" << critic_steps << ",\"controls\":" << budget.controls
+        << ",\"physical_substeps\":" << budget.substeps << ",\"initial_passes\":" << before.passed
+        << ",\"frozen_passes\":" << after.passed << ",\"sustained_passes\":" << long_result.passed
+        << ",\"initial_recovery_pass\":" << (initial_recovery_pass ? "true" : "false")
+        << ",\"final_recovery_pass\":" << (final_recovery_pass ? "true" : "false")
         << ",\"sustained_windows_passed\":" << long_result.windows_passed
-        << ",\"sustained_windows_total\":" << long_result.windows_total
-        << ",\"long_evaluation_attempted\":" << (after.passed == 4 ? "true" : "false")
+        << ",\"sustained_windows_total\":" << long_result.windows_total << ",\"long_evaluation_attempted\":"
+        << ((after.passed == 4 && (!depth_offsets || final_recovery_pass)) ? "true" : "false")
         << ",\"long_completed_poses\":" << long_result.completed_poses
         << ",\"long_safety_code\":" << long_result.safety_code
         << ",\"long_safety_fault\":" << std::quoted(long_result.safety_fault)
@@ -1694,12 +2573,26 @@ int main(int argc, char **argv) {
     try {
         verification_mode = argc > 1 && (std::string(argv[1]) == "--prepare-verify" ||
                                          std::string(argv[1]) == "--verify-resume");
-        require(argc >= 3 && argc <= 17 && argc % 2 == 1,
+        require(argc >= 3 && argc <= 21 && argc % 2 == 1,
                 "Use --prepare/--run/--verify-resume DIR [--seed UINT32] [--rho 0|0.8] [--resume-from "
                 "CHECKPOINT --resume-protocol PROTOCOL]");
         fs::path resume_checkpoint, resume_protocol;
         bool seed_explicit = false, rho_explicit = false;
         for (int option = 3; option < argc; option += 2) {
+            if (std::string(argv[option]) == "--actor-lr") {
+                size_t used = 0;
+                const float rate = std::stof(argv[option + 1], &used);
+                require(used == std::string(argv[option + 1]).size() && rate == .00025f,
+                        "Unsupported matched actor rate");
+                actor_lr_override = rate;
+                continue;
+            }
+            if (std::string(argv[option]) == "--depth-offsets") {
+                require(std::string(argv[option + 1]) == "0" || std::string(argv[option + 1]) == "1",
+                        "Invalid fixed-depth start mix");
+                depth_offsets = std::string(argv[option + 1]) == "1";
+                continue;
+            }
             if (std::string(argv[option]) == "--episode-controls") {
                 size_t used = 0;
                 horizon = std::stoi(argv[option + 1], &used);
@@ -1749,11 +2642,20 @@ int main(int argc, char **argv) {
         rows = environments * horizon;
         training_cap = updates * rows;
         control_cap = training_cap + 64 + 1280 + 2400;
+        if (depth_offsets)
+            control_cap += 3840;
+        if (actor_lr_override)
+            control_cap += 5120; // Two additional short+recovery checkpoint assessments.
         substep_cap = control_cap * 10;
         if (tilt_mixture || updates <= 32)
             active_wall_cap = 20;
         if (horizon == 640)
             active_wall_cap = 30;
+        if (depth_offsets) {
+            require(horizon == 640 && updates == 32 && !tilt_mixture,
+                    "Fixed-depth recovery trial requires32updates/32sepisodes and original poses");
+            active_wall_cap = 60;
+        }
         const auto root = fs::absolute(argv[2]);
         if ((std::string(argv[1]) == "--run" || std::string(argv[1]) == "--verify-resume" ||
              std::string(argv[1]) == "--continue-pre-training") &&
@@ -1765,7 +2667,16 @@ int main(int argc, char **argv) {
                 "Both resume checkpoint and protocol are required");
         if (!resume_checkpoint.empty())
             load_resume_source(resume_checkpoint, resume_protocol, seed_explicit, rho_explicit);
+        if (depth_offsets)
+            require(resume_state && starting_update() == 288 && seed == 1247037243 && correlation == .8f,
+                    "Recovery lesson requires preserved update288 seed243");
         require(!verification_mode || resume_state.has_value(), "Resume verification requires a PPO parent");
+        if (std::string(argv[1]) == "--fixed-depth-prepare" || std::string(argv[1]) == "--fixed-depth-replay")
+            return fixed_depth_replay(root, std::string(argv[1]) == "--fixed-depth-prepare");
+        if (std::string(argv[1]) == "--sensitivity" || std::string(argv[1]) == "--sensitivity-continue")
+            return depth_sensitivity(root, std::string(argv[1]) == "--sensitivity-continue");
+        if (std::string(argv[1]) == "--verify-path-scale")
+            return verify_path_scale(root);
         if (std::string(argv[1]) == "--verify-resume")
             return verify_resume(root);
         if (std::string(argv[1]) == "--neutral-pitch" || std::string(argv[1]) == "--neutral-pitch-continue")

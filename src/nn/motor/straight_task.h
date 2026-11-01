@@ -1,6 +1,7 @@
 #ifndef CUDARL_STRAIGHT_TASK_H
 #define CUDARL_STRAIGHT_TASK_H
 #include "motor/joint_motor.h"
+#include "motor/observation_contract.h"
 // Shared requested-speed task: pure observations/reward/acceptance, no ownership.
 namespace cudarl::straight_motor {
 namespace p = physics;
@@ -12,8 +13,12 @@ using Outcome = old::Outcome;
 using joint::action_from_latent;
 using joint::step_state;
 constexpr int kTaskVersion = 6, kObservations = 40, kActions = 4;
-constexpr int kRewardVersion = 4;
+constexpr int kRewardVersion = 5;
+// Reward references only: these NEVER command a joint or body velocity.
+constexpr float kDepthSettlingSeconds = 2.f, kRecoverySpeedLimit = .001f;
+constexpr float kRollCost = .05f, kPitchCost = .01f;
 struct ForwardConfig {
+    uint32_t observation_schema = motor_observation::legacy;
     float target_speed_m_s = .008f, clearance_m = .01f;
     float minimum_speed_m_s = .0072f, maximum_speed_m_s = .0088f, speed_rmse_limit = .0025f;
     float lateral_limit_m = .002f, depth_limit_m = .001f, path_angle_limit_deg = 5, tilt_limit_deg = 10;
@@ -35,13 +40,23 @@ CUDARL_HD inline contact::Arena long_swim_arena() { return {.6f, .4f}; }
 // One episode contract is passed unchanged to every training kernel. Evaluation
 // retains its own existing ForwardConfig and is independent of training horizon.
 struct TrainingEpisode {
+    uint32_t observation_schema = motor_observation::legacy;
     int controls = 160;
     bool tilt_mixture = false;
+    bool fixed_depth_offsets = false;
+    int offset_phase = 0;
+    CUDARL_HD float initial_vertical_offset(int environment) const {
+        if (!fixed_depth_offsets)
+            return 0;
+        const int group = (environment / 2 + offset_phase) % 3;
+        return group == 1 ? -.0005f : (group == 2 ? .0005f : 0.f);
+    }
     CUDARL_HD bool valid() const { return controls == 160 || controls == 640; }
     CUDARL_HD contact::Arena arena() const { return controls == 640 ? long_swim_arena() : contact::Arena{}; }
     CUDARL_HD ForwardConfig task_config() const {
         auto c = config_for_speed(.008f);
         c.maximum_controls = controls;
+        c.observation_schema = observation_schema;
         return c;
     }
 };
@@ -73,6 +88,8 @@ CUDARL_HD inline World initial_training_world(int environment, bool tilt_mixture
 }
 struct Metrics {
     float forward_m = 0, lateral_m = 0, depth_m = 0, speed_error_m_s = 0, head_yaw_deg = 0, tilt_deg = 0;
+    float signed_depth_m = 0, vertical_velocity_m_s = 0, horizontal_speed_error_m_s = 0;
+    float roll_deg = 0, pitch_deg = 0;
 };
 struct ForwardTask {
     simulation::MotorRequest request{};
@@ -88,6 +105,8 @@ struct ForwardTask {
 // Dimensionless cost rates; multiply their sum by the physical control interval.
 struct RewardCosts {
     float speed = 0, lane = 0, depth = 0, posture = 0, effort = 0;
+    // Details of speed and posture aggregates; do not add them a second time.
+    float horizontal = 0, recovery = 0, roll = 0, pitch = 0;
     CUDARL_HD float total() const { return speed + lane + depth + posture + effort; }
 };
 struct Transition {
@@ -126,8 +145,30 @@ CUDARL_HD inline bool begin_forward(const World &w, const ForwardConfig &c, Forw
     output = next;
     return true;
 }
+// Initialization only: translate the whole creature, retaining the already chosen
+// world-space target/lane. This never changes an ongoing episode or its deadline.
+CUDARL_HD inline bool offset_episode_start(World &world, ForwardTask &task, const ForwardConfig &config,
+                                           float vertical_offset_m) {
+    if (!p::finite_number(vertical_offset_m) || task.controls != 0 || task.outcome != Outcome::Running ||
+        world.physical.control_steps != 0 || world.attempted_substeps != 0 || !in_domain(world, config))
+        return false;
+    if (vertical_offset_m == 0)
+        return true;
+    auto shifted = world;
+    shifted.physical.body.position.y += vertical_offset_m / p::scale;
+    if (!in_domain(shifted, config))
+        return false;
+    // Speed displacement starts at the actual translated COM. Depth/lane and
+    // reward still use start_com_model, which deliberately remains unchanged.
+    const auto actual = old::motion(shifted.physical.body).com_model;
+    task.steady_start_com_model = actual;
+    task.maximum_depth = fabsf((actual.y - task.start_com_model.y) * p::scale);
+    world = shifted;
+    return true;
+}
 CUDARL_HD inline bool begin_training_episode(int environment, bool tilt_mixture, const ForwardConfig &config,
-                                             World &world, ForwardTask &task, contact::Arena arena = {}) {
+                                             World &world, ForwardTask &task, contact::Arena arena = {},
+                                             float vertical_offset_m = 0) {
     world = initial_training_world(environment, tilt_mixture);
     world.arena = arena;
     if (!begin_forward(world, config, task))
@@ -140,7 +181,7 @@ CUDARL_HD inline bool begin_training_episode(int environment, bool tilt_mixture,
         task.request = {task.start_com_model + heading * (.072f / p::scale),
                         heading * config.target_speed_m_s, heading};
     }
-    return true;
+    return offset_episode_start(world, task, config, vertical_offset_m);
 }
 CUDARL_HD inline bool request_speed(const World &w, float speed, ForwardConfig &c, ForwardTask &t) {
     if (!supported_speed(speed) || !in_domain(w, c))
@@ -157,13 +198,13 @@ CUDARL_HD inline bool request_speed(const World &w, float speed, ForwardConfig &
     return true;
 }
 CUDARL_HD inline bool observe(const ForwardTask &t, const World &w, const ForwardConfig &c, float *out) {
-    if (!out || t.outcome != Outcome::Running || !in_domain(w, c))
+    if (!out || !motor_observation::valid(c.observation_schema) || t.outcome != Outcome::Running || !in_domain(w, c))
         return false;
     const auto motion = old::motion(w.physical.body);
     const auto &q = w.physical.body.orientation;
     const auto displacement = (motion.com_model - t.start_com_model) * p::scale;
     const auto lane_error = t.request.heading * p::dot(displacement, t.request.heading) - displacement;
-    old::vector_features(out, 0, q.inverse(lane_error) / old::kBodyLength);
+    old::vector_features(out, 0, q.inverse(lane_error) / motor_observation::path_scale_m(c.observation_schema));
     old::vector_features(out, 3, q.inverse(t.request.terminal_velocity) / old::kVelocityScale);
     old::vector_features(out, 6, q.inverse(t.request.heading));
     old::vector_features(out, 9, q.inverse({0, 1, 0}));
@@ -195,25 +236,47 @@ CUDARL_HD inline Metrics measure(const ForwardTask &t, const World &w) {
     const auto perpendicular = displacement - t.request.heading * result.forward_m;
     result.lateral_m = p::norm({perpendicular.x, 0, perpendicular.z});
     result.depth_m = fabsf(displacement.y);
-    result.speed_error_m_s = p::norm(motion.velocity_m_s - t.request.terminal_velocity);
+    result.signed_depth_m = displacement.y;
+    result.vertical_velocity_m_s = motion.velocity_m_s.y;
+    const auto velocity_error = motion.velocity_m_s - t.request.terminal_velocity;
+    result.speed_error_m_s = p::norm(velocity_error); // Original acceptance, including vertical motion.
+    result.horizontal_speed_error_m_s = p::norm({velocity_error.x, 0, velocity_error.z});
     const auto forward = w.physical.body.orientation.rotate({1, 0, 0});
     const auto up = w.physical.body.orientation.rotate({0, 1, 0});
     result.head_yaw_deg = fabsf(atan2f(p::dot(p::cross(t.request.heading, forward), {0, 1, 0}),
                                        p::dot(t.request.heading, forward))) *
                           180 / movement::pi;
     result.tilt_deg = acosf(p::clamp(p::dot(up, {0, 1, 0}), -1, 1)) * 180 / movement::pi;
+    const auto local_up = w.physical.body.orientation.inverse({0, 1, 0});
+    result.pitch_deg = atan2f(local_up.x, sqrtf(local_up.y * local_up.y + local_up.z * local_up.z)) * 180 /
+                       movement::pi; // positive nose-up
+    result.roll_deg = atan2f(-local_up.z, local_up.y) * 180 / movement::pi;
     return result;
+}
+CUDARL_HD inline float recovery_velocity(float signed_depth_m) {
+    // Y up; below target -> positive reference, taper continuously to zero.
+    return p::clamp(-signed_depth_m / kDepthSettlingSeconds, -kRecoverySpeedLimit, kRecoverySpeedLimit);
 }
 CUDARL_HD inline RewardCosts reward_costs(const Metrics &metrics, const World &world,
                                           const ForwardConfig &config, bool speed_scored) {
-    const float velocity = metrics.speed_error_m_s / config.target_speed_m_s;
+    const float horizontal = metrics.horizontal_speed_error_m_s / config.target_speed_m_s;
+    const float vertical =
+        (metrics.vertical_velocity_m_s - recovery_velocity(metrics.signed_depth_m)) / config.target_speed_m_s;
     const float lane = metrics.lateral_m / config.lateral_limit_m;
     const float depth = metrics.depth_m / config.depth_limit_m;
-    // BodyState.orientation is link0 (the head), not an average of bent links.
-    // World Y is up. This yaw-invariant tilt combines roll and pitch; no pose clamp.
-    const float tilt = metrics.tilt_deg / config.tilt_limit_deg;
-    return {speed_scored ? velocity * velocity : 0.f, .05f * lane * lane, .05f * depth * depth,
-            .05f * tilt * tilt, .002f * world.physical.mean_squared_torque};
+    const float roll = metrics.roll_deg / config.tilt_limit_deg;
+    const float pitch = metrics.pitch_deg / config.tilt_limit_deg;
+    RewardCosts out;
+    out.horizontal = speed_scored ? horizontal * horizontal : 0.f;
+    out.recovery = vertical * vertical; // From FIRST control, including startup.
+    out.roll = kRollCost * roll * roll;
+    out.pitch = kPitchCost * pitch * pitch;
+    out.speed = out.horizontal + out.recovery;
+    out.lane = .05f * lane * lane;
+    out.depth = .05f * depth * depth;
+    out.posture = out.roll + out.pitch;
+    out.effort = .002f * world.physical.mean_squared_torque;
+    return out;
 }
 CUDARL_HD inline Transition record_control(ForwardTask &t, const World &w, const ForwardConfig &c) {
     Transition out;
@@ -229,8 +292,8 @@ CUDARL_HD inline Transition record_control(ForwardTask &t, const World &w, const
     }
     out.metrics = measure(t, w);
     // Interval40 ends at2s; intervals41..160 are the scored2..8s window.
-    // ONLY speed has a startup window. Lane, depth, head posture and effort are
-    // charged on the very first interval and all later intervals. Full trajectory
+    // ONLY horizontal speed has a startup window. Recovery, lane, depth, head
+    // posture and effort are charged from the first interval. Full trajectory
     // credit, physical work, safety and acceptance bookkeeping never reset.
     const bool scored = t.controls >= c.measure_start;
     out.costs = reward_costs(out.metrics, w, c, scored);

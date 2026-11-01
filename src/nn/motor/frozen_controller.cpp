@@ -7,7 +7,7 @@ namespace cudarl::motor {
 namespace sm = straight_motor;
 namespace cp = checkpoint;
 namespace p = physics;
-static_assert(movement::kVersion == 6 && sm::kTaskVersion == 6 && sm::kRewardVersion == 4,
+static_assert(movement::kVersion == 6 && sm::kTaskVersion == 6 && sm::kRewardVersion == 5,
               "Frozen actor contract changed");
 FrozenController::FrozenController()
     : actor_({{40, 32, 32, 4}, {nn::Activation::Tanh, nn::Activation::Tanh, nn::Activation::Identity}}) {}

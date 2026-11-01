@@ -9,6 +9,7 @@ struct Counts {
     float rejected_gap_m = 0;
     unsigned long long controls = 0, substeps = 0;
     double cost_integral[5]{}, command_square[4]{};
+    double reward_detail_integral[4]{}; // horizontal, recovery, roll, pitch; aggregate decomposition.
     float joint_min[4]{}, joint_max[4]{}, maximum_tilt_deg = 0;
     unsigned long long saturated_axis_substeps = 0;
     float episode_forward_mm = 0;
@@ -32,8 +33,9 @@ __global__ void initialize(m::World *worlds, m::ForwardTask *tasks, int n, int *
     if (i >= n || *fault)
         return;
 
-    if (!episode.valid() || !m::begin_training_episode(i, episode.tilt_mixture, episode.task_config(),
-                                                       worlds[i], tasks[i], episode.arena()))
+    if (!episode.valid() ||
+        !m::begin_training_episode(i, episode.tilt_mixture, episode.task_config(), worlds[i], tasks[i],
+                                   episode.arena(), episode.initial_vertical_offset(i)))
         atomicExch(fault, 1);
 }
 __global__ void observe(const m::World *worlds, const m::ForwardTask *tasks, float *output, int n, int *fault,
@@ -107,6 +109,10 @@ __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *la
                            interval.costs.posture, interval.costs.effort};
     for (int j = 0; j < 5; ++j)
         counts[i].cost_integral[j] += physics::dt * cost[j];
+    const float detail[4] = {interval.costs.horizontal, interval.costs.recovery, interval.costs.roll,
+                             interval.costs.pitch};
+    for (int j = 0; j < 4; ++j)
+        counts[i].reward_detail_integral[j] += physics::dt * detail[j];
     if (cost_output)
         for (int j = 0; j < 5; ++j)
             cost_output[i * 5 + j] = cost[j];

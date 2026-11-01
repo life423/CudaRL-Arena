@@ -1,5 +1,7 @@
 #include "check.h"
+#include "nn/mlp_cpu.h"
 #include "rl/ppo_checkpoint.h"
+#include "rl/ppo_diagnostics.h"
 #include <filesystem>
 namespace {
 namespace cp = cudarl::checkpoint;
@@ -26,6 +28,30 @@ std::vector<uint8_t> fixture(bool trained = false) {
     }
     return out.data;
 }
+TEST_CASE("ppo_diagnostics: same-action ratios inverse permutation and value summaries are independent") {
+    namespace rl = cudarl::rl;
+    const auto identity = rl::diagnostic_ratios({-2, -1}, {-2, -1}, .2);
+    CHECK(identity.k1 == 0 && identity.k3 == 0 && identity.clipped_fraction == 0);
+    const auto changed = rl::diagnostic_ratios({0, 0}, {.3f, -.3f}, .2);
+    CHECK(fabs(changed.k1) < 1e-12 && fabs(changed.k3 - (cosh(.3) - 1)) < 1e-7 &&
+          changed.clipped_fraction == 1);
+    const auto negative_sample = rl::diagnostic_ratios({0}, {.1f}, .2);
+    CHECK(negative_sample.k1 < 0 && negative_sample.k3 >= 0);
+    const auto perm = rl::make_permutation(37, 123);
+    std::vector<float> shuffled(37);
+    for (uint32_t i = 0; i < 37; ++i)
+        shuffled[i] = float(rl::permute(perm, i));
+    const auto ordered = rl::diagnostic_original_order(shuffled, perm);
+    for (int i = 0; i < 37; ++i)
+        CHECK(ordered[i] == float(i));
+    const auto moments = rl::diagnostic_moments({1, 2, 3});
+    CHECK(moments.mean == 2 && fabs(moments.variance - 2. / 3) < 1e-12);
+    const auto exact = rl::diagnostic_value({1, 2, 3}, {1, 2, 3});
+    CHECK(exact.half_mse == 0 && exact.explained_variance == 1 && exact.variance_defined);
+    const auto constant = rl::diagnostic_value({2, 2, 2}, {1, 2, 3});
+    CHECK(fabs(constant.half_mse - 1. / 3) < 1e-12 && constant.explained_variance == 0);
+    CHECK(!rl::diagnostic_value({1, 1}, {1, 1}).variance_defined);
+}
 } // namespace
 TEST_CASE("ppo_checkpoint: full resume retains critic both Adam states sigma and counters") {
     const auto bytes = fixture(true);
@@ -45,12 +71,63 @@ TEST_CASE("ppo_checkpoint: full resume retains critic both Adam states sigma and
     }
     CHECK(cudarl::rl::read_ppo_actor(bytes, 99, 1247037233).parameters == state.actor.parameters);
 }
+TEST_CASE("path_scale: checkpoint conversion transforms columns and cotangents without resets") {
+    namespace rl = cudarl::rl;
+    const auto original = rl::read_ppo_training_state(fixture(true), 99);
+    const auto scaled = rl::rescale_ppo_path_inputs(original);
+    CHECK(scaled.actor.observation_schema == 2 && original.actor.observation_schema == 1);
+    CHECK(scaled.actor.update == original.actor.update);
+    for (int network = 0; network < 2; ++network) {
+        const auto &a = network ? original.critic : original.actor.parameters;
+        const auto &b = network ? scaled.critic : scaled.actor.parameters;
+        const auto &oa = network ? original.critic_adam : original.actor_adam;
+        const auto &ob = network ? scaled.critic_adam : scaled.actor_adam;
+        CHECK(oa.steps == ob.steps && oa.config.lr == ob.config.lr && oa.config.eps == ob.config.eps);
+        for (size_t i = 0; i < a.size(); ++i) {
+            const bool changed = i < 1280 && i % 40 < 3;
+            CHECK(b[i] == (changed ? a[i] / 36.f : a[i]));
+            CHECK(ob.first[i] == (changed ? oa.first[i] * 36.f : oa.first[i]));
+            CHECK(ob.second[i] == (changed ? oa.second[i] * 1296.f : oa.second[i]));
+        }
+    }
+    const auto bytes = rl::write_ppo_training_state(scaled);
+    const auto back = rl::read_ppo_training_state(bytes, 99, original.actor.seed, 2);
+    CHECK(back.actor.parameters == scaled.actor.parameters && back.critic == scaled.critic);
+    CHECK(back.actor_adam.first == scaled.actor_adam.first &&
+          back.critic_adam.second == scaled.critic_adam.second);
+    bool rejected = false;
+    try {
+        (void)rl::read_ppo_actor(bytes, 99, original.actor.seed);
+    } catch (const std::runtime_error &) {
+        rejected = true;
+    }
+    CHECK(rejected); // Legacy observation evaluator must not silently consume schema2.
+    CHECK(rl::read_ppo_actor(bytes, 99, original.actor.seed, 2).observation_schema == 2);
+    rejected = false;
+    try {
+        (void)rl::rescale_ppo_path_inputs(scaled);
+    } catch (const std::runtime_error &) {
+        rejected = true;
+    }
+    CHECK(rejected);
+}
 TEST_CASE("ppo_checkpoint: four-axis schema preserves actor without optimizer updates") {
     const auto bytes = fixture();
     const auto actor = cudarl::rl::read_ppo_actor(bytes, 99, 1247037233);
     CHECK(actor.parameters.size() == 2500 && actor.update == 0 && actor.actor_steps == 0 &&
           actor.critic_steps == 0);
     CHECK(bytes == fixture());
+}
+TEST_CASE("ppo_checkpoint: reward4 and reward5 retain explicit provenance without changing weights") {
+    const auto old = fixture(true);
+    auto revised = old;
+    revised[36] = 5; // Existing on-disk reward-version field, no schema conversion.
+    const auto a = cudarl::rl::read_ppo_training_state(old, 99);
+    const auto b = cudarl::rl::read_ppo_training_state(revised, 99);
+    CHECK(a.actor.reward_version == 4 && b.actor.reward_version == 5);
+    CHECK(a.actor.parameters == b.actor.parameters && a.critic == b.critic);
+    CHECK(a.actor_adam.first == b.actor_adam.first && a.actor_adam.steps == b.actor_adam.steps);
+    CHECK(a.critic_adam.second == b.critic_adam.second);
 }
 TEST_CASE("ppo_checkpoint: incompatible schema dimensions seed protocol nonfinite and trailing data reject") {
     for (int fault = 0; fault < 9; ++fault) {

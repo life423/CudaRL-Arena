@@ -15,6 +15,20 @@ using namespace cudarl::nn;
 using cudarl::test::random_floats;
 using cudarl::test::to_device;
 using cudarl::test::to_host;
+GPU_TEST_CASE("adam: rate override after restore preserves both optimizer states except actor rate") {
+    namespace cp=cudarl::checkpoint;
+    AdamConfig cfg;cfg.lr=.001f;cfg.max_grad_norm=.5f;cfg.eps=.00001f;
+    cp::Writer parent;
+    parent.value(cfg);parent.value(11460);parent.array(std::vector<float>(8,.125f));parent.array(std::vector<float>(8,.25f));
+    GpuAdam actor(8,cfg),critic(8,cfg);
+    cp::Reader a{parent.data},c{parent.data};actor.load(a);critic.load(c);a.finish();c.finish();
+    actor.set_learning_rate(.00025f);
+    cp::Writer actual_actor,actual_critic,expected;
+    actor.save(actual_actor);critic.save(actual_critic);
+    cfg.lr=.00025f;expected.value(cfg);expected.value(11460);expected.array(std::vector<float>(8,.125f));expected.array(std::vector<float>(8,.25f));
+    CHECK(actual_actor.data==expected.data && actual_critic.data==parent.data);
+    CHECK(actor.steps()==11460 && critic.steps()==11460);
+}
 
 namespace {
 

@@ -1,0 +1,132 @@
+{
+  "algorithm": "native C++/CUDA PPO",
+  "seed": 1247037243,
+  "update": 320,
+  "checkpoint_sha256": "14EF881C0B5C437D43DF8B5E80374965E0DABBDDC621F560E3C212973EF6EA39",
+  "protocol_sha256": "217874C6945E84CE894BDF1BA112B9E0B4BBADABC733A57A58F02B25DF1AB0A4",
+  "source_run": "build/ppo/path-scale-r5-actorlr025-288to320-v1",
+  "checkpoint_schema": 4,
+  "protocol_version": 11,
+  "observation_schema": 2,
+  "path_error_scale_m": 0.002,
+  "path_error_indices": [
+    0,
+    1,
+    2
+  ],
+  "model": 6,
+  "task": 6,
+  "reward": 5,
+  "action_mapping": 3,
+  "actor": [
+    40,
+    32,
+    32,
+    4
+  ],
+  "critic": [
+    40,
+    32,
+    32,
+    1
+  ],
+  "rho": 0.8,
+  "fixed_log_std": [
+    -1,
+    -1,
+    -1,
+    -1
+  ],
+  "Adam_actor_steps": 16580,
+  "Adam_critic_steps": 16580,
+  "actor_lr": 0.00025,
+  "critic_lr": 0.001,
+  "full_training_resume_state": true,
+  "resume_semantics": "Completed-update boundary; actor/critic/bothAdam/configs/counters/logstd; fresh true episodes/AR history; not bitwise mid-rollout resume",
+  "source_original_288": "assets/ppo-four-axis-checkpoints/update-288/ppo-update-288.bin",
+  "source_original_288_sha256": "CEAB95BF500788F8F005EADC28F556CF0AB08069AB67625622199E3D7C07CB0C",
+  "conversion": "x0..2 multiply36; actor+critic first-layer columns0..2 divide36; corresponding Adam m*=36 v*=1296; all other state retained",
+  "optimizer_caveat": "Initial functions equivalent within FP32 tolerance; scalar learning rates, epsilon, and global clipping are not coordinate invariant, so future updates differ",
+  "training_episode_controls": 640,
+  "training_arena_horizontal_m": [
+    1.2,
+    0.8
+  ],
+  "training_start_distribution": "Originalposes0/3 balanced center/±0.5mm with fixed target Y=-0.08m; phaseglobalupdate%3",
+  "short_passes": 4,
+  "short_total": 4,
+  "ordinary32s_swims_passed": 3,
+  "recovery_passed_cases": 1,
+  "recovery_total_cases": 3,
+  "offset_recovery_passes": 0,
+  "recovery_rule": "Each offset must satisfy original32s gates AND |deptherror|<half actual initialerror at every sampled control24–32s",
+  "long_evaluated": false,
+  "long_skip_reason": "Offset recovery gates failed",
+  "runtime_adopted": false,
+  "status": "Research candidate: improved depth conditioning/32s swimming, still overshoots and fails settling",
+  "imitation_or_teacher_weights": false,
+  "physics_and_acceptance_unchanged": true,
+  "input_equivalence": "input-equivalence.csv; actualCPU/CUDA executed; no optimizer updates",
+  "hashes": [
+    {
+      "file": "converted-parent-288.bin",
+      "sha256": "B8FDCA940A741E46AC2DF2B14B8A7A930482554EA1F054B074D8591EDA5CDD39"
+    },
+    {
+      "file": "converted-parent-protocol.bin",
+      "sha256": "9E43B23C772DA382DB25BE28DAEDFDB2745C828C4A4B99592276C4B958EC42FC"
+    },
+    {
+      "file": "evaluation.csv",
+      "sha256": "E981B200D0B31C23CB33B1CD3CB6F0035B877F3506E8A0B2D5550DDC4120140B"
+    },
+    {
+      "file": "experiment.json",
+      "sha256": "CC2015F8863088C35384DCF900E5DA354EC23CCFF5466480507A6E364BFCDDD0"
+    },
+    {
+      "file": "input-equivalence.csv",
+      "sha256": "F8462089590E05DB737E80463CF3BFBBE0DFD666779250165B10A841C2D6E3B0"
+    },
+    {
+      "file": "ppo-update-320.bin",
+      "sha256": "14EF881C0B5C437D43DF8B5E80374965E0DABBDDC621F560E3C212973EF6EA39"
+    },
+    {
+      "file": "protocol.bin",
+      "sha256": "217874C6945E84CE894BDF1BA112B9E0B4BBADABC733A57A58F02B25DF1AB0A4"
+    },
+    {
+      "file": "recovery-gates.csv",
+      "sha256": "36F7D2A3C8EBAE826A54F755E34DC66A1F9EB45222F83CBC09F3E6CF9CA8CF2F"
+    },
+    {
+      "file": "recovery-metrics.json",
+      "sha256": "13511759790907E27CDBF3473EC78061C582B9B2E0E9BF5E98D4F45CF19D853F"
+    },
+    {
+      "file": "settling-analysis.json",
+      "sha256": "40132F0134C1AEFD409073BCFF9E5976E4A6D706D2FC18366CAD17E7B494D069"
+    }
+  ],
+  "verification": {
+    "verified_utc": "2026-11-01T23:36:20.8442067Z",
+    "focused_tests_passed": 22,
+    "skipped": 0,
+    "actual_GPU_executed": [
+      "reward parity36cases",
+      "fixedtarget reset96cases",
+      "Adamrestoreconfig",
+      "inputequivalence1376rowsperpolicy"
+    ],
+    "durable_checkpoint_loaded": true,
+    "restored_update": 320,
+    "restored_actor_Adam_steps": 16580,
+    "restored_critic_Adam_steps": 16580,
+    "load_CPU_CUDA_observation_actor_check": true,
+    "load_physical_steps": 0,
+    "load_optimizer_steps": 0,
+    "local_load_evidence": "build/ppo/durable-pathscale320-load-v1/readiness.json",
+    "final_checks_log": "verification.log"
+  }
+}
