@@ -1,0 +1,1 @@
+{"update":336,"training_updates":0,"optimizer_steps":0,"start_unix_seconds":1793577178.7753284,"end_unix_seconds":1793577179.1641414,"completed_poses":2,"passed_poses":0,"windows_passed":28,"windows_total":30,"controls":2400,"substeps":24000,"safety_code":0,"fault":"","checkpoint_unchanged":true,"closed":true}

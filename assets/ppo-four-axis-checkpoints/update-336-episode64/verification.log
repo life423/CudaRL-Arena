@@ -1,0 +1,30 @@
+CUDA device: present
+
+PASS  straight_episode64: fixed targets late reward and terminal GAE use1280 controls (zero integration)     19.9 ms
+PASS  straight_episode32: task continues past8s and includes late rewards until32s terminal      3.3 ms
+
+2/2 tests passed, 0 skipped
+CUDA device: present
+
+PASS  ppo_checkpoint: full resume retains critic both Adam states sigma and counters      0.1 ms
+PASS  ppo_checkpoint: four-axis schema preserves actor without optimizer updates      0.0 ms
+PASS  ppo_checkpoint: reward4 and reward5 retain explicit provenance without changing weights      0.1 ms
+PASS  ppo_checkpoint: incompatible schema dimensions seed protocol nonfinite and trailing data reject      0.2 ms
+PASS  ppo_checkpoint: historical two-output actor rejects without conversion      0.3 ms
+PASS  ppo_checkpoint: schema3 records correlation and rejects invalid stochastic metadata      0.1 ms
+
+6/6 tests passed, 0 skipped
+CUDA device: present
+
+PASS  path_scale: production observations change only the three rotated path channels      0.1 ms
+PASS  path_scale: checkpoint conversion transforms columns and cotangents without resets      0.3 ms
+
+2/2 tests passed, 0 skipped
+CUDA device: present
+
+    first reset CPUtargetXYZ -0.172014921904 -2 -0.0122169386595; GPU -0.172014907002 -2 -0.0122169386595
+    96 zero-step reset targets: max CPU/CUDA coordinate difference 1.49011611938e-08 modelunits, 48 non-bitwise coordinates; ALL targetY exactly-2
+PASS  straight_depth_mix CUDA: actual reset target coordinates across all phases (zero integration)    233.7 ms
+PASS  straight_depth_mix: balanced phase cycle preserves original poses and fixed references (zero integration)      0.8 ms
+
+2/2 tests passed, 0 skipped

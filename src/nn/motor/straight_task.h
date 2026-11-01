@@ -51,8 +51,11 @@ struct TrainingEpisode {
         const int group = (environment / 2 + offset_phase) % 3;
         return group == 1 ? -.0005f : (group == 2 ? .0005f : 0.f);
     }
-    CUDARL_HD bool valid() const { return controls == 160 || controls == 640; }
-    CUDARL_HD contact::Arena arena() const { return controls == 640 ? long_swim_arena() : contact::Arena{}; }
+    CUDARL_HD bool valid() const {
+        return motor_observation::valid(observation_schema) &&
+               (controls == 160 || controls == 640 || controls == 1280);
+    }
+    CUDARL_HD contact::Arena arena() const { return controls >= 640 ? long_swim_arena() : contact::Arena{}; }
     CUDARL_HD ForwardConfig task_config() const {
         auto c = config_for_speed(.008f);
         c.maximum_controls = controls;
@@ -198,13 +201,15 @@ CUDARL_HD inline bool request_speed(const World &w, float speed, ForwardConfig &
     return true;
 }
 CUDARL_HD inline bool observe(const ForwardTask &t, const World &w, const ForwardConfig &c, float *out) {
-    if (!out || !motor_observation::valid(c.observation_schema) || t.outcome != Outcome::Running || !in_domain(w, c))
+    if (!out || !motor_observation::valid(c.observation_schema) || t.outcome != Outcome::Running ||
+        !in_domain(w, c))
         return false;
     const auto motion = old::motion(w.physical.body);
     const auto &q = w.physical.body.orientation;
     const auto displacement = (motion.com_model - t.start_com_model) * p::scale;
     const auto lane_error = t.request.heading * p::dot(displacement, t.request.heading) - displacement;
-    old::vector_features(out, 0, q.inverse(lane_error) / motor_observation::path_scale_m(c.observation_schema));
+    old::vector_features(out, 0,
+                         q.inverse(lane_error) / motor_observation::path_scale_m(c.observation_schema));
     old::vector_features(out, 3, q.inverse(t.request.terminal_velocity) / old::kVelocityScale);
     old::vector_features(out, 6, q.inverse(t.request.heading));
     old::vector_features(out, 9, q.inverse({0, 1, 0}));

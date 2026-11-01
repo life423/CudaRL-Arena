@@ -225,7 +225,7 @@ struct Batches {
 std::vector<uint8_t> protocol() {
     cp::Writer out;
     out.value(uint32_t{0x3150504d});
-    out.value(uint32_t{11});
+    out.value(uint32_t{12});
     out.value(training_episode.observation_schema);
     out.value(cudarl::motor_observation::path_scale_m(training_episode.observation_schema));
     out.value(uint32_t{actor_lr_override ? 1u : 0u});
@@ -337,6 +337,50 @@ void check_initialization() {
     for (const auto &count : download(data.counts.get(), environments, stream.value))
         require(count.controls == 0 && count.substeps == 0, "Initialization advanced physics");
 }
+void verify_nominal_arena(const fs::path &root) {
+    if (horizon != 1280)
+        return;
+    const auto links = cudarl::movement::shape(m::initial_world(0).physical.body);
+    float center_bound = 0, root_envelope = 0, mass = 0, weighted_center_bound = 0;
+    for (int b = 0; b < 3; ++b) {
+        const auto g = cudarl::movement::body_geometry(b);
+        if (b)
+            center_bound += .5f * (links.link[b - 1].length + g.length);
+        const float radius = std::max(g.half_height, g.half_width);
+        const float support = b ? .5f * g.length + radius : std::max(.5f * g.length, radius);
+        root_envelope = std::max(root_envelope, center_bound + support);
+        mass += links.link[b].mass;
+        weighted_center_bound += links.link[b].mass * center_bound;
+    }
+    const float com_envelope = root_envelope + weighted_center_bound / mass;
+    std::ofstream out(root / "arena-envelope.json");
+    out << std::setprecision(12)
+        << "{\"seconds\":64,\"target_speed_m_s\":0.008,\"COM_radius_bound_m\":" << com_envelope
+        << ",\"assumption\":\"nominal constant target velocity plus2mm cross-track; not a guarantee for "
+           "exploratory overspeed\",\"poses\":[";
+    int count = 0;
+    for (int pose : {0, 3}) {
+        auto world = m::initial_world(pose);
+        world.arena = training_episode.arena();
+        const auto config = training_episode.task_config();
+        m::ForwardTask task;
+        require(m::begin_forward(world, config, task), "Arena envelope setup");
+        const auto initial = cudarl::motor::motion(world.physical.body).com_model * p::scale;
+        const auto finish = initial + task.request.heading * (.008f * 64);
+        const auto upper = initial + task.request.heading * (.0088f * 64);
+        const float mx = world.arena.half_width_m - config.clearance_m - com_envelope -
+                         std::max(fabsf(initial.x), fabsf(finish.x)) - config.lateral_limit_m;
+        const float mz = world.arena.half_depth_m - config.clearance_m - com_envelope -
+                         std::max(fabsf(initial.z), fabsf(finish.z)) - config.lateral_limit_m;
+        const float upper_mx = world.arena.half_width_m - config.clearance_m - com_envelope -
+                               std::max(fabsf(initial.x), fabsf(upper.x)) - config.lateral_limit_m;
+        out << (count++ ? "," : "") << "{\"pose\":" << pose << ",\"nominal_margin_x_m\":" << mx
+            << ",\"nominal_margin_z_m\":" << mz << ",\"upper_speed_conservative_margin_x_m\":" << upper_mx
+            << '}';
+        require(mx > 0 && mz > 0, "64s nominal target trajectory does not fit existing arena");
+    }
+    out << "],\"physics_steps\":0,\"arena_unchanged\":true}\n";
+}
 int prepare(const fs::path &root) {
     require(!fs::exists(root), "Run identity already exists");
     fs::create_directories(root);
@@ -345,6 +389,7 @@ int prepare(const fs::path &root) {
         fs::copy_file(parent_protocol_path, root / "parent-protocol.bin");
     }
     check_initialization();
+    verify_nominal_arena(root);
     cp::write_atomic((root / "protocol.bin").string(), protocol());
     cp::write_atomic((root / "initialization.bin").string(), initialization());
     cp::Writer actor_identity, critic_identity;
@@ -628,6 +673,44 @@ Evaluation evaluate(const std::vector<float> &params, const fs::path &root, cons
     }
     return out;
 }
+int frozen_sustained(const fs::path &root) {
+    const auto original = cp::read((root / "checkpoint.bin").string());
+    const auto source_protocol = cp::read((root / "protocol.bin").string());
+    const auto policy = rl::read_ppo_actor(original, cp::checksum(source_protocol), seed, 2);
+    require(policy.update == 336 && policy.reward_version == 5 && policy.correlation == .8f,
+            "Frozen sustained336 identity mismatch");
+    require(fs::create_directory(root / "run-started"), "Frozen sustained test already attempted");
+    training_episode.observation_schema = policy.observation_schema;
+    started = std::chrono::steady_clock::now();
+    const auto utc = [] {
+        return std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+    };
+    const auto begin = utc();
+    std::cout << std::setprecision(17) << "FROZEN_SUSTAINED_STARTED unix_seconds=" << begin << std::endl;
+    Budget budget;
+    budget.maximum_controls = 2400;
+    budget.maximum_substeps = 24000;
+    budget.seconds = 10;
+    const auto result = sustained(policy.parameters, root, budget);
+    require(cp::read((root / "checkpoint.bin").string()) == original &&
+                cp::read((root / "protocol.bin").string()) == source_protocol,
+            "Frozen sustained inputs changed");
+    if (result.safety_fault.empty())
+        require(budget.controls == 2400 && budget.substeps == 24000 && result.completed_poses == 2,
+                "Frozen sustained accounting mismatch");
+    std::ofstream out(root / "result.json");
+    out << std::setprecision(17) << "{\"update\":336,\"training_updates\":0,\"optimizer_steps\":0"
+        << ",\"start_unix_seconds\":" << begin << ",\"end_unix_seconds\":" << utc()
+        << ",\"completed_poses\":" << result.completed_poses << ",\"passed_poses\":" << result.passed
+        << ",\"windows_passed\":" << result.windows_passed << ",\"windows_total\":" << result.windows_total
+        << ",\"controls\":" << budget.controls << ",\"substeps\":" << budget.substeps
+        << ",\"safety_code\":" << result.safety_code << ",\"fault\":" << std::quoted(result.safety_fault)
+        << ",\"checkpoint_unchanged\":true,\"closed\":true}\n";
+    out.close();
+    std::ifstream report(root / "result.json");
+    std::cout << report.rdbuf() << std::flush;
+    return result.safety_fault.empty() ? 0 : 3;
+}
 void snapshot(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::GpuAdam &actor_opt,
               nn::GpuAdam &critic_opt) {
     cp::Writer out;
@@ -667,7 +750,8 @@ void state_json(std::ostream &out, const p::BodyState &body) {
 // Fixed world-space COM target; translating a start must not translate its lesson.
 // Harness only: all four actions still come from the unchanged frozen actor.
 int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_budget = nullptr,
-                       bool *recovered = nullptr, int expected_update = 288) {
+                       bool *recovered = nullptr, int expected_update = 288, int duration_controls = 640) {
+    require(duration_controls == 640 || duration_controls == 1280, "Unsupported recovery duration");
     const auto original = cp::read((root / "checkpoint.bin").string());
     const auto policy = rl::read_ppo_actor(original, cp::checksum(cp::read((root / "protocol.bin").string())),
                                            seed, training_episode.observation_schema);
@@ -679,7 +763,7 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
     base.arena = m::long_swim_arena();
     auto config = m::config_for_speed(.008f);
     config.observation_schema = training_episode.observation_schema;
-    config.maximum_controls = 640;
+    config.maximum_controls = duration_controls;
     m::ForwardTask base_task;
     require(m::begin_forward(base, config, base_task), "Depth base setup invalid");
     const auto target = base_task.start_com_model;
@@ -734,8 +818,8 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
     const auto case_clock = std::chrono::steady_clock::now();
     Budget local_budget;
     if (!shared_budget) {
-        local_budget.maximum_controls = 1920;
-        local_budget.maximum_substeps = 19200;
+        local_budget.maximum_controls = 3 * duration_controls;
+        local_budget.maximum_substeps = 30 * duration_controls;
         local_budget.seconds = 5;
     }
     Budget &budget = shared_budget ? *shared_budget : local_budget;
@@ -753,7 +837,8 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
     std::string fault;
     bool recovery_ok = true;
     std::ofstream recovery_summary(root / "recovery-gates.csv");
-    recovery_summary << "case,existing32s_gates_pass,final8s_within_half_initial_error,passed\n";
+    recovery_summary << "case,existing" << duration_controls / 20
+                     << "s_gates_pass,final8s_within_half_initial_error,passed\n";
     for (int c = 0; c < 3 && fault.empty(); ++c) {
         auto &world = worlds[c];
         auto &task = tasks[c];
@@ -784,7 +869,7 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
         };
         const float zeros[4]{};
         row(0, {}, zeros);
-        for (int t = 0; t < 640; ++t) {
+        for (int t = 0; t < duration_controls; ++t) {
             p::BodyState before{}, candidate{};
             cudarl::movement::Telemetry telemetry{};
             try {
@@ -799,7 +884,7 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
                 const auto interval = m::record_control(task, world, config);
                 require(interval.accepted, "Depth replay task rejected");
                 row(t + 1, interval, action.command);
-                if (c != 0 && t >= 480 && fabsf(error_mm(world)) >= half_initial_error)
+                if (c != 0 && t >= duration_controls - 160 && fabsf(error_mm(world)) >= half_initial_error)
                     final8_closer = false;
             } catch (const std::exception &e) {
                 fault = e.what();
@@ -1816,6 +1901,7 @@ void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout 
 }
 void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, Batches &batch,
                                const rl::Permutation &permutation, cudaStream_t stream) {
+    const int late_start = horizon == 1280 ? 640 : 160;
     const auto rewards = download(data.reward.get(), rows, stream),
                values = download(data.value.get(), rows, stream),
                dones = download(data.done.get(), rows, stream),
@@ -1827,20 +1913,23 @@ void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, 
                gradients = download(batch.mean_gradient.get(), 2 * minibatch * actions, stream);
     const auto tasks = download(data.tasks.get(), environments, stream);
     const auto worlds = download(data.worlds.get(), environments, stream);
-    require(horizon == 640 && training_episode.task_config().maximum_controls == 640,
+    require((horizon == 640 || horizon == 1280) && training_episode.task_config().maximum_controls == horizon,
             "Runner/task horizon mismatch");
     double maximum_return_error = 0, maximum_reward_error = 0, absolute_late_rewards = 0, late_reward_sum = 0;
     std::vector<double> independent(rows), without_late(rows);
     for (int e = 0; e < environments; ++e) {
-        require(tasks[e].controls == 640 && worlds[e].physical.control_steps == 640 &&
-                    worlds[e].physical.substeps == 6400 && fabs(worlds[e].physical.time_seconds - 32) < 1e-5,
-                "Actual simulator episode did not reach32s");
+        require(tasks[e].controls == horizon &&
+                    worlds[e].physical.control_steps == static_cast<uint64_t>(horizon) &&
+                    worlds[e].physical.substeps == static_cast<uint64_t>(horizon * 10) &&
+                    fabs(worlds[e].physical.time_seconds - horizon * .05) < 1e-5,
+                "Actual simulator episode did not reach declared horizon");
         double target = 0, masked = 0;
         for (int t = horizon - 1; t >= 0; --t) {
             const int row = t * environments + e;
-            require(dones[row] == (t == horizon - 1 ? 1.f : 0.f), "Early terminal/reset inside32s episode");
+            require(dones[row] == (t == horizon - 1 ? 1.f : 0.f),
+                    "Early terminal/reset inside declared episode");
             target = rewards[row] + double(.99f) * target;
-            masked = (t < 160 ? rewards[row] : 0) + double(.99f) * masked;
+            masked = (t < late_start ? rewards[row] : 0) + double(.99f) * masked;
             independent[row] = target;
             without_late[row] = masked;
             const double error = fabs(returns[row] - target);
@@ -1855,7 +1944,7 @@ void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, 
             maximum_reward_error = std::max(maximum_reward_error, reward_error);
             require(reward_error <= 1e-6 + 1e-5 * fabs(rewards[row]),
                     "Stored reward does not match actual cost components");
-            if (t >= 160) {
+            if (t >= late_start) {
                 absolute_late_rewards += fabs(rewards[row]);
                 late_reward_sum += rewards[row];
             }
@@ -1866,7 +1955,7 @@ void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, 
         const int row = static_cast<int>(rl::permute(permutation, i));
         require(gathered_adv[i] == advantages[row] && gathered_returns[i] == returns[row],
                 "Optimizer minibatch dropped/replaced actual returns");
-        if (row / environments >= 160) {
+        if (row / environments >= late_start) {
             ++late_rows;
             float magnitude = 0;
             for (int j = 0; j < actions; ++j)
@@ -1877,7 +1966,7 @@ void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, 
         }
     }
     require(absolute_late_rewards > 0 && late_rows > 0 && late_rows_with_gradient > 0,
-            "No post8s reward/optimizer signal");
+            "No late reward/optimizer signal");
     std::ofstream trace(root / "duration-reward-rows.csv");
     trace << std::setprecision(12)
           << "row,world,control,end_s,reward,done,value,advantage,GPU_return,independent_return,return_"
@@ -1897,21 +1986,25 @@ void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, 
         << "{\"passed\":true,\"before_first_optimizer_step\":true,\"global_update\":" << update
         << ",\"runner_controls\":" << horizon
         << ",\"GPU_task_controls\":" << training_episode.task_config().maximum_controls
-        << ",\"actual_worlds\":32,\"actual_seconds_each\":32,\"actual_substeps_each\":6400,\"terminal_only_"
-           "control640\":true,\"post8_reward_rows\":15360,\"sum_post8_rewards\":"
-        << late_reward_sum << ",\"max_reward_component_error\":" << maximum_reward_error
+        << ",\"actual_worlds\":32,\"actual_seconds_each\":" << horizon * .05
+        << ",\"actual_substeps_each\":" << horizon * 10 << ",\"terminal_only_at_horizon\":true"
+        << ",\"late_cutoff_s\":" << late_start * .05
+        << ",\"late_reward_rows\":" << (horizon - late_start) * environments
+        << ",\"sum_late_rewards\":" << late_reward_sum
+        << ",\"max_reward_component_error\":" << maximum_reward_error
         << ",\"max_GAE_return_error\":" << maximum_return_error
-        << ",\"first_optimizer_batch_post8_rows\":" << late_rows
-        << ",\"post8_batch_rows_with_nonzero_policy_gradient\":" << late_rows_with_gradient
-        << ",\"example_control161_world0_return\":" << returns[160 * environments]
-        << ",\"same_return_without_post8_rewards\":" << without_late[160 * environments]
+        << ",\"first_optimizer_batch_late_rows\":" << late_rows
+        << ",\"late_batch_rows_with_nonzero_policy_gradient\":" << late_rows_with_gradient
+        << ",\"first_late_world0_return\":" << returns[late_start * environments]
+        << ",\"same_return_without_late_rewards\":" << without_late[late_start * environments]
         << ",\"Adam_steps_before\":" << initial_optimizer(true).steps << ",\"unix_seconds\":"
         << std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count()
         << "}\n";
     out.close();
-    std::cout << "EPISODE32_REWARD_VERIFIED before_optimizer update=" << update
-              << " post8_rows=15360 minibatch_late_rows=" << late_rows
-              << " gradient_rows=" << late_rows_with_gradient << std::endl;
+    std::cout << "EPISODE_REWARD_VERIFIED before_optimizer update=" << update << " seconds=" << horizon * .05
+              << " late_rows=" << (horizon - late_start) * environments
+              << " minibatch_late_rows=" << late_rows << " gradient_rows=" << late_rows_with_gradient
+              << std::endl;
 }
 std::vector<float> score_batch(nn::GpuMlp &actor, Rollout &data, Batches &batch, cudaStream_t stream);
 void rollout_diagnostics(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &critic,
@@ -1968,7 +2061,7 @@ double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::G
                 batch.advantage.get(), batch.returns.get(), data.adv_stats.get(), {.2f, 0, .5f},
                 batch.mean_gradient.get(), batch.value_gradient.get(), batch.row_stats.get(),
                 batch.stats.get(), stream);
-            if (horizon == 640 && update == starting_update() && epoch == 0 && first == 0 &&
+            if (horizon >= 640 && update == starting_update() && epoch == 0 && first == 0 &&
                 !diagnostics.empty())
                 verify_long_episode_batch(diagnostics, update, data, batch, permutation, stream);
             actor.zero_grad(stream);
@@ -2249,12 +2342,17 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     budget.seconds = active_wall_cap;
     Evaluation before, after;
     bool initial_recovery_pass = false, final_recovery_pass = false;
+    const bool extended = horizon == 1280;
+    bool final64_recovery_pass = false, qualified_stop = false;
+    int long_attempts = 0;
     auto recovery_evaluation = [&](const fs::path &directory, const fs::path &checkpoint,
-                                   const fs::path &source_protocol, int expected_update, bool &passed) {
+                                   const fs::path &source_protocol, int expected_update, bool &passed,
+                                   int duration_controls = 640) {
         require(fs::create_directory(directory), "Recovery evaluation identity already exists");
         fs::copy_file(checkpoint, directory / "checkpoint.bin");
         fs::copy_file(source_protocol, directory / "protocol.bin");
-        require(fixed_depth_replay(directory, false, &budget, &passed, expected_update) == 0,
+        require(fixed_depth_replay(directory, false, &budget, &passed, expected_update, duration_controls) ==
+                    0,
                 "Recovery evaluation physical/execution stop; no continuation");
     };
     if (continue_pre_training) {
@@ -2286,6 +2384,11 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             if (depth_offsets)
                 recovery_evaluation(root / "initial-recovery", parent_checkpoint_path, parent_protocol_path,
                                     base_update, initial_recovery_pass);
+            if (extended) {
+                bool baseline64 = false;
+                recovery_evaluation(root / "initial-recovery64", parent_checkpoint_path, parent_protocol_path,
+                                    base_update, baseline64, 1280);
+            }
         }
         nn::GpuMlp actor(spec(actions), rows, seed), critic(spec(1), rows, seed + 1);
         actor.set_params(initial_actor());
@@ -2479,7 +2582,8 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 log << ',' << v;
             log << '\n';
             log.flush();
-            if (actor_lr_override && (completed - base_update == 8 || completed - base_update == 16)) {
+            if (actor_lr_override && completed - base_update != updates &&
+                (completed - base_update == 8 || completed - base_update == 16)) {
                 const auto directory = root / ("checkpoint-" + std::to_string(completed));
                 require(fs::create_directory(directory), "Intermediate evaluation already exists");
                 const auto actor_before_eval = actor.get_params(), critic_before_eval = critic.get_params();
@@ -2491,6 +2595,11 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 recovery_evaluation(directory / "recovery",
                                     root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                     root / "protocol.bin", completed, recovery);
+                bool recovery64 = false;
+                if (extended)
+                    recovery_evaluation(directory / "recovery64",
+                                        root / ("ppo-update-" + std::to_string(completed) + ".bin"),
+                                        root / "protocol.bin", completed, recovery64, 1280);
                 actor_opt.save(optimizer_after);
                 critic_opt.save(optimizer_after);
                 require(actor.get_params() == actor_before_eval &&
@@ -2501,26 +2610,53 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 summary
                     << "{\"update\":" << completed << ",\"short_passes\":" << short_result.passed
                     << ",\"recovery_pass\":" << (recovery ? "true" : "false")
+                    << ",\"recovery64_pass\":" << (recovery64 ? "true" : "false")
                     << ",\"parameters_and_optimizers_unchanged\":true,\"sampling_counter_unchanged\":true}\n";
                 std::cout << "INTERMEDIATE_EVALUATED update=" << completed
                           << " short_passes=" << short_result.passed << " recovery=" << recovery << std::endl;
+                if (extended && short_result.passed == 4 && recovery && recovery64) {
+                    require(fs::create_directory(directory / "long"), "Long evaluation identity exists");
+                    ++long_attempts;
+                    long_result = sustained(actor_before_eval, directory / "long", budget);
+                    require(long_result.safety_fault.empty(), "64s campaign long physical safety stop");
+                    if (long_result.passed == 2) {
+                        after = short_result;
+                        final_recovery_pass = recovery;
+                        final64_recovery_pass = recovery64;
+                        qualified_stop = true;
+                        break;
+                    }
+                }
             }
         }
         training_seconds =
             std::chrono::duration<double>(std::chrono::steady_clock::now() - training_started).count();
         status(root, "frozen_evaluation", budget, completed);
-        after = evaluate(actor.get_params(), root, "frozen", budget);
-        if (depth_offsets)
+        if (!qualified_stop)
+            after = evaluate(actor.get_params(), root, "frozen", budget);
+        if (depth_offsets && !qualified_stop)
             recovery_evaluation(root / "final-recovery",
                                 root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                 root / "protocol.bin", completed, final_recovery_pass);
-        const bool run_long = after.passed == 4 && (!depth_offsets || final_recovery_pass);
-        if (run_long) {
+        if (extended && !qualified_stop)
+            recovery_evaluation(root / "final-recovery64",
+                                root / ("ppo-update-" + std::to_string(completed) + ".bin"),
+                                root / "protocol.bin", completed, final64_recovery_pass, 1280);
+        const bool run_long = after.passed == 4 && (!depth_offsets || final_recovery_pass) &&
+                              (!extended || final64_recovery_pass);
+        if (run_long && !qualified_stop) {
             status(root, "long_evaluation", budget, completed);
+            ++long_attempts;
             long_result = sustained(actor.get_params(), root, budget);
+            if (extended)
+                require(long_result.safety_fault.empty(), "64s campaign long physical safety stop");
         }
         const int expected_controls =
-            control_cap - (run_long ? 0 : 2400) - (continue_pre_training && !depth_offsets ? 480 : 0);
+            extended
+                ? (completed - base_update) * rows + 64 + 640 + 1920 + 3840 +
+                      ((completed - base_update >= 8) ? 6400 : 0) +
+                      ((completed - base_update >= 16) ? 6400 : 0) + long_attempts * 2400
+                : control_cap - (run_long ? 0 : 2400) - (continue_pre_training && !depth_offsets ? 480 : 0);
         require((long_result.safety_fault.empty() && budget.controls == expected_controls &&
                  budget.substeps == expected_controls * 10) ||
                     (!long_result.safety_fault.empty() && budget.controls <= control_cap &&
@@ -2544,9 +2680,12 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         << ",\"frozen_passes\":" << after.passed << ",\"sustained_passes\":" << long_result.passed
         << ",\"initial_recovery_pass\":" << (initial_recovery_pass ? "true" : "false")
         << ",\"final_recovery_pass\":" << (final_recovery_pass ? "true" : "false")
+        << ",\"final64_recovery_pass\":" << (final64_recovery_pass ? "true" : "false")
+        << ",\"long_evaluation_attempts\":" << long_attempts
+        << ",\"qualified_early_stop\":" << (qualified_stop ? "true" : "false")
         << ",\"sustained_windows_passed\":" << long_result.windows_passed
-        << ",\"sustained_windows_total\":" << long_result.windows_total << ",\"long_evaluation_attempted\":"
-        << ((after.passed == 4 && (!depth_offsets || final_recovery_pass)) ? "true" : "false")
+        << ",\"sustained_windows_total\":" << long_result.windows_total
+        << ",\"long_evaluation_attempted\":" << (long_attempts ? "true" : "false")
         << ",\"long_completed_poses\":" << long_result.completed_poses
         << ",\"long_safety_code\":" << long_result.safety_code
         << ",\"long_safety_fault\":" << std::quoted(long_result.safety_fault)
@@ -2646,14 +2785,17 @@ int main(int argc, char **argv) {
             control_cap += 3840;
         if (actor_lr_override)
             control_cap += 5120; // Two additional short+recovery checkpoint assessments.
+        if (horizon == 1280)
+            control_cap = training_cap + 64 + 640 + 1920 + 3840 + 2 * 6400 + 2 * 2400;
         substep_cap = control_cap * 10;
         if (tilt_mixture || updates <= 32)
             active_wall_cap = 20;
-        if (horizon == 640)
+        if (horizon >= 640)
             active_wall_cap = 30;
         if (depth_offsets) {
-            require(horizon == 640 && updates == 32 && !tilt_mixture,
-                    "Fixed-depth recovery trial requires32updates/32sepisodes and original poses");
+            require(!tilt_mixture &&
+                        ((horizon == 640 && updates == 32) || (horizon == 1280 && updates == 16)),
+                    "Unsupported fixed-depth recovery horizon/update budget");
             active_wall_cap = 60;
         }
         const auto root = fs::absolute(argv[2]);
@@ -2668,8 +2810,12 @@ int main(int argc, char **argv) {
         if (!resume_checkpoint.empty())
             load_resume_source(resume_checkpoint, resume_protocol, seed_explicit, rho_explicit);
         if (depth_offsets)
-            require(resume_state && starting_update() == 288 && seed == 1247037243 && correlation == .8f,
-                    "Recovery lesson requires preserved update288 seed243");
+            require(resume_state && seed == 1247037243 && correlation == .8f &&
+                        ((horizon == 640 && starting_update() == 288) ||
+                         (horizon == 1280 && starting_update() == 320 &&
+                          resume_state->actor.observation_schema == 2 &&
+                          resume_state->actor.reward_version == 5)),
+                    "Recovery lesson parent/schema mismatch");
         require(!verification_mode || resume_state.has_value(), "Resume verification requires a PPO parent");
         if (std::string(argv[1]) == "--fixed-depth-prepare" || std::string(argv[1]) == "--fixed-depth-replay")
             return fixed_depth_replay(root, std::string(argv[1]) == "--fixed-depth-prepare");
@@ -2677,6 +2823,8 @@ int main(int argc, char **argv) {
             return depth_sensitivity(root, std::string(argv[1]) == "--sensitivity-continue");
         if (std::string(argv[1]) == "--verify-path-scale")
             return verify_path_scale(root);
+        if (std::string(argv[1]) == "--frozen-sustained")
+            return frozen_sustained(root);
         if (std::string(argv[1]) == "--verify-resume")
             return verify_resume(root);
         if (std::string(argv[1]) == "--neutral-pitch" || std::string(argv[1]) == "--neutral-pitch-continue")

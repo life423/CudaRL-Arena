@@ -6,13 +6,15 @@ presentation only. The motor supplies four independent joint-angle targets throu
 
 ## Current state
 
-Training is stopped. Original update288 remains preserved with4/4 eight-second
-swims and8/30 long windows. The newer reward5/path-scale experiment is saved in
-`assets/ppo-four-axis-checkpoints/update-320-path-scale`:4/4 short swims and all
-three ordinary32-second swimming cases pass, but both offset recovery/settling
-cases fail. It was not adopted and did not qualify for the conditional long test.
-Its JSON provenance records hashes, exact protocol, converted parent, results and
-optimizer caveats. [HANDOFF.md](HANDOFF.md) describes the earlier baseline campaign.
+Training is stopped. The sustained-depth milestone is saved in
+`assets/ppo-four-axis-checkpoints/update-336-episode64`:4/4 short swims and3/3
+64-second recovery cases pass. Both existing60-second swims hold depth, lane and
+posture;28/30 windows pass. Formal long-case acceptance is0/2 because the2–4s
+speed windows miss7.2mm/s. The earlier32s settling deadline also remains failed.
+This is not full formal motor acceptance or a runtime-installed policy.
+JSON provenance records hashes, exact protocol, results and remaining limits.
+Original288 and the converted-parent/path-scale320 milestone remain preserved.
+[HANDOFF.md](HANDOFF.md) describes the earlier baseline campaign.
 Reward5 separates roll/pitch and scores depth-dependent vertical settling from
 the first control. Observation schema2 scales all three body-frame path-error
 inputs by2mm; old checkpoints retain explicit72mm scaling. Checkpoint schema4

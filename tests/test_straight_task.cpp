@@ -3,6 +3,44 @@
 #include "rl/ppo_math.h"
 namespace st = cudarl::straight_motor;
 namespace p = cudarl::physics;
+TEST_CASE(
+    "straight_episode64: fixed targets late reward and terminal GAE use1280 controls (zero integration)") {
+    st::TrainingEpisode episode;
+    episode.controls = 1280;
+    episode.fixed_depth_offsets = true;
+    episode.observation_schema = 2;
+    CHECK(episode.valid() && episode.task_config().maximum_controls == 1280);
+    CHECK(episode.arena().half_width_m == st::long_swim_arena().half_width_m);
+    for (int environment : {0, 2, 4}) {
+        st::World world;
+        st::ForwardTask task;
+        const auto config = episode.task_config();
+        CHECK(st::begin_training_episode(environment, false, config, world, task, episode.arena(),
+                                         episode.initial_vertical_offset(environment)));
+        const auto target = task.start_com_model;
+        std::vector<float> rewards(1280), values(1280), done(1280), zero(1280), advantage(1280),
+            returns(1280);
+        float last[1]{};
+        double late = 0;
+        for (int t = 0; t < 1280; ++t) {
+            float obs[40]{};
+            CHECK(st::observe(task, world, config, obs));
+            world.physical.control_steps = t + 1; // Scoring/terminal fixture, no simulation.
+            const auto result = st::record_control(task, world, config);
+            CHECK(result.accepted && result.done == (t == 1279));
+            CHECK(task.start_com_model.y == target.y && task.request.position.y == target.y);
+            rewards[t] = result.reward;
+            done[t] = result.done ? 1.f : 0.f;
+            if (t >= 640)
+                late += result.reward;
+        }
+        CHECK(late < -31.9 && task.controls == 1280 && world.attempted_substeps == 0);
+        cudarl::rl::gae_one_env(1280, 1, 0, rewards.data(), values.data(), done.data(), zero.data(),
+                                zero.data(), last, .99f, 1.f, advantage.data(), returns.data());
+        CHECK(returns[640] < -4.9f && returns[1279] == rewards[1279]);
+        CHECK(fabsf(returns[640] - rewards[640] * (1.f - powf(.99f, 640)) / (1.f - .99f)) < 1e-4f);
+    }
+}
 TEST_CASE("path_scale: production observations change only the three rotated path channels") {
     for (int pose = 0; pose < 4; ++pose)
         for (int sign : {-1, 1}) {
