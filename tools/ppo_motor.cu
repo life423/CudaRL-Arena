@@ -214,7 +214,9 @@ struct Batches {
 std::vector<uint8_t> protocol() {
     cp::Writer out;
     out.value(uint32_t{0x3150504d});
-    out.value(uint32_t{7});
+    out.value(uint32_t{8});
+    out.value(training_episode.arena().half_width_m);
+    out.value(training_episode.arena().half_depth_m);
     out.value(uint32_t{1}); // Gate long evaluation on four short passes.
     out.value(uint32_t{tilt_mixture ? 1u : 0u});
     out.value(tilt_mixture ? 3.f : 0.f);
@@ -270,13 +272,20 @@ void check_initialization() {
                                              environments, data.fault.get(), training_episode);
     CUDA_CHECK_THROW(cudaGetLastError());
     const auto actual = download(data.obs.get(), environments * observations, stream.value);
+    const auto setup_worlds = download(data.worlds.get(), environments, stream.value);
     finite(actual);
     require(download(data.fault.get(), 1, stream.value)[0] == 0, "Zero-step device initialization failed");
     for (int i = 0; i < environments; ++i) {
         m::World world;
         m::ForwardTask task;
-        require(m::begin_training_episode(i, tilt_mixture, training_episode.task_config(), world, task),
+        require(m::begin_training_episode(i, tilt_mixture, training_episode.task_config(), world, task,
+                                          training_episode.arena()),
                 "CPU initialization failed");
+        require(setup_worlds[i].arena.half_width_m == world.arena.half_width_m &&
+                    setup_worlds[i].arena.half_depth_m == world.arena.half_depth_m,
+                "CPU/CUDA training arena mismatch");
+        require(p::norm(setup_worlds[i].physical.body.position - world.physical.body.position) < 1e-7f,
+                "CPU/CUDA training pose mismatch");
         float expected[observations]{};
         require(m::observe(task, world, training_episode.task_config(), expected), "CPU observation failed");
         for (int j = 0; j < observations; ++j)
@@ -334,6 +343,8 @@ int prepare(const fs::path &root) {
            "examples\":false,\"preset_oscillator\":false,\"target_mm_s\":8,\"environments\":32,\"rollout_"
            "controls\":"
         << horizon << ",\"episode_seconds\":" << horizon * .05
+        << ",\"training_arena_width_m\":" << 2 * training_episode.arena().half_width_m
+        << ",\"training_arena_depth_m\":" << 2 * training_episode.arena().half_depth_m
         << ",\"PPO_additional_updates_max\":" << (verification_mode ? 1 : updates)
         << ",\"ending_update_max\":" << starting_update() + (verification_mode ? 1 : updates)
         << ",\"epochs\":2,\"minibatch\":256,\"additional_optimizer_steps_max_each\":"
@@ -451,7 +462,7 @@ Sustained sustained(const std::vector<float> &params, const fs::path &root, Budg
              << "pose,control,time_s,forward_mm,signed_depth_mm,lane_mm,tilt_deg,vy_mm_s,clearance_mm\n";
     for (int pose : {0, 3}) {
         auto world = m::initial_world(pose);
-        world.arena = {.6f, .4f};
+        world.arena = m::long_swim_arena();
         auto config = m::config_for_speed(.008f);
         config.maximum_controls = 1200;
         m::ForwardTask task;
@@ -635,7 +646,7 @@ int diagnose_safety(const fs::path &root) {
     nn::CpuMlp<float> actor(spec(actions));
     actor.params() = policy.parameters;
     auto world = m::initial_world(0);
-    world.arena = {.6f, .4f};
+    world.arena = m::long_swim_arena();
     auto config = m::config_for_speed(.008f);
     config.maximum_controls = 1200;
     m::ForwardTask task;
@@ -1508,6 +1519,8 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             previous_substeps = substeps;
             const int rollout_fault = download(data.fault.get(), 1, stream.value)[0];
             if (rollout_fault) {
+                if (completed % 8 != 0)
+                    snapshot(root, completed, actor, critic, actor_opt, critic_opt);
                 const auto failed_worlds = download(data.worlds.get(), environments, stream.value);
                 const auto failed_tasks = download(data.tasks.get(), environments, stream.value);
                 const auto partial_rewards = download(data.reward.get(), rows, stream.value);
@@ -1542,6 +1555,11 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                                << cudarl::movement::clearance(w.physical.body, true, w.arena)
                                << ",\"state\":";
                     state_json(diagnostic, w.physical.body);
+                    diagnostic << ",\"before_failed_substep\":";
+                    state_json(diagnostic, counts[i].last_before);
+                    diagnostic << ",\"rejected_candidate\":";
+                    state_json(diagnostic, counts[i].rejected_candidate);
+                    diagnostic << ",\"rejected_minimum_gap_m\":" << counts[i].rejected_gap_m;
                     diagnostic << '}';
                 }
                 diagnostic << "]}\n";

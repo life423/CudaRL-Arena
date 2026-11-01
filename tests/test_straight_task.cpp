@@ -3,6 +3,36 @@
 #include "rl/ppo_math.h"
 namespace st = cudarl::straight_motor;
 namespace p = cudarl::physics;
+TEST_CASE("straight_training_arena:32s uses existing long arena without changing initial pose or target") {
+    st::TrainingEpisode episode;
+    CHECK(episode.arena().half_width_m == cudarl::contact::Arena{}.half_width_m);
+    CHECK(episode.arena().half_depth_m == cudarl::contact::Arena{}.half_depth_m);
+    episode.controls = 640;
+    CHECK(episode.arena().half_width_m == .6f && episode.arena().half_depth_m == .4f);
+    for (int i = 0; i < 32; ++i) {
+        auto baseline = st::initial_world(i % 2 ? 3 : 0);
+        st::ForwardTask reference;
+        CHECK(st::begin_forward(baseline, st::ForwardConfig{}, reference));
+        st::World world;
+        st::ForwardTask task;
+        CHECK(st::begin_training_episode(i, false, episode.task_config(), world, task, episode.arena()));
+        CHECK(p::norm(world.physical.body.position - baseline.physical.body.position) == 0);
+        CHECK(p::norm(task.start_com_model - reference.start_com_model) == 0);
+        CHECK(p::norm(task.request.position - reference.request.position) == 0);
+        CHECK(p::norm(task.request.heading - reference.request.heading) == 0);
+        CHECK(p::norm(task.request.terminal_velocity - reference.request.terminal_velocity) == 0);
+        CHECK(world.physical.fluid.density == baseline.physical.fluid.density);
+        CHECK(world.physical.fluid.viscosity == baseline.physical.fluid.viscosity);
+        CHECK(world.physical.fluid.gravity == baseline.physical.fluid.gravity);
+        for (int j = 0; j < 4; ++j) {
+            CHECK(world.physical.body.angle[j] == baseline.physical.body.angle[j]);
+            CHECK(world.physical.held_targets[j] == baseline.physical.held_targets[j]);
+        }
+        for (float v : world.physical.body.velocity)
+            CHECK(v == 0);
+        CHECK(world.attempted_substeps == 0);
+    }
+}
 TEST_CASE("straight_episode32: task continues past8s and includes late rewards until32s terminal") {
     st::TrainingEpisode episode;
     episode.controls = 640;

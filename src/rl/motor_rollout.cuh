@@ -5,6 +5,8 @@
 namespace cudarl::rl::motor_rollout {
 namespace m = straight_motor;
 struct Counts {
+    physics::BodyState last_before{}, rejected_candidate{};
+    float rejected_gap_m = 0;
     unsigned long long controls = 0, substeps = 0;
     double cost_integral[5]{}, command_square[4]{};
     float joint_min[4]{}, joint_max[4]{}, maximum_tilt_deg = 0;
@@ -30,8 +32,8 @@ __global__ void initialize(m::World *worlds, m::ForwardTask *tasks, int n, int *
     if (i >= n || *fault)
         return;
 
-    if (!episode.valid() ||
-        !m::begin_training_episode(i, episode.tilt_mixture, episode.task_config(), worlds[i], tasks[i]))
+    if (!episode.valid() || !m::begin_training_episode(i, episode.tilt_mixture, episode.task_config(),
+                                                       worlds[i], tasks[i], episode.arena()))
         atomicExch(fault, 1);
 }
 __global__ void observe(const m::World *worlds, const m::ForwardTask *tasks, float *output, int n, int *fault,
@@ -72,7 +74,14 @@ __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *la
     }
     const auto before = worlds[i].attempted_substeps;
     ++counts[i].controls;
-    const bool ok = joint_motor::step_state(worlds[i], action.command);
+    movement::Telemetry telemetry;
+    physics::BodyState before_state{}, candidate{};
+    const bool ok = joint_motor::step_state(worlds[i], action.command, &telemetry, &before_state, &candidate);
+    if (!ok) {
+        counts[i].last_before = before_state;
+        counts[i].rejected_candidate = candidate;
+        counts[i].rejected_gap_m = telemetry.minimum_gap;
+    }
     const auto attempted = worlds[i].attempted_substeps - before;
     counts[i].substeps += attempted;
     if (!ok || attempted != 10) {

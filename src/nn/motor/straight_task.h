@@ -31,12 +31,14 @@ CUDARL_HD inline ForwardConfig config_for_speed(float speed) {
     c.speed_rmse_limit = .3125f * speed;
     return c;
 }
+CUDARL_HD inline contact::Arena long_swim_arena() { return {.6f, .4f}; }
 // One episode contract is passed unchanged to every training kernel. Evaluation
 // retains its own existing ForwardConfig and is independent of training horizon.
 struct TrainingEpisode {
     int controls = 160;
     bool tilt_mixture = false;
     CUDARL_HD bool valid() const { return controls == 160 || controls == 640; }
+    CUDARL_HD contact::Arena arena() const { return controls == 640 ? long_swim_arena() : contact::Arena{}; }
     CUDARL_HD ForwardConfig task_config() const {
         auto c = config_for_speed(.008f);
         c.maximum_controls = controls;
@@ -125,8 +127,9 @@ CUDARL_HD inline bool begin_forward(const World &w, const ForwardConfig &c, Forw
     return true;
 }
 CUDARL_HD inline bool begin_training_episode(int environment, bool tilt_mixture, const ForwardConfig &config,
-                                             World &world, ForwardTask &task) {
+                                             World &world, ForwardTask &task, contact::Arena arena = {}) {
     world = initial_training_world(environment, tilt_mixture);
+    world.arena = arena;
     if (!begin_forward(world, config, task))
         return false;
     if (tilt_mixture) {
