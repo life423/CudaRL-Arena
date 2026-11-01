@@ -6,13 +6,11 @@ presentation only. The motor supplies four independent joint-angle targets throu
 
 ## Current state
 
-The four-axis PPO interface is implemented and CPU/CUDA actuator checks pass.
-The first fresh128-update trial was rejected:0/4eight-second cases and0/30
-sustained windows; mean steady speed0.409mm/s versus8mm/s requested. Both
-60second evaluations completed without resets or numerical/domain failures,
-but the policy rolled to about90degrees. Tilt is gated but currently has no
-direct reward penalty; no second run or policy adoption occurred. Exact frozen
-inputs, checkpoints and results remain in build/ppo/joint-target-ppo-v1.
+Training is stopped at update352. The best research checkpoint remains update288:
+4/4 eight-second swims and8/30 long windows; sustained depth tracking still fails.
+The best new32-second-training checkpoint passes2/4 short swims and was not adopted.
+See [HANDOFF.md](HANDOFF.md) for durable checkpoints, hashes, results and resume usage.
+Reward4 includes head posture, lane and depth costs from the first control.
 
 The prior imitation-trained controllers and dedicated supervised training paths
 were removed by user request. No verified PPO checkpoint is installed. The viewer
@@ -22,7 +20,7 @@ not substitute random weights, a teacher or another algorithm.
 The native PPO primitives live in src/rl: Gaussian sampling/log probabilities,
 clipped policy loss, GAE and minibatch gathers. Shared MLP, Adam, GEMM and critic
 loss code lives in src/nn. The ppo_motor executable trains a fresh actor/critic
-on the forward8mm/s lesson:40observations, four outputs, eight-second episodes.
+on the forward8mm/s lesson:40observations, four outputs, eight- or32-second episodes.
 There is no oscillator in this action path. Old two-output checkpoints are
 preserved as evidence and rejected by the new explicit schema. Training worlds and rollout/update buffers stay on
 the GPU; frozen evaluation uses the same motor equations on the CPU.
