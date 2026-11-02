@@ -38,7 +38,7 @@ __global__ void initialize(m::World *worlds, m::ForwardTask *tasks, int n, int *
                                    episode.arena(), episode.initial_vertical_offset(i)))
         atomicExch(fault, 1);
 }
-__global__ void observe(const m::World *worlds, const m::ForwardTask *tasks, float *output, int n, int *fault,
+__global__ void observe(const m::World *worlds, m::ForwardTask *tasks, float *output, int n, int *fault,
                         m::TrainingEpisode episode = {}) {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i >= n)
@@ -49,7 +49,9 @@ __global__ void observe(const m::World *worlds, const m::ForwardTask *tasks, flo
             row[j] = 0;
         return;
     }
-    if (!m::observe(tasks[i], worlds[i], episode.task_config(), row))
+    const auto config = episode.task_config(tasks[i].controls);
+    if ((episode.stopping && !m::update_velocity_request(worlds[i], config, tasks[i])) ||
+        !m::observe(tasks[i], worlds[i], config, row))
         atomicExch(fault, 2);
 }
 __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *latent, float *rewards,
@@ -98,7 +100,7 @@ __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *la
         if (fabsf(torque) >= .999999f)
             ++counts[i].saturated_axis_substeps;
     }
-    const auto interval = m::record_control(tasks[i], worlds[i], episode.task_config());
+    const auto interval = m::record_control(tasks[i], worlds[i], episode.task_config(tasks[i].controls));
     if (!interval.accepted) {
         atomicExch(fault, 6);
         return;

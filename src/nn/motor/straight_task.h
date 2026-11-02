@@ -19,6 +19,10 @@ constexpr float kDepthSettlingSeconds = 2.f, kRecoverySpeedLimit = .001f;
 constexpr float kRollCost = .05f, kPitchCost = .01f;
 struct ForwardConfig {
     uint32_t observation_schema = motor_observation::legacy;
+    // Normally equal to the nonzero request. A stopping request retains this
+    // lesson scale instead of dividing by zero or reweighting depth/posture.
+    float velocity_reward_scale_m_s = .008f;
+    bool stationary_request = false;
     float target_speed_m_s = .008f, clearance_m = .01f;
     float minimum_speed_m_s = .0072f, maximum_speed_m_s = .0088f, speed_rmse_limit = .0025f;
     float lateral_limit_m = .002f, depth_limit_m = .001f, path_angle_limit_deg = 5, tilt_limit_deg = 10;
@@ -31,12 +35,30 @@ CUDARL_HD inline bool supported_speed(float speed) {
 CUDARL_HD inline ForwardConfig config_for_speed(float speed) {
     ForwardConfig c;
     c.target_speed_m_s = speed;
+    c.velocity_reward_scale_m_s = speed;
     c.minimum_speed_m_s = .9f * speed;
     c.maximum_speed_m_s = 1.1f * speed;
     c.speed_rmse_limit = .3125f * speed;
     return c;
 }
 CUDARL_HD inline contact::Arena long_swim_arena() { return {.6f, .4f}; }
+// A goal schedule only: it never supplies joint actions or modifies world state.
+// Activation in the training runner requires a separately registered protocol.
+// ForwardTask terminal gates remain swimming-only; stopping acceptance must be
+// scored separately by the explicit stopping experiment.
+struct StopSequence {
+    static constexpr int request_control = 640, maximum_controls = 1280;
+    CUDARL_HD ForwardConfig config(int completed_controls, uint32_t observation_schema) const {
+        auto c = config_for_speed(.008f);
+        c.maximum_controls = maximum_controls;
+        c.observation_schema = observation_schema;
+        if (completed_controls >= request_control) {
+            c.target_speed_m_s = 0;
+            c.stationary_request = true;
+        }
+        return c;
+    }
+};
 // One episode contract is passed unchanged to every training kernel. Evaluation
 // retains its own existing ForwardConfig and is independent of training horizon.
 struct TrainingEpisode {
@@ -44,6 +66,7 @@ struct TrainingEpisode {
     int controls = 160;
     bool tilt_mixture = false;
     bool fixed_depth_offsets = false;
+    bool stopping = false;
     int offset_phase = 0;
     CUDARL_HD float initial_vertical_offset(int environment) const {
         if (!fixed_depth_offsets)
@@ -53,10 +76,13 @@ struct TrainingEpisode {
     }
     CUDARL_HD bool valid() const {
         return motor_observation::valid(observation_schema) &&
-               (controls == 160 || controls == 640 || controls == 1280);
+               (controls == 160 || controls == 640 || controls == 1280) && (!stopping || controls == 1280);
     }
     CUDARL_HD contact::Arena arena() const { return controls >= 640 ? long_swim_arena() : contact::Arena{}; }
-    CUDARL_HD ForwardConfig task_config() const {
+    CUDARL_HD int reward_version() const { return stopping ? 6 : kRewardVersion; }
+    CUDARL_HD ForwardConfig task_config(int completed_controls = 0) const {
+        if (stopping)
+            return StopSequence{}.config(completed_controls, observation_schema);
         auto c = config_for_speed(.008f);
         c.maximum_controls = controls;
         c.observation_schema = observation_schema;
@@ -120,15 +146,23 @@ struct Transition {
     Outcome outcome = Outcome::Rejected;
 };
 CUDARL_HD inline bool valid(const ForwardConfig &c) {
-    const float fields[] = {c.target_speed_m_s,       c.clearance_m,          c.minimum_speed_m_s,
-                            c.maximum_speed_m_s,      c.speed_rmse_limit,     c.lateral_limit_m,
-                            c.depth_limit_m,          c.path_angle_limit_deg, c.tilt_limit_deg,
+    const float fields[] = {c.velocity_reward_scale_m_s,
+                            c.clearance_m,
+                            c.minimum_speed_m_s,
+                            c.maximum_speed_m_s,
+                            c.speed_rmse_limit,
+                            c.lateral_limit_m,
+                            c.depth_limit_m,
+                            c.path_angle_limit_deg,
+                            c.tilt_limit_deg,
                             c.work_per_distance_limit};
     for (float x : fields)
         if (!p::finite_number(x) || x <= 0)
             return false;
-    return supported_speed(c.target_speed_m_s) && c.maximum_speed_m_s >= c.minimum_speed_m_s &&
-           c.clearance_m >= .01f && c.measure_start > 0 && c.maximum_controls > c.measure_start;
+    const bool target_valid =
+        supported_speed(c.target_speed_m_s) || (c.stationary_request && c.target_speed_m_s == 0);
+    return target_valid && c.maximum_speed_m_s >= c.minimum_speed_m_s && c.clearance_m >= .01f &&
+           c.measure_start > 0 && c.maximum_controls > c.measure_start;
 }
 CUDARL_HD inline bool in_domain(const World &w, const ForwardConfig &c) {
     return valid(c) && joint::in_domain(w, c.clearance_m);
@@ -200,6 +234,14 @@ CUDARL_HD inline bool request_speed(const World &w, float speed, ForwardConfig &
     t = segment;
     return true;
 }
+// Within-episode goal update. Unlike request_speed's segment reset, this keeps
+// the fixed world target, heading, elapsed time, warmup and all audit state.
+CUDARL_HD inline bool update_velocity_request(const World &w, const ForwardConfig &c, ForwardTask &t) {
+    if (!in_domain(w, c) || t.outcome != Outcome::Running || w.physical.control_steps != t.last_world_control)
+        return false;
+    t.request.terminal_velocity = t.request.heading * c.target_speed_m_s;
+    return true;
+}
 CUDARL_HD inline bool observe(const ForwardTask &t, const World &w, const ForwardConfig &c, float *out) {
     if (!out || !motor_observation::valid(c.observation_schema) || t.outcome != Outcome::Running ||
         !in_domain(w, c))
@@ -264,9 +306,9 @@ CUDARL_HD inline float recovery_velocity(float signed_depth_m) {
 }
 CUDARL_HD inline RewardCosts reward_costs(const Metrics &metrics, const World &world,
                                           const ForwardConfig &config, bool speed_scored) {
-    const float horizontal = metrics.horizontal_speed_error_m_s / config.target_speed_m_s;
-    const float vertical =
-        (metrics.vertical_velocity_m_s - recovery_velocity(metrics.signed_depth_m)) / config.target_speed_m_s;
+    const float horizontal = metrics.horizontal_speed_error_m_s / config.velocity_reward_scale_m_s;
+    const float vertical = (metrics.vertical_velocity_m_s - recovery_velocity(metrics.signed_depth_m)) /
+                           config.velocity_reward_scale_m_s;
     const float lane = metrics.lateral_m / config.lateral_limit_m;
     const float depth = metrics.depth_m / config.depth_limit_m;
     const float roll = metrics.roll_deg / config.tilt_limit_deg;

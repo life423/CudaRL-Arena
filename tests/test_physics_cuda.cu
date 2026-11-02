@@ -2,6 +2,7 @@
 #include "simulation/world.h"
 #include "cuda/cuda_memory.h"
 #include "motor/straight_task.h"
+#include "rl/motor_rollout.cuh"
 #include <cuda_runtime.h>
 #include <array>
 #include <vector>
@@ -10,6 +11,23 @@
 
 namespace {
 namespace s=cudarl::simulation;
+CUDARL_HD void stopping_fixture(int i,float *out) {
+    namespace m=cudarl::straight_motor;
+    auto w=m::initial_world(i%2?3:0);m::ForwardTask t;
+    auto c=m::StopSequence{}.config(0,2);
+    bool ok=m::begin_forward(w,c,t);
+    ok=ok&&m::offset_episode_start(w,t,c,(i%2?1.f:-1.f)*.0005f);
+    t.controls=i<4?639:640;t.last_world_control=t.controls;w.physical.control_steps=t.controls;
+    c=m::StopSequence{}.config(t.controls,2);
+    ok=ok&&m::update_velocity_request(w,c,t);
+    w.physical.body.velocity[0]=.008f;float obs[40]{};
+    ok=ok&&m::observe(t,w,c,obs);
+    const auto r=m::reward_costs(m::measure(t,w),w,c,true);
+    out[0]=ok?1.f:0.f;out[1]=t.start_com_model.y;out[2]=float(t.controls);
+    for(int j=0;j<40;++j)out[3+j]=obs[j];
+    out[43]=r.horizontal;out[44]=r.recovery;out[45]=r.depth;out[46]=r.total();
+}
+__global__ void stopping_fixture_kernel(float *out) {const int i=threadIdx.x;if(i<8)stopping_fixture(i,out+i*47);}
 // Synthetic initialization/scoring only. No physics or policy update occurs.
 CUDARL_HD void recovery_score_fixture(int i, float *out) {
     namespace m = cudarl::straight_motor;
@@ -74,6 +92,35 @@ void discrete(const s::WorldState& a,const s::WorldState& b) {
     const auto& p=x.inspection;const auto& q=y.inspection;
     CHECK(p.contact==q.contact&&p.floor_contact==q.floor_contact&&p.excessive==q.excessive&&p.escape==q.escape&&p.invalid==q.invalid);
 }
+}
+GPU_TEST_CASE("stopping_prepare CUDA: production rollout observes zero request at640 without reset") {
+    namespace m=cudarl::straight_motor;namespace gpu=cudarl::rl::motor_rollout;
+    m::TrainingEpisode episode;episode.controls=1280;episode.stopping=true;episode.observation_schema=2;
+    auto w=m::initial_world(0);m::ForwardTask task;CHECK(m::begin_forward(w,episode.task_config(),task));
+    CHECK(m::offset_episode_start(w,task,episode.task_config(),-.0005f));
+    task.controls=640;task.last_world_control=640;w.physical.control_steps=640;
+    device_ptr<m::World> world(1);device_ptr<m::ForwardTask> tasks(1);device_ptr<float> observation(40);device_ptr<int> fault(1);
+    const int zero=0;world.copy_from_host(&w,1);tasks.copy_from_host(&task,1);fault.copy_from_host(&zero,1);
+    gpu::observe<<<1,32>>>(world.get(),tasks.get(),observation.get(),1,fault.get(),episode);
+    CUDA_CHECK_THROW(cudaGetLastError());CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    float actual[40];int status;observation.copy_to_host(actual,40);fault.copy_to_host(&status,1);
+    m::ForwardTask result;tasks.copy_to_host(&result,1);
+    CHECK(status==0 && result.controls==640 && result.start_com_model.y==task.start_com_model.y);
+    CHECK(result.request.terminal_velocity.x==0 && result.request.terminal_velocity.z==0);
+    for(int j=3;j<6;++j)CHECK(actual[j]==0);
+    CHECK(actual[34]==0 && fabsf(actual[1]-.25f)<1e-5);
+}
+GPU_TEST_CASE("stopping_prepare CUDA: zero target observation and finite reward match CPU without integration") {
+    device_ptr<float> buffer(8*47);stopping_fixture_kernel<<<1,32>>>(buffer.get());
+    CUDA_CHECK_THROW(cudaGetLastError());CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    std::vector<float> actual(8*47);buffer.copy_to_host(actual.data(),actual.size());
+    double maximum=0;
+    for(int i=0;i<8;++i){float expected[47]{};stopping_fixture(i,expected);
+        CHECK(expected[0]==1 && actual[i*47]==1 && actual[i*47+1]==-2);
+        for(int j=0;j<47;++j){const double e=fabs(double(actual[i*47+j])-expected[j]);maximum=fmax(maximum,e);CHECK(e<2e-6);}
+        if(i>=4)for(int j=3;j<6;++j)CHECK(actual[i*47+3+j]==0);
+    }
+    std::printf("    8 zero-integration CPU/CUDA stopping cases maxdifference %.9g\n",maximum);
 }
 GPU_TEST_CASE("straight_reward5 CUDA: fixed reference and decomposed reward match CPU (zero integration)") {
     device_ptr<float> output(36*18);

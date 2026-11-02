@@ -1,0 +1,113 @@
+{
+  "status": "REJECTED;notadopted",
+  "algorithm": "native C++/CUDA PPO",
+  "source_run": "build/ppo/stopping-ppo-336to352-v1",
+  "source_milestone_commit": "9e3724dfbd72731c04350f720e8e8b9db94a8cd9",
+  "accepted_baseline": "assets/ppo-four-axis-checkpoints/update-336-episode64/ppo-update-336.bin",
+  "accepted_baseline_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "checkpoint344_sha256": "BBE9403C5125F49BDD1E77E48BD1E35F016387394AE82D7217F86382B354E951",
+  "checkpoint352_sha256": "494E09694993C45E18037EA7B21996FAC482BFAC64F3BDB974AB5090E136A9FB",
+  "protocol_sha256": "587639809FE4AE9139188FDCC53EBC4204590B6873022A41741027515D895D3A",
+  "checkpoint_schema": 4,
+  "protocol_version": 13,
+  "reward": 6,
+  "parent_reward": 5,
+  "observation_schema": 2,
+  "path_scale_m": 0.002,
+  "model": 6,
+  "task": 6,
+  "action_mapping": 3,
+  "actor": [
+    40,
+    32,
+    32,
+    4
+  ],
+  "critic": [
+    40,
+    32,
+    32,
+    1
+  ],
+  "seed": 1247037243,
+  "rho": 0.8,
+  "log_std": [
+    -1,
+    -1,
+    -1,
+    -1
+  ],
+  "source_update": 336,
+  "last_update": 352,
+  "additional_updates": 16,
+  "actor_lr": 0.00025,
+  "critic_lr": 0.001,
+  "Adam_steps344_each": 24260,
+  "Adam_steps352_each": 26820,
+  "full_training_resume_state": true,
+  "resume_semantics": "completeupdateboundary;bothnetworks/bothAdam/moments/configs/counters/logstd;freshtrueepisodes,notbitwisemidtrajectoryresume",
+  "schedule": "8mm/s0–32s;zero32–64s;fixedworldtargetY=-.08m,lane/heading/time/filter/ARhistorynotreset",
+  "velocity_reward_normalization_m_s": 0.008,
+  "training_episode_controls": 1280,
+  "environments": 32,
+  "start_mix": "originalposes0/3balancedcenter/±0.5mm",
+  "training_arena_m": [
+    1.2,
+    0.8
+  ],
+  "stopping_passes": {
+    "total": 2,
+    "update344": 0,
+    "baseline336": 0,
+    "update352": 0
+  },
+  "short_swim_passes": {
+    "total": 4,
+    "update344": 0,
+    "baseline336": 4,
+    "update352": 0
+  },
+  "update352_recovery64_passes": 0,
+  "stopping_result": "No1scontinuousspeed<=0.5mm/s;notstoppedby32safterrequest.Nocompletedstoppingdistance;postcommandtravel109.90/109.59mm",
+  "update352_final_speed_mm_s": [
+    2.79578661919,
+    2.86664772034
+  ],
+  "update352_max_depth_mm": [
+    0.577635765076,
+    0.582342147827
+  ],
+  "update352_max_lane_mm": [
+    1.10597419739,
+    0.876733124256
+  ],
+  "update352_peak_tilt_deg": [
+    8.46301651001,
+    8.92251110077
+  ],
+  "physical_safety_stops": 0,
+  "long_evaluation_attempted": false,
+  "long_skip_reason": "Shortswim/recovery/stoppingprerequisitesfailed",
+  "candidate_accepted": false,
+  "runtime_adopted": false,
+  "source_checkpoint_preserved": true,
+  "training_stopped": true,
+  "retries": 0,
+  "extensions": 0,
+  "imitation_or_teacher_weights": false,
+  "verification": {
+    "utc": "2026-11-02T00:25:53.8812223Z",
+    "focused_tests_passed": 26,
+    "skipped": 0,
+    "actual_CUDA_zero_request_and_reward_checks": true,
+    "post32_GPU_rewards_reached_GAE_and_optimizer": true,
+    "durable352_payload_load_passed": true,
+    "loaded_update": 352,
+    "parsed_Adam_steps_each": 26820,
+    "load_optimizer_updates": 0,
+    "load_physical_steps": 0,
+    "load_note": "Zero-stepordinary8mm/sinitializationcheck,notadditionaltraining",
+    "local_load_log": "build/ppo/stopping352-durable-load.log",
+    "diff_check_passed": true
+  }
+}

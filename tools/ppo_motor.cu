@@ -37,6 +37,7 @@ int training_cap = updates * rows, control_cap = training_cap + 64 + 1280 + 2400
     substep_cap = control_cap * 10;
 bool &tilt_mixture = training_episode.tilt_mixture;
 bool &depth_offsets = training_episode.fixed_depth_offsets;
+bool &stopping = training_episode.stopping;
 int optimizer_steps_per_update() { return epochs * (rows / minibatch); }
 size_t rollout_elements(int components = 1) { return static_cast<size_t>(rows) * components; }
 uint32_t seed = 0x4a544731u;
@@ -225,14 +226,17 @@ struct Batches {
 std::vector<uint8_t> protocol() {
     cp::Writer out;
     out.value(uint32_t{0x3150504d});
-    out.value(uint32_t{12});
+    out.value(uint32_t{13});
+    out.value(uint32_t{stopping ? 1u : 0u});
+    out.value(m::StopSequence::request_control);
     out.value(training_episode.observation_schema);
     out.value(cudarl::motor_observation::path_scale_m(training_episode.observation_schema));
     out.value(uint32_t{actor_lr_override ? 1u : 0u});
     out.value(actor_lr_override.value_or(0));
     out.value(uint32_t{depth_offsets ? 1u : 0u});
     out.value(.0005f); // Symmetric fixed-target starts; pair-group phase = global update %3.
-    out.value(resume_state ? resume_state->actor.reward_version : uint32_t{m::kRewardVersion});
+    out.value(resume_state ? resume_state->actor.reward_version
+                           : uint32_t{static_cast<uint32_t>(training_episode.reward_version())});
     for (float v : {m::kDepthSettlingSeconds, m::kRecoverySpeedLimit, m::kRollCost, m::kPitchCost})
         out.value(v);
     out.value(training_episode.arena().half_width_m);
@@ -250,9 +254,10 @@ std::vector<uint8_t> protocol() {
     out.array(policy_sigma());
     out.value(initial_optimizer_config(true));
     out.value(initial_optimizer_config(false));
-    for (int v : {6, m::kTaskVersion, m::kRewardVersion, 3, observations, actions, environments, horizon,
-                  verification_mode ? 1 : updates, minibatch, epochs, verification_mode ? rows : training_cap,
-                  verification_mode ? rows : control_cap, verification_mode ? rows * 10 : substep_cap})
+    for (int v : {6, m::kTaskVersion, training_episode.reward_version(), 3, observations, actions,
+                  environments, horizon, verification_mode ? 1 : updates, minibatch, epochs,
+                  verification_mode ? rows : training_cap, verification_mode ? rows : control_cap,
+                  verification_mode ? rows * 10 : substep_cap})
         out.value(v);
     for (float v : {.008f, log_sigma, .001f, .00001f, .5f, .99f, 1.f, .2f, .01f,
                     verification_mode ? 10.f : static_cast<float>(active_wall_cap)})
@@ -405,7 +410,9 @@ int prepare(const fs::path &root) {
         << ",\"starting_actor_steps\":" << initial_optimizer(true).steps
         << ",\"starting_critic_steps\":" << initial_optimizer(false).steps
         << ",\"actor_shape\":[40,32,32,4],\"critic_shape\":[40,32,32,1],\"checkpoint_schema\":4,\"action_"
-           "mapping\":3,\"task\":6,\"reward\":5,\"model\":6,\"fresh_episode_rollout\":true,\"teacher_"
+           "mapping\":3,\"task\":6,\"reward\":"
+        << training_episode.reward_version() << ",\"stopping_sequence\":" << (stopping ? "true" : "false")
+        << ",\"model\":6,\"fresh_episode_rollout\":true,\"teacher_"
            "examples\":false,\"preset_oscillator\":false,\"target_mm_s\":8,\"environments\":32,\"rollout_"
            "controls\":"
         << horizon << ",\"episode_seconds\":" << horizon * .05
@@ -517,6 +524,28 @@ struct Evaluation {
     int passed = 0;
     float speed = 0, rmse = 0, work_per_m = 0;
 };
+Evaluation reused_baseline(const fs::path &root) {
+    std::ifstream in(root / "baseline-evaluation.csv");
+    std::string line;
+    std::getline(in, line);
+    Evaluation out;
+    int rows_seen = 0;
+    while (std::getline(in, line)) {
+        std::stringstream row(line);
+        std::string field;
+        std::vector<float> v;
+        while (std::getline(row, field, ','))
+            v.push_back(std::stof(field));
+        require(v.size() == 11 && v[0] == rows_seen && v[1] == 1, "Invalid preserved336 baseline evaluation");
+        ++rows_seen;
+        ++out.passed;
+        out.speed += v[2] * .001f / 4;
+        out.rmse += v[3] * .001f / 4;
+        out.work_per_m += v[5] / 4;
+    }
+    require(rows_seen == 4, "Preserved baseline must contain4poses");
+    return out;
+}
 struct Sustained {
     int passed = 0, windows_passed = 0, windows_total = 0;
     int completed_poses = 0, safety_code = 0;
@@ -673,6 +702,177 @@ Evaluation evaluate(const std::vector<float> &params, const fs::path &root, cons
     }
     return out;
 }
+struct StoppingResult {
+    int passed = 0, completed = 0;
+};
+StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs::path &root, Budget &budget) {
+    require(fs::create_directory(root), "Stopping evaluation identity already exists");
+    nn::CpuMlp<float> actor(spec(actions));
+    actor.params() = parameters;
+    StoppingResult result;
+    std::ofstream trace(root / "controls.csv"), summary(root / "summary.csv");
+    trace << std::setprecision(12)
+          << "pose,control,time_s,requested_mm_s,COM_speed_mm_s,forward_velocity_mm_s,vx_mm_s,vy_mm_s,vz_mm_"
+             "s,forward_mm,depth_mm,lane_mm,tilt_deg,head_yaw_deg,reward,speed_cost,lane_cost,depth_cost,"
+             "posture_cost,effort_cost\n";
+    summary << std::setprecision(12)
+            << "pose,passed,pre_speed_mm_s,pre_RMSE_mm_s,permanent_stop_relative_s,first20samples_stop_"
+               "relative_s,stopping_distance_mm,post_command_forward_mm,reverse_distance_mm,peak_reverse_mm_"
+               "s,speed_at48_mm_s,final_speed_mm_s,max_depth_mm,max_lane_mm,peak_tilt_deg,peak_head_yaw_deg,"
+               "hold_max_excursion_mm,hold_net_drift_mm,hold_mean_speed_mm_s,hold_mean_vy_mm_s,final_depth_"
+               "mm,stop_positive_work_J,deadline_pass,hold_pass,state_pass,pre_swim_pass\n";
+    for (int pose : {0, 3}) {
+        auto world = m::initial_world(pose);
+        world.arena = m::long_swim_arena();
+        m::ForwardTask task;
+        const m::StopSequence sequence;
+        require(m::begin_forward(world, sequence.config(0, training_episode.observation_schema), task),
+                "Stopping setup");
+        const auto target = task.start_com_model, heading = task.request.heading;
+        float forward[1281]{}, pre_origin = 0, pre_work = 0, command_work = 0, pre_speed = 0, pre_rmse = 0;
+        float hold_origin = 0, hold_excursion = 0, hold_net = 0, reverse_distance = 0,
+              min_forward_velocity = 0;
+        float max_depth = 0, max_lane = 0, max_tilt = 0, max_yaw = 0, speed48 = 0, final_speed = 0;
+        double pre_error2 = 0, hold_speed = 0, hold_vy = 0;
+        int last_fast = 640, streak = 0, first_stop = -1;
+        bool deadline = true, hold = true, pre_pass = false;
+        for (int control = 1; control <= 1280; ++control) {
+            const auto config = sequence.config(task.controls, training_episode.observation_schema);
+            require(task.start_com_model.y == target.y && p::norm(task.request.heading - heading) == 0,
+                    "Stopping target reference changed");
+            require(m::update_velocity_request(world, config, task), "Stopping request update");
+            float observation[observations];
+            require(m::observe(task, world, config, observation), "Stopping observation");
+            if (control == 641)
+                for (int j = 3; j < 6; ++j)
+                    require(observation[j] == 0, "Zero request absent from observation");
+            actor.forward(observation, 1);
+            m::Action action;
+            require(m::action_from_latent(actor.output(), action), "Stopping action");
+            p::BodyState before{}, candidate{};
+            try {
+                budget.step(world, action.command, nullptr, &before, &candidate);
+            } catch (const std::exception &error) {
+                std::ofstream fault(root / "failure.json");
+                fault << std::setprecision(17) << "{\"pose\":" << pose
+                      << ",\"attempted_time_s\":" << world.attempted_substeps * .005
+                      << ",\"code\":" << world.failure_code << ",\"error\":" << std::quoted(error.what())
+                      << ",\"before\":";
+                state_json(fault, before);
+                fault << ",\"candidate_not_committed\":";
+                state_json(fault, candidate);
+                fault << ",\"last_accepted\":";
+                state_json(fault, world.physical.body);
+                fault << "}\n";
+                throw;
+            }
+            const auto interval = m::record_control(task, world, config);
+            require(interval.accepted, "Stopping scoring");
+            const auto motion = cudarl::motor::motion(world.physical.body);
+            const auto &metrics = interval.metrics;
+            const float speed = p::norm(motion.velocity_m_s), velocity = p::dot(motion.velocity_m_s, heading);
+            forward[control] = metrics.forward_m;
+            max_depth = std::max(max_depth, metrics.depth_m);
+            max_lane = std::max(max_lane, metrics.lateral_m);
+            max_tilt = std::max(max_tilt, metrics.tilt_deg);
+            max_yaw = std::max(max_yaw, metrics.head_yaw_deg);
+            if (control == 40) {
+                pre_origin = metrics.forward_m;
+                pre_work = world.physical.body.work;
+            }
+            if (control > 40 && control <= 640)
+                pre_error2 += metrics.speed_error_m_s * metrics.speed_error_m_s;
+            if (control == 640) {
+                pre_speed = (metrics.forward_m - pre_origin) / 30;
+                pre_rmse = sqrtf(float(pre_error2 / 600));
+                const auto delta = (motion.com_model - task.steady_start_com_model) * p::scale;
+                const auto side = delta - heading * p::dot(delta, heading);
+                const float path =
+                    atan2f(p::norm({side.x, 0, side.z}), p::dot(delta, heading)) * 180 / cudarl::movement::pi;
+                const float work =
+                    (world.physical.body.work - pre_work) / fmaxf(metrics.forward_m - pre_origin, 1e-9f);
+                pre_pass = pre_speed >= .0072f && pre_speed <= .0088f && pre_rmse <= .0025f && path <= 5 &&
+                           work <= .001f;
+                command_work = world.physical.body.work;
+            }
+            if (control > 640) {
+                if (speed > .0005f) {
+                    last_fast = control;
+                    streak = 0;
+                } else
+                    ++streak;
+                if (streak == 20 && first_stop < 0)
+                    first_stop = control - 19;
+                reverse_distance += fmaxf(0, forward[control - 1] - forward[control]);
+                min_forward_velocity = std::min(min_forward_velocity, velocity);
+                if (control >= 960 && speed > .0005f)
+                    deadline = false;
+            }
+            if (control == 960)
+                speed48 = speed;
+            if (control == 1120)
+                hold_origin = metrics.forward_m;
+            if (control > 1120) {
+                hold_net = metrics.forward_m - hold_origin;
+                hold_excursion = std::max(hold_excursion, fabsf(hold_net));
+                hold_speed += speed;
+                hold_vy += motion.velocity_m_s.y;
+                hold = hold && speed <= .0005f && metrics.depth_m <= .001f && metrics.lateral_m <= .002f &&
+                       metrics.tilt_deg <= 10;
+            }
+            final_speed = speed;
+            trace << pose << ',' << control << ',' << control * .05 << ',' << config.target_speed_m_s * 1000
+                  << ',' << speed * 1000 << ',' << velocity * 1000 << ',' << motion.velocity_m_s.x * 1000
+                  << ',' << motion.velocity_m_s.y * 1000 << ',' << motion.velocity_m_s.z * 1000 << ','
+                  << metrics.forward_m * 1000 << ',' << metrics.signed_depth_m * 1000 << ','
+                  << metrics.lateral_m * 1000 << ',' << metrics.tilt_deg << ',' << metrics.head_yaw_deg << ','
+                  << interval.reward;
+            for (float cost : {interval.costs.speed, interval.costs.lane, interval.costs.depth,
+                               interval.costs.posture, interval.costs.effort})
+                trace << ',' << cost;
+            trace << '\n';
+        }
+        const bool stopped = last_fast < 1280;
+        const float permanent = stopped ? (last_fast + 1) * .05f - 32 : -1;
+        const float distance = stopped ? (forward[last_fast + 1] - forward[640]) * 1000
+                                       : std::numeric_limits<float>::quiet_NaN();
+        const bool state = max_depth <= .001f && max_lane <= .002f && max_tilt <= 10;
+        hold = hold && hold_excursion <= .002f;
+        const bool passed = deadline && stopped && hold && state && pre_pass;
+        result.passed += passed ? 1 : 0;
+        ++result.completed;
+        summary << pose << ',' << passed << ',' << pre_speed * 1000 << ',' << pre_rmse * 1000 << ','
+                << permanent << ',' << (first_stop < 0 ? -1 : first_stop * .05f - 32) << ',' << distance
+                << ',' << (forward[1280] - forward[640]) * 1000 << ',' << reverse_distance * 1000 << ','
+                << min_forward_velocity * 1000 << ',' << speed48 * 1000 << ',' << final_speed * 1000 << ','
+                << max_depth * 1000 << ',' << max_lane * 1000 << ',' << max_tilt << ',' << max_yaw << ','
+                << hold_excursion * 1000 << ',' << hold_net * 1000 << ',' << hold_speed / 160 * 1000 << ','
+                << hold_vy / 160 * 1000 << ',' << m::measure(task, world).signed_depth_m * 1000 << ','
+                << world.physical.body.work - command_work << ',' << deadline << ',' << hold << ',' << state
+                << ',' << pre_pass << '\n';
+        summary.flush();
+        trace.flush();
+    }
+    return result;
+}
+bool preserved_long_windows(const fs::path &root) {
+    std::ifstream in(root / "sustained-windows.csv");
+    std::string line;
+    std::getline(in, line);
+    int rows_seen = 0;
+    while (std::getline(in, line)) {
+        std::stringstream row(line);
+        std::string field;
+        std::vector<double> values;
+        while (std::getline(row, field, ','))
+            values.push_back(std::stod(field));
+        require(values.size() == 10, "Long regression row shape");
+        ++rows_seen;
+        if (values[1] > 4 && values[9] != 1)
+            return false;
+    }
+    return rows_seen == 30;
+}
 int frozen_sustained(const fs::path &root) {
     const auto original = cp::read((root / "checkpoint.bin").string());
     const auto source_protocol = cp::read((root / "protocol.bin").string());
@@ -722,7 +922,7 @@ void snapshot(const fs::path &root, int update, nn::GpuMlp &actor, nn::GpuMlp &c
     out.value(uint32_t{cudarl::movement::kVersion});
     out.value(uint32_t{cudarl::joint_motor::kActionVersion});
     out.value(uint32_t{m::kTaskVersion});
-    out.value(uint32_t{m::kRewardVersion});
+    out.value(uint32_t{static_cast<uint32_t>(training_episode.reward_version())});
     out.value(uint32_t{observations});
     out.value(uint32_t{actions});
     out.value(uint32_t{1}); // history-conditioned Gaussian stochastic-policy schema
@@ -2343,7 +2543,8 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     Evaluation before, after;
     bool initial_recovery_pass = false, final_recovery_pass = false;
     const bool extended = horizon == 1280;
-    bool final64_recovery_pass = false, qualified_stop = false;
+    bool final64_recovery_pass = false, qualified_stop = false, long_regression_pass = false;
+    StoppingResult initial_stopping, final_stopping;
     int long_attempts = 0;
     auto recovery_evaluation = [&](const fs::path &directory, const fs::path &checkpoint,
                                    const fs::path &source_protocol, int expected_update, bool &passed,
@@ -2380,11 +2581,13 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         Stream stream;
         if (!continue_pre_training) {
             parity(budget, stream.value);
-            before = evaluate(initial_actor(), root, "initial", budget);
-            if (depth_offsets)
+            before = stopping ? reused_baseline(root) : evaluate(initial_actor(), root, "initial", budget);
+            if (stopping)
+                initial_stopping = evaluate_stopping(initial_actor(), root / "initial-stop", budget);
+            if (depth_offsets && !stopping)
                 recovery_evaluation(root / "initial-recovery", parent_checkpoint_path, parent_protocol_path,
                                     base_update, initial_recovery_pass);
-            if (extended) {
+            if (extended && !stopping) {
                 bool baseline64 = false;
                 recovery_evaluation(root / "initial-recovery64", parent_checkpoint_path, parent_protocol_path,
                                     base_update, baseline64, 1280);
@@ -2592,14 +2795,18 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 critic_opt.save(optimizer_before);
                 const auto short_result = evaluate(actor_before_eval, directory, "frozen", budget);
                 bool recovery = false;
-                recovery_evaluation(directory / "recovery",
-                                    root / ("ppo-update-" + std::to_string(completed) + ".bin"),
-                                    root / "protocol.bin", completed, recovery);
+                if (!stopping)
+                    recovery_evaluation(directory / "recovery",
+                                        root / ("ppo-update-" + std::to_string(completed) + ".bin"),
+                                        root / "protocol.bin", completed, recovery);
                 bool recovery64 = false;
                 if (extended)
                     recovery_evaluation(directory / "recovery64",
                                         root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                         root / "protocol.bin", completed, recovery64, 1280);
+                StoppingResult stop_result;
+                if (stopping)
+                    stop_result = evaluate_stopping(actor_before_eval, directory / "stop", budget);
                 actor_opt.save(optimizer_after);
                 critic_opt.save(optimizer_after);
                 require(actor.get_params() == actor_before_eval &&
@@ -2611,18 +2818,23 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                     << "{\"update\":" << completed << ",\"short_passes\":" << short_result.passed
                     << ",\"recovery_pass\":" << (recovery ? "true" : "false")
                     << ",\"recovery64_pass\":" << (recovery64 ? "true" : "false")
+                    << ",\"stopping_passes\":" << stop_result.passed
                     << ",\"parameters_and_optimizers_unchanged\":true,\"sampling_counter_unchanged\":true}\n";
                 std::cout << "INTERMEDIATE_EVALUATED update=" << completed
                           << " short_passes=" << short_result.passed << " recovery=" << recovery << std::endl;
-                if (extended && short_result.passed == 4 && recovery && recovery64) {
+                if (extended && short_result.passed == 4 && recovery64 &&
+                    (stopping ? stop_result.passed == 2 : recovery)) {
                     require(fs::create_directory(directory / "long"), "Long evaluation identity exists");
                     ++long_attempts;
                     long_result = sustained(actor_before_eval, directory / "long", budget);
                     require(long_result.safety_fault.empty(), "64s campaign long physical safety stop");
-                    if (long_result.passed == 2) {
+                    long_regression_pass =
+                        stopping ? preserved_long_windows(directory / "long") : long_result.passed == 2;
+                    if (long_regression_pass) {
                         after = short_result;
                         final_recovery_pass = recovery;
                         final64_recovery_pass = recovery64;
+                        final_stopping = stop_result;
                         qualified_stop = true;
                         break;
                     }
@@ -2634,7 +2846,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         status(root, "frozen_evaluation", budget, completed);
         if (!qualified_stop)
             after = evaluate(actor.get_params(), root, "frozen", budget);
-        if (depth_offsets && !qualified_stop)
+        if (depth_offsets && !qualified_stop && !stopping)
             recovery_evaluation(root / "final-recovery",
                                 root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                 root / "protocol.bin", completed, final_recovery_pass);
@@ -2642,17 +2854,25 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             recovery_evaluation(root / "final-recovery64",
                                 root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                 root / "protocol.bin", completed, final64_recovery_pass, 1280);
-        const bool run_long = after.passed == 4 && (!depth_offsets || final_recovery_pass) &&
-                              (!extended || final64_recovery_pass);
+        if (stopping && !qualified_stop)
+            final_stopping = evaluate_stopping(actor.get_params(), root / "final-stop", budget);
+        const bool run_long =
+            after.passed == 4 &&
+            (stopping ? final_stopping.passed == 2 : (!depth_offsets || final_recovery_pass)) &&
+            (!extended || final64_recovery_pass);
         if (run_long && !qualified_stop) {
             status(root, "long_evaluation", budget, completed);
             ++long_attempts;
             long_result = sustained(actor.get_params(), root, budget);
             if (extended)
                 require(long_result.safety_fault.empty(), "64s campaign long physical safety stop");
+            long_regression_pass = stopping ? preserved_long_windows(root) : long_result.passed == 2;
         }
         const int expected_controls =
-            extended
+            stopping
+                ? (completed - base_update) * rows + 64 + 2560 + ((completed - base_update >= 8) ? 7040 : 0) +
+                      ((completed - base_update >= 16) ? 7040 : 0) + long_attempts * 2400
+            : extended
                 ? (completed - base_update) * rows + 64 + 640 + 1920 + 3840 +
                       ((completed - base_update >= 8) ? 6400 : 0) +
                       ((completed - base_update >= 16) ? 6400 : 0) + long_attempts * 2400
@@ -2666,11 +2886,14 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         fault = error.what();
     }
     const bool accepted =
-        fault.empty() && after.passed == 4 && after.rmse < before.rmse && long_result.passed == 2;
+        fault.empty() && after.passed == 4 &&
+        (stopping ? final_stopping.passed == 2 && final64_recovery_pass && long_regression_pass
+                  : after.rmse < before.rmse && long_result.passed == 2);
     std::ofstream out(root / "result.json");
-    out << std::setprecision(9) << "{\"algorithm\":\"PPO\",\"reward_version\":" << m::kRewardVersion
+    out << std::setprecision(9)
+        << "{\"algorithm\":\"PPO\",\"reward_version\":" << training_episode.reward_version()
         << ",\"parent_reward_version\":"
-        << (resume_state ? resume_state->actor.reward_version : m::kRewardVersion)
+        << (resume_state ? resume_state->actor.reward_version : training_episode.reward_version())
         << ",\"fresh_initialization\":" << (resume_state ? "false" : "true") << ",\"seed\":" << seed
         << ",\"starting_update\":" << base_update << ",\"additional_updates\":" << completed - base_update
         << ",\"rho\":" << correlation << ",\"fault\":" << std::quoted(fault)
@@ -2681,6 +2904,10 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         << ",\"initial_recovery_pass\":" << (initial_recovery_pass ? "true" : "false")
         << ",\"final_recovery_pass\":" << (final_recovery_pass ? "true" : "false")
         << ",\"final64_recovery_pass\":" << (final64_recovery_pass ? "true" : "false")
+        << ",\"stopping_lesson\":" << (stopping ? "true" : "false")
+        << ",\"initial_stopping_passes\":" << initial_stopping.passed
+        << ",\"final_stopping_passes\":" << final_stopping.passed
+        << ",\"long_regression_preserved\":" << (long_regression_pass ? "true" : "false")
         << ",\"long_evaluation_attempts\":" << long_attempts
         << ",\"qualified_early_stop\":" << (qualified_stop ? "true" : "false")
         << ",\"sustained_windows_passed\":" << long_result.windows_passed
@@ -2718,6 +2945,12 @@ int main(int argc, char **argv) {
         fs::path resume_checkpoint, resume_protocol;
         bool seed_explicit = false, rho_explicit = false;
         for (int option = 3; option < argc; option += 2) {
+            if (std::string(argv[option]) == "--stopping") {
+                require(std::string(argv[option + 1]) == "0" || std::string(argv[option + 1]) == "1",
+                        "Invalid stopping flag");
+                stopping = std::string(argv[option + 1]) == "1";
+                continue;
+            }
             if (std::string(argv[option]) == "--actor-lr") {
                 size_t used = 0;
                 const float rate = std::stof(argv[option + 1], &used);
@@ -2787,6 +3020,8 @@ int main(int argc, char **argv) {
             control_cap += 5120; // Two additional short+recovery checkpoint assessments.
         if (horizon == 1280)
             control_cap = training_cap + 64 + 640 + 1920 + 3840 + 2 * 6400 + 2 * 2400;
+        if (stopping)
+            control_cap = training_cap + 64 + 2560 + 2 * 7040 + 2 * 2400;
         substep_cap = control_cap * 10;
         if (tilt_mixture || updates <= 32)
             active_wall_cap = 20;
@@ -2812,10 +3047,14 @@ int main(int argc, char **argv) {
         if (depth_offsets)
             require(resume_state && seed == 1247037243 && correlation == .8f &&
                         ((horizon == 640 && starting_update() == 288) ||
-                         (horizon == 1280 && starting_update() == 320 &&
+                         (horizon == 1280 && starting_update() == (stopping ? 336 : 320) &&
                           resume_state->actor.observation_schema == 2 &&
                           resume_state->actor.reward_version == 5)),
                     "Recovery lesson parent/schema mismatch");
+        if (stopping)
+            require(horizon == 1280 && updates == 16 && depth_offsets && actor_lr_override && resume_state &&
+                        starting_update() == 336 && resume_state->actor.reward_version == 5,
+                    "Stopping lesson requires copied336,16updates,64s,fixed-targetmix and matched rate");
         require(!verification_mode || resume_state.has_value(), "Resume verification requires a PPO parent");
         if (std::string(argv[1]) == "--fixed-depth-prepare" || std::string(argv[1]) == "--fixed-depth-replay")
             return fixed_depth_replay(root, std::string(argv[1]) == "--fixed-depth-prepare");

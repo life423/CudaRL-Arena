@@ -3,6 +3,90 @@
 #include "rl/ppo_math.h"
 namespace st = cudarl::straight_motor;
 namespace p = cudarl::physics;
+TEST_CASE("stopping_prepare: zero request preserves references and exposes goal without warmup reset") {
+    st::TrainingEpisode lesson;
+    lesson.controls = 1280;
+    lesson.stopping = true;
+    lesson.observation_schema = 2;
+    CHECK(lesson.valid() && lesson.reward_version() == 6 &&
+          lesson.task_config(639).target_speed_m_s == .008f);
+    CHECK(lesson.task_config(640).target_speed_m_s == 0 &&
+          lesson.task_config(640).velocity_reward_scale_m_s == .008f);
+    const auto swim = st::StopSequence{}.config(639, 2), stop = st::StopSequence{}.config(640, 2);
+    CHECK(st::valid(swim) && st::valid(stop));
+    CHECK(swim.target_speed_m_s == .008f && stop.target_speed_m_s == 0);
+    CHECK(stop.velocity_reward_scale_m_s == .008f);
+    auto w = st::initial_world(0);
+    st::ForwardTask t;
+    CHECK(st::begin_forward(w, swim, t) && st::offset_episode_start(w, t, swim, -.0005f));
+    t.controls = 640;
+    t.last_world_control = 640;
+    w.physical.control_steps = 640;
+    w.physical.time_seconds = 32;
+    w.reference_rate[0] = .2f;
+    const auto reference = t.start_com_model, heading = t.request.heading, target = t.request.position;
+    const float held = w.physical.held_targets[0];
+    float before[40], after[40];
+    CHECK(st::observe(t, w, swim, before) && st::update_velocity_request(w, stop, t) &&
+          st::observe(t, w, stop, after));
+    CHECK(t.controls == 640 && t.last_world_control == 640 && t.start_com_model.y == reference.y);
+    CHECK(p::norm(t.request.position - target) == 0 && p::norm(t.request.heading - heading) == 0);
+    CHECK(w.physical.time_seconds == 32 && w.reference_rate[0] == .2f && w.physical.held_targets[0] == held);
+    CHECK(w.attempted_substeps == 0 && p::norm(t.request.terminal_velocity) == 0 && after[34] == 0);
+    for (int j = 0; j < 40; ++j) {
+        if (j >= 3 && j < 6)
+            CHECK(after[j] == 0);
+        else
+            CHECK(before[j] == after[j]);
+    }
+    auto invalid = stop;
+    invalid.stationary_request = false;
+    CHECK(!st::valid(invalid));
+    invalid = stop;
+    invalid.velocity_reward_scale_m_s = 0;
+    CHECK(!st::valid(invalid));
+}
+TEST_CASE(
+    "stopping_prepare: zero-speed reward finite and reverse oscillation cannot farm reward (synthetic)") {
+    const auto c = st::StopSequence{}.config(640, 2);
+    st::World w;
+    st::Metrics m;
+    const auto settled = st::reward_costs(m, w, c, true);
+    m.horizontal_speed_error_m_s = .008f;
+    const auto moving = st::reward_costs(m, w, c, true);
+    m.horizontal_speed_error_m_s = fabsf(-.008f);
+    const auto reverse = st::reward_costs(m, w, c, true);
+    m.horizontal_speed_error_m_s = .0005f;
+    const auto slow = st::reward_costs(m, w, c, true);
+    CHECK(settled.total() == 0 && moving.horizontal == 1 && reverse.total() == moving.total());
+    CHECK(p::finite_number(slow.total()) && slow.horizontal == .00390625f);
+    CHECK((moving.total() + reverse.total()) * .5f == moving.total());
+    m.horizontal_speed_error_m_s = 0;
+    m.signed_depth_m = -.0005f;
+    m.depth_m = .0005f;
+    const auto hold = st::reward_costs(m, w, c, true);
+    m.vertical_velocity_m_s = .00025f;
+    const auto recovery = st::reward_costs(m, w, c, true);
+    CHECK(recovery.recovery == 0 && recovery.total() < hold.total());
+    std::printf("    synthetic stopping reward/50ms: settled %.9g,8mm/s %.9g,0.5mm/s %.9g; belowtarget still "
+                "%.9g vs usefulup %.9g\n",
+                -.05f * settled.total(), -.05f * moving.total(), -.05f * slow.total(), -.05f * hold.total(),
+                -.05f * recovery.total());
+}
+TEST_CASE("stopping_prepare: positive-speed reward normalization unchanged (synthetic)") {
+    st::World w;
+    st::Metrics m;
+    m.horizontal_speed_error_m_s = .002f;
+    m.signed_depth_m = -.0005f;
+    m.vertical_velocity_m_s = -.0001f;
+    for (float speed : {.004f, .005f, .006f, .007f, .008f}) {
+        const auto c = st::config_for_speed(speed);
+        const auto r = st::reward_costs(m, w, c, true);
+        const float h = m.horizontal_speed_error_m_s / speed;
+        const float v = (m.vertical_velocity_m_s - st::recovery_velocity(m.signed_depth_m)) / speed;
+        CHECK(r.horizontal == h * h && r.recovery == v * v);
+    }
+}
 TEST_CASE(
     "straight_episode64: fixed targets late reward and terminal GAE use1280 controls (zero integration)") {
     st::TrainingEpisode episode;

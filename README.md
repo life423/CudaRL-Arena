@@ -14,6 +14,10 @@ speed windows miss7.2mm/s. The earlier32s settling deadline also remains failed.
 This is not full formal motor acceptance or a runtime-installed policy.
 JSON provenance records hashes, exact protocol, results and remaining limits.
 Original288 and the converted-parent/path-scale320 milestone remain preserved.
+The first stopping trial is saved in
+`assets/ppo-four-axis-checkpoints/stopping-336to352-rejected`. It slowed after
+the zero-speed request but never stopped and regressed to0/4 short swims. Those
+checkpoints are rejected;336 remains the preserved sustained-swimming baseline.
 [HANDOFF.md](HANDOFF.md) describes the earlier baseline campaign.
 Reward5 separates roll/pitch and scores depth-dependent vertical settling from
 the first control. Observation schema2 scales all three body-frame path-error

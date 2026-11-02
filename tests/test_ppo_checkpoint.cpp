@@ -129,6 +129,19 @@ TEST_CASE("ppo_checkpoint: reward4 and reward5 retain explicit provenance withou
     CHECK(a.actor_adam.first == b.actor_adam.first && a.actor_adam.steps == b.actor_adam.steps);
     CHECK(a.critic_adam.second == b.critic_adam.second);
 }
+TEST_CASE("stopping_prepare: reward6 checkpoint is explicit and unknown reward rejects") {
+    auto bytes = fixture(true);
+    bytes[36] = 6;
+    CHECK(cudarl::rl::read_ppo_training_state(bytes, 99).actor.reward_version == 6);
+    bytes[36] = 7;
+    bool rejected = false;
+    try {
+        (void)cudarl::rl::read_ppo_training_state(bytes, 99);
+    } catch (const std::runtime_error &) {
+        rejected = true;
+    }
+    CHECK(rejected);
+}
 TEST_CASE("ppo_checkpoint: incompatible schema dimensions seed protocol nonfinite and trailing data reject") {
     for (int fault = 0; fault < 9; ++fault) {
         auto bytes = fixture();

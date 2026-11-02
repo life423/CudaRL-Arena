@@ -1,0 +1,7 @@
+{
+  "prefix0to32_max_defined_field_difference": 0.0,
+  "zero_goal_final_forward_mm_s": 2.77012419701,
+  "constant8_final_forward_mm_s": 4.70036840439,
+  "zero_goal_forward32to64_mm": 109.89607238799996,
+  "constant8_forward32to64_mm": 155.764785767
+}

@@ -34,7 +34,7 @@ inline std::vector<uint8_t> adam_payload(const PpoAdamState &state) {
     return out.data;
 }
 // PPO research schema2 fixes topology40-32-32-(4actor/1critic), float32,
-// model6/task6/reward4 or5 and independent joint-target mapping3.
+// model6/task6/reward4,5 or6 and independent joint-target mapping3.
 // Parse/validate auxiliary state without constructing or restoring an optimizer.
 inline PpoTrainingState
 read_ppo_training_state(const std::vector<uint8_t> &payload, uint64_t expected_protocol,
@@ -57,7 +57,8 @@ read_ppo_training_state(const std::vector<uint8_t> &payload, uint64_t expected_p
         throw std::runtime_error("Wrong PPO model/action mapping");
     const auto task_version = in.value<uint32_t>();
     actor.reward_version = in.value<uint32_t>();
-    if (task_version != 6 || (actor.reward_version != 4 && actor.reward_version != 5) ||
+    if (task_version != 6 ||
+        (actor.reward_version != 4 && actor.reward_version != 5 && actor.reward_version != 6) ||
         in.value<uint32_t>() != 40 || in.value<uint32_t>() != 4)
         throw std::runtime_error("Wrong PPO task/reward/shape");
     if (schema >= 3) {
