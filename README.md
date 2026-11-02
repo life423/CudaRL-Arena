@@ -11,6 +11,9 @@ Training is stopped. The sustained-depth milestone is saved in
 64-second recovery cases pass. Both existing60-second swims hold depth, lane and
 posture;28/30 windows pass. Formal long-case acceptance is0/2 because the2–4s
 speed windows miss7.2mm/s. The earlier32s settling deadline also remains failed.
+The additional `five-minute-evaluation` record passes148/150 windows over two
+300-second frozen swims; only those same startup-speed windows fail. This is
+bounded endurance evidence, not proof of indefinite operation.
 This is not full formal motor acceptance or a runtime-installed policy.
 JSON provenance records hashes, exact protocol, results and remaining limits.
 Original288 and the converted-parent/path-scale320 milestone remain preserved.

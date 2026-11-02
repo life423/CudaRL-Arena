@@ -1,0 +1,296 @@
+[
+  {
+    "pose": 0,
+    "sampled_backward_travel0to8_mm": 0.018529541834164002,
+    "negative_forward_velocity_samples": 4,
+    "min_forward_velocity0to8_mm_s": -0.12837690698656817,
+    "first_sample_forward_velocity_ge7_2_s": 3.1,
+    "segments": [
+      {
+        "start_s": 0,
+        "end_s": 2,
+        "mean_forward_mm_s": 2.766595363615,
+        "max_head_yaw_deg": 24.0629310608,
+        "max_tilt_deg": 8.82788181305,
+        "max_lane_mm": 0.607442557812,
+        "depth_min_mm": 0.000171661362401,
+        "depth_max_mm": 0.115184783936,
+        "axes": [
+          {
+            "axis": 0,
+            "command_filtered_RMSE_rad": 0.8163795067672013,
+            "filtered_actual_RMSE_rad": 0.012576139499355512,
+            "command_RMS_rad": 0.7736520843730728,
+            "actual_RMS_rad": 0.30309415232098674
+          },
+          {
+            "axis": 1,
+            "command_filtered_RMSE_rad": 0.20516469727269457,
+            "filtered_actual_RMSE_rad": 0.002560378902721236,
+            "command_RMS_rad": 0.23506583864875946,
+            "actual_RMS_rad": 0.11745617981883924
+          },
+          {
+            "axis": 2,
+            "command_filtered_RMSE_rad": 0.8264781734259627,
+            "filtered_actual_RMSE_rad": 0.013018281347902451,
+            "command_RMS_rad": 0.7980847121428898,
+            "actual_RMS_rad": 0.3245726526612863
+          },
+          {
+            "axis": 3,
+            "command_filtered_RMSE_rad": 0.5324230276584365,
+            "filtered_actual_RMSE_rad": 0.008329964947610678,
+            "command_RMS_rad": 0.5911746145034692,
+            "actual_RMS_rad": 0.3127058010255415
+          }
+        ],
+        "min_forward_velocity_mm_s": -0.12837690698656817,
+        "max_forward_velocity_mm_s": 6.008068986903473
+      },
+      {
+        "start_s": 2,
+        "end_s": 4,
+        "mean_forward_mm_s": 7.0260138511850005,
+        "max_head_yaw_deg": 20.0641002655,
+        "max_tilt_deg": 4.65568351746,
+        "max_lane_mm": 0.487364500761,
+        "depth_min_mm": 0.0985288545489,
+        "depth_max_mm": 0.187692642212,
+        "axes": [
+          {
+            "axis": 0,
+            "command_filtered_RMSE_rad": 0.7609378420063321,
+            "filtered_actual_RMSE_rad": 0.0122875097004153,
+            "command_RMS_rad": 0.7292940459102302,
+            "actual_RMS_rad": 0.25580231221199295
+          },
+          {
+            "axis": 1,
+            "command_filtered_RMSE_rad": 0.16534681151716535,
+            "filtered_actual_RMSE_rad": 0.0023839096901413885,
+            "command_RMS_rad": 0.1848806128101207,
+            "actual_RMS_rad": 0.13292169408844157
+          },
+          {
+            "axis": 2,
+            "command_filtered_RMSE_rad": 0.7861702271449105,
+            "filtered_actual_RMSE_rad": 0.012131355038171645,
+            "command_RMS_rad": 0.7185465115818067,
+            "actual_RMS_rad": 0.2511799405873808
+          },
+          {
+            "axis": 3,
+            "command_filtered_RMSE_rad": 0.41648701229558494,
+            "filtered_actual_RMSE_rad": 0.0065869236920583765,
+            "command_RMS_rad": 0.5903353653639343,
+            "actual_RMS_rad": 0.44957392764902976
+          }
+        ],
+        "min_forward_velocity_mm_s": 6.2321699762690805,
+        "max_forward_velocity_mm_s": 7.7267284565509975
+      },
+      {
+        "start_s": 4,
+        "end_s": 8,
+        "mean_forward_mm_s": 7.827855586999999,
+        "max_head_yaw_deg": 17.9132518768,
+        "max_tilt_deg": 4.89632987976,
+        "max_lane_mm": 0.756546258926,
+        "depth_min_mm": -0.109148025513,
+        "depth_max_mm": 0.164432525635,
+        "axes": [
+          {
+            "axis": 0,
+            "command_filtered_RMSE_rad": 0.7324240688239158,
+            "filtered_actual_RMSE_rad": 0.011420582419837604,
+            "command_RMS_rad": 0.6759494702484156,
+            "actual_RMS_rad": 0.2405546708110162
+          },
+          {
+            "axis": 1,
+            "command_filtered_RMSE_rad": 0.17118611070915085,
+            "filtered_actual_RMSE_rad": 0.0025044495789743903,
+            "command_RMS_rad": 0.200561940339737,
+            "actual_RMS_rad": 0.12363772147259913
+          },
+          {
+            "axis": 2,
+            "command_filtered_RMSE_rad": 0.7191642270165097,
+            "filtered_actual_RMSE_rad": 0.011323922018645682,
+            "command_RMS_rad": 0.6719952953265818,
+            "actual_RMS_rad": 0.22602307097456376
+          },
+          {
+            "axis": 3,
+            "command_filtered_RMSE_rad": 0.38718265049080297,
+            "filtered_actual_RMSE_rad": 0.006082159274262724,
+            "command_RMS_rad": 0.5843476883274484,
+            "actual_RMS_rad": 0.4993926931750455
+          }
+        ],
+        "min_forward_velocity_mm_s": 7.466427545960227,
+        "max_forward_velocity_mm_s": 8.058667257502334
+      }
+    ],
+    "motion_prefix_max_difference": 0.0,
+    "actual_angle_serialization_max_difference_rad": 4.979000000071565E-07,
+    "minimum_forward_position_mm": -0.0183230545372,
+    "negative_velocity_sample_times_s": [
+      0.15,
+      0.2,
+      0.25,
+      0.3
+    ],
+    "positive_velocity_after_initial_reverse_s": 0.35,
+    "original_position_repassed_s": 0.4,
+    "last_forward_velocity_below7_2_before8_s": 3.4
+  },
+  {
+    "pose": 3,
+    "sampled_backward_travel0to8_mm": 0.018947342949121,
+    "negative_forward_velocity_samples": 4,
+    "min_forward_velocity0to8_mm_s": -0.12503995476593593,
+    "first_sample_forward_velocity_ge7_2_s": 2.85,
+    "segments": [
+      {
+        "start_s": 0,
+        "end_s": 2,
+        "mean_forward_mm_s": 2.887669324875,
+        "max_head_yaw_deg": 23.5638504028,
+        "max_tilt_deg": 9.35767364502,
+        "max_lane_mm": 0.675020575523,
+        "depth_min_mm": -0.00641822814941,
+        "depth_max_mm": 0.108189582825,
+        "axes": [
+          {
+            "axis": 0,
+            "command_filtered_RMSE_rad": 0.8215120606232089,
+            "filtered_actual_RMSE_rad": 0.012646086329532943,
+            "command_RMS_rad": 0.7786746383614983,
+            "actual_RMS_rad": 0.3074758352661547
+          },
+          {
+            "axis": 1,
+            "command_filtered_RMSE_rad": 0.20866691747959584,
+            "filtered_actual_RMSE_rad": 0.002582680631243438,
+            "command_RMS_rad": 0.23840750717362483,
+            "actual_RMS_rad": 0.1184300998688129
+          },
+          {
+            "axis": 2,
+            "command_filtered_RMSE_rad": 0.8370772807695168,
+            "filtered_actual_RMSE_rad": 0.013209648842590497,
+            "command_RMS_rad": 0.8097546476823072,
+            "actual_RMS_rad": 0.3281844084563776
+          },
+          {
+            "axis": 3,
+            "command_filtered_RMSE_rad": 0.537949287486117,
+            "filtered_actual_RMSE_rad": 0.00842638296762021,
+            "command_RMS_rad": 0.5982967020313101,
+            "actual_RMS_rad": 0.3151441406929538
+          }
+        ],
+        "min_forward_velocity_mm_s": -0.12503995476593593,
+        "max_forward_velocity_mm_s": 6.133449896676043
+      },
+      {
+        "start_s": 2,
+        "end_s": 4,
+        "mean_forward_mm_s": 7.116208314874999,
+        "max_head_yaw_deg": 19.3024082184,
+        "max_tilt_deg": 4.79370832443,
+        "max_lane_mm": 0.609731376171,
+        "depth_min_mm": 0.0858354568481,
+        "depth_max_mm": 0.163388252258,
+        "axes": [
+          {
+            "axis": 0,
+            "command_filtered_RMSE_rad": 0.7595033844428246,
+            "filtered_actual_RMSE_rad": 0.012275192609486523,
+            "command_RMS_rad": 0.7284379069307217,
+            "actual_RMS_rad": 0.2538152967574105
+          },
+          {
+            "axis": 1,
+            "command_filtered_RMSE_rad": 0.16432493187533007,
+            "filtered_actual_RMSE_rad": 0.0023864792321011295,
+            "command_RMS_rad": 0.18512968695041895,
+            "actual_RMS_rad": 0.1346401854522527
+          },
+          {
+            "axis": 2,
+            "command_filtered_RMSE_rad": 0.7827739347605553,
+            "filtered_actual_RMSE_rad": 0.012047083716859237,
+            "command_RMS_rad": 0.7128633360584663,
+            "actual_RMS_rad": 0.24952172088726707
+          },
+          {
+            "axis": 3,
+            "command_filtered_RMSE_rad": 0.4147309182591866,
+            "filtered_actual_RMSE_rad": 0.006539129481437117,
+            "command_RMS_rad": 0.5897544044989457,
+            "actual_RMS_rad": 0.4534265448306374
+          }
+        ],
+        "min_forward_velocity_mm_s": 6.386838523183818,
+        "max_forward_velocity_mm_s": 7.747807663717489
+      },
+      {
+        "start_s": 4,
+        "end_s": 8,
+        "mean_forward_mm_s": 7.8391904831,
+        "max_head_yaw_deg": 17.8039188385,
+        "max_tilt_deg": 4.49862575531,
+        "max_lane_mm": 0.454655051231,
+        "depth_min_mm": -0.124969474971,
+        "depth_max_mm": 0.137319549918,
+        "axes": [
+          {
+            "axis": 0,
+            "command_filtered_RMSE_rad": 0.7284513409226966,
+            "filtered_actual_RMSE_rad": 0.011369535628890533,
+            "command_RMS_rad": 0.6727159117996945,
+            "actual_RMS_rad": 0.2409927940366037
+          },
+          {
+            "axis": 1,
+            "command_filtered_RMSE_rad": 0.17196682576207467,
+            "filtered_actual_RMSE_rad": 0.0025185972487180245,
+            "command_RMS_rad": 0.20339091246739704,
+            "actual_RMS_rad": 0.12695022982407764
+          },
+          {
+            "axis": 2,
+            "command_filtered_RMSE_rad": 0.7174121760679044,
+            "filtered_actual_RMSE_rad": 0.011292551782651806,
+            "command_RMS_rad": 0.668952014160118,
+            "actual_RMS_rad": 0.2240459280776734
+          },
+          {
+            "axis": 3,
+            "command_filtered_RMSE_rad": 0.38472184533086945,
+            "filtered_actual_RMSE_rad": 0.006044630692813248,
+            "command_RMS_rad": 0.5860060220263444,
+            "actual_RMS_rad": 0.5023788771676214
+          }
+        ],
+        "min_forward_velocity_mm_s": 7.483206746683011,
+        "max_forward_velocity_mm_s": 8.047454766865659
+      }
+    ],
+    "motion_prefix_max_difference": 0.0,
+    "actual_angle_serialization_max_difference_rad": 4.984129999829889E-07,
+    "minimum_forward_position_mm": -0.0187121871859,
+    "negative_velocity_sample_times_s": [
+      0.15,
+      0.2,
+      0.25,
+      0.3
+    ],
+    "positive_velocity_after_initial_reverse_s": 0.35,
+    "original_position_repassed_s": 0.4,
+    "last_forward_velocity_below7_2_before8_s": 2.8
+  }
+]

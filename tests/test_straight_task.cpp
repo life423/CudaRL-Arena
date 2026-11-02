@@ -3,6 +3,56 @@
 #include "rl/ppo_math.h"
 namespace st = cudarl::straight_motor;
 namespace p = cudarl::physics;
+TEST_CASE(
+    "frozen_long_initial: poses0and3 preserve exact initialization across60and300s (zero integration)") {
+    for (int pose : {0, 3}) {
+        auto w = st::initial_world(pose);
+        w.arena = {3.f, .4f};
+        auto c = st::config_for_speed(.008f);
+        c.maximum_controls = 6000;
+        c.observation_schema = 2;
+        st::ForwardTask t;
+        CHECK(st::begin_forward(w, c, t));
+        const auto &b = w.physical.body;
+        const auto root = b.position * p::scale, com = t.start_com_model * p::scale;
+        CHECK(b.position.x == (float(pose) - 1.5f) * .02f && b.position.y == -2 && b.position.z == 0);
+        CHECK(b.angle[0] == (pose == 0 ? -.02f : .02f) && b.angle[2] == -b.angle[0]);
+        CHECK(b.angle[1] == 0 && b.angle[3] == 0 && t.start_com_model.y == -2);
+        for (float velocity : b.velocity)
+            CHECK(velocity == 0);
+        for (int j = 0; j < 4; ++j)
+            CHECK(w.physical.held_targets[j] == b.angle[j] && w.reference_rate[j] == 0);
+        CHECK(w.attempted_substeps == 0 && w.physical.control_steps == 0 && w.physical.time_seconds == 0);
+        float longer[40], shorter[40];
+        CHECK(st::observe(t, w, c, longer));
+        auto original_world = st::initial_world(pose);
+        original_world.arena = st::long_swim_arena();
+        auto original_config = c;
+        original_config.maximum_controls = 1200;
+        st::ForwardTask original_task;
+        CHECK(st::begin_forward(original_world, original_config, original_task));
+        CHECK(st::observe(original_task, original_world, original_config, shorter));
+        for (int j = 0; j < 40; ++j)
+            CHECK(longer[j] == shorter[j]);
+        std::printf("INITIAL_LONG_POSE "
+                    "{\"pose\":%d,\"root_m\":[%.12g,%.12g,%.12g],\"quaternion_xyzw\":[%.12g,%.12g,%.12g,%."
+                    "12g],\"COM_target_m\":[%.12g,%.12g,%.12g],\"heading\":[%.12g,%.12g,%.12g],\"target_"
+                    "velocity_m_s\":[%.12g,%.12g,%.12g],\"joint_angles_rad\":[",
+                    pose, root.x, root.y, root.z, b.orientation.x, b.orientation.y, b.orientation.z,
+                    b.orientation.w, com.x, com.y, com.z, t.request.heading.x, t.request.heading.y,
+                    t.request.heading.z, t.request.terminal_velocity.x, t.request.terminal_velocity.y,
+                    t.request.terminal_velocity.z);
+        for (int j = 0; j < 4; ++j)
+            std::printf("%s%.12g", j ? "," : "", b.angle[j]);
+        std::printf("],\"held_targets_rad\":[");
+        for (int j = 0; j < 4; ++j)
+            std::printf("%s%.12g", j ? "," : "", w.physical.held_targets[j]);
+        std::printf("],\"generalized_velocities\":[");
+        for (int j = 0; j < 10; ++j)
+            std::printf("%s%.12g", j ? "," : "", b.velocity[j]);
+        std::printf("],\"filter_rates_rad_s\":[0,0,0,0],\"time_s\":0,\"physics_steps\":0}\n");
+    }
+}
 TEST_CASE("stopping_prepare: zero request preserves references and exposes goal without warmup reset") {
     st::TrainingEpisode lesson;
     lesson.controls = 1280;

@@ -1,0 +1,178 @@
+[
+  {
+    "pose": 0,
+    "seconds": 300,
+    "completed_controls": 6000,
+    "passed_windows": 74,
+    "total_windows": 75,
+    "formal_case_pass": false,
+    "distance_mm": 2433.47021484,
+    "scored_speed_mm_s": 8.147439678230773,
+    "full_vector_RMSE_mm_s": 0.9711748921113063,
+    "speed0to2_mm_s": 2.766595363615,
+    "speed2to4_mm_s": 7.02601480484,
+    "speed4to8_mm_s": 7.82785463333,
+    "later_window_min_mm_s": 7.82785463333,
+    "later_window_max_mm_s": 8.30128765106,
+    "max_depth_mm": 0.456027984619,
+    "final_depth_mm": 0.0784873887897,
+    "max_lane_mm": 0.964791357517,
+    "final_lane_mm": 0.00476250099018,
+    "final_lateral_signed_mm": -0.00476837158203,
+    "peak_tilt_deg": 8.82788181305,
+    "maximum_window_path_deg": 1.72102880478,
+    "maximum_window_work_J_per_m": 0.00028273765929,
+    "minimum_clearance_mm": 65.806892395,
+    "events": {
+      "tilt": {
+        "limit": 10,
+        "first_exit_s": null,
+        "first_exit_value": null,
+        "first_return_s": null
+      },
+      "lane": {
+        "limit": 2,
+        "first_exit_s": null,
+        "first_exit_value": null,
+        "first_return_s": null
+      },
+      "depth": {
+        "limit": 1,
+        "first_exit_s": null,
+        "first_exit_value": null,
+        "first_return_s": null
+      }
+    },
+    "late30_depth_slope_mm_s": -6.87686687545738E-06,
+    "late30_signed_lane_slope_mm_s": 7.263786571908633E-05,
+    "late30_mean_vy_mm_s": 0.0016512816014190644,
+    "late30_depth_net_mm": -0.020108222961399996,
+    "late30_signed_lane_net_mm": 0.24908781051596998,
+    "tail_last30": [
+      {
+        "axis": 0,
+        "peak_to_peak_rad": 0.671531498432,
+        "rate_RMS_rad_s": 2.0503236703776246,
+        "positive_mean_crossings": 42,
+        "approx_cycles_per_s": 1.4
+      },
+      {
+        "axis": 1,
+        "peak_to_peak_rad": 0.1420254334803,
+        "rate_RMS_rad_s": 0.4562503738152558,
+        "positive_mean_crossings": 42,
+        "approx_cycles_per_s": 1.4
+      },
+      {
+        "axis": 2,
+        "peak_to_peak_rad": 0.662035495043,
+        "rate_RMS_rad_s": 2.023872506568953,
+        "positive_mean_crossings": 42,
+        "approx_cycles_per_s": 1.4
+      },
+      {
+        "axis": 3,
+        "peak_to_peak_rad": 0.342350065708,
+        "rate_RMS_rad_s": 1.063554352832947,
+        "positive_mean_crossings": 41,
+        "approx_cycles_per_s": 1.3666666666666667
+      }
+    ],
+    "first60_prefix_max_difference": {
+      "forward_mm": 0.0,
+      "signed_depth_mm": 0.0,
+      "lane_mm": 0.0,
+      "tilt_deg": 0.0,
+      "vy_mm_s": 0.0,
+      "clearance_mm": 0.0
+    }
+  },
+  {
+    "pose": 3,
+    "seconds": 300,
+    "completed_controls": 6000,
+    "passed_windows": 74,
+    "total_windows": 75,
+    "formal_case_pass": false,
+    "distance_mm": 2434.46166992,
+    "scored_speed_mm_s": 8.149954131779362,
+    "full_vector_RMSE_mm_s": 0.9700150402507145,
+    "speed0to2_mm_s": 2.887669324875,
+    "speed2to4_mm_s": 7.11620807648,
+    "speed4to8_mm_s": 7.8391919136,
+    "later_window_min_mm_s": 7.8391919136,
+    "later_window_max_mm_s": 8.28636455536,
+    "max_depth_mm": 0.350713729858,
+    "final_depth_mm": 0.0777101516724,
+    "max_lane_mm": 0.851649224758,
+    "final_lane_mm": 0.00896828342229,
+    "final_lateral_signed_mm": 0.00898540019989,
+    "peak_tilt_deg": 9.35767364502,
+    "maximum_window_path_deg": 1.48821091652,
+    "maximum_window_work_J_per_m": 0.000278564693872,
+    "minimum_clearance_mm": 65.9122772217,
+    "events": {
+      "tilt": {
+        "limit": 10,
+        "first_exit_s": null,
+        "first_exit_value": null,
+        "first_return_s": null
+      },
+      "lane": {
+        "limit": 2,
+        "first_exit_s": null,
+        "first_exit_value": null,
+        "first_return_s": null
+      },
+      "depth": {
+        "limit": 1,
+        "first_exit_s": null,
+        "first_exit_value": null,
+        "first_return_s": null
+      }
+    },
+    "late30_depth_slope_mm_s": -1.8799128502788628E-05,
+    "late30_signed_lane_slope_mm_s": 0.00013218918074540882,
+    "late30_mean_vy_mm_s": 0.0016257817143091606,
+    "late30_depth_net_mm": -0.020098686218200004,
+    "late30_signed_lane_net_mm": 0.25822222232789,
+    "tail_last30": [
+      {
+        "axis": 0,
+        "peak_to_peak_rad": 0.671507418155,
+        "rate_RMS_rad_s": 2.050107411142508,
+        "positive_mean_crossings": 42,
+        "approx_cycles_per_s": 1.4
+      },
+      {
+        "axis": 1,
+        "peak_to_peak_rad": 0.1420118138196,
+        "rate_RMS_rad_s": 0.45637488954791045,
+        "positive_mean_crossings": 42,
+        "approx_cycles_per_s": 1.4
+      },
+      {
+        "axis": 2,
+        "peak_to_peak_rad": 0.6620968878269999,
+        "rate_RMS_rad_s": 2.024105604701295,
+        "positive_mean_crossings": 42,
+        "approx_cycles_per_s": 1.4
+      },
+      {
+        "axis": 3,
+        "peak_to_peak_rad": 0.342333644628,
+        "rate_RMS_rad_s": 1.0632111128987443,
+        "positive_mean_crossings": 41,
+        "approx_cycles_per_s": 1.3666666666666667
+      }
+    ],
+    "first60_prefix_max_difference": {
+      "forward_mm": 0.0,
+      "signed_depth_mm": 0.0,
+      "lane_mm": 0.0,
+      "tilt_deg": 0.0,
+      "vy_mm_s": 0.0,
+      "clearance_mm": 0.0
+    }
+  }
+]

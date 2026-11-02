@@ -1,0 +1,69 @@
+{
+  "identity": "frozen-five-minutes-336-v1",
+  "registered_utc": "2026-11-02T21:33:59.4586765Z",
+  "source_commit": "8bf5268b2fe6558cc4407b2da2399e715c28eaab",
+  "checkpoint_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "source_protocol_sha256": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+  "poses": [
+    0,
+    3
+  ],
+  "seconds_each": 300,
+  "controls_each": 6000,
+  "control_s": 0.05,
+  "physics_s": 0.005,
+  "filter_Hz": 1,
+  "target_speed_mm_s": 8,
+  "exploration": false,
+  "training_updates": 0,
+  "optimizer_steps": 0,
+  "model": 6,
+  "reward": 5,
+  "observation_schema": 2,
+  "path_scale_m": 0.002,
+  "arena_m": [
+    6,
+    0.8
+  ],
+  "previous_arena_m": [
+    1.2,
+    0.8
+  ],
+  "only_boundary_change": "Xhalfextent0.6mto3m;Zhalfextent.4munchanged,floor/surfaceunchanged;no reposition/wrap/reset",
+  "initial_pose_unchanged": true,
+  "geometry_clearance_check": {
+    "upper_band_speed_m_s": 0.0088,
+    "upper_band_travel_m": 2.64,
+    "conservative_COM_radius_m": 0.075,
+    "known_max_initial_COM_coordinate_abs_m": 0.007,
+    "max_initial_heading_rad": 0.075,
+    "lane_allowance_m": 0.002,
+    "conservative_Xmargin_m": 0.266,
+    "conservative_Zmargin_m": 0.10818557279996022,
+    "required_clearance_m": 0.01
+  },
+  "windows": "75perpose:2–4s,then4s...296–300s;startupcountsformally;2–300scoredmeanand3DvelocityRMSE",
+  "gates": {
+    "lane_mm": 2,
+    "tilt_deg": 10,
+    "RMSE_mm_s": 2.5,
+    "speed_mm_s": [
+      7.2,
+      8.8
+    ],
+    "work_J_per_m": 0.001,
+    "depth_mm": 1,
+    "path_deg": 5
+  },
+  "counts": {
+    "substeps_cap": 120000,
+    "native_s_cap": 10,
+    "extensions": 0,
+    "retries": 0,
+    "process_s_cap": 15,
+    "controls_cap": 12000
+  },
+  "recording": "COM3Dvelocity/signeddepth/signedlane/clearance/allactualjointanglesandrates",
+  "prefix_check": "Comparefirst60scommonfieldsagainstexistingsaved336two60straces,noextrareplays",
+  "stopping": "Endafter2casesorfirstphysicalsafetystop;nopolicyupdateorpostruntraining"
+}

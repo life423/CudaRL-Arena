@@ -552,28 +552,35 @@ struct Sustained {
     std::string safety_fault;
 };
 void state_json(std::ostream &out, const p::BodyState &body);
-Sustained sustained(const std::vector<float> &params, const fs::path &root, Budget &budget) {
+Sustained sustained(const std::vector<float> &params, const fs::path &root, Budget &budget,
+                    int duration_controls = 1200, cudarl::contact::Arena arena = m::long_swim_arena()) {
+    require(duration_controls == 1200 || duration_controls == 6000, "Unsupported frozen duration");
     nn::CpuMlp<float> actor(spec(actions));
     actor.params() = params;
     Sustained result;
     std::ofstream trace(root / "sustained-windows.csv");
+    trace << std::setprecision(12);
     trace << "pose,end_s,mean_mm_s,RMSE_mm_s,lateral_mm,depth_mm,tilt_deg,path_deg,work_J_per_m,passed\n";
     std::ofstream controls(root / "sustained-controls.csv");
     controls << std::setprecision(12)
-             << "pose,control,time_s,forward_mm,signed_depth_mm,lane_mm,tilt_deg,vy_mm_s,clearance_mm\n";
+             << "pose,control,time_s,forward_mm,signed_depth_mm,lane_mm,tilt_deg,vy_mm_s,clearance_mm,vx_mm_"
+                "s,vz_mm_s,lateral_signed_mm";
+    for (int j = 0; j < 4; ++j)
+        controls << ",angle" << j << ",rate" << j;
+    controls << '\n';
     for (int pose : {0, 3}) {
         auto world = m::initial_world(pose);
-        world.arena = m::long_swim_arena();
+        world.arena = arena;
         auto config = m::config_for_speed(.008f);
         config.observation_schema = training_episode.observation_schema;
-        config.maximum_controls = 1200;
+        config.maximum_controls = duration_controls;
         m::ForwardTask task;
         require(m::begin_forward(world, config, task), "Long evaluation initialization failed");
         auto origin = cudarl::motor::motion(world.physical.body).com_model;
         float work0 = world.physical.body.work;
         double error2 = 0;
         bool all = true;
-        for (int tick = 0; tick < 1200; ++tick) {
+        for (int tick = 0; tick < duration_controls; ++tick) {
             float obs[observations]{};
             require(m::observe(task, world, config, obs), "Long observation failed");
             actor.forward(obs, 1);
@@ -609,7 +616,14 @@ Sustained sustained(const std::vector<float> &params, const fs::path &root, Budg
                      << (motion.com_model.y - task.start_com_model.y) * p::scale * 1000 << ','
                      << interval.metrics.lateral_m * 1000 << ',' << interval.metrics.tilt_deg << ','
                      << motion.velocity_m_s.y * 1000 << ','
-                     << cudarl::movement::clearance(world.physical.body, true, world.arena) * 1000 << '\n';
+                     << cudarl::movement::clearance(world.physical.body, true, world.arena) * 1000 << ','
+                     << motion.velocity_m_s.x * 1000 << ',' << motion.velocity_m_s.z * 1000 << ','
+                     << p::dot((motion.com_model - task.start_com_model) * p::scale,
+                               p::cross({0, 1, 0}, task.request.heading)) *
+                            1000;
+            for (int j = 0; j < 4; ++j)
+                controls << ',' << world.physical.body.angle[j] << ',' << world.physical.body.velocity[6 + j];
+            controls << '\n';
             if (tick >= 40)
                 error2 += interval.metrics.speed_error_m_s * interval.metrics.speed_error_m_s;
             if (tick == 39) {
@@ -873,7 +887,7 @@ bool preserved_long_windows(const fs::path &root) {
     }
     return rows_seen == 30;
 }
-int frozen_sustained(const fs::path &root) {
+int frozen_sustained(const fs::path &root, bool five_minutes = false) {
     const auto original = cp::read((root / "checkpoint.bin").string());
     const auto source_protocol = cp::read((root / "protocol.bin").string());
     const auto policy = rl::read_ppo_actor(original, cp::checksum(source_protocol), seed, 2);
@@ -888,18 +902,25 @@ int frozen_sustained(const fs::path &root) {
     const auto begin = utc();
     std::cout << std::setprecision(17) << "FROZEN_SUSTAINED_STARTED unix_seconds=" << begin << std::endl;
     Budget budget;
-    budget.maximum_controls = 2400;
-    budget.maximum_substeps = 24000;
+    const int duration_controls = five_minutes ? 6000 : 1200;
+    const cudarl::contact::Arena arena =
+        five_minutes ? cudarl::contact::Arena{3.f, .4f} : m::long_swim_arena();
+    require(cudarl::contact::valid_arena(arena), "Invalid frozen arena");
+    budget.maximum_controls = 2 * duration_controls;
+    budget.maximum_substeps = 20 * duration_controls;
     budget.seconds = 10;
-    const auto result = sustained(policy.parameters, root, budget);
+    const auto result = sustained(policy.parameters, root, budget, duration_controls, arena);
     require(cp::read((root / "checkpoint.bin").string()) == original &&
                 cp::read((root / "protocol.bin").string()) == source_protocol,
             "Frozen sustained inputs changed");
     if (result.safety_fault.empty())
-        require(budget.controls == 2400 && budget.substeps == 24000 && result.completed_poses == 2,
+        require(budget.controls == 2 * duration_controls && budget.substeps == 20 * duration_controls &&
+                    result.completed_poses == 2,
                 "Frozen sustained accounting mismatch");
     std::ofstream out(root / "result.json");
     out << std::setprecision(17) << "{\"update\":336,\"training_updates\":0,\"optimizer_steps\":0"
+        << ",\"seconds_per_pose\":" << duration_controls * .05
+        << ",\"arena_width_m\":" << arena.half_width_m * 2 << ",\"arena_depth_m\":" << arena.half_depth_m * 2
         << ",\"start_unix_seconds\":" << begin << ",\"end_unix_seconds\":" << utc()
         << ",\"completed_poses\":" << result.completed_poses << ",\"passed_poses\":" << result.passed
         << ",\"windows_passed\":" << result.windows_passed << ",\"windows_total\":" << result.windows_total
@@ -3064,6 +3085,8 @@ int main(int argc, char **argv) {
             return verify_path_scale(root);
         if (std::string(argv[1]) == "--frozen-sustained")
             return frozen_sustained(root);
+        if (std::string(argv[1]) == "--frozen-five-minutes")
+            return frozen_sustained(root, true);
         if (std::string(argv[1]) == "--verify-resume")
             return verify_resume(root);
         if (std::string(argv[1]) == "--neutral-pitch" || std::string(argv[1]) == "--neutral-pitch-continue")
