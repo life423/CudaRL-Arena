@@ -1,0 +1,18 @@
+CUDA device: present
+
+    36 CPU/CUDA reward/offset cases, maximum defined-field difference 4.76837158e-07; zero physics
+PASS  straight_reward5 CUDA: fixed reference and decomposed reward match CPU (zero integration)     77.5 ms
+    below0.5mm per50ms: depart -0.000820290297, hold -0.000673807459, recover -0.000624980836; near0.1mm fast -0.000730079890, settle -0.000024996372
+PASS  straight_reward5: symmetric recovery and near-target braking apply from first step (synthetic)      0.3 ms
+    synthetic useful1.8deg pitch reward -0.000641199993 vs level hold -0.000673828123, pointing-only -0.000690028130
+PASS  straight_reward5: head roll and pitch separate while combined tilt acceptance stays10degrees      0.0 ms
+    synthetic8s reward: hold -0.107812501, recover -0.012186015, oscillate -0.208118840, settled0
+PASS  straight_reward5: settled optimum beats bounded recovery and oscillation (synthetic trajectories)      0.0 ms
+PASS  straight_reward5: lane depth and head tilt cost apply from first control through startup boundary      0.1 ms
+PASS  straight_reward5: posture uses head up yaw invariant and does not punish tail bending as tilt      0.0 ms
+PASS  straight_reward5: meaningful progress outweighs all near-limit soft state costs      0.0 ms
+PASS  straight_reward5: interval40 is warmup and41 is scored, effort always charged (zero integration)      0.0 ms
+PASS  straight_reward5: warmup safety and work are not discarded (zero integration)      0.4 ms
+PASS  straight_reward5: later scored costs retain full-return credit to warmup (zero integration)      0.0 ms
+
+10/10 tests passed, 0 skipped

@@ -96,3 +96,63 @@ A usable holding milestone requires4/4short,6/6stop/hold, and every previously
 passing4-60s window retained. No automatic viewer adoption. No300s cases, new
 32/64s pure-swimming recovery study or indefinite-performance claim is authorized
 by this study. Preserve all candidates, failures, protocol and actual resource use.
+
+## Completed result: rejected
+
+Training started2026-11-04T17:11:06.755Z; first update337 completed17:11:08.615Z.
+Process launched17:11:05.053Z and ended17:12:02.688Z(exit0,57.628s).
+Completed32updates336->368,1310720training+40544evaluation=1351264controls,
+13512640substeps,10240additional Adam steps per network(final31940each).
+No physical/numerical safety stop, retry or extension. Training is stopped.
+
+| Stage | Original short swims | Stop+hold | Worst depth/lane/tilt across6stop cases | Worst final8s anchor error |60s windows |
+|---|---|---|---|---|---|
+|336,new hold inputs,no updates |4/4 |0/6 |7.53mm /6.83mm /123.80deg |70.11mm |Historical28/30 |
+|344 |0/4 |0/6 |8.23mm /2.54mm /120.55deg |66.57mm |28/30 |
+|352 |0/4 |0/6 |8.92mm /1.35mm /117.48deg |65.53mm |28/30 |
+|368 |0/4 |0/6 |9.00mm /5.96mm /119.53deg |64.45mm |0/30 |
+
+Final speeds0.1060-0.1065mm/s are low, but permanent low speed occurs18.7s
+after request, missing the16s deadline. Every stage fails stopping deadline,
+holding and whole-body state gates. Low late drift is not target holding: the
+creature remains~64mm away,~9mm below target and greatly overtilted. Final short
+mean speed6.3556mm/s is below7.2minimum; pure60s swimming also regresses. Earlier
+344/352 retain28previous4-60s windows but fail short startup speed. No adoption.
+
+The new input interface itself destabilizes inherited336 before learning:
+historical zero-goal baseline keeps tilt8.83/9.36degrees but continues8.37/8.41mm/s;
+same weights with longitudinal hold error slow down while tilting~124degrees.
+Across1280centered precommand controls, ten common motion fields match exactly.
+This isolates a compatibility problem rather than evidence that336 could hold.
+The stronger reward also changes return scale substantially(first-update mean
+-92.43,std141.29), so simply extending this run is not justified.
+
+Both networks and both Adam moments/counters restore exactly; only planned actor
+LR differs. All4joint outputs and actual rates/last torques are recorded, along
+with signed head roll/pitch. No joint/posture clamp, scripted body action or
+physics change was introduced. Static buoyancy/righting remain as inspected.
+
+Build and31focused CPU/CUDA checks pass,0skips. Actual8holding synthetic
+CPU/CUDA cases agree within3.82e-6; production mixed observation kernel passes.
+Post32s20480reward rows and126minibatch rows with nonzero policy gradients
+reach PPO; GAE absolute discrepancy2.13e-4 is within existing scale-aware tolerance.
+Three saved candidate checkpoints reload at344/352/368 with both Adam counters
+24260/26820/31940 and zero dynamics/optimizer updates. A stale legacy test that
+treated reward7 as unknown was fixed before launch; unknown9still rejects.
+
+Two generic readiness labels were corrected after the completed run: holding's
+actual wrapper cap is180s and its regression evaluation is unconditional. Frozen
+original evidence remains unchanged; a zero-step metadata preparation confirms
+the correction. No extra training or physical evaluation was run.
+
+Preserve all candidates as rejected, original336 unchanged, and unrelated Godot
+edits/evidence untouched. Durable record:
+assets/ppo-four-axis-checkpoints/position-hold-r8-336to368-rejected.
+Full per-control traces and executable/source snapshot remain in the ignored run
+directory. No push/merge/viewer installation. The one study is closed.
+
+Next proposal: retain existing lane/depth feature semantics and add longitudinal
+holding information through a migration initialized to preserve336outputs;
+use a gradual bounded curriculum and balanced reward scales. This is a proposal,
+not a demonstrated cure or permission for an automatic new trial. No successful
+position/depth hold, disturbance recovery or indefinite performance is claimed.

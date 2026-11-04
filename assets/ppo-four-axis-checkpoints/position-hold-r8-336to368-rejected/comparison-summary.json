@@ -1,0 +1,238 @@
+[
+  {
+    "update": 336,
+    "short_passes": 4,
+    "short_total": 4,
+    "short_mean_speed_mm_s": 7.579387499999999,
+    "stop_passes": 0,
+    "stop_total": 6,
+    "stop_deadline_passes": 0,
+    "hold_passes": 0,
+    "whole_state_passes": 0,
+    "pre_swim_passes": 6,
+    "final_speed_range_mm_s": [
+      0.100016407669,
+      0.100349724293
+    ],
+    "permanent_stop_relative_range_s": [
+      18.3500022888,
+      18.4000015259
+    ],
+    "maximum_depth_mm": 7.53457069397,
+    "maximum_lane_mm": 6.83201646805,
+    "peak_tilt_deg": 123.799133301,
+    "maximum_anchor_error_final8_mm": 70.1147003174,
+    "maximum_hold_excursion_mm": 1.26147270203,
+    "long_windows_passed": 0,
+    "long_windows_total": 0,
+    "retained4to60_windows": 0,
+    "first_tilt_exit_s": 0.65,
+    "case0_late_joint_motion": [
+      {
+        "command_max": -0.728006005287,
+        "last_torque_max_abs": 7.40974144264E-07,
+        "axis": 0,
+        "late_rate_RMS_rad_s": 0.000895322291360211,
+        "command_min": -0.734147667885
+      },
+      {
+        "command_max": 0.76535487175,
+        "last_torque_max_abs": 3.74824935534E-06,
+        "axis": 1,
+        "late_rate_RMS_rad_s": 0.0029919989548053433,
+        "command_min": 0.742340445518
+      },
+      {
+        "command_max": -0.993034005165,
+        "last_torque_max_abs": 6.4422433752E-06,
+        "axis": 2,
+        "late_rate_RMS_rad_s": 8.723642295933248E-05,
+        "command_min": -0.993707120419
+      },
+      {
+        "command_max": 0.99053388834,
+        "last_torque_max_abs": 1.69759607616E-06,
+        "axis": 3,
+        "late_rate_RMS_rad_s": 0.0001082473018286782,
+        "command_min": 0.989716112614
+      }
+    ]
+  },
+  {
+    "update": 344,
+    "short_passes": 0,
+    "short_total": 4,
+    "short_mean_speed_mm_s": 7.1046625,
+    "stop_passes": 0,
+    "stop_total": 6,
+    "stop_deadline_passes": 0,
+    "hold_passes": 0,
+    "whole_state_passes": 0,
+    "pre_swim_passes": 6,
+    "final_speed_range_mm_s": [
+      0.0977223291993,
+      0.0980398580432
+    ],
+    "permanent_stop_relative_range_s": [
+      18.1000022888,
+      18.1000022888
+    ],
+    "maximum_depth_mm": 8.23273563385,
+    "maximum_lane_mm": 2.53770422935,
+    "peak_tilt_deg": 120.552505493,
+    "maximum_anchor_error_final8_mm": 66.5679626465,
+    "maximum_hold_excursion_mm": 1.23938918114,
+    "long_windows_passed": 28,
+    "long_windows_total": 30,
+    "retained4to60_windows": 28,
+    "first_tilt_exit_s": 32.9,
+    "case0_late_joint_motion": [
+      {
+        "command_max": -0.682888627052,
+        "last_torque_max_abs": 1.76966398158E-06,
+        "axis": 0,
+        "late_rate_RMS_rad_s": 0.0016742409217440648,
+        "command_min": -0.695188045502
+      },
+      {
+        "command_max": 0.797595858574,
+        "last_torque_max_abs": 3.93318578062E-06,
+        "axis": 1,
+        "late_rate_RMS_rad_s": 0.0027214679595866033,
+        "command_min": 0.776692807674
+      },
+      {
+        "command_max": -0.991619110107,
+        "last_torque_max_abs": 5.74602290726E-06,
+        "axis": 2,
+        "late_rate_RMS_rad_s": 0.00010397515940560726,
+        "command_min": -0.992426097393
+      },
+      {
+        "command_max": 0.992101311684,
+        "last_torque_max_abs": 1.29308193664E-06,
+        "axis": 3,
+        "late_rate_RMS_rad_s": 8.895722465081089E-05,
+        "command_min": 0.99143499136
+      }
+    ]
+  },
+  {
+    "update": 352,
+    "short_passes": 0,
+    "short_total": 4,
+    "short_mean_speed_mm_s": 7.0934125,
+    "stop_passes": 0,
+    "stop_total": 6,
+    "stop_deadline_passes": 0,
+    "hold_passes": 0,
+    "whole_state_passes": 0,
+    "pre_swim_passes": 6,
+    "final_speed_range_mm_s": [
+      0.0997395217419,
+      0.100049510598
+    ],
+    "permanent_stop_relative_range_s": [
+      18.2000007629,
+      18.25
+    ],
+    "maximum_depth_mm": 8.92319583893,
+    "maximum_lane_mm": 1.34893965721,
+    "peak_tilt_deg": 117.484397888,
+    "maximum_anchor_error_final8_mm": 65.5308761597,
+    "maximum_hold_excursion_mm": 1.2566447258,
+    "long_windows_passed": 28,
+    "long_windows_total": 30,
+    "retained4to60_windows": 28,
+    "first_tilt_exit_s": 32.85,
+    "case0_late_joint_motion": [
+      {
+        "command_max": -0.527337908745,
+        "last_torque_max_abs": 1.15187162919E-06,
+        "axis": 0,
+        "late_rate_RMS_rad_s": 0.0016061518061849193,
+        "command_min": -0.539223968983
+      },
+      {
+        "command_max": 0.841656625271,
+        "last_torque_max_abs": 1.41081204674E-06,
+        "axis": 1,
+        "late_rate_RMS_rad_s": 0.002157857648139866,
+        "command_min": 0.825164914131
+      },
+      {
+        "command_max": -0.980313718319,
+        "last_torque_max_abs": 6.17691102889E-06,
+        "axis": 2,
+        "late_rate_RMS_rad_s": 0.0002701425311322478,
+        "command_min": -0.982422053814
+      },
+      {
+        "command_max": 0.994243502617,
+        "last_torque_max_abs": 2.70209852715E-06,
+        "axis": 3,
+        "late_rate_RMS_rad_s": 8.488062326818774E-05,
+        "command_min": 0.99361795187
+      }
+    ]
+  },
+  {
+    "update": 368,
+    "short_passes": 0,
+    "short_total": 4,
+    "short_mean_speed_mm_s": 6.355572499999999,
+    "stop_passes": 0,
+    "stop_total": 6,
+    "stop_deadline_passes": 0,
+    "hold_passes": 0,
+    "whole_state_passes": 0,
+    "pre_swim_passes": 0,
+    "final_speed_range_mm_s": [
+      0.106017909944,
+      0.106497876346
+    ],
+    "permanent_stop_relative_range_s": [
+      18.7000007629,
+      18.7000007629
+    ],
+    "maximum_depth_mm": 9.00374317169,
+    "maximum_lane_mm": 5.95518636703,
+    "peak_tilt_deg": 119.526565552,
+    "maximum_anchor_error_final8_mm": 64.4527740479,
+    "maximum_hold_excursion_mm": 1.29842758179,
+    "long_windows_passed": 0,
+    "long_windows_total": 30,
+    "retained4to60_windows": 0,
+    "first_tilt_exit_s": 33.3,
+    "case0_late_joint_motion": [
+      {
+        "command_max": -0.361271321774,
+        "last_torque_max_abs": 7.98124005996E-07,
+        "axis": 0,
+        "late_rate_RMS_rad_s": 0.0019037651461732879,
+        "command_min": -0.375565826893
+      },
+      {
+        "command_max": 0.904955565929,
+        "last_torque_max_abs": 6.55348276268E-06,
+        "axis": 1,
+        "late_rate_RMS_rad_s": 0.0014214668492004842,
+        "command_min": 0.894193410873
+      },
+      {
+        "command_max": -0.973979234695,
+        "last_torque_max_abs": 7.00860164216E-06,
+        "axis": 2,
+        "late_rate_RMS_rad_s": 0.0003922293026952264,
+        "command_min": -0.977028310299
+      },
+      {
+        "command_max": 0.99016982317,
+        "last_torque_max_abs": 4.38466076957E-06,
+        "axis": 3,
+        "late_rate_RMS_rad_s": 0.0001541453328368654,
+        "command_min": 0.989018857479
+      }
+    ]
+  }
+]

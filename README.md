@@ -6,7 +6,15 @@ presentation only. The motor supplies four independent joint-angle targets throu
 
 ## Current state
 
-Training is stopped. The November4 half-rate startup trial is preserved in
+Training is stopped. The November4 position/depth-hold lesson is preserved as
+rejected in `assets/ppo-four-axis-checkpoints/position-hold-r8-336to368-rejected`.
+It completed32updates but passed0/6holding cases at every assessment and regressed
+short swimming to0/4. Low final speed was accompanied by large position/depth
+error and~120degree tilt, so this is not successful holding. Original336 remains
+unchanged. [Protocol and results](docs/POSITION_HOLD_2026-11-04.md) identify the
+new full-position input's incompatibility with the inherited policy.
+
+The earlier November4 half-rate startup trial is preserved in
 `assets/ppo-four-axis-checkpoints/startup-speed-r7-half-rate-336to352-rejected`.
 It completed16updates and improved2-4s speed, but344 still exceeds the10degree
 tilt limit (10.0813degrees);352 regresses further. Neither candidate qualifies.

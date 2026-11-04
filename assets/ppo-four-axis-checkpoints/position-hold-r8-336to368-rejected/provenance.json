@@ -1,0 +1,355 @@
+{
+  "status": "REJECTED; slowing is not controlled position/depth holding; retain original336",
+  "source_commit": "0fda90089db1392e7d32909a7ec1604acbd1afc6",
+  "source_run": "build/ppo/position-hold-r8-336to368-v1",
+  "original_baseline": "../update-336-episode64/ppo-update-336.bin",
+  "original_baseline_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "original_baseline_unchanged": true,
+  "protocol_sha256": "C09795F7E4D46AD956D59372B13848490FA668B6E90AAD621FF1BDA5F67756B6",
+  "reward": 8,
+  "observation_schema": 3,
+  "checkpoint_schema": 4,
+  "protocol_version": 15,
+  "saved_checkpoints": [
+    {
+      "sha256": "82AB9FE9D2273641353B85A6AA9A5C034BF8541FE53D7338D0213AA7AA1A876A",
+      "name": "ppo-update-336.bin"
+    },
+    {
+      "sha256": "1B1B6AA83F134894BEFDFAE2ADE36471C1BF5E81A086C3FCC781FC525510E3F8",
+      "name": "ppo-update-344.bin"
+    },
+    {
+      "sha256": "22AE58247F83DE35276539B8A845F97D6E215B614CE08F87D742041F55E043FE",
+      "name": "ppo-update-352.bin"
+    },
+    {
+      "sha256": "0333D6303202D1BFA8C6F5A06B9645B199EE7D03AC96640DDD1FDB9FAF14D5A8",
+      "name": "ppo-update-360.bin"
+    },
+    {
+      "sha256": "DC5B62C7C3282F71BD94B7FECD29916513460CA97ED4B47D5EC34AD955D15D2B",
+      "name": "ppo-update-368.bin"
+    }
+  ],
+  "derived336_note": "ppo-update-336.bin HERE is a copied initial training state tagged reward8/schema3 with half actor LR, not a replacement for original336; all parameter and Adam values restored unchanged",
+  "intended_change": "Fixed horizontal anchor with original depth, full position-error input only at zero goal,1mm/s reward scale,50percent sustained-swimming worlds; all4joints remain NN outputs",
+  "actor_lr": 0.000125,
+  "critic_lr": 0.001,
+  "tilt_gate_deg": 10,
+  "physics_changed": false,
+  "posture_clamp": false,
+  "actual_training_started_utc": "2026-11-04T17:11:06.7550000+00:00",
+  "execution": {
+    "launched_utc": "2026-11-04T17:11:05.0526528Z",
+    "cwd": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation",
+    "phase": "completed",
+    "command": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\position-hold-r8-336to368-v1/holding-runner.exe --run \"C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\position-hold-r8-336to368-v1\" --hold-position 1 --actor-lr 0.000125 --depth-offsets 1 --episode-controls 1280 --updates 32",
+    "exit_code": 0,
+    "completed_utc": "2026-11-04T17:12:02.6883673Z",
+    "pid": 8628,
+    "wall_seconds": 57.6277071
+  },
+  "starting_update": 336,
+  "completed_update": 368,
+  "additional_updates": 32,
+  "training_controls": 1310720,
+  "evaluation_controls": 40544,
+  "all_controls": 1351264,
+  "all_substeps": 13512640,
+  "optimizer_steps_added_each": 10240,
+  "final_Adam_steps_each": 31940,
+  "stages": [
+    {
+      "update": 336,
+      "short_passes": 4,
+      "short_total": 4,
+      "short_mean_speed_mm_s": 7.579387499999999,
+      "stop_passes": 0,
+      "stop_total": 6,
+      "stop_deadline_passes": 0,
+      "hold_passes": 0,
+      "whole_state_passes": 0,
+      "pre_swim_passes": 6,
+      "final_speed_range_mm_s": [
+        0.100016407669,
+        0.100349724293
+      ],
+      "permanent_stop_relative_range_s": [
+        18.3500022888,
+        18.4000015259
+      ],
+      "maximum_depth_mm": 7.53457069397,
+      "maximum_lane_mm": 6.83201646805,
+      "peak_tilt_deg": 123.799133301,
+      "maximum_anchor_error_final8_mm": 70.1147003174,
+      "maximum_hold_excursion_mm": 1.26147270203,
+      "long_windows_passed": 0,
+      "long_windows_total": 0,
+      "retained4to60_windows": 0,
+      "first_tilt_exit_s": 0.65,
+      "case0_late_joint_motion": [
+        {
+          "command_max": -0.728006005287,
+          "last_torque_max_abs": 7.40974144264E-07,
+          "axis": 0,
+          "late_rate_RMS_rad_s": 0.000895322291360211,
+          "command_min": -0.734147667885
+        },
+        {
+          "command_max": 0.76535487175,
+          "last_torque_max_abs": 3.74824935534E-06,
+          "axis": 1,
+          "late_rate_RMS_rad_s": 0.0029919989548053433,
+          "command_min": 0.742340445518
+        },
+        {
+          "command_max": -0.993034005165,
+          "last_torque_max_abs": 6.4422433752E-06,
+          "axis": 2,
+          "late_rate_RMS_rad_s": 8.723642295933248E-05,
+          "command_min": -0.993707120419
+        },
+        {
+          "command_max": 0.99053388834,
+          "last_torque_max_abs": 1.69759607616E-06,
+          "axis": 3,
+          "late_rate_RMS_rad_s": 0.0001082473018286782,
+          "command_min": 0.989716112614
+        }
+      ]
+    },
+    {
+      "update": 344,
+      "short_passes": 0,
+      "short_total": 4,
+      "short_mean_speed_mm_s": 7.1046625,
+      "stop_passes": 0,
+      "stop_total": 6,
+      "stop_deadline_passes": 0,
+      "hold_passes": 0,
+      "whole_state_passes": 0,
+      "pre_swim_passes": 6,
+      "final_speed_range_mm_s": [
+        0.0977223291993,
+        0.0980398580432
+      ],
+      "permanent_stop_relative_range_s": [
+        18.1000022888,
+        18.1000022888
+      ],
+      "maximum_depth_mm": 8.23273563385,
+      "maximum_lane_mm": 2.53770422935,
+      "peak_tilt_deg": 120.552505493,
+      "maximum_anchor_error_final8_mm": 66.5679626465,
+      "maximum_hold_excursion_mm": 1.23938918114,
+      "long_windows_passed": 28,
+      "long_windows_total": 30,
+      "retained4to60_windows": 28,
+      "first_tilt_exit_s": 32.9,
+      "case0_late_joint_motion": [
+        {
+          "command_max": -0.682888627052,
+          "last_torque_max_abs": 1.76966398158E-06,
+          "axis": 0,
+          "late_rate_RMS_rad_s": 0.0016742409217440648,
+          "command_min": -0.695188045502
+        },
+        {
+          "command_max": 0.797595858574,
+          "last_torque_max_abs": 3.93318578062E-06,
+          "axis": 1,
+          "late_rate_RMS_rad_s": 0.0027214679595866033,
+          "command_min": 0.776692807674
+        },
+        {
+          "command_max": -0.991619110107,
+          "last_torque_max_abs": 5.74602290726E-06,
+          "axis": 2,
+          "late_rate_RMS_rad_s": 0.00010397515940560726,
+          "command_min": -0.992426097393
+        },
+        {
+          "command_max": 0.992101311684,
+          "last_torque_max_abs": 1.29308193664E-06,
+          "axis": 3,
+          "late_rate_RMS_rad_s": 8.895722465081089E-05,
+          "command_min": 0.99143499136
+        }
+      ]
+    },
+    {
+      "update": 352,
+      "short_passes": 0,
+      "short_total": 4,
+      "short_mean_speed_mm_s": 7.0934125,
+      "stop_passes": 0,
+      "stop_total": 6,
+      "stop_deadline_passes": 0,
+      "hold_passes": 0,
+      "whole_state_passes": 0,
+      "pre_swim_passes": 6,
+      "final_speed_range_mm_s": [
+        0.0997395217419,
+        0.100049510598
+      ],
+      "permanent_stop_relative_range_s": [
+        18.2000007629,
+        18.25
+      ],
+      "maximum_depth_mm": 8.92319583893,
+      "maximum_lane_mm": 1.34893965721,
+      "peak_tilt_deg": 117.484397888,
+      "maximum_anchor_error_final8_mm": 65.5308761597,
+      "maximum_hold_excursion_mm": 1.2566447258,
+      "long_windows_passed": 28,
+      "long_windows_total": 30,
+      "retained4to60_windows": 28,
+      "first_tilt_exit_s": 32.85,
+      "case0_late_joint_motion": [
+        {
+          "command_max": -0.527337908745,
+          "last_torque_max_abs": 1.15187162919E-06,
+          "axis": 0,
+          "late_rate_RMS_rad_s": 0.0016061518061849193,
+          "command_min": -0.539223968983
+        },
+        {
+          "command_max": 0.841656625271,
+          "last_torque_max_abs": 1.41081204674E-06,
+          "axis": 1,
+          "late_rate_RMS_rad_s": 0.002157857648139866,
+          "command_min": 0.825164914131
+        },
+        {
+          "command_max": -0.980313718319,
+          "last_torque_max_abs": 6.17691102889E-06,
+          "axis": 2,
+          "late_rate_RMS_rad_s": 0.0002701425311322478,
+          "command_min": -0.982422053814
+        },
+        {
+          "command_max": 0.994243502617,
+          "last_torque_max_abs": 2.70209852715E-06,
+          "axis": 3,
+          "late_rate_RMS_rad_s": 8.488062326818774E-05,
+          "command_min": 0.99361795187
+        }
+      ]
+    },
+    {
+      "update": 368,
+      "short_passes": 0,
+      "short_total": 4,
+      "short_mean_speed_mm_s": 6.355572499999999,
+      "stop_passes": 0,
+      "stop_total": 6,
+      "stop_deadline_passes": 0,
+      "hold_passes": 0,
+      "whole_state_passes": 0,
+      "pre_swim_passes": 0,
+      "final_speed_range_mm_s": [
+        0.106017909944,
+        0.106497876346
+      ],
+      "permanent_stop_relative_range_s": [
+        18.7000007629,
+        18.7000007629
+      ],
+      "maximum_depth_mm": 9.00374317169,
+      "maximum_lane_mm": 5.95518636703,
+      "peak_tilt_deg": 119.526565552,
+      "maximum_anchor_error_final8_mm": 64.4527740479,
+      "maximum_hold_excursion_mm": 1.29842758179,
+      "long_windows_passed": 0,
+      "long_windows_total": 30,
+      "retained4to60_windows": 0,
+      "first_tilt_exit_s": 33.3,
+      "case0_late_joint_motion": [
+        {
+          "command_max": -0.361271321774,
+          "last_torque_max_abs": 7.98124005996E-07,
+          "axis": 0,
+          "late_rate_RMS_rad_s": 0.0019037651461732879,
+          "command_min": -0.375565826893
+        },
+        {
+          "command_max": 0.904955565929,
+          "last_torque_max_abs": 6.55348276268E-06,
+          "axis": 1,
+          "late_rate_RMS_rad_s": 0.0014214668492004842,
+          "command_min": 0.894193410873
+        },
+        {
+          "command_max": -0.973979234695,
+          "last_torque_max_abs": 7.00860164216E-06,
+          "axis": 2,
+          "late_rate_RMS_rad_s": 0.0003922293026952264,
+          "command_min": -0.977028310299
+        },
+        {
+          "command_max": 0.99016982317,
+          "last_torque_max_abs": 4.38466076957E-06,
+          "axis": 3,
+          "late_rate_RMS_rad_s": 0.0001541453328368654,
+          "command_min": 0.989018857479
+        }
+      ]
+    }
+  ],
+  "long_regression": [
+    {
+      "max_lane_mm": 0.878059625626,
+      "passed_windows": 28,
+      "update": 344,
+      "max_tilt_deg": 8.86833572388,
+      "retained4to60_windows": 28,
+      "max_depth_mm": 0.707273483276
+    },
+    {
+      "max_lane_mm": 1.04604411125,
+      "passed_windows": 28,
+      "update": 352,
+      "max_tilt_deg": 8.89852237701,
+      "retained4to60_windows": 28,
+      "max_depth_mm": 0.394158363342
+    },
+    {
+      "max_lane_mm": 1.28234755993,
+      "passed_windows": 0,
+      "update": 368,
+      "max_tilt_deg": 8.03362846375,
+      "retained4to60_windows": 0,
+      "max_depth_mm": 0.349779129028
+    }
+  ],
+  "historical_baseline_input_note": "Original336 under old zero-speed interface ended8.37/8.41mm/s with tilt8.83/9.36deg; new interface alone ends~0.10mm/s but tilt~124deg and~70mm anchor error. Common first32s motion fields match exactly across1280controls; no weights updated in either baseline.",
+  "numerical_verification": {
+    "skipped": 0,
+    "load_checks": 3,
+    "load_optimizer_steps": 0,
+    "actual_CUDA_executed": true,
+    "hold_CPU_CUDA_max_error": 3.81469727E-06,
+    "GAE_within_declared_tolerance": true,
+    "native_build_passed": true,
+    "GAE_max_absolute_error": 0.00021284593424297782,
+    "unrelated_files_hash_verified": 15,
+    "late_rows_with_nonzero_policy_gradient": 126,
+    "metadata_only_check_physical_steps": 0,
+    "load_physical_steps": 0,
+    "late_reward_rows": 20480,
+    "late_optimizer_rows": 126,
+    "focused_tests_passed": 31
+  },
+  "corrected_metadata_note": "After run, corrected generic readiness process cap75->180 for holding and unconditional long-evaluation flag; original frozen readiness preserved. Actual wrapper/native bounds were180s and run57.63s. Metadata-only preparation verified correction; no additional dynamics/training.",
+  "resolved_preflight_issue": "Legacy stopping test incorrectly called already-supported reward7 unknown. It now verifies7 accepted and9 rejected; all31checks pass before launch.",
+  "retries": 0,
+  "extensions": 0,
+  "safety_stops": 0,
+  "candidate_accepted": false,
+  "runtime_adopted": false,
+  "training_stopped": true,
+  "blocker": "Inherited policy is incompatible with full longitudinal path-error inputs: interface-only baseline already flips>120deg.32updates reduce overshoot slightly but do not learn depth/posture/position and regress swimming. Holding criterion0/6 at every assessment.",
+  "next_design_proposal": "Preserve original lane/depth input semantics and introduce longitudinal hold error through an explicitly migrated feature initialized to preserve336outputs; use a gradual bounded holding curriculum and balance reward scales. Requires a new finite protocol; no automatic rerun.",
+  "claim_boundary": "Finite failed study; not hovering, not successful stopping/holding, no indefinite-performance claim"
+}

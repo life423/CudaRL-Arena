@@ -478,13 +478,15 @@ int prepare(const fs::path &root) {
         << ",\"fixed_depth_offsets\":" << (depth_offsets ? "true" : "false")
         << ",\"actor_learning_rate\":" << initial_optimizer_config(true).lr
         << ",\"critic_learning_rate\":" << initial_optimizer_config(false).lr
-        << ",\"long_evaluation_requires_short4of4\":true"
+        << ",\"long_evaluation_requires_short4of4\":"
+        << ((holding || startup_speed) ? "false" : "true")
         << ",\"native_wall_seconds\":" << (verification_mode ? 10 : active_wall_cap)
         << ",\"process_wall_seconds\":"
-        << (depth_offsets
-                ? 75
-                : (verification_mode ? 15
-                                     : (horizon == 640 ? 35 : ((tilt_mixture || updates <= 32) ? 25 : 75))))
+        << (holding ? 180
+                    : (depth_offsets
+                           ? 75
+                           : (verification_mode ? 15
+                                                : (horizon == 640 ? 35 : ((tilt_mixture || updates <= 32) ? 25 : 75)))))
         << ",\"physical_steps\":0,\"optimizer_steps_"
            "performed\":0,\"runtime_adoption\":false,\"retries\":0,\"log_std\":[";
     const auto sigma = policy_sigma();

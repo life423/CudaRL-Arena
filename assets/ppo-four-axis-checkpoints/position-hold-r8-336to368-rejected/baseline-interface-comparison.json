@@ -1,0 +1,19 @@
+{
+  "new_source": "initial-stop/controls.csv",
+  "prefix0to32_max_difference": 0.0,
+  "controls_compared": 1280,
+  "old_source": "build/ppo/stopping-ppo-336to352-v1/initial-stop/controls.csv",
+  "common_motion_fields": [
+    "COM_speed_mm_s",
+    "forward_velocity_mm_s",
+    "vx_mm_s",
+    "vy_mm_s",
+    "vz_mm_s",
+    "forward_mm",
+    "depth_mm",
+    "lane_mm",
+    "tilt_deg",
+    "head_yaw_deg"
+  ],
+  "interpretation": "Same frozen336 precommand motion; new full-position input after command changes physical behavior before any PPO update"
+}
