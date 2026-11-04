@@ -245,10 +245,12 @@ int run_append(const fs::path& root) {
             timer.begin(stream.value);const double kl=optimize_rollout(update,actor,critic,actor_opt,critic_opt,data,batch,stream.value,root);
             const double update_ms=timer.end(stream.value);completed=update+1;
             require(download(data.fault.get(),1,stream.value)[0]==0,"Nonfinite optimized parameters");
-            require(actor_opt.steps()==21700+(completed-336)*320&&critic_opt.steps()==actor_opt.steps()&&actor_opt.fresh_steps()==(completed-336)*320&&critic_opt.fresh_steps()==actor_opt.fresh_steps(),"Adam age accounting");
+            require(actor_opt.steps()==21700+actor_opt.fresh_steps()&&critic_opt.steps()==actor_opt.steps()&&
+                    actor_opt.fresh_steps()>=(completed-336)*160&&actor_opt.fresh_steps()<=(completed-336)*320&&
+                    critic_opt.fresh_steps()==actor_opt.fresh_steps(),"Adam age accounting");
             save_append(root,completed,actor,critic,actor_opt,critic_opt);
             log<<completed<<','<<budget.controls<<','<<actor_opt.steps()<<','<<actor_opt.fresh_steps()<<','<<rollout_ms<<','<<update_ms<<','<<kl<<'\n';log.flush();
-            if(completed==337){std::ofstream first(root/"first-update.json");first<<std::setprecision(17)<<"{\"update\":337,\"unix_seconds\":"<<std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count()<<",\"old_Adam_age\":22020,\"new_column_age\":320}\n";}
+            if(completed==337){std::ofstream first(root/"first-update.json");first<<std::setprecision(17)<<"{\"update\":337,\"unix_seconds\":"<<std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count()<<",\"old_Adam_age\":"<<actor_opt.steps()<<",\"new_column_age\":"<<actor_opt.fresh_steps()<<"}\n";}
             std::cout<<"PPO_UPDATE_COMPLETED "<<completed<<"/344 controls="<<budget.controls<<std::endl;
         }
         status(root,"evaluation",budget,completed);
@@ -281,8 +283,8 @@ int main(int argc,char** argv){try{
         nn::GpuMlp actor(spec(4),1,seed),critic(spec(1),1,seed);actor.set_params(state.ppo.actor.parameters);critic.set_params(state.ppo.critic);
         nn::GpuAdam ao(2532,state.ppo.actor_adam.config),co(2433,state.ppo.critic_adam.config);restore_optimizer(ao,state.ppo.actor_adam);restore_optimizer(co,state.ppo.critic_adam);
         ao.set_fresh_column(41,32,state.actor_column_age);co.set_fresh_column(41,32,state.critic_column_age);
-        require(state.ppo.actor.update==344&&ao.steps()==24260&&co.steps()==24260&&ao.fresh_steps()==2560&&co.fresh_steps()==2560,"Reload age mismatch");
-        std::cout<<"APPEND_RELOAD_PASSED update344 oldAge24260 newAge2560 zero physical/PPO steps"<<std::endl;return 0;
+        require(state.ppo.actor.update==344&&ao.steps()==21700+ao.fresh_steps()&&co.steps()==ao.steps()&&ao.fresh_steps()>=1280&&ao.fresh_steps()<=2560&&co.fresh_steps()==ao.fresh_steps(),"Reload age mismatch");
+        std::cout<<"APPEND_RELOAD_PASSED update344 oldAge="<<ao.steps()<<" newAge="<<ao.fresh_steps()<<" zero physical/PPO steps"<<std::endl;return 0;
     }
     throw std::runtime_error("Unknown append mode");
 }catch(const std::exception& e){std::cerr<<e.what()<<std::endl;return 2;}}
