@@ -71,6 +71,7 @@ struct TrainingEpisode {
     bool stopping = false;
     bool startup_speed = false;
     bool holding = false;
+    bool appended_hold = false;
     int offset_phase = 0;
     CUDARL_HD float initial_vertical_offset(int environment) const {
         if (!fixed_depth_offsets)
@@ -83,7 +84,7 @@ struct TrainingEpisode {
                (controls == 160 || controls == 640 || controls == 1280) && (!stopping || controls == 1280);
     }
     CUDARL_HD contact::Arena arena() const { return controls >= 640 ? long_swim_arena() : contact::Arena{}; }
-    CUDARL_HD int reward_version() const { return holding ? 8 : (startup_speed ? 7 : (stopping ? 6 : kRewardVersion)); }
+    CUDARL_HD int reward_version() const { return appended_hold ? 9 : (holding ? 8 : (startup_speed ? 7 : (stopping ? 6 : kRewardVersion))); }
     CUDARL_HD ForwardConfig task_config(int completed_controls = 0, int environment = 0) const {
         if (stopping || (holding && environment % 2)) {
             auto c = StopSequence{}.config(completed_controls, observation_schema);
@@ -297,6 +298,23 @@ CUDARL_HD inline bool observe(const ForwardTask &t, const World &w, const Forwar
         if (!p::finite_number(out[j]))
             return false;
     return true;
+}
+// Schema4 adds exactly one scalar; the learned meanings of the first40 stay schema2.
+CUDARL_HD inline bool observe_appended(const ForwardTask &t, const World &w,
+                                      const ForwardConfig &config, float *out) {
+    auto original = config;
+    original.observation_schema = motor_observation::task_scale;
+    original.position_hold = false;
+    if (!observe(t, w, original, out))
+        return false;
+    out[40] = 0;
+    if (config.position_hold && config.stationary_request) {
+        if (!t.hold_anchor_set)
+            return false;
+        const auto error = (t.hold_anchor_model - old::motion(w.physical.body).com_model) * p::scale;
+        out[40] = tanhf(p::dot(error, t.request.heading) / .02f);
+    }
+    return p::finite_number(out[40]);
 }
 CUDARL_HD inline Metrics measure(const ForwardTask &t, const World &w) {
     const auto motion = old::motion(w.physical.body);

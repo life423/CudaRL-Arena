@@ -27,7 +27,19 @@ namespace nn = cudarl::nn;
 namespace rl = cudarl::rl;
 namespace gpu = rl::motor_rollout;
 namespace cp = cudarl::checkpoint;
+#ifdef CUDARL_APPEND_HOLD41
+constexpr int observations = 41, actions = m::kActions;
+#else
 constexpr int observations = m::kObservations, actions = m::kActions;
+#endif
+bool observe_for_runner(const m::ForwardTask &task, const m::World &world,
+                        const m::ForwardConfig &config, float *out) {
+#ifdef CUDARL_APPEND_HOLD41
+    return m::observe_appended(task, world, config, out);
+#else
+    return m::observe(task, world, config, out);
+#endif
+}
 constexpr int environments = 32, minibatch = 256, epochs = 2;
 m::TrainingEpisode training_episode;
 int &horizon = training_episode.controls;
@@ -319,7 +331,7 @@ void check_initialization() {
         require(p::norm(setup_worlds[i].physical.body.position - world.physical.body.position) < 1e-7f,
                 "CPU/CUDA training pose mismatch");
         float expected[observations]{};
-        require(m::observe(task, world, training_episode.task_config(), expected), "CPU observation failed");
+        require(observe_for_runner(task, world, training_episode.task_config(), expected), "CPU observation failed");
         for (int j = 0; j < observations; ++j)
             require(fabsf(expected[j] - actual[i * observations + j]) <= 1e-6f,
                     "Zero-step CPU/CUDA observation mismatch");
@@ -634,7 +646,7 @@ Sustained sustained(const std::vector<float> &params, const fs::path &root, Budg
         bool all = true;
         for (int tick = 0; tick < duration_controls; ++tick) {
             float obs[observations]{};
-            require(m::observe(task, world, config, obs), "Long observation failed");
+            require(observe_for_runner(task, world, config, obs), "Long observation failed");
             actor.forward(obs, 1);
             m::Action action;
             require(m::action_from_latent(actor.output(), action), "Long action failed");
@@ -737,7 +749,7 @@ Evaluation evaluate(const std::vector<float> &params, const fs::path &root, cons
         require(m::begin_forward(world, config, task), "Frozen evaluation initialization failed");
         for (int t = 0; t < config.maximum_controls; ++t) {
             float obs[observations]{};
-            require(m::observe(task, world, config, obs), "Invalid frozen observation");
+            require(observe_for_runner(task, world, config, obs), "Invalid frozen observation");
             actor.forward(obs, 1);
             m::Action action;
             require(m::action_from_latent(actor.output(), action), "Invalid frozen action");
@@ -825,7 +837,7 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
                     "Stopping target reference changed");
             require(m::update_velocity_request(world, config, task), "Stopping request update");
             float observation[observations];
-            require(m::observe(task, world, config, observation), "Stopping observation");
+            require(observe_for_runner(task, world, config, observation), "Stopping observation");
             if (control == 641)
                 for (int j = 3; j < 6; ++j)
                     require(observation[j] == 0, "Zero request absent from observation");
@@ -1088,7 +1100,7 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
         tasks[c] = base_task;
         require(m::offset_episode_start(worlds[c], tasks[c], config, offsets[c] / 1000),
                 "Translated setup invalid");
-        require(m::observe(tasks[c], worlds[c], config, initial_obs[c]), "Translated observation invalid");
+        require(observe_for_runner(tasks[c], worlds[c], config, initial_obs[c]), "Translated observation invalid");
         const auto *o = initial_obs[c];
         const float decoded_depth =
             (-1000 * cudarl::motor_observation::path_scale_m(config.observation_schema)) *
@@ -1179,7 +1191,7 @@ int fixed_depth_replay(const fs::path &root, bool setup_only, Budget *shared_bud
                 require(task.start_com_model.y == target.y && task.request.position.y == target.y,
                         "Fixed depth target drifted");
                 float obs[observations];
-                require(m::observe(task, world, config, obs), "Depth replay observation failed");
+                require(observe_for_runner(task, world, config, obs), "Depth replay observation failed");
                 actor.forward(obs, 1);
                 m::Action action;
                 require(m::action_from_latent(actor.output(), action), "Depth replay action failed");
@@ -1306,7 +1318,7 @@ int verify_path_scale(const fs::path &root) {
         for (int control = 1; control <= 160; ++control) {
             wall_guard();
             float base_obs[observations];
-            require(m::observe(task, world, config, base_obs), "Scale baseline observation");
+            require(observe_for_runner(task, world, config, base_obs), "Scale baseline observation");
             actor.forward(base_obs, 1);
             m::Action action;
             require(m::action_from_latent(actor.output(), action), "Scale baseline action");
@@ -1320,7 +1332,7 @@ int verify_path_scale(const fs::path &root) {
                 if (probe >= 4)
                     w.physical.body.velocity[1] += float(probe - 5) * .0005f - motion.velocity_m_s.y;
                 float x[observations], y[observations];
-                require(m::observe(task, w, config, x) && m::observe(task, w, next_config, y),
+                require(observe_for_runner(task, w, config, x) && observe_for_runner(task, w, next_config, y),
                         "Scale probe observation");
                 compare(x, y);
             }
@@ -1473,7 +1485,7 @@ int depth_sensitivity(const fs::path &root, bool continuation = false) {
     std::string fault;
     int completed_replays = 0, sensitivity_rows = 0;
     auto observe = [&](const Snapshot &s, float *obs) {
-        require(m::observe(s.task, s.world, config, obs), "Sensitivity observation rejected");
+        require(observe_for_runner(s.task, s.world, config, obs), "Sensitivity observation rejected");
         const auto motion = cudarl::motor::motion(s.world.physical.body);
         const float e = (motion.com_model.y - s.task.start_com_model.y) * p::scale * 1000;
         const float decoded = (-1000 * cudarl::motor_observation::path_scale_m(config.observation_schema)) *
@@ -1745,7 +1757,7 @@ int diagnose_safety(const fs::path &root) {
         require(std::chrono::duration<double>(std::chrono::steady_clock::now() - begin).count() < 10,
                 "Safety replay wall cap");
         float obs[observations];
-        require(m::observe(task, world, config, obs), "Safety replay observation");
+        require(observe_for_runner(task, world, config, obs), "Safety replay observation");
         actor.forward(obs, 1);
         m::Action action;
         require(m::action_from_latent(actor.output(), action), "Safety replay action");
@@ -1966,7 +1978,7 @@ int neutral_pitch_replay(const fs::path &root, bool continue_recorded = false) {
         std::ofstream state_stream(root / "reference-full-world-states.bin", std::ios::binary);
         for (int i = 0; i < 277; ++i) {
             float obs[observations];
-            require(m::observe(reference_task, reference, config, obs), "Reference observation failed");
+            require(observe_for_runner(reference_task, reference, config, obs), "Reference observation failed");
             actor.forward(obs, 1);
             m::Action action;
             require(m::action_from_latent(actor.output(), action), "Reference action failed");

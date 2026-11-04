@@ -43,15 +43,17 @@ __global__ void observe(const m::World *worlds, m::ForwardTask *tasks, float *ou
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i >= n)
         return;
-    float *row = output + i * m::kObservations;
+    const int width = episode.appended_hold ? 41 : m::kObservations;
+    float *row = output + i * width;
     if (*fault) {
-        for (int j = 0; j < m::kObservations; ++j)
+        for (int j = 0; j < width; ++j)
             row[j] = 0;
         return;
     }
     const auto config = episode.task_config(tasks[i].controls, i);
     if (((episode.stopping || episode.holding) && !m::update_velocity_request(worlds[i], config, tasks[i])) ||
-        !m::observe(tasks[i], worlds[i], config, row))
+        !(episode.appended_hold ? m::observe_appended(tasks[i], worlds[i], config, row)
+                                : m::observe(tasks[i], worlds[i], config, row)))
         atomicExch(fault, 2);
 }
 __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *latent, float *rewards,
