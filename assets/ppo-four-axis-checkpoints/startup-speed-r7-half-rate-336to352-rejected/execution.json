@@ -1,0 +1,10 @@
+{
+  "command": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-half-rate-336to352-v1/startup-runner.exe --run \"C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-half-rate-336to352-v1\" --startup-speed 1 --actor-lr 0.000125 --depth-offsets 1 --episode-controls 1280 --updates 16",
+  "phase": "completed",
+  "wall_seconds": 26.2648666,
+  "exit_code": 0,
+  "pid": 16224,
+  "launched_utc": "2026-11-04T16:31:55.3574583Z",
+  "cwd": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation",
+  "completed_utc": "2026-11-04T16:32:21.6296118Z"
+}

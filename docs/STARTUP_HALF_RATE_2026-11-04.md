@@ -77,3 +77,49 @@ No automatic viewer installation. Depth recovery at32/64s is not retested in
 this study and cannot be claimed newly validated. Stopping remains rejected;
 revisit its design only after the startup result, without launching another run
 under this budget. Finite two-start300s results never prove indefinite behavior.
+
+## Completed result
+
+Training actually started2026-11-04T16:31:55.684Z. First completed update337
+was recorded16:31:57.513Z. Process ended16:32:21.630Z,exit0,26.265s wall.
+Completed16updates,655360training+6784evaluation=662144total controls,
+6621440physical substeps and5120additional Adam steps per network. No safety or
+numerical stops; no retries, extensions or300s evaluations. All frozen inputs
+and baseline336 hashes remained unchanged. Candidate hashes, actual execution,
+checks and comparisons are in the durable rejected-asset provenance.
+
+| Candidate | Short passes | Long passes/windows |2-4s speed poses0/3 | Peak tilt poses0/3 |
+|---|---|---|---|---|
+| Baseline336 |4/4 |0/2,28/30 |7.0260/7.1162mm/s |8.8279/9.3577deg |
+| Half-rate344 |2/4 |1/2,15/30 |7.2402/7.3130mm/s |9.5950/10.0813deg |
+| Half-rate352 |0/4 |0/2,0/30 |7.3598/7.4078mm/s |10.2432/10.6386deg |
+
+Both new candidates pass the startup-speed windows but fail tilt. At344,
+poses1/3 fail only tilt; at352 all four short poses fail only tilt. The first
+60s-case tilt exits are0.65s for344pose3 and0.70/0.65s for352poses0/3.
+Cumulative peak bookkeeping means an early excursion fails later windows even
+after posture recovers. Depth/lane remain within limits across all four60s
+cases. Maximum depth errors at344 are0.3708/0.3473mm and lane0.7158/0.7136mm;
+at352 depth0.3199/0.2809mm and lane0.9767/0.8442mm.
+
+The first update's same-batch KL_k3 drops0.0041765->0.0029891 and clip fraction
+0.040576->0.018628 relative to the prior rate. Initial return mean/std match
+exactly. Restored actor/critic parameters, both Adam moments/counters and critic
+config match336 exactly; only actor rate differs. This supports that the smaller
+step was exercised, but it did not solve the startup/posture tradeoff.
+
+Validation: native PPO/test build passes,15/15 focused checks with0skips,
+actual CUDA reset/observation checks and4synthetic reward cases pass; two CLI
+scope rejections create no run; both durable candidates reload at344/352 with
+24260/26820Adam steps each and zero physical/optimizer steps. Full64s GPU reward
+verification includes20480post32s rows and126late minibatch rows with nonzero
+policy gradients; maximum GAE discrepancy7.07e-7. No new32/64s recovery trials.
+
+Decision: reject both; retain336. The frozen study is closed. Stopping remains
+unresolved and no stopping trial was launched. The next design review should
+address startup acceleration versus combined tilt, rather than another implicit
+rate sweep. Saved traces lack signed head roll/pitch and instantaneous joint
+torques, so do not claim which tilt component causes the excursion. Add those
+diagnostics to a future separately bounded evaluation and consider aligning its
+training posture objective with the unchanged combined-tilt gate. No additional
+training, viewer replacement, push or merge is part of this completed study.

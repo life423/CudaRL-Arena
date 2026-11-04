@@ -1,0 +1,5 @@
+CUDA device: present
+
+PASS  startup_reward: only horizontal reward mask changes; acceptance and ordinary starts unchanged      0.0 ms
+
+1/1 tests passed, 0 skipped

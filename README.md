@@ -6,7 +6,14 @@ presentation only. The motor supplies four independent joint-angle targets throu
 
 ## Current state
 
-Training is stopped. The sustained-depth milestone is saved in
+Training is stopped. The November4 half-rate startup trial is preserved in
+`assets/ppo-four-axis-checkpoints/startup-speed-r7-half-rate-336to352-rejected`.
+It completed16updates and improved2-4s speed, but344 still exceeds the10degree
+tilt limit (10.0813degrees);352 regresses further. Neither candidate qualifies.
+Both are rejected; no viewer adoption or new stopping run occurred. See
+[the frozen protocol and outcome](docs/STARTUP_HALF_RATE_2026-11-04.md).
+
+The sustained-depth milestone is saved in
 `assets/ppo-four-axis-checkpoints/update-336-episode64`:4/4 short swims and3/3
 64-second recovery cases pass. Both existing60-second swims hold depth, lane and
 posture;28/30 windows pass. Formal long-case acceptance is0/2 because the2–4s

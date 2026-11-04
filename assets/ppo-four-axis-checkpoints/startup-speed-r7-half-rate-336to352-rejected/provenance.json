@@ -1,0 +1,130 @@
+{
+  "status": "REJECTED; no qualifying candidate; baseline336 retained",
+  "algorithm": "native C++/CUDA PPO",
+  "source_commit": "79e3b13d2bb22ef47fdb6caad02e36014dd9dd78",
+  "preservation_commit": "b3addfb",
+  "source_run": "build/ppo/startup-speed-r7-half-rate-336to352-v1",
+  "baseline": "../update-336-episode64/ppo-update-336.bin",
+  "baseline_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "baseline_unchanged": true,
+  "checkpoint344_sha256": "03FAFCF34792BC9D1CC172249D5A975B94C189A024E5E0F76BD1EB591EBE7985",
+  "checkpoint352_sha256": "D5258528C429B4A39F39B29870553E9BB6A803055EFA176DF4521741E9D06606",
+  "protocol_sha256": "C4A096276B9D83DF3D94A72855F46FA39B74E4BE38EF4CA40E039750BAA44183",
+  "treatment": "actor learning rate0.00025 ->0.000125; reward7 and all other trial settings unchanged",
+  "checkpoint_schema": 4,
+  "protocol_version": 14,
+  "reward": 7,
+  "parent_reward": 5,
+  "actor_lr": 0.000125,
+  "critic_lr": 0.001,
+  "seed": 1247037243,
+  "rho": 0.8,
+  "source_update": 336,
+  "completed_update": 352,
+  "additional_updates": 16,
+  "training_controls": 655360,
+  "evaluation_controls": 6784,
+  "all_controls": 662144,
+  "all_substeps": 6621440,
+  "optimizer_steps_added_each": 5120,
+  "optimizer_steps_final_each": 26820,
+  "actual_training_started_utc": "2026-11-04T16:31:55.6840000+00:00",
+  "execution": {
+    "command": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-half-rate-336to352-v1/startup-runner.exe --run \"C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-half-rate-336to352-v1\" --startup-speed 1 --actor-lr 0.000125 --depth-offsets 1 --episode-controls 1280 --updates 16",
+    "phase": "completed",
+    "wall_seconds": 26.2648666,
+    "exit_code": 0,
+    "pid": 16224,
+    "launched_utc": "2026-11-04T16:31:55.3574583Z",
+    "cwd": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation",
+    "completed_utc": "2026-11-04T16:32:21.6296118Z"
+  },
+  "candidates": [
+    {
+      "failed_short_poses": [
+        1,
+        3
+      ],
+      "startup2to4_mm_s": [
+        7.24023771286,
+        7.3129529953
+      ],
+      "short_passes": 2,
+      "long_total": 2,
+      "long_passes": 1,
+      "only_failed_gate": "combined head/body tilt above unchanged10degree limit",
+      "accepted": false,
+      "update": 344,
+      "peak_tilt_deg": [
+        9.59501171112,
+        10.0813169479
+      ],
+      "long_windows_total": 30,
+      "short_total": 4,
+      "long_windows_passed": 15
+    },
+    {
+      "failed_short_poses": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "startup2to4_mm_s": [
+        7.35982608795,
+        7.40778970718
+      ],
+      "short_passes": 0,
+      "long_total": 2,
+      "long_passes": 0,
+      "only_failed_gate": "combined head/body tilt above unchanged10degree limit",
+      "accepted": false,
+      "update": 352,
+      "peak_tilt_deg": [
+        10.2431526184,
+        10.6385774612
+      ],
+      "long_windows_total": 30,
+      "short_total": 4,
+      "long_windows_passed": 0
+    }
+  ],
+  "depth_lane_exits_all_60s_cases": 0,
+  "safety_stops": 0,
+  "fault": "",
+  "endurance300_attempts": 0,
+  "endurance_skip_reason": "Neither candidate passed every original short and60s criterion",
+  "frozen_gates": "Unchanged speed7.2-8.8mm/s,RMSE2.5mm/s,lane2mm,depth1mm,tilt10deg,path5deg,work0.001J/m;startup retained",
+  "cumulative_tilt_note": "Peak tilt is cumulative from startup; brief early excursion fails each subsequent window; does not imply persistent overtilt",
+  "first_update_comparison": {
+    "new_KL_k3": 0.00298912182342,
+    "old_KL_k3": 0.00417651228568,
+    "new_clip_fraction": 0.0186279296875,
+    "old_clip_fraction": 0.040576171875,
+    "returns_before_first_update_exact": true
+  },
+  "verification": {
+    "tests_skipped": 0,
+    "reload_optimizer_steps": 0,
+    "maximum_GAE_error": 7.062039000249598E-07,
+    "native_build_passed": true,
+    "full_restoration_exact_except_actor_lr": true,
+    "checkpoint_zero_step_reloads": 2,
+    "late_minibatch_gradient_rows": 126,
+    "focused_tests_passed": 15,
+    "reload_physical_steps": 0,
+    "CLI_rejections": 2,
+    "synthetic_GPU_reward_cases": 4,
+    "unrelated_existing_files_hash_verified": 15,
+    "reward_rows_after32s": 20480,
+    "actual_CUDA_zero_integration_checks": true
+  },
+  "training_stopped": true,
+  "runtime_adopted": false,
+  "retries": 0,
+  "extensions": 0,
+  "new_stopping_runs": 0,
+  "new_recovery_runs": 0,
+  "interpretation": "Half rate reduces update displacement and early tilt but does not meet startup/posture tradeoff. Retain336; no acceptable replacement.",
+  "next_design": "Review startup combined-tilt reward/constraint and missing signed roll/pitch diagnostics before another separately bounded study. No automatic further rate sweep or stopping training."
+}
