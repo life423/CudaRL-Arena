@@ -3,6 +3,38 @@
 #include "rl/ppo_math.h"
 namespace st = cudarl::straight_motor;
 namespace p = cudarl::physics;
+TEST_CASE("startup_reward: only horizontal reward mask changes; acceptance and ordinary starts unchanged") {
+    st::TrainingEpisode before, after;
+    before.controls = after.controls = 1280;
+    before.observation_schema = after.observation_schema = 2;
+    before.fixed_depth_offsets = after.fixed_depth_offsets = true;
+    after.startup_speed = true;
+    CHECK(before.reward_version() == 5 && after.reward_version() == 7);
+    for (int control : {0, 1, 39, 40, 41, 1279}) {
+        const auto old_config = before.task_config(control), config = after.task_config(control);
+        CHECK(config.measure_start == old_config.measure_start && config.measure_start == 40);
+        CHECK(config.maximum_controls == old_config.maximum_controls && config.maximum_controls == 1280);
+        CHECK(config.target_speed_m_s == old_config.target_speed_m_s && !config.stationary_request);
+        auto w = st::initial_world(0);
+        st::Metrics metrics;
+        metrics.horizontal_speed_error_m_s = .004f;
+        metrics.signed_depth_m = -.0005f;
+        metrics.depth_m = .0005f;
+        metrics.vertical_velocity_m_s = .0001f;
+        metrics.lateral_m = .0007f;
+        metrics.roll_deg = 2;
+        metrics.pitch_deg = 3;
+        w.physical.mean_squared_torque = .2f;
+        const auto a = st::reward_costs(metrics, w, old_config, control >= 40);
+        const auto b = st::reward_costs(metrics, w, config, control >= 40);
+        CHECK(b.horizontal == .25f && a.horizontal == (control >= 40 ? .25f : 0.f));
+        CHECK(a.recovery == b.recovery && a.lane == b.lane && a.depth == b.depth && a.roll == b.roll &&
+              a.pitch == b.pitch && a.posture == b.posture && a.effort == b.effort);
+        CHECK(fabsf((b.total() - a.total()) - (control < 40 ? .25f : 0.f)) < 1e-7f);
+    }
+    for (int world = 0; world < 32; ++world)
+        CHECK(before.initial_vertical_offset(world) == after.initial_vertical_offset(world));
+}
 TEST_CASE(
     "frozen_long_initial: poses0and3 preserve exact initialization across60and300s (zero integration)") {
     for (int pose : {0, 3}) {

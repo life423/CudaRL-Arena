@@ -23,6 +23,7 @@ struct ForwardConfig {
     // lesson scale instead of dividing by zero or reweighting depth/posture.
     float velocity_reward_scale_m_s = .008f;
     bool stationary_request = false;
+    bool horizontal_from_first_step = false;
     float target_speed_m_s = .008f, clearance_m = .01f;
     float minimum_speed_m_s = .0072f, maximum_speed_m_s = .0088f, speed_rmse_limit = .0025f;
     float lateral_limit_m = .002f, depth_limit_m = .001f, path_angle_limit_deg = 5, tilt_limit_deg = 10;
@@ -67,6 +68,7 @@ struct TrainingEpisode {
     bool tilt_mixture = false;
     bool fixed_depth_offsets = false;
     bool stopping = false;
+    bool startup_speed = false;
     int offset_phase = 0;
     CUDARL_HD float initial_vertical_offset(int environment) const {
         if (!fixed_depth_offsets)
@@ -79,13 +81,14 @@ struct TrainingEpisode {
                (controls == 160 || controls == 640 || controls == 1280) && (!stopping || controls == 1280);
     }
     CUDARL_HD contact::Arena arena() const { return controls >= 640 ? long_swim_arena() : contact::Arena{}; }
-    CUDARL_HD int reward_version() const { return stopping ? 6 : kRewardVersion; }
+    CUDARL_HD int reward_version() const { return startup_speed ? 7 : (stopping ? 6 : kRewardVersion); }
     CUDARL_HD ForwardConfig task_config(int completed_controls = 0) const {
         if (stopping)
             return StopSequence{}.config(completed_controls, observation_schema);
         auto c = config_for_speed(.008f);
         c.maximum_controls = controls;
         c.observation_schema = observation_schema;
+        c.horizontal_from_first_step = startup_speed;
         return c;
     }
 };
@@ -314,7 +317,7 @@ CUDARL_HD inline RewardCosts reward_costs(const Metrics &metrics, const World &w
     const float roll = metrics.roll_deg / config.tilt_limit_deg;
     const float pitch = metrics.pitch_deg / config.tilt_limit_deg;
     RewardCosts out;
-    out.horizontal = speed_scored ? horizontal * horizontal : 0.f;
+    out.horizontal = (speed_scored || config.horizontal_from_first_step) ? horizontal * horizontal : 0.f;
     out.recovery = vertical * vertical; // From FIRST control, including startup.
     out.roll = kRollCost * roll * roll;
     out.pitch = kPitchCost * pitch * pitch;
@@ -339,7 +342,8 @@ CUDARL_HD inline Transition record_control(ForwardTask &t, const World &w, const
     }
     out.metrics = measure(t, w);
     // Interval40 ends at2s; intervals41..160 are the scored2..8s window.
-    // ONLY horizontal speed has a startup window. Recovery, lane, depth, head
+    // Reward5 masks horizontal speed during startup; reward7 removes only that
+    // mask. Acceptance still scores the original2..8s window. Recovery, lane, depth, head
     // posture and effort are charged from the first interval. Full trajectory
     // credit, physical work, safety and acceptance bookkeeping never reset.
     const bool scored = t.controls >= c.measure_start;

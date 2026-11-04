@@ -21,7 +21,17 @@ The first stopping trial is saved in
 `assets/ppo-four-axis-checkpoints/stopping-336to352-rejected`. It slowed after
 the zero-speed request but never stopped and regressed to0/4 short swims. Those
 checkpoints are rejected;336 remains the preserved sustained-swimming baseline.
-[HANDOFF.md](HANDOFF.md) describes the earlier baseline campaign.
+The subsequent startup-speed trial is preserved in
+`assets/ppo-four-axis-checkpoints/startup-speed-r7-336to352-rejected`.
+Reward7 scores horizontal speed from the first control. At the previous actor
+rate0.00025 it fixes the2-4s speed miss but exceeds the unchanged10degree tilt
+limit. Update344 passes2/4 short and1/2 long cases;352 passes0/4 and0/2.
+Both are rejected;336 remains unchanged. Original uncommitted files and hashes
+are backed up in `build/review-preservation/2026-11-04-before-startup-half-rate`.
+Unrelated Godot editor changes and earlier smooth-exploration evidence are
+preserved separately and remain outside this source checkpoint.
+[HANDOFF.md](HANDOFF.md) describes an older campaign; the current state above
+and asset provenance supersede its choice of baseline.
 Reward5 separates roll/pitch and scores depth-dependent vertical settling from
 the first control. Observation schema2 scales all three body-frame path-error
 inputs by2mm; old checkpoints retain explicit72mm scaling. Checkpoint schema4

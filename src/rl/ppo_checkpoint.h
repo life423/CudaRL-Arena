@@ -58,7 +58,8 @@ read_ppo_training_state(const std::vector<uint8_t> &payload, uint64_t expected_p
     const auto task_version = in.value<uint32_t>();
     actor.reward_version = in.value<uint32_t>();
     if (task_version != 6 ||
-        (actor.reward_version != 4 && actor.reward_version != 5 && actor.reward_version != 6) ||
+        (actor.reward_version != 4 && actor.reward_version != 5 && actor.reward_version != 6 &&
+         actor.reward_version != 7) ||
         in.value<uint32_t>() != 40 || in.value<uint32_t>() != 4)
         throw std::runtime_error("Wrong PPO task/reward/shape");
     if (schema >= 3) {

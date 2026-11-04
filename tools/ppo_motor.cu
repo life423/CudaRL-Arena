@@ -38,6 +38,7 @@ int training_cap = updates * rows, control_cap = training_cap + 64 + 1280 + 2400
 bool &tilt_mixture = training_episode.tilt_mixture;
 bool &depth_offsets = training_episode.fixed_depth_offsets;
 bool &stopping = training_episode.stopping;
+bool &startup_speed = training_episode.startup_speed;
 int optimizer_steps_per_update() { return epochs * (rows / minibatch); }
 size_t rollout_elements(int components = 1) { return static_cast<size_t>(rows) * components; }
 uint32_t seed = 0x4a544731u;
@@ -226,7 +227,8 @@ struct Batches {
 std::vector<uint8_t> protocol() {
     cp::Writer out;
     out.value(uint32_t{0x3150504d});
-    out.value(uint32_t{13});
+    out.value(uint32_t{14});
+    out.value(uint32_t{startup_speed ? 1u : 0u});
     out.value(uint32_t{stopping ? 1u : 0u});
     out.value(m::StopSequence::request_control);
     out.value(training_episode.observation_schema);
@@ -386,6 +388,45 @@ void verify_nominal_arena(const fs::path &root) {
     }
     out << "],\"physics_steps\":0,\"arena_unchanged\":true}\n";
 }
+__global__ void startup_reward_probe(m::RewardCosts *out) {
+    const int i = threadIdx.x;
+    if (i >= 4)
+        return;
+    m::World w;
+    w.physical.mean_squared_torque = .2f;
+    m::Metrics metrics;
+    metrics.horizontal_speed_error_m_s = .004f;
+    metrics.signed_depth_m = -.0005f;
+    metrics.depth_m = .0005f;
+    metrics.vertical_velocity_m_s = .0001f;
+    metrics.lateral_m = .0007f;
+    metrics.roll_deg = 2;
+    metrics.pitch_deg = 3;
+    auto config = m::config_for_speed(.008f);
+    config.horizontal_from_first_step = (i % 2) != 0;
+    out[i] = m::reward_costs(metrics, w, config, i >= 2);
+}
+void verify_startup_reward(const fs::path &root) {
+    if (!startup_speed)
+        return;
+    Stream stream;
+    device_ptr<m::RewardCosts> device(4);
+    startup_reward_probe<<<1, 4, 0, stream.value>>>(device.get());
+    CUDA_CHECK_THROW(cudaGetLastError());
+    const auto values = download(device.get(), 4, stream.value);
+    for (int i = 0; i < 4; ++i) {
+        const auto &v = values[i];
+        require(fabsf(v.horizontal - (i == 0 ? 0.f : .25f)) < 1e-7f &&
+                    fabsf(v.recovery - .0003515625f) < 1e-7f && fabsf(v.lane - .006125f) < 1e-7f &&
+                    fabsf(v.depth - .0125f) < 1e-7f && fabsf(v.roll - .002f) < 1e-7f &&
+                    fabsf(v.pitch - .0009f) < 1e-7f && fabsf(v.effort - .0004f) < 1e-7f,
+                "Startup reward CUDA component mismatch");
+    }
+    std::ofstream out(root / "startup-reward-verification.json");
+    out << "{\"GPU_executed\":true,\"cases\":4,\"physical_substeps\":0,\"optimizer_steps\":0,"
+           "\"synthetic_only\":true,\"startup_horizontal_old\":0,\"startup_horizontal_new\":0.25,"
+           "\"late_horizontal_both\":0.25,\"other_costs_unchanged\":true}\n";
+}
 int prepare(const fs::path &root) {
     require(!fs::exists(root), "Run identity already exists");
     fs::create_directories(root);
@@ -394,6 +435,7 @@ int prepare(const fs::path &root) {
         fs::copy_file(parent_protocol_path, root / "parent-protocol.bin");
     }
     check_initialization();
+    verify_startup_reward(root);
     verify_nominal_arena(root);
     cp::write_atomic((root / "protocol.bin").string(), protocol());
     cp::write_atomic((root / "initialization.bin").string(), initialization());
@@ -411,7 +453,9 @@ int prepare(const fs::path &root) {
         << ",\"starting_critic_steps\":" << initial_optimizer(false).steps
         << ",\"actor_shape\":[40,32,32,4],\"critic_shape\":[40,32,32,1],\"checkpoint_schema\":4,\"action_"
            "mapping\":3,\"task\":6,\"reward\":"
-        << training_episode.reward_version() << ",\"stopping_sequence\":" << (stopping ? "true" : "false")
+        << training_episode.reward_version()
+        << ",\"startup_speed_from_first_step\":" << (startup_speed ? "true" : "false")
+        << ",\"stopping_sequence\":" << (stopping ? "true" : "false")
         << ",\"model\":6,\"fresh_episode_rollout\":true,\"teacher_"
            "examples\":false,\"preset_oscillator\":false,\"target_mm_s\":8,\"environments\":32,\"rollout_"
            "controls\":"
@@ -2563,10 +2607,10 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     budget.seconds = active_wall_cap;
     Evaluation before, after;
     bool initial_recovery_pass = false, final_recovery_pass = false;
-    const bool extended = horizon == 1280;
+    const bool extended = horizon == 1280 && !startup_speed;
     bool final64_recovery_pass = false, qualified_stop = false, long_regression_pass = false;
     StoppingResult initial_stopping, final_stopping;
-    int long_attempts = 0;
+    int long_attempts = 0, endurance_attempts = 0;
     auto recovery_evaluation = [&](const fs::path &directory, const fs::path &checkpoint,
                                    const fs::path &source_protocol, int expected_update, bool &passed,
                                    int duration_controls = 640) {
@@ -2605,7 +2649,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             before = stopping ? reused_baseline(root) : evaluate(initial_actor(), root, "initial", budget);
             if (stopping)
                 initial_stopping = evaluate_stopping(initial_actor(), root / "initial-stop", budget);
-            if (depth_offsets && !stopping)
+            if (depth_offsets && !stopping && !startup_speed)
                 recovery_evaluation(root / "initial-recovery", parent_checkpoint_path, parent_protocol_path,
                                     base_update, initial_recovery_pass);
             if (extended && !stopping) {
@@ -2806,7 +2850,33 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 log << ',' << v;
             log << '\n';
             log.flush();
-            if (actor_lr_override && completed - base_update != updates &&
+            if (startup_speed && completed - base_update == 8) {
+                const auto directory = root / ("checkpoint-" + std::to_string(completed));
+                require(fs::create_directory(directory), "Startup evaluation already exists");
+                const auto params = actor.get_params();
+                const auto short_result = evaluate(params, directory, "frozen", budget);
+                require(fs::create_directory(directory / "long"), "Startup long identity exists");
+                ++long_attempts;
+                const auto long_check = sustained(params, directory / "long", budget);
+                require(long_check.safety_fault.empty(), "Startup long physical safety stop");
+                Sustained endurance;
+                if (short_result.passed == 4 && long_check.passed == 2) {
+                    require(fs::create_directory(directory / "five-minutes"), "Endurance identity exists");
+                    ++endurance_attempts;
+                    endurance = sustained(params, directory / "five-minutes", budget, 6000, {3.f, .4f});
+                    require(endurance.safety_fault.empty(), "Startup endurance physical safety stop");
+                }
+                std::ofstream summary(directory / "summary.json");
+                summary << "{\"update\":" << completed << ",\"short_passes\":" << short_result.passed
+                        << ",\"long_passes\":" << long_check.passed
+                        << ",\"long_windows\":" << long_check.windows_passed
+                        << ",\"endurance_poses\":" << endurance.completed_poses
+                        << ",\"endurance_passes\":" << endurance.passed << "}\n";
+                std::cout << "STARTUP_EVALUATED update=" << completed << " short=" << short_result.passed
+                          << " long=" << long_check.passed << " windows=" << long_check.windows_passed
+                          << std::endl;
+            }
+            if (actor_lr_override && completed - base_update != updates && !startup_speed &&
                 (completed - base_update == 8 || completed - base_update == 16)) {
                 const auto directory = root / ("checkpoint-" + std::to_string(completed));
                 require(fs::create_directory(directory), "Intermediate evaluation already exists");
@@ -2867,7 +2937,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         status(root, "frozen_evaluation", budget, completed);
         if (!qualified_stop)
             after = evaluate(actor.get_params(), root, "frozen", budget);
-        if (depth_offsets && !qualified_stop && !stopping)
+        if (depth_offsets && !qualified_stop && !stopping && !startup_speed)
             recovery_evaluation(root / "final-recovery",
                                 root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                 root / "protocol.bin", completed, final_recovery_pass);
@@ -2878,9 +2948,10 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         if (stopping && !qualified_stop)
             final_stopping = evaluate_stopping(actor.get_params(), root / "final-stop", budget);
         const bool run_long =
-            after.passed == 4 &&
-            (stopping ? final_stopping.passed == 2 : (!depth_offsets || final_recovery_pass)) &&
-            (!extended || final64_recovery_pass);
+            startup_speed ||
+            (after.passed == 4 &&
+             (stopping ? final_stopping.passed == 2 : (!depth_offsets || final_recovery_pass)) &&
+             (!extended || final64_recovery_pass));
         if (run_long && !qualified_stop) {
             status(root, "long_evaluation", budget, completed);
             ++long_attempts;
@@ -2889,8 +2960,21 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                 require(long_result.safety_fault.empty(), "64s campaign long physical safety stop");
             long_regression_pass = stopping ? preserved_long_windows(root) : long_result.passed == 2;
         }
+        if (startup_speed && after.passed == 4 && long_result.passed == 2) {
+            require(fs::create_directory(root / "five-minutes"), "Final endurance identity exists");
+            ++endurance_attempts;
+            const auto endurance =
+                sustained(actor.get_params(), root / "five-minutes", budget, 6000, {3.f, .4f});
+            require(endurance.safety_fault.empty(), "Startup endurance physical safety stop");
+            std::ofstream summary(root / "five-minutes" / "summary.json");
+            summary << "{\"passed\":" << endurance.passed
+                    << ",\"windows_passed\":" << endurance.windows_passed
+                    << ",\"windows_total\":" << endurance.windows_total << "}\n";
+        }
         const int expected_controls =
-            stopping
+            startup_speed ? (completed - base_update) * rows + 64 + 3 * 640 + long_attempts * 2400 +
+                                endurance_attempts * 12000
+            : stopping
                 ? (completed - base_update) * rows + 64 + 2560 + ((completed - base_update >= 8) ? 7040 : 0) +
                       ((completed - base_update >= 16) ? 7040 : 0) + long_attempts * 2400
             : extended
@@ -2899,7 +2983,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                       ((completed - base_update >= 16) ? 6400 : 0) + long_attempts * 2400
                 : control_cap - (run_long ? 0 : 2400) - (continue_pre_training && !depth_offsets ? 480 : 0);
         require((long_result.safety_fault.empty() && budget.controls == expected_controls &&
-                 budget.substeps == expected_controls * 10) ||
+                 budget.substeps == expected_controls * 10 && budget.controls <= control_cap) ||
                     (!long_result.safety_fault.empty() && budget.controls <= control_cap &&
                      budget.substeps <= substep_cap),
                 "Total run accounting mismatch");
@@ -2960,12 +3044,17 @@ int main(int argc, char **argv) {
     try {
         verification_mode = argc > 1 && (std::string(argv[1]) == "--prepare-verify" ||
                                          std::string(argv[1]) == "--verify-resume");
-        require(argc >= 3 && argc <= 21 && argc % 2 == 1,
+        require(argc >= 3 && argc <= 23 && argc % 2 == 1,
                 "Use --prepare/--run/--verify-resume DIR [--seed UINT32] [--rho 0|0.8] [--resume-from "
                 "CHECKPOINT --resume-protocol PROTOCOL]");
         fs::path resume_checkpoint, resume_protocol;
         bool seed_explicit = false, rho_explicit = false;
         for (int option = 3; option < argc; option += 2) {
+            if (std::string(argv[option]) == "--startup-speed") {
+                require(std::string(argv[option + 1]) == "1", "Startup experiment must be explicit");
+                startup_speed = true;
+                continue;
+            }
             if (std::string(argv[option]) == "--stopping") {
                 require(std::string(argv[option + 1]) == "0" || std::string(argv[option + 1]) == "1",
                         "Invalid stopping flag");
@@ -3043,6 +3132,8 @@ int main(int argc, char **argv) {
             control_cap = training_cap + 64 + 640 + 1920 + 3840 + 2 * 6400 + 2 * 2400;
         if (stopping)
             control_cap = training_cap + 64 + 2560 + 2 * 7040 + 2 * 2400;
+        if (startup_speed)
+            control_cap = training_cap + 64 + 3 * 640 + 2 * 2400 + 2 * 12000;
         substep_cap = control_cap * 10;
         if (tilt_mixture || updates <= 32)
             active_wall_cap = 20;
@@ -3054,6 +3145,8 @@ int main(int argc, char **argv) {
                     "Unsupported fixed-depth recovery horizon/update budget");
             active_wall_cap = 60;
         }
+        if (startup_speed)
+            active_wall_cap = 90;
         const auto root = fs::absolute(argv[2]);
         if ((std::string(argv[1]) == "--run" || std::string(argv[1]) == "--verify-resume" ||
              std::string(argv[1]) == "--continue-pre-training") &&
@@ -3068,10 +3161,14 @@ int main(int argc, char **argv) {
         if (depth_offsets)
             require(resume_state && seed == 1247037243 && correlation == .8f &&
                         ((horizon == 640 && starting_update() == 288) ||
-                         (horizon == 1280 && starting_update() == (stopping ? 336 : 320) &&
+                         (horizon == 1280 && starting_update() == ((stopping || startup_speed) ? 336 : 320) &&
                           resume_state->actor.observation_schema == 2 &&
                           resume_state->actor.reward_version == 5)),
                     "Recovery lesson parent/schema mismatch");
+        if (startup_speed)
+            require(!stopping && horizon == 1280 && updates == 16 && depth_offsets && actor_lr_override &&
+                        resume_state && starting_update() == 336 && resume_state->actor.reward_version == 5,
+                    "Startup trial requires copied336 and unchanged64s fixed-target settings");
         if (stopping)
             require(horizon == 1280 && updates == 16 && depth_offsets && actor_lr_override && resume_state &&
                         starting_update() == 336 && resume_state->actor.reward_version == 5,

@@ -1,0 +1,51 @@
+{
+  "name": "startup-speed-r7-336to352-v1",
+  "utc": "2026-11-02T22:14:30.1456112Z",
+  "source_checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64/ppo-update-336.bin",
+  "source_SHA256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "source_update": 336,
+  "parent_reward": 5,
+  "reward": 7,
+  "protocol_version": 14,
+  "change": "Only horizontal-speed startup mask removed; other cost weights/masks and acceptance unchanged",
+  "training_updates": 16,
+  "ending_update": 352,
+  "save_evaluate_updates": [
+    344,
+    352
+  ],
+  "environments": 32,
+  "episode_controls": 1280,
+  "episode_seconds": 64,
+  "control_dt": 0.05,
+  "physics_dt": 0.005,
+  "training_controls": 655360,
+  "training_substeps": 6553600,
+  "maximum_controls": 686144,
+  "maximum_substeps": 6861440,
+  "maximum_optimizer_steps_each": 5120,
+  "native_seconds": 90,
+  "process_seconds": 75,
+  "retries": 0,
+  "actor_lr": 0.00025,
+  "critic_lr": 0.001,
+  "rho": 0.8,
+  "seed": 1247037243,
+  "training_starts": "Original336 mix: alternating pose0/3 and balanced center/+0.5mm/-0.5mm at fixed targetY=-80mm, pair-group offset phase=global update%3",
+  "evaluation": "Original four8s, two60s for each candidate, two300s only if4/4short and2/2long. Baseline remains336. No teacher/guards/stopping curriculum",
+  "arena_training_m": [
+    1.2,
+    0.8
+  ],
+  "arena_long_m": [
+    1.2,
+    0.8
+  ],
+  "arena_300_m": [
+    6,
+    0.8
+  ],
+  "training_resume": "Both networks and bothAdam moments/config/counters; fresh true episodes; globalupdate-keyed stochastic counter",
+  "prepared_command": ".\\build\\Release\\ppo_motor.exe --prepare C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-336to352-v1 --startup-speed 1 --actor-lr 0.00025 --depth-offsets 1 --episode-controls 1280 --updates 16 --resume-from C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64/ppo-update-336.bin --resume-protocol C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64/protocol.bin",
+  "working_directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation"
+}
