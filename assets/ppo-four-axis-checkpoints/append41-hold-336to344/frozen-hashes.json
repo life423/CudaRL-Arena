@@ -1,0 +1,226 @@
+[
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\runner.exe",
+    "Hash": "C466234A322EBC8E9EF2EDF8484F8366B4B8FFF5FA83A51FC461EB3000BCA518"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\protocol.bin",
+    "Hash": "7B6B9FF3D25C4C6FAF6EE120B22376DD5592A952521020DA619FBDD7CB6A38D9"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\migrated-initial.bin",
+    "Hash": "5E64011E16EFDBFE27D2B55739D007C8CB36E5AAC3E2D84245F59ADD8022BB9A"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\parent-checkpoint.bin",
+    "Hash": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\parent-protocol.bin",
+    "Hash": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\readiness.json",
+    "Hash": "C775DF02D4ECACD113FE85CF80EC31180151CFD2EE0299726429A74954E588F4"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\experiment.json",
+    "Hash": "D4E025DF9EAC4AB9A4DFAED1BB8F7ED7E5C8492482600895379B4045A916B0CA"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source-manifest.json",
+    "Hash": "C86B3DF68B8657AE348E501C3DE10E7D398C9C7356BACD34AD0FAE824894D9F1"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\protocol.md",
+    "Hash": "226F43117BFEAF518DBEC3029C5C65881D31584023C8E3C7BE0B33A013456A5D"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\CMakeLists.txt",
+    "Hash": "335F88BB2D96C5CCE34EB6AE652A4EE24045C41C707317D7CCACDE35D7735FEC"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\docs\\APPEND41_HOLD_2026-11-04.md",
+    "Hash": "226F43117BFEAF518DBEC3029C5C65881D31584023C8E3C7BE0B33A013456A5D"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\core\\checkpoint.cpp",
+    "Hash": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\core\\checkpoint.h",
+    "Hash": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\core\\hd.h",
+    "Hash": "2A8D1C759D9F8B8E268EDB95134F749DCEDBCF200E83200C628BBB213C98D7AC"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\core\\rng.h",
+    "Hash": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\cuda\\block_reduce.h",
+    "Hash": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\cuda\\cuda_memory.h",
+    "Hash": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\cuda\\device.cu",
+    "Hash": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\cuda\\device.h",
+    "Hash": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\adam_config.h",
+    "Hash": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\adam.cu",
+    "Hash": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\adam.h",
+    "Hash": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\gemm.cu",
+    "Hash": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\gemm.h",
+    "Hash": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\loss.cu",
+    "Hash": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\loss.h",
+    "Hash": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\mlp_cpu.h",
+    "Hash": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\mlp_gpu.cu",
+    "Hash": "37BC9915F97B3EECEE3D5490D027F7AC3B00EB24A0C57BC6FF8F06A3344787B5"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\mlp_gpu.h",
+    "Hash": "0AD0D2107E8C5B4EC3BC6FC4C5AF001D9546CF7883269B00600BD01AF7E983FE"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\mlp_spec.h",
+    "Hash": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\frozen_contract.in.h",
+    "Hash": "A4B6E7767924049BEBB4591322C71583F2DCFF3A7580133275A457DCEF2DE929"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\frozen_controller.cpp",
+    "Hash": "E7BBBE69CB96F84C4B62A2DD74D95E7BFDBE26C79C36572EE276DC3F81680C82"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\frozen_controller.h",
+    "Hash": "73907C4C5E285BF57C9E559DEB535A2111BFC9F6A22FE9B948B49B75652DFD31"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\joint_motor.h",
+    "Hash": "AC65522082DE6B501C5DD62366820ED3D7A01EE994E57A78239876EE86695F03"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\movement_model.h",
+    "Hash": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\observation_contract.h",
+    "Hash": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\state.h",
+    "Hash": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\nn\\motor\\straight_task.h",
+    "Hash": "E57A67A07B2272F07327D57D558171E500C9A93554DE4921285380AE1100919F"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\physics\\contact.h",
+    "Hash": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\physics\\dynamics.h",
+    "Hash": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\append_hold_checkpoint.h",
+    "Hash": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\ar_gaussian_math.h",
+    "Hash": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\gaussian_kernels.cu",
+    "Hash": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\gaussian_kernels.h",
+    "Hash": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\gaussian_math.h",
+    "Hash": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\motor_rollout.cuh",
+    "Hash": "A3D8172FF66CE625B27BEC373836A09B53ED7F698D0668F1E5B5D1B5899626D0"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\ppo_checkpoint.h",
+    "Hash": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\ppo_diagnostics.h",
+    "Hash": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\ppo_kernels.cu",
+    "Hash": "884AC4D2485E97D19D6049BE677CB218B5FB17B617A50F72545DF98B13D37E8C"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\ppo_kernels.h",
+    "Hash": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\rl\\ppo_math.h",
+    "Hash": "68E726DC7A84778E6900BC6894BED50126EC4545A1370618DFF0953374D25E8D"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\simulation\\world_cuda.cu",
+    "Hash": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\simulation\\world.cpp",
+    "Hash": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\src\\simulation\\world.h",
+    "Hash": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\tools\\append_hold8.cu",
+    "Hash": "672FDF2B7F320409B2ACC31809B7CD449EC032E76775687AE3A064634EEC53A0"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\source\\tools\\ppo_motor.cu",
+    "Hash": "B38E6342193D5A2B8708A92D02C90ABF5465C5B471474325233C8C96AC58377D"
+  }
+]

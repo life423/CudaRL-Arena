@@ -6,7 +6,16 @@ presentation only. The motor supplies four independent joint-angle targets throu
 
 ## Current state
 
-Training is stopped. The November4 position/depth-hold lesson is preserved as
+Training is stopped. The compatible41-input migration and exact8-update pilot are
+saved in `assets/ppo-four-axis-checkpoints/append41-hold-336to344`.
+Both same-seed replays preserve336observations/actions/critic/trajectories exactly.
+After8updates,4/4short swims and28/30long windows remain, but0/6holding cases pass:
+the creature continues~8.6mm/s and drifts~68mm in8s. Depth and10degree tilt gates
+pass; stopping/position/lane do not. Original336 remains unchanged; no adoption.
+The independent reward check found~334x cost scale, a separate learning concern.
+See [protocol and measured results](docs/APPEND41_HOLD_2026-11-04.md).
+
+The earlier November4 position/depth-hold lesson is preserved as
 rejected in `assets/ppo-four-axis-checkpoints/position-hold-r8-336to368-rejected`.
 It completed32updates but passed0/6holding cases at every assessment and regressed
 short swimming to0/4. Low final speed was accompanied by large position/depth

@@ -1,0 +1,8 @@
+CUDA device: present
+
+PASS  speed_request: target is observed and each speed has fixed relative accuracy (zero integration)      0.0 ms
+PASS  speed_request: switching preserves world, targets, heading and lifetime work (zero integration)      0.0 ms
+PASS  speed_request: segment effort excludes previous segments without erasing physical accounting      0.5 ms
+PASS  speed_request: absent or invalid policy never starts or advances physics (zero integration)      0.2 ms
+
+4/4 tests passed, 0 skipped
