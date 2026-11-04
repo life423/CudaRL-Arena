@@ -757,3 +757,68 @@ TEST_CASE("straight_task6: cross-track drift fails despite correct forward speed
     CHECK(task.outcome == st::Outcome::Timeout && task.maximum_lateral > .002f);
     CHECK(world.attempted_substeps == 0);
 }
+
+TEST_CASE("position_hold: mixed lessons preserve swim observations and expose a fixed stop anchor without reset") {
+    st::TrainingEpisode episode;
+    episode.holding = true; episode.controls = 1280;
+    episode.observation_schema = cudarl::motor_observation::position_hold;
+    CHECK(episode.reward_version() == 8 && episode.valid());
+    CHECK(episode.task_config(640, 0).target_speed_m_s == .008f);
+    CHECK(episode.task_config(639, 1).target_speed_m_s == .008f);
+    auto c = episode.task_config(640, 1);
+    CHECK(c.position_hold && c.stationary_request && c.target_speed_m_s == 0 && c.tilt_limit_deg == 10);
+    auto w = st::initial_world(0); st::ForwardTask t;
+    auto forward = episode.task_config(0, 1);
+    CHECK(st::begin_forward(w, forward, t));
+    CHECK(st::offset_episode_start(w, t, forward, -.0005f));
+    float before[40], after[40];
+    CHECK(st::observe(t, w, forward, before));
+    auto old = forward; old.observation_schema = 2;
+    CHECK(st::observe(t, w, old, after));
+    for (int j=0; j<40; ++j) CHECK(before[j] == after[j]);
+    t.controls=640; t.last_world_control=640; w.physical.control_steps=640;
+    const auto original = t.start_com_model; const auto position = w.physical.body.position;
+    CHECK(st::update_velocity_request(w,c,t));
+    const auto anchor=t.hold_anchor_model;
+    CHECK(t.hold_anchor_set && anchor.y == original.y && t.controls == 640 && w.attempted_substeps == 0);
+    CHECK(p::norm(w.physical.body.position-position)==0 && p::norm(t.start_com_model-original)==0);
+    for(int j=0;j<4;++j) CHECK(w.physical.held_targets[j]==w.physical.body.angle[j]);
+    CHECK(st::observe(t,w,c,after));
+    for(int j=3;j<6;++j) CHECK(after[j]==0);
+    CHECK(after[34]==0);
+    w.physical.body.position += t.request.heading*(.004f/p::scale);
+    CHECK(st::update_velocity_request(w,c,t));
+    CHECK(p::norm(t.hold_anchor_model-anchor)==0);
+    CHECK(st::observe(t,w,c,after));
+    const auto body_heading=w.physical.body.orientation.inverse(t.request.heading);
+    CHECK(fabsf(after[0]*body_heading.x+after[1]*body_heading.y+after[2]*body_heading.z+2.f)<1e-5f);
+    auto invalid=c; invalid.observation_schema=2;
+    CHECK(!st::observe(t,w,invalid,after));
+}
+TEST_CASE("position_hold: gate-scale stopping and return-to-anchor rewards allow all joint motion") {
+    auto c=st::StopSequence{}.config(640,3);c.position_hold=true;
+    auto w=st::initial_world(0);st::Metrics metrics;
+    metrics.velocity_m_s={.0028f,0,0};metrics.horizontal_speed_error_m_s=.0028f;
+    const auto stronger=st::reward_costs(metrics,w,c,true);
+    auto previous=c;previous.position_hold=false;
+    const auto old=st::reward_costs(metrics,w,previous,true);
+    CHECK(fabsf(stronger.horizontal-7.84f)<1e-5f);
+    CHECK(fabsf(stronger.horizontal/old.horizontal-64.f)<1e-5f);
+    metrics={};metrics.hold_error_m={.004f,0,0};
+    metrics.velocity_m_s={-.002f,0,0};
+    const auto toward=st::reward_costs(metrics,w,c,true);
+    metrics.velocity_m_s={.002f,0,0};
+    const auto away=st::reward_costs(metrics,w,c,true);
+    CHECK(toward.horizontal==0 && away.horizontal>15.9f && toward.lane>.19f);
+    metrics={};metrics.signed_depth_m=-.0005f;
+    const auto sinking=st::reward_costs(metrics,w,c,true);
+    metrics.vertical_velocity_m_s=.00025f;
+    const auto recovery=st::reward_costs(metrics,w,c,true);
+    CHECK(sinking.recovery>0 && recovery.recovery==0);
+    metrics={};const auto settled=st::reward_costs(metrics,w,c,true);
+    for(int j=0;j<4;++j){w.physical.body.angle[j]=.1f*(j+1);w.physical.body.velocity[6+j]=1.f;}
+    const auto moving=st::reward_costs(metrics,w,c,true);
+    CHECK(moving.total()==settled.total());
+    for(int j=0;j<4;++j) CHECK(w.physical.body.velocity[6+j]==1.f);
+    CHECK(c.tilt_limit_deg==10 && w.attempted_substeps==0);
+}

@@ -134,6 +134,8 @@ TEST_CASE("stopping_prepare: reward6 checkpoint is explicit and unknown reward r
     bytes[36] = 6;
     CHECK(cudarl::rl::read_ppo_training_state(bytes, 99).actor.reward_version == 6);
     bytes[36] = 7;
+    CHECK(cudarl::rl::read_ppo_training_state(bytes, 99).actor.reward_version == 7);
+    bytes[36] = 9; // First unsupported reward after explicit holding reward8.
     bool rejected = false;
     try {
         (void)cudarl::rl::read_ppo_training_state(bytes, 99);
@@ -200,4 +202,20 @@ TEST_CASE("ppo_checkpoint: schema3 records correlation and rejects invalid stoch
         }
         CHECK(rejected);
     }
+}
+
+TEST_CASE("position_hold checkpoint: observation3 reward8 are paired and preserve full PPO state") {
+    namespace rl=cudarl::rl;
+    auto state=rl::read_ppo_training_state(fixture(true),99);
+    state.actor.reward_version=8;state.actor.observation_schema=3;
+    const auto bytes=rl::write_ppo_training_state(state);
+    const auto loaded=rl::read_ppo_training_state(bytes,99,{},3);
+    CHECK(loaded.actor.parameters==state.actor.parameters && loaded.critic==state.critic);
+    CHECK(loaded.actor_adam.first==state.actor_adam.first && loaded.critic_adam.second==state.critic_adam.second);
+    bool rejected=false;
+    try{(void)rl::read_ppo_actor(bytes,99,state.actor.seed,2);}catch(const std::runtime_error&){rejected=true;}
+    CHECK(rejected);
+    state.actor.observation_schema=2;rejected=false;
+    try{(void)rl::write_ppo_training_state(state);}catch(const std::runtime_error&){rejected=true;}
+    CHECK(rejected);
 }

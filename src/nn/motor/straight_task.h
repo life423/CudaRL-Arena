@@ -24,6 +24,7 @@ struct ForwardConfig {
     float velocity_reward_scale_m_s = .008f;
     bool stationary_request = false;
     bool horizontal_from_first_step = false;
+    bool position_hold = false; // Research schema3; no physical state or joint constraints.
     float target_speed_m_s = .008f, clearance_m = .01f;
     float minimum_speed_m_s = .0072f, maximum_speed_m_s = .0088f, speed_rmse_limit = .0025f;
     float lateral_limit_m = .002f, depth_limit_m = .001f, path_angle_limit_deg = 5, tilt_limit_deg = 10;
@@ -69,6 +70,7 @@ struct TrainingEpisode {
     bool fixed_depth_offsets = false;
     bool stopping = false;
     bool startup_speed = false;
+    bool holding = false;
     int offset_phase = 0;
     CUDARL_HD float initial_vertical_offset(int environment) const {
         if (!fixed_depth_offsets)
@@ -81,10 +83,13 @@ struct TrainingEpisode {
                (controls == 160 || controls == 640 || controls == 1280) && (!stopping || controls == 1280);
     }
     CUDARL_HD contact::Arena arena() const { return controls >= 640 ? long_swim_arena() : contact::Arena{}; }
-    CUDARL_HD int reward_version() const { return startup_speed ? 7 : (stopping ? 6 : kRewardVersion); }
-    CUDARL_HD ForwardConfig task_config(int completed_controls = 0) const {
-        if (stopping)
-            return StopSequence{}.config(completed_controls, observation_schema);
+    CUDARL_HD int reward_version() const { return holding ? 8 : (startup_speed ? 7 : (stopping ? 6 : kRewardVersion)); }
+    CUDARL_HD ForwardConfig task_config(int completed_controls = 0, int environment = 0) const {
+        if (stopping || (holding && environment % 2)) {
+            auto c = StopSequence{}.config(completed_controls, observation_schema);
+            c.position_hold = holding;
+            return c;
+        }
         auto c = config_for_speed(.008f);
         c.maximum_controls = controls;
         c.observation_schema = observation_schema;
@@ -122,9 +127,12 @@ struct Metrics {
     float forward_m = 0, lateral_m = 0, depth_m = 0, speed_error_m_s = 0, head_yaw_deg = 0, tilt_deg = 0;
     float signed_depth_m = 0, vertical_velocity_m_s = 0, horizontal_speed_error_m_s = 0;
     float roll_deg = 0, pitch_deg = 0;
+    p::V hold_error_m{}, velocity_m_s{};
 };
 struct ForwardTask {
     simulation::MotorRequest request{};
+    p::V hold_anchor_model{};
+    bool hold_anchor_set = false;
     p::V start_com_model{}, steady_start_com_model{};
     uint64_t last_world_control = 0;
     float start_work_J = 0;
@@ -242,6 +250,13 @@ CUDARL_HD inline bool request_speed(const World &w, float speed, ForwardConfig &
 CUDARL_HD inline bool update_velocity_request(const World &w, const ForwardConfig &c, ForwardTask &t) {
     if (!in_domain(w, c) || t.outcome != Outcome::Running || w.physical.control_steps != t.last_world_control)
         return false;
+    if (c.position_hold && c.stationary_request && !t.hold_anchor_set) {
+        // One command target: actual horizontal COM at request, original depth.
+        // Never teleport, recenter or change the original depth/lane reference.
+        t.hold_anchor_model = old::motion(w.physical.body).com_model;
+        t.hold_anchor_model.y = t.start_com_model.y;
+        t.hold_anchor_set = true;
+    }
     t.request.terminal_velocity = t.request.heading * c.target_speed_m_s;
     return true;
 }
@@ -252,7 +267,12 @@ CUDARL_HD inline bool observe(const ForwardTask &t, const World &w, const Forwar
     const auto motion = old::motion(w.physical.body);
     const auto &q = w.physical.body.orientation;
     const auto displacement = (motion.com_model - t.start_com_model) * p::scale;
-    const auto lane_error = t.request.heading * p::dot(displacement, t.request.heading) - displacement;
+    auto lane_error = t.request.heading * p::dot(displacement, t.request.heading) - displacement;
+    if (c.position_hold && c.stationary_request) {
+        if (c.observation_schema != motor_observation::position_hold || !t.hold_anchor_set)
+            return false;
+        lane_error = (t.hold_anchor_model - motion.com_model) * p::scale;
+    }
     old::vector_features(out, 0,
                          q.inverse(lane_error) / motor_observation::path_scale_m(c.observation_schema));
     old::vector_features(out, 3, q.inverse(t.request.terminal_velocity) / old::kVelocityScale);
@@ -282,6 +302,9 @@ CUDARL_HD inline Metrics measure(const ForwardTask &t, const World &w) {
     const auto motion = old::motion(w.physical.body);
     const auto displacement = (motion.com_model - t.start_com_model) * p::scale;
     Metrics result;
+    result.velocity_m_s = motion.velocity_m_s;
+    if (t.hold_anchor_set)
+        result.hold_error_m = (motion.com_model - t.hold_anchor_model) * p::scale;
     result.forward_m = p::dot(displacement, t.request.heading);
     const auto perpendicular = displacement - t.request.heading * result.forward_m;
     result.lateral_m = p::norm({perpendicular.x, 0, perpendicular.z});
@@ -325,6 +348,21 @@ CUDARL_HD inline RewardCosts reward_costs(const Metrics &metrics, const World &w
     out.lane = .05f * lane * lane;
     out.depth = .05f * depth * depth;
     out.posture = out.roll + out.pitch;
+    if (config.position_hold && config.stationary_request) {
+        // Reward references only. The network still chooses all four joints.
+        auto desired = p::V{-metrics.hold_error_m.x / 2.f, 0, -metrics.hold_error_m.z / 2.f};
+        const float magnitude = p::norm(desired);
+        if (magnitude > .002f)
+            desired = desired * (.002f / magnitude);
+        const auto error = p::V{metrics.velocity_m_s.x - desired.x, 0,
+                                metrics.velocity_m_s.z - desired.z};
+        out.horizontal = p::dot(error, error) / (.001f * .001f);
+        const float vy_error = metrics.vertical_velocity_m_s - recovery_velocity(metrics.signed_depth_m);
+        out.recovery = vy_error * vy_error / (.001f * .001f);
+        out.speed = out.horizontal + out.recovery;
+        const auto position = p::V{metrics.hold_error_m.x, 0, metrics.hold_error_m.z};
+        out.lane += .05f * p::dot(position, position) / (.002f * .002f);
+    }
     out.effort = .002f * world.physical.mean_squared_torque;
     return out;
 }

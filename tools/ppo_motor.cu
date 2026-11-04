@@ -39,6 +39,7 @@ bool &tilt_mixture = training_episode.tilt_mixture;
 bool &depth_offsets = training_episode.fixed_depth_offsets;
 bool &stopping = training_episode.stopping;
 bool &startup_speed = training_episode.startup_speed;
+bool &holding = training_episode.holding;
 int optimizer_steps_per_update() { return epochs * (rows / minibatch); }
 size_t rollout_elements(int components = 1) { return static_cast<size_t>(rows) * components; }
 uint32_t seed = 0x4a544731u;
@@ -227,7 +228,10 @@ struct Batches {
 std::vector<uint8_t> protocol() {
     cp::Writer out;
     out.value(uint32_t{0x3150504d});
-    out.value(uint32_t{14});
+    out.value(uint32_t{15});
+    out.value(uint32_t{holding ? 1u : 0u});
+    out.value(.001f); // Holding velocity reward scale, m/s.
+    out.value(.002f); // Holding horizontal position scale/reference cap, m/s or m.
     out.value(uint32_t{startup_speed ? 1u : 0u});
     out.value(uint32_t{stopping ? 1u : 0u});
     out.value(m::StopSequence::request_control);
@@ -454,6 +458,8 @@ int prepare(const fs::path &root) {
         << ",\"actor_shape\":[40,32,32,4],\"critic_shape\":[40,32,32,1],\"checkpoint_schema\":4,\"action_"
            "mapping\":3,\"task\":6,\"reward\":"
         << training_episode.reward_version()
+        << ",\"observation_schema\":" << training_episode.observation_schema
+        << ",\"holding_position\":" << (holding ? "true" : "false")
         << ",\"startup_speed_from_first_step\":" << (startup_speed ? "true" : "false")
         << ",\"stopping_sequence\":" << (stopping ? "true" : "false")
         << ",\"model\":6,\"fresh_episode_rollout\":true,\"teacher_"
@@ -772,19 +778,34 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
     trace << std::setprecision(12)
           << "pose,control,time_s,requested_mm_s,COM_speed_mm_s,forward_velocity_mm_s,vx_mm_s,vy_mm_s,vz_mm_"
              "s,forward_mm,depth_mm,lane_mm,tilt_deg,head_yaw_deg,reward,speed_cost,lane_cost,depth_cost,"
-             "posture_cost,effort_cost\n";
+             "posture_cost,effort_cost";
+    if (holding) {
+        trace << ",case,initial_depth_offset_mm,hold_error_mm,roll_deg,pitch_deg";
+        for (int j = 0; j < 4; ++j)
+            trace << ",command" << j << ",angle" << j << ",rate" << j << ",last_torque" << j;
+    }
+    trace << '\n';
     summary << std::setprecision(12)
             << "pose,passed,pre_speed_mm_s,pre_RMSE_mm_s,permanent_stop_relative_s,first20samples_stop_"
                "relative_s,stopping_distance_mm,post_command_forward_mm,reverse_distance_mm,peak_reverse_mm_"
                "s,speed_at48_mm_s,final_speed_mm_s,max_depth_mm,max_lane_mm,peak_tilt_deg,peak_head_yaw_deg,"
                "hold_max_excursion_mm,hold_net_drift_mm,hold_mean_speed_mm_s,hold_mean_vy_mm_s,final_depth_"
-               "mm,stop_positive_work_J,deadline_pass,hold_pass,state_pass,pre_swim_pass\n";
-    for (int pose : {0, 3}) {
+               "mm,stop_positive_work_J,deadline_pass,hold_pass,state_pass,pre_swim_pass";
+    if (holding)
+        summary << ",case,initial_depth_offset_mm,hold_anchor_max_error_mm,hold_anchor_final_error_mm";
+    summary << '\n';
+    for (int case_id = 0; case_id < (holding ? 6 : 2); ++case_id) {
+        const int pose = case_id % 2 ? 3 : 0;
+        const float initial_offset = !holding || case_id / 2 == 0 ? 0.f
+                                   : case_id / 2 == 1 ? -.0005f : .0005f;
         auto world = m::initial_world(pose);
         world.arena = m::long_swim_arena();
         m::ForwardTask task;
         const m::StopSequence sequence;
-        require(m::begin_forward(world, sequence.config(0, training_episode.observation_schema), task),
+        auto initial_config = sequence.config(0, training_episode.observation_schema);
+        initial_config.position_hold = holding;
+        require(m::begin_forward(world, initial_config, task) &&
+                    m::offset_episode_start(world, task, initial_config, initial_offset),
                 "Stopping setup");
         const auto target = task.start_com_model, heading = task.request.heading;
         float forward[1281]{}, pre_origin = 0, pre_work = 0, command_work = 0, pre_speed = 0, pre_rmse = 0;
@@ -793,9 +814,11 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
         float max_depth = 0, max_lane = 0, max_tilt = 0, max_yaw = 0, speed48 = 0, final_speed = 0;
         double pre_error2 = 0, hold_speed = 0, hold_vy = 0;
         int last_fast = 640, streak = 0, first_stop = -1;
+        float anchor_max_error = 0, anchor_final_error = 0;
         bool deadline = true, hold = true, pre_pass = false;
         for (int control = 1; control <= 1280; ++control) {
-            const auto config = sequence.config(task.controls, training_episode.observation_schema);
+            auto config = sequence.config(task.controls, training_episode.observation_schema);
+            config.position_hold = holding;
             require(task.start_com_model.y == target.y && p::norm(task.request.heading - heading) == 0,
                     "Stopping target reference changed");
             require(m::update_velocity_request(world, config, task), "Stopping request update");
@@ -871,6 +894,8 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
             if (control == 1120)
                 hold_origin = metrics.forward_m;
             if (control > 1120) {
+                anchor_final_error = p::norm(metrics.hold_error_m);
+                anchor_max_error = std::max(anchor_max_error, anchor_final_error);
                 hold_net = metrics.forward_m - hold_origin;
                 hold_excursion = std::max(hold_excursion, fabsf(hold_net));
                 hold_speed += speed;
@@ -888,6 +913,13 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
             for (float cost : {interval.costs.speed, interval.costs.lane, interval.costs.depth,
                                interval.costs.posture, interval.costs.effort})
                 trace << ',' << cost;
+            if (holding) {
+                trace << ',' << case_id << ',' << initial_offset * 1000 << ','
+                      << p::norm(metrics.hold_error_m) * 1000 << ',' << metrics.roll_deg << ',' << metrics.pitch_deg;
+                for (int j = 0; j < 4; ++j)
+                    trace << ',' << action.command[j] << ',' << world.physical.body.angle[j] << ','
+                          << world.physical.body.velocity[6 + j] << ',' << world.physical.last_actual_torques[j];
+            }
             trace << '\n';
         }
         const bool stopped = last_fast < 1280;
@@ -895,7 +927,7 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
         const float distance = stopped ? (forward[last_fast + 1] - forward[640]) * 1000
                                        : std::numeric_limits<float>::quiet_NaN();
         const bool state = max_depth <= .001f && max_lane <= .002f && max_tilt <= 10;
-        hold = hold && hold_excursion <= .002f;
+        hold = hold && hold_excursion <= .002f && (!holding || anchor_max_error <= .002f);
         const bool passed = deadline && stopped && hold && state && pre_pass;
         result.passed += passed ? 1 : 0;
         ++result.completed;
@@ -907,7 +939,11 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
                 << hold_excursion * 1000 << ',' << hold_net * 1000 << ',' << hold_speed / 160 * 1000 << ','
                 << hold_vy / 160 * 1000 << ',' << m::measure(task, world).signed_depth_m * 1000 << ','
                 << world.physical.body.work - command_work << ',' << deadline << ',' << hold << ',' << state
-                << ',' << pre_pass << '\n';
+                << ',' << pre_pass;
+        if (holding)
+            summary << ',' << case_id << ',' << initial_offset * 1000 << ','
+                    << anchor_max_error * 1000 << ',' << anchor_final_error * 1000;
+        summary << '\n';
         summary.flush();
         trace.flush();
     }
@@ -2607,7 +2643,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     budget.seconds = active_wall_cap;
     Evaluation before, after;
     bool initial_recovery_pass = false, final_recovery_pass = false;
-    const bool extended = horizon == 1280 && !startup_speed;
+    const bool extended = horizon == 1280 && !startup_speed && !holding;
     bool final64_recovery_pass = false, qualified_stop = false, long_regression_pass = false;
     StoppingResult initial_stopping, final_stopping;
     int long_attempts = 0, endurance_attempts = 0;
@@ -2647,9 +2683,9 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         if (!continue_pre_training) {
             parity(budget, stream.value);
             before = stopping ? reused_baseline(root) : evaluate(initial_actor(), root, "initial", budget);
-            if (stopping)
+            if (stopping || holding)
                 initial_stopping = evaluate_stopping(initial_actor(), root / "initial-stop", budget);
-            if (depth_offsets && !stopping && !startup_speed)
+            if (depth_offsets && !stopping && !startup_speed && !holding)
                 recovery_evaluation(root / "initial-recovery", parent_checkpoint_path, parent_protocol_path,
                                     base_update, initial_recovery_pass);
             if (extended && !stopping) {
@@ -2876,7 +2912,35 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                           << " long=" << long_check.passed << " windows=" << long_check.windows_passed
                           << std::endl;
             }
-            if (actor_lr_override && completed - base_update != updates && !startup_speed &&
+            if (holding && completed - base_update != updates &&
+                (completed - base_update == 8 || completed - base_update == 16)) {
+                const auto directory = root / ("checkpoint-" + std::to_string(completed));
+                require(fs::create_directory(directory), "Holding assessment already exists");
+                const auto params = actor.get_params();
+                const auto critic_before = critic.get_params();
+                cp::Writer optimizers_before, optimizers_after;
+                actor_opt.save(optimizers_before); critic_opt.save(optimizers_before);
+                const auto short_result = evaluate(params, directory, "frozen", budget);
+                const auto stop_result = evaluate_stopping(params, directory / "stop", budget);
+                require(fs::create_directory(directory / "long"), "Holding long assessment exists");
+                ++long_attempts;
+                const auto regression = sustained(params, directory / "long", budget);
+                require(regression.safety_fault.empty(), "Holding long physical safety stop");
+                actor_opt.save(optimizers_after); critic_opt.save(optimizers_after);
+                require(actor.get_params() == params && critic.get_params() == critic_before &&
+                            optimizers_before.data == optimizers_after.data,
+                        "Holding frozen evaluation changed training state");
+                std::ofstream summary(directory / "summary.json");
+                summary << "{\"update\":" << completed << ",\"short_passes\":" << short_result.passed
+                        << ",\"stopping_passes\":" << stop_result.passed
+                        << ",\"stopping_total\":6,\"long_passes\":" << regression.passed
+                        << ",\"long_windows\":" << regression.windows_passed
+                        << ",\"parameters_and_optimizers_unchanged\":true}\n";
+                std::cout << "HOLDING_EVALUATED update=" << completed << " short=" << short_result.passed
+                          << " stop=" << stop_result.passed << "/6 long=" << regression.passed
+                          << " windows=" << regression.windows_passed << std::endl;
+            }
+            if (actor_lr_override && completed - base_update != updates && !startup_speed && !holding &&
                 (completed - base_update == 8 || completed - base_update == 16)) {
                 const auto directory = root / ("checkpoint-" + std::to_string(completed));
                 require(fs::create_directory(directory), "Intermediate evaluation already exists");
@@ -2937,7 +3001,7 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         status(root, "frozen_evaluation", budget, completed);
         if (!qualified_stop)
             after = evaluate(actor.get_params(), root, "frozen", budget);
-        if (depth_offsets && !qualified_stop && !stopping && !startup_speed)
+        if (depth_offsets && !qualified_stop && !stopping && !startup_speed && !holding)
             recovery_evaluation(root / "final-recovery",
                                 root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                 root / "protocol.bin", completed, final_recovery_pass);
@@ -2945,10 +3009,10 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             recovery_evaluation(root / "final-recovery64",
                                 root / ("ppo-update-" + std::to_string(completed) + ".bin"),
                                 root / "protocol.bin", completed, final64_recovery_pass, 1280);
-        if (stopping && !qualified_stop)
+        if ((stopping || holding) && !qualified_stop)
             final_stopping = evaluate_stopping(actor.get_params(), root / "final-stop", budget);
         const bool run_long =
-            startup_speed ||
+            holding || startup_speed ||
             (after.passed == 4 &&
              (stopping ? final_stopping.passed == 2 : (!depth_offsets || final_recovery_pass)) &&
              (!extended || final64_recovery_pass));
@@ -2956,9 +3020,9 @@ int run(const fs::path &root, bool continue_pre_training = false) {
             status(root, "long_evaluation", budget, completed);
             ++long_attempts;
             long_result = sustained(actor.get_params(), root, budget);
-            if (extended)
+            if (extended || holding)
                 require(long_result.safety_fault.empty(), "64s campaign long physical safety stop");
-            long_regression_pass = stopping ? preserved_long_windows(root) : long_result.passed == 2;
+            long_regression_pass = (stopping || holding) ? preserved_long_windows(root) : long_result.passed == 2;
         }
         if (startup_speed && after.passed == 4 && long_result.passed == 2) {
             require(fs::create_directory(root / "five-minutes"), "Final endurance identity exists");
@@ -2972,7 +3036,9 @@ int run(const fs::path &root, bool continue_pre_training = false) {
                     << ",\"windows_total\":" << endurance.windows_total << "}\n";
         }
         const int expected_controls =
-            startup_speed ? (completed - base_update) * rows + 64 + 3 * 640 + long_attempts * 2400 +
+            holding ? (completed - base_update) * rows + 64 + 640 + 7680 +
+                          3 * (640 + 7680) + long_attempts * 2400
+            : startup_speed ? (completed - base_update) * rows + 64 + 3 * 640 + long_attempts * 2400 +
                                 endurance_attempts * 12000
             : stopping
                 ? (completed - base_update) * rows + 64 + 2560 + ((completed - base_update >= 8) ? 7040 : 0) +
@@ -2992,7 +3058,8 @@ int run(const fs::path &root, bool continue_pre_training = false) {
     }
     const bool accepted =
         fault.empty() && after.passed == 4 &&
-        (stopping ? final_stopping.passed == 2 && final64_recovery_pass && long_regression_pass
+        (holding ? final_stopping.passed == 6 && long_regression_pass
+         : stopping ? final_stopping.passed == 2 && final64_recovery_pass && long_regression_pass
                   : after.rmse < before.rmse && long_result.passed == 2);
     std::ofstream out(root / "result.json");
     out << std::setprecision(9)
@@ -3009,6 +3076,8 @@ int run(const fs::path &root, bool continue_pre_training = false) {
         << ",\"initial_recovery_pass\":" << (initial_recovery_pass ? "true" : "false")
         << ",\"final_recovery_pass\":" << (final_recovery_pass ? "true" : "false")
         << ",\"final64_recovery_pass\":" << (final64_recovery_pass ? "true" : "false")
+        << ",\"holding_position_lesson\":" << (holding ? "true" : "false")
+        << ",\"stopping_case_count\":" << (holding ? 6 : 2)
         << ",\"stopping_lesson\":" << (stopping ? "true" : "false")
         << ",\"initial_stopping_passes\":" << initial_stopping.passed
         << ",\"final_stopping_passes\":" << final_stopping.passed
@@ -3050,6 +3119,11 @@ int main(int argc, char **argv) {
         fs::path resume_checkpoint, resume_protocol;
         bool seed_explicit = false, rho_explicit = false;
         for (int option = 3; option < argc; option += 2) {
+            if (std::string(argv[option]) == "--hold-position") {
+                require(std::string(argv[option + 1]) == "1", "Holding experiment must be explicit");
+                holding = true;
+                continue;
+            }
             if (std::string(argv[option]) == "--startup-speed") {
                 require(std::string(argv[option + 1]) == "1", "Startup experiment must be explicit");
                 startup_speed = true;
@@ -3125,8 +3199,8 @@ int main(int argc, char **argv) {
         // The smaller rate belongs only to the separately frozen startup study.
         // Keep earlier stopping and depth-study configurations unchanged.
         require(!actor_lr_override || *actor_lr_override != .000125f ||
-                    (startup_speed && !stopping),
-                "Half actor rate requires explicit startup experiment");
+                    ((startup_speed || holding) && !stopping),
+                "Half actor rate requires explicit startup or holding experiment");
         rows = environments * horizon;
         training_cap = updates * rows;
         control_cap = training_cap + 64 + 1280 + 2400;
@@ -3140,6 +3214,8 @@ int main(int argc, char **argv) {
             control_cap = training_cap + 64 + 2560 + 2 * 7040 + 2 * 2400;
         if (startup_speed)
             control_cap = training_cap + 64 + 3 * 640 + 2 * 2400 + 2 * 12000;
+        if (holding)
+            control_cap = training_cap + 64 + 640 + 7680 + 3 * (640 + 7680 + 2400);
         substep_cap = control_cap * 10;
         if (tilt_mixture || updates <= 32)
             active_wall_cap = 20;
@@ -3147,12 +3223,14 @@ int main(int argc, char **argv) {
             active_wall_cap = 30;
         if (depth_offsets) {
             require(!tilt_mixture &&
-                        ((horizon == 640 && updates == 32) || (horizon == 1280 && updates == 16)),
+                        ((horizon == 640 && updates == 32) || (horizon == 1280 && (updates == 16 || (holding && updates == 32)))),
                     "Unsupported fixed-depth recovery horizon/update budget");
             active_wall_cap = 60;
         }
         if (startup_speed)
             active_wall_cap = 90;
+        if (holding)
+            active_wall_cap = 180;
         const auto root = fs::absolute(argv[2]);
         if ((std::string(argv[1]) == "--run" || std::string(argv[1]) == "--verify-resume" ||
              std::string(argv[1]) == "--continue-pre-training") &&
@@ -3167,7 +3245,7 @@ int main(int argc, char **argv) {
         if (depth_offsets)
             require(resume_state && seed == 1247037243 && correlation == .8f &&
                         ((horizon == 640 && starting_update() == 288) ||
-                         (horizon == 1280 && starting_update() == ((stopping || startup_speed) ? 336 : 320) &&
+                         (horizon == 1280 && starting_update() == ((stopping || startup_speed || holding) ? 336 : 320) &&
                           resume_state->actor.observation_schema == 2 &&
                           resume_state->actor.reward_version == 5)),
                     "Recovery lesson parent/schema mismatch");
@@ -3175,6 +3253,13 @@ int main(int argc, char **argv) {
             require(!stopping && horizon == 1280 && updates == 16 && depth_offsets && actor_lr_override &&
                         resume_state && starting_update() == 336 && resume_state->actor.reward_version == 5,
                     "Startup trial requires copied336 and unchanged64s fixed-target settings");
+        if (holding)
+            require(!stopping && !startup_speed && horizon == 1280 && updates == 32 && depth_offsets &&
+                        actor_lr_override == .000125f && resume_state && starting_update() == 336 &&
+                        resume_state->actor.reward_version == 5 && resume_state->actor.observation_schema == 2,
+                    "Holding trial requires copied336,32updates,64s,fixed-targetmix and half rate");
+        if (holding)
+            training_episode.observation_schema = cudarl::motor_observation::position_hold;
         if (stopping)
             require(horizon == 1280 && updates == 16 && depth_offsets && actor_lr_override && resume_state &&
                         starting_update() == 336 && resume_state->actor.reward_version == 5,

@@ -59,7 +59,7 @@ read_ppo_training_state(const std::vector<uint8_t> &payload, uint64_t expected_p
     actor.reward_version = in.value<uint32_t>();
     if (task_version != 6 ||
         (actor.reward_version != 4 && actor.reward_version != 5 && actor.reward_version != 6 &&
-         actor.reward_version != 7) ||
+         actor.reward_version != 7 && actor.reward_version != 8) ||
         in.value<uint32_t>() != 40 || in.value<uint32_t>() != 4)
         throw std::runtime_error("Wrong PPO task/reward/shape");
     if (schema >= 3) {
@@ -74,6 +74,8 @@ read_ppo_training_state(const std::vector<uint8_t> &payload, uint64_t expected_p
     if (!motor_observation::valid(actor.observation_schema) ||
         (expected_observations && actor.observation_schema != *expected_observations))
         throw std::runtime_error("PPO observation schema mismatch");
+    if ((actor.reward_version == 8) != (actor.observation_schema == motor_observation::position_hold))
+        throw std::runtime_error("Holding reward/observation contract mismatch");
     auto finite = [](const std::vector<float> &values) {
         for (float value : values)
             if (!std::isfinite(value))

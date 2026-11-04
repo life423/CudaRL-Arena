@@ -211,3 +211,53 @@ GPU_TEST_CASE("physics CUDA: same-stream CPU agreement and exact GPU replay (4CP
     }
     std::printf("    shared-physics CPU/CUDA max defined-field difference %.9g; GPU repeat exact\n",maximum);
 }
+
+namespace {
+CUDARL_HD void holding_fixture(int i,float* out) {
+    namespace m=cudarl::straight_motor;
+    m::TrainingEpisode ep;ep.holding=true;ep.controls=1280;ep.observation_schema=3;
+    auto w=m::initial_world(i%2?3:0);m::ForwardTask task;
+    const auto start=ep.task_config(0,i);
+    bool ok=m::begin_forward(w,start,task)&&m::offset_episode_start(w,task,start,(i%3-1)*.0005f);
+    task.controls=640;task.last_world_control=640;w.physical.control_steps=640;
+    auto c=ep.task_config(640,i);
+    ok=ok&&m::update_velocity_request(w,c,task);
+    w.physical.body.position += task.request.heading*(.004f/cudarl::physics::scale);
+    w.physical.body.velocity[0]=.0028f;
+    ok=ok&&m::update_velocity_request(w,c,task);
+    float obs[40]{};ok=ok&&m::observe(task,w,c,obs);
+    const auto r=m::reward_costs(m::measure(task,w),w,c,true);
+    out[0]=ok?1.f:0.f;out[1]=task.hold_anchor_set?1.f:0.f;
+    out[2]=task.start_com_model.y;out[3]=task.hold_anchor_model.y;
+    for(int j=0;j<40;++j)out[4+j]=obs[j];
+    out[44]=r.horizontal;out[45]=r.recovery;out[46]=r.lane;out[47]=r.total();
+}
+__global__ void holding_fixture_kernel(float* out){int i=threadIdx.x;if(i<8)holding_fixture(i,out+48*i);}
+}
+GPU_TEST_CASE("position_hold CUDA: mixed full-position observations and reward match CPU without integration") {
+    device_ptr<float> output(8*48);holding_fixture_kernel<<<1,32>>>(output.get());
+    CUDA_CHECK_THROW(cudaGetLastError());CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    std::vector<float> actual(8*48);output.copy_to_host(actual.data(),actual.size());
+    double maximum=0;
+    for(int i=0;i<8;++i){float expected[48]{};holding_fixture(i,expected);
+        CHECK(expected[0]==1 && expected[1]==float(i%2));
+        for(int j=0;j<48;++j){double error=fabs(double(expected[j])-actual[i*48+j]);maximum=fmax(maximum,error);CHECK(error<2e-5);}
+        if(i%2)CHECK(actual[i*48+3]==-2);
+    }
+    std::printf("    8 zero-integration holding CPU/CUDA cases maximum error %.9g\n",maximum);
+}
+GPU_TEST_CASE("position_hold CUDA: production observation kernel keeps mixed swim and stop goals") {
+    namespace m=cudarl::straight_motor;namespace gpu=cudarl::rl::motor_rollout;
+    m::TrainingEpisode ep;ep.holding=true;ep.controls=1280;ep.observation_schema=3;
+    m::World initial[2];m::ForwardTask start[2];
+    for(int i=0;i<2;++i){CHECK(m::begin_training_episode(i,false,ep.task_config(0,i),initial[i],start[i],ep.arena()));start[i].controls=640;start[i].last_world_control=640;initial[i].physical.control_steps=640;}
+    device_ptr<m::World> worlds(2);device_ptr<m::ForwardTask> tasks(2);device_ptr<float> obs(80);device_ptr<int> fault(1);
+    int zero=0;worlds.copy_from_host(initial,2);tasks.copy_from_host(start,2);fault.copy_from_host(&zero,1);
+    gpu::observe<<<1,32>>>(worlds.get(),tasks.get(),obs.get(),2,fault.get(),ep);
+    CUDA_CHECK_THROW(cudaGetLastError());CUDA_CHECK_THROW(cudaDeviceSynchronize());
+    m::ForwardTask result[2];tasks.copy_to_host(result,2);float values[80];obs.copy_to_host(values,80);int error;fault.copy_to_host(&error,1);
+    CHECK(error==0 && !result[0].hold_anchor_set && result[1].hold_anchor_set);
+    CHECK(cudarl::physics::norm(result[0].request.terminal_velocity)>.0079f);
+    CHECK(cudarl::physics::norm(result[1].request.terminal_velocity)==0);
+    for(int j=3;j<6;++j)CHECK(values[40+j]==0);
+}
