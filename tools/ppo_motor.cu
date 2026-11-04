@@ -3064,7 +3064,8 @@ int main(int argc, char **argv) {
             if (std::string(argv[option]) == "--actor-lr") {
                 size_t used = 0;
                 const float rate = std::stof(argv[option + 1], &used);
-                require(used == std::string(argv[option + 1]).size() && rate == .00025f,
+                require(used == std::string(argv[option + 1]).size() &&
+                        (rate == .00025f || rate == .000125f),
                         "Unsupported matched actor rate");
                 actor_lr_override = rate;
                 continue;
@@ -3121,6 +3122,11 @@ int main(int argc, char **argv) {
                     "Invalid seed");
             seed = static_cast<uint32_t>(value);
         }
+        // The smaller rate belongs only to the separately frozen startup study.
+        // Keep earlier stopping and depth-study configurations unchanged.
+        require(!actor_lr_override || *actor_lr_override != .000125f ||
+                    (startup_speed && !stopping),
+                "Half actor rate requires explicit startup experiment");
         rows = environments * horizon;
         training_cap = updates * rows;
         control_cap = training_cap + 64 + 1280 + 2400;
