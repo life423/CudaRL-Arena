@@ -1,0 +1,42 @@
+{
+  "status": "Completed 32 updates; 0 of 6 holds at every assessment; rejected; training stopped",
+  "source_run": "build/ppo/hold-exploration-2026-11-22-v1",
+  "parent_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "trainable_parameters": "Four stationary-request output coefficients only; frozen 336 MLP and old Adam",
+  "initial_gains": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "final_gains": [
+    0.6862522959709167,
+    0.8705000281333923,
+    0.5741626620292664,
+    0.6643787622451782
+  ],
+  "PPO_updates": 32,
+  "fresh_Adam_steps": 2560,
+  "controls": 691680,
+  "substeps": 6916800,
+  "critic_calls": 0,
+  "critic_steps": 0,
+  "short_swims": 4,
+  "long_windows": 28,
+  "hold_passes": 0,
+  "all_32_swimming_traces_byte_identical": true,
+  "deterministic_assessment_amplitude": 1,
+  "calibration_quiet_segments": 102,
+  "calibration_heldout_quiet_rows": 2223,
+  "calibration_heldout_hold_rows": 2560,
+  "native_combined_seconds": 84.0648873,
+  "process_combined_seconds": 84.2195275,
+  "runtime_adopted": false,
+  "retries": 0,
+  "extensions": 0,
+  "closed": true,
+  "independent_input_files_checked": 406,
+  "prior_artifact_files_unchanged": 5256,
+  "frozen_run_inputs_unchanged": 76,
+  "note": "All 33 gain states and 33 sampled batches remain in source_run. GUI research exports and inspection are separate from production adoption."
+}

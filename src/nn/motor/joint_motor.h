@@ -9,6 +9,7 @@ namespace base = motor;
 namespace model = movement;
 constexpr int kObservations = 40, kActions = 4;
 constexpr uint32_t kActionVersion = 3;
+constexpr int kSubstepsPerControl = 10;
 struct Action {
     float latent[4]{}, command[4]{};
 };
@@ -85,7 +86,7 @@ CUDARL_HD inline bool step_state(World &w, const float *command, model::Telemetr
     state.mean_squared_torque = 0;
     for (int j = 0; j < 4; ++j)
         state.raw_action[j] = command[j];
-    for (int k = 0; k < 10; ++k) {
+    for (int k = 0; k < kSubstepsPerControl; ++k) {
         if (before_substep)
             *before_substep = state.body;
         const float h = .005f;

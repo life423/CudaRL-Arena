@@ -1,0 +1,1 @@
+{"passed":true,"rows_each":40960,"holding_rows_each":10240,"all_observations_actions_values_logp_dones_equal":true,"trajectory_observations_and_final_states_equal":true,"reward_component_gain_error":0,"PPO_updates_before_gate":0,"extra_physical_controls":0}

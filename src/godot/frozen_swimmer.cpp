@@ -30,7 +30,8 @@ Dictionary FrozenSwimmer::get_state()const{const auto& c=impl_->controller;const
     out["segment_work_J"]=b.work-c.task().start_work_J;
     out["arena_width_m"]=2*w.arena.half_width_m;out["arena_depth_m"]=2*w.arena.half_depth_m;
     const auto gates=cudarl::straight_motor::config_for_speed(c.target_speed());const auto& task=c.task();Dictionary score;
-    score["task_controls"]=task.controls;score["maximum_controls"]=gates.maximum_controls;score["complete"]=task.controls>=gates.maximum_controls;
+    score["task_controls"]=task.controls;score["maximum_controls"]=c.benchmark_controls();score["complete"]=task.controls>=c.benchmark_controls();
+    out["substeps_per_control"]=c.substeps_per_control();out["training_update"]=c.training_update();out["observation_schema"]=c.observation_schema();
     score["outcome"]=static_cast<int>(task.outcome);score["steady_speed_m_s"]=task.steady_speed_m_s;score["minimum_speed_m_s"]=gates.minimum_speed_m_s;score["maximum_speed_m_s"]=gates.maximum_speed_m_s;
     score["speed_rmse_m_s"]=task.speed_rmse;score["speed_rmse_limit"]=gates.speed_rmse_limit;score["maximum_lateral_m"]=task.maximum_lateral;score["lateral_limit_m"]=gates.lateral_limit_m;
     score["maximum_depth_m"]=task.maximum_depth;score["depth_limit_m"]=gates.depth_limit_m;score["path_angle_deg"]=task.path_angle_deg;score["path_angle_limit_deg"]=gates.path_angle_limit_deg;

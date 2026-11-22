@@ -1,0 +1,1 @@
+Approved exact protocol including critic-only calibration. Report actual returns and critic validation before PPO; native pauses for reported-and-continue marker while120s wall caps continue. Proceed only if original gates pass. No retries/extensions/adoption/moving starts.

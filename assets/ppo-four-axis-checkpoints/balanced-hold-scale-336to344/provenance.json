@@ -1,0 +1,165 @@
+{
+  "status": "Completed exact approved two-arm trial; critic conditioning improved in B; both physical candidates rejected; no adoption",
+  "source_run": "build\\ppo\\balanced-hold-scale-336to344-v1",
+  "branch": "codex/minimal-foundation",
+  "source_parent_commit": "137638c14cbf3a01484988b593d248525ab4047a",
+  "checkpoint336_SHA256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "source_manifest": "source-manifest.json",
+  "raw_rollout_batches": "All16 checksummed batches remain in source_run/{A,B}/batch-{336..343}.bin; hashes and byte sizes in evidence-manifest.json",
+  "protocol": "frozen-protocol.md",
+  "measured_results": "comparison-summary.json",
+  "independent_final_gates": {
+    "A": [
+      {
+        "case": 0,
+        "pose": 0,
+        "initial_depth_offset_mm": 0.0,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 1,
+        "pose": 3,
+        "initial_depth_offset_mm": 0.0,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 2,
+        "pose": 0,
+        "initial_depth_offset_mm": -0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 3,
+        "pose": 3,
+        "initial_depth_offset_mm": -0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 4,
+        "pose": 0,
+        "initial_depth_offset_mm": 0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64",
+          "depth"
+        ]
+      },
+      {
+        "case": 5,
+        "pose": 3,
+        "initial_depth_offset_mm": 0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      }
+    ],
+    "B": [
+      {
+        "case": 0,
+        "pose": 0,
+        "initial_depth_offset_mm": 0.0,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 1,
+        "pose": 3,
+        "initial_depth_offset_mm": 0.0,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 2,
+        "pose": 0,
+        "initial_depth_offset_mm": -0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 3,
+        "pose": 3,
+        "initial_depth_offset_mm": -0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 4,
+        "pose": 0,
+        "initial_depth_offset_mm": 0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64"
+        ]
+      },
+      {
+        "case": 5,
+        "pose": 3,
+        "initial_depth_offset_mm": 0.5,
+        "failed_gates": [
+          "speed48to64",
+          "anchor56to64",
+          "excursion56to64",
+          "tilt"
+        ]
+      }
+    ]
+  },
+  "checkpoint_schema": 5,
+  "observation_schema": 4,
+  "observations": 41,
+  "reward_tag": 9,
+  "reward_gain_bound_to_arm_protocol_checksum": true,
+  "holding_gain_A": 1,
+  "holding_gain_B": 0.0009765625,
+  "all4joints_NN_controlled": true,
+  "tilt_limit_deg": 10,
+  "posture_clamp": false,
+  "physics_changed": false,
+  "PPO_updates_each": 8,
+  "training_controls_combined": 655360,
+  "controls_combined": 698368,
+  "substeps_combined": 6983680,
+  "checkpoints_each": 9,
+  "rollout_batches_each": 8,
+  "prior_checkpoint_protocol_files_hash_verified": 36,
+  "unrelated_files_hash_verified": 15,
+  "runtime_adopted": false,
+  "training_stopped": true,
+  "retries": 0,
+  "extensions": 0,
+  "hard_faults": 0,
+  "remaining_blocker": "Neither candidate stops/holds in any of six tests. A loses short swimming and one depth gate; B exceeds10degree tilt in one case. No candidate accepted.",
+  "inference": "Scaling holding reward improved the prespecified same-batch critic conditioning diagnostic under balanced goal/pose mix for this seed. It did not establish the cause of earlier failures or solve holding."
+}

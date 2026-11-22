@@ -5,6 +5,7 @@ option(CUDARL_ENABLE_CUDA "Build shared CUDA physics checks and learning primiti
 option(CUDARL_BUILD_GODOT "Build the single Godot inspection extension" ON)
 option(CUDARL_WARNINGS_AS_ERRORS "Treat project warnings as errors" ON)
 option(CUDARL_BUILD_PPO "Build the native PPO trainer (never run by CTest)" ON)
+option(CUDARL_BUILD_LEARNED_AMPLITUDE "Enable the opt-in whole-episode PPO compilation target; never executes training" OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -74,11 +75,31 @@ target_link_libraries(frozen_controller PUBLIC creature_physics)
 target_include_directories(frozen_controller PUBLIC "${CMAKE_SOURCE_DIR}/src/nn" PRIVATE "${CMAKE_BINARY_DIR}/generated")
 project_warnings(frozen_controller)
 
+add_executable(frozen_brake_probe tools/frozen_brake_probe.cpp)
+target_link_libraries(frozen_brake_probe PRIVATE creature_physics)
+target_include_directories(frozen_brake_probe PRIVATE "${CMAKE_SOURCE_DIR}/src/nn")
+project_warnings(frozen_brake_probe)
+
 add_executable(motor_compare tools/motor_compare.cpp)
 target_link_libraries(motor_compare PRIVATE frozen_controller)
 project_warnings(motor_compare)
 
 if(CUDARL_ENABLE_CUDA AND CUDARL_BUILD_PPO)
+    if(CUDARL_BUILD_LEARNED_AMPLITUDE)
+        # Explicit compilation only. Closed research budgets are not reopened by building.
+        add_executable(ppo_learned_amplitude EXCLUDE_FROM_ALL tools/hold_learned_amplitude_study.cu)
+        target_compile_definitions(ppo_learned_amplitude PRIVATE CUDARL_APPEND_HOLD41=1)
+        target_link_libraries(ppo_learned_amplitude PRIVATE creature_gpu frozen_controller)
+        project_warnings(ppo_learned_amplitude)
+    endif()
+    add_executable(ppo_rest_hold tools/rest_hold_study.cu)
+    target_compile_definitions(ppo_rest_hold PRIVATE CUDARL_APPEND_HOLD41=1)
+    target_link_libraries(ppo_rest_hold PRIVATE creature_gpu frozen_controller)
+    project_warnings(ppo_rest_hold)
+    add_executable(ppo_hold_scale tools/hold_scale_study.cu)
+    target_compile_definitions(ppo_hold_scale PRIVATE CUDARL_APPEND_HOLD41=1)
+    target_link_libraries(ppo_hold_scale PRIVATE creature_gpu frozen_controller)
+    project_warnings(ppo_hold_scale)
     add_executable(ppo_append_hold tools/append_hold8.cu)
     target_compile_definitions(ppo_append_hold PRIVATE CUDARL_APPEND_HOLD41=1)
     target_link_libraries(ppo_append_hold PRIVATE creature_gpu frozen_controller)
@@ -89,23 +110,42 @@ if(CUDARL_ENABLE_CUDA AND CUDARL_BUILD_PPO)
 endif()
 
 if(CUDARL_BUILD_GODOT)
-    set(CUDARL_GODOT_CPP_ROOT "${CMAKE_SOURCE_DIR}/external/godot-cpp" CACHE PATH "Matching Godot 4.4 C++ bindings")
-    # The baseline and minimal worktree share this repository's existing dependency.
-    if(NOT EXISTS "${CUDARL_GODOT_CPP_ROOT}/include/godot_cpp/godot.hpp" AND EXISTS "${CMAKE_SOURCE_DIR}/../../external/godot-cpp/include/godot_cpp/godot.hpp")
-        get_filename_component(CUDARL_GODOT_CPP_ROOT "${CMAKE_SOURCE_DIR}/../../external/godot-cpp" ABSOLUTE)
+    set(default_godot_cpp_root "${CMAKE_SOURCE_DIR}/external/godot-cpp")
+    set(CUDARL_GODOT_CPP_ROOT "${default_godot_cpp_root}" CACHE PATH "Matching Godot 4.4 C++ bindings")
+    set(godot_cpp_root "${CUDARL_GODOT_CPP_ROOT}")
+    # A linked worktree can share the original checkout's built dependency.
+    if(godot_cpp_root STREQUAL default_godot_cpp_root AND
+       NOT EXISTS "${godot_cpp_root}/include/godot_cpp/godot.hpp" AND
+       EXISTS "${CMAKE_SOURCE_DIR}/../../external/godot-cpp/include/godot_cpp/godot.hpp")
+        get_filename_component(godot_cpp_root "${CMAKE_SOURCE_DIR}/../../external/godot-cpp" ABSOLUTE)
     endif()
-    set(CUDARL_GODOT_CPP_LIBRARY "${CUDARL_GODOT_CPP_ROOT}/bin/libgodot-cpp.windows.template_release.x86_64.lib" CACHE FILEPATH "Prebuilt platform godot-cpp library")
-    if(NOT EXISTS "${CUDARL_GODOT_CPP_LIBRARY}")
-        message(FATAL_ERROR "Set CUDARL_GODOT_CPP_ROOT/LIBRARY to matching bindings, or CUDARL_BUILD_GODOT=OFF")
+    set(CUDARL_GODOT_CPP_LIBRARY "" CACHE FILEPATH "Override the prebuilt Windows x64 godot-cpp release library")
+    set(godot_cpp_library "${CUDARL_GODOT_CPP_LIBRARY}")
+    if(NOT godot_cpp_library)
+        set(godot_cpp_library "${godot_cpp_root}/bin/libgodot-cpp.windows.template_release.x86_64.lib")
     endif()
+    foreach(binding IN ITEMS
+            "${godot_cpp_root}/include/godot_cpp/godot.hpp"
+            "${godot_cpp_root}/gen/include/godot_cpp/classes/project_settings.hpp"
+            "${godot_cpp_root}/gdextension/gdextension_interface.h"
+            "${godot_cpp_library}")
+        if(NOT EXISTS "${binding}")
+            message(FATAL_ERROR "Missing Godot C++ binding: ${binding}\n"
+                "Use matching, built godot-cpp bindings via CUDARL_GODOT_CPP_ROOT and, if needed, "
+                "CUDARL_GODOT_CPP_LIBRARY; or use CUDARL_BUILD_GODOT=OFF.")
+        endif()
+    endforeach()
+    message(STATUS "Godot C++ bindings: ${godot_cpp_root}")
+    set(CUDARL_GODOT_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/live/addons/frozen_swimmer/bin" CACHE PATH
+        "Frozen viewer Release DLL directory; override to verify a build without replacing the live DLL")
     add_library(godot_cpp STATIC IMPORTED)
-    set_target_properties(godot_cpp PROPERTIES IMPORTED_LOCATION "${CUDARL_GODOT_CPP_LIBRARY}"
-        INTERFACE_INCLUDE_DIRECTORIES "${CUDARL_GODOT_CPP_ROOT}/include;${CUDARL_GODOT_CPP_ROOT}/gen/include;${CUDARL_GODOT_CPP_ROOT}/gdextension"
-        INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${CUDARL_GODOT_CPP_ROOT}/include;${CUDARL_GODOT_CPP_ROOT}/gen/include;${CUDARL_GODOT_CPP_ROOT}/gdextension")
-    add_library(frozen_swimmer SHARED src/godot/register_live_types.cpp src/godot/frozen_swimmer.cpp)
+    set_target_properties(godot_cpp PROPERTIES IMPORTED_LOCATION "${godot_cpp_library}"
+        INTERFACE_INCLUDE_DIRECTORIES "${godot_cpp_root}/include;${godot_cpp_root}/gen/include;${godot_cpp_root}/gdextension"
+        INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${godot_cpp_root}/include;${godot_cpp_root}/gen/include;${godot_cpp_root}/gdextension")
+    add_library(frozen_swimmer SHARED src/godot/register_live_types.cpp src/godot/frozen_swimmer.cpp src/godot/hold_lab_preview.cpp)
     target_link_libraries(frozen_swimmer PRIVATE frozen_controller godot_cpp)
     target_compile_definitions(frozen_swimmer PRIVATE TYPED_METHOD_BIND $<$<PLATFORM_ID:Windows>:WINDOWS_ENABLED>)
-    set_target_properties(frozen_swimmer PROPERTIES PREFIX "" RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/live/addons/frozen_swimmer/bin")
+    set_target_properties(frozen_swimmer PROPERTIES PREFIX "" RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CUDARL_GODOT_OUTPUT_DIR}")
     project_warnings(frozen_swimmer)
 endif()
 

@@ -72,21 +72,39 @@ struct TrainingEpisode {
     bool startup_speed = false;
     bool holding = false;
     bool appended_hold = false;
+    // Explicit research protocol; historical training defaults are unchanged.
+    bool balanced_hold = false;
+    bool rest_hold = false; // Explicit approved hold-from-rest research mode.
+    float holding_reward_gain = 1.f;
+    CUDARL_HD bool hold_episode(int environment) const {
+        return holding && (balanced_hold ? (environment / 2) % 2 : environment % 2);
+    }
+    CUDARL_HD float reward_gain(int completed_controls, int environment) const {
+        return hold_episode(environment) && (rest_hold || completed_controls >= 640) ? holding_reward_gain : 1.f;
+    }
     int offset_phase = 0;
     CUDARL_HD float initial_vertical_offset(int environment) const {
-        if (!fixed_depth_offsets)
+        if (!fixed_depth_offsets || (rest_hold && hold_episode(environment)))
             return 0;
         const int group = (environment / 2 + offset_phase) % 3;
         return group == 1 ? -.0005f : (group == 2 ? .0005f : 0.f);
     }
     CUDARL_HD bool valid() const {
         return motor_observation::valid(observation_schema) &&
-               (controls == 160 || controls == 640 || controls == 1280) && (!stopping || controls == 1280);
+               (controls == 160 || controls == 640 || controls == 1280 || (rest_hold && controls == 320)) && (!stopping || controls == 1280) &&
+               (holding_reward_gain == 1.f || holding_reward_gain == 1.f / 1024) &&
+               (!balanced_hold || (holding && appended_hold && (controls == 1280 || (rest_hold && controls == 320)))) &&
+               (!rest_hold || (holding && balanced_hold && appended_hold && controls == 320 && !stopping && !startup_speed));
     }
-    CUDARL_HD contact::Arena arena() const { return controls >= 640 ? long_swim_arena() : contact::Arena{}; }
+    CUDARL_HD contact::Arena arena() const { return controls >= 640 || rest_hold ? long_swim_arena() : contact::Arena{}; }
     CUDARL_HD int reward_version() const { return appended_hold ? 9 : (holding ? 8 : (startup_speed ? 7 : (stopping ? 6 : kRewardVersion))); }
     CUDARL_HD ForwardConfig task_config(int completed_controls = 0, int environment = 0) const {
-        if (stopping || (holding && environment % 2)) {
+        if (rest_hold && hold_episode(environment)) {
+            auto c = config_for_speed(.008f);c.maximum_controls = controls;
+            c.observation_schema = observation_schema;c.target_speed_m_s = 0;
+            c.stationary_request = true;c.position_hold = true;return c;
+        }
+        if (stopping || hold_episode(environment)) {
             auto c = StopSequence{}.config(completed_controls, observation_schema);
             c.position_hold = holding;
             return c;

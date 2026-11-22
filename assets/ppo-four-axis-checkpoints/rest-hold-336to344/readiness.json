@@ -1,0 +1,1 @@
+{"ready":true,"rest_from_control0":true,"controls_max":113664,"substeps_max":1136640,"PPO_updates_max":8,"critic_only_steps":80,"actor_steps_max":640,"critic_steps_max":720,"process_seconds":120,"report_pause_before_PPO":true,"physical_controls":0,"optimizer_steps":0,"retries":0}

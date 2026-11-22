@@ -2,6 +2,7 @@
 #include "core/checkpoint.h"
 #include "frozen_contract.h"
 #include <cmath>
+#include <iterator>
 #include <stdexcept>
 namespace cudarl::motor {
 namespace sm = straight_motor;
@@ -11,29 +12,44 @@ static_assert(movement::kVersion == 6 && sm::kTaskVersion == 6 && sm::kRewardVer
               "Frozen actor contract changed");
 FrozenController::FrozenController()
     : actor_({{40, 32, 32, 4}, {nn::Activation::Tanh, nn::Activation::Tanh, nn::Activation::Identity}}) {}
+std::vector<std::string_view> FrozenController::source_contract_hashes() {
+    return {std::begin(kFrozenContracts), std::end(kFrozenContracts)};
+}
 bool FrozenController::load(const std::string &path) {
     loaded_ = false;
     paused_ = true;
     error_.clear();
+    training_update_ = 0;
+    source_protocol_checksum_ = 0;
     try {
         const auto bytes = cp::read(path);
         cp::Reader r{bytes};
         if (r.value<uint32_t>() != 0x36434D46)
             throw std::runtime_error("Wrong frozen controller magic");
+        // Package v5 separates wire format version from observation schema.
+        // Header: magic/version/model/task/reward/input/output/update/mapping/
+        // observation schema, then min/max speed, source protocol checksum,
+        // actor checksum, source-contract hashes and actor parameters.
         const auto schema = r.value<uint32_t>();
-        if (schema != 4)
-            throw std::runtime_error("Unsupported frozen controller schema");
-        if (r.value<uint32_t>() != 6 || r.value<uint32_t>() != 6 || r.value<uint32_t>() != 4 ||
-            r.value<uint32_t>() != 40 || r.value<uint32_t>() != 4)
-            throw std::runtime_error("Wrong frozen controller schema/model/task/shape");
-        (void)r.value<uint32_t>(); // training update provenance; no optimizer loaded
+        if (schema == 4)
+            throw std::runtime_error("Legacy frozen controller omits observation schema; an explicit v5 package is required");
+        if (schema != 5)
+            throw std::runtime_error("Unsupported frozen controller package version");
+        if (r.value<uint32_t>() != movement::kVersion || r.value<uint32_t>() != sm::kTaskVersion ||
+            r.value<uint32_t>() != sm::kRewardVersion || r.value<uint32_t>() != sm::kObservations ||
+            r.value<uint32_t>() != joint_motor::kActions)
+            throw std::runtime_error("Wrong frozen controller model/task/reward/shape; viewer supports 40-input forward actors only");
+        const auto training_update = r.value<uint32_t>();
         const auto mapping = r.value<uint32_t>();
         if (mapping != joint_motor::kActionVersion)
             throw std::runtime_error("Unsupported frozen action mapping");
+        const auto observations = r.value<uint32_t>();
+        if (observations != motor_observation::legacy && observations != motor_observation::task_scale)
+            throw std::runtime_error("Unsupported frozen forward actor observation schema");
         const float low = r.value<float>(), high = r.value<float>();
         if (!sm::supported_speed(low) || !sm::supported_speed(high) || low > high)
             throw std::runtime_error("Invalid validated speed range");
-        (void)r.value<uint64_t>();
+        const auto source_protocol_checksum = r.value<uint64_t>();
         const auto actor_checksum = r.value<uint64_t>();
         if (r.value<uint32_t>() != kFrozenContractCount)
             throw std::runtime_error("Source contract count mismatch");
@@ -58,8 +74,15 @@ bool FrozenController::load(const std::string &path) {
         minimum_speed_ = low;
         maximum_speed_ = high;
         config_ = sm::config_for_speed(high);
+        config_.observation_schema = observations;
         loaded_ = true;
-        return reset(0);
+        if (!reset(0)) {
+            loaded_ = false;
+            return false;
+        }
+        training_update_ = training_update;
+        source_protocol_checksum_ = source_protocol_checksum;
+        return true;
     } catch (const std::exception &e) {
         error_ = e.what();
         return false;
@@ -92,7 +115,14 @@ bool FrozenController::set_speed(float speed) {
         return false;
     if (speed == target_speed())
         return true;
-    return sm::request_speed(world_, speed, config_, task_);
+    auto next_config = config_;
+    auto next_task = task_;
+    if (!sm::request_speed(world_, speed, next_config, next_task))
+        return false;
+    next_config.observation_schema = config_.observation_schema;
+    config_ = next_config;
+    task_ = next_task;
+    return true;
 }
 bool FrozenController::start() {
     if (!loaded_ || finished() || !error_.empty())

@@ -1,0 +1,27 @@
+{
+  "status": "Completed80critic-only steps and8PPOupdates; holding failed0/6; rejected; reporting delivery timing missed",
+  "source_run": "build\\ppo\\rest-hold-336to344-v1",
+  "branch": "codex/minimal-foundation",
+  "controls": 113664,
+  "substeps": 1136640,
+  "actor_optimizer_steps": 640,
+  "critic_optimizer_steps": 720,
+  "holding_passes": 0,
+  "short_swim_passes": 4,
+  "long_window_passes": 28,
+  "retained_long_windows": 28,
+  "runtime_adopted": false,
+  "training_stopped": true,
+  "retries": 0,
+  "extensions": 0,
+  "numerical_gates_passed": true,
+  "reporting_delivery_requirement_met": false,
+  "reporting_deviation": "Native report/pause occurred before PPO; delegated update reached Drew only after PPO. Local emission was incorrectly treated as delivery.",
+  "all_prior_evidence_hashes_verified": 4494,
+  "unrelated_hashes_verified": 15,
+  "remaining_blockers": [
+    "Stationary holding not learned",
+    "Lane limit failed5of6",
+    "Reporting delivery timing requirement missed"
+  ]
+}

@@ -12,13 +12,30 @@ constexpr int all_control_cap=359424; //8PPOupdates+two replay caps+axis+baselin
 nn::MlpSpec old_spec(int output) {
     return {{40,32,32,output},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}};
 }
+#ifdef CUDARL_REST_HOLD_STUDY
+std::vector<uint8_t> rest_protocol();
+#endif
 std::vector<uint8_t> append_protocol() {
+#ifdef CUDARL_REST_HOLD_STUDY
+    return rest_protocol();
+#else
+#ifdef CUDARL_BALANCED_HOLD_STUDY
+    cp::Writer out;out.value(uint32_t{17});out.value(uint32_t{41});out.value(uint32_t{9});
+    out.value(training_episode.balanced_hold);out.value(training_episode.holding_reward_gain);
+    out.value(uint32_t{349184});out.value(uint32_t{698368});out.value(uint32_t{0});
+#else
     cp::Writer out;out.value(uint32_t{16});out.value(uint32_t{41});out.value(uint32_t{9});
+#endif
     out.value(seed);out.value(cp::checksum(parent_checkpoint_payload));out.value(cp::checksum(parent_protocol_payload));
+#ifdef CUDARL_BALANCED_HOLD_STUDY
+    for(int v:{336,8,32,1280,256,2,349184,3491840,0})out.value(v);
+#else
     for(int v:{336,8,32,1280,256,2,all_control_cap,all_control_cap*10,maximum_replays})out.value(v);
+#endif
     for(float v:{.02f,.000125f,.001f,.8f,.99f,1.f,180.f})out.value(v);
     const std::string reward="reward8 unchanged; appended signed forward error tanh(e/.02m); legacy40 schema2 unchanged";
     out.array(std::vector<uint8_t>(reward.begin(),reward.end()));return out.data;
+#endif
 }
 void configure_append(const fs::path& root,bool from_copy) {
     horizon=1280;rows=32*horizon;updates=8;training_cap=updates*rows;
@@ -271,6 +288,7 @@ int run_append(const fs::path& root) {
     out.close();status(root,fault.empty()?"done":"failed",budget,completed);std::ifstream report(root/"result.json");std::cout<<report.rdbuf()<<std::flush;return fault.empty()?0:3;
 }
 } // namespace
+#ifndef CUDARL_BALANCED_HOLD_STUDY
 int main(int argc,char** argv){try{
     require(argc==3,"Use --prepare/--verify/--run/--load DIR");const std::string mode=argv[1];const auto root=fs::absolute(argv[2]);
     configure_append(root,mode!="--prepare");
@@ -288,3 +306,5 @@ int main(int argc,char** argv){try{
     }
     throw std::runtime_error("Unknown append mode");
 }catch(const std::exception& e){std::cerr<<e.what()<<std::endl;return 2;}}
+
+#endif

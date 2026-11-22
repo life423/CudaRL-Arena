@@ -3,6 +3,8 @@
 #include "motor/straight_task.h"
 #include "nn/mlp_cpu.h"
 #include <string>
+#include <string_view>
+#include <vector>
 namespace cudarl::motor {
 // One physical state, one frozen actor; no optimizer or background worker.
 class FrozenController {
@@ -16,9 +18,17 @@ class FrozenController {
     contact::Arena arena_{};
     float minimum_speed_=.008f,maximum_speed_=.008f;
     std::string error_;
+    uint32_t training_update_=0;
+    uint64_t source_protocol_checksum_=0;
 public:
     FrozenController();
     bool load(const std::string& path);
+    static std::vector<std::string_view> source_contract_hashes();
+    uint32_t observation_schema() const { return config_.observation_schema; }
+    uint32_t training_update() const { return training_update_; }
+    uint64_t source_protocol_checksum() const { return source_protocol_checksum_; }
+    static constexpr int substeps_per_control() { return joint_motor::kSubstepsPerControl; }
+    int benchmark_controls() const { return config_.maximum_controls; }
     bool reset(int case_id=0);
     bool start();
     bool set_speed(float speed);

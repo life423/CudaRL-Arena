@@ -1,0 +1,20 @@
+{
+  "status": "Completed exact approved frozen diagnostic; no threshold-sized local braking response",
+  "source_run": "build\\diagnostics\\frozen-brake-B344-v1",
+  "branch": "codex/minimal-foundation",
+  "controls": 6240,
+  "substeps": 62400,
+  "branches": 60,
+  "pulse_branches": 48,
+  "useful_branches": 0,
+  "safe_branch_count": 60,
+  "small_relative_improvements": 24,
+  "absolute_late_speed_below_initial_count": 9,
+  "best_absolute_speed_drop_mm_s": 0.05597620011000082,
+  "optimizer_updates": 0,
+  "runtime_adopted": false,
+  "retries": 0,
+  "extensions": 0,
+  "prior_evidence_files_hash_verified": 4362,
+  "remaining_uncertainty": "This narrow pulse family did not establish useful braking; coordinated/phase-dependent controllability and full stop/hold feasibility remain unverified."
+}

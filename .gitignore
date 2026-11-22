@@ -27,6 +27,8 @@ tmpxft_*
 .vscode/
 .idea/
 .claude/settings.local.json
+__pycache__/
+*.pyc
 
 # OS
 .DS_Store

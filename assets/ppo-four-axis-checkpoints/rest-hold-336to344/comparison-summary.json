@@ -1,0 +1,247 @@
+{
+  "result": {
+    "fault": "",
+    "gate_failed": "",
+    "launched_unix": 1793824911.7419248,
+    "ended_unix": 1793824950.9160056,
+    "native_seconds": 39.1741263,
+    "controls": 113664,
+    "substeps": 1136640,
+    "PPO_updates": 8,
+    "critic_only_steps": 80,
+    "baseline_short": 4,
+    "baseline_rest": 0,
+    "baseline_rest_completed": 6,
+    "baseline_long_windows": 28,
+    "final_short": 4,
+    "final_rest": 0,
+    "final_rest_completed": 6,
+    "final_long_windows": 28,
+    "baseline_already_qualified": false,
+    "candidate_accepted": false,
+    "actor_PPO_steps": 640,
+    "critic_optimizer_steps": 720,
+    "runtime_adopted": false,
+    "retries": 0,
+    "closed": true
+  },
+  "execution": {
+    "forced_stop": "",
+    "ended_utc": "2026-11-04T20:42:30.9516107Z",
+    "wall_seconds": 39.2936114,
+    "exit_code": 0,
+    "pid": 28028,
+    "started_utc": "2026-11-04T20:41:51.6581439Z"
+  },
+  "calibration_report": {
+    "return_scale_passed": true,
+    "holding_returns": {
+      "rows": 5120,
+      "return_mean": -0.524979308213,
+      "return_std": 0.151352556004,
+      "return_RMS": 0.546361483141,
+      "abs_return_p99": 0.759136855602,
+      "abs_return_max": 0.772349119186,
+      "passed": true
+    },
+    "swimming_returns": {
+      "rows": 5120,
+      "return_mean": -0.286416215979,
+      "return_std": 0.201979729106,
+      "return_RMS": 0.350471196742,
+      "abs_return_p99": 1.03597271442,
+      "abs_return_max": 1.05966520309,
+      "passed": true
+    },
+    "critic_only_steps": 80,
+    "hold_validation_before": {
+      "rows": 2560,
+      "RMSE": 0.291129348396,
+      "bias": -0.0467478815466,
+      "return_RMS": 0.5621731038,
+      "EV": -2.50233631261
+    },
+    "swim_validation_before": {
+      "rows": 2560,
+      "RMSE": 0.231081805505,
+      "bias": -0.11245038464,
+      "return_RMS": 0.441259038078,
+      "EV": 0.282975510753
+    },
+    "hold_validation_after": {
+      "rows": 2560,
+      "RMSE": 0.189919829003,
+      "bias": 0.0431790289353,
+      "return_RMS": 0.5621731038,
+      "EV": -0.450847226164
+    },
+    "swim_validation_after": {
+      "rows": 2560,
+      "RMSE": 0.206896695793,
+      "bias": 0.0631241491414,
+      "return_RMS": 0.441259038078,
+      "EV": 0.316969530725
+    },
+    "hold_RMSE_improvement_limit": 0.218347011297,
+    "hold_RMSE_scale_limit": 0.2810865519,
+    "hold_bias_limit": 0.14054327595,
+    "swim_RMSE_limit": 0.254189986056,
+    "critic_validation_passed": true,
+    "ready_for_PPO": true,
+    "gate_failed": "",
+    "actor_updates": 0,
+    "controls": 21024,
+    "substeps": 210240
+  },
+  "signal_gate": {
+    "passed": true,
+    "holding_fraction_squared_normalized_advantage": 0.612391614325,
+    "minimum": 0.1,
+    "maximum": 0.9,
+    "actor_updates_before_gate": 0
+  },
+  "stages": [
+    {
+      "stage": "baseline",
+      "short_passes": 4,
+      "mean_short_speed_mm_s": 7.5793875,
+      "long_windows_passed": 28,
+      "retained4to60_windows": 28,
+      "rest_passes": 0,
+      "depth_passes": 6,
+      "lane_passes": 6,
+      "tilt_passes": 6,
+      "max_speed_mm_s": 8.95856189728,
+      "max_anchor_error_mm": 522.523376465,
+      "max_depth_mm": 0.796480178833,
+      "max_lane_mm": 1.25339603424,
+      "max_tilt_deg": 8.50142669678,
+      "final8_mean_speed_range_mm_s": [
+        8.536456519365437,
+        8.565243911743124
+      ],
+      "final8_forward_drift_range_mm": [
+        67.64166259800004,
+        67.86624145500002
+      ],
+      "first_speed_violation_range_s": [
+        0.35,
+        0.35
+      ]
+    },
+    {
+      "stage": "final",
+      "short_passes": 4,
+      "mean_short_speed_mm_s": 7.4234025,
+      "long_windows_passed": 28,
+      "retained4to60_windows": 28,
+      "rest_passes": 0,
+      "depth_passes": 6,
+      "lane_passes": 1,
+      "tilt_passes": 6,
+      "max_speed_mm_s": 8.81077480316,
+      "max_anchor_error_mm": 507.950531006,
+      "max_depth_mm": 0.895972251892,
+      "max_lane_mm": 2.07166790962,
+      "max_tilt_deg": 8.29810523987,
+      "final8_mean_speed_range_mm_s": [
+        8.274703425168813,
+        8.306485658884124
+      ],
+      "final8_forward_drift_range_mm": [
+        65.56701660099998,
+        65.81179809499997
+      ],
+      "first_speed_violation_range_s": [
+        0.35,
+        0.35
+      ]
+    }
+  ],
+  "calibration_actor_parameters_and_Adam_unchanged": true,
+  "asymmetric_final_ages": {
+    "actor_old": 22340,
+    "actor_new": 640,
+    "critic_old": 22420,
+    "critic_new": 720
+  },
+  "all9_batch_integrity_passed": true,
+  "max_GAE_error": 8.03222320822e-07,
+  "max_old_logp_rescore_error": 0,
+  "independent_all12_physical_cases_and_validation_metrics_agree": true,
+  "training_hold_coverage": [
+    {
+      "global_update_collected": 336,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 114,
+      "hold_pre_action_speed_mean_mm_s": 7.01080322265625,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 337,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 104,
+      "hold_pre_action_speed_mean_mm_s": 7.106787204742432,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 338,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 123,
+      "hold_pre_action_speed_mean_mm_s": 6.802947998046875,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 339,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 112,
+      "hold_pre_action_speed_mean_mm_s": 7.068511962890625,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 340,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 124,
+      "hold_pre_action_speed_mean_mm_s": 6.718384742736816,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 341,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 114,
+      "hold_pre_action_speed_mean_mm_s": 6.919449806213379,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 342,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 119,
+      "hold_pre_action_speed_mean_mm_s": 6.821228981018066,
+      "hold_initial_zero_velocity_rows": 16
+    },
+    {
+      "global_update_collected": 343,
+      "hold_rows": 5120,
+      "hold_pre_action_speed_le05": 123,
+      "hold_pre_action_speed_mean_mm_s": 6.947868347167969,
+      "hold_initial_zero_velocity_rows": 16
+    }
+  ],
+  "preservation": {
+    "prior_evidence_files_hash_verified": 4494,
+    "unrelated_files_verified": 15,
+    "current_frozen_files_verified": 61,
+    "checkpoint336_unchanged": true
+  },
+  "reporting_deviation": {
+    "native_report_generated_before_PPO": true,
+    "native_reporting_pause_occurred": true,
+    "report_delivered_to_Drew_before_PPO": false,
+    "requested_delivery_timing_met": false,
+    "explanation": "The native report was generated and a local commentary message emitted before release, but the delegated update did not reach Drew until after PPO. The reporting requirement was missed, as confirmed by parent delegation. Do not describe local emission as verified user receipt."
+  },
+  "runtime_adopted": false,
+  "no_further_training": true,
+  "retries": 0,
+  "extensions": 0
+}

@@ -4,7 +4,37 @@ Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
 motion comes from torque-limited internal joints and water forces; Godot supplies
 presentation only. The motor supplies four independent joint-angle targets through bounded servos.
 
+The mission is a physical creature that starts as a dependable swimmer, learns
+from player interaction while retaining its skills, then grows into more capable
+movement: underwater limbs, shallow crawling, land movement and eventually
+manipulation. One learned goal chooser and one reusable body motor are the
+intended design. Those later stages and the interactive learning loop are not
+implemented in this minimal research project yet.
+
 ## Current state
+
+**November 22:** [learned persistent amplitude](docs/HOLD_LEARNED_AMPLITUDE_RESULTS_2026-11-22.md)
+now passes all six original and six withheld 64-second calm holds, plus both
+uninterrupted five-minute holds. Native PPO learned two amplitude-distribution
+parameters in seven updates; the initial deterministic actor failed all six holds.
+All four short swims and the same 28 long windows stayed byte-identical through
+the frozen backbone. Independent verification passes. This is calm holding from
+rest, with restricted parameter learning; moving-start braking and disturbance
+recovery remain unvalidated. Training is stopped, checkpoint 336 is preserved,
+and no production adoption follows automatically. [AI_STATUS.md](docs/AI_STATUS.md)
+records current evidence and scope. Viewer inspection is recorded or frozen
+physics, not ongoing learning.
+
+### Earlier milestones
+
+The approved balanced reward-scale comparison is complete and training is stopped.
+Both arms ran exactly8updates. Gain1 lost short swimming(0/4); holding gain1/1024
+retained4/4short and28/30long windows and improved critic conditioning, but both
+passed0/6holding cases. The scaled arm still travels~8.1mm/s with~64mm drift in
+the final8s and reaches10.42degrees tilt in one case, failing the10degree limit.
+Neither candidate is accepted or installed. Checkpoint336/all prior data remain
+unchanged. [Measured results](docs/HOLD_SCALE_RESULTS_2026-11-04.md) and
+[frozen protocol](docs/HOLD_SCALE_2026-11-04.md) contain exact gates and budgets.
 
 Training is stopped. The compatible41-input migration and exact8-update pilot are
 saved in `assets/ppo-four-axis-checkpoints/append41-hold-336to344`.
@@ -61,10 +91,18 @@ the first control. Observation schema2 scales all three body-frame path-error
 inputs by2mm; old checkpoints retain explicit72mm scaling. Checkpoint schema4
 records that choice and rejects mismatched frozen evaluators.
 
-The prior imitation-trained controllers and dedicated supervised training paths
-were removed by user request. No verified PPO checkpoint is installed. The viewer
-shows the native creature paused with its motion controls unavailable. It does
-not substitute random weights, a teacher or another algorithm.
+## Run and inspect the creature
+
+The current single Godot frontend loads the qualified saved research policy from
+`res://research_data/learned-amplitude-v1.bin`, with its matching `viewer.json`
+metadata. It starts paused; Play runs actual native physics with frozen inference.
+Hold/Swim selection restarts the isolated task from rest, so switching is not a
+braking test. The viewer has no optimizer or background learning worker. See
+[the interface and verification guide](docs/POND_UI_REVIEW_2026-11-22.md).
+
+The earlier imitation-trained controllers and dedicated supervised training paths
+were removed by user request. Missing or incompatible policies produce a usable
+error; the app does not substitute random weights, a teacher or another algorithm.
 
 The native PPO primitives live in src/rl: Gaussian sampling/log probabilities,
 clipped policy loss, GAE and minibatch gathers. Shared MLP, Adam, GEMM and critic
@@ -80,8 +118,9 @@ the GPU; frozen evaluation uses the same motor equations on the CPU.
 ```
 
 CMake3.24+, Visual Studio2022 C++ tools, CUDA for learning and matching prebuilt
-Godot C++ bindings are required. Live stepping and numerical kernels are native;
-there is no Python runtime or exporter in the active project.
+Godot C++ bindings are required. Simulation, neural inference and learning are
+native. Offline Python utilities package evidence metadata; they are not part of
+the running creature or its learning system.
 
 ```powershell
 cmake --preset windows
@@ -92,18 +131,22 @@ cmake --build --preset release
 # Its -Run switch executes that identity only after an explicit bounded approval.
 ```
 
-The zero-step viewer check is:
-`Godot_console.exe --headless --path live --script ../tests/godot/viewer_controls.gd`.
-It verifies the missing-policy state and never advances physics. New physical or
-training runs require their own finite approved protocol; all old budgets closed.
+The zero-physics frontend check runs rendered, because headless Godot uses a dummy
+viewport here: `Godot_console.exe --path live --resolution 1280x720 --script
+../tests/godot/pond_ui_smoke.gd`. It tests controls with native stepping disabled.
+New physical or training runs require their own finite approved protocol; old
+budgets remain closed.
 
 ## Architecture and limitations
 
-One native world owner, one bridge and one plain scene. live/main.gd directly
-extends Node3D; FrozenSwimmer composes FrozenController. Shared motor code lives
+One native world owner, one bridge and one scene: `live/main.tscn`. Its frontend
+is `live/main.gd`; `live/pond_world.gd` only presents native body transforms.
+HoldLabPreview owns frozen policy playback. Shared motor code lives
 in src/nn/motor and physics in src/physics. Keep training independent of Godot.
 Preserve model6, two universal joints/four axes and +/-10microN*m torque limits.
-Contact, current, stopping/holding and arbitrary transitions remain unvalidated.
+Calm holding from rest is qualified only within the declared original, withheld
+and five-minute suites. Contact, moving-start braking, disturbance/current holding
+and arbitrary transitions remain unvalidated.
 
 Tracked historical source/assets remain recoverable through Git (a812960 and
 prior checkpoints). Unique local research results/checkpoints remain in ignored

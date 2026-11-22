@@ -1,6 +1,8 @@
 #include "check.h"
 #include "motor/straight_task.h"
 #include <limits>
+#include <chrono>
+#include "core/checkpoint.h"
 #include <filesystem>
 #include "motor/frozen_controller.h"
 namespace speed=cudarl::straight_motor;
@@ -48,4 +50,102 @@ TEST_CASE("speed_request: absent or invalid policy never starts or advances phys
     CHECK(!controller.start()&&!controller.set_speed(.008f));
     CHECK(!controller.load((root/"CMakeLists.txt").string()));CHECK(!controller.start()&&!controller.step());
     CHECK(controller.world().attempted_substeps==0);
+}
+
+namespace {
+namespace frozen_cp = cudarl::checkpoint;
+using LiveController = cudarl::motor::FrozenController;
+
+std::vector<uint8_t> frozen_fixture(uint32_t version, uint32_t inputs, uint32_t observation_schema,
+                                   bool wrong_contract = false) {
+    frozen_cp::Writer out;
+    out.value(uint32_t{0x36434D46});
+    out.value(version);
+    if (version == 4) return out.data; // old header lacks a typed observation contract
+    out.value(uint32_t{cudarl::movement::kVersion});
+    out.value(uint32_t{speed::kTaskVersion});
+    out.value(uint32_t{speed::kRewardVersion});
+    out.value(inputs);
+    out.value(uint32_t{cudarl::joint_motor::kActions});
+    out.value(uint32_t{336}); // fixture label, not the real training checkpoint
+    out.value(cudarl::joint_motor::kActionVersion);
+    out.value(observation_schema);
+    out.value(.004f);
+    out.value(.008f);
+    out.value(uint64_t{123});
+    const std::vector<float> parameters(2500, 0.f);
+    frozen_cp::Writer raw;
+    for (float weight : parameters) raw.value(weight);
+    out.value(frozen_cp::checksum(raw.data));
+    const auto contracts = LiveController::source_contract_hashes();
+    out.value(static_cast<uint32_t>(contracts.size()));
+    for (const auto hash : contracts) {
+        auto bytes = std::vector<uint8_t>(hash.begin(), hash.end());
+        if (wrong_contract && !bytes.empty()) bytes[0] ^= 1;
+        out.array(bytes);
+    }
+    out.array(parameters);
+    return out.data;
+}
+
+class TemporaryFrozenFixture {
+    std::filesystem::path directory_;
+public:
+    TemporaryFrozenFixture() {
+        const auto nonce = std::chrono::steady_clock::now().time_since_epoch().count();
+        directory_ = std::filesystem::temp_directory_path() / ("cudarl-frozen-fixture-" + std::to_string(nonce));
+        if (!std::filesystem::create_directory(directory_)) throw std::runtime_error("Fixture directory exists");
+    }
+    ~TemporaryFrozenFixture() {
+        std::error_code ignored;
+        std::filesystem::remove(directory_ / "actor.bin", ignored);
+        std::filesystem::remove(directory_ / "actor.bin.lock", ignored);
+        std::filesystem::remove(directory_ / "actor.bin.tmp", ignored);
+        std::filesystem::remove(directory_, ignored);
+    }
+    std::string path() const { return (directory_ / "actor.bin").string(); }
+    void write(uint32_t version, uint32_t inputs, uint32_t observation_schema, bool wrong_contract = false) const {
+        frozen_cp::write_atomic(path(), frozen_fixture(version, inputs, observation_schema, wrong_contract));
+    }
+};
+}
+
+TEST_CASE("frozen_viewer: explicit v5 observation scale survives speed changes and resets (zero integration)") {
+    TemporaryFrozenFixture fixture;
+    LiveController viewer;
+    for (uint32_t schema : {cudarl::motor_observation::legacy, cudarl::motor_observation::task_scale}) {
+        fixture.write(5, 40, schema);
+        CHECK(viewer.load(fixture.path()));
+        CHECK(viewer.loaded() && viewer.paused());
+        CHECK(viewer.training_update() == 336 && viewer.source_protocol_checksum() == 123);
+        CHECK(viewer.observation_schema() == schema);
+        CHECK(viewer.set_speed(.006f) && viewer.set_speed(.004f));
+        CHECK(viewer.observation_schema() == schema);
+        CHECK(viewer.reset(3));
+        CHECK(viewer.observation_schema() == schema);
+        CHECK(viewer.target_speed() == .004f);
+        CHECK(viewer.benchmark_controls() == speed::config_for_speed(.004f).maximum_controls);
+        CHECK(viewer.benchmark_controls() * viewer.substeps_per_control() == 1600);
+        CHECK(viewer.world().attempted_substeps == 0 && viewer.viewing_substeps() == 0);
+    }
+}
+
+TEST_CASE("frozen_viewer: legacy ambiguous, hold, and nonmatching source contracts fail closed (zero integration)") {
+    TemporaryFrozenFixture fixture;
+    LiveController viewer;
+    fixture.write(5, 40, cudarl::motor_observation::task_scale);
+    CHECK(viewer.load(fixture.path()));
+    const auto refused = [&](uint32_t version, uint32_t inputs, uint32_t schema, bool wrong_contract,
+                             const std::string& expected) {
+        fixture.write(version, inputs, schema, wrong_contract);
+        CHECK(!viewer.load(fixture.path()));
+        CHECK(viewer.error().find(expected) != std::string::npos);
+        CHECK(!viewer.loaded() && viewer.paused() && !viewer.start() && !viewer.step());
+        CHECK(viewer.training_update() == 0 && viewer.source_protocol_checksum() == 0);
+        CHECK(viewer.world().attempted_substeps == 0 && viewer.viewing_substeps() == 0);
+    };
+    refused(4, 40, 0, false, "omits observation schema");
+    refused(5, 41, cudarl::motor_observation::appended_hold, false, "40-input forward actors");
+    refused(5, 40, cudarl::motor_observation::position_hold, false, "observation schema");
+    refused(5, 40, cudarl::motor_observation::task_scale, true, "compiled source contract differ");
 }

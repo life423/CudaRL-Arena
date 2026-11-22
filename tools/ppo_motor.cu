@@ -200,18 +200,39 @@ struct Budget {
                 "Physical budget exhausted");
         ++controls;
         const auto before = world.attempted_substeps;
+#ifdef CUDARL_PHYSICAL_STEP_HOOK
+        const p::BodyState control_start = world.physical.body;
+#endif
+#ifdef CUDARL_PHYSICAL_FAILURE_HOOK
+        // Opt-in research evidence only; default callers retain the old path.
+        p::BodyState captured_before = world.physical.body, captured_candidate = world.physical.body;
+        auto* recorded_before = before_state ? before_state : &captured_before;
+        auto* recorded_candidate = candidate ? candidate : &captured_candidate;
+        const bool ok = cudarl::joint_motor::step_state(world, command, diagnostic, recorded_before, recorded_candidate);
+#else
         const bool ok = cudarl::joint_motor::step_state(world, command, diagnostic, before_state, candidate);
+#endif
         substeps += static_cast<int>(world.attempted_substeps - before);
-        if (!ok || world.attempted_substeps - before != 10)
+        if (!ok || world.attempted_substeps - before != 10) {
+#ifdef CUDARL_PHYSICAL_FAILURE_HOOK
+            CUDARL_PHYSICAL_FAILURE_HOOK(world, *recorded_before, *recorded_candidate, controls, substeps);
+#endif
             throw std::runtime_error(
                 "CPU physical safety stop code=" + std::to_string(world.failure_code) +
                 " completed_controls=" + std::to_string(world.physical.control_steps) +
                 " attempted_substeps=" + std::to_string(world.attempted_substeps) + " current_clearance_m=" +
                 std::to_string(cudarl::movement::clearance(world.physical.body, true, world.arena)));
+        }
+#ifdef CUDARL_PHYSICAL_STEP_HOOK
+        CUDARL_PHYSICAL_STEP_HOOK(world, control_start, controls, substeps);
+#endif
     }
 };
 struct Rollout {
     device_ptr<float> cost_trace{rollout_elements(5)};
+#ifdef CUDARL_REST_HOLD_RESET_STUDY
+    device_ptr<float> pre_action_speed{rollout_elements()};
+#endif
     device_ptr<m::World> worlds{environments};
     device_ptr<m::ForwardTask> tasks{environments};
     device_ptr<gpu::Counts> counts{environments};
@@ -907,13 +928,12 @@ StoppingResult evaluate_stopping(const std::vector<float> &parameters, const fs:
                 speed48 = speed;
             if (control == 1120)
                 hold_origin = metrics.forward_m;
-            if (control > 1120) {
+            if (control >= 1120) {
                 anchor_final_error = p::norm(metrics.hold_error_m);
                 anchor_max_error = std::max(anchor_max_error, anchor_final_error);
                 hold_net = metrics.forward_m - hold_origin;
                 hold_excursion = std::max(hold_excursion, fabsf(hold_net));
-                hold_speed += speed;
-                hold_vy += motion.velocity_m_s.y;
+                if (control > 1120) { hold_speed += speed; hold_vy += motion.velocity_m_s.y; }
                 hold = hold && speed <= .0005f && metrics.depth_m <= .001f && metrics.lateral_m <= .002f &&
                        metrics.tilt_deg <= 10;
             }
@@ -2136,9 +2156,20 @@ int neutral_pitch_replay(const fs::path &root, bool continue_recorded = false) {
     std::cout << immediate.rdbuf() << std::flush;
     return 0;
 }
+#ifdef CUDARL_REST_HOLD_STUDY
+uint32_t rest_action_seed();
+uint32_t rest_action_counter(int update,int t);
+void rest_verify_minibatch(int update,int epoch,int first,Rollout& data,Batches& batch,
+                          const rl::Permutation& permutation,cudaStream_t stream);
+#endif
 // Shared by production training and the save/reload verification: no shadow updater.
+#ifdef CUDARL_REST_HOLD_MEASURED_BASELINE
+void collect_rollout_selected_value(int update, nn::GpuMlp &actor, nn::GpuMlp* critic, Rollout &data,
+                                    cudaStream_t stream,const fs::path &diagnostics) {
+#else
 void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout &data, cudaStream_t stream,
                      const fs::path &diagnostics = {}) {
+#endif
     training_episode.offset_phase = update % 3;
     gpu::initialize<<<1, 32, 0, stream>>>(data.worlds.get(), data.tasks.get(), environments, data.fault.get(),
                                           training_episode);
@@ -2174,8 +2205,10 @@ void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout 
     for (int t = 0; t < horizon; ++t) {
         const int offset = t * environments;
         float *obs = data.obs.get() + offset * observations;
+#ifndef CUDARL_REST_HOLD_RESET_STUDY
         gpu::observe<<<1, 32, 0, stream>>>(data.worlds.get(), data.tasks.get(), obs, environments,
                                            data.fault.get(), training_episode);
+#endif
         float *previous_obs = data.previous_obs.get() + offset * observations;
         float *previous_action = data.previous_action.get() + offset * actions;
         float *history = data.history.get() + offset;
@@ -2192,7 +2225,14 @@ void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout 
                 cudaMemcpyAsync(previous_action, data.action.get() + (offset - environments) * actions,
                                 environments * actions * sizeof(float), cudaMemcpyDeviceToDevice, stream));
         }
+#ifdef CUDARL_REST_HOLD_RESET_STUDY
+        gpu::rest_hold_reset_boundary<<<1,32,0,stream>>>(data.worlds.get(), data.tasks.get(), previous_obs,
+            previous_action, history, data.pre_action_speed.get()+offset, data.fault.get(), t, training_episode);
+        gpu::observe<<<1,32,0,stream>>>(data.worlds.get(), data.tasks.get(), obs, environments,
+                                       data.fault.get(), training_episode);
+#else
         gpu::set_history<<<1, 32, 0, stream>>>(history, environments, t != 0);
+#endif
         CUDA_CHECK_THROW(cudaMemcpyAsync(data.actor_input.get(), obs,
                                          environments * observations * sizeof(float),
                                          cudaMemcpyDeviceToDevice, stream));
@@ -2200,13 +2240,30 @@ void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout 
                                          environments * observations * sizeof(float),
                                          cudaMemcpyDeviceToDevice, stream));
         actor.forward(data.actor_input.get(), 2 * environments, stream);
+#ifdef CUDARL_REST_HOLD_MEASURED_BASELINE
+        if(critic)critic->forward(obs,environments,stream);
+#else
         critic.forward(obs, environments, stream);
+#endif
         rl::sample_ar_gaussian(actor.output(), data.sigma.get(), previous_action, history, environments,
-                               actions, correlation, seed + 2,
-                               static_cast<uint32_t>(static_cast<uint64_t>(update) * horizon + t),
+                               actions, correlation,
+#ifdef CUDARL_REST_HOLD_STUDY
+                               rest_action_seed(),rest_action_counter(update,t),
+#else
+                               seed + 2,static_cast<uint32_t>(static_cast<uint64_t>(update) * horizon + t),
+#endif
                                data.action.get() + offset * actions, data.logp.get() + offset, stream);
+#ifdef CUDARL_REST_HOLD_MEASURED_BASELINE
+        if(critic){
+            CUDA_CHECK_THROW(cudaMemcpyAsync(data.value.get()+offset,critic->output(),
+                                             environments*sizeof(float),cudaMemcpyDeviceToDevice,stream));
+        }else{
+            CUDA_CHECK_THROW(cudaMemsetAsync(data.value.get()+offset,0,environments*sizeof(float),stream));
+        }
+#else
         CUDA_CHECK_THROW(cudaMemcpyAsync(data.value.get() + offset, critic.output(),
                                          environments * sizeof(float), cudaMemcpyDeviceToDevice, stream));
+#endif
         gpu::advance<<<1, 32, 0, stream>>>(
             data.worlds.get(), data.tasks.get(), data.action.get() + offset * actions,
             data.reward.get() + offset, data.done.get() + offset, data.counts.get(), environments,
@@ -2214,6 +2271,12 @@ void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout 
         CUDA_CHECK_THROW(cudaGetLastError());
     }
 }
+#ifdef CUDARL_REST_HOLD_MEASURED_BASELINE
+void collect_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, Rollout &data, cudaStream_t stream,
+                     const fs::path &diagnostics = {}) {
+    collect_rollout_selected_value(update,actor,&critic,data,stream,diagnostics);
+}
+#endif
 void verify_long_episode_batch(const fs::path &root, int update, Rollout &data, Batches &batch,
                                const rl::Permutation &permutation, cudaStream_t stream) {
     const int late_start = horizon == 1280 ? 640 : 160;
@@ -2335,14 +2398,15 @@ double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::G
     const int actor_before = actor_opt.steps(), critic_before = critic_opt.steps();
     double pooled[5]{};
     int optimizer_rows = 0;
-    if (actor_lr_override && update == starting_update()) {
+    if (actor_lr_override && (update == starting_update() || training_episode.balanced_hold)) {
         const auto rescore = score_batch(actor, data, batch, stream);
         const auto saved = download(data.logp.get(), rows, stream);
         float maximum = 0;
         for (int i = 0; i < rows; ++i)
             maximum = fmaxf(maximum, fabsf(rescore[i] - saved[i]));
         require(maximum < 1e-4f, "Old rollout policy rescore mismatch before optimizer");
-        std::ofstream proof(diagnostics / "old-policy-rescore.json");
+        std::ofstream proof(diagnostics / (training_episode.balanced_hold ?
+            "old-policy-rescore-" + std::to_string(update) + ".json" : "old-policy-rescore.json"));
         proof << std::setprecision(12) << "{\"rows\":" << rows << ",\"max_abs_logp_error\":" << maximum
               << ",\"same_recorded_latents_and_AR_history\":true,\"before_first_optimizer\":true}\n";
     }
@@ -2376,6 +2440,9 @@ double optimize_rollout(int update, nn::GpuMlp &actor, nn::GpuMlp &critic, nn::G
                 batch.advantage.get(), batch.returns.get(), data.adv_stats.get(), {.2f, 0, .5f},
                 batch.mean_gradient.get(), batch.value_gradient.get(), batch.row_stats.get(),
                 batch.stats.get(), stream);
+#ifdef CUDARL_REST_HOLD_STUDY
+            rest_verify_minibatch(update,epoch,first,data,batch,permutation,stream);
+#endif
             if (horizon >= 640 && update == starting_update() && epoch == 0 && first == 0 &&
                 !diagnostics.empty())
                 verify_long_episode_batch(diagnostics, update, data, batch, permutation, stream);

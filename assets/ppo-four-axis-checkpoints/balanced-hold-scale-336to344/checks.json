@@ -1,0 +1,38 @@
+{
+  "actual_CUDA_required": true,
+  "checks": [
+    {
+      "filter": "ppo_checkpoint:",
+      "log": "checks-0.log",
+      "summary": "6/6 tests passed, 0 skipped"
+    },
+    {
+      "filter": "position_hold",
+      "log": "checks-1.log",
+      "summary": "5/5 tests passed, 0 skipped"
+    },
+    {
+      "filter": "gaussian:",
+      "log": "checks-2.log",
+      "summary": "9/9 tests passed, 0 skipped"
+    },
+    {
+      "filter": "adam: rate override",
+      "log": "checks-3.log",
+      "summary": "1/1 tests passed, 0 skipped"
+    },
+    {
+      "filter": "adam: checkpoint fences",
+      "log": "checks-4.log",
+      "summary": "1/1 tests passed, 0 skipped"
+    },
+    {
+      "filter": "ppo_diagnostics:",
+      "log": "checks-5.log",
+      "summary": "1/1 tests passed, 0 skipped"
+    }
+  ],
+  "preparation_seconds": 1.9011616999996477,
+  "physical_controls": 0,
+  "PPO_updates": 0
+}

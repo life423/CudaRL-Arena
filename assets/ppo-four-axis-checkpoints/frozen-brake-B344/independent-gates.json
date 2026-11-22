@@ -1,0 +1,482 @@
+[
+  {
+    "case": 0,
+    "branch": 0,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.07839498519300037,
+    "displacement_reduction_mm": 0.07003784209999253,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 1,
+    "envelope": true,
+    "speed_reduction_mm_s": -3.000266701747023e-12,
+    "displacement_reduction_mm": 9.99875737761613e-11,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 2,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.05541324615800036,
+    "displacement_reduction_mm": -0.13259887690000483,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 3,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.03910570144200065,
+    "displacement_reduction_mm": 0.11575317410000707,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 4,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.09836301803199987,
+    "displacement_reduction_mm": 0.1499633791000008,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 5,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.08232011795399963,
+    "displacement_reduction_mm": -0.1285705559000121,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 6,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.0914230346719993,
+    "displacement_reduction_mm": -0.14389038090001804,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 7,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.11548366546099942,
+    "displacement_reduction_mm": 0.18617248609999137,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 8,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05694847106700074,
+    "displacement_reduction_mm": 0.1233825690999879,
+    "useful": false
+  },
+  {
+    "case": 0,
+    "branch": 9,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.05685672760199978,
+    "displacement_reduction_mm": -0.12612914990000945,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 0,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.08060111999400021,
+    "displacement_reduction_mm": 0.07563781790002011,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 1,
+    "envelope": true,
+    "speed_reduction_mm_s": -2.000177801164682e-12,
+    "displacement_reduction_mm": -9.99982319171977e-11,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 2,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.0625432968160009,
+    "displacement_reduction_mm": -0.14498901309998402,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 3,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.04742670058899989,
+    "displacement_reduction_mm": 0.13000488289999979,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 4,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.10244750976299954,
+    "displacement_reduction_mm": 0.15612792989999846,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 5,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.08559312820499976,
+    "displacement_reduction_mm": -0.13339233410000517,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 6,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.09388561248900018,
+    "displacement_reduction_mm": -0.152770996099985,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 7,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.11943011283799976,
+    "displacement_reduction_mm": 0.1958923339000087,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 8,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05803699493399961,
+    "displacement_reduction_mm": 0.12582397490000474,
+    "useful": false
+  },
+  {
+    "case": 1,
+    "branch": 9,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.05739908218500034,
+    "displacement_reduction_mm": -0.12731933609999757,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 0,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.0744171142599992,
+    "displacement_reduction_mm": 0.06695556620000076,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 1,
+    "envelope": true,
+    "speed_reduction_mm_s": 3.000266701747023e-12,
+    "displacement_reduction_mm": -8.000071716196544e-10,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 2,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.06215867996099966,
+    "displacement_reduction_mm": -0.1420135497999908,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 3,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.046866512299999386,
+    "displacement_reduction_mm": 0.1274566642000039,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 4,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.10121040344400001,
+    "displacement_reduction_mm": 0.15415954520000952,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 5,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.08485260009499918,
+    "displacement_reduction_mm": -0.13160705579999643,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 6,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.09241371154500122,
+    "displacement_reduction_mm": -0.14704895080000568,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 7,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.11715488434199983,
+    "displacement_reduction_mm": 0.19010925219999564,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 8,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05793571472299952,
+    "displacement_reduction_mm": 0.1253509522000016,
+    "useful": false
+  },
+  {
+    "case": 2,
+    "branch": 9,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.05747957229200118,
+    "displacement_reduction_mm": -0.12707519580001048,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 0,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.07657737732000136,
+    "displacement_reduction_mm": 0.07421875029998048,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 1,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.0,
+    "displacement_reduction_mm": 2.999804848968779e-10,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 2,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.06971893310399935,
+    "displacement_reduction_mm": -0.15672302270000316,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 3,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05884742736800064,
+    "displacement_reduction_mm": 0.14707946829999585,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 4,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.10510473251400043,
+    "displacement_reduction_mm": 0.15962219229998098,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 5,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.08754272460899948,
+    "displacement_reduction_mm": -0.13630676270001274,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 6,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.09486980438299852,
+    "displacement_reduction_mm": -0.15678405770001902,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 7,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.12129025459200093,
+    "displacement_reduction_mm": 0.20024108929998263,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 8,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05874719620000057,
+    "displacement_reduction_mm": 0.12648010229999684,
+    "useful": false
+  },
+  {
+    "case": 3,
+    "branch": 9,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.057352542876,
+    "displacement_reduction_mm": -0.12745666470000216,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 0,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.08313341140899944,
+    "displacement_reduction_mm": 0.07479858339999979,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 1,
+    "envelope": true,
+    "speed_reduction_mm_s": 2.000177801164682e-12,
+    "displacement_reduction_mm": -6.000071550715802e-10,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 2,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.04791154861299951,
+    "displacement_reduction_mm": -0.12165832560000567,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 3,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.03156108856300044,
+    "displacement_reduction_mm": 0.10493469240001119,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 4,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.09473609924499904,
+    "displacement_reduction_mm": 0.14508056640000078,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 5,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.07871751785100045,
+    "displacement_reduction_mm": -0.12319946359999889,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 6,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.09036560058400056,
+    "displacement_reduction_mm": -0.14051818859999443,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 7,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.11348075866700036,
+    "displacement_reduction_mm": 0.18251037540000326,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 8,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05564861297900059,
+    "displacement_reduction_mm": 0.12129211440000986,
+    "useful": false
+  },
+  {
+    "case": 4,
+    "branch": 9,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.055794239041999205,
+    "displacement_reduction_mm": -0.12359619159999724,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 0,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.08602075576500035,
+    "displacement_reduction_mm": 0.07986450130000833,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 1,
+    "envelope": true,
+    "speed_reduction_mm_s": -2.000177801164682e-12,
+    "displacement_reduction_mm": -6.999840707067051e-10,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 2,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.05172224045099938,
+    "displacement_reduction_mm": -0.1292572027000034,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 3,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.035336017606001136,
+    "displacement_reduction_mm": 0.1117248533000037,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 4,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.0978432178490003,
+    "displacement_reduction_mm": 0.14950561530001494,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 5,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.0813802719129999,
+    "displacement_reduction_mm": -0.12747192470000357,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 6,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.09220275879200024,
+    "displacement_reduction_mm": -0.14704895069998258,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 7,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.11654138564800043,
+    "displacement_reduction_mm": 0.1894989013000128,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 8,
+    "envelope": true,
+    "speed_reduction_mm_s": 0.05641679763500029,
+    "displacement_reduction_mm": 0.12263488730000915,
+    "useful": false
+  },
+  {
+    "case": 5,
+    "branch": 9,
+    "envelope": true,
+    "speed_reduction_mm_s": -0.05632057190300088,
+    "displacement_reduction_mm": -0.12544250569997928,
+    "useful": false
+  }
+]

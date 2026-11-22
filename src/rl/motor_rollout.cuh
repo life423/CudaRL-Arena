@@ -1,6 +1,9 @@
 #ifndef CUDARL_RL_MOTOR_ROLLOUT_CUH
 #define CUDARL_RL_MOTOR_ROLLOUT_CUH
 #include "motor/straight_task.h"
+#ifdef CUDARL_REST_HOLD_STUDY
+#include "motor/hold_assessment.h"
+#endif
 #include <cuda_runtime.h>
 namespace cudarl::rl::motor_rollout {
 namespace m = straight_motor;
@@ -37,7 +40,41 @@ __global__ void initialize(m::World *worlds, m::ForwardTask *tasks, int n, int *
         !m::begin_training_episode(i, episode.tilt_mixture, episode.task_config(0, i), worlds[i], tasks[i],
                                    episode.arena(), episode.initial_vertical_offset(i)))
         atomicExch(fault, 1);
+    if (!*fault && episode.rest_hold && episode.hold_episode(i) &&
+        !m::update_velocity_request(worlds[i], episode.task_config(0,i), tasks[i]))
+        atomicExch(fault, 1);
 }
+#ifdef CUDARL_REST_HOLD_RESET_STUDY
+constexpr int rest_hold_reset_controls = 20;
+__global__ void rest_hold_reset_boundary(m::World *worlds, m::ForwardTask *tasks, float *previous_obs,
+                                         float *previous_action, float *history, float *pre_action_speed,
+                                         int *fault, int slot, m::TrainingEpisode episode) {
+    const int i = threadIdx.x;
+    if (i >= 32 || *fault)
+        return;
+    const bool reset = slot == 0 || (episode.hold_episode(i) && slot % rest_hold_reset_controls == 0);
+    history[i] = reset ? 0.f : 1.f;
+    if (reset) {
+        if (slot != 0) {
+            const auto config = episode.task_config(0,i);
+            if (tasks[i].controls != rest_hold_reset_controls ||
+                worlds[i].physical.control_steps != rest_hold_reset_controls ||
+                worlds[i].physical.substeps != rest_hold_reset_controls * 10 ||
+                !m::begin_training_episode(i, episode.tilt_mixture, config, worlds[i], tasks[i],
+                                           episode.arena(), episode.initial_vertical_offset(i)) ||
+                !m::update_velocity_request(worlds[i], config, tasks[i])) {
+                atomicExch(fault, 8);
+                return;
+            }
+        }
+        for (int j = 0; j < 41; ++j)
+            previous_obs[i * 41 + j] = 0;
+        for (int j = 0; j < 4; ++j)
+            previous_action[i * 4 + j] = 0;
+    }
+    pre_action_speed[i] = physics::norm(m::measure(tasks[i], worlds[i]).velocity_m_s);
+}
+#endif
 __global__ void observe(const m::World *worlds, m::ForwardTask *tasks, float *output, int n, int *fault,
                         m::TrainingEpisode episode = {}) {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -102,19 +139,29 @@ __global__ void advance(m::World *worlds, m::ForwardTask *tasks, const float *la
         if (fabsf(torque) >= .999999f)
             ++counts[i].saturated_axis_substeps;
     }
+#ifdef CUDARL_REST_HOLD_STUDY
+    const auto interval = m::record_hold_control(tasks[i], worlds[i], episode.task_config(tasks[i].controls, i));
+#else
     const auto interval = m::record_control(tasks[i], worlds[i], episode.task_config(tasks[i].controls, i));
+#endif
     if (!interval.accepted) {
         atomicExch(fault, 6);
         return;
     }
-    rewards[i] = interval.reward;
+    const float gain = episode.reward_gain(tasks[i].controls - 1, i);
+    rewards[i] = interval.reward * gain;
+#ifdef CUDARL_REST_HOLD_RESET_STUDY
+    const bool segment_done = episode.hold_episode(i) && tasks[i].controls == rest_hold_reset_controls;
+    dones[i] = (interval.done || segment_done) ? 1.f : 0.f;
+#else
     dones[i] = interval.done ? 1.f : 0.f;
-    const float cost[5] = {interval.costs.speed, interval.costs.lane, interval.costs.depth,
-                           interval.costs.posture, interval.costs.effort};
+#endif
+    const float cost[5] = {gain * interval.costs.speed, gain * interval.costs.lane, gain * interval.costs.depth,
+                           gain * interval.costs.posture, gain * interval.costs.effort};
     for (int j = 0; j < 5; ++j)
         counts[i].cost_integral[j] += physics::dt * cost[j];
-    const float detail[4] = {interval.costs.horizontal, interval.costs.recovery, interval.costs.roll,
-                             interval.costs.pitch};
+    const float detail[4] = {gain * interval.costs.horizontal, gain * interval.costs.recovery, gain * interval.costs.roll,
+                             gain * interval.costs.pitch};
     for (int j = 0; j < 4; ++j)
         counts[i].reward_detail_integral[j] += physics::dt * detail[j];
     if (cost_output)

@@ -1,0 +1,3972 @@
+{
+  "scope": "Independent saved evidence only; zero physics/optimizer steps",
+  "passed": true,
+  "limitations": [
+    "Frozen-source/full-prior-artifact preservation are coordinator checks.",
+    "Short-swim RMSE uses native summary; physical gates and long-swim RMSE are independently checked."
+  ],
+  "envelopes": {
+    "passed": true,
+    "files": 30,
+    "payload_bytes": 589749489,
+    "physical_controls": 0,
+    "optimizer_steps": 0
+  },
+  "baseline": {
+    "short_passes": 4,
+    "short_cases": [
+      {
+        "pose": 0,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 0.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.56058,
+          "RMSE_mm_s": 1.19887,
+          "lateral_mm": 0.756546,
+          "work_J_per_m": 0.000319729,
+          "depth_mm": 0.187693,
+          "tilt_deg": 8.82788,
+          "path_deg": 1.63331,
+          "forward_mm": 50.8966,
+          "late_forward_mm": 31.3114
+        }
+      },
+      {
+        "pose": 1,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 1.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.59819,
+          "RMSE_mm_s": 1.16581,
+          "lateral_mm": 0.675018,
+          "work_J_per_m": 0.000318431,
+          "depth_mm": 0.163388,
+          "tilt_deg": 9.35767,
+          "path_deg": 1.28824,
+          "forward_mm": 51.3645,
+          "late_forward_mm": 31.3568
+        }
+      },
+      {
+        "pose": 2,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 2.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.56058,
+          "RMSE_mm_s": 1.19887,
+          "lateral_mm": 0.756538,
+          "work_J_per_m": 0.000319729,
+          "depth_mm": 0.187693,
+          "tilt_deg": 8.82788,
+          "path_deg": 1.6333,
+          "forward_mm": 50.8967,
+          "late_forward_mm": 31.3114
+        }
+      },
+      {
+        "pose": 3,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 3.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.5982,
+          "RMSE_mm_s": 1.16582,
+          "lateral_mm": 0.675021,
+          "work_J_per_m": 0.000318431,
+          "depth_mm": 0.163388,
+          "tilt_deg": 9.35767,
+          "path_deg": 1.28825,
+          "forward_mm": 51.3645,
+          "late_forward_mm": 31.3568
+        }
+      }
+    ],
+    "long_passes": 28,
+    "long_pass_keys": [
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        12
+      ],
+      [
+        0,
+        16
+      ],
+      [
+        0,
+        20
+      ],
+      [
+        0,
+        24
+      ],
+      [
+        0,
+        28
+      ],
+      [
+        0,
+        32
+      ],
+      [
+        0,
+        36
+      ],
+      [
+        0,
+        40
+      ],
+      [
+        0,
+        44
+      ],
+      [
+        0,
+        48
+      ],
+      [
+        0,
+        52
+      ],
+      [
+        0,
+        56
+      ],
+      [
+        0,
+        60
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        16
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        24
+      ],
+      [
+        3,
+        28
+      ],
+      [
+        3,
+        32
+      ],
+      [
+        3,
+        36
+      ],
+      [
+        3,
+        40
+      ],
+      [
+        3,
+        44
+      ],
+      [
+        3,
+        48
+      ],
+      [
+        3,
+        52
+      ],
+      [
+        3,
+        56
+      ],
+      [
+        3,
+        60
+      ]
+    ],
+    "retained": true,
+    "hold": {
+      "passes": 0,
+      "cases": [
+        {
+          "case": 0,
+          "pose": 0,
+          "offset_mm": 0.0,
+          "controls": 1280,
+          "gain": 1.0,
+          "passed": false,
+          "gates": [
+            false,
+            false,
+            true,
+            true,
+            true,
+            false
+          ],
+          "peaks_mm_and_degrees": [
+            8.93658447266,
+            520.700805664,
+            0.733480453491,
+            1.07713794708,
+            7.40353345871
+          ],
+          "final8_excursion_mm": 67.66180419900002,
+          "first_breach_s": 0.35,
+          "final8_mean_speed_mm_s": 8.538984555006063
+        },
+        {
+          "case": 1,
+          "pose": 3,
+          "offset_mm": 0.0,
+          "controls": 1280,
+          "gain": 1.0,
+          "passed": false,
+          "gates": [
+            false,
+            false,
+            true,
+            true,
+            true,
+            false
+          ],
+          "peaks_mm_and_degrees": [
+            8.8719997406,
+            522.036987305,
+            0.647048950195,
+            1.15685141087,
+            7.89209985733
+          ],
+          "final8_excursion_mm": 67.86386108399995,
+          "first_breach_s": 0.35,
+          "final8_mean_speed_mm_s": 8.564820063114125
+        },
+        {
+          "case": 2,
+          "pose": 0,
+          "offset_mm": -0.5,
+          "controls": 1280,
+          "gain": 1.0,
+          "passed": false,
+          "gates": [
+            false,
+            false,
+            true,
+            true,
+            true,
+            false
+          ],
+          "peaks_mm_and_degrees": [
+            8.95856189728,
+            519.844726562,
+            0.796480178833,
+            1.1675055027,
+            6.85077047348
+          ],
+          "final8_excursion_mm": 67.64166259800004,
+          "first_breach_s": 0.35,
+          "final8_mean_speed_mm_s": 8.536456519365437
+        },
+        {
+          "case": 3,
+          "pose": 3,
+          "offset_mm": -0.5,
+          "controls": 1280,
+          "gain": 1.0,
+          "passed": false,
+          "gates": [
+            false,
+            false,
+            true,
+            true,
+            true,
+            false
+          ],
+          "peaks_mm_and_degrees": [
+            8.90658473969,
+            521.376281738,
+            0.739994049072,
+            1.07225489616,
+            7.26908826828
+          ],
+          "final8_excursion_mm": 67.85714721699998,
+          "first_breach_s": 0.35,
+          "final8_mean_speed_mm_s": 8.563934218883876
+        },
+        {
+          "case": 4,
+          "pose": 0,
+          "offset_mm": 0.5,
+          "controls": 1280,
+          "gain": 1.0,
+          "passed": false,
+          "gates": [
+            false,
+            false,
+            true,
+            true,
+            true,
+            false
+          ],
+          "peaks_mm_and_degrees": [
+            8.91839313507,
+            521.436096191,
+            0.713539123535,
+            1.0137116909,
+            7.93743610382
+          ],
+          "final8_excursion_mm": 67.679046631,
+          "first_breach_s": 0.35,
+          "final8_mean_speed_mm_s": 8.541349536180686
+        },
+        {
+          "case": 5,
+          "pose": 3,
+          "offset_mm": 0.5,
+          "controls": 1280,
+          "gain": 1.0,
+          "passed": false,
+          "gates": [
+            false,
+            false,
+            true,
+            true,
+            true,
+            false
+          ],
+          "peaks_mm_and_degrees": [
+            8.87138366699,
+            522.523376465,
+            0.628623962402,
+            1.25339603424,
+            8.50142669678
+          ],
+          "final8_excursion_mm": 67.86624145500002,
+          "first_breach_s": 0.35,
+          "final8_mean_speed_mm_s": 8.565243911743124
+        }
+      ],
+      "controls": 7680
+    },
+    "controls": 10720
+  },
+  "initial_policy": {
+    "update": 0,
+    "steps": 0,
+    "parameters": [
+      4.595119953155518,
+      1.0902440547943115
+    ],
+    "deterministic_gain": 0.9900000010199071,
+    "sigma": 6.000000023645402
+  },
+  "initial_hold": {
+    "passes": 0,
+    "cases": [
+      {
+        "case": 0,
+        "pose": 0,
+        "offset_mm": 0.0,
+        "controls": 1280,
+        "gain": 0.990000069141,
+        "passed": false,
+        "gates": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "peaks_mm_and_degrees": [
+          8.86175727844,
+          516.33380127,
+          0.719223022461,
+          1.0732601881,
+          7.36233901978
+        ],
+        "final8_excursion_mm": 67.07525634799993,
+        "first_breach_s": 0.35,
+        "final8_mean_speed_mm_s": 8.465048909187312
+      },
+      {
+        "case": 1,
+        "pose": 3,
+        "offset_mm": 0.0,
+        "controls": 1280,
+        "gain": 0.990000069141,
+        "passed": false,
+        "gates": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "peaks_mm_and_degrees": [
+          8.79654788971,
+          517.701965332,
+          0.629587173462,
+          1.13587427139,
+          7.84695386887
+        ],
+        "final8_excursion_mm": 67.26467895500002,
+        "first_breach_s": 0.35,
+        "final8_mean_speed_mm_s": 8.489246332645186
+      },
+      {
+        "case": 2,
+        "pose": 0,
+        "offset_mm": -0.5,
+        "controls": 1280,
+        "gain": 0.990000069141,
+        "passed": false,
+        "gates": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "peaks_mm_and_degrees": [
+          8.88000774384,
+          515.466796875,
+          0.781841278076,
+          1.16329813004,
+          6.81494760513
+        ],
+        "final8_excursion_mm": 67.05734252999997,
+        "first_breach_s": 0.35,
+        "final8_mean_speed_mm_s": 8.4628645658495
+      },
+      {
+        "case": 3,
+        "pose": 3,
+        "offset_mm": -0.5,
+        "controls": 1280,
+        "gain": 0.990000069141,
+        "passed": false,
+        "gates": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "peaks_mm_and_degrees": [
+          8.82940292358,
+          517.022033691,
+          0.7223700881,
+          1.04989540577,
+          7.22848987579
+        ],
+        "final8_excursion_mm": 67.25869751000005,
+        "first_breach_s": 0.35,
+        "final8_mean_speed_mm_s": 8.48838240504275
+      },
+      {
+        "case": 4,
+        "pose": 0,
+        "offset_mm": 0.5,
+        "controls": 1280,
+        "gain": 0.990000069141,
+        "passed": false,
+        "gates": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "peaks_mm_and_degrees": [
+          8.83877468109,
+          517.083679199,
+          0.699062287807,
+          1.00166070461,
+          7.89117956161
+        ],
+        "final8_excursion_mm": 67.090087891,
+        "first_breach_s": 0.4,
+        "final8_mean_speed_mm_s": 8.46707540154475
+      },
+      {
+        "case": 5,
+        "pose": 3,
+        "offset_mm": 0.5,
+        "controls": 1280,
+        "gain": 0.990000069141,
+        "passed": false,
+        "gates": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "peaks_mm_and_degrees": [
+          8.79689025879,
+          518.199157715,
+          0.631003320217,
+          1.22890329361,
+          8.45184803009
+        ],
+        "final8_excursion_mm": 67.26559448299997,
+        "first_breach_s": 0.35,
+        "final8_mean_speed_mm_s": 8.489550387859376
+      }
+    ],
+    "controls": 7680
+  },
+  "calibration": {
+    "parameters": [
+      4.595119953155518,
+      1.0902440547943115
+    ],
+    "quiet": 52,
+    "quiet_pose0": 27,
+    "quiet_pose3": 25,
+    "probability_error": 9.5367431640625e-07,
+    "backbone_error": 8.626807619371846e-07,
+    "return_error": 0.0,
+    "gain_min": 4.909859853796661e-06,
+    "gain_max": 1.0,
+    "quiet_gain_max": 0.3819228410720825,
+    "controls": 327680
+  },
+  "calibration_passed": true,
+  "calibration_scale": 0.48350932181921447,
+  "calibration_return_p99": 1.1745346784591675,
+  "calibration_return_max": 1.174572467803955,
+  "counted_controls": 2734560,
+  "counted_substeps": 27345600,
+  "reserved_withheld": {
+    "passes": 6,
+    "cases": [
+      {
+        "case": 0,
+        "pose": 1,
+        "offset_mm": 0.0,
+        "controls": 1280,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0915045291185,
+          0.379154294729,
+          0.364766120911,
+          0.104281455278,
+          1.49841630459
+        ],
+        "final8_excursion_mm": 2.0395032999999743e-05,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 0.0002750108727923062
+      },
+      {
+        "case": 1,
+        "pose": 2,
+        "offset_mm": 0.0,
+        "controls": 1280,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0478298440576,
+          0.38553199172,
+          0.341563224792,
+          0.175903901458,
+          1.27380001545
+        ],
+        "final8_excursion_mm": 5.373731250000319e-05,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 0.0002791272291688125
+      },
+      {
+        "case": 2,
+        "pose": 1,
+        "offset_mm": -0.25,
+        "controls": 1280,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0952270925045,
+          0.24999617040157315,
+          0.24999617040157315,
+          0.0932911634445,
+          1.68713641167
+        ],
+        "final8_excursion_mm": 1.9311904899999704e-05,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 0.00028374902512950625
+      },
+      {
+        "case": 3,
+        "pose": 2,
+        "offset_mm": -0.25,
+        "controls": 1280,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0504109933972,
+          0.249996170402,
+          0.249996170402,
+          0.171077787876,
+          1.45319962502
+        ],
+        "final8_excursion_mm": 5.1766634000000034e-05,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 0.0002889273169784937
+      },
+      {
+        "case": 4,
+        "pose": 1,
+        "offset_mm": 0.25,
+        "controls": 1280,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0877237543464,
+          0.607249200344,
+          0.596666276455,
+          0.114523440599,
+          1.34987699986
+        ],
+        "final8_excursion_mm": 2.3424625389999523e-05,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 0.00026640590631363747
+      },
+      {
+        "case": 5,
+        "pose": 2,
+        "offset_mm": 0.25,
+        "controls": 1280,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0452532880008,
+          0.602692425251,
+          0.574421882629,
+          0.180107325315,
+          1.19844639301
+        ],
+        "final8_excursion_mm": 5.508214229999614e-05,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 0.0002698289668841937
+      }
+    ],
+    "controls": 7680
+  },
+  "reserved_endurance": {
+    "passes": 2,
+    "cases": [
+      {
+        "case": 0,
+        "pose": 0,
+        "offset_mm": 0.0,
+        "controls": 6000,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0478296764195,
+          0.38594558835,
+          0.341563224792,
+          0.177335962653,
+          1.27380001545
+        ],
+        "final8_excursion_mm": 0.0,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 1.02940055058e-06
+      },
+      {
+        "case": 1,
+        "pose": 3,
+        "offset_mm": 0.0,
+        "controls": 6000,
+        "gain": 0.262116551399,
+        "passed": true,
+        "gates": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "peaks_mm_and_degrees": [
+          0.0915044024587,
+          0.379188776016,
+          0.364766120911,
+          0.105460718274,
+          1.49841630459
+        ],
+        "final8_excursion_mm": 0.0,
+        "first_breach_s": null,
+        "final8_mean_speed_mm_s": 8.478341442240001e-07
+      }
+    ],
+    "controls": 12000
+  },
+  "training": {
+    "controls": 2734560,
+    "substeps": 27345600,
+    "active_seconds": 37.0096797,
+    "prior_active_seconds": 6.3478226,
+    "PPO_updates": 7,
+    "actor_steps": 112,
+    "critic_steps": 0,
+    "critic_forward_calls": 0,
+    "fault": "",
+    "gate": "qualified_after_withheld_endurance_no_adoption",
+    "original_success": true,
+    "qualified": true,
+    "withheld_passes": 6,
+    "endurance_passes": 2,
+    "reserve_consumed": true,
+    "closed": true,
+    "runtime_adopted": false,
+    "retries": 0
+  },
+  "updates": [
+    {
+      "parameters": [
+        4.595119953155518,
+        1.0902440547943115
+      ],
+      "quiet": 55,
+      "quiet_pose0": 26,
+      "quiet_pose3": 29,
+      "probability_error": 9.5367431640625e-07,
+      "backbone_error": 8.295988194184645e-07,
+      "return_error": 0.0,
+      "gain_min": 1.731843894958729e-06,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.35283756256103516,
+      "controls": 327680,
+      "update": 1,
+      "LOO_advantage_max_error": 5.8618246923103356e-08,
+      "LOO_case_mean_advantages": [
+        -1.1089236195971353e-08,
+        -6.9307728445267e-09,
+        0.0,
+        -9.703081893519538e-09,
+        -5.676632941487014e-09,
+        1.9868215517249155e-08
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.97887390852,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.76996326447,
+                511.303771973,
+                0.703887879848,
+                1.06964635849,
+                7.31579494476
+              ],
+              "final8_excursion_mm": 66.39730835,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.379412037134312
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.97887390852,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.70746421814,
+                512.698303223,
+                0.610466003418,
+                1.10599577427,
+                7.79583454132
+              ],
+              "final8_excursion_mm": 66.5703125,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.401046878099189
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.97887390852,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.79378700256,
+                510.422454834,
+                0.765743255615,
+                1.15780055523,
+                6.77453660965
+              ],
+              "final8_excursion_mm": 66.38504028299997,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.37769873142275
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.97887390852,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.73799991608,
+                512.005249023,
+                0.702686309814,
+                1.02344715595,
+                7.18261194229
+              ],
+              "final8_excursion_mm": 66.56643676699997,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.4003349542615
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.97887390852,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.75219154358,
+                512.065307617,
+                0.685720384121,
+                0.989005327225,
+                7.83897018433
+              ],
+              "final8_excursion_mm": 66.40905761700003,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 8.380815452337313
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.97887390852,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.7087097168,
+                513.212036133,
+                0.633640289307,
+                1.1993304491,
+                8.39578151703
+              ],
+              "final8_excursion_mm": 66.57037353500004,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.401151055097376
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "parameters": [
+        3.835897922515869,
+        1.6067895889282227
+      ],
+      "quiet": 73,
+      "quiet_pose0": 37,
+      "quiet_pose3": 36,
+      "probability_error": 9.5367431640625e-07,
+      "backbone_error": 8.392205455010071e-07,
+      "return_error": 0.0,
+      "gain_min": 2.8571116672537755e-06,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.40012624859809875,
+      "controls": 327680,
+      "update": 2,
+      "LOO_advantage_max_error": 5.944697800686072e-08,
+      "LOO_case_mean_advantages": [
+        -5.544618097985676e-09,
+        1.38615456890534e-08,
+        -2.772309048992838e-09,
+        -9.703081893519538e-09,
+        8.514949634275126e-09,
+        5.676632941487014e-09
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.954163789749,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.56199741364,
+                499.452850342,
+                0.669555604458,
+                1.06456196308,
+                7.20954799652
+              ],
+              "final8_excursion_mm": 64.83944702100001,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 8.182320502400563
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.954163789749,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.49941921234,
+                500.915893555,
+                0.568056046963,
+                1.04711973667,
+                7.67866659164
+              ],
+              "final8_excursion_mm": 64.962310791,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.198256576061375
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.954163789749,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.58249092102,
+                498.538452148,
+                0.731058120728,
+                1.15101647377,
+                6.68184232712
+              ],
+              "final8_excursion_mm": 64.83673095799998,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.182043141126751
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.954163789749,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.52720069885,
+                500.187866211,
+                0.66097253561,
+                0.969586908817,
+                7.07725906372
+              ],
+              "final8_excursion_mm": 64.96325683599997,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.198486787080688
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.954163789749,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.54351615906,
+                500.234436035,
+                0.660042762756,
+                0.983043253422,
+                7.71996212006
+              ],
+              "final8_excursion_mm": 64.83819580100004,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 8.182183635235063
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.954163789749,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.50463581085,
+                501.454589844,
+                0.639371871948,
+                1.13413059711,
+                8.26733398438
+              ],
+              "final8_excursion_mm": 64.955474853,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 8.197462728619312
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "parameters": [
+        3.0357604026794434,
+        1.9237728118896484
+      ],
+      "quiet": 91,
+      "quiet_pose0": 51,
+      "quiet_pose3": 40,
+      "probability_error": 4.76837158203125e-07,
+      "backbone_error": 9.072503264206944e-07,
+      "return_error": 0.0,
+      "gain_min": 3.0425923114307807e-07,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.40535739064216614,
+      "controls": 327680,
+      "update": 3,
+      "LOO_advantage_max_error": 5.938170133390486e-08,
+      "LOO_case_mean_advantages": [
+        -1.663385518213545e-08,
+        -2.772309048992838e-09,
+        2.4950780996846333e-08,
+        -9.703081893519538e-09,
+        8.514949634275126e-09,
+        4.257474817137563e-09
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.901349782944,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.04777145386,
+                470.59185791,
+                0.612993180752,
+                1.05741834641,
+                6.96576166153
+              ],
+              "final8_excursion_mm": 61.168823241999974,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 7.718459141254874
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.901349782944,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                7.99124240875,
+                472.195983887,
+                0.487871140242,
+                0.921381473541,
+                7.40994405746
+              ],
+              "final8_excursion_mm": 61.100372315000016,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 7.710360422730187
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.901349782944,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.07088756561,
+                469.611907959,
+                0.660638809204,
+                1.13178384304,
+                6.46778059006
+              ],
+              "final8_excursion_mm": 61.17977905299995,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 7.7199815183878115
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.901349782944,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.01353168488,
+                471.409637451,
+                0.572719573975,
+                0.854403376579,
+                6.83477640152
+              ],
+              "final8_excursion_mm": 61.113739013999975,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 7.712003195285687
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.901349782944,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.03190422058,
+                471.412811279,
+                0.67242616415,
+                0.978016972542,
+                7.44795274734
+              ],
+              "final8_excursion_mm": 61.15423584000001,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 7.71661384105675
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.901349782944,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                8.00241470337,
+                472.826202393,
+                0.651292800903,
+                0.996965110302,
+                7.97356033325
+              ],
+              "final8_excursion_mm": 61.08187866200001,
+              "first_breach_s": 0.35,
+              "final8_mean_speed_mm_s": 7.708061069250002
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "parameters": [
+        2.2123122215270996,
+        2.1309592723846436
+      ],
+      "quiet": 106,
+      "quiet_pose0": 51,
+      "quiet_pose3": 55,
+      "probability_error": 4.76837158203125e-07,
+      "backbone_error": 9.303761219214834e-07,
+      "return_error": 0.0,
+      "gain_min": 3.693755523670461e-09,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.3559979200363159,
+      "controls": 327680,
+      "update": 4,
+      "LOO_advantage_max_error": 5.959926863141618e-08,
+      "LOO_case_mean_advantages": [
+        -8.316927591067724e-09,
+        5.544618097985676e-09,
+        -1.663385518213545e-08,
+        2.772309048992838e-09,
+        1.1353265882974029e-08,
+        8.514949634275126e-09
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.79691940546,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                6.66941070557,
+                393.619812012,
+                0.619640350342,
+                1.0329297781,
+                6.37775039673
+              ],
+              "final8_excursion_mm": 51.201232910000044,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 6.463639160990499
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.79691940546,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                6.63593578339,
+                396.154693604,
+                0.430622071028,
+                0.700574100018,
+                6.80947685242
+              ],
+              "final8_excursion_mm": 51.215454101000034,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 6.464598479867
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.79691940546,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                6.68840169907,
+                392.502624512,
+                0.609731674194,
+                1.08755302429,
+                5.94600200653
+              ],
+              "final8_excursion_mm": 51.10028076200001,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 6.450923988223001
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.79691940546,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                6.6383638382,
+                395.185424805,
+                0.4999923408031463,
+                0.746214807034,
+                6.27085399628
+              ],
+              "final8_excursion_mm": 51.128295897999976,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 6.453692770004187
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.79691940546,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                6.7917766571,
+                394.58480835,
+                0.708699226379,
+                0.974606812,
+                6.80045604706
+              ],
+              "final8_excursion_mm": 51.30407714900002,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 6.476520889997625
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.79691940546,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                6.86385250092,
+                396.983337402,
+                0.692033708096,
+                0.732541561127,
+                7.34317970276
+              ],
+              "final8_excursion_mm": 51.30276489299996,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 6.475525426864562
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "parameters": [
+        1.3671507835388184,
+        2.1727707386016846
+      ],
+      "quiet": 93,
+      "quiet_pose0": 48,
+      "quiet_pose3": 45,
+      "probability_error": 4.76837158203125e-07,
+      "backbone_error": 9.033734245100788e-07,
+      "return_error": 0.0,
+      "gain_min": 7.274299385073846e-09,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.34909287095069885,
+      "controls": 327680,
+      "update": 5,
+      "LOO_advantage_max_error": 5.950602233184554e-08,
+      "LOO_case_mean_advantages": [
+        -2.772309048992838e-09,
+        8.316927591067724e-09,
+        -2.2178472391942705e-08,
+        -5.544618097985676e-09,
+        -2.838316470743507e-09,
+        0.0
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.633432805538,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                4.16434049606,
+                182.978164673,
+                2.03686714172,
+                0.818021893501,
+                5.29609203339
+              ],
+              "final8_excursion_mm": 17.055343628000003,
+              "first_breach_s": 0.45,
+              "final8_mean_speed_mm_s": 2.1633187934749376
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.633432805538,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                4.27490568161,
+                189.420639038,
+                2.00409889221,
+                0.568506658077,
+                5.60549354553
+              ],
+              "final8_excursion_mm": 17.670745850000003,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 2.2407221049071877
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.633432805538,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                3.95028305054,
+                180.478286743,
+                2.00596809387,
+                0.827314436436,
+                4.73416566849
+              ],
+              "final8_excursion_mm": 17.198211670000006,
+              "first_breach_s": 0.45,
+              "final8_mean_speed_mm_s": 2.1813251152634376
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.633432805538,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                4.07603788376,
+                187.019668579,
+                1.96285247803,
+                0.57665014267,
+                5.16880702972
+              ],
+              "final8_excursion_mm": 17.881134034000013,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 2.2672497183081872
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.633432805538,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                4.37240886688,
+                185.238128662,
+                2.07067489624,
+                0.807459056377,
+                5.88243246078
+              ],
+              "final8_excursion_mm": 16.896774292000003,
+              "first_breach_s": 0.45,
+              "final8_mean_speed_mm_s": 2.143251179159125
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.633432805538,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+              ],
+              "peaks_mm_and_degrees": [
+                4.47743654251,
+                191.568435669,
+                2.04753875732,
+                0.56275755167,
+                6.0386133194
+              ],
+              "final8_excursion_mm": 17.446884154999992,
+              "first_breach_s": 0.4,
+              "final8_mean_speed_mm_s": 2.2124486833809374
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "parameters": [
+        0.5469720363616943,
+        2.068499803543091
+      ],
+      "quiet": 113,
+      "quiet_pose0": 49,
+      "quiet_pose3": 64,
+      "probability_error": 4.76837158203125e-07,
+      "backbone_error": 9.210179623408976e-07,
+      "return_error": 0.0,
+      "gain_min": 1.805757676720532e-08,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.3571609556674957,
+      "controls": 327680,
+      "update": 6,
+      "LOO_advantage_max_error": 5.927761970170309e-08,
+      "LOO_case_mean_advantages": [
+        2.772309048992838e-09,
+        -1.1089236195971353e-08,
+        2.772309048992838e-09,
+        -1.38615456890534e-08,
+        -9.934107758624577e-09,
+        0.0
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.443283438683,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.60108590126,
+                3.71162700653,
+                0.714082658291,
+                0.255402177572,
+                3.24515962601
+              ],
+              "final8_excursion_mm": 0.004553794860000071,
+              "first_breach_s": 1.75,
+              "final8_mean_speed_mm_s": 0.0006932921767656438
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.443283438683,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.830200374126,
+                6.13834381104,
+                0.768055915833,
+                0.222683265805,
+                3.58484768867
+              ],
+              "final8_excursion_mm": 0.007453441620000056,
+              "first_breach_s": 0.9,
+              "final8_mean_speed_mm_s": 0.0010051119072158562
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.443283438683,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.595473527908,
+                3.64479327202,
+                0.4999923408031463,
+                0.280171811581,
+                3.38737797737
+              ],
+              "final8_excursion_mm": 0.004508733749999827,
+              "first_breach_s": 0.95,
+              "final8_mean_speed_mm_s": 0.0007156118013880875
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.443283438683,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.808750331402,
+                5.90055418015,
+                0.4999923408031463,
+                0.25289735198,
+                3.66660904884
+              ],
+              "final8_excursion_mm": 0.007175445560000604,
+              "first_breach_s": 0.9,
+              "final8_mean_speed_mm_s": 0.0009899219759973875
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.443283438683,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.595489144325,
+                3.75869655609,
+                1.15026473999,
+                0.227443367243,
+                3.19647192955
+              ],
+              "final8_excursion_mm": 0.004517793659999825,
+              "first_breach_s": 1.75,
+              "final8_mean_speed_mm_s": 0.0006657744504991313
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.443283438683,
+              "passed": false,
+              "gates": [
+                false,
+                false,
+                false,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.840902447701,
+                6.34323215485,
+                1.20037066936,
+                0.184528335929,
+                3.64421820641
+              ],
+              "final8_excursion_mm": 0.007673740379999572,
+              "first_breach_s": 0.9,
+              "final8_mean_speed_mm_s": 0.0010166702028073188
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "parameters": [
+        -0.22784680128097534,
+        1.6912835836410522
+      ],
+      "quiet": 131,
+      "quiet_pose0": 63,
+      "quiet_pose3": 68,
+      "probability_error": 4.76837158203125e-07,
+      "backbone_error": 8.833813347486341e-07,
+      "return_error": 0.0,
+      "gain_min": 1.1680435818561818e-06,
+      "gain_max": 1.0,
+      "quiet_gain_max": 0.422556608915329,
+      "controls": 327680,
+      "update": 7,
+      "LOO_advantage_max_error": 5.921531909258704e-08,
+      "LOO_case_mean_advantages": [
+        -1.663385518213545e-08,
+        -4.158463795533862e-09,
+        -3.32677103642709e-08,
+        -2.772309048992838e-09,
+        -5.676632941487014e-09,
+        -9.934107758624577e-09
+      ],
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756546,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.63331,
+              "forward_mm": 50.8966,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.59819,
+              "RMSE_mm_s": 1.16581,
+              "lateral_mm": 0.675018,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28824,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.56058,
+              "RMSE_mm_s": 1.19887,
+              "lateral_mm": 0.756538,
+              "work_J_per_m": 0.000319729,
+              "depth_mm": 0.187693,
+              "tilt_deg": 8.82788,
+              "path_deg": 1.6333,
+              "forward_mm": 50.8967,
+              "late_forward_mm": 31.3114
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.5982,
+              "RMSE_mm_s": 1.16582,
+              "lateral_mm": 0.675021,
+              "work_J_per_m": 0.000318431,
+              "depth_mm": 0.163388,
+              "tilt_deg": 9.35767,
+              "path_deg": 1.28825,
+              "forward_mm": 51.3645,
+              "late_forward_mm": 31.3568
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 6,
+          "cases": [
+            {
+              "case": 0,
+              "pose": 0,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.262116551399,
+              "passed": true,
+              "gates": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.0478296764195,
+                0.385540157557,
+                0.341563224792,
+                0.175909385085,
+                1.27380001545
+              ],
+              "final8_excursion_mm": 7.310509680000243e-05,
+              "first_breach_s": null,
+              "final8_mean_speed_mm_s": 0.00027912425866810625
+            },
+            {
+              "case": 1,
+              "pose": 3,
+              "offset_mm": 0.0,
+              "controls": 1280,
+              "gain": 0.262116551399,
+              "passed": true,
+              "gates": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.0915044024587,
+                0.379155993462,
+                0.364766120911,
+                0.104279004037,
+                1.49841630459
+              ],
+              "final8_excursion_mm": 1.705717300000062e-05,
+              "first_breach_s": null,
+              "final8_mean_speed_mm_s": 0.0002750111519163
+            },
+            {
+              "case": 2,
+              "pose": 0,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.262116551399,
+              "passed": true,
+              "gates": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.0529621765018,
+                0.4999923408031463,
+                0.4999923408031463,
+                0.165585309267,
+                1.66659617424
+              ],
+              "final8_excursion_mm": 0.00010165944699999652,
+              "first_breach_s": null,
+              "final8_mean_speed_mm_s": 0.000299438081947325
+            },
+            {
+              "case": 3,
+              "pose": 3,
+              "offset_mm": -0.5,
+              "controls": 1280,
+              "gain": 0.262116551399,
+              "passed": true,
+              "gates": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.0989036634564,
+                0.4999923408031463,
+                0.4999923408031463,
+                0.0815694853663,
+                1.90669929981
+              ],
+              "final8_excursion_mm": 2.4950131800000747e-05,
+              "first_breach_s": null,
+              "final8_mean_speed_mm_s": 0.00029302005650606877
+            },
+            {
+              "case": 4,
+              "pose": 0,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.262116551399,
+              "passed": true,
+              "gates": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.0427035577595,
+                0.829235911369,
+                0.808243751526,
+                0.183692961931,
+                1.39240753651
+              ],
+              "final8_excursion_mm": 7.439404729999571e-05,
+              "first_breach_s": null,
+              "final8_mean_speed_mm_s": 0.00026137792110603127
+            },
+            {
+              "case": 5,
+              "pose": 3,
+              "offset_mm": 0.5,
+              "controls": 1280,
+              "gain": 0.262116551399,
+              "passed": true,
+              "gates": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "peaks_mm_and_degrees": [
+                0.0839261710644,
+                0.838192522526,
+                0.829286575317,
+                0.124052487314,
+                1.53684234619
+              ],
+              "final8_excursion_mm": 1.472095027999984e-05,
+              "first_breach_s": null,
+              "final8_mean_speed_mm_s": 0.000258764870795875
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    }
+  ],
+  "policies": [
+    {
+      "update": 0,
+      "steps": 0,
+      "parameters": [
+        4.595119953155518,
+        1.0902440547943115
+      ],
+      "deterministic_gain": 0.9900000010199071,
+      "sigma": 6.000000023645402
+    },
+    {
+      "update": 1,
+      "steps": 16,
+      "parameters": [
+        3.835897922515869,
+        1.6067895889282227
+      ],
+      "deterministic_gain": 0.978873989668985,
+      "sigma": 6.672073227492723
+    },
+    {
+      "update": 2,
+      "steps": 32,
+      "parameters": [
+        3.0357604026794434,
+        1.9237728118896484
+      ],
+      "deterministic_gain": 0.9541637658774699,
+      "sigma": 6.986840558683188
+    },
+    {
+      "update": 3,
+      "steps": 48,
+      "parameters": [
+        2.2123122215270996,
+        2.1309592723846436
+      ],
+      "deterministic_gain": 0.9013497167550228,
+      "sigma": 7.156314525060494
+    },
+    {
+      "update": 4,
+      "steps": 64,
+      "parameters": [
+        1.3671507835388184,
+        2.1727707386016846
+      ],
+      "deterministic_gain": 0.7969194297253737,
+      "sigma": 7.187331332149181
+    },
+    {
+      "update": 5,
+      "steps": 80,
+      "parameters": [
+        0.5469720363616943,
+        2.068499803543091
+      ],
+      "deterministic_gain": 0.6334327953944321,
+      "sigma": 7.108038749233013
+    },
+    {
+      "update": 6,
+      "steps": 96,
+      "parameters": [
+        -0.22784680128097534,
+        1.6912835836410522
+      ],
+      "deterministic_gain": 0.4432834536537172,
+      "sigma": 6.762923467843341
+    },
+    {
+      "update": 7,
+      "steps": 112,
+      "parameters": [
+        -1.0349966287612915,
+        1.3400334119796753
+      ],
+      "deterministic_gain": 0.26211655084405844,
+      "sigma": 6.350338715997288
+    }
+  ],
+  "phase": "closed_attempt",
+  "input_sha256": {
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\verify_hold_learned_amplitude.py": "98832ac5b5c7a36af11dbf325b6a7eeca930642d6e8637aa8401a5f725438cba",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\learned-amplitude-preparation-2026-11-22\\check-evidence.exe": "75e9ac1d75bf5658926faf42a42bed0dd4235570d0074b31f697d3c6a5c5afb3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\protocol.bin": "421769f0c9213439c915da2ffb7262ba38f082f04589609c0743a989f368160a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\parent-checkpoint.bin": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\migrated-initial.bin": "f8df45d03d4bab6abf2b4ceb333d5ea27066159aeadd2dfb7f8822f23fcb08fc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\rest\\controls.csv": "f78088cd6dab7b769bf9a32e54c0d9da7499468fdc5f459f5d3eb5f325abdfd7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\rest\\summary.csv": "11874ed64b09503b86d32138b809a91a31da79a5625561485dbb2461f140aa2f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\rest\\cases.csv": "d85f1ca962af247b87f1e2166d0a66e3f03ed083106a1cb5a5a1928487d7189c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\baseline\\rest\\poses.csv": "06c2dd3196e117a613d567a4dfe496c73fc02609b61f673214f62be16b84c84f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\initial-policy\\amplitude-policy-update-0.bin": "e6bc1ecd4dbb0b02d27fd30be85e91981538c84c4bad7ce48f4e7de18c3fd362",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\initial-hold\\rest\\controls.csv": "a64c7e6bb111d4baea661dd742164f341b7f4c9a6b446eabb92dd77f31e630d2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\initial-hold\\rest\\summary.csv": "0264a5e3b970a485e96ecc82f484d85a164c87188aadb602b7e02d3d4a1c0992",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\initial-hold\\rest\\cases.csv": "96e895616fcd7075555abef57c3e539aa684d2a6f9c5c8397e7ae2f4dd6b28e1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\initial-hold\\rest\\poses.csv": "4228ac0f813dfa7eb4572945d07132b740f5c10ab218c2ae4bc6d3486994e4d6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\calibration-result.json": "fc95db7ad1f5b6323633e888e7262f0963fd71e92a1c27a72fc0dfe1feb7aa44",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\calibration-started\\calibration-batch-0.bin": "0148e832bbd53c3047c8f0e0151b7474a90f5846dd527776a58c497646dbdeaa",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\calibration-started\\calibration-episodes-0.csv": "68f19dfe1f5c2e708a0b9c0c4a4c4b75be64deffea07e8f6e931a75c4b53992c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\fixed-scale.bin": "ff6cb7e123feedcf5fca2dc330ff1acbb54d1038a134a066e7e418ba10bd110b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\calibration-report.json": "0b3d982a8ed35f13a0d335bd49007d8e6284ee47c025032389d3081fdbc2442c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-result.json": "f49b7945bfb6b26e1d2513d1fd402297f917d84db7e53e5ab84cc8750ac828ae",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-0.bin": "e6bc1ecd4dbb0b02d27fd30be85e91981538c84c4bad7ce48f4e7de18c3fd362",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-1.bin": "5503b1e0bcd5b9edf1121f0aa259380aebcecdf7dd12d8d5c749674ab869b07d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-2.bin": "74019542d07329476c9eb7a021abb1e34dcbf7b2ac58f7cb20e76dd2bc76f064",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-3.bin": "edaf27dcd6ccd89835190c558172c7ca2754c3f2b818e957ca725509698d7514",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-4.bin": "bacb8c1aac9397d752c9fcad784133651d77ff520984de22a7b297a5f58a8677",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-5.bin": "886d871f4bae50844069f78af28d0f9139844bf2302d6017095ed291c8e3470f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-6.bin": "b8c721ce7916eb91fe582368ef84a4a30c5371a045e1fc2c312f60f3d8520867",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-7.bin": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\updates.jsonl": "674b0ec0901556f14fd9f50b3f87b8a65a44cbfc08e201f92ea38d80a720a6c4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-1.bin": "8c33c9ff8fc34f3197131c4caeca8de51e754b661c476c6846b1afdbdb8b296d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-1.csv": "f912a7ad3209a75e647d3f51eb90728e713836847ceabad8b0f66cbe1d496cce",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-1.bin": "f20fbafb5b487b8bfd5278aba8e115e6f4e6f279ae7100b584cc410960042d44",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\rest\\controls.csv": "a9f5ad7eb69295a2d8711e22c94046cf0480ed2cbf2b0a4d7cb9251d00e950ec",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\rest\\summary.csv": "b5a9a2c50967b3a2b99ac4aad1573802775f9c5039f41755ff10c05b06ceae81",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\rest\\cases.csv": "58feea6e7b891c167bd36a0e1c8a7a3f3178968e91aab303f65277b6528d01c1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-1\\rest\\poses.csv": "4d86f2d85f5eefd3ee6589d6a4b3d13d0e7248b80e95d2f029411660da191ced",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-2.bin": "04f1c083427d018789757b4c2bf949bda5ad17db82f187143a202da8318cba3a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-2.csv": "4f460e59566149f68e2d2370859add78ad11506a35ba4b0be721d8232a6610ff",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-2.bin": "636c6ce61a2b3f2caf765ade93fbff9587691d4c12fcc678ead5ac0dd2dd7303",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\rest\\controls.csv": "7acaac0f5ded6911ce66d90009645e4ef1dc37f016d710ebfcab6cac0d9c8bf7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\rest\\summary.csv": "a00887b7d40afed86250ae520e78df723b39faa8366623b9af259818b9c820d3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\rest\\cases.csv": "25e12146fd57b3a14a97cf8060bde1a2d63bbf33b3033c9f05ac9a63b0391048",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-2\\rest\\poses.csv": "0e949e673219678cf09efe773d2a525da6a13b899286736ed3db653a515411be",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-3.bin": "a09b95c87bd3cb3f8e325ca198ab87a37bafb2a2d0989a3306d12852c2e459ec",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-3.csv": "27a96665265bd490d6e8541cb393ffa301294d8b535645063e3a188bea755e3a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-3.bin": "41aef76b4370a68c871cb7ea8d3249d17f74615c5eb8c9b4f797abb5eeabb63a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\rest\\controls.csv": "67a4a41adb7bcc652632665aa99b47b7a9a9f412cf9d6ae1f0ede14ae0b7351f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\rest\\summary.csv": "f5941ccf035279533a02a441c6cbcf686cf10c99c647c76dfe10ef131d76b1a2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\rest\\cases.csv": "37383d1ad4c48c12cab556e37fa48c5190c36f869a478d3e02390e7e8df04730",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-3\\rest\\poses.csv": "1b7f57a912c6a3f0e6b60d508f235d520d59d62d2d178b50b449fac61d68ff63",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-4.bin": "24982410a8e1008cd8fab82b6ec55f24bce729f55cf6ab86ac298b70768f47a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-4.csv": "6c6e0a01cebae9042db1e85d5f2b8047d2cd24b17eb64a03ee3bfab62d930975",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-4.bin": "a22b8d9cfca4aedf94571ffcc00159451435f8e8f8d1d0ab1ca538cb47f0f51c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\rest\\controls.csv": "83882ae7b56cb29f8d6bcf157a03ce819651d1db5085d6a9ebc45d4c72d8d0cc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\rest\\summary.csv": "1a79906a2237759ae73e704213e4237bc045b9c4795b286f31f358853823ed76",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\rest\\cases.csv": "fb4ce9479c0f6145104097b9df89fbf0a1fd89c35dd61202f4a0637d25aecc4c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-4\\rest\\poses.csv": "061e174032a09b163c8cc8c79d997e62b95e5c835ede6b6d1dcb11a1fe5fa229",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-5.bin": "b97f8426de6004f41bcbe3aece641d2a6f518daab16351b4d83be5944b75ce3a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-5.csv": "5468a251004fb47f630f27f353f67c444108702f10d11dc341f6df9a92ee793c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-5.bin": "cbf492f91812db6130ec7bc44338ad169c83afe9707c7b019ca05787eb190eb5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\rest\\controls.csv": "f63555f4df225bb949c562e35c243d8dee99025cc4af03ef844f5956a39c6f16",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\rest\\summary.csv": "7b57f1e00a78484ee218b8e88b64163f86f55513d424a0ad0ac61f1c61da2b87",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\rest\\cases.csv": "84c07a894d1b759943eef371ebee90b017499559ef829fdf78b5f8ed348ef292",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-5\\rest\\poses.csv": "c4a84bb085872d39d1305cfdb8e394c43f0cb3003665856ee355283a8b88fe10",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-6.bin": "98a60552359f009843a22800125abf8dec679aad388a1592c9abbd48afc0e4c2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-6.csv": "34dac824f4cac06e3ed5b8d89adbbd02eb340fb4ec5934373e3a52493cff873e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-6.bin": "0c77901d52c0f0c6f32363f377e693aba6a27784ddd86d2fda6a07eb7415480e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\rest\\controls.csv": "09d4a815498d23790d79ca751f8d70f44774418ea861394d9c502740b168da51",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\rest\\summary.csv": "ca080b7c8e4375a3fc73fa9b693bfc25ad8362588ccf43934df2a33b1d709e34",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\rest\\cases.csv": "92d547d7c5c189c44dcdb1ecdd77b37da5dc78cffc1b077bb0dbc550f8e83dac",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-6\\rest\\poses.csv": "3570234a16765cd1362bfd647da099e76c718b8b2b8e4a36f79054025326b04c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-batch-7.bin": "4e3ae171ba97f100a38c9752434abdd95a918da90b53fa15bc67f32998f1a081",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\training-episodes-7.csv": "5c72bb6c831f410cd27e35b88461327f46f22cc1a4c0a5b534c1fc59cf4eb217",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\advantages-7.bin": "699a6dc207fe3cc18cec0a09924bc3d64445ec9108fa6aefa5720c96ed0d1da1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\rest\\controls.csv": "5c3ee77327fdf29cefff7b32d5357684fd96010ee6962e63e33fe58eb97c0a05",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\rest\\summary.csv": "a5cee49127f754fd0e2dce1b0fc1f667832c3c1d4c5427a814bdba02b2fa00f1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\rest\\cases.csv": "693396c6ac27fbea2a3dd761e75081659b3665f808e654d3278de019a008fc72",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\rest\\poses.csv": "4cf2abdb4c567edac6fee7bc0bc3c4a2a1fbd5149da4b6f8beb188feb329de8a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\withheld\\rest\\controls.csv": "1fcf368875bb7466817514cfb0db57bed494158ed13f0d07a8c3097fe2d07799",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\withheld\\rest\\summary.csv": "364c2ed2aa3526fb556af3bdc65fe6e538202a50e0dc2ecb491e7aef7cd04a2c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\withheld\\rest\\cases.csv": "c7709586d8473be0de6564fa0f69fd2db87d88e9185d92f49d4451b196e8cffb",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\withheld\\rest\\poses.csv": "9948fa3603f3a47fd2c649a56064b81a570f9c5553383f9447636119804f642e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\endurance\\rest\\controls.csv": "a37941fc3d8bdf9a9523d80f2820a76956a3db0b37c9118dfc939bc143645c30",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\endurance\\rest\\summary.csv": "2a7270eeac8232ddb877e90217a856ae60a1a97ecc5a8ce1caeb437764b5e635",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\endurance\\rest\\cases.csv": "4c907b63efe6ec41f5fe2cf69774f0830dcd498c67c7ed0096c42d2bc8ce2a44",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\reserved-validation\\endurance\\rest\\poses.csv": "2780dfe3be883d37a1ac5468750086fa823943144fc332acf880c455c43336fd"
+  }
+}

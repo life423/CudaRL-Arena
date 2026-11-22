@@ -1,0 +1,47 @@
+[
+  {
+    "path": "build_rest_scale.ps1",
+    "sha256": "E2B9AD42350B4CE05C4D84B7AA0B437E8F1C3597B430A60A4AC7B1C7B7DA7F53",
+    "bytes": 2933
+  },
+  {
+    "path": "instantaneous-reward-grid.csv",
+    "sha256": "730B1E95E85FEB23B2066A55B9FE44DCCA47BC40900FF24EB1A818F0AAA2D5EC",
+    "bytes": 1881
+  },
+  {
+    "path": "PROTOCOL.md",
+    "sha256": "8DA549E033414D69621B4EEC19115A4894633AEE484E2282216636266AB8D391",
+    "bytes": 15624
+  },
+  {
+    "path": "provenance.json",
+    "sha256": "78CD9D187E76854A9B897857B7AB6DDDF559C7E02826D50DF98809F8C86C1817",
+    "bytes": 1637
+  },
+  {
+    "path": "publish_rest_proposal.py",
+    "sha256": "83ED7900A574FE55F3F848EFDB4F143F5FB90D3376AD5E8021E25D8C4E24239B",
+    "bytes": 3609
+  },
+  {
+    "path": "rest-starts.csv",
+    "sha256": "63E50E541CF35C859051F299609C9FC21CB639DB7218B61AAB74D2A33DFAE1AD",
+    "bytes": 2701
+  },
+  {
+    "path": "rest_scale_probe.cpp",
+    "sha256": "BBBB5ECB3E21C86FA6EDE944BDE579E905C7D21517426863716B9748BC97C825",
+    "bytes": 6971
+  },
+  {
+    "path": "result.json",
+    "sha256": "C60FEC4FD99582024F37B127A118FDEDEB56C993592B211A80A979B8798D343B",
+    "bytes": 284
+  },
+  {
+    "path": "static-probe-execution.json",
+    "sha256": "FFDB8D5D1EA54F07F83AEAD345ECDC5E6B724C8A23EE5F645AAE322634215153",
+    "bytes": 108
+  }
+]

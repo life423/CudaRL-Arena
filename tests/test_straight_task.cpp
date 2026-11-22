@@ -1,4 +1,5 @@
 #include "check.h"
+#include "motor/hold_assessment.h"
 #include "motor/straight_task.h"
 #include "rl/ppo_math.h"
 namespace st = cudarl::straight_motor;
@@ -821,4 +822,93 @@ TEST_CASE("position_hold: gate-scale stopping and return-to-anchor rewards allow
     CHECK(moving.total()==settled.total());
     for(int j=0;j<4;++j) CHECK(w.physical.body.velocity[6+j]==1.f);
     CHECK(c.tilt_limit_deg==10 && w.attempted_substeps==0);
+}
+
+TEST_CASE("rest_hold_scorer: inclusive gates and 64-second completion") {
+    st::RestHoldAssessment assessment;
+    st::Metrics x{};
+    x.depth_m = assessment.max_depth_m;
+    x.lateral_m = assessment.max_lane_m;
+    x.tilt_deg = assessment.max_tilt_deg;
+    x.hold_error_m.x = assessment.max_anchor_m;
+    x.velocity_m_s.x = assessment.max_speed_m_s;
+    CHECK(assessment.record(0, x));
+    CHECK(assessment.rms_speed_m_s() == 0.);
+    CHECK(!assessment.complete());
+    CHECK(!assessment.passed());
+    x.velocity_m_s = {};
+    for (int control = 1; control <= assessment.controls; ++control) {
+        x.forward_m = control < assessment.final_window_start - 1 ? .01f
+                      : control == assessment.final_window_start ? 0.f : -.002f;
+        CHECK(assessment.record(control, x));
+    }
+    CHECK(assessment.complete());
+    CHECK(assessment.passed());
+    CHECK(assessment.rms_speed_m_s() == 0.);
+    CHECK(assessment.final_excursion_m() == .002f);
+}
+
+TEST_CASE("rest_hold_scorer: sticky independent gates including first and last samples") {
+    st::RestHoldAssessment assessment;
+    st::Metrics initial{};
+    initial.velocity_m_s = { .0004f, .0004f, 0.f }; // 3D speed is > 0.5 mm/s.
+    CHECK(assessment.record(0, initial));
+    for (int control = 1; control <= assessment.controls; ++control) {
+        st::Metrics x{};
+        if (control == 1) x.hold_error_m.x = .00201f;
+        if (control == 2) x.depth_m = .00101f;
+        if (control == 3) x.lateral_m = .00201f;
+        if (control == 4) x.tilt_deg = 10.01f;
+        if (control == assessment.controls) x.forward_m = -.00201f;
+        CHECK(assessment.record(control, x));
+    }
+    CHECK(assessment.complete());
+    CHECK(!assessment.passed());
+    const auto g = assessment.gates();
+    CHECK(!g.speed && !g.anchor && !g.depth && !g.lane && !g.tilt && !g.excursion);
+}
+
+TEST_CASE("rest_hold_scorer: missing, duplicate and nonfinite samples cannot pass") {
+    const st::Metrics x{};
+    st::RestHoldAssessment missing, duplicate, invalid;
+    CHECK(!missing.record(1, x));
+    CHECK(!missing.record(0, x));
+    CHECK(!missing.passed());
+    CHECK(duplicate.record(0, x));
+    CHECK(!duplicate.record(0, x));
+    CHECK(!duplicate.passed());
+    st::Metrics nan = x;
+    nan.forward_m = std::numeric_limits<float>::quiet_NaN();
+    CHECK(!invalid.record(0, nan));
+    CHECK(!invalid.complete());
+    CHECK(!invalid.passed());
+}
+
+TEST_CASE("rest_hold_scorer: hold completion is not generic swim success (zero integration)") {
+    st::World world;
+    st::ForwardConfig config;
+    st::ForwardTask task;
+    CHECK(st::begin_forward(world, config, task));
+    const auto start = task.start_com_model;
+    world.physical.body.velocity[0] = config.target_speed_m_s;
+    // Fabricate a motion that satisfies the legacy swim-only gates even under
+    // the hold flags, so a regression in outcome classification is observable.
+    config.stationary_request = config.position_hold = true;
+    st::Transition transition{};
+    for (int n = 1; n <= config.maximum_controls; ++n) {
+        const auto now = cudarl::motor::motion(world.physical.body).com_model;
+        const auto desired = start + p::V{config.target_speed_m_s * p::dt * float(n) / p::scale, 0, 0};
+        world.physical.body.position += desired - now;
+        world.physical.control_steps = n;
+        auto old = task;
+        const auto legacy = st::record_control(old, world, config);
+        transition = st::record_hold_control(task, world, config);
+        CHECK(transition.accepted == legacy.accepted && transition.done == legacy.done);
+        CHECK(transition.reward == legacy.reward && task.controls == old.controls);
+        if (n == config.maximum_controls)
+            CHECK(legacy.outcome == st::Outcome::Success);
+    }
+    CHECK(transition.accepted && transition.done && transition.outcome == st::Outcome::Timeout);
+    CHECK(task.outcome == st::Outcome::Timeout);
+    CHECK(world.attempted_substeps == 0);
 }

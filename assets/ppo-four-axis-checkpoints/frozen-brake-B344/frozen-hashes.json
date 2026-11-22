@@ -1,0 +1,226 @@
+[
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\runner.exe",
+    "sha256": "F0BC0E4DBE8B24D12BD66AF70EFE1DA7D997DEABA79B99DC62B2352299B6A469"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\frozen-protocol.md",
+    "sha256": "4D4DEEC571FF3C20F5870C7FF6C4D96D6A6FD9726CCCBE39B189FA11B86DC75E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\frozen-checkpoint.bin",
+    "sha256": "8D705FC82A2B12D465E4FDCD48BC8D881EA0710192B030B262E4A26A6C6AF2B2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\source-protocol.bin",
+    "sha256": "B96BC59DD6F134946AA0FFCF5C371834347B54EAED7B6BB90322EDBCA48D8458"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\protocol.bin",
+    "sha256": "8DDFC1BF68F5ED562FB94240E6F33CE143686D22E87FA82A67DE72FE442DE0A6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\numerical-fixture.csv",
+    "sha256": "4C25A94941FBEF316F3C6932BDDE54D552A59638FE0E647E7F2894D7DB0EC42C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\numerical-preflight.json",
+    "sha256": "55F8FA28091F7092AD8DAB07AD0DCA4E2C1F4671A5015783C9CC08F31FF7FBDE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\readiness.json",
+    "sha256": "0F205090C9970937B58B1E89714BA3280ECAC69EAC1AD797448CA8E3C7E951C4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\diagnostics\\frozen-brake-B344-v1\\source-manifest.json",
+    "sha256": "24DC49E1B515A10133E78D06309A882DACA018FAC15E5B3B8CC132BCFF8F9BED"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\hd.h",
+    "sha256": "2A8D1C759D9F8B8E268EDB95134F749DCEDBCF200E83200C628BBB213C98D7AC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\cuda\\block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\cuda\\cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\cuda\\device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\cuda\\device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_gpu.cu",
+    "sha256": "37BC9915F97B3EECEE3D5490D027F7AC3B00EB24A0C57BC6FF8F06A3344787B5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_gpu.h",
+    "sha256": "0AD0D2107E8C5B4EC3BC6FC4C5AF001D9546CF7883269B00600BD01AF7E983FE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\motor_rollout.cuh",
+    "sha256": "C4045DF8B96482B8D764C949FA5DA112D5D7F68EE4478A86964010837AAEFF77"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_kernels.cu",
+    "sha256": "884AC4D2485E97D19D6049BE677CB218B5FB17B617A50F72545DF98B13D37E8C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_math.h",
+    "sha256": "68E726DC7A84778E6900BC6894BED50126EC4545A1370618DFF0953374D25E8D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\simulation\\world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\simulation\\world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\simulation\\world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\frozen_contract.in.h",
+    "sha256": "A4B6E7767924049BEBB4591322C71583F2DCFF3A7580133275A457DCEF2DE929"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\frozen_controller.cpp",
+    "sha256": "E7BBBE69CB96F84C4B62A2DD74D95E7BFDBE26C79C36572EE276DC3F81680C82"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\frozen_controller.h",
+    "sha256": "73907C4C5E285BF57C9E559DEB535A2111BFC9F6A22FE9B948B49B75652DFD31"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\joint_motor.h",
+    "sha256": "AC65522082DE6B501C5DD62366820ED3D7A01EE994E57A78239876EE86695F03"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\straight_task.h",
+    "sha256": "93988D78511EB302E3609ABBF9DBCB683D59D71FB8457AD2B27DF22ABFBA09D4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\CMakeLists.txt",
+    "sha256": "18ABB92155FC182445F311831147602D3AF2CF3AB06B66A9B24DD9506BFF7CB7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\AGENTS.md",
+    "sha256": "F8257B2B32CA62E1647D6E6F287311E3E71298408703B8937275B4D93DCE839C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\frozen_brake_probe.cpp",
+    "sha256": "32D82E16EC10D9E750FBC35C38756A0797B4C35CC2390D67BD4DF03C07AD1113"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\run-frozen-brake-probe.ps1",
+    "sha256": "CF8D4298833355DAF6D4D230365860EF0B7C3CB35D0D5E7F395DA8576BED6AE4"
+  }
+]

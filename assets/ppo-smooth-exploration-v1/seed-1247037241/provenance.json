@@ -1,0 +1,37 @@
+{
+  "seed": 1247037241,
+  "frozen_8s_passes": 0,
+  "preserved_utc": "2026-10-31T22:35:15.9334906Z",
+  "run_executable_sha256": "070D8DD359B11020372EDF40E7C059304D75C4823F4A0F4FD1FA45BDFA440464",
+  "task": 6,
+  "source_run": "explore-pair-v1-s1247037241-smooth",
+  "fresh_initialization": true,
+  "teacher_examples_or_imported_weights": false,
+  "rho": 0.8,
+  "actor": [
+    40,
+    32,
+    32,
+    4
+  ],
+  "source_started_utc": "2026-10-31T22:23:41.4898202Z",
+  "action_mapping": 3,
+  "reward": 4,
+  "status": "research only; NOT accepted or installed",
+  "critic": [
+    40,
+    32,
+    32,
+    1
+  ],
+  "checkpoint_sha256": "DA41D3AFC54BAE71F8CC81E621CCE492C1753994CB92749917069C0B85B686BC",
+  "protocol_sha256": "CC871F3E92CDA1AEE07522A2976E7E2D3281BE594305BF75230B44823A3E2B0E",
+  "candidate_accepted": false,
+  "initialization_sha256": "C02279AB7D12ED3C0525688661AAC96D9B0BD61DB59C9E292C4BB033969E2A1A",
+  "source_ended_utc": "2026-10-31T22:24:06.9922659Z",
+  "algorithm": "native CUDA PPO",
+  "schema": 3,
+  "updates": 128,
+  "long_fault": "",
+  "model": 6
+}

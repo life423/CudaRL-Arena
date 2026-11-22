@@ -1,0 +1,3 @@
+case,pose,offset_mm,controls,gain,initial_speed_m_s,initial_anchor_m,initial_depth_m,initial_lane_m,initial_tilt_deg
+0,0,0,6000,0.262116551399,0,0,0,0,0
+1,3,0,6000,0.262116551399,0,0,0,0,0
