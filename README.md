@@ -1,18 +1,34 @@
 # CudaRL-Arena
 
-Windows preview: **Tadpole Pond** now includes sinking-food interaction and genuine local PPO on CUDA **or CPU**. The player menu focuses on the pond; CartPole/Racing code and developer routes remain. [Download website](https://cudarl.drewclark.io) · [Windows release notes and rebuild](docs/windows_release.md). macOS/browser-game versions and physical growth are future stages.
+Native C++/CUDA reinforcement learning, with Godot as the frontend. **Tadpole Pond** is the playable Windows preview. The four-axis swimmer is a separate, unreleased research track.
 
 [![CI](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml/badge.svg)](https://github.com/life423/CudaRL-Arena/actions/workflows/ci.yml)
 
-Reinforcement learning environments written as hand-written CUDA kernels and driven directly from the Godot game engine, with no Python anywhere in the loop.
+## Play Tadpole Pond (Windows)
 
-Godot loads a C++ GDExtension DLL that has the CUDA code linked in. GDScript calls straight into it. There's no server, no socket, no interpreter, and no ML framework. Every kernel and learning algorithm in this repo is written from scratch.
+**[Download TadpolePondSetup.exe](https://github.com/life423/CudaRL-Arena/releases/download/v0.1.0-preview.2/TadpolePondSetup.exe)** · [Release and assets](https://github.com/life423/CudaRL-Arena/releases/tag/v0.1.0-preview.2) · [SHA-256 checksums](https://github.com/life423/CudaRL-Arena/releases/download/v0.1.0-preview.2/SHA256SUMS.txt) · [Project website](https://cudarl.drewclark.io/)
 
-The new [portable Windows pond preview](docs/portable_pond.md) also builds without CUDA. Its optional CUDA module runs the saved AI and physics on a compatible NVIDIA GPU after a real device-and-kernel check; otherwise it uses the same C++ equations and trained weights on the CPU. Godot still renders on the available graphics hardware. This preview provides pond playback; live CPU training and other portable demos remain follow-ups.
+The unsigned Windows 10/11 x64 preview installs per user and launches **Tadpole Pond**. No administrator access, Godot editor, Python, or CUDA toolkit is needed to play. Use **Open pond** and click or tap the water to drop sinking food. The game runs native PPO locally, choosing a compatible NVIDIA GPU after a device and kernel check, or falling back to native CPU learning. Learning uses 1,024 practice worlds on CUDA or 16 on CPU; throughput differs. Training saves stay on your computer and are kept when you uninstall. See [installation and packaging notes](docs/windows_release.md) and the [feeding guide](docs/live_feeding.md).
 
-[Frozen-policy current tests](docs/experiments/swimmer/gentle-currents/README.md) now measure robustness before adaptation: 0.5 cm/s currents reduce collection by 3.05% on the tested layouts; 1.0 cm/s reduces it by 18.48% and exposes a prolonged stall in a five-minute trial. The original controller and training saves are preserved; no robustness-training improvement is claimed.
+The website is a download page, not a browser game. This release does not include a macOS build, the research swimmer, or its Hold Lab replay viewer.
 
-> **Status: Tadpole Pond now supports user-dropped sinking food and native CUDA PPO during play.** The inherited shared selector scores all active food; the swimming actor learns in 1,024 practice worlds influenced by user drops/current and adopts validated improvements without a world reset. The [feeding guide](docs/live_feeding.md) records the brief starting check, separate full save/resume, preserved references and prototype limits. The earlier frozen CPU/CUDA pond remains in Experiments, with its [0.75 cm/s evidence](docs/experiments/swimmer/current-075/README.md). CartPole and racing code/training remain intact as hidden developer demonstrations. Physical growth and land movement are future stages. See the [creature plan](docs/CREATURE_PLAN.md).
+## Four-axis swimmer research
+
+The [standalone research snapshot](research/minimal-foundation/README.md) on `main` builds separately from the playable pond. A native motor drives four torque-limited joint targets in still water; the Godot research scene is not a packaged demo and ships without an installed controller. The original app, installer, and CartPole/Racing developer demos remain at the repository root.
+
+A later [archived slow-approach experiment](https://github.com/life423/CudaRL-Arena/blob/8d2156d10af550c82eb5c01ed787407f10502513/docs/experiments/active-parking-2026-11-21/README.md) evaluated a frozen research-only readout for 64 seconds per trial:
+
+| Initial approach speed | Held within 1 mm for the final 16 s and met the motion/safety gates |
+| --- | ---: |
+| 0.50 mm/s | 6/6 |
+| 0.55 mm/s | 6/6 |
+| 0.60 mm/s | 5/6 |
+
+The six reference Swim traces matched checkpoint 336 byte for byte. This is evidence for slow front approaches in calm water, **not** reliable braking from normal swimming speed, recovery from disturbances, or holding against current. The research candidate is not installed in the public preview.
+
+## How it runs
+
+Godot calls the C++ GDExtension in-process. The CUDA path runs native kernels; the portable path can run C++ physics and learning without a CUDA toolkit. There is no Python interpreter, ML framework, server, or socket in the runtime. The earlier [frozen-policy current studies](docs/experiments/swimmer/gentle-currents/README.md) and [portable pond notes](docs/portable_pond.md) describe different controllers and are not four-axis holding results.
 
 ![Three-food tadpole pond with native CUDA training statistics and a measured food-per-minute learning curve](docs/images/tadpole-learning.png)
 
@@ -30,7 +46,7 @@ The usual RL stack goes Python → framework → bindings → GPU, with the envi
 
 ---
 
-## What works today
+## Development capabilities and historical benchmarks
 
 | | Status |
 |---|---|
@@ -156,7 +172,17 @@ Some design points:
 
 ---
 
-## Build (Windows)
+## Build from source (Windows)
+
+The root build is the playable/app developer project. For a CPU-only core build without CUDA or Godot, use the same flags as the portable CI job:
+
+```powershell
+cmake -S . -B build/portable-ci -DCUDARL_ENABLE_CUDA=OFF -DCUDARL_BUILD_GODOT=OFF -DCUDARL_BUILD_BENCH=OFF
+cmake --build build/portable-ci --config Release
+ctest --test-dir build/portable-ci -C Release --output-on-failure
+```
+
+The requirements and commands below are for the **CUDA developer build**. The separate four-axis source build is documented in the [research README](research/minimal-foundation/README.md).
 
 **Requirements** (tested versions in parentheses)
 - NVIDIA GPU + driver (RTX 5070, driver 620.02)
@@ -218,11 +244,11 @@ earlier traffic-only comparison.
 godot --path godot-project
 ```
 
-The default scene is the **Tadpole Pond** menu. With healthy CUDA, **Open pond** starts [sinking-food interaction and native PPO during play](docs/live_feeding.md). Click/tap water to feed. The worker practices user-influenced conditions and applies validated motor updates without resetting the visible creature. Leaving saves/stops; reopening resumes the separate feeding checkpoint. **Experiments → Trained reference** keeps the earlier frozen CPU/CUDA pond and untrained comparison; CUDA-unavailable machines select that reference. Help labels the older headless selector console as a separate task. CartPole/Racing code, policies and training remain available through developer routes/direct scenes while hidden from this UI. Direct scene examples: `res://pond/feeding_pond.tscn`, `res://pond/latest_agent.tscn`, `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://pond/pond.tscn`.
+The following describes the developer source project and direct scenes, not extra navigation in the packaged installer. The default scene is the **Tadpole Pond** menu. With healthy CUDA, **Open pond** starts [sinking-food interaction and native PPO during play](docs/live_feeding.md). Click/tap water to feed. The worker practices user-influenced conditions and applies validated motor updates without resetting the visible creature. Leaving saves/stops; reopening resumes the separate feeding checkpoint. **Experiments → Trained reference** keeps the earlier frozen CPU/CUDA pond and untrained comparison; CUDA-unavailable machines select that reference. Help labels the older headless selector console as a separate task. CartPole/Racing code, policies and training remain available through developer routes/direct scenes while hidden from this UI. Direct scene examples: `res://pond/feeding_pond.tscn`, `res://pond/latest_agent.tscn`, `res://cartpole/cartpole.tscn`, `res://racing/racing.tscn`, `res://pond/pond.tscn`.
 
 ### Continuous integration
 
-Every push and pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on a GitHub-hosted Windows runner. It installs the CUDA 13.2 compiler and runtime from NVIDIA's network installer, builds the core, tests, and benchmark with **warnings as errors**, and runs the test suite. Hosted runners have no GPU, so CI proves the build and the CPU reference, while the GPU tests (`SKIP` there) run locally on the RTX 5070. A self-hosted GPU runner is planned.
+Pushes and pull requests trigger [Windows CI](.github/workflows/ci.yml). One job builds and tests the portable C++ core without CUDA or Godot. The other builds the CUDA 13.2 core, tests, and benchmarks with warnings as errors. Hosted runners do not execute NVIDIA GPU tests; local RTX 5070 results are separate evidence.
 
 ---
 
@@ -276,6 +302,8 @@ src/godot/            GDExtension classes and registration
 tests/                hand-written test harness and test suites (run via ctest)
 tools/nn_bench.cpp    roofline and cuBLAS benchmark (`tc`, `fp32`, `train`, `tune`, `profile`)
 godot-project/        Godot project: addons/cudarl/ (extension), cartpole/ (live PPO), racing/ (live driving), fit/, maze/
+research/             separately built four-axis motor research; not part of the app or installer
+website/              source for the Tadpole Pond download page
 docs/                 GEMM worklog, PPO write-ups (CartPole, racing), screenshots
 external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 ```
@@ -292,7 +320,12 @@ external/godot-cpp/   godot-cpp 4.4-stable (submodule)
 
 ---
 
-## Roadmap
+## Research priorities
+
+1. Verify controlled braking from ordinary swimming into a quiet hold without regressing the reference swim.
+2. Test repeatability across poses and recovery after small disturbances before adding current to the four-axis test.
+
+### Earlier development milestones
 
 1. ~~**Neural network core.**~~ ✅ MLP forward and backward kernels and Adam, verified against finite differences and a CPU reference, benchmarked against the roofline and cuBLAS.
 2. ~~**Tensor-core GEMM.**~~ ✅ bf16 `mma.sync` kernel at 91–96% of cuBLAS on large matrices, with a [worklog](docs/gemm_worklog.md) of every optimization and its profile.
