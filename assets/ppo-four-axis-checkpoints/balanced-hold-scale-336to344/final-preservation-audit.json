@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "prior_binary_files": 36,
+  "unrelated_files": 15,
+  "frozen_inputs": 67,
+  "all_archived_arm_files_match_raw": true,
+  "no_new_simulation_or_training": true
+}

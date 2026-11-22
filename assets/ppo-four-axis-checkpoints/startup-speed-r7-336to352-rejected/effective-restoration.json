@@ -1,0 +1,1 @@
+{"actor_lr_after_restore":0.000250000011874,"critic_lr_after_restore":0.0010000000475,"actor_steps":21700,"critic_steps":21700,"actor_and_critic_parameters_exact":true,"both_Adam_moments_exact":true,"critic_config_exact":true,"only_actor_lr_changed":true}

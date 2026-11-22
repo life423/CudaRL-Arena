@@ -1,0 +1,12 @@
+CUDA device: present
+
+PASS  stopping_prepare CUDA: production rollout observes zero request at640 without reset    621.1 ms
+    8 zero-integration CPU/CUDA stopping cases maxdifference 8.94069672e-08
+PASS  stopping_prepare CUDA: zero target observation and finite reward match CPU without integration      2.9 ms
+PASS  stopping_prepare: zero request preserves references and exposes goal without warmup reset      0.0 ms
+    synthetic stopping reward/50ms: settled -0,8mm/s -0.0500000007,0.5mm/s -0.000195312503; belowtarget still -0.000673828123 vs usefulup -0.000625000044
+PASS  stopping_prepare: zero-speed reward finite and reverse oscillation cannot farm reward (synthetic)      0.0 ms
+PASS  stopping_prepare: positive-speed reward normalization unchanged (synthetic)      0.0 ms
+PASS  stopping_prepare: reward6 checkpoint is explicit and unknown reward rejects      0.2 ms
+
+6/6 tests passed, 0 skipped

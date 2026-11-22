@@ -19,9 +19,6 @@ build/
 *.cudafe*
 tmpxft_*
 
-# Built extension (rebuild with CMake; see README)
-godot-project/addons/cudarl/bin/
-
 # Godot editor cache. Keep *.uid and *.import files: Godot 4.4 expects them in version control.
 .godot/
 
@@ -30,9 +27,14 @@ godot-project/addons/cudarl/bin/
 .vscode/
 .idea/
 .claude/settings.local.json
+__pycache__/
+*.pyc
 
 # OS
 .DS_Store
 Thumbs.db
 *~
 *.swp
+
+# Separate foundation worktrees
+.worktrees/

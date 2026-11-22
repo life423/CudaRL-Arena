@@ -1,0 +1,22 @@
+[
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\migration-verified",
+    "Hash": "EFF01DD39848AA6E51863D51A7643F19AD45F763F83DC2F9E6DF456E52451444"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\verification-2\\result.json",
+    "Hash": "6E5E99646818752D3A4F4D31CD8365951C5E3339435BE80225E23B61739CE151"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\verification-2\\gpu-parity.json",
+    "Hash": "F8C1312984C64CF56DB354A65EA035595C44E30FB92813D72D56B4C55F7E8190"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\verification-2\\reward-scale.json",
+    "Hash": "3A3393E3EE4E3149D6E46CB60F0F687B2932679399A9A8BED10083B41F8DD134"
+  },
+  {
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\append41-hold-336to344-v1\\verification-2\\replay.csv",
+    "Hash": "D3AEDAABB51C4F5BC222A266AE7879F425A172F1820044E9AF900EF240AFA1FF"
+  }
+]

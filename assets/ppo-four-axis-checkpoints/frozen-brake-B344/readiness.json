@@ -1,0 +1,1 @@
+{"ready":true,"backend":"CPU original model6 equations","cases":6,"prefix_controls":3840,"branch_controls":2400,"controls_cap":6240,"substep_cap":62400,"native_seconds":30,"process_seconds":30,"optimizer_updates":0,"physical_preflight_controls":0,"retries":0,"runtime_installation":false}

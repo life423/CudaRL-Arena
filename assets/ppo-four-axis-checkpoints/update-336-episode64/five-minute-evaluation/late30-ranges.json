@@ -1,0 +1,18 @@
+[
+  {
+    "pose": 0,
+    "depth_min_mm": 0.0756120607257,
+    "depth_max_mm": 0.0995492860675,
+    "lane_max_mm": 0.25535929203,
+    "lateral_signed_min_mm": -0.25537610054,
+    "lateral_signed_max_mm": 0.0555664300919
+  },
+  {
+    "pose": 3,
+    "depth_min_mm": 0.0757694244385,
+    "depth_max_mm": 0.0994157716632,
+    "lane_max_mm": 0.255496054888,
+    "lateral_signed_min_mm": -0.255480408669,
+    "lateral_signed_max_mm": 0.054657459259
+  }
+]

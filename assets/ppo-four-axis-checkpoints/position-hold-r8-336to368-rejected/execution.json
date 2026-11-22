@@ -1,0 +1,10 @@
+{
+  "launched_utc": "2026-11-04T17:11:05.0526528Z",
+  "cwd": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation",
+  "phase": "completed",
+  "command": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\position-hold-r8-336to368-v1/holding-runner.exe --run \"C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\position-hold-r8-336to368-v1\" --hold-position 1 --actor-lr 0.000125 --depth-offsets 1 --episode-controls 1280 --updates 32",
+  "exit_code": 0,
+  "completed_utc": "2026-11-04T17:12:02.6883673Z",
+  "pid": 8628,
+  "wall_seconds": 57.6277071
+}

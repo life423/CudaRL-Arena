@@ -1,0 +1,1382 @@
+[
+  {
+    "stage": "baseline",
+    "case": 0,
+    "pose": 0,
+    "initial_depth_offset_mm": 0.0,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": false,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 8.14423751831,
+    "speed48to64_max_mm_s": 8.85729503632,
+    "speed48to64_RMS_mm_s": 8.548121801068039,
+    "final8_speed_mean_mm_s": 8.557432115078063,
+    "final8_speed_min_mm_s": 8.14423751831,
+    "final8_speed_max_mm_s": 8.85729503632,
+    "final8_depth_net_drift_mm": -0.2957772985097,
+    "anchor56to64_max_error_mm": 270.431182861,
+    "forward56to64_max_excursion_mm": 67.78750610399999,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 270.424346924,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.36126565933,
+      5.52330732346
+    ],
+    "final8_pitch_range_deg": [
+      -3.93458294868,
+      4.99031686783
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.794517636299,
+          0.950707495213
+        ],
+        "angle": [
+          -0.27755934,
+          0.426794350147
+        ],
+        "rate": [
+          -2.7705540657,
+          2.79819154739
+        ],
+        "last_torque": [
+          -0.113509319723,
+          0.099619217217
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.158491387963,
+          0.432821840048
+        ],
+        "angle": [
+          0.0335449799895,
+          0.204008042812
+        ],
+        "rate": [
+          -0.684028506279,
+          0.840956449509
+        ],
+        "last_torque": [
+          -0.0317777059972,
+          0.0292268451303
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.906940042973,
+          0.907762050629
+        ],
+        "angle": [
+          -0.416420698166,
+          0.362251967192
+        ],
+        "rate": [
+          -2.70091724396,
+          3.01497077942
+        ],
+        "last_torque": [
+          -0.0480657406151,
+          0.0654645264149
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.941760122776,
+          0.0991931259632
+        ],
+        "angle": [
+          -0.69168150425,
+          -0.332495242357
+        ],
+        "rate": [
+          -1.36479604244,
+          1.72372961044
+        ],
+        "last_torque": [
+          -0.0306969024241,
+          0.0176452100277
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 1,
+    "pose": 3,
+    "initial_depth_offset_mm": 0.0,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 8.17690467834,
+    "speed48to64_max_mm_s": 8.85577011108,
+    "speed48to64_RMS_mm_s": 8.556658570484531,
+    "final8_speed_mean_mm_s": 8.57537381649,
+    "final8_speed_min_mm_s": 8.17690467834,
+    "final8_speed_max_mm_s": 8.85577011108,
+    "final8_depth_net_drift_mm": -0.2748632133004,
+    "anchor56to64_max_error_mm": 270.650085449,
+    "forward56to64_max_excursion_mm": 67.93283081100003,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 270.644317627,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.37156152725,
+      5.41332626343
+    ],
+    "final8_pitch_range_deg": [
+      -3.8771841526,
+      5.01898670197
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.793753802776,
+          0.950010597706
+        ],
+        "angle": [
+          -0.280749112368,
+          0.425161272287
+        ],
+        "rate": [
+          -2.76612091064,
+          2.80681562424
+        ],
+        "last_torque": [
+          -0.114288620651,
+          0.0994677916169
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.159184902906,
+          0.433780968189
+        ],
+        "angle": [
+          0.0331018194556,
+          0.203223243356
+        ],
+        "rate": [
+          -0.675820291042,
+          0.838095963001
+        ],
+        "last_torque": [
+          -0.03184440732,
+          0.0290322285146
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.90686839819,
+          0.906273722649
+        ],
+        "angle": [
+          -0.427735924721,
+          0.356972128153
+        ],
+        "rate": [
+          -2.69958329201,
+          3.01947212219
+        ],
+        "last_torque": [
+          -0.0482941940427,
+          0.0649876520038
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.940929591656,
+          0.0938530117273
+        ],
+        "angle": [
+          -0.690948605537,
+          -0.329988330603
+        ],
+        "rate": [
+          -1.36332201958,
+          1.73895204067
+        ],
+        "last_torque": [
+          -0.0307912454009,
+          0.0175543613732
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 2,
+    "pose": 0,
+    "initial_depth_offset_mm": -0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": false,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 8.13313674927,
+    "speed48to64_max_mm_s": 8.8579120636,
+    "speed48to64_RMS_mm_s": 8.541675344241904,
+    "final8_speed_mean_mm_s": 8.554244047403312,
+    "final8_speed_min_mm_s": 8.13313674927,
+    "final8_speed_max_mm_s": 8.8579120636,
+    "final8_depth_net_drift_mm": -0.2934217453002,
+    "anchor56to64_max_error_mm": 270.239257812,
+    "forward56to64_max_excursion_mm": 67.760742187,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 270.231781006,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.34455728531,
+      5.56769943237
+    ],
+    "final8_pitch_range_deg": [
+      -3.95151209831,
+      4.9816827774
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.793202400208,
+          0.95084798336
+        ],
+        "angle": [
+          -0.277537226677,
+          0.427591204643
+        ],
+        "rate": [
+          -2.76921129227,
+          2.80097174644
+        ],
+        "last_torque": [
+          -0.113573923707,
+          0.0999172925949
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.1603371948,
+          0.433532983065
+        ],
+        "angle": [
+          0.0332263037562,
+          0.204397425056
+        ],
+        "rate": [
+          -0.685962378979,
+          0.840392231941
+        ],
+        "last_torque": [
+          -0.0319044925272,
+          0.0291458349675
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.906744301319,
+          0.908276796341
+        ],
+        "angle": [
+          -0.418987035751,
+          0.363979816437
+        ],
+        "rate": [
+          -2.70151948929,
+          3.02009081841
+        ],
+        "last_torque": [
+          -0.0479961000383,
+          0.0656473711133
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.942016303539,
+          0.0987668558955
+        ],
+        "angle": [
+          -0.691918611526,
+          -0.332153141499
+        ],
+        "rate": [
+          -1.36377668381,
+          1.72377181053
+        ],
+        "last_torque": [
+          -0.0305112153292,
+          0.0176057778299
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 3,
+    "pose": 3,
+    "initial_depth_offset_mm": -0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 8.16800308228,
+    "speed48to64_max_mm_s": 8.85730266571,
+    "speed48to64_RMS_mm_s": 8.551667583411213,
+    "final8_speed_mean_mm_s": 8.572810250520938,
+    "final8_speed_min_mm_s": 8.16800308228,
+    "final8_speed_max_mm_s": 8.85730266571,
+    "final8_depth_net_drift_mm": -0.2711152806878,
+    "anchor56to64_max_error_mm": 270.503326416,
+    "forward56to64_max_excursion_mm": 67.91091919000002,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 270.497039795,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.40585613251,
+      5.42557048798
+    ],
+    "final8_pitch_range_deg": [
+      -3.90215015411,
+      4.95130825043
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.793158650398,
+          0.950400054455
+        ],
+        "angle": [
+          -0.278094112873,
+          0.426172226667
+        ],
+        "rate": [
+          -2.76565551758,
+          2.80102372169
+        ],
+        "last_torque": [
+          -0.113110072911,
+          0.0994118005037
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.158017709851,
+          0.433106809855
+        ],
+        "angle": [
+          0.0336335003376,
+          0.203532844782
+        ],
+        "rate": [
+          -0.680033624172,
+          0.839554429054
+        ],
+        "last_torque": [
+          -0.0318006835878,
+          0.0292630232871
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.905197679996,
+          0.907234430313
+        ],
+        "angle": [
+          -0.428828835487,
+          0.358361750841
+        ],
+        "rate": [
+          -2.70004844666,
+          3.00960326195
+        ],
+        "last_torque": [
+          -0.0483709424734,
+          0.0653257146478
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.941489815712,
+          0.0959617868066
+        ],
+        "angle": [
+          -0.691334664822,
+          -0.330593585968
+        ],
+        "rate": [
+          -1.36300230026,
+          1.74270880222
+        ],
+        "last_torque": [
+          -0.0307141747326,
+          0.0176076628268
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 4,
+    "pose": 0,
+    "initial_depth_offset_mm": 0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": false,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 8.1523399353,
+    "speed48to64_max_mm_s": 8.85548210144,
+    "speed48to64_RMS_mm_s": 8.554891727494638,
+    "final8_speed_mean_mm_s": 8.561314278840875,
+    "final8_speed_min_mm_s": 8.1523399353,
+    "final8_speed_max_mm_s": 8.85548210144,
+    "final8_depth_net_drift_mm": -0.2971076965329,
+    "anchor56to64_max_error_mm": 270.621520996,
+    "forward56to64_max_excursion_mm": 67.82037353499999,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 270.615264893,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.37737512589,
+      5.4705529213
+    ],
+    "final8_pitch_range_deg": [
+      -3.92703819275,
+      4.99731254578
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.795729756355,
+          0.95038741827
+        ],
+        "angle": [
+          -0.277374953032,
+          0.425619035959
+        ],
+        "rate": [
+          -2.77047872543,
+          2.79423618317
+        ],
+        "last_torque": [
+          -0.114240787923,
+          0.0990477502346
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.158143684268,
+          0.433389306068
+        ],
+        "angle": [
+          0.0339884534478,
+          0.203543186188
+        ],
+        "rate": [
+          -0.68063300848,
+          0.840180456638
+        ],
+        "last_torque": [
+          -0.0318895466626,
+          0.029229734093
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.907075107098,
+          0.906941413879
+        ],
+        "angle": [
+          -0.41485902667,
+          0.35998493433
+        ],
+        "rate": [
+          -2.69894337654,
+          3.00785899162
+        ],
+        "last_torque": [
+          -0.0481302551925,
+          0.0651301369071
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.941378712654,
+          0.0982741191983
+        ],
+        "angle": [
+          -0.69152033329,
+          -0.332964777946
+        ],
+        "rate": [
+          -1.36497581005,
+          1.73002278805
+        ],
+        "last_torque": [
+          -0.0307887233794,
+          0.0176376681775
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 5,
+    "pose": 3,
+    "initial_depth_offset_mm": 0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": false,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 8.18939590454,
+    "speed48to64_max_mm_s": 8.85078144073,
+    "speed48to64_RMS_mm_s": 8.561671120857788,
+    "final8_speed_mean_mm_s": 8.578399342298688,
+    "final8_speed_min_mm_s": 8.18939590454,
+    "final8_speed_max_mm_s": 8.85078144073,
+    "final8_depth_net_drift_mm": -0.2775668874381,
+    "anchor56to64_max_error_mm": 270.791320801,
+    "forward56to64_max_excursion_mm": 67.95932006800001,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 270.786102295,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.41212034225,
+      5.38392305374
+    ],
+    "final8_pitch_range_deg": [
+      -3.86743092537,
+      5.07494401932
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.795524358749,
+          0.949472904205
+        ],
+        "angle": [
+          -0.282372117043,
+          0.426005840302
+        ],
+        "rate": [
+          -2.76713061333,
+          2.807710886
+        ],
+        "last_torque": [
+          -0.114138476551,
+          0.100480899215
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.160297811031,
+          0.434114038944
+        ],
+        "angle": [
+          0.0329860113561,
+          0.203013315797
+        ],
+        "rate": [
+          -0.674283087254,
+          0.835387587547
+        ],
+        "last_torque": [
+          -0.0317491255701,
+          0.0291162542999
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.908239066601,
+          0.905400037766
+        ],
+        "angle": [
+          -0.425079405308,
+          0.354177445173
+        ],
+        "rate": [
+          -2.69881081581,
+          3.02210378647
+        ],
+        "last_torque": [
+          -0.0481180362403,
+          0.0651229992509
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.941371262074,
+          0.100861176848
+        ],
+        "angle": [
+          -0.690543889999,
+          -0.32999420166
+        ],
+        "rate": [
+          -1.36060404778,
+          1.72941100597
+        ],
+        "last_torque": [
+          -0.0306636821479,
+          0.0176785159856
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 0,
+    "pose": 0,
+    "initial_depth_offset_mm": 0.0,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 7.69199037552,
+    "speed48to64_max_mm_s": 8.41490650177,
+    "speed48to64_RMS_mm_s": 8.087141789075721,
+    "final8_speed_mean_mm_s": 8.08529855907,
+    "final8_speed_min_mm_s": 7.69199037552,
+    "final8_speed_max_mm_s": 8.41490650177,
+    "final8_depth_net_drift_mm": -0.23158073425269998,
+    "anchor56to64_max_error_mm": 257.459991455,
+    "forward56to64_max_excursion_mm": 64.05798339800003,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 257.45501709,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.113301754,
+      3.98129200935
+    ],
+    "final8_pitch_range_deg": [
+      -4.16849994659,
+      4.47093629837
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.742522478104,
+          0.949830174446
+        ],
+        "angle": [
+          -0.212784945965,
+          0.457285493612
+        ],
+        "rate": [
+          -2.72538542747,
+          2.65852117538
+        ],
+        "last_torque": [
+          -0.110022984445,
+          0.0938661247492
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.137387797236,
+          0.416017115116
+        ],
+        "angle": [
+          0.0411204397678,
+          0.19936299324
+        ],
+        "rate": [
+          -0.628984153271,
+          0.78896600008
+        ],
+        "last_torque": [
+          -0.0311727151275,
+          0.0281208213419
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.880283713341,
+          0.882881939411
+        ],
+        "angle": [
+          -0.384370833635,
+          0.32994684577
+        ],
+        "rate": [
+          -2.58844685555,
+          2.89120316505
+        ],
+        "last_torque": [
+          -0.0485439114273,
+          0.0594297349453
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.921193957329,
+          0.0742973014712
+        ],
+        "angle": [
+          -0.663080334663,
+          -0.328784227371
+        ],
+        "rate": [
+          -1.32191705704,
+          1.6176122427
+        ],
+        "last_torque": [
+          -0.0286793764681,
+          0.0197213981301
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 1,
+    "pose": 3,
+    "initial_depth_offset_mm": 0.0,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 7.72438097,
+    "speed48to64_max_mm_s": 8.41608428955,
+    "speed48to64_RMS_mm_s": 8.092119886336857,
+    "final8_speed_mean_mm_s": 8.1029775738715,
+    "final8_speed_min_mm_s": 7.72438097,
+    "final8_speed_max_mm_s": 8.41608428955,
+    "final8_depth_net_drift_mm": -0.2268838882447,
+    "anchor56to64_max_error_mm": 257.53012085,
+    "forward56to64_max_excursion_mm": 64.19760131799995,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 257.52532959,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.29256057739,
+      3.92720198631
+    ],
+    "final8_pitch_range_deg": [
+      -4.11259031296,
+      4.53693246841
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.74382519722,
+          0.950465381145
+        ],
+        "angle": [
+          -0.216225907207,
+          0.455458045006
+        ],
+        "rate": [
+          -2.72462749481,
+          2.66614675522
+        ],
+        "last_torque": [
+          -0.111373767257,
+          0.0953392758965
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.134526357055,
+          0.416627168655
+        ],
+        "angle": [
+          0.0401016026735,
+          0.199018716812
+        ],
+        "rate": [
+          -0.63060939312,
+          0.787069320679
+        ],
+        "last_torque": [
+          -0.0311136376113,
+          0.0280845351517
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.885504186153,
+          0.882503688335
+        ],
+        "angle": [
+          -0.396707564592,
+          0.325776606798
+        ],
+        "rate": [
+          -2.5825445652,
+          2.89828395844
+        ],
+        "last_torque": [
+          -0.0485000349581,
+          0.0598021484911
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.920964896679,
+          0.0794474035501
+        ],
+        "angle": [
+          -0.663303017616,
+          -0.329013198614
+        ],
+        "rate": [
+          -1.31979465485,
+          1.61112046242
+        ],
+        "last_torque": [
+          -0.0283641554415,
+          0.0195022504777
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 2,
+    "pose": 0,
+    "initial_depth_offset_mm": -0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 7.68689012527,
+    "speed48to64_max_mm_s": 8.4203414917,
+    "speed48to64_RMS_mm_s": 8.083854550155554,
+    "final8_speed_mean_mm_s": 8.084558308124938,
+    "final8_speed_min_mm_s": 7.68689012527,
+    "final8_speed_max_mm_s": 8.4203414917,
+    "final8_depth_net_drift_mm": -0.23188111931119998,
+    "anchor56to64_max_error_mm": 257.187347412,
+    "forward56to64_max_excursion_mm": 64.052825928,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 257.182159424,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.08532476425,
+      4.01197052002
+    ],
+    "final8_pitch_range_deg": [
+      -4.1869354248,
+      4.44332075119
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.741537511349,
+          0.949965178967
+        ],
+        "angle": [
+          -0.212013497949,
+          0.457713067532
+        ],
+        "rate": [
+          -2.7242295742,
+          2.65797948837
+        ],
+        "last_torque": [
+          -0.110194392502,
+          0.093906596303
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.137579888105,
+          0.416040360928
+        ],
+        "angle": [
+          0.0413229800761,
+          0.199670419097
+        ],
+        "rate": [
+          -0.631015002728,
+          0.788906037807
+        ],
+        "last_torque": [
+          -0.031200427562,
+          0.0280598793179
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.879731833935,
+          0.883616685867
+        ],
+        "angle": [
+          -0.383589744568,
+          0.33174598217
+        ],
+        "rate": [
+          -2.58934020996,
+          2.89115047455
+        ],
+        "last_torque": [
+          -0.0485498383641,
+          0.0594427101314
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.921239078045,
+          0.0748923122883
+        ],
+        "angle": [
+          -0.66319167614,
+          -0.328939378262
+        ],
+        "rate": [
+          -1.32217288017,
+          1.61752223969
+        ],
+        "last_torque": [
+          -0.0286640729755,
+          0.0196773950011
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 3,
+    "pose": 3,
+    "initial_depth_offset_mm": -0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 7.71737480164,
+    "speed48to64_max_mm_s": 8.41989135742,
+    "speed48to64_RMS_mm_s": 8.090101118816774,
+    "final8_speed_mean_mm_s": 8.10285252332675,
+    "final8_speed_min_mm_s": 7.71737480164,
+    "final8_speed_max_mm_s": 8.41989135742,
+    "final8_depth_net_drift_mm": -0.2254486083988,
+    "anchor56to64_max_error_mm": 257.305969238,
+    "forward56to64_max_excursion_mm": 64.19796752899998,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 257.300964355,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.28291749954,
+      3.93415904045
+    ],
+    "final8_pitch_range_deg": [
+      -4.12656831741,
+      4.47711706161
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.742890357971,
+          0.950694620609
+        ],
+        "angle": [
+          -0.214965090156,
+          0.456823050976
+        ],
+        "rate": [
+          -2.72593331337,
+          2.66271281242
+        ],
+        "last_torque": [
+          -0.110953323543,
+          0.094945602119
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.13426104188,
+          0.417055159807
+        ],
+        "angle": [
+          0.0405471511185,
+          0.199191182852
+        ],
+        "rate": [
+          -0.631308197975,
+          0.790517389774
+        ],
+        "last_torque": [
+          -0.0307701788843,
+          0.0282913818955
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.885627865791,
+          0.88214045763
+        ],
+        "angle": [
+          -0.396089822054,
+          0.326001554728
+        ],
+        "rate": [
+          -2.58572340012,
+          2.89154577255
+        ],
+        "last_torque": [
+          -0.0483960285783,
+          0.0598568879068
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.921314895153,
+          0.0766952708364
+        ],
+        "angle": [
+          -0.663322687149,
+          -0.328979462385
+        ],
+        "rate": [
+          -1.32175600529,
+          1.60072052479
+        ],
+        "last_torque": [
+          -0.0286012161523,
+          0.0196414943784
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 4,
+    "pose": 0,
+    "initial_depth_offset_mm": 0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": true,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 7.69876718521,
+    "speed48to64_max_mm_s": 8.40962314606,
+    "speed48to64_RMS_mm_s": 8.090660651926662,
+    "final8_speed_mean_mm_s": 8.087083655595874,
+    "final8_speed_min_mm_s": 7.69876718521,
+    "final8_speed_max_mm_s": 8.40962314606,
+    "final8_depth_net_drift_mm": -0.23153781890840003,
+    "anchor56to64_max_error_mm": 257.737335205,
+    "forward56to64_max_excursion_mm": 64.07330322300004,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 257.732635498,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.14726686478,
+      3.9476685524
+    ],
+    "final8_pitch_range_deg": [
+      -4.14674472809,
+      4.50542497635
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.743548631668,
+          0.949644684792
+        ],
+        "angle": [
+          -0.21372307837,
+          0.456702530384
+        ],
+        "rate": [
+          -2.72617769241,
+          2.65991473198
+        ],
+        "last_torque": [
+          -0.11003240943,
+          0.0939833447337
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.137271851301,
+          0.415771126747
+        ],
+        "angle": [
+          0.0407986529171,
+          0.199052721262
+        ],
+        "rate": [
+          -0.62745153904,
+          0.788246691227
+        ],
+        "last_torque": [
+          -0.0311741791666,
+          0.0281928833574
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.880860567093,
+          0.882215738297
+        ],
+        "angle": [
+          -0.38616335392,
+          0.327962785959
+        ],
+        "rate": [
+          -2.58756279945,
+          2.89255166054
+        ],
+        "last_torque": [
+          -0.0485443249345,
+          0.0593900159001
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.921106636524,
+          0.0743816047907
+        ],
+        "angle": [
+          -0.663100659847,
+          -0.32861250639
+        ],
+        "rate": [
+          -1.32133603096,
+          1.61790549755
+        ],
+        "last_torque": [
+          -0.0286807883531,
+          0.0197517704219
+        ]
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 5,
+    "pose": 3,
+    "initial_depth_offset_mm": 0.5,
+    "passed": false,
+    "gates": {
+      "speed48to64": false,
+      "anchor56to64": false,
+      "excursion56to64": false,
+      "depth": true,
+      "lane": true,
+      "tilt": false,
+      "pre_swim": true
+    },
+    "speed48to64_min_mm_s": 7.72800445557,
+    "speed48to64_max_mm_s": 8.41061782837,
+    "speed48to64_RMS_mm_s": 8.094229333529817,
+    "final8_speed_mean_mm_s": 8.103647857904125,
+    "final8_speed_min_mm_s": 7.72800445557,
+    "final8_speed_max_mm_s": 8.41061782837,
+    "final8_depth_net_drift_mm": -0.2282714843752,
+    "anchor56to64_max_error_mm": 257.763977051,
+    "forward56to64_max_excursion_mm": 64.20278930699999,
+    "first1s_stopped_relative_s": -1.0,
+    "permanent_stop_relative_s": -1.0,
+    "post_command_forward_mm": 257.759368896,
+    "reverse_distance_mm": 0.0,
+    "final8_roll_range_deg": [
+      -4.30337953568,
+      3.91541028023
+    ],
+    "final8_pitch_range_deg": [
+      -4.11450624466,
+      4.5996222496
+    ],
+    "final8_joints": [
+      {
+        "axis": 0,
+        "command": [
+          -0.74456590414,
+          0.950004041195
+        ],
+        "angle": [
+          -0.217295214534,
+          0.45527485013
+        ],
+        "rate": [
+          -2.72163510323,
+          2.66840648651
+        ],
+        "last_torque": [
+          -0.1113653332,
+          0.0953904464841
+        ]
+      },
+      {
+        "axis": 1,
+        "command": [
+          -0.135846272111,
+          0.415555417538
+        ],
+        "angle": [
+          0.039715886116,
+          0.198772192001
+        ],
+        "rate": [
+          -0.629552483559,
+          0.783399581909
+        ],
+        "last_torque": [
+          -0.031302433461,
+          0.0281399991363
+        ]
+      },
+      {
+        "axis": 2,
+        "command": [
+          -0.885257422924,
+          0.882440447807
+        ],
+        "angle": [
+          -0.397336483002,
+          0.325447380543
+        ],
+        "rate": [
+          -2.58515405655,
+          2.90331864357
+        ],
+        "last_torque": [
+          -0.0486122444272,
+          0.0595828741789
+        ]
+      },
+      {
+        "axis": 3,
+        "command": [
+          -0.920408248901,
+          0.0799610689282
+        ],
+        "angle": [
+          -0.663150548935,
+          -0.328270584345
+        ],
+        "rate": [
+          -1.31693649292,
+          1.61833119392
+        ],
+        "last_torque": [
+          -0.0284470673651,
+          0.019528483972
+        ]
+      }
+    ]
+  }
+]

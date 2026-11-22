@@ -1,0 +1,24 @@
+{
+  "experiment": "quiet-gait-endurance-v1",
+  "max_controls": 29120,
+  "max_substeps": 291200,
+  "wall_seconds": 120,
+  "trial_budget": 18,
+  "retries": 0,
+  "optimizer_steps": 0,
+  "reason": "frozen quiet-gait-v2 passed 12/12 20-second cases; measure longer duration before increasing speed",
+  "selection": "none; load the exact selected research candidate read-only",
+  "evaluation": "six cases per tier, 64s each; approach speeds 0.50, 0.55, 0.60 mm/s, only advance if previous tier passes all six; require quiet for last 16s inclusive, all-time safety and byte-identical full Swim trajectories; new offset variations at tier 0.5 alongside two previously used poses",
+  "changes": "evaluation only; no new training, still water, no threat",
+  "sha256": {
+    "build/quiet-gait-endurance-v1/quiet.cpp": "37291459EF3492B73306348EAE2C5C67CD8A373E93DB05EAD819E9AA9622996D",
+    "build/quiet-gait-endurance-v1/quiet.exe": "C8DB2BDC7D3A4837E7C38D65B913AAF0D6897D983FA96573CF0A48545A749E08",
+    "build/quiet-gait-endurance-v1/front_pad_protocol.h": "35FEAEAD72A513B0C106ECCA579ABAD93E8A878B5902990B6DEC0C9CEC5D1F32",
+    "build/quiet-gait-endurance-v1/build.cmd": "2FAA52FBCB9192842B3B26D1470BD383156FE536D579E47143CAE61E67180486",
+    "assets/ppo-four-axis-checkpoints/update-336-episode64/ppo-update-336.bin": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+    "assets/ppo-four-axis-checkpoints/update-336-episode64/protocol.bin": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+    "build/front-pad-output-bias-v4/checkpoint.obj": "E0D2DFEBE61B788740A8C48529808C5E1E4301D9B862CBEB2ADCF0A8946D2A47",
+    "build/front-pad-output-bias-v4/world.obj": "284D3B4D701362788E5CF240CFD09E74D8383B99E470E70A291567572AAB1113",
+    "build/quiet-gait-v2/recorded-run/candidate-research-only.bin": "7A76421C50AEC1B69C23831F01AFF2E27E6E4888BB8D219AAD9612839A87E245"
+  }
+}

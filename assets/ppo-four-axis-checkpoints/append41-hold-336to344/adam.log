@@ -1,0 +1,12 @@
+CUDA device: present
+
+PASS  adam: rate override after restore preserves both optimizer states except actor rate    159.6 ms
+PASS  adam: matches CPU reference over 200 steps                   12.8 ms
+PASS  adam: clipping matches CPU when it triggers                   6.8 ms
+PASS  adam: clipping is a no-op below the threshold                 2.3 ms
+PASS  adam: reports the pre-clip gradient norm                      2.4 ms
+PASS  adam: fits sin(x) end to end on the GPU                     349.4 ms
+PASS  adam: training is bit-identical run to run                   33.6 ms
+PASS  adam: checkpoint fences nonblocking updates and preserves tiny continuation      0.7 ms
+
+8/8 tests passed, 0 skipped

@@ -1,0 +1,14 @@
+{
+  "protected_files": 5168,
+  "unchanged_files": 5167,
+  "intentional_source_changes_with_preserved_preimage": [
+    {
+      "path": "tools/ppo_motor.cu",
+      "reason": "Opt-in unsafe-state evidence hook for new study",
+      "preserved_before": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\hold-credit-preparation-2026-11-22\\ppo_motor.before-hook.cu",
+      "original_sha256": "A28064190258D59DE046959F8ECC8105CF022E8CF0F811EEE098D2D6248BDEA8",
+      "new_sha256": "F10BD736A8C0A59E530DEE0C43A02900D6E0339E47450F819C8E0DD0807DDE6C"
+    }
+  ],
+  "unexpected_changes": []
+}

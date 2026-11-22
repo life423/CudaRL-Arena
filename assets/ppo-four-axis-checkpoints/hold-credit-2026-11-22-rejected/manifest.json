@@ -1,0 +1,167 @@
+[
+  {
+    "path": "approved-protocol.md",
+    "sha256": "1000B5A9CAFF2F54E71D6AE56B446AC971EA1A89956229B1CED147CC8D35F19D",
+    "bytes": 8722
+  },
+  {
+    "path": "baseline/first-hold-breach.csv",
+    "sha256": "431EBC9ADD0FD61063F4ED61682B4032679278424A6BCF399BA35AB15CE836A8",
+    "bytes": 103
+  },
+  {
+    "path": "baseline/frozen-evaluation.csv",
+    "sha256": "055F903511FD7B56A4F7F3AD4847923D99E2603120E6AABE5E5D48FF705F8B27",
+    "bytes": 443
+  },
+  {
+    "path": "baseline/long/sustained-windows.csv",
+    "sha256": "5BC295E0A7A0A8AB3260F7CC976E9B3A33715001B8328B63D9E33943ABAFD3A9",
+    "bytes": 3480
+  },
+  {
+    "path": "baseline/rest/summary.csv",
+    "sha256": "11874ED64B09503B86D32138B809A91A31DA79A5625561485DBB2461F140AA2F",
+    "bytes": 1225
+  },
+  {
+    "path": "build-final.log",
+    "sha256": "59B2722F993040CD4F214CCEB8E603F42FE59C38835D75C2A3A81A1A53CA455C",
+    "bytes": 143
+  },
+  {
+    "path": "calibrate-frozen-verification.json",
+    "sha256": "52B20630137C894F314AE38B01FB502D632874E464329D075418A0F39F2FAEFC",
+    "bytes": 46
+  },
+  {
+    "path": "calibrate-process.json",
+    "sha256": "511981A0B647AE34142A63C77113DF2CFE104648AD206218A9A8ECEDB8207922",
+    "bytes": 240
+  },
+  {
+    "path": "calibration-report.json",
+    "sha256": "5CEB0B8E1AD8FDF6B17C4764B73F7DBC19F807ED19BE4EB30F7F4112E3105D1F",
+    "bytes": 1108
+  },
+  {
+    "path": "calibration-result.json",
+    "sha256": "07A304B75A511B1D6EEF39765C9B2DDAA74EABBE6D4C717F5A936E9859682BE8",
+    "bytes": 262
+  },
+  {
+    "path": "credit-actor-update-336.bin",
+    "sha256": "8C9425AFB6BC4972E3B02721583A414B51A813F1EBB94CB4FE4E17BCD6E282D3",
+    "bytes": 30496
+  },
+  {
+    "path": "credit-actor-update-337.bin",
+    "sha256": "4A3428EBB2826C5CB0CF5C984867E95981F3A99D866F11D29463F32693D27BDB",
+    "bytes": 30496
+  },
+  {
+    "path": "credit-actor-update-338.bin",
+    "sha256": "739E4A8FA8A75D2BB1899692787E814CD1EE546FB2574AB4E57907D989979578",
+    "bytes": 30496
+  },
+  {
+    "path": "fixed-baseline.bin",
+    "sha256": "26901645270B1BAE25C3A4C6D8FEE2923FB886C6AD47B7D756A0B84092E2280F",
+    "bytes": 9672
+  },
+  {
+    "path": "frozen-inputs.json",
+    "sha256": "48EDFD833CFE6B4AAB6681AA9877BB77EB17E2FAD4C09D2F708CD5BEE14A78FA",
+    "bytes": 10302
+  },
+  {
+    "path": "independent-verification.json",
+    "sha256": "B81E3A774560C91BEE4B9BA9AFD83EC5AC91CE43C22574CC6D6C6B8870E3E2BE",
+    "bytes": 43138
+  },
+  {
+    "path": "migrated-initial.bin",
+    "sha256": "D484C935D35723EEA4696C4212311784A7EA809586C92B2C7E3C8A209EE85399",
+    "bytes": 59796
+  },
+  {
+    "path": "prior-preservation.json",
+    "sha256": "2D21B69FC59D8E15F6189C6C7A8B8CA81A6E874C093858E19D847D0EEA678AD9",
+    "bytes": 642
+  },
+  {
+    "path": "protocol.bin",
+    "sha256": "CF9C215D964F9C1A70A60BE5B7879011DD7BA87EC899CDB7EB78EACB1B866112",
+    "bytes": 840
+  },
+  {
+    "path": "provenance.json",
+    "sha256": "D1FA8974248A95516034A26E6F0FADAEC48F0A12B403F9C600343FEB157C0287",
+    "bytes": 621
+  },
+  {
+    "path": "REPORT.md",
+    "sha256": "7B308B204DE24ED3389BB8E6C0649350F6FF892EB617F627BB272BB0FF7933B9",
+    "bytes": 492
+  },
+  {
+    "path": "train-frozen-verification.json",
+    "sha256": "FDF4CA797F95C146AF5ACD7714070F29D0CA50E98EE9B3F795B17271CC6103C4",
+    "bytes": 46
+  },
+  {
+    "path": "train-process.json",
+    "sha256": "67334CD4A719BE12C9C08618542AF1B686AB6439DE0B6672271BE8BB1F9908AF",
+    "bytes": 236
+  },
+  {
+    "path": "training-result.json",
+    "sha256": "4564FE40AF9364C0CBD1E251CCA23CA8467F074F23404C4B3C5DFF39370A2E35",
+    "bytes": 290
+  },
+  {
+    "path": "training-started/assessment-337/first-hold-breach.csv",
+    "sha256": "431EBC9ADD0FD61063F4ED61682B4032679278424A6BCF399BA35AB15CE836A8",
+    "bytes": 103
+  },
+  {
+    "path": "training-started/assessment-337/frozen-evaluation.csv",
+    "sha256": "FE7B17D87BC51C211007AD0FEA99FE6505EF9F4AB263AAB09E6C58BEDCFC3FB7",
+    "bytes": 440
+  },
+  {
+    "path": "training-started/assessment-337/long/sustained-windows.csv",
+    "sha256": "44C23C7A0218D1118EAC4DE24ED1718BB2900DB8E090B5A3BD43151359780FE2",
+    "bytes": 3468
+  },
+  {
+    "path": "training-started/assessment-337/rest/summary.csv",
+    "sha256": "8CFFFF35753FA7712AA9B3AFB3B93852688D44CA13F5D0AF74EB79C8F32C8E4D",
+    "bytes": 1225
+  },
+  {
+    "path": "training-started/assessment-338/first-hold-breach.csv",
+    "sha256": "D3F901B8B58CBB4B81EBE1D73BEB54A926E4E780257DBB8030295824BBBB9DE3",
+    "bytes": 102
+  },
+  {
+    "path": "training-started/assessment-338/frozen-evaluation.csv",
+    "sha256": "7F8C0D58BFB20D796EFE3B8539FE81BC7405EBAB3225BD987D78BB8B08C25F50",
+    "bytes": 445
+  },
+  {
+    "path": "training-started/assessment-338/long/sustained-windows.csv",
+    "sha256": "7A4656A6655436C6F4171292363CCBB40E69BA658FCD38D683F61F4E79162D32",
+    "bytes": 3476
+  },
+  {
+    "path": "training-started/assessment-338/rest/summary.csv",
+    "sha256": "B92AC7249C5DA898294D099C6EF635377F38D9E03D019A6256E82B59B976D5E9",
+    "bytes": 1223
+  },
+  {
+    "path": "updates.jsonl",
+    "sha256": "33B920FB5E7E1A2D24C46B6DD4F3F88D404DC840B9D6C15222EF79D6B28DDB87",
+    "bytes": 747
+  }
+]

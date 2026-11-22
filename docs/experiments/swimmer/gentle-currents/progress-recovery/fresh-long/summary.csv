@@ -1,4 +1,0 @@
-condition,current_cm_s,trials,seconds,original_fpm,candidate_fpm,delta,paired_ci_low,paired_ci_high,original_gaps_over_20s,candidate_gaps_over_20s,original_max_gap,candidate_max_gap
-calm,0,64,300,17.76875,17.81875,0.05,-0.0846881171,0.1846881171,0,0,13.25,13.7
-cm10_px,1,64,300,14.675,14.790625,0.115625,-0.1437768795,0.3750268795,2,2,21.25,27.15
-cm10_nx_nz,1,64,300,14.071875,14.26875,0.196875,-0.0361652065,0.4299152065,0,0,18.3,16.75

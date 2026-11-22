@@ -3,6 +3,7 @@
 // reference, so it has to be right first.
 
 #include <cmath>
+#include <limits>
 #include <vector>
 
 #include "check.h"
@@ -116,4 +117,41 @@ TEST_CASE("cpu_mlp: parameter layout and init") {
     CHECK(p == init_params(spec, 7));                  // deterministic
     CHECK(p != init_params(spec, 8));                  // seed matters
     for (int b = spec.bias_offset(0); b < spec.weight_offset(1); ++b) CHECK(p[b] == 0.f);
+}
+
+TEST_CASE("cpu_mlp: invalid forward/backward calls fail before reading buffers") {
+    CpuMlp<double> net(MlpSpec({1, 1}, {Activation::Identity}));
+    const double x = 2, dy = .5;
+    auto refused = [](auto call) {
+        bool threw = false;
+        try { call(); } catch (const std::exception&) { threw = true; }
+        CHECK(threw);
+    };
+    refused([&] { net.backward(nullptr, 1); });
+    refused([&] { net.forward(&x, 0); });
+    refused([&] { net.forward(&x, -1); });
+    refused([&] { net.forward(nullptr, 1); });
+    net.forward(&x, 1);
+    refused([&] { net.backward(nullptr, 2); });
+    refused([&] { net.backward(nullptr, 1); });
+    net.backward(&dy, 1);
+    CHECK(net.grads()[0] == 1 && net.grads()[1] == .5);
+}
+
+TEST_CASE("cpu_mlp: parameter layout rejects int overflow without allocation") {
+    auto refused = [](auto sizes) {
+        bool threw = false;
+        try { (void)MlpSpec(sizes, std::vector<Activation>(sizes.size() - 1, Activation::Identity)); }
+        catch (const std::invalid_argument&) { threw = true; }
+        CHECK(threw);
+    };
+    refused(std::vector<int>{65536, 65536});
+    refused(std::vector<int>{32768, 32768, 32768});
+    refused(std::vector<int>{std::numeric_limits<int>::max(), 1});
+    const MlpSpec near_limit({1, std::numeric_limits<int>::max() / 2}, {Activation::Identity});
+    CHECK(near_limit.num_params() == std::numeric_limits<int>::max() - 1);
+    CHECK(near_limit.bias_offset(0) == std::numeric_limits<int>::max() / 2);
+    bool threw = false;
+    try { (void)near_limit.weight_offset(-1); } catch (const std::out_of_range&) { threw = true; }
+    CHECK(threw);
 }

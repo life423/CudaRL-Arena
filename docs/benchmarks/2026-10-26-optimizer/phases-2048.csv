@@ -1,6 +1,0 @@
-# NVIDIA GeForce RTX 5070; SMs=48; CUDA driver/runtime=13050/13020; seed=1; horizon=64; epochs=4; minibatches=8; anneal_total=1200; profile=1; distributed=1; simulation=0; graphs=0
-trial,distributed,agents,races,warmup,updates,mean_ms,p10_ms,p50_ms,p90_ms,M_agent_steps_s,rollout_ms,bootstrap_gae_ms,metrics_ms,optimize_ms,readback_ms,advance_ms,resolve_ms,observe_ms,last_laps,clean_laps,contacts,walls,eval_clean,eval_contacts,eval_walls,eval_best_s,gather_ms,forward_loss_ms,actor_update_ms,critic_update_ms,optimization_submit_ms,graphs,graph_setup_ms,graph_nodes
-1,1,2048,256,10,30,47.7061,43.6349,47.6118,50.4873,2.7475,23.0586,0.5076,0.0613,23.9337,0.0341,3.2064,7.1226,8.5578,0.80069,301,778,1630,-1,-1,-1,0.0000,2.2354,4.8731,9.2638,7.5453,35.0970,0,0.0000,0
-1,1,2048,256,10,30,41.8081,36.8902,42.1064,44.7421,3.1351,23.0987,0.5049,0.0539,17.9654,0.0680,3.2887,7.0467,8.5337,0.80069,301,778,1630,-1,-1,-1,0.0000,0.8232,4.4871,6.5822,6.0579,12.8907,1,1.5648,2048
-2,1,2048,256,10,30,41.8686,38.2080,41.7833,45.1927,3.1306,23.0902,0.4970,0.0535,18.0372,0.0678,3.3264,6.9922,8.5775,0.80069,301,778,1630,-1,-1,-1,0.0000,0.8242,4.4980,6.5062,6.1938,11.9814,1,1.6978,2048
-2,1,2048,256,10,30,47.6099,43.5268,47.8425,50.8459,2.7530,23.0704,0.4919,0.0584,23.8367,0.0438,3.3861,6.9460,8.5377,0.80069,301,778,1630,-1,-1,-1,0.0000,2.4733,4.8552,9.3353,7.1573,36.8744,0,0.0000,0

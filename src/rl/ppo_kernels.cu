@@ -1,6 +1,8 @@
 #include "ppo_kernels.h"
 
 #include <algorithm>
+#include <limits>
+#include <stdexcept>
 
 #include "cuda/block_reduce.h"
 #include "cuda/cuda_memory.h"
@@ -12,7 +14,15 @@ namespace {
 constexpr int kThreads       = 256;
 constexpr int kReduceThreads = 1024;
 
-int blocks_for(int n) { return std::max(1, (n + kThreads - 1) / kThreads); }
+int blocks_for(int n) { return std::max(1, n / kThreads + (n % kThreads != 0)); }
+
+void validate_categorical_shape(int n, int k, bool with_stats) {
+    if (n <= 0 || k <= 0 || k > kMaxActions)
+        throw std::invalid_argument("Categorical PPO: positive rows and 1..8 actions required");
+    const int stride = with_stats ? std::max(k, kPpoStats) : k;
+    if (n > std::numeric_limits<int>::max() / stride)
+        throw std::invalid_argument("Categorical PPO: row indexing exceeds int range");
+}
 
 __global__ void sample_kernel(const float* __restrict__ logits, int n, int k, uint32_t seed, uint32_t stream_id,
                               bool greedy, int* __restrict__ actions, float* __restrict__ logp_out) {
@@ -113,6 +123,7 @@ __global__ void episode_stats_kernel(const float* __restrict__ lengths, int n, f
 
 void sample_actions(const float* logits, int n, int k, uint32_t seed, uint32_t stream_id, bool greedy, int* actions,
                     float* logp, cudaStream_t stream) {
+    validate_categorical_shape(n, k, false);
     sample_kernel<<<blocks_for(n), kThreads, 0, stream>>>(logits, n, k, seed, stream_id, greedy, actions, logp);
     CUDA_CHECK_THROW(cudaGetLastError());
 }
@@ -143,6 +154,7 @@ void mean_std(const float* x, int n, float* out, cudaStream_t stream) {
 void ppo_loss_grad(const float* logits, const float* values, int n, int k, const int* actions, const float* old_logp,
                    const float* advantages, const float* returns, const float* adv_stats, PpoCoefficients coeffs,
                    float* dlogits, float* dvalues, float* row_stats, float* stats, cudaStream_t stream) {
+    validate_categorical_shape(n, k, true);
     ppo_grad_kernel<<<blocks_for(n), kThreads, 0, stream>>>(logits, values, n, k, actions, old_logp, advantages,
                                                             returns, adv_stats, coeffs, dlogits, dvalues, row_stats);
     sum_columns_kernel<<<1, kReduceThreads, 0, stream>>>(row_stats, n, kPpoStats, stats);

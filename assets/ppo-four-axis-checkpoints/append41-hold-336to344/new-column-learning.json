@@ -1,0 +1,40 @@
+[
+  {
+    "update": 336,
+    "new_columns": [
+      {
+        "new_column_RMS": 0.0,
+        "network": "actor",
+        "new_column_min": 0.0,
+        "new_column_nonzero": 0,
+        "new_column_max": 0.0
+      },
+      {
+        "new_column_RMS": 0.0,
+        "network": "critic",
+        "new_column_min": 0.0,
+        "new_column_nonzero": 0,
+        "new_column_max": 0.0
+      }
+    ]
+  },
+  {
+    "update": 344,
+    "new_columns": [
+      {
+        "new_column_RMS": 0.006495587013207326,
+        "network": "actor",
+        "new_column_min": -0.016078822314739227,
+        "new_column_nonzero": 32,
+        "new_column_max": 0.009514449164271355
+      },
+      {
+        "new_column_RMS": 0.37788904053715355,
+        "network": "critic",
+        "new_column_min": -0.7051466703414917,
+        "new_column_nonzero": 32,
+        "new_column_max": 0.6091442108154297
+      }
+    ]
+  }
+]

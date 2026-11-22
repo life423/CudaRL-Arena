@@ -1,0 +1,38 @@
+[
+  {
+    "stage": "baseline",
+    "short_passes": 4,
+    "mean_short_speed_mm_s": 7.579387499999999,
+    "stopping_passes": 0,
+    "stop_total": 6,
+    "long_windows_passed": 28,
+    "long_windows_total": 30,
+    "retained4to60_windows": 28,
+    "maximum_stop_depth_mm": 0.641989707947,
+    "maximum_stop_lane_mm": 2.08216071129,
+    "maximum_stop_tilt_deg": 10.0035667419,
+    "maximum_hold_anchor_error_mm": 270.791320801,
+    "hold_forward_drift_min_mm": 67.7607650757,
+    "hold_forward_drift_max_mm": 67.9592819214,
+    "hold_speed_mean_min_mm_s": 8.55424401816,
+    "hold_speed_mean_max_mm_s": 8.57839936507
+  },
+  {
+    "stage": "final",
+    "short_passes": 4,
+    "mean_short_speed_mm_s": 7.4088,
+    "stopping_passes": 0,
+    "stop_total": 6,
+    "long_windows_passed": 28,
+    "long_windows_total": 30,
+    "retained4to60_windows": 28,
+    "maximum_stop_depth_mm": 0.889053344727,
+    "maximum_stop_lane_mm": 2.44719648361,
+    "maximum_stop_tilt_deg": 9.68547725677,
+    "maximum_hold_anchor_error_mm": 269.712982178,
+    "hold_forward_drift_min_mm": 68.0286254883,
+    "hold_forward_drift_max_mm": 68.2516403198,
+    "hold_speed_mean_min_mm_s": 8.58803563751,
+    "hold_speed_mean_max_mm_s": 8.61482789041
+  }
+]

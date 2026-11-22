@@ -1,0 +1,10 @@
+{
+  "command": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-336to352-v1/startup-runner.exe --run \"C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-336to352-v1\" --startup-speed 1 --actor-lr 0.00025 --depth-offsets 1 --episode-controls 1280 --updates 16",
+  "completed_utc": "2026-11-02T22:15:19.8345584Z",
+  "cwd": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation",
+  "launched_utc": "2026-11-02T22:14:53.7051038Z",
+  "phase": "completed",
+  "pid": 38840,
+  "wall_seconds": 26.1268796,
+  "exit_code": 0
+}

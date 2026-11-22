@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "policy": {
+    "family": "Learned persistent amplitude",
+    "holding_updates": 7,
+    "package_version": 2,
+    "policy_method": "learned_persistent_amplitude",
+    "package_sha256": "4B6400C4DB65873BD346C3E0C4FED384E3A77F9E5174D0DCEA5D74073B94616D",
+    "qualified": true,
+    "source_checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\amplitude-policy-update-7.bin"
+  },
+  "result": {
+    "outcome": "Calm hold verified",
+    "hold_passes": 6,
+    "hold_total": 6,
+    "short_passes": 4,
+    "long_passes": 28,
+    "long_retained": 28,
+    "method": "Native PPO learned two persistent-amplitude distribution parameters; all inherited swimming network weights remain frozen.",
+    "source_run": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1",
+    "training_stopped": true,
+    "validation_note": "6/6 original and 6/6 withheld 64-second holds passed, plus 2/2 holds lasting 300 seconds. Calm water only; braking and currents remain separate."
+  },
+  "history": [],
+  "sources": [
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-result.json",
+      "sha256": "f49b7945bfb6b26e1d2513d1fd402297f917d84db7e53e5ab84cc8750ac828ae"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\live\\research_data\\learned-amplitude-v1.json",
+      "sha256": "94717d08739d2b149050cf428e6bd0357476ec00dd436f6c74045e4a631947b6"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\rest\\summary.csv",
+      "sha256": "a5cee49127f754fd0e2dce1b0fc1f667832c3c1d4c5427a814bdba02b2fa00f1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\frozen-evaluation.csv",
+      "sha256": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\learned-amplitude-2026-11-22-v1\\training-started\\assessment-7\\long\\sustained-windows.csv",
+      "sha256": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9"
+    }
+  ]
+}

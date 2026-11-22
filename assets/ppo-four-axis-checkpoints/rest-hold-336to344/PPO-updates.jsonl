@@ -1,0 +1,8 @@
+{"completed":337,"actor_old_age":21780,"critic_old_age":21860,"actor_new_age":80,"critic_new_age":160,"KL":0.00251636}
+{"completed":338,"actor_old_age":21860,"critic_old_age":21940,"actor_new_age":160,"critic_new_age":240,"KL":0.00383386}
+{"completed":339,"actor_old_age":21940,"critic_old_age":22020,"actor_new_age":240,"critic_new_age":320,"KL":0.00328864}
+{"completed":340,"actor_old_age":22020,"critic_old_age":22100,"actor_new_age":320,"critic_new_age":400,"KL":0.00431297}
+{"completed":341,"actor_old_age":22100,"critic_old_age":22180,"actor_new_age":400,"critic_new_age":480,"KL":0.00277144}
+{"completed":342,"actor_old_age":22180,"critic_old_age":22260,"actor_new_age":480,"critic_new_age":560,"KL":0.00355947}
+{"completed":343,"actor_old_age":22260,"critic_old_age":22340,"actor_new_age":560,"critic_new_age":640,"KL":0.00386678}
+{"completed":344,"actor_old_age":22340,"critic_old_age":22420,"actor_new_age":640,"critic_new_age":720,"KL":0.00242707}

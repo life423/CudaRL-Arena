@@ -1,0 +1,24 @@
+{
+  "actual_CUDA_required": true,
+  "checks": [
+    {
+      "filter": "ppo_checkpoint:",
+      "result": "6/6 tests passed, 0 skipped"
+    },
+    {
+      "filter": "position_hold",
+      "result": "5/5 tests passed, 0 skipped"
+    },
+    {
+      "filter": "gaussian:",
+      "result": "9/9 tests passed, 0 skipped"
+    },
+    {
+      "filter": "ppo_diagnostics:",
+      "result": "1/1 tests passed, 0 skipped"
+    }
+  ],
+  "policy_optimizer_steps": 0,
+  "physical_controls": 0,
+  "readiness_seconds": 1.4609574999994948
+}

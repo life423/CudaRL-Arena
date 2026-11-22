@@ -1,7 +1,0 @@
-CURRICULUM recovery_starts=95 swimming_controller_frozen=true
-PROGRESS seed=71 envs=8192 update=128 calm=17.9062 current_px=14.6719 current_diagonal=13.9688 elapsed=1.2
-PROGRESS seed=71 envs=8192 update=192 calm=17.9062 current_px=14.6719 current_diagonal=14.0625 elapsed=56.7
-PROGRESS seed=71 envs=8192 update=256 calm=17.8906 current_px=15.1250 current_diagonal=14.4062 elapsed=112.5
-PROGRESS seed=71 envs=8192 update=320 calm=17.9219 current_px=14.9688 current_diagonal=14.4375 elapsed=169.4
-PROGRESS seed=71 envs=8192 update=384 calm=17.9375 current_px=14.9375 current_diagonal=14.1875 elapsed=224.8
-SAVED update=384 additional=256 motor_unchanged=true source_unchanged=true

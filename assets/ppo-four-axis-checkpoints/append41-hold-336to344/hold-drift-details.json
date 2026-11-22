@@ -1,0 +1,578 @@
+[
+  {
+    "stage": "baseline",
+    "case": 0,
+    "pose": 0,
+    "offset_mm": 0.0,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.14423751831,
+    "hold_speed_max_mm_s": 8.85729503632,
+    "hold_speed_mean_mm_s": 8.557432115078061,
+    "hold_forward_drift_mm": 67.78750610399999,
+    "hold_depth_net_drift_mm": -0.2957772985097,
+    "hold_depth_peak_to_peak_mm": 0.3090285956858,
+    "hold_max_abs_depth_mm": 0.357489556074,
+    "hold_max_anchor_error_mm": 270.431182861,
+    "whole64_max_depth_mm": 0.456027984619,
+    "whole64_max_lane_mm": 2.04684567451,
+    "whole64_peak_tilt_deg": 8.82788181305,
+    "final_speed_mm_s": 8.36931324005,
+    "late_joint_activity": [
+      {
+        "command_max": 0.950707495213,
+        "command_min": -0.794517636299,
+        "rate_RMS_rad_s": 2.06998840732735,
+        "axis": 0
+      },
+      {
+        "command_max": 0.432821840048,
+        "command_min": -0.158491387963,
+        "rate_RMS_rad_s": 0.5091402239788038,
+        "axis": 1
+      },
+      {
+        "command_max": 0.907762050629,
+        "command_min": -0.906940042973,
+        "rate_RMS_rad_s": 2.0871912160514055,
+        "axis": 2
+      },
+      {
+        "command_max": 0.0991931259632,
+        "command_min": -0.941760122776,
+        "rate_RMS_rad_s": 1.0705286924677049,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 1,
+    "pose": 3,
+    "offset_mm": 0.0,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 1,
+    "hold_speed_min_mm_s": 8.17690467834,
+    "hold_speed_max_mm_s": 8.85577011108,
+    "hold_speed_mean_mm_s": 8.575373816490004,
+    "hold_forward_drift_mm": 67.93283081100003,
+    "hold_depth_net_drift_mm": -0.2748632133004,
+    "hold_depth_peak_to_peak_mm": 0.286903358996,
+    "hold_max_abs_depth_mm": 0.365033119917,
+    "hold_max_anchor_error_mm": 270.650085449,
+    "whole64_max_depth_mm": 0.378446578979,
+    "whole64_max_lane_mm": 1.93174266815,
+    "whole64_peak_tilt_deg": 9.35767364502,
+    "final_speed_mm_s": 8.40868186951,
+    "late_joint_activity": [
+      {
+        "command_max": 0.950010597706,
+        "command_min": -0.793753802776,
+        "rate_RMS_rad_s": 2.0759931331446353,
+        "axis": 0
+      },
+      {
+        "command_max": 0.433780968189,
+        "command_min": -0.159184902906,
+        "rate_RMS_rad_s": 0.5077423798187205,
+        "axis": 1
+      },
+      {
+        "command_max": 0.906273722649,
+        "command_min": -0.90686839819,
+        "rate_RMS_rad_s": 2.092294736123619,
+        "axis": 2
+      },
+      {
+        "command_max": 0.0938530117273,
+        "command_min": -0.940929591656,
+        "rate_RMS_rad_s": 1.0749814319507638,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 2,
+    "pose": 0,
+    "offset_mm": -0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.13313674927,
+    "hold_speed_max_mm_s": 8.8579120636,
+    "hold_speed_mean_mm_s": 8.554244047403316,
+    "hold_forward_drift_mm": 67.760742187,
+    "hold_depth_net_drift_mm": -0.2934217453002,
+    "hold_depth_peak_to_peak_mm": 0.3069019317627,
+    "hold_max_abs_depth_mm": 0.351996421814,
+    "hold_max_anchor_error_mm": 270.239257812,
+    "whole64_max_depth_mm": 0.499830245972,
+    "whole64_max_lane_mm": 2.08216071129,
+    "whole64_peak_tilt_deg": 8.19496059418,
+    "final_speed_mm_s": 8.36360454559,
+    "late_joint_activity": [
+      {
+        "command_max": 0.95084798336,
+        "command_min": -0.793202400208,
+        "rate_RMS_rad_s": 2.0689488184193716,
+        "axis": 0
+      },
+      {
+        "command_max": 0.433532983065,
+        "command_min": -0.1603371948,
+        "rate_RMS_rad_s": 0.5094813337162258,
+        "axis": 1
+      },
+      {
+        "command_max": 0.908276796341,
+        "command_min": -0.906744301319,
+        "rate_RMS_rad_s": 2.0861986565168236,
+        "axis": 2
+      },
+      {
+        "command_max": 0.0987668558955,
+        "command_min": -0.942016303539,
+        "rate_RMS_rad_s": 1.0697326219486347,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 3,
+    "pose": 3,
+    "offset_mm": -0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 1,
+    "hold_speed_min_mm_s": 8.16800308228,
+    "hold_speed_max_mm_s": 8.85730266571,
+    "hold_speed_mean_mm_s": 8.572810250520934,
+    "hold_forward_drift_mm": 67.91091919000002,
+    "hold_depth_net_drift_mm": -0.2711152806878,
+    "hold_depth_peak_to_peak_mm": 0.2833223342898,
+    "hold_max_abs_depth_mm": 0.359859466553,
+    "hold_max_anchor_error_mm": 270.503326416,
+    "whole64_max_depth_mm": 0.499830245972,
+    "whole64_max_lane_mm": 1.95542120934,
+    "whole64_peak_tilt_deg": 8.69400215149,
+    "final_speed_mm_s": 8.40570068359,
+    "late_joint_activity": [
+      {
+        "command_max": 0.950400054455,
+        "command_min": -0.793158650398,
+        "rate_RMS_rad_s": 2.0751125091950757,
+        "axis": 0
+      },
+      {
+        "command_max": 0.433106809855,
+        "command_min": -0.158017709851,
+        "rate_RMS_rad_s": 0.5079343993863831,
+        "axis": 1
+      },
+      {
+        "command_max": 0.907234430313,
+        "command_min": -0.905197679996,
+        "rate_RMS_rad_s": 2.091051922778153,
+        "axis": 2
+      },
+      {
+        "command_max": 0.0959617868066,
+        "command_min": -0.941489815712,
+        "rate_RMS_rad_s": 1.0741948458904043,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 4,
+    "pose": 0,
+    "offset_mm": 0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.1523399353,
+    "hold_speed_max_mm_s": 8.85548210144,
+    "hold_speed_mean_mm_s": 8.561314278840879,
+    "hold_forward_drift_mm": 67.82037353499999,
+    "hold_depth_net_drift_mm": -0.2971076965329,
+    "hold_depth_peak_to_peak_mm": 0.3100729025897,
+    "hold_max_abs_depth_mm": 0.363264083862,
+    "hold_max_anchor_error_mm": 270.621520996,
+    "whole64_max_depth_mm": 0.641989707947,
+    "whole64_max_lane_mm": 2.0057322979,
+    "whole64_peak_tilt_deg": 9.4401922226,
+    "final_speed_mm_s": 8.37670612335,
+    "late_joint_activity": [
+      {
+        "command_max": 0.95038741827,
+        "command_min": -0.795729756355,
+        "rate_RMS_rad_s": 2.0712717061674817,
+        "axis": 0
+      },
+      {
+        "command_max": 0.433389306068,
+        "command_min": -0.158143684268,
+        "rate_RMS_rad_s": 0.508745025468217,
+        "axis": 1
+      },
+      {
+        "command_max": 0.906941413879,
+        "command_min": -0.907075107098,
+        "rate_RMS_rad_s": 2.0883991393393138,
+        "axis": 2
+      },
+      {
+        "command_max": 0.0982741191983,
+        "command_min": -0.941378712654,
+        "rate_RMS_rad_s": 1.0715041951467001,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "baseline",
+    "case": 5,
+    "pose": 3,
+    "offset_mm": 0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.18939590454,
+    "hold_speed_max_mm_s": 8.85078144073,
+    "hold_speed_mean_mm_s": 8.578399342298685,
+    "hold_forward_drift_mm": 67.95932006800001,
+    "hold_depth_net_drift_mm": -0.2775668874381,
+    "hold_depth_peak_to_peak_mm": 0.2893542945389,
+    "hold_max_abs_depth_mm": 0.370273560286,
+    "hold_max_anchor_error_mm": 270.791320801,
+    "whole64_max_depth_mm": 0.613346099854,
+    "whole64_max_lane_mm": 1.90704596043,
+    "whole64_peak_tilt_deg": 10.0035667419,
+    "final_speed_mm_s": 8.41320896149,
+    "late_joint_activity": [
+      {
+        "command_max": 0.949472904205,
+        "command_min": -0.795524358749,
+        "rate_RMS_rad_s": 2.0771081356613124,
+        "axis": 0
+      },
+      {
+        "command_max": 0.434114038944,
+        "command_min": -0.160297811031,
+        "rate_RMS_rad_s": 0.5075065612289612,
+        "axis": 1
+      },
+      {
+        "command_max": 0.905400037766,
+        "command_min": -0.908239066601,
+        "rate_RMS_rad_s": 2.0937219311682176,
+        "axis": 2
+      },
+      {
+        "command_max": 0.100861176848,
+        "command_min": -0.941371262074,
+        "rate_RMS_rad_s": 1.0759232619525003,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 0,
+    "pose": 0,
+    "offset_mm": 0.0,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.20743751526,
+    "hold_speed_max_mm_s": 8.91543102264,
+    "hold_speed_mean_mm_s": 8.592317551374126,
+    "hold_forward_drift_mm": 68.06539917000003,
+    "hold_depth_net_drift_mm": -0.23668289184590002,
+    "hold_depth_peak_to_peak_mm": 0.2467107772829,
+    "hold_max_abs_depth_mm": 0.211343765259,
+    "hold_max_anchor_error_mm": 269.34967041,
+    "whole64_max_depth_mm": 0.84415435791,
+    "whole64_max_lane_mm": 2.37843728065,
+    "whole64_peak_tilt_deg": 8.57249069214,
+    "final_speed_mm_s": 8.4785118103,
+    "late_joint_activity": [
+      {
+        "command_max": 0.95127594471,
+        "command_min": -0.811074912548,
+        "rate_RMS_rad_s": 2.1124137553657047,
+        "axis": 0
+      },
+      {
+        "command_max": 0.457691788673,
+        "command_min": -0.134831681848,
+        "rate_RMS_rad_s": 0.468925814786311,
+        "axis": 1
+      },
+      {
+        "command_max": 0.909509241581,
+        "command_min": -0.87421888113,
+        "rate_RMS_rad_s": 2.0571018899852724,
+        "axis": 2
+      },
+      {
+        "command_max": 0.138613760471,
+        "command_min": -0.942201077938,
+        "rate_RMS_rad_s": 1.0957182166505108,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 1,
+    "pose": 3,
+    "offset_mm": 0.0,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.26399326324,
+    "hold_speed_max_mm_s": 8.90779590607,
+    "hold_speed_mean_mm_s": 8.612369513511618,
+    "hold_forward_drift_mm": 68.22973632899999,
+    "hold_depth_net_drift_mm": -0.1911973804234,
+    "hold_depth_peak_to_peak_mm": 0.2029466480019,
+    "hold_max_abs_depth_mm": 0.157003387809,
+    "hold_max_anchor_error_mm": 269.481414795,
+    "whole64_max_depth_mm": 0.754089355469,
+    "whole64_max_lane_mm": 2.20746636391,
+    "whole64_peak_tilt_deg": 9.12731170654,
+    "final_speed_mm_s": 8.56327533722,
+    "late_joint_activity": [
+      {
+        "command_max": 0.950445353985,
+        "command_min": -0.816226541996,
+        "rate_RMS_rad_s": 2.117561732287821,
+        "axis": 0
+      },
+      {
+        "command_max": 0.457178533077,
+        "command_min": -0.129453346133,
+        "rate_RMS_rad_s": 0.46747777106395044,
+        "axis": 1
+      },
+      {
+        "command_max": 0.907270550728,
+        "command_min": -0.875599861145,
+        "rate_RMS_rad_s": 2.063638674193757,
+        "axis": 2
+      },
+      {
+        "command_max": 0.142624005675,
+        "command_min": -0.941540420055,
+        "rate_RMS_rad_s": 1.1003701493224138,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 2,
+    "pose": 0,
+    "offset_mm": -0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.19760513306,
+    "hold_speed_max_mm_s": 8.92153358459,
+    "hold_speed_mean_mm_s": 8.588035619259,
+    "hold_forward_drift_mm": 68.02862548900004,
+    "hold_depth_net_drift_mm": -0.2337455749507,
+    "hold_depth_peak_to_peak_mm": 0.2441501598802,
+    "hold_max_abs_depth_mm": 0.222826004028,
+    "hold_max_anchor_error_mm": 269.0105896,
+    "whole64_max_depth_mm": 0.821647644043,
+    "whole64_max_lane_mm": 2.44719648361,
+    "whole64_peak_tilt_deg": 8.01797294617,
+    "final_speed_mm_s": 8.48169803619,
+    "late_joint_activity": [
+      {
+        "command_max": 0.951290249825,
+        "command_min": -0.810755133629,
+        "rate_RMS_rad_s": 2.1112265322383372,
+        "axis": 0
+      },
+      {
+        "command_max": 0.454499661922,
+        "command_min": -0.138770550489,
+        "rate_RMS_rad_s": 0.4697993865623958,
+        "axis": 1
+      },
+      {
+        "command_max": 0.910408318043,
+        "command_min": -0.874771535397,
+        "rate_RMS_rad_s": 2.05604023140638,
+        "axis": 2
+      },
+      {
+        "command_max": 0.130138531327,
+        "command_min": -0.942380189896,
+        "rate_RMS_rad_s": 1.0948857705890198,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 3,
+    "pose": 3,
+    "offset_mm": -0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.24671173096,
+    "hold_speed_max_mm_s": 8.91195774078,
+    "hold_speed_mean_mm_s": 8.609243977070129,
+    "hold_forward_drift_mm": 68.20199585,
+    "hold_depth_net_drift_mm": -0.18510818481490002,
+    "hold_depth_peak_to_peak_mm": 0.1974534951155,
+    "hold_max_abs_depth_mm": 0.165176391602,
+    "hold_max_anchor_error_mm": 269.258422852,
+    "whole64_max_depth_mm": 0.763711929321,
+    "whole64_max_lane_mm": 2.26390862465,
+    "whole64_peak_tilt_deg": 8.54435634613,
+    "final_speed_mm_s": 8.5818567276,
+    "late_joint_activity": [
+      {
+        "command_max": 0.950439274311,
+        "command_min": -0.816354691982,
+        "rate_RMS_rad_s": 2.1165764144511288,
+        "axis": 0
+      },
+      {
+        "command_max": 0.453130453825,
+        "command_min": -0.136851102114,
+        "rate_RMS_rad_s": 0.4681220384573774,
+        "axis": 1
+      },
+      {
+        "command_max": 0.908043622971,
+        "command_min": -0.875335276127,
+        "rate_RMS_rad_s": 2.062660280456379,
+        "axis": 2
+      },
+      {
+        "command_max": 0.142259955406,
+        "command_min": -0.941689312458,
+        "rate_RMS_rad_s": 1.0997512849210194,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 4,
+    "pose": 0,
+    "offset_mm": 0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.21931648254,
+    "hold_speed_max_mm_s": 8.91394329071,
+    "hold_speed_mean_mm_s": 8.597182530164996,
+    "hold_forward_drift_mm": 68.108642578,
+    "hold_depth_net_drift_mm": -0.2405738830563,
+    "hold_depth_peak_to_peak_mm": 0.2501535266633,
+    "hold_max_abs_depth_mm": 0.199708923697,
+    "hold_max_anchor_error_mm": 269.655914307,
+    "whole64_max_depth_mm": 0.889053344727,
+    "whole64_max_lane_mm": 2.30846786499,
+    "whole64_peak_tilt_deg": 9.09809303284,
+    "final_speed_mm_s": 8.48020076752,
+    "late_joint_activity": [
+      {
+        "command_max": 0.950756072998,
+        "command_min": -0.81143707037,
+        "rate_RMS_rad_s": 2.113721523804243,
+        "axis": 0
+      },
+      {
+        "command_max": 0.457121580839,
+        "command_min": -0.128711551428,
+        "rate_RMS_rad_s": 0.46813577854409977,
+        "axis": 1
+      },
+      {
+        "command_max": 0.907839894295,
+        "command_min": -0.873831629753,
+        "rate_RMS_rad_s": 2.058302514648124,
+        "axis": 2
+      },
+      {
+        "command_max": 0.138852417469,
+        "command_min": -0.941697537899,
+        "rate_RMS_rad_s": 1.0967149825368492,
+        "axis": 3
+      }
+    ]
+  },
+  {
+    "stage": "final",
+    "case": 5,
+    "pose": 3,
+    "offset_mm": 0.5,
+    "passed": 0,
+    "deadline_pass": 0,
+    "hold_pass": 0,
+    "whole_state_pass": 0,
+    "hold_speed_min_mm_s": 8.27121829987,
+    "hold_speed_max_mm_s": 8.90600776672,
+    "hold_speed_mean_mm_s": 8.614827907085562,
+    "hold_forward_drift_mm": 68.25164794900002,
+    "hold_depth_net_drift_mm": -0.1981591992076,
+    "hold_depth_peak_to_peak_mm": 0.2091073952614,
+    "hold_max_abs_depth_mm": 0.149803161621,
+    "hold_max_anchor_error_mm": 269.712982178,
+    "whole64_max_depth_mm": 0.786781311035,
+    "whole64_max_lane_mm": 2.15010380745,
+    "whole64_peak_tilt_deg": 9.68547725677,
+    "final_speed_mm_s": 8.55105018616,
+    "late_joint_activity": [
+      {
+        "command_max": 0.949201762676,
+        "command_min": -0.814038574696,
+        "rate_RMS_rad_s": 2.118628151688187,
+        "axis": 0
+      },
+      {
+        "command_max": 0.452369660139,
+        "command_min": -0.132826268673,
+        "rate_RMS_rad_s": 0.466839115067995,
+        "axis": 1
+      },
+      {
+        "command_max": 0.904183745384,
+        "command_min": -0.877769172192,
+        "rate_RMS_rad_s": 2.0646511842334054,
+        "axis": 2
+      },
+      {
+        "command_max": 0.127012118697,
+        "command_min": -0.94037348032,
+        "rate_RMS_rad_s": 1.1010973598589675,
+        "axis": 3
+      }
+    ]
+  }
+]

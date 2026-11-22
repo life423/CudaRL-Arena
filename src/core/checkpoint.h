@@ -22,7 +22,7 @@ struct Reader {
     const std::vector<uint8_t>& data;size_t position=0;
     template<class T> T value() {
         static_assert(std::is_trivially_copyable_v<T>);
-        if(position>data.size() || sizeof(T)>data.size()-position) throw std::runtime_error("Truncated training checkpoint");
+        if(position>data.size() || sizeof(T)>data.size()-position) throw std::runtime_error("Truncated checkpoint");
         T v;std::memcpy(&v,data.data()+position,sizeof(T));position+=sizeof(T);return v;
     }
     template<class T> std::vector<T> array(size_t maximum=10000000) {
@@ -36,10 +36,10 @@ struct Reader {
 };
 // Checksummed, bounded binary payload; write/flush a sibling temporary file,
 // then atomically replace the destination. A failed replacement keeps the old file.
+// Concurrent writers use an exclusive, nonblocking lease on the target path.
+uint64_t checksum(const std::vector<uint8_t>& data);
 void write_atomic(const std::string& path,const std::vector<uint8_t>& data);
 std::vector<uint8_t> read(const std::string& path);
-bool exists(const std::string& path);
-std::string archive_before_reset(const std::string& path);
 class Lease {
 public:
     explicit Lease(const std::string& path);
@@ -50,10 +50,5 @@ private:
     int descriptor_=-1;
 };
 struct Busy:std::runtime_error {using std::runtime_error::runtime_error;};
-struct Status {
-    bool resumed=false,imported=false;
-    int saved_update=-1,loaded_update=-1;
-    std::string error;
-};
 }
 #endif

@@ -1,9 +1,0 @@
-best_update=64350 checkpoint_update=80525 seed=917362409 trials=256 seconds=60
-paired_delta_fpm=1.78125 approximate_95_ci=1.54885,2.01365 wins=201 ties=33 losses=22
-motor_weights_unchanged=true checkpoint_unchanged=true physics_unchanged=true gradients=false
-Same initial layouts and environment IDs. Subsequent placements depend on physical collection history; they need not match across modes.
-Nearest is a programmed per-control-step input-order benchmark, not a learned policy. Wall time includes CPU instrumentation and is not a throughput benchmark.
-selector_update=675 decision_steps=20 candidate_fixed_fpm=17.875
-selector_vs_canonical delta=2.27344 approximate_95_ci=2.06577,2.48111
-selector_vs_nearest delta=0.492188 approximate_95_ci=0.286063,0.698312
-selector_vs_held_nearest delta=1.91016 approximate_95_ci=1.6991,2.12121

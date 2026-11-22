@@ -30,6 +30,8 @@ public:
 
     // x: [batch x input_size], row-major. Keeps a copy of x for backward().
     void forward(const T* x, int batch) {
+        if (batch <= 0 || x == nullptr)
+            throw std::invalid_argument("CpuMlp::forward: positive batch and input required");
         batch_ = batch;
         input_.assign(x, x + static_cast<size_t>(batch) * spec_.input_size());
         const T* in = input_.data();
@@ -58,6 +60,9 @@ public:
     // dy = dL/d(output) for the last forward(). Accumulates parameter gradients;
     // writes dL/d(input) to dx when it is non-null.
     void backward(const T* dy, int batch, T* dx = nullptr) {
+        if (batch_ <= 0 || batch != batch_)
+            throw std::logic_error("CpuMlp::backward: batch must match the preceding forward()");
+        if (dy == nullptr) throw std::invalid_argument("CpuMlp::backward: output gradient required");
         std::vector<T> d_out(dy, dy + static_cast<size_t>(batch) * spec_.output_size());
         for (int l = spec_.num_layers() - 1; l >= 0; --l) {
             const int n_in = spec_.in(l), n_out = spec_.out(l);

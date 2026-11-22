@@ -1,0 +1,1 @@
+{"passed":true,"physical_controls":0,"physics_substeps":0,"optimizer_steps":0,"rest_states":6,"original40_error":0,"actor_migration_error":0,"critic_migration_error":0,"constant_cost_returns_are_counterfactual_not_rollouts":true,"time_feature0_is_a_neural_counterfactual_only":true}

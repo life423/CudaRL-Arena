@@ -1,0 +1,1 @@
+{"ready":true,"observations":41,"checkpoint_schema":5,"observation_schema":4,"reward":9,"reward_formula_same_as":8,"updates_exact":8,"starting_update":336,"ending_update":344,"training_controls":327680,"combined_controls_cap":359424,"combined_substeps_cap":3594240,"maximum_replays":2,"native_seconds":180,"physical_steps":0,"PPO_updates":0,"runtime_adopted":false}

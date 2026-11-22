@@ -1,0 +1,757 @@
+[
+  {
+    "path": "approval-and-reporting.txt",
+    "sha256": "EA391F32FEA18F5CE5870BD850DBF387BB5196964DBD9FDE0C41995C99A4DF38",
+    "bytes": 276
+  },
+  {
+    "path": "approved-protocol.md",
+    "sha256": "8DA549E033414D69621B4EEC19115A4894633AEE484E2282216636266AB8D391",
+    "bytes": 15624
+  },
+  {
+    "path": "awaiting-report-release",
+    "sha256": "A32793C389B991AF62791329B3D45BE7B4A28285CA83582EC8E77A16B1866B86",
+    "bytes": 74
+  },
+  {
+    "path": "baseline-controls.csv",
+    "sha256": "CC15B30F22E361B0A14581BB3CE039776EB9783FEF0BA9A283AD2378EFA5B2A3",
+    "bytes": 130658
+  },
+  {
+    "path": "baseline-evaluation.csv",
+    "sha256": "055F903511FD7B56A4F7F3AD4847923D99E2603120E6AABE5E5D48FF705F8B27",
+    "bytes": 443
+  },
+  {
+    "path": "batch-336.bin",
+    "sha256": "639F0A83D4AEDD4AFD5AC9BD234A5E2BF41BEDC8A2C7F207F041933F89A55D2B",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-337.bin",
+    "sha256": "FEE3BF61BB509A5B20B78E02C8830A59F90DC682258AD17A7B362F4327E7F77C",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-338.bin",
+    "sha256": "2DED96AD48E5C4530D1EB0FC2CAA83FEF63BD991A78367DFA0ED415BBA8ED345",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-339.bin",
+    "sha256": "208EE1D125B83D6CC16B8DB922CECA454137F146DA5C9EAF86C3CB27388D9BFB",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-340.bin",
+    "sha256": "CAEA8B0229DCC27933AA3143C0CADDDCEB5458C0CCBD6E40A7706560E4DDCA9C",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-341.bin",
+    "sha256": "6D659D249CC90839BDCBFABFA1E6EBC395D318EEF46E2B2F5C7073E560252EED",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-342.bin",
+    "sha256": "2287A28DF78AC764CF73B3DB1A133CE9844B3C20258E47E87D215B6E356F9F4C",
+    "bytes": 4138152
+  },
+  {
+    "path": "batch-343.bin",
+    "sha256": "D6CC6C244F35DCA93E2A20F0AC55B9213D1315343347A756DFC6D49925DE311B",
+    "bytes": 4138152
+  },
+  {
+    "path": "calibration-integrity.json",
+    "sha256": "55126898351B8790F34F6CD8D8683664EA352E6EA268091CAE16751B4A05C872",
+    "bytes": 170
+  },
+  {
+    "path": "calibration-value-rows.csv",
+    "sha256": "F61A1503E69E4B1487D78729400D4A8F8B698ABCF36E41E326D39FECF6A0D67C",
+    "bytes": 637828
+  },
+  {
+    "path": "calibration-world-split.csv",
+    "sha256": "59174E0979D10523A6C9205E790C895D76B81678D0FEAE0B6C8C80585B5B8C09",
+    "bytes": 331
+  },
+  {
+    "path": "checks.json",
+    "sha256": "0AE4B91695C579FA60796B0C4347D0B8C6D721DE666832309A66E2B88D43E2AC",
+    "bytes": 544
+  },
+  {
+    "path": "comparison-summary.json",
+    "sha256": "48D1DAFDD08FF76CCF2227A787F2D147A32B8ADA524EABCC2C0300B87A6E894E",
+    "bytes": 7499
+  },
+  {
+    "path": "critic-calibration.csv",
+    "sha256": "B9D4106C60BACB53E69768C654067103B15D469F6E6C0F0CA0797AE5523EB6D9",
+    "bytes": 1184
+  },
+  {
+    "path": "execution.json",
+    "sha256": "5F64BF49DAD6AA291100B48F65307100DA8119D90D19D709411F61BB0FC6684B",
+    "bytes": 192
+  },
+  {
+    "path": "final-controls.csv",
+    "sha256": "D1E0443A3274532F88EEF80CE21C306A5270E3320D310EFF017D24223B5C2DB4",
+    "bytes": 130533
+  },
+  {
+    "path": "final-evaluation.csv",
+    "sha256": "6A157B7CD4B985C498A694EBD21D74052DAA48490EF8E39FF7AF9BB1B2026E01",
+    "bytes": 449
+  },
+  {
+    "path": "first-PPO-signal-gate.json",
+    "sha256": "BA4AB3A3C20343115A5F386286E28A75AFACB2233A0E93BE8C072362BF9AD368",
+    "bytes": 138
+  },
+  {
+    "path": "frozen-hashes.json",
+    "sha256": "027ED1E0EA4E921070EA80CAA8497E381CB320403AD043048B6025C4A29DB972",
+    "bytes": 13829
+  },
+  {
+    "path": "gpu-reset-starts.csv",
+    "sha256": "F23435CE81F34E4CBAF66A9D84CBC699089D2CF06F549696C7E299995390E2F6",
+    "bytes": 6460
+  },
+  {
+    "path": "hold-details.json",
+    "sha256": "499859FC8B18E4268E3D2306D1D8CDE51CFEB1DB3E14F2D959CEA4F1F26268C9",
+    "bytes": 25605
+  },
+  {
+    "path": "holding-minibatch-proof.jsonl",
+    "sha256": "0E2A2C85EC023FBB85041E0C0D0E6C4C8A18FCD1A2C2461AF47BEA4663B5E683",
+    "bytes": 1200
+  },
+  {
+    "path": "launch.json",
+    "sha256": "3A539466478F6C05B2A99B8E2B3811D74D88250C7D57AE96B39B3E4FB04CD011",
+    "bytes": 103
+  },
+  {
+    "path": "migrated-initial.bin",
+    "sha256": "B825DC48EE6870D2654B5AAC962E0F7FE3A63C51E600CE7BD737FA945E496E03",
+    "bytes": 59796
+  },
+  {
+    "path": "native.err",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "native.log",
+    "sha256": "61977A74B915D3CB38735D4FD48F33B4544D2F645E7FCC1652870A1E32124064",
+    "bytes": 834
+  },
+  {
+    "path": "old-policy-rescore-336.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-337.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-338.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-339.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-340.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-341.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-342.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "old-policy-rescore-343.json",
+    "sha256": "F437A0F5ACB837C4B93FF819898215BA7C721F3DA04A3DE13A2A5AF01518D939",
+    "bytes": 113
+  },
+  {
+    "path": "parent-checkpoint.bin",
+    "sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+    "bytes": 59016
+  },
+  {
+    "path": "parent-protocol.bin",
+    "sha256": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+    "bytes": 292
+  },
+  {
+    "path": "PPO-336-integrity.json",
+    "sha256": "0BE80C106BFE4597142257E7CB5C51688AD9FEC838B80BCB87677489597070C5",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-337-integrity.json",
+    "sha256": "5967193A7F1373B19EEE91FDDCD2ACB22E0087142E0EE4206FBD5D4B559494F5",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-338-integrity.json",
+    "sha256": "7C3777AAA93542F2E1FDE5AC423A6D850AE73F9083FF14624C5976458944AB9C",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-339-integrity.json",
+    "sha256": "A7612252EB8C0E6FBBFE8CB7CEE07EF2615C3647BEEC04EE8AC6D13F374D0DFD",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-340-integrity.json",
+    "sha256": "0E2D7880700948759D17AC624215596597D837B5FB65ECA2B0A8ED559870066D",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-341-integrity.json",
+    "sha256": "77CF7CD29623F0FDD6BEC405DCDEBFC890B9E09DE93E9AE6817437C5594AF350",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-342-integrity.json",
+    "sha256": "0EDD13207E880E4BADC221776D2356EEDB3AB29A5EE5B709274338BC4E701157",
+    "bytes": 170
+  },
+  {
+    "path": "PPO-343-integrity.json",
+    "sha256": "161CB38F67F3E8D1E4845772A3FAE7D19623F275B29717C6285B0929CFCBF0A5",
+    "bytes": 170
+  },
+  {
+    "path": "ppo-diagnostics.jsonl",
+    "sha256": "C32D286111215A5F054543E97A0EDD99BFB5A0151B519B2395D5D6E7435E9370",
+    "bytes": 7112
+  },
+  {
+    "path": "PPO-updates.jsonl",
+    "sha256": "69D0F4A00A2CD78E251AF394A10BDCE9287F5B7E23971ABA582651F57B964E58",
+    "bytes": 967
+  },
+  {
+    "path": "pre-PPO-report.json",
+    "sha256": "F6C422FA692650C905DC69E05ABEC2F364426EA4187AAEF371E5E9D34E500D6D",
+    "bytes": 1237
+  },
+  {
+    "path": "protocol.bin",
+    "sha256": "E89253D1E7632641512396FC51F3588E52A6CC9522A183DFE1B4641C18F82F86",
+    "bytes": 353
+  },
+  {
+    "path": "readiness.json",
+    "sha256": "E2CC6D696EF4E4474FA78911105B1C39CF9A112DEACE83A04E2CBA8E0DFB4D82",
+    "bytes": 282
+  },
+  {
+    "path": "REPORT.md",
+    "sha256": "BA4CAF75CA072B825DF13B5192C4D33044A19F0668A688B86816C7041A456F57",
+    "bytes": 7365
+  },
+  {
+    "path": "reported-and-continue",
+    "sha256": "105AFE342993C7D7107E43B6F924BD4C4D66839430B9FCA3E97A61E7D4701DAE",
+    "bytes": 89
+  },
+  {
+    "path": "reporting-deviation.json",
+    "sha256": "FB4FB6A72625BC7E33FC4C1A763966336E0AB5A6B98668044388098FCEAAA86A",
+    "bytes": 485
+  },
+  {
+    "path": "result.json",
+    "sha256": "11479D3820AC2B4C2C5FCB09FC2FF57A558D05BB5C9CB35DA028C9E878E1181A",
+    "bytes": 545
+  },
+  {
+    "path": "runner.exe",
+    "sha256": "AFAD277C32338F17EC673D7FCDEE4C068C1F015EF038648755175C5249047540",
+    "bytes": 3394048
+  },
+  {
+    "path": "source-manifest.json",
+    "sha256": "22585CA6C031A1742FCF84B93EABFCD8D8A1F338663DC648980F382B7925B9E4",
+    "bytes": 6672
+  },
+  {
+    "path": "status.json",
+    "sha256": "C96D374F4D5FA5AAC6C191E6FFEE34790666864437B1830CECBF8AEB8BD7DEEA",
+    "bytes": 208
+  },
+  {
+    "path": "zero-step-checks.json",
+    "sha256": "953DF1126FAFA91FB395A3EAB1852072BB12CE702AB91598274D603D93AEA5D0",
+    "bytes": 174
+  },
+  {
+    "path": "baseline-long\\sustained-controls.csv",
+    "sha256": "152D031BBCD189775B3E506AAD8DAFEA6B9E52E352FA008C1A3DC4233E80DB74",
+    "bytes": 642104
+  },
+  {
+    "path": "baseline-long\\sustained-windows.csv",
+    "sha256": "5BC295E0A7A0A8AB3260F7CC976E9B3A33715001B8328B63D9E33943ABAFD3A9",
+    "bytes": 3480
+  },
+  {
+    "path": "baseline-rest\\controls.csv",
+    "sha256": "F78088CD6DAB7B769BF9A32E54C0D9DA7499468FDC5F459F5D3EB5F325ABDFD7",
+    "bytes": 3054534
+  },
+  {
+    "path": "baseline-rest\\summary.csv",
+    "sha256": "11874ED64B09503B86D32138B809A91A31DA79A5625561485DBB2461F140AA2F",
+    "bytes": 1225
+  },
+  {
+    "path": "calibration\\actual-GPU-migration.json",
+    "sha256": "83F2B056E2963EFC99B41A3AB2DA13907310C3AC223F1C0405AA1BE5D2CA2114",
+    "bytes": 84
+  },
+  {
+    "path": "calibration\\batch-336.bin",
+    "sha256": "4D602173020EC0C71CE1B387DA777B3C7B21D3244A77DE5F8C9549993DDED6BD",
+    "bytes": 4138152
+  },
+  {
+    "path": "calibration\\gpu-reset-starts.csv",
+    "sha256": "217411BBBCE44516E2F30242B9B10FBBB2A5B9DB4B32CF63C2656BC28AA35FEE",
+    "bytes": 864
+  },
+  {
+    "path": "calibration\\initial-function-parity.json",
+    "sha256": "C04D8720F90726FD1CE44DE496205339D42CCA9CE9C45906AC3DF904B05FCCC3",
+    "bytes": 133
+  },
+  {
+    "path": "critic-calibrated\\ppo-append-update-336.bin",
+    "sha256": "FCBBB477D2212FDBE46F501769C4C359A68B6CD73F108C800705DFACCDA9892B",
+    "bytes": 59796
+  },
+  {
+    "path": "final-long\\sustained-controls.csv",
+    "sha256": "4977B8E3703E89DAD2044859962E06C819EDA0C67CF13D7943725F067F803F79",
+    "bytes": 639479
+  },
+  {
+    "path": "final-long\\sustained-windows.csv",
+    "sha256": "366B07B0C1BA1326D415175AC4A0D953CF9B308ECA3A596E925FD64EA275C656",
+    "bytes": 3496
+  },
+  {
+    "path": "final-rest\\controls.csv",
+    "sha256": "D243CAF27D3509C257DD0AFCA3ED90AD0CAC12C61D524C96BDD8D6CA2616B7AB",
+    "bytes": 3050111
+  },
+  {
+    "path": "final-rest\\summary.csv",
+    "sha256": "0419E3B2DE776CED2D718E6FBD4E5BD5B965293A478E7E47D4C4A7D70962406F",
+    "bytes": 1219
+  },
+  {
+    "path": "initial-training-state\\ppo-append-update-336.bin",
+    "sha256": "17DA6C55474A3C31A77BBF5BCE40FEDA9E67865060DC6FA8FAEB8F6F7E376020",
+    "bytes": 59796
+  },
+  {
+    "path": "preservation\\build-result.json",
+    "sha256": "F41293FB4661B1BD23D7EA94954D6BC725E7F2FE44B1387EBA129C0FDED533E8",
+    "bytes": 50
+  },
+  {
+    "path": "preservation\\build.err",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "preservation\\build.log",
+    "sha256": "9D0CA8BD5445E23BD97219AB0EB0CE26FB4A1267F86A45D9764A27B552F269A2",
+    "bytes": 13327
+  },
+  {
+    "path": "preservation\\checks-0.log",
+    "sha256": "B106B7E6F508D4BAA509A3F61386B8A9A03E8DCDF3025AC40C3D9B7912A50908",
+    "bytes": 662
+  },
+  {
+    "path": "preservation\\checks-1.log",
+    "sha256": "08E437BE3CCB0B117B6075CADDBAF3E1578EACDD889D34E6E8309D6A81A17CC7",
+    "bytes": 676
+  },
+  {
+    "path": "preservation\\checks-2.log",
+    "sha256": "B2A2F4303634351BE06CFE988EFE2BFCDA87B1019DDCA3EEF4688389D68F1DA7",
+    "bytes": 1508
+  },
+  {
+    "path": "preservation\\checks-3.log",
+    "sha256": "C14328171CA6F55AEED6DE8B63CEB5ED70982C6B442EA4D6C29A1908C6E7408B",
+    "bytes": 166
+  },
+  {
+    "path": "preservation\\preexisting-diff.patch",
+    "sha256": "EDD2A67A462EBB1D2977C1FA9ACA6C7F72B6CE34908B392FFDC4EAD27ADFB817",
+    "bytes": 11155
+  },
+  {
+    "path": "preservation\\prepare.log",
+    "sha256": "1C1966F6AE05A190C35C4F963435AC443EC6DEDF0B493BFAFAB0775A9184C4E1",
+    "bytes": 45
+  },
+  {
+    "path": "preservation\\prior-evidence-hashes.json",
+    "sha256": "16D59FD6AFB811355885CE722FA896C2AE38FD53810E94754C96A1D3D8E29228",
+    "bytes": 887652
+  },
+  {
+    "path": "preservation\\unrelated-hashes.json",
+    "sha256": "FC79B83D4A55785EDA05196B3475D59E1153F0CC92C5B48429C5BD4C5ECA2EFF",
+    "bytes": 2557
+  },
+  {
+    "path": "source\\AGENTS.md",
+    "sha256": "F8257B2B32CA62E1647D6E6F287311E3E71298408703B8937275B4D93DCE839C",
+    "bytes": 2208
+  },
+  {
+    "path": "source\\CMakeLists.txt",
+    "sha256": "81C391031A7EA3CB2BBFC030FB1B2F48ED2DC3081D7B0A3EF1B6B0F7DD945ADB",
+    "bytes": 7885
+  },
+  {
+    "path": "update-337\\ppo-append-update-337.bin",
+    "sha256": "E850411BF8D29D4AB9D7DC056488BDCE68AC526A53DD7A0B2DC0229AD1A5A361",
+    "bytes": 59796
+  },
+  {
+    "path": "update-338\\ppo-append-update-338.bin",
+    "sha256": "B76BD0579C47EA9CA132A52FC7CFDD4B21768DF6398ED4AA5BC6C184DC4FCA8B",
+    "bytes": 59796
+  },
+  {
+    "path": "update-339\\ppo-append-update-339.bin",
+    "sha256": "2CC152953DFD6BC563354A41A926488A6A0F97BA0E5B403B90A4571271ED5F31",
+    "bytes": 59796
+  },
+  {
+    "path": "update-340\\ppo-append-update-340.bin",
+    "sha256": "5C184BC78D3356C1B9C3E31F181ADC03A5C12176F2AABCC8718A8062D70C730C",
+    "bytes": 59796
+  },
+  {
+    "path": "update-341\\ppo-append-update-341.bin",
+    "sha256": "89B45959348556166687AF1CD72D6F24A2AAEC490EBD9E06DBEF62D6AB60B39F",
+    "bytes": 59796
+  },
+  {
+    "path": "update-342\\ppo-append-update-342.bin",
+    "sha256": "92C8BD429453AA17CDB640DD3D6CBA1551C86D845114CD1FB1AB96F5C4E2B39A",
+    "bytes": 59796
+  },
+  {
+    "path": "update-343\\ppo-append-update-343.bin",
+    "sha256": "FBDC7097E08E7401D0885D63A80D4F11CC91912BCFAF9783E9775FAE2095BE6B",
+    "bytes": 59796
+  },
+  {
+    "path": "update-344\\ppo-append-update-344.bin",
+    "sha256": "45FE1EB8B1C1D1E71BC1AB861C966B9C50A6CDEA669B2822132F0C188E5F6C09",
+    "bytes": 59796
+  },
+  {
+    "path": "source\\tools\\append_hold8.cu",
+    "sha256": "5D46932E99F0245F0CCA81110671E256CEFD329B477C62E5247F156034A7EEB8",
+    "bytes": 26001
+  },
+  {
+    "path": "source\\tools\\hold_scale_study.cu",
+    "sha256": "728547AA895A460BDDE2964AA3A3AC2C60851A87320C8FC51C050E895EF34EC5",
+    "bytes": 23555
+  },
+  {
+    "path": "source\\tools\\ppo_motor.cu",
+    "sha256": "0CED25F11C44F1E362157A4D63BE7830CAFC65D63E8FA32BD156EAB95AEE3CD5",
+    "bytes": 195055
+  },
+  {
+    "path": "source\\tools\\rest_hold_study.cu",
+    "sha256": "6FF439FB35278C10F2D6C87160177C3496BD9F96BB0D8FAEF5650C6CAD68E151",
+    "bytes": 36113
+  },
+  {
+    "path": "source\\tools\\run-rest-hold-study.ps1",
+    "sha256": "72ED8B39C153D707DF44429E11089BC5204839F23A14EA1AB476CB880055BA75",
+    "bytes": 2187
+  },
+  {
+    "path": "source\\src\\core\\checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770",
+    "bytes": 4620
+  },
+  {
+    "path": "source\\src\\core\\checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D",
+    "bytes": 2413
+  },
+  {
+    "path": "source\\src\\core\\hd.h",
+    "sha256": "2A8D1C759D9F8B8E268EDB95134F749DCEDBCF200E83200C628BBB213C98D7AC",
+    "bytes": 337
+  },
+  {
+    "path": "source\\src\\core\\rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627",
+    "bytes": 1401
+  },
+  {
+    "path": "source\\src\\cuda\\block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77",
+    "bytes": 752
+  },
+  {
+    "path": "source\\src\\cuda\\cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00",
+    "bytes": 4350
+  },
+  {
+    "path": "source\\src\\cuda\\device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F",
+    "bytes": 1532
+  },
+  {
+    "path": "source\\src\\cuda\\device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D",
+    "bytes": 765
+  },
+  {
+    "path": "source\\src\\nn\\adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3",
+    "bytes": 5719
+  },
+  {
+    "path": "source\\src\\nn\\adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9",
+    "bytes": 2093
+  },
+  {
+    "path": "source\\src\\nn\\adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73",
+    "bytes": 585
+  },
+  {
+    "path": "source\\src\\nn\\gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4",
+    "bytes": 9200
+  },
+  {
+    "path": "source\\src\\nn\\gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6",
+    "bytes": 2434
+  },
+  {
+    "path": "source\\src\\nn\\loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572",
+    "bytes": 910
+  },
+  {
+    "path": "source\\src\\nn\\loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA",
+    "bytes": 356
+  },
+  {
+    "path": "source\\src\\nn\\mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153",
+    "bytes": 6814
+  },
+  {
+    "path": "source\\src\\nn\\mlp_gpu.cu",
+    "sha256": "37BC9915F97B3EECEE3D5490D027F7AC3B00EB24A0C57BC6FF8F06A3344787B5",
+    "bytes": 8320
+  },
+  {
+    "path": "source\\src\\nn\\mlp_gpu.h",
+    "sha256": "0AD0D2107E8C5B4EC3BC6FC4C5AF001D9546CF7883269B00600BD01AF7E983FE",
+    "bytes": 2594
+  },
+  {
+    "path": "source\\src\\nn\\mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF",
+    "bytes": 6090
+  },
+  {
+    "path": "source\\src\\physics\\contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6",
+    "bytes": 7503
+  },
+  {
+    "path": "source\\src\\physics\\dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6",
+    "bytes": 9192
+  },
+  {
+    "path": "source\\src\\rl\\append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B",
+    "bytes": 5009
+  },
+  {
+    "path": "source\\src\\rl\\ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797",
+    "bytes": 2719
+  },
+  {
+    "path": "source\\src\\rl\\gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7",
+    "bytes": 9242
+  },
+  {
+    "path": "source\\src\\rl\\gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D",
+    "bytes": 3307
+  },
+  {
+    "path": "source\\src\\rl\\gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700",
+    "bytes": 3304
+  },
+  {
+    "path": "source\\src\\rl\\motor_rollout.cuh",
+    "sha256": "B4F50A4A508AD50DB7AD85671218D8A5FD86E0AF086522DE24EB6ED1EE299A76",
+    "bytes": 6654
+  },
+  {
+    "path": "source\\src\\rl\\ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2",
+    "bytes": 8055
+  },
+  {
+    "path": "source\\src\\rl\\ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC",
+    "bytes": 3172
+  },
+  {
+    "path": "source\\src\\rl\\ppo_kernels.cu",
+    "sha256": "884AC4D2485E97D19D6049BE677CB218B5FB17B617A50F72545DF98B13D37E8C",
+    "bytes": 8861
+  },
+  {
+    "path": "source\\src\\rl\\ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8",
+    "bytes": 2657
+  },
+  {
+    "path": "source\\src\\rl\\ppo_math.h",
+    "sha256": "68E726DC7A84778E6900BC6894BED50126EC4545A1370618DFF0953374D25E8D",
+    "bytes": 6515
+  },
+  {
+    "path": "source\\src\\simulation\\world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8",
+    "bytes": 8888
+  },
+  {
+    "path": "source\\src\\simulation\\world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3",
+    "bytes": 6386
+  },
+  {
+    "path": "source\\src\\simulation\\world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441",
+    "bytes": 1945
+  },
+  {
+    "path": "source\\src\\nn\\motor\\frozen_contract.in.h",
+    "sha256": "A4B6E7767924049BEBB4591322C71583F2DCFF3A7580133275A457DCEF2DE929",
+    "bytes": 222
+  },
+  {
+    "path": "source\\src\\nn\\motor\\frozen_controller.cpp",
+    "sha256": "E7BBBE69CB96F84C4B62A2DD74D95E7BFDBE26C79C36572EE276DC3F81680C82",
+    "bytes": 6373
+  },
+  {
+    "path": "source\\src\\nn\\motor\\frozen_controller.h",
+    "sha256": "73907C4C5E285BF57C9E559DEB535A2111BFC9F6A22FE9B948B49B75652DFD31",
+    "bytes": 2379
+  },
+  {
+    "path": "source\\src\\nn\\motor\\joint_motor.h",
+    "sha256": "AC65522082DE6B501C5DD62366820ED3D7A01EE994E57A78239876EE86695F03",
+    "bytes": 5779
+  },
+  {
+    "path": "source\\src\\nn\\motor\\movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5",
+    "bytes": 10657
+  },
+  {
+    "path": "source\\src\\nn\\motor\\observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332",
+    "bytes": 617
+  },
+  {
+    "path": "source\\src\\nn\\motor\\state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F",
+    "bytes": 2183
+  },
+  {
+    "path": "source\\src\\nn\\motor\\straight_task.h",
+    "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22",
+    "bytes": 24241
+  },
+  {
+    "path": "preservation\\source-before\\CMakeLists.txt",
+    "sha256": "18ABB92155FC182445F311831147602D3AF2CF3AB06B66A9B24DD9506BFF7CB7",
+    "bytes": 7633
+  },
+  {
+    "path": "preservation\\source-before\\tools\\append_hold8.cu",
+    "sha256": "1D84C719EB496631509B31204C3EED63043BF827CE3905F8F6EADAB3E9E8D89B",
+    "bytes": 25855
+  },
+  {
+    "path": "preservation\\source-before\\tools\\hold_scale_study.cu",
+    "sha256": "F2BC87D39ABC8D47FC6E4C579D67A16B7F4EA503CD9995D953DBBC1E37733C08",
+    "bytes": 23516
+  },
+  {
+    "path": "preservation\\source-before\\tools\\ppo_motor.cu",
+    "sha256": "1997F6C72B76F046A52B07B862B5EEB1E2962579A3264D728E44D0E3409E0A9C",
+    "bytes": 194525
+  },
+  {
+    "path": "preservation\\source-before\\src\\rl\\motor_rollout.cuh",
+    "sha256": "C4045DF8B96482B8D764C949FA5DA112D5D7F68EE4478A86964010837AAEFF77",
+    "bytes": 6473
+  },
+  {
+    "path": "preservation\\source-before\\src\\nn\\motor\\straight_task.h",
+    "sha256": "93988D78511EB302E3609ABBF9DBCB683D59D71FB8457AD2B27DF22ABFBA09D4",
+    "bytes": 23601
+  }
+]

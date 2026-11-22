@@ -1,0 +1,260 @@
+{
+  "status": "Input compatibility verified; exactly8PPOupdates completed; holding pilot failed; not adopted",
+  "source_run": "build/ppo/append41-hold-336to344-v1",
+  "initial_source_commit": "0299fee3848688a54f78a77da6ccfac860de55a1",
+  "final_source_commit": "79a5e6426cd65dcf66500bcb56fa3889b75f01c2",
+  "original_baseline": "../update-336-episode64/ppo-update-336.bin",
+  "original_baseline_SHA256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "original_baseline_unchanged": true,
+  "protocol_SHA256": "7B6B9FF3D25C4C6FAF6EE120B22376DD5592A952521020DA619FBDD7CB6A38D9",
+  "checkpoint_schema": 5,
+  "observation_schema": 4,
+  "observations": 41,
+  "actor": [
+    41,
+    32,
+    32,
+    4
+  ],
+  "critic": [
+    41,
+    32,
+    32,
+    1
+  ],
+  "reward_tag": 9,
+  "reward_formula_same_as": 8,
+  "reward_retuned": false,
+  "appended_feature": "tanh(dot(anchor-COM,original_heading)/0.02m);positive short,negative overshoot;zero outside holding",
+  "original40inputs": "unchanged schema2 meanings and2mm scale including zero goal",
+  "new_input_weights_initially_zero_both_networks": true,
+  "Adam_migration": "all old weights/moments/configs/counters copied with row/offset remapping; new columns have zero moments and independent age0; shared gradient clipping retained",
+  "replay_attempts": 2,
+  "replay_controls_total": 10240,
+  "replay_substeps_total": 102400,
+  "both_replays_passed": true,
+  "second_replay_reason": "Pretraining accounting guard corrected to preserve existing KL epoch stop; final executable reverified within reserved replay cap; no PPO retry",
+  "replay": {
+    "passed": true,
+    "fault": "",
+    "seed": 1247037243,
+    "controls": 5120,
+    "substeps": 51200,
+    "old40_observation_error": 0,
+    "actor_error": 0,
+    "critic_error": 0,
+    "sampled_action_error": 0,
+    "state_error": 0,
+    "AR_logp_error": 0,
+    "PPO_updates": 0
+  },
+  "CUDA_replay_crosscheck": {
+    "rows": 2560,
+    "actor_error": 0,
+    "critic_error": 0,
+    "CPU_GPU_error": 1.49011611938E-06,
+    "physical_steps": 0
+  },
+  "reward_scale": {
+    "same_physical_trajectory": true,
+    "hold_rows": 1280,
+    "reward6_cost_sum": 77.8595368378,
+    "reward8_cost_sum": 26042.9740365,
+    "cost_ratio": 334.486629309,
+    "mean_abs_return6": 5.09696751276,
+    "mean_abs_return8": 1916.10653595,
+    "decision": "Keep reward8 formula unchanged for this8-update input-migration comparison; scale remains a separate optimization concern",
+    "PPO_updates": 0
+  },
+  "actual_training_started_utc": "2026-11-04T18:29:33.9250000+00:00",
+  "execution": {
+    "mode": "run",
+    "completed_utc": "2026-11-04T18:29:48.6932044Z",
+    "launched_utc": "2026-11-04T18:29:31.9057307Z",
+    "wall_seconds": 16.7862443,
+    "exit_code": 0,
+    "pid": 15420
+  },
+  "PPO_updates": 8,
+  "starting_update": 336,
+  "completed_update": 344,
+  "training_controls": 327680,
+  "training_substeps": 3276800,
+  "replay_controls": 10240,
+  "axis_CPU_CUDA_controls": 64,
+  "assessment_controls": 21440,
+  "combined_controls": 359424,
+  "combined_substeps": 3594240,
+  "Adam_updates_each": 2560,
+  "old_coordinate_age_final": 24260,
+  "new_column_age_final": 2560,
+  "synthetic_preparation_Adam_fixture_updates_each": 1,
+  "synthetic_policy_PPO_updates": 0,
+  "seed": 1247037243,
+  "rho": 0.8,
+  "actor_lr": 0.000125,
+  "critic_lr": 0.001,
+  "log_std": [
+    -1,
+    -1,
+    -1,
+    -1
+  ],
+  "stages": [
+    {
+      "stage": "baseline",
+      "short_passes": 4,
+      "mean_short_speed_mm_s": 7.579387499999999,
+      "stopping_passes": 0,
+      "stop_total": 6,
+      "long_windows_passed": 28,
+      "long_windows_total": 30,
+      "retained4to60_windows": 28,
+      "maximum_stop_depth_mm": 0.641989707947,
+      "maximum_stop_lane_mm": 2.08216071129,
+      "maximum_stop_tilt_deg": 10.0035667419,
+      "maximum_hold_anchor_error_mm": 270.791320801,
+      "hold_forward_drift_min_mm": 67.7607650757,
+      "hold_forward_drift_max_mm": 67.9592819214,
+      "hold_speed_mean_min_mm_s": 8.55424401816,
+      "hold_speed_mean_max_mm_s": 8.57839936507
+    },
+    {
+      "stage": "final",
+      "short_passes": 4,
+      "mean_short_speed_mm_s": 7.4088,
+      "stopping_passes": 0,
+      "stop_total": 6,
+      "long_windows_passed": 28,
+      "long_windows_total": 30,
+      "retained4to60_windows": 28,
+      "maximum_stop_depth_mm": 0.889053344727,
+      "maximum_stop_lane_mm": 2.44719648361,
+      "maximum_stop_tilt_deg": 9.68547725677,
+      "maximum_hold_anchor_error_mm": 269.712982178,
+      "hold_forward_drift_min_mm": 68.0286254883,
+      "hold_forward_drift_max_mm": 68.2516403198,
+      "hold_speed_mean_min_mm_s": 8.58803563751,
+      "hold_speed_mean_max_mm_s": 8.61482789041
+    }
+  ],
+  "final_hold_depth_net_drift_min_mm": -0.2405738830563,
+  "final_hold_depth_net_drift_max_mm": -0.18510818481490002,
+  "final_hold_speed_min_mm_s": 8.19760513306,
+  "final_hold_speed_max_mm_s": 8.92153358459,
+  "new_columns_after_training": [
+    {
+      "update": 336,
+      "new_columns": [
+        {
+          "new_column_RMS": 0.0,
+          "network": "actor",
+          "new_column_min": 0.0,
+          "new_column_nonzero": 0,
+          "new_column_max": 0.0
+        },
+        {
+          "new_column_RMS": 0.0,
+          "network": "critic",
+          "new_column_min": 0.0,
+          "new_column_nonzero": 0,
+          "new_column_max": 0.0
+        }
+      ]
+    },
+    {
+      "update": 344,
+      "new_columns": [
+        {
+          "new_column_RMS": 0.006495587013207326,
+          "network": "actor",
+          "new_column_min": -0.016078822314739227,
+          "new_column_nonzero": 32,
+          "new_column_max": 0.009514449164271355
+        },
+        {
+          "new_column_RMS": 0.37788904053715355,
+          "network": "critic",
+          "new_column_min": -0.7051466703414917,
+          "new_column_nonzero": 32,
+          "new_column_max": 0.6091442108154297
+        }
+      ]
+    }
+  ],
+  "critic_scale_diagnostics": {
+    "final_critic_half_MSE_after": 355643.460207,
+    "first_return_mean": -489.279274328,
+    "first_critic_half_MSE_after": 477070.229716,
+    "final_critic_EV": 0.0996157616616,
+    "first_return_std": 873.176874808
+  },
+  "tests": {
+    "native41_build_passed": true,
+    "post32_reward_rows": 20480,
+    "unrelated_existing_files_hash_verified": 15,
+    "GAE_max_error": 0.0013782293608528562,
+    "skipped": 0,
+    "legacy40_build_passed": true,
+    "reload_physical_steps": 0,
+    "focused_tests_passed": 31,
+    "legacy40_zero_step_readiness_passed": true,
+    "final_checkpoint_reload_passed": true,
+    "reload_PPO_updates": 0,
+    "late_minibatch_rows_with_nonzero_gradient": 126,
+    "GAE_within_existing_tolerance": true,
+    "actual_CUDA_required": true
+  },
+  "checkpoint_hashes": [
+    {
+      "sha256": "AE738752269C75AB38AE6FDEF7F95F32EB038A48A4C1CFA7E2E47741E4949041",
+      "name": "ppo-append-update-336.bin"
+    },
+    {
+      "sha256": "4BF98A1180372B510E037D21E7737AB36D1A236C1B3A0616591A59E88F933B2C",
+      "name": "ppo-append-update-337.bin"
+    },
+    {
+      "sha256": "F1AF25CA864806225E9D752F13C168337366299D2D39E85808BF33E291C10E43",
+      "name": "ppo-append-update-338.bin"
+    },
+    {
+      "sha256": "5630855BDF9D4C2717D28BE0BEFD2FFDF9309F60AC44B277991B232407DCAEAB",
+      "name": "ppo-append-update-339.bin"
+    },
+    {
+      "sha256": "66FD4CC9978C2E1F6B12051D10B5DC87F4CEA2AEE88BE392231C54A87D33E98F",
+      "name": "ppo-append-update-340.bin"
+    },
+    {
+      "sha256": "C8ADC6A16DDB5071747E488EB40241FE311198D9560E6FE27698602F325F843E",
+      "name": "ppo-append-update-341.bin"
+    },
+    {
+      "sha256": "A609CD69D528FA070725F4532E9B479B1923DAAE87FCFA676D0CEA7002BD1E85",
+      "name": "ppo-append-update-342.bin"
+    },
+    {
+      "sha256": "1CCF8419D697AAC0089DD3D7AFF072E52D37200842C6C1E9422D81DB08CCF394",
+      "name": "ppo-append-update-343.bin"
+    },
+    {
+      "sha256": "ECA377225B102C7EB71546E73101782498BCB6A071A944C132795EC6F5E47C79",
+      "name": "ppo-append-update-344.bin"
+    }
+  ],
+  "physics_changed": false,
+  "tilt_gate_deg": 10,
+  "all4joints_NN_controlled": true,
+  "posture_clamp": false,
+  "safety_or_numerical_stops": 0,
+  "PPO_retries": 0,
+  "extensions": 0,
+  "candidate_accepted": false,
+  "runtime_adopted": false,
+  "training_stopped": true,
+  "conclusion": "Migration incompatibility fixed and original swimming criteria retained. No learned stopping/holding: all6cases continue swimming near8.6mm/s,~68mm final8s drift,~270mm anchor error. Depth and tilt pass, lane and stopping/position criteria fail.",
+  "uncertainty": "Keeping reward8 fixed isolates representation but leaves334x measured cost scale and weak critic fit as separate optimization concerns. Their causal contribution to learning failure is not established.",
+  "training_mix_limitation": "As in prior comparison, even worlds use pose0/sustained swim and odd worlds pose3/zero after32s; goal condition correlates with training pose. Bothposes and three offsets are tested; no broad generalization claimed.",
+  "next_decision": "Keep compatible representation; calibrate reward/value scale and independently balance goal/start coverage in a separately bounded study. No automatic extension."
+}

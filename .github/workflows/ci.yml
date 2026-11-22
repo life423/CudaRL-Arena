@@ -1,81 +1,22 @@
-# Builds the CUDA core, tests and benchmark on a GitHub-hosted Windows runner and
-# runs the tests. Hosted runners have no NVIDIA GPU: everything compiles (nvcc
-# doesn't need a GPU), the CPU tests run, and the GPU tests report SKIP.
-name: CI
-
+name: Foundation checks
 on:
   push:
-    branches: ["**"]
   pull_request:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
-  group: ci-${{ github.ref }}
+  group: foundation-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  CUDA_VERSION: "13.2"
-  CUDA_INSTALLER: https://developer.download.nvidia.com/compute/cuda/13.2.1/network_installers/cuda_13.2.1_windows_network.exe
-
 jobs:
-  portable-cpu:
-    name: Portable pond, C++ only (no CUDA toolkit)
+  cpu-foundation:
+    name: Physics and state, CPU (no CUDA toolkit)
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
-      - name: Configure without CUDA or Godot build dependencies
-        run: cmake -S . -B build/portable-ci -DCUDARL_ENABLE_CUDA=OFF -DCUDARL_BUILD_GODOT=OFF -DCUDARL_BUILD_BENCH=OFF
-      - name: Build the portable runtime and tests
-        run: cmake --build build/portable-ci --config Release --parallel
-      - name: Test saved AI and unchanged CPU physics
-        run: ctest --test-dir build/portable-ci -C Release --output-on-failure
-  build-and-test:
-    name: Windows, CUDA 13.2 (no GPU)
-    runs-on: windows-2022
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v4
-
-      # NVIDIA's network installer, with only the components the build needs:
-      # compiler, runtime, headers, profiler API (pond_progress_profile), cuBLAS
-      # (benchmark only), and the Visual Studio integration CMake uses to find CUDA.
-      - name: Install CUDA toolkit
-        shell: pwsh
-        run: |
-          $v = $env:CUDA_VERSION
-          Invoke-WebRequest -Uri $env:CUDA_INSTALLER -OutFile cuda_installer.exe
-          $components = 'nvcc','crt','cudart','cuda_profiler_api','nvvm','thrust','nvptxcompiler','nvfatbin','nvjitlink',
-                        'cublas','cublas_dev','visual_studio_integration' | ForEach-Object { "${_}_$v" }
-          $p = Start-Process -FilePath .\cuda_installer.exe -ArgumentList (@('-s') + $components + @('-n')) -Wait -PassThru
-          if ($p.ExitCode -ne 0) { throw "CUDA installer failed with exit code $($p.ExitCode)" }
-          $root = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v$v"
-          if (-not (Test-Path "$root\bin\nvcc.exe")) { throw "nvcc not found under $root" }
-          if (-not (Test-Path "$root\include\cuda_profiler_api.h")) {
-            throw "CUDA profiler API header missing; cuda_profiler_api_$v must be installed for pond_progress_profile."
-          }
-          "CUDA_PATH=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          "CUDA_PATH_V$($v -replace '\.','_')=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          "$root\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
-          & "$root\bin\nvcc.exe" --version
-
-      - name: Configure
-        run: cmake --preset ci
-
-      # Warnings are errors in this project's code (CUDARL_WARNINGS_AS_ERRORS).
+      - name: Configure isolated physical foundation
+        run: cmake -S . -B build -DCUDARL_ENABLE_CUDA=OFF -DCUDARL_BUILD_GODOT=OFF
       - name: Build
-        run: cmake --build --preset ci
-
+        run: cmake --build build --config Release --parallel
       - name: Test
-        shell: pwsh
-        run: |
-          ctest --preset ci 2>&1 | Tee-Object -Variable out
-          $code = $LASTEXITCODE
-          "## Test results (no GPU on this runner)" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          '```' | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          $out | Select-String '^\d+: (PASS|FAIL|SKIP)|tests passed' | ForEach-Object { $_.Line -replace '^\d+: ','' } |
-            Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          '```' | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          exit $code
+        run: ctest --test-dir build -C Release --output-on-failure

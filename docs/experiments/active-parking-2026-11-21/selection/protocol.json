@@ -1,0 +1,22 @@
+{
+  "experiment": "quiet-gait-v2",
+  "max_controls": 52480,
+  "max_substeps": 524800,
+  "wall_seconds": 120,
+  "trial_budget": 26,
+  "retries": 0,
+  "reason": "diagnostic verified 0.5Hz reversed phase reduces forward overshoot without tilt in both starts; encode this sign as search seed/prior rather than repeat blind search",
+  "selection": "two seeds (neutral and quiet deadband signed drive) plus 24 mirrored learned feedback candidates; select on four 0.5 mm/s development poses/distances using identical reward and 20s horizon",
+  "evaluation": "eight regression starts and four newly unobserved separations/lateral offsets; all 0.5 mm/s, 20s; require continuous quiet final 8s and matching full Swim trace",
+  "changes": "simulator uses same physical motor; still-water, no threat, no action on Swim",
+  "sha256": {
+    "build/quiet-gait-v2/quiet.cpp": "92B9F15F740E0A97BAAE5BB0E4DA106F211E413105B58B7A72E1A582C93711BD",
+    "build/quiet-gait-v2/quiet.exe": "B28DB2A1E79D46B05E89C7E2E6C72CD65CD58267432338A413409024E643F3DC",
+    "build/quiet-gait-v2/front_pad_protocol.h": "35FEAEAD72A513B0C106ECCA579ABAD93E8A878B5902990B6DEC0C9CEC5D1F32",
+    "build/quiet-gait-v2/build.cmd": "EDEE9507C70B060A91B8D3FF93C3F1B386688D3F3A950FE080D51B452A64D3BD",
+    "assets/ppo-four-axis-checkpoints/update-336-episode64/ppo-update-336.bin": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+    "assets/ppo-four-axis-checkpoints/update-336-episode64/protocol.bin": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+    "build/front-pad-output-bias-v4/checkpoint.obj": "E0D2DFEBE61B788740A8C48529808C5E1E4301D9B862CBEB2ADCF0A8946D2A47",
+    "build/front-pad-output-bias-v4/world.obj": "284D3B4D701362788E5CF240CFD09E74D8383B99E470E70A291567572AAB1113"
+  }
+}

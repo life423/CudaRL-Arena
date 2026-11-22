@@ -1,0 +1,6 @@
+CUDA device: present
+
+PASS  path_scale: production observations change only the three rotated path channels      0.1 ms
+PASS  path_scale: checkpoint conversion transforms columns and cotangents without resets      0.3 ms
+
+2/2 tests passed, 0 skipped

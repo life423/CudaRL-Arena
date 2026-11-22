@@ -1,0 +1,21 @@
+{
+  "experiment": "slow-stroke-response-v1",
+  "max_controls": 4320,
+  "max_substeps": 43200,
+  "wall_seconds": 120,
+  "trials": 18,
+  "retries": 0,
+  "optimizer_steps": 0,
+  "reason": "screen whether swimmable phase-lagged strokes generate safe braking in current motor, in lieu of more blind search",
+  "comparison": "2 training poses, 0.5 mm/s, 2 mm front pad; quiet neutral against sign of phase lag x two amplitudes and two frequencies. Fixed diagnostic commands only, six seconds action envelope then return to neutral, no install or checkpoint change",
+  "sha256": {
+    "build/slow-stroke-response-v1/quiet.cpp": "F92903B35278A231C9088C73A0BF9254F2A81568D5480B55B0C5AA63C4063201",
+    "build/slow-stroke-response-v1/quiet.exe": "E7DB5C39D3C205C32EA49B2E6AEC001AE4FDF0485538044A34311139B4BC3975",
+    "build/slow-stroke-response-v1/front_pad_protocol.h": "35FEAEAD72A513B0C106ECCA579ABAD93E8A878B5902990B6DEC0C9CEC5D1F32",
+    "build/slow-stroke-response-v1/build.cmd": "9C6805262CAC55BDEBE2F5F9E844088371C41FA35FCAD9E3157A94CB6DF88D86",
+    "assets/ppo-four-axis-checkpoints/update-336-episode64/ppo-update-336.bin": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+    "assets/ppo-four-axis-checkpoints/update-336-episode64/protocol.bin": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+    "build/front-pad-output-bias-v4/checkpoint.obj": "E0D2DFEBE61B788740A8C48529808C5E1E4301D9B862CBEB2ADCF0A8946D2A47",
+    "build/front-pad-output-bias-v4/world.obj": "284D3B4D701362788E5CF240CFD09E74D8383B99E470E70A291567572AAB1113"
+  }
+}

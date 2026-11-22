@@ -1,0 +1,11 @@
+TRAINING_STARTED unix_seconds=1793816973.9247034 exactly8PPOupdates from336; new-column age0
+EPISODE_REWARD_VERIFIED before_optimizer update=336 seconds=64 late_rows=20480 minibatch_late_rows=126 gradient_rows=126
+PPO_UPDATE_COMPLETED 337/344 controls=61984
+PPO_UPDATE_COMPLETED 338/344 controls=102944
+PPO_UPDATE_COMPLETED 339/344 controls=143904
+PPO_UPDATE_COMPLETED 340/344 controls=184864
+PPO_UPDATE_COMPLETED 341/344 controls=225824
+PPO_UPDATE_COMPLETED 342/344 controls=266784
+PPO_UPDATE_COMPLETED 343/344 controls=307744
+PPO_UPDATE_COMPLETED 344/344 controls=348704
+{"fault":"","completed_update":344,"PPO_updates":8,"training_started_unix_seconds":1793816973.9247034,"controls":359424,"substeps":3594240,"baseline_short":4,"final_short":4,"baseline_stop":0,"final_stop":0,"stop_total":6,"baseline_long_windows":28,"final_long_windows":28,"final_formal_long":0,"swimming_regression_preserved":true,"candidate_accepted":false,"runtime_adopted":false,"closed":true,"retries":0}

@@ -1,0 +1,67 @@
+{
+  "algorithm": "native C++/CUDA PPO",
+  "seed": 1247037243,
+  "update": 352,
+  "checkpoint_sha256": "A93637E9469DE591203C4465FCF7E630C0236BEC3EEDB6D4CC47D0DD0E14F933",
+  "protocol_sha256": "D8D9E3BF6C0AFA66A1AE9CB25AC7CEC3977A9DE48CAE638782839125426482AF",
+  "source_run": "build/ppo/episode32-wide-243-u352",
+  "model": 6,
+  "task": 6,
+  "reward": 4,
+  "action_mapping": 3,
+  "actor": [
+    40,
+    32,
+    32,
+    4
+  ],
+  "critic": [
+    40,
+    32,
+    32,
+    1
+  ],
+  "rho": 0.8,
+  "fixed_log_std": [
+    -1,
+    -1,
+    -1,
+    -1
+  ],
+  "Adam_actor_steps": 19540,
+  "Adam_critic_steps": 19540,
+  "full_training_resume_state": true,
+  "resume_semantics": "Completed updateboundary; full actor critic bothAdam configs moments counters. Freshtrueepisodes/ARhistory; no midrollout exactresume.",
+  "training_episode_controls": 640,
+  "training_arena_horizontal_m": [
+    1.2,
+    0.8
+  ],
+  "short_passes": 2,
+  "short_total": 4,
+  "long_evaluated": false,
+  "long_passed_poses": 0,
+  "long_windows_passed": 0,
+  "long_windows_total": 0,
+  "status": "Bestnew32scheckpoint;short2/4, no long evaluation triggered; notselectedover288",
+  "runtime_adopted": false,
+  "imitation_or_teacher_weights": false,
+  "simulator": "Stillwater model6 two universal joints fourindependentaxes; torque10microNm,1Hzfilter50mscontrol5msphysics",
+  "verification": {
+    "verified_utc": "2026-11-01T01:37:37.5325884Z",
+    "checkpoint_and_protocol_checksum_valid": true,
+    "actor_critic_both_Adam_metadata_and_arrays_parsed": true,
+    "restored_update": 352,
+    "restored_Adam_actor": 19540,
+    "restored_Adam_critic": 19540,
+    "actual_CPU_CUDA_observation_and_actor_output_checks_passed": true,
+    "physical_steps": 0,
+    "optimizer_steps": 0,
+    "focused_tests": "17passed,0skipped:checkpoint5,episode1,arena1,reward6,AR4includingCUDA",
+    "full_optimizer_continuation": "Previouslysamebatchsave/reloadverification matchedweightsandbothAdam states exactly; no newoptimizerupdateforhandoff",
+    "native_executable_sha256": "F029C157B3704D1007FDB90F8A0DC7C7D3EFC6563374D8445B708CAF388376F2",
+    "local_load_log": "build/ppo/durable-load-352-v1.log"
+  },
+  "checkpoint_schema": 3,
+  "source_protocol_version": 8
+}

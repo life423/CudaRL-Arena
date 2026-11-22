@@ -1,0 +1,16 @@
+{
+  "status": "Rejected after second update at frozen swimming-retention gate",
+  "run_identity": "build\\ppo\\hold-credit-336to344-2026-11-22-v1",
+  "parent_update": 336,
+  "parent_SHA256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "actual_updates": 2,
+  "actor_Adam_steps": 160,
+  "controls": 62880,
+  "substeps": 628800,
+  "runtime_adopted": false,
+  "closed": true,
+  "retries": 0,
+  "extensions": 0,
+  "source_snapshot": "build\\ppo\\hold-credit-336to344-2026-11-22-v1\\source",
+  "scope": "Local native C++/CUDA research; no viewer policy or physics equations changed"
+}

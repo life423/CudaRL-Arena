@@ -1,0 +1,1 @@
+{"same_physical_trajectory":true,"hold_rows":1280,"reward6_cost_sum":77.8595368378,"reward8_cost_sum":26042.9740365,"cost_ratio":334.486629309,"mean_abs_return6":5.09696751276,"mean_abs_return8":1916.10653595,"decision":"Keep reward8 formula unchanged for this8-update input-migration comparison; scale remains a separate optimization concern","PPO_updates":0}

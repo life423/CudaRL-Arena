@@ -1,0 +1,10 @@
+{
+  "status": "closed",
+  "wall_seconds": 2.7489732,
+  "exit_code": 0,
+  "timed_out": false,
+  "phase": "calibrate",
+  "ended_utc": "2026-11-22T21:59:14.9317226Z",
+  "started_utc": "2026-11-22T21:59:12.1728191Z",
+  "retries": 0
+}

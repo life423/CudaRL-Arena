@@ -1,0 +1,7 @@
+{
+  "native_report_generated_before_PPO": true,
+  "native_reporting_pause_occurred": true,
+  "report_delivered_to_Drew_before_PPO": false,
+  "requested_delivery_timing_met": false,
+  "explanation": "The native report was generated and a local commentary message emitted before release, but the delegated update did not reach Drew until after PPO. The reporting requirement was missed, as confirmed by parent delegation. Do not describe local emission as verified user receipt."
+}

@@ -1,25 +1,56 @@
-# CudaRL-Arena project memory
+# Workspace instructions
 
-- Windows consumer downloads must be installer-first: one setup EXE, automatic per-user installation and an obvious Tadpole Pond shortcut. Do not make players extract DLL/PCK/data folders or read notes to find what to open. Keep optional ZIP archives for developers. Preserve local training saves on upgrade/uninstall.
+Read README.md for current usage, architecture and limitations. Check asset JSON
+provenance before changing a checkpoint or interpreting acceptance.
 
-Before substantive work, read `docs/CREATURE_PLAN.md` and the latest entry in `docs/SESSION_CHECKPOINT.md`. Later explicit user instructions take precedence.
+- Work only in this minimal-foundation worktree unless explicitly instructed.
+  Preserve the original checkout, its editor, personal saves and ignored evidence.
+- Baseline tag: baseline/pre-minimal-foundation-2026-10-30, commit
+  e5e9bd1db7e442715ac8ba3a5f5030c0ede26430. Original save backups/hashes are in
+  the original checkout's build/foundation-baseline/2026-10-30/; Git does not save
+  ignored files. e84db5f and626e313 preserve later source milestones.
+- All prior physical/training budgets are closed. Freeze a new finite protocol
+  before any explicitly approved run; count backend/internal attempts and failures.
+  No retries, tuning, tolerance relaxation or unused-budget reuse implicitly.
+- Preserve model6 physics, two universal joints/four axes and +/-10microN*m torque
+  limits unless a model change is authorized. No global propulsion or scripted
+  rescue. Bounded calm holding from rest qualified in the November 22 learned-
+  amplitude study: six original and six withheld 64-second cases, plus two
+  uninterrupted 300-second cases. Read docs/HOLD_LEARNED_AMPLITUDE_RESULTS_2026-11-22.md
+  for its restricted learned-parameter scope. Contact, moving-start braking,
+  arbitrary slowdown/mode switches and disturbance/current holding remain
+  unvalidated; no new budget or production adoption follows automatically.
+- Keep native physics/learning independent of Godot. One native world owner,
+  one bridge and one scene; one chooser and one reusable motor, not per-skill nets.
+  Store/replay actual sampled actions consistently; critics are training auxiliaries.
+- Keep checkpoint formats explicit/checksummed. Reject incompatible data without
+  random fallback, silently resetting state or overwriting old personal saves.
+- Delete obsolete active code/docs rather than commenting out or adding archives.
+  Preserve unique checkpoint/data/evidence and dependencies; inspect hidden contents
+  before removing directories. Do not restore retired code merely for history.
+- Use focused nonphysical/CPU/CUDA checks; distinguish actual GPU execution from
+  skips. No training/expanded physical studies after cleanup without approval.
+- Preserve usable44px UI controls and narrow layouts; inspect rendered UI changes.
+  Document exactly what was verified. Keep main merges/deployment separate from
+  feature-branch publication; new changes stay local until publication is requested.
 
-- The approved product journey is **a dependable young swimmer → increasingly challenging interactions → genuine measured adaptation → physical growth and new movement skills**. The main creature starts competent; learning is demonstrated honestly through further improvement and new capabilities.
-- Real-time learning during user interaction is a core product requirement (clarified October 28). The first CUDA feeding loop is implemented in `docs/live_feeding.md`: user-created sinking-food conditions reach background PPO, the swimming actor learns from inherited weights, and validated updates reach the running creature without a world reset. The shared selector remains inherited in this stage. Preserve original references and distinguish real updates, measured improvements and fixed-policy reactions. The user rejected a three-pellet UI limit and lengthy starting tests; all active pellets must be considered, no silent replacements, and initial reference measurement remains brief. The separate reference pond remains frozen.
-- Keep two decision controllers: food/goal selection and swimming/body control. Build on learned weights; a separate network for every ability is not the chosen direction. Native C++/CUDA PPO, without Python/PyTorch training/runtime, is a central portfolio goal.
-- Prioritize the visible creature's reliability. Research success within 20 seconds is not a sufficient product-quality gate. Investigate actual playback stalls, preserve meaningful physical behavior and report residual failures honestly.
-- Food remains underwater with physical clearance. Preserve original trained policies and full saves. Training resets are not deployed recoveries; do not conceal a failure with teleports, scripted swimming or altered physics.
-- Current stage: reliable swimming and recovery, then bounded current/environment interaction and real learning. Arms/legs, land movement and automatic growth are later stages; no arms yet. Distinguish frozen inference, reactive adaptation and actual weight updates.
-- GPU optimization is saved in `docs/gpu_optimization.md` for later. Distribution/installer expansion and cosmetics are paused unless explicitly requested. The user-facing product is Tadpole Pond (October 28): hide CartPole/Racing from its UI while preserving their code, scenes, policies, developer routes and training. Do not change the underlying Godot application name/save paths just to rename the visible product.
-- Work in manageable verified steps. Keep protocol, training, development and final evaluation evidence separate; do not call a policy globally optimal or robust to every current. Do not automatically replace the working demo with an unvalidated experimental actor.
-- For visual AI demonstrations, the user wants the newest saved agent running live in the pond. Open `pond/latest_agent.tscn` for the current candidate; recorded before/after clips are supplementary diagnostics, not a substitute. Clearly distinguish live physical simulation from actual learning updates.
-- After a push or merge, inspect GitHub Actions for the exact pushed commit. Local tests and a successful push do not establish remote CI success. Follow applicable jobs through completion before reporting the integration finished; if verification cannot finish, explicitly report CI as pending or failed. Keep GPU-required local evidence separate from hosted jobs that intentionally skip GPU execution.
+## User workflow preference — November 22, 2026
 
-## Windows release decision — October 28, 2026
-
-Future idea explicitly deferred by the user: consider GPU-backed browser play with an enforced **$15/month maximum Azure GPU spend**. Hold it until the current Windows/download-site task is complete; no GPU resource is authorized now. Verify enforceable limits before promising a hard cap.
-
-- User approved a Windows download plus public Azure download website, and explicitly chose genuine CPU learning for systems without NVIDIA. Keep the newest sinking-food task; do not substitute the older frozen three-food viewer and call it learning.
-- CUDA is preferred after a real device/kernel probe; CPU uses 16 background worlds with the same physical equations and PPO math. Separate full CPU/CUDA checkpoints preserve existing saves. See docs/windows_release.md.
-- Hosting is Azure Static Web Apps Free with GitHub release downloads. No GPU VM or paid training server is authorized. A review blocked sending the Azure deployment credential to GitHub Secrets; use direct local-to-Azure deployment without persisting/printing that credential.
-- Experiments and Help/training are removed from player-facing navigation. Preserve developer code/routes. macOS/browser ports remain deferred.
+- Keep actual reinforcement learning through native C++/CUDA PPO. A frozen viewer,
+  scripted motion or manually chosen quiet coefficient is not a learning result.
+- The user explicitly requested rebuilding the whole Godot GUI from scratch
+  because it had become a mess. Maintain one coherent primary interface around
+  the actual creature. Keep ordinary controls simple; disclose research detail
+  and history on demand. Remove obsolete routes/controls after dependency checks
+  instead of continually adding parallel viewers or dashboard panels.
+- Whenever changing learning, simulation or other meaningful app behavior, check
+  the GUI in the same pass: update visible information/actions and the selected
+  saved-policy metadata, and remove anything no longer needed. Preserve distinct
+  labels for actual learning, live frozen inference and recordings. Never show a
+  stale or rejected candidate as a successful current capability.
+- Keep the visible native body faithful to the shared physical state and leave
+  previous source/evidence available for rollback. Verify the rendered result
+  and relevant interactions before saying the GUI is finished.
+- Keep automated GUI validation windows hidden. Launch the final interactive
+  app normally, without test/capture auto-exit arguments, and verify that Godot
+  Project Manager points at the current project rather than an old build copy.

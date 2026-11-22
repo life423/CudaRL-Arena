@@ -1,0 +1,1 @@
+{"controls":62880,"substeps":628800,"active_seconds":4.8094824000000003,"prior_active_seconds":2.5521555,"PPO_updates":2,"actor_steps":160,"critic_steps":0,"critic_forward_calls":0,"fault":"","gate":"regressed_swimming","qualified":false,"closed":true,"runtime_adopted":false,"retries":0}

@@ -1,0 +1,134 @@
+[
+  {
+    "update": 288,
+    "case": "centered",
+    "start_depth_mm": 0.0,
+    "final_depth_mm": -3.43843460083,
+    "max_depth_mm": 3.43843460083,
+    "mean_forward_mm_s": 7.9680356979375,
+    "late_vy_mm_s": -0.16349063235101863,
+    "peak_tilt_deg": 6.64582061768,
+    "max_lane_mm": 1.92975342274
+  },
+  {
+    "update": 288,
+    "case": "below",
+    "start_depth_mm": -0.499992340803,
+    "final_depth_mm": -3.89885902405,
+    "max_depth_mm": 3.89885902405,
+    "mean_forward_mm_s": 7.95386552809375,
+    "late_vy_mm_s": -0.163403108526821,
+    "peak_tilt_deg": 6.6326174736,
+    "max_lane_mm": 2.2577047348
+  },
+  {
+    "update": 288,
+    "case": "above",
+    "start_depth_mm": 0.500001907349,
+    "final_depth_mm": -2.97892570496,
+    "max_depth_mm": 2.97892570496,
+    "mean_forward_mm_s": 7.9820604324375,
+    "late_vy_mm_s": -0.1636149013792918,
+    "peak_tilt_deg": 6.66535615921,
+    "max_lane_mm": 1.60315811634
+  },
+  {
+    "update": 296,
+    "case": "centered",
+    "start_depth_mm": 0.0,
+    "final_depth_mm": -4.07368659973,
+    "max_depth_mm": 4.07368659973,
+    "mean_forward_mm_s": 7.93651390075,
+    "late_vy_mm_s": -0.20579690947196932,
+    "peak_tilt_deg": 6.17612600327,
+    "max_lane_mm": 2.54061365128
+  },
+  {
+    "update": 296,
+    "case": "below",
+    "start_depth_mm": -0.499992340803,
+    "final_depth_mm": -4.53942251205,
+    "max_depth_mm": 4.53942251205,
+    "mean_forward_mm_s": 7.8694124221875,
+    "late_vy_mm_s": -0.20450956975110435,
+    "peak_tilt_deg": 6.1379160881,
+    "max_lane_mm": 2.74324417114
+  },
+  {
+    "update": 296,
+    "case": "above",
+    "start_depth_mm": 0.500001907349,
+    "final_depth_mm": -3.56327986717,
+    "max_depth_mm": 3.56327986717,
+    "mean_forward_mm_s": 8.0063076019375,
+    "late_vy_mm_s": -0.20293079926635818,
+    "peak_tilt_deg": 6.21441745758,
+    "max_lane_mm": 2.34450817108
+  },
+  {
+    "update": 304,
+    "case": "centered",
+    "start_depth_mm": 0.0,
+    "final_depth_mm": 0.635094642639,
+    "max_depth_mm": 0.635094642639,
+    "mean_forward_mm_s": 7.7424149513125,
+    "late_vy_mm_s": 0.06162626594160686,
+    "peak_tilt_deg": 6.13059806824,
+    "max_lane_mm": 1.65351629257
+  },
+  {
+    "update": 304,
+    "case": "below",
+    "start_depth_mm": -0.499992340803,
+    "final_depth_mm": 0.372219085693,
+    "max_depth_mm": 0.499992340803,
+    "mean_forward_mm_s": 7.6777381896875,
+    "late_vy_mm_s": 0.07183062864124469,
+    "peak_tilt_deg": 6.09216833115,
+    "max_lane_mm": 1.72353982925
+  },
+  {
+    "update": 304,
+    "case": "above",
+    "start_depth_mm": 0.500001907349,
+    "final_depth_mm": 0.895562171936,
+    "max_depth_mm": 0.895562171936,
+    "mean_forward_mm_s": 7.806780815125,
+    "late_vy_mm_s": 0.050156261069801575,
+    "peak_tilt_deg": 6.16983795166,
+    "max_lane_mm": 1.60375475883
+  },
+  {
+    "update": 320,
+    "case": "centered",
+    "start_depth_mm": 0.0,
+    "final_depth_mm": 0.426030129194,
+    "max_depth_mm": 0.507259309292,
+    "mean_forward_mm_s": 7.53035640715625,
+    "late_vy_mm_s": 0.08873387445161038,
+    "peak_tilt_deg": 7.26528215408,
+    "max_lane_mm": 1.18430483341
+  },
+  {
+    "update": 320,
+    "case": "below",
+    "start_depth_mm": -0.499992340803,
+    "final_depth_mm": 0.324277877808,
+    "max_depth_mm": 0.830516815186,
+    "mean_forward_mm_s": 7.47788143159375,
+    "late_vy_mm_s": 0.10408058737447576,
+    "peak_tilt_deg": 6.96995639801,
+    "max_lane_mm": 1.19848763943
+  },
+  {
+    "update": 320,
+    "case": "above",
+    "start_depth_mm": 0.500001907349,
+    "final_depth_mm": 0.539751052856,
+    "max_depth_mm": 0.66987991333,
+    "mean_forward_mm_s": 7.583604812625,
+    "late_vy_mm_s": 0.07417242497758687,
+    "peak_tilt_deg": 7.62194824219,
+    "max_lane_mm": 1.21071445942
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "checkpoint": "../ppo-update-336.bin",
+  "checkpoint_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "checkpoint_protocol": "../protocol.bin",
+  "checkpoint_protocol_sha256": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+  "source_run": "build/ppo/frozen-five-minutes-336-v1",
+  "source_commit": "8bf5268b2fe6558cc4407b2da2399e715c28eaab",
+  "seconds_per_pose": 300,
+  "poses": [
+    0,
+    3
+  ],
+  "arena_m": [
+    6,
+    0.8
+  ],
+  "boundary_change_only": "Xhalfextent.6to3m,Zhalfextent.4munchanged;floor/surface/clearances unchanged;noreset/recenter",
+  "physics_unchanged": true,
+  "exploration": false,
+  "training_updates": 0,
+  "optimizer_steps": 0,
+  "controls": 12000,
+  "substeps": 120000,
+  "windows_passed": 148,
+  "windows_total": 150,
+  "formal_full_cases_passed": 0,
+  "failed_windows": "Only2–4sspeed:7.02601480484/7.11620807648mm/s versus7.2",
+  "all_windows4to300_pass": true,
+  "depth_lane_tilt_exits": 0,
+  "safety_stops": 0,
+  "runtime_adopted": false,
+  "start_utc": "2026-11-02T21:34:26.4877583Z",
+  "end_utc": "2026-11-02T21:34:28.5170902Z",
+  "native_seconds": 1.9453976,
+  "process_seconds": 1.9763472,
+  "first60s_common_motion_fields_max_difference": 0,
+  "initial_condition_check": "1zero-integrationtestpasses;all40initialobservationsidenticalbetween60/300durations",
+  "startup_sources": [
+    "build/ppo/episode64-r5-pathscale-320to336-v1/frozen-controls.csv",
+    "build/ppo/stopping-ppo-336to352-v1/initial-stop/controls.csv"
+  ],
+  "startup_source_compatibility": "commonmotionfields0difference;older6digitjointangleCSVserializationerror<=4.985e-7rad",
+  "startup_finding": "Tiny~.019mmrecoil,forwardagain.35s,startrepassed.4s;2–4sspeedpositive6.23–7.75;doesnotshowpersistentwrongdirection",
+  "missing_startup_fields": "Signedheadpitch/rollandperaxisinstantaneoustorqueswerenotsaved;pitchjointanglesarenotheadpitch",
+  "metric_conventions": "Allcontrol-end50mssamples,nointerpolation;2–300displacementmean;3DRMSEweighted2sfirstwindow+4slater;final30OLSpositiontrends;meaninstantaneousvyisnotpositiontrend;tailfrequencyfrompositive-meancrossings",
+  "claim_boundary": "Demonstrates300sfrozenswimmingfromtwostarts,notindefiniteorallconditionstability",
+  "verification": {
+    "native_build_passed": true,
+    "checkpoint_unchanged": true,
+    "new_physical_runs": 1,
+    "initial_zero_step_test_passed": true,
+    "no_training_or_push": true,
+    "retries": 0,
+    "checkpoint_tests_passed": 6,
+    "focused_tests_total": 7,
+    "tests_skipped": 0
+  },
+  "runner_source_sha256": "7EC7D740735FC9171EED1E220D1835E71FAD3ABC3FA2F8E72A61AAE50F363CAF",
+  "runner_executable_sha256": "A1AF2A3F75928CF7C208FF447FE52AAA1771845C5AEA1159A17ED7E8C4A8E917"
+}

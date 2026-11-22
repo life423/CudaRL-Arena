@@ -1,0 +1,10 @@
+CUDA device: present
+
+PASS  ppo_checkpoint: full resume retains critic both Adam states sigma and counters      0.1 ms
+PASS  ppo_checkpoint: four-axis schema preserves actor without optimizer updates      0.0 ms
+PASS  ppo_checkpoint: reward4 and reward5 retain explicit provenance without changing weights      0.1 ms
+PASS  ppo_checkpoint: incompatible schema dimensions seed protocol nonfinite and trailing data reject      0.2 ms
+PASS  ppo_checkpoint: historical two-output actor rejects without conversion      0.3 ms
+PASS  ppo_checkpoint: schema3 records correlation and rejects invalid stochastic metadata      0.1 ms
+
+6/6 tests passed, 0 skipped

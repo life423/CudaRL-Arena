@@ -1,0 +1,10 @@
+{
+  "phase": "train",
+  "retries": 0,
+  "status": "closed",
+  "timed_out": false,
+  "exit_code": 0,
+  "started_utc": "2026-11-22T22:00:05.6017797Z",
+  "ended_utc": "2026-11-22T22:01:27.0669939Z",
+  "wall_seconds": 81.4705543
+}

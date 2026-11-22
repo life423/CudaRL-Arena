@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdio>
 #include <functional>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -41,13 +42,18 @@ inline void fail(const char* file, int line, const std::string& msg) {
 }
 
 // Largest |a - b| divided by the largest |b|: robust to individual values near
-// zero, which is where per-element relative error is meaningless.
+// zero, which is where per-element relative error is meaningless. Invalid
+// comparisons return infinity so CHECK_CLOSE cannot silently accept them.
 template <typename A, typename B>
 double normalized_max_error(const A& a, const B& b) {
+    if (a.size() != b.size()) return std::numeric_limits<double>::infinity();
     double max_diff = 0.0, max_ref = 0.0;
     for (size_t i = 0; i < b.size(); ++i) {
-        max_diff = std::fmax(max_diff, std::fabs(static_cast<double>(a[i]) - static_cast<double>(b[i])));
-        max_ref  = std::fmax(max_ref, std::fabs(static_cast<double>(b[i])));
+        const double actual = static_cast<double>(a[i]), expected = static_cast<double>(b[i]);
+        if (!std::isfinite(actual) || !std::isfinite(expected))
+            return std::numeric_limits<double>::infinity();
+        max_diff = std::fmax(max_diff, std::fabs(actual - expected));
+        max_ref  = std::fmax(max_ref, std::fabs(expected));
     }
     return max_ref > 0.0 ? max_diff / max_ref : max_diff;
 }

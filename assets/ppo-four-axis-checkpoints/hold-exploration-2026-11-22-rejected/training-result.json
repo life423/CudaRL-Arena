@@ -1,0 +1,1 @@
+{"controls":691680,"substeps":6916800,"active_seconds":81.412560799999994,"prior_active_seconds":2.6523265,"PPO_updates":32,"actor_steps":2560,"critic_steps":0,"critic_forward_calls":0,"fault":"","gate":"","qualified":false,"closed":true,"runtime_adopted":false,"retries":0}

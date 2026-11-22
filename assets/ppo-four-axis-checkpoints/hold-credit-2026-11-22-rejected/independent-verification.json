@@ -1,0 +1,1321 @@
+{
+  "scope": "Read-only independent saved-artifact verification; zero physical or optimizer steps",
+  "limitations": [
+    "Short-swim RMSE uses saved native summary; gate arithmetic is independently checked",
+    "Frozen source and protected-file preservation manifests are coordinator checks"
+  ],
+  "passed": true,
+  "protocol_id": 14345521924898219785,
+  "baseline": {
+    "short_passes": 4,
+    "short_cases": [
+      {
+        "pose": 0,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 0.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.56058,
+          "RMSE_mm_s": 1.19887,
+          "lateral_mm": 0.756546,
+          "work_J_per_m": 0.000319729,
+          "depth_mm": 0.187693,
+          "tilt_deg": 8.82788,
+          "path_deg": 1.63331,
+          "forward_mm": 50.8966,
+          "late_forward_mm": 31.3114
+        }
+      },
+      {
+        "pose": 1,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 1.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.59819,
+          "RMSE_mm_s": 1.16581,
+          "lateral_mm": 0.675018,
+          "work_J_per_m": 0.000318431,
+          "depth_mm": 0.163388,
+          "tilt_deg": 9.35767,
+          "path_deg": 1.28824,
+          "forward_mm": 51.3645,
+          "late_forward_mm": 31.3568
+        }
+      },
+      {
+        "pose": 2,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 2.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.56058,
+          "RMSE_mm_s": 1.19887,
+          "lateral_mm": 0.756538,
+          "work_J_per_m": 0.000319729,
+          "depth_mm": 0.187693,
+          "tilt_deg": 8.82788,
+          "path_deg": 1.6333,
+          "forward_mm": 50.8967,
+          "late_forward_mm": 31.3114
+        }
+      },
+      {
+        "pose": 3,
+        "passed": true,
+        "gates": {
+          "speed": true,
+          "RMSE": true,
+          "lane": true,
+          "depth": true,
+          "tilt": true,
+          "path": true,
+          "work": true
+        },
+        "failed_gates": [],
+        "native_metrics": {
+          "pose": 3.0,
+          "passed": 1.0,
+          "steady_mm_s": 7.5982,
+          "RMSE_mm_s": 1.16582,
+          "lateral_mm": 0.675021,
+          "work_J_per_m": 0.000318431,
+          "depth_mm": 0.163388,
+          "tilt_deg": 9.35767,
+          "path_deg": 1.28825,
+          "forward_mm": 51.3645,
+          "late_forward_mm": 31.3568
+        }
+      }
+    ],
+    "long_passes": 28,
+    "long_pass_keys": [
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        12
+      ],
+      [
+        0,
+        16
+      ],
+      [
+        0,
+        20
+      ],
+      [
+        0,
+        24
+      ],
+      [
+        0,
+        28
+      ],
+      [
+        0,
+        32
+      ],
+      [
+        0,
+        36
+      ],
+      [
+        0,
+        40
+      ],
+      [
+        0,
+        44
+      ],
+      [
+        0,
+        48
+      ],
+      [
+        0,
+        52
+      ],
+      [
+        0,
+        56
+      ],
+      [
+        0,
+        60
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        16
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        3,
+        24
+      ],
+      [
+        3,
+        28
+      ],
+      [
+        3,
+        32
+      ],
+      [
+        3,
+        36
+      ],
+      [
+        3,
+        40
+      ],
+      [
+        3,
+        44
+      ],
+      [
+        3,
+        48
+      ],
+      [
+        3,
+        52
+      ],
+      [
+        3,
+        56
+      ],
+      [
+        3,
+        60
+      ]
+    ],
+    "retained": true,
+    "hold": {
+      "passes": 0,
+      "cases": [
+        {
+          "case": 0,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "anchor": false,
+            "depth": true,
+            "lane": true,
+            "tilt": true,
+            "excursion": false
+          },
+          "peaks": {
+            "speed": 8.93658447266,
+            "anchor": 520.700805664,
+            "depth": 0.733480453491,
+            "lane": 1.07713794708,
+            "tilt": 7.40353345871,
+            "excursion": 67.66180419900002
+          },
+          "first_breach_s": 0.35,
+          "first_breach_cause": "speed",
+          "final8_mean_speed_mm_s": 8.538984555006063,
+          "final8_forward_delta_mm": 67.66180419900002,
+          "net_forward_mm": 520.700195312,
+          "final_speed_mm_s": 8.35097980499
+        },
+        {
+          "case": 1,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "anchor": false,
+            "depth": true,
+            "lane": true,
+            "tilt": true,
+            "excursion": false
+          },
+          "peaks": {
+            "speed": 8.8719997406,
+            "anchor": 522.036987305,
+            "depth": 0.647048950195,
+            "lane": 1.15685141087,
+            "tilt": 7.89209985733,
+            "excursion": 67.86386108399995
+          },
+          "first_breach_s": 0.35,
+          "first_breach_cause": "speed",
+          "final8_mean_speed_mm_s": 8.564820063114125,
+          "final8_forward_delta_mm": 67.86386108399995,
+          "net_forward_mm": 522.036071777,
+          "final_speed_mm_s": 8.41121959686
+        },
+        {
+          "case": 2,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "anchor": false,
+            "depth": true,
+            "lane": true,
+            "tilt": true,
+            "excursion": false
+          },
+          "peaks": {
+            "speed": 8.95856189728,
+            "anchor": 519.844726562,
+            "depth": 0.796480178833,
+            "lane": 1.1675055027,
+            "tilt": 6.85077047348,
+            "excursion": 67.64166259800004
+          },
+          "first_breach_s": 0.35,
+          "first_breach_cause": "speed",
+          "final8_mean_speed_mm_s": 8.536456519365437,
+          "final8_forward_delta_mm": 67.64166259800004,
+          "net_forward_mm": 519.844116211,
+          "final_speed_mm_s": 8.35073280334
+        },
+        {
+          "case": 3,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "anchor": false,
+            "depth": true,
+            "lane": true,
+            "tilt": true,
+            "excursion": false
+          },
+          "peaks": {
+            "speed": 8.90658473969,
+            "anchor": 521.376281738,
+            "depth": 0.739994049072,
+            "lane": 1.07225489616,
+            "tilt": 7.26908826828,
+            "excursion": 67.85714721699998
+          },
+          "first_breach_s": 0.35,
+          "first_breach_cause": "speed",
+          "final8_mean_speed_mm_s": 8.563934218883876,
+          "final8_forward_delta_mm": 67.85714721699998,
+          "net_forward_mm": 521.375488281,
+          "final_speed_mm_s": 8.42046833038
+        },
+        {
+          "case": 4,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "anchor": false,
+            "depth": true,
+            "lane": true,
+            "tilt": true,
+            "excursion": false
+          },
+          "peaks": {
+            "speed": 8.91839313507,
+            "anchor": 521.436096191,
+            "depth": 0.713539123535,
+            "lane": 1.0137116909,
+            "tilt": 7.93743610382,
+            "excursion": 67.679046631
+          },
+          "first_breach_s": 0.35,
+          "first_breach_cause": "speed",
+          "final8_mean_speed_mm_s": 8.541349536180686,
+          "final8_forward_delta_mm": 67.679046631,
+          "net_forward_mm": 521.43536377,
+          "final_speed_mm_s": 8.3525686264
+        },
+        {
+          "case": 5,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "anchor": false,
+            "depth": true,
+            "lane": true,
+            "tilt": true,
+            "excursion": false
+          },
+          "peaks": {
+            "speed": 8.87138366699,
+            "anchor": 522.523376465,
+            "depth": 0.628623962402,
+            "lane": 1.25339603424,
+            "tilt": 8.50142669678,
+            "excursion": 67.86624145500002
+          },
+          "first_breach_s": 0.35,
+          "first_breach_cause": "speed",
+          "final8_mean_speed_mm_s": 8.565243911743124,
+          "final8_forward_delta_mm": 67.86624145500002,
+          "net_forward_mm": 522.522521973,
+          "final_speed_mm_s": 8.40337371826
+        }
+      ],
+      "controls": 7680
+    },
+    "controls": 10720
+  },
+  "calibration": {
+    "independent_signal": {
+      "hold_share": 0.5859990923917953,
+      "heldout_hold_quiet": 483,
+      "by_duration": {
+        "20": {
+          "bias": 0.00036538328188265984,
+          "mse": 1.0095310022183628e-06,
+          "offset_energy_fraction": 0.1322445198671234
+        },
+        "60": {
+          "bias": 3.213209129258136e-05,
+          "mse": 9.468175161181891e-05,
+          "offset_energy_fraction": 1.0904649240835356e-05
+        }
+      }
+    },
+    "fit_rms": [
+      0.16359445913311882,
+      0.007254723799376249
+    ],
+    "return_recurrence_max_error": 3.051704561274349e-07
+  },
+  "calibration_signal_gate": true,
+  "updates": [
+    {
+      "collection_update": 336,
+      "oldlogp_max_error": 9.85244041640243e-06,
+      "return_recurrence_max_error": 6.315684530910914e-07,
+      "signal": {
+        "hold_share": 0.6783530496416543,
+        "heldout_hold_quiet": 473,
+        "by_duration": {
+          "20": {
+            "bias": 0.0005943857070633427,
+            "mse": 1.6983319705259493e-06,
+            "offset_energy_fraction": 0.20802432910203036
+          },
+          "60": {
+            "bias": -0.0032867985476812893,
+            "mse": 0.00012090764320477931,
+            "offset_energy_fraction": 0.08934955976887987
+          }
+        }
+      },
+      "assessment": {
+        "short_passes": 4,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.26162,
+              "RMSE_mm_s": 1.29439,
+              "lateral_mm": 0.672343,
+              "work_J_per_m": 0.00032199,
+              "depth_mm": 0.224676,
+              "tilt_deg": 8.23616,
+              "path_deg": 1.50405,
+              "forward_mm": 48.8524,
+              "late_forward_mm": 30.1124
+            }
+          },
+          {
+            "pose": 1,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.30462,
+              "RMSE_mm_s": 1.25492,
+              "lateral_mm": 0.647861,
+              "work_J_per_m": 0.000319751,
+              "depth_mm": 0.201268,
+              "tilt_deg": 8.79734,
+              "path_deg": 1.14113,
+              "forward_mm": 49.3591,
+              "late_forward_mm": 30.1857
+            }
+          },
+          {
+            "pose": 2,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.26161,
+              "RMSE_mm_s": 1.29439,
+              "lateral_mm": 0.672365,
+              "work_J_per_m": 0.00032199,
+              "depth_mm": 0.224676,
+              "tilt_deg": 8.23616,
+              "path_deg": 1.50409,
+              "forward_mm": 48.8524,
+              "late_forward_mm": 30.1123
+            }
+          },
+          {
+            "pose": 3,
+            "passed": true,
+            "gates": {
+              "speed": true,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 1.0,
+              "steady_mm_s": 7.30462,
+              "RMSE_mm_s": 1.25492,
+              "lateral_mm": 0.64786,
+              "work_J_per_m": 0.00031975,
+              "depth_mm": 0.201268,
+              "tilt_deg": 8.79734,
+              "path_deg": 1.1411,
+              "forward_mm": 49.3592,
+              "late_forward_mm": 30.1858
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": true,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.65481376648,
+                "anchor": 502.298706055,
+                "depth": 0.731425225735,
+                "lane": 1.2570540905,
+                "tilt": 7.05568981171,
+                "excursion": 65.27264404300001
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 8.237506377697063,
+              "final8_forward_delta_mm": 65.27264404300001,
+              "net_forward_mm": 502.297943115,
+              "final_speed_mm_s": 8.35513210297
+            },
+            {
+              "case": 1,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.5964422226,
+                "anchor": 503.912384033,
+                "depth": 0.664310395718,
+                "lane": 1.20115149021,
+                "tilt": 7.51995182037,
+                "excursion": 65.44451904299996
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 8.25939555168156,
+              "final8_forward_delta_mm": 65.44451904299996,
+              "net_forward_mm": 503.911682129,
+              "final_speed_mm_s": 8.45254993439
+            },
+            {
+              "case": 2,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.67631816864,
+                "anchor": 501.383666992,
+                "depth": 0.778841972351,
+                "lane": 1.32796478271,
+                "tilt": 7.16434288025,
+                "excursion": 65.26126098599997
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 8.236015754938187,
+              "final8_forward_delta_mm": 65.26126098599997,
+              "net_forward_mm": 501.382873535,
+              "final_speed_mm_s": 8.35155773163
+            },
+            {
+              "case": 3,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.63398933411,
+                "anchor": 503.166442871,
+                "depth": 0.707039833069,
+                "lane": 1.17419493198,
+                "tilt": 6.90037965775,
+                "excursion": 65.43801879800003
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 8.25848057866075,
+              "final8_forward_delta_mm": 65.43801879800003,
+              "net_forward_mm": 503.165771484,
+              "final_speed_mm_s": 8.45029163361
+            },
+            {
+              "case": 4,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.62831020355,
+                "anchor": 503.091217041,
+                "depth": 0.695757865906,
+                "lane": 1.19257712364,
+                "tilt": 7.67109823227,
+                "excursion": 65.28131103499999
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 8.238629764318812,
+              "final8_forward_delta_mm": 65.28131103499999,
+              "net_forward_mm": 503.090515137,
+              "final_speed_mm_s": 8.36148929596
+            },
+            {
+              "case": 5,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.56126689911,
+                "anchor": 504.461303711,
+                "depth": 0.673365592957,
+                "lane": 1.28184664249,
+                "tilt": 8.1292924881,
+                "excursion": 65.44674682599998
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 8.259736043214938,
+              "final8_forward_delta_mm": 65.44674682599998,
+              "net_forward_mm": 504.460571289,
+              "final_speed_mm_s": 8.4543132782
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    },
+    {
+      "collection_update": 337,
+      "oldlogp_max_error": 1.4577464183318511e-05,
+      "return_recurrence_max_error": 2.2446432257350324e-07,
+      "signal": {
+        "hold_share": 0.44898101461369655,
+        "heldout_hold_quiet": 481,
+        "by_duration": {
+          "20": {
+            "bias": 0.0004481147966089224,
+            "mse": 1.8064218606778121e-06,
+            "offset_energy_fraction": 0.11116277726206679
+          },
+          "60": {
+            "bias": 0.0034810677494548675,
+            "mse": 7.95341362888916e-05,
+            "offset_energy_fraction": 0.15236014674603632
+          }
+        }
+      },
+      "assessment": {
+        "short_passes": 0,
+        "short_cases": [
+          {
+            "pose": 0,
+            "passed": false,
+            "gates": {
+              "speed": false,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [
+              "speed"
+            ],
+            "native_metrics": {
+              "pose": 0.0,
+              "passed": 0.0,
+              "steady_mm_s": 6.96094,
+              "RMSE_mm_s": 1.44589,
+              "lateral_mm": 0.576221,
+              "work_J_per_m": 0.000323985,
+              "depth_mm": 0.239301,
+              "tilt_deg": 7.99966,
+              "path_deg": 1.31806,
+              "forward_mm": 46.8162,
+              "late_forward_mm": 28.8647
+            }
+          },
+          {
+            "pose": 1,
+            "passed": false,
+            "gates": {
+              "speed": false,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [
+              "speed"
+            ],
+            "native_metrics": {
+              "pose": 1.0,
+              "passed": 0.0,
+              "steady_mm_s": 7.01517,
+              "RMSE_mm_s": 1.39492,
+              "lateral_mm": 0.644596,
+              "work_J_per_m": 0.000322347,
+              "depth_mm": 0.215259,
+              "tilt_deg": 8.59932,
+              "path_deg": 0.94703,
+              "forward_mm": 47.4061,
+              "late_forward_mm": 28.9753
+            }
+          },
+          {
+            "pose": 2,
+            "passed": false,
+            "gates": {
+              "speed": false,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [
+              "speed"
+            ],
+            "native_metrics": {
+              "pose": 2.0,
+              "passed": 0.0,
+              "steady_mm_s": 6.96094,
+              "RMSE_mm_s": 1.44589,
+              "lateral_mm": 0.576219,
+              "work_J_per_m": 0.000323985,
+              "depth_mm": 0.239291,
+              "tilt_deg": 7.99966,
+              "path_deg": 1.31805,
+              "forward_mm": 46.8162,
+              "late_forward_mm": 28.8647
+            }
+          },
+          {
+            "pose": 3,
+            "passed": false,
+            "gates": {
+              "speed": false,
+              "RMSE": true,
+              "lane": true,
+              "depth": true,
+              "tilt": true,
+              "path": true,
+              "work": true
+            },
+            "failed_gates": [
+              "speed"
+            ],
+            "native_metrics": {
+              "pose": 3.0,
+              "passed": 0.0,
+              "steady_mm_s": 7.01518,
+              "RMSE_mm_s": 1.39492,
+              "lateral_mm": 0.644595,
+              "work_J_per_m": 0.000322347,
+              "depth_mm": 0.215259,
+              "tilt_deg": 8.59932,
+              "path_deg": 0.94704,
+              "forward_mm": 47.4062,
+              "late_forward_mm": 28.9754
+            }
+          }
+        ],
+        "long_passes": 28,
+        "long_pass_keys": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            0,
+            16
+          ],
+          [
+            0,
+            20
+          ],
+          [
+            0,
+            24
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            32
+          ],
+          [
+            0,
+            36
+          ],
+          [
+            0,
+            40
+          ],
+          [
+            0,
+            44
+          ],
+          [
+            0,
+            48
+          ],
+          [
+            0,
+            52
+          ],
+          [
+            0,
+            56
+          ],
+          [
+            0,
+            60
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            24
+          ],
+          [
+            3,
+            28
+          ],
+          [
+            3,
+            32
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            3,
+            40
+          ],
+          [
+            3,
+            44
+          ],
+          [
+            3,
+            48
+          ],
+          [
+            3,
+            52
+          ],
+          [
+            3,
+            56
+          ],
+          [
+            3,
+            60
+          ]
+        ],
+        "retained": false,
+        "hold": {
+          "passes": 0,
+          "cases": [
+            {
+              "case": 0,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.29539489746,
+                "anchor": 480.374786377,
+                "depth": 0.773849487305,
+                "lane": 1.33562278748,
+                "tilt": 7.36313915253,
+                "excursion": 62.455413817999954
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 7.882312864065125,
+              "final8_forward_delta_mm": 62.455413817999954,
+              "net_forward_mm": 480.37399292,
+              "final_speed_mm_s": 7.93970584869
+            },
+            {
+              "case": 1,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.24174308777,
+                "anchor": 482.113220215,
+                "depth": 0.704846322536,
+                "lane": 1.28563678265,
+                "tilt": 7.37339115143,
+                "excursion": 62.52737426699997
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 7.891098687052937,
+              "final8_forward_delta_mm": 62.52737426699997,
+              "net_forward_mm": 482.112609863,
+              "final_speed_mm_s": 7.87402057648
+            },
+            {
+              "case": 2,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.32061290741,
+                "anchor": 479.457366943,
+                "depth": 0.827460229397,
+                "lane": 1.40007960796,
+                "tilt": 7.60036706924,
+                "excursion": 62.45791625999999
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 7.882576590776313,
+              "final8_forward_delta_mm": 62.45791625999999,
+              "net_forward_mm": 479.456542969,
+              "final_speed_mm_s": 7.9331073761
+            },
+            {
+              "case": 3,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.27910518646,
+                "anchor": 481.428039551,
+                "depth": 0.756044328213,
+                "lane": 1.26497161388,
+                "tilt": 6.9470949173,
+                "excursion": 62.53088378899997
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 7.891544377803564,
+              "final8_forward_delta_mm": 62.53088378899997,
+              "net_forward_mm": 481.427398682,
+              "final_speed_mm_s": 7.86828136444
+            },
+            {
+              "case": 4,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.26895236969,
+                "anchor": 481.085968018,
+                "depth": 0.733509004116,
+                "lane": 1.28374874592,
+                "tilt": 7.890209198,
+                "excursion": 62.447143555000025
+              },
+              "first_breach_s": 0.4,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 7.881316420435749,
+              "final8_forward_delta_mm": 62.447143555000025,
+              "net_forward_mm": 481.085205078,
+              "final_speed_mm_s": 7.9474978447
+            },
+            {
+              "case": 5,
+              "passed": false,
+              "gates": {
+                "speed": false,
+                "anchor": false,
+                "depth": true,
+                "lane": true,
+                "tilt": true,
+                "excursion": false
+              },
+              "peaks": {
+                "speed": 8.19993686676,
+                "anchor": 482.641845703,
+                "depth": 0.717954576015,
+                "lane": 1.35054850578,
+                "tilt": 8.03475189209,
+                "excursion": 62.51654052700002
+              },
+              "first_breach_s": 0.35,
+              "first_breach_cause": "speed",
+              "final8_mean_speed_mm_s": 7.8897114366298755,
+              "final8_forward_delta_mm": 62.51654052700002,
+              "net_forward_mm": 482.641265869,
+              "final_speed_mm_s": 7.87875509262
+            }
+          ],
+          "controls": 7680
+        },
+        "controls": 10720
+      }
+    }
+  ],
+  "actor_checkpoints": [
+    {
+      "update": 336,
+      "fresh_steps": 0,
+      "inherited_steps": 21700,
+      "sha256": "8c9425afb6bc4972e3b02721583a414b51a813f1ebb94cb4fe4e17bcd6e282d3"
+    },
+    {
+      "update": 337,
+      "fresh_steps": 80,
+      "inherited_steps": 21780,
+      "sha256": "4a3428ebb2826c5cb0cf5c984867e95981f3a99d866f11d29463f32693d27bdb"
+    },
+    {
+      "update": 338,
+      "fresh_steps": 160,
+      "inherited_steps": 21860,
+      "sha256": "739e4a8fa8a75d2bb1899692787e814cd1ee546fb2574ab4e57907d989979578"
+    }
+  ],
+  "counted_controls": 62880,
+  "counted_substeps": 628800,
+  "input_sha256": {
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\calibration-result.json": "07a304b75a511b1d6eef39765c9b2ddaa74eabbe6d4c717f5a936e9859682be8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-result.json": "4564fe40af9364c0cbd1e251cca23ca8467f074f23404c4b3c5dff39370a2e35",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\protocol.bin": "cf9c215d964f9c1a70a60be5b7879011dd7ba87ec899cdb7eb78eacb1b866112",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\frozen-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\frozen-controls.csv": "cc15b30f22e361b0a14581bb3ce039776eb9783fef0ba9a283ad2378efa5b2a3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\long\\sustained-controls.csv": "152d031bbcd189775b3e506aad8dafea6b9e52e352fa008c1a3dc4233e80db74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\rest\\controls.csv": "f78088cd6dab7b769bf9a32e54c0d9da7499468fdc5f459f5d3eb5f325abdfd7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\rest\\summary.csv": "11874ed64b09503b86d32138b809a91a31da79a5625561485dbb2461f140aa2f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\baseline\\first-hold-breach.csv": "431ebc9add0fd61063f4ed61682b4032679278424a6bcf399ba35ab15ce836a8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\calibration\\batch-336.bin": "a67dd58f841f0436badac739cdb4a2fd2827679b1a8e6c06bd5182948adeecbb",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\calibration\\rows-336.csv": "366cabf0df0e459ca27b6d37bff5211932e79a181f87fe7ee79e392250fa9a72",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\fixed-baseline.bin": "26901645270b1bae25c3a4c6d8fee2923fb886c6ad47b7d756a0b84092e2280f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\calibration-report.json": "5ceb0b8e1ad8fdf6b17c4764b73f7dbc19f807ed19be4eb30f7f4112e3105d1f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\updates.jsonl": "33b920fb5e7e1a2d24c46b6dd4f3f88d404dc840b9d6c15222ef79d6b28ddb87",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\credit-actor-update-336.bin": "8c9425afb6bc4972e3b02721583a414b51a813f1ebb94cb4fe4e17bcd6e282d3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\credit-actor-update-337.bin": "4a3428ebb2826c5cb0cf5c984867e95981f3a99d866f11d29463f32693d27bdb",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\credit-actor-update-338.bin": "739e4a8fa8a75d2bb1899692787e814cd1ee546fb2574ab4e57907d989979578",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\batch-336.bin": "8eb2cb28f31bc54465ad40a3805915fe40ac9acbb5abb82153587e16f7edfcdf",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\rows-336.csv": "bffc3e99ac5a1c60f9a7bf7a030803d56fbf6e3a8f1e573ce14ab621d09aa0d7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\frozen-evaluation.csv": "fe7b17d87bc51c211007ad0fea99fe6505ef9f4ab263aab09e6c58bedcfc3fb7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\frozen-controls.csv": "4377f8baf65576622072442e277b18953c8b11119acb816fed5fa79bc37eb4fe",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\long\\sustained-windows.csv": "44c23c7a0218d1118eac4de24ed1718bb2900db8e090b5a3bd43151359780fe2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\long\\sustained-controls.csv": "2373ce4f0073854bac86cb1535f7c9d53bc885d2dfb794b44dea98bcbe0d3f38",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\rest\\controls.csv": "6da9887c9add2259275ac8b409195641f57f760e6d9a6f0e80c54454bdb58789",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\rest\\summary.csv": "8cffff35753fa7712aa9b3afb3b93852688d44ca13f5d0af74eb79c8f32c8e4d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-337\\first-hold-breach.csv": "431ebc9add0fd61063f4ed61682b4032679278424a6bcf399ba35ab15ce836a8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\batch-337.bin": "67861e505f00d421dfaa740ab35dfbae2d0a982622b0977a5518fadeab49248f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\rows-337.csv": "2759582ce1c3e6e0c6ad74367e5034af282c5f715750ecf8400d47a1c67f59ee",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\frozen-evaluation.csv": "7f8c0d58bfb20d796efe3b8539fe81bc7405ebab3225bd987d78bb8b08c25f50",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\frozen-controls.csv": "8d172decf24544bc8928f28bfbdeef14b4ada05402fb114a3318529a5d6634a2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\long\\sustained-windows.csv": "7a4656a6655436c6f4171292363ccbb40e69ba658fcd38d683f61f4e79162d32",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\long\\sustained-controls.csv": "8fde956c3295a4cb643d19df37d46c39514c32893784f6828eeb35ae4fe34aa0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\rest\\controls.csv": "c1028df4b8649b95362ccb14d4c72db72573ca77bdb448db7f91b5717587b22d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\rest\\summary.csv": "b92ac7249c5da898294d099c6ef635377f38d9e03d019a6256e82b59b976d5e9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-credit-336to344-2026-11-22-v1\\training-started\\assessment-338\\first-hold-breach.csv": "d3f901b8b58cbb4b81ebe1d73beb54a926e4e780257dbb8030295824bbbb9de3"
+  }
+}

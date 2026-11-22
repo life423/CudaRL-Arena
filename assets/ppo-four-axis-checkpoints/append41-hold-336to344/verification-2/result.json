@@ -1,0 +1,1 @@
+{"passed":true,"fault":"","seed":1247037243,"controls":5120,"substeps":51200,"old40_observation_error":0,"actor_error":0,"critic_error":0,"sampled_action_error":0,"state_error":0,"AR_logp_error":0,"PPO_updates":0}

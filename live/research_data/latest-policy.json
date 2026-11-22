@@ -1,0 +1,19 @@
+{
+  "scope": "Frozen research inspection; no runtime training or production adoption",
+  "parent_sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "source_checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\hold-exploration-2026-11-22-v1\\training-started\\exploration-policy-update-368.bin",
+  "source_checkpoint_sha256": "8B2B498BD0EDE4D22B50CE8DE722FC5148A87B13428FFC73349D9CA08605A2B0",
+  "package_sha256": "2860E04C02B7264804BBC75853FF2097069E307C523536C5F50B3DF045F96D68",
+  "holding_updates": 32,
+  "coefficient_Adam_steps": 2560,
+  "qualified": false,
+  "gains": [
+    0.6862522959709167,
+    0.8705000281333923,
+    0.5741626620292664,
+    0.6643787622451782
+  ],
+  "backbone_frozen": true,
+  "deterministic_amplitude": 1,
+  "action_noise": false
+}

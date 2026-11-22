@@ -1,6 +1,0 @@
-variant,seed,selected_update,comparison_food_per_minute,heldout_food_per_minute
-canonical,1,650,12.0938,12
-shuffled,1,775,7.92188,7.60938
-canonical,2,925,11.3906,11.3125
-shuffled,2,850,11.5781,11.75
-frozen_reference,1,29125,13.8281,13.5156

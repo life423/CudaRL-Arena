@@ -1,4 +1,0 @@
-condition,current_cm_s,trials,seconds,food_per_minute,delta_vs_calm,paired_ci_low,paired_ci_high,win,tie,loss,mean_low_ground_seconds,mean_low_water_relative_seconds,mean_no_food_10_seconds,mean_max_food_gap_seconds,max_food_gap_seconds,worlds_gap_over_20s,zero_food_worlds,mean_ground_cm_s,mean_water_relative_cm_s
-calm,0,64,300,17.78125,0,0,0,0,64,0,0.1171875,0.1171875,0.11640625,7.07265625,13.9,0,0,4.230172607,4.230172607
-cm05_nx_nz,0.5,64,300,17,-0.78125,-0.9670112155,-0.5954887845,6,3,55,0.175,0.12734375,0.434375,8.5625,15.45,0,0,4.18053668,4.212648843
-cm10_nx_nz,1,64,300,13.859375,-3.921875,-4.354509487,-3.489240513,0,0,64,4.3984375,0.19453125,6.125,15.4734375,265.6,2,0,3.860824283,4.010896572

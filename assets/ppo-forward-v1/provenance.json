@@ -1,0 +1,106 @@
+{
+  "source_run": "build/ppo/fresh-forward-ppo-v1",
+  "algorithm": "PPO",
+  "unvalidated": [
+    "speed transitions",
+    "longer swimming",
+    "current",
+    "contact",
+    "holding"
+  ],
+  "checkpoint_format": "Native checksummed PPO research schema1; little-endian float32 actor/critic and Adam; not a Godot inference asset",
+  "critic_shape": [
+    42,
+    32,
+    32,
+    1
+  ],
+  "imported_weights_or_examples": false,
+  "initial_Adam_moments_and_steps_zero": true,
+  "model": 6,
+  "task": 5,
+  "runtime_adopted": false,
+  "seed": 1347440433,
+  "fresh_initialization": true,
+  "actor_shape": [
+    42,
+    32,
+    32,
+    2
+  ],
+  "reward_version": 2,
+  "action_mapping": 2,
+  "scope": "Four poses,4seconds from rest,target8mm/s only",
+  "files": [
+    {
+      "sha256": "DC000BBFA4548300980122311BC16FA7EB8837CBC02D3B4F3AAD9F59AAB7FD48",
+      "path": "checkpoint.bin"
+    },
+    {
+      "sha256": "55CC0C7BFA2BB6DFC854F7AE1740B44F9180BDD3FD91B59B6C0FD7C0B8174573",
+      "path": "initial-checkpoint.bin"
+    },
+    {
+      "sha256": "FB92A3C32201DCD72DE0D96665399FA5DCB1C433057FEE9F68659BE935921EC1",
+      "path": "initialization.bin"
+    },
+    {
+      "sha256": "692EDDFBA50A7F0B800003A10473192137CCADE994DEF4B4E8FF9BD724A8BB86",
+      "path": "protocol.bin"
+    },
+    {
+      "sha256": "18CA3E8444681DAB890667410F0CB05D925AD124328CE227BA65E44630B3060B",
+      "path": "acceptance.json"
+    },
+    {
+      "sha256": "FD029C175E80598972E233908A7B4674DDDB5386EF12BDE02DAC7B831BC430D0",
+      "path": "result.json"
+    },
+    {
+      "sha256": "0C99D953270B9BD2D540009DD10004348F6D407072FED1642865E7F31DC104B8",
+      "path": "task-contract.json"
+    },
+    {
+      "sha256": "DA27712B312570A754768D7FAC5439CA9799512BA4F9D0BEDABE25D8BC81DFAB",
+      "path": "source-manifest.json"
+    },
+    {
+      "sha256": "E1A6E1A51B64EA5B37B9FE24703076974BCA8F349C60DE2C936FDE4220D7C46E",
+      "path": "frozen-evaluation.csv"
+    },
+    {
+      "sha256": "B23AB69D75202B4EBCF663014F4D93D8B7C0ABF6DB8D47734B20209E3C6A4D4C",
+      "path": "initial-evaluation.csv"
+    },
+    {
+      "sha256": "2B75671A2301448C799FCB97A71B8FA8D10E018B923EB3FFF45B4E48C13F432D",
+      "path": "training.csv"
+    },
+    {
+      "sha256": "0B623012BB8D0901680633965EFFE680260E0748BEEF8A7CBB8C009B8ADB22E0",
+      "path": "long-evaluation.json"
+    },
+    {
+      "sha256": "8ABA37BBFAA77992CDACC34E7FFA44890C906F48728DA7C9B0CB87FB3BDDF3CF",
+      "path": "long-windows.csv"
+    },
+    {
+      "sha256": "F044C9A488827EAA53E9B7E7D5F76FAEEDFE6292F28438B8DD76E57D400B9B15",
+      "path": "long-contract.json"
+    },
+    {
+      "sha256": "E31C8896DEB7D636CF06154735CE4D731952DB2E9BCC4A59703319DF7CE749BD",
+      "path": "long-protocol.bin"
+    }
+  ],
+  "long_duration_evaluation": {
+    "passed_windows": 2,
+    "first4s_reference_parity_passes": 2,
+    "passed": false,
+    "scope": "Two uninterrupted60s CPU cases,poses0/3,no resets or optimization,explicit1.2x0.8m arena",
+    "windows": 30,
+    "current_limit": "Overspeed after4s, then accumulating lane and path-angle errors; original4s acceptance remains scoped to4s",
+    "checkpoint_unchanged": true,
+    "result": "long-evaluation.json"
+  }
+}

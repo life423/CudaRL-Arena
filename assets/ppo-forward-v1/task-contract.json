@@ -1,0 +1,43 @@
+{
+  "optimizer": "Fresh Adam lr0.001 eps0.00001 global gradient clipping0.5; moments and steps zero",
+  "budget": {
+    "substeps": 1645120,
+    "initial_and_final_evaluation_controls": 640,
+    "controls": 164512,
+    "actor_Adam_steps_max": 1280,
+    "retries": 0,
+    "process_seconds": 75,
+    "native_seconds": 60,
+    "parity_controls": 32,
+    "training_controls": 163840,
+    "critic_Adam_steps_max": 1280,
+    "PPO_updates": 64
+  },
+  "algorithm": "PPO",
+  "training_reward": "Shared task5/reward2: -0.05*(squared relative velocity error +0.05*squared lane error) in2-4s; torque effort0.002 charged throughout4s",
+  "fresh_seed": 1347440433,
+  "PPO": "clip0.2,entropy0,value coefficient0.5,two epochs,epoch KL stop0.01",
+  "actor_initialization": "Orthogonal fresh random weights, output gain0.01, nominal amplitude0.35rad/cadence1Hz bias; no imported policy",
+  "evaluation": {
+    "work_limit_J_per_m": 0.001,
+    "success": "All4 frozen cases and lower mean RMSE than fresh initial policy",
+    "RMSE_limit_mm_s": 2.5,
+    "runtime_adoption": false,
+    "target_mm_s": 8,
+    "depth_limit_mm": 1,
+    "path_limit_deg": 5,
+    "tilt_limit_deg": 10,
+    "minimum_steady_mm_s": 7.2,
+    "poses": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "maximum_steady_mm_s": 8.8,
+    "lateral_limit_mm": 2
+  },
+  "credit_assignment": "gamma0.99,lambda1; complete80-control finite episodes, terminal bootstrap0",
+  "exploration": "Fixed diagonal Gaussian latent log_std=-2; exact sampled latent/logp retained",
+  "critic_initialization": "Fresh orthogonal random weights"
+}

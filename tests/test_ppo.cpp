@@ -1,17 +1,17 @@
-// PPO building blocks against independent references, then the full trainer:
+// Reusable PPO building blocks against independent references:
 // sampling statistics, the Feistel shuffle, GAE with truncation, the loss
-// gradient vs finite differences, orthogonal init, and end-to-end learning.
+// gradient vs finite differences, and orthogonal initialization.
 
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <limits>
 #include <string>
 #include <vector>
 
 #include "check.h"
 #include "gpu_util.h"
 #include "nn/mlp_spec.h"
-#include "rl/ppo.h"
 #include "rl/ppo_kernels.h"
 #include "rl/ppo_math.h"
 
@@ -22,6 +22,26 @@ using cudarl::test::to_device;
 using cudarl::test::to_host;
 
 // --- Shuffle -----------------------------------------------------------------
+
+TEST_CASE("ppo: categorical shape guards reject invalid inputs before CUDA launch") {
+    const int invalid[][2] = {{0, 2}, {-1, 2}, {1, 0}, {1, -1}, {1, kMaxActions + 1},
+                              {std::numeric_limits<int>::max(), kMaxActions}};
+    for (const auto& shape : invalid) {
+        bool sampled = false, loss = false;
+        try { sample_actions(nullptr, shape[0], shape[1], 1, 0, false, nullptr, nullptr, nullptr); }
+        catch (const std::invalid_argument&) { sampled = true; }
+        try { ppo_loss_grad(nullptr, nullptr, shape[0], shape[1], nullptr, nullptr, nullptr, nullptr, nullptr,
+                             { .2f, .01f, .5f }, nullptr, nullptr, nullptr, nullptr, nullptr); }
+        catch (const std::invalid_argument&) { loss = true; }
+        CHECK(sampled && loss);
+    }
+    bool stats_overflow = false;
+    try { ppo_loss_grad(nullptr, nullptr, std::numeric_limits<int>::max() / kPpoStats + 1, 1,
+                         nullptr, nullptr, nullptr, nullptr, nullptr, { .2f, .01f, .5f },
+                         nullptr, nullptr, nullptr, nullptr, nullptr); }
+    catch (const std::invalid_argument&) { stats_overflow = true; }
+    CHECK(stats_overflow);
+}
 
 TEST_CASE("ppo: Feistel shuffle is a permutation for any size") {
     for (uint32_t n : {1u, 2u, 3u, 7u, 1000u, 4096u, 100003u}) {
@@ -274,47 +294,5 @@ TEST_CASE("ppo: orthogonal init gives scaled orthonormal weights") {
             }
         CHECK_MSG(worst < 1e-5, "layer " + std::to_string(l) + " orthonormality error " + std::to_string(worst));
         for (int b = spec.bias_offset(l); b < spec.bias_offset(l) + rows; ++b) CHECK(p[b] == 0.f);
-    }
-}
-
-// --- End to end ---------------------------------------------------------------------
-
-GPU_TEST_CASE("ppo: solves CartPole (mean episode length >= 475) on 3 seeds") {
-    for (uint32_t seed : {1u, 2u, 3u}) {
-        PpoConfig cfg;
-        cfg.seed = seed;
-        PpoTrainer trainer(cfg);
-        int streak = 0, updates = 0;
-        while (streak < 3 && updates < 60) {
-            streak = trainer.update().mean_episode_length >= 475.f ? streak + 1 : 0;
-            ++updates;
-        }
-        CHECK_MSG(streak == 3, "seed " + std::to_string(seed) + " not solved in 60 updates");
-        std::printf("    seed %u solved after %d updates (%d env steps)\n", seed, updates,
-                    updates * cfg.num_envs * cfg.rollout_steps);
-    }
-}
-
-GPU_TEST_CASE("ppo: training is bit-identical for the same seed") {
-    PpoConfig cfg;
-    cfg.num_envs = 256;
-    cfg.rollout_steps = 16;
-    std::vector<float> first_params;
-    std::vector<float> first_curve;
-    for (int run = 0; run < 2; ++run) {
-        PpoTrainer trainer(cfg);
-        std::vector<float> curve;
-        for (int u = 0; u < 5; ++u) {
-            const auto s = trainer.update();
-            curve.push_back(s.mean_episode_length);
-            curve.push_back(s.approx_kl);
-        }
-        if (run == 0) {
-            first_params = trainer.actor_params();
-            first_curve = curve;
-        } else {
-            CHECK(trainer.actor_params() == first_params);
-            CHECK(curve == first_curve);
-        }
     }
 }

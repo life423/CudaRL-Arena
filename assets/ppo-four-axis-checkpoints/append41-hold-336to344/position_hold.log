@@ -1,0 +1,10 @@
+CUDA device: present
+
+    8 zero-integration holding CPU/CUDA cases maximum error 3.81469727e-06
+PASS  position_hold CUDA: mixed full-position observations and reward match CPU without integration     84.8 ms
+PASS  position_hold CUDA: production observation kernel keeps mixed swim and stop goals      0.5 ms
+PASS  position_hold: mixed lessons preserve swim observations and expose a fixed stop anchor without reset      0.0 ms
+PASS  position_hold: gate-scale stopping and return-to-anchor rewards allow all joint motion      0.0 ms
+PASS  position_hold checkpoint: observation3 reward8 are paired and preserve full PPO state      0.4 ms
+
+5/5 tests passed, 0 skipped

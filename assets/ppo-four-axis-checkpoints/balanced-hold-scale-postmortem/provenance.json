@@ -1,0 +1,17 @@
+{
+  "scope": "Read-only saved-input analysis; writes only new postmortem deliverables",
+  "source_run": "build\\ppo\\balanced-hold-scale-336to344-v1",
+  "branch": "codex/minimal-foundation",
+  "new_physical_controls": 0,
+  "new_optimizer_steps": 0,
+  "new_training_updates": 0,
+  "runtime_changed": false,
+  "new_future_probe_executed": false,
+  "prior_binaries_verified": 36,
+  "unrelated_files_verified": 15,
+  "frozen_files_verified": 67,
+  "archived_files_verified": 129,
+  "analyzed_inputs_verified": 34,
+  "finding": "No holding stopped/reverse examples; goal and gradient paths active; forward position saturation and weak learned position feedback; physical braking authority still unverified.",
+  "recommendation": "Approve a separately bounded6240control frozen branching diagnostic before choosing more PPO."
+}

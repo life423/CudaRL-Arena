@@ -1,0 +1,174 @@
+[
+  {
+    "name": "baseline336",
+    "update": 336,
+    "actor_lr": 0.00025,
+    "poses": [
+      {
+        "pose": 0,
+        "short_pass": 1,
+        "short_failed_gates": [],
+        "startup2to4_mm_s": 7.02601480484,
+        "long_windows_passed": 14,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 8.82788181305,
+        "long_max_depth_mm": 0.456027984619,
+        "long_max_lane_mm": 0.964791357517,
+        "first_tilt_exit_s": null
+      },
+      {
+        "pose": 3,
+        "short_pass": 1,
+        "short_failed_gates": [],
+        "startup2to4_mm_s": 7.11620807648,
+        "long_windows_passed": 14,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 9.35767364502,
+        "long_max_depth_mm": 0.350713729858,
+        "long_max_lane_mm": 0.851649224758,
+        "first_tilt_exit_s": null
+      }
+    ],
+    "note": "Poses0/3 shown; all four short cases retained in CSV"
+  },
+  {
+    "name": "previous344",
+    "update": 344,
+    "actor_lr": 0.00025,
+    "poses": [
+      {
+        "pose": 0,
+        "short_pass": 1,
+        "short_failed_gates": [],
+        "startup2to4_mm_s": 7.46385288239,
+        "long_windows_passed": 15,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 9.8715133667,
+        "long_max_depth_mm": 0.370244950056,
+        "long_max_lane_mm": 0.881564617157,
+        "first_tilt_exit_s": null
+      },
+      {
+        "pose": 3,
+        "short_pass": 0,
+        "short_failed_gates": [
+          "tilt"
+        ],
+        "startup2to4_mm_s": 7.51633739471,
+        "long_windows_passed": 0,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 10.3255386353,
+        "long_max_depth_mm": 0.345950126648,
+        "long_max_lane_mm": 0.744854450226,
+        "first_tilt_exit_s": 0.65
+      }
+    ],
+    "note": "Poses0/3 shown; all four short cases retained in CSV"
+  },
+  {
+    "name": "half-rate344",
+    "update": 344,
+    "actor_lr": 0.000125,
+    "poses": [
+      {
+        "pose": 0,
+        "short_pass": 1,
+        "short_failed_gates": [],
+        "startup2to4_mm_s": 7.24023771286,
+        "long_windows_passed": 15,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 9.59501171112,
+        "long_max_depth_mm": 0.370788574219,
+        "long_max_lane_mm": 0.71580183506,
+        "first_tilt_exit_s": null
+      },
+      {
+        "pose": 3,
+        "short_pass": 0,
+        "short_failed_gates": [
+          "tilt"
+        ],
+        "startup2to4_mm_s": 7.3129529953,
+        "long_windows_passed": 0,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 10.0813169479,
+        "long_max_depth_mm": 0.347323387861,
+        "long_max_lane_mm": 0.713642001152,
+        "first_tilt_exit_s": 0.65
+      }
+    ],
+    "note": "Poses0/3 shown; all four short cases retained in CSV"
+  },
+  {
+    "name": "previous352",
+    "update": 352,
+    "actor_lr": 0.00025,
+    "poses": [
+      {
+        "pose": 0,
+        "short_pass": 0,
+        "short_failed_gates": [
+          "tilt"
+        ],
+        "startup2to4_mm_s": 7.44752311707,
+        "long_windows_passed": 0,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 10.5756444931,
+        "long_max_depth_mm": 0.318222045898,
+        "long_max_lane_mm": 0.792134225368,
+        "first_tilt_exit_s": 0.65
+      },
+      {
+        "pose": 3,
+        "short_pass": 0,
+        "short_failed_gates": [
+          "tilt"
+        ],
+        "startup2to4_mm_s": 7.48201942444,
+        "long_windows_passed": 0,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 10.9606132507,
+        "long_max_depth_mm": 0.291290283203,
+        "long_max_lane_mm": 0.704699456692,
+        "first_tilt_exit_s": 0.65
+      }
+    ],
+    "note": "Poses0/3 shown; all four short cases retained in CSV"
+  },
+  {
+    "name": "half-rate352",
+    "update": 352,
+    "actor_lr": 0.000125,
+    "poses": [
+      {
+        "pose": 0,
+        "short_pass": 0,
+        "short_failed_gates": [
+          "tilt"
+        ],
+        "startup2to4_mm_s": 7.35982608795,
+        "long_windows_passed": 0,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 10.2431526184,
+        "long_max_depth_mm": 0.319910019636,
+        "long_max_lane_mm": 0.976705670357,
+        "first_tilt_exit_s": 0.7
+      },
+      {
+        "pose": 3,
+        "short_pass": 0,
+        "short_failed_gates": [
+          "tilt"
+        ],
+        "startup2to4_mm_s": 7.40778970718,
+        "long_windows_passed": 0,
+        "long_windows_total": 15,
+        "long_peak_tilt_deg": 10.6385774612,
+        "long_max_depth_mm": 0.28094291687,
+        "long_max_lane_mm": 0.844243586063,
+        "first_tilt_exit_s": 0.65
+      }
+    ],
+    "note": "Poses0/3 shown; all four short cases retained in CSV"
+  }
+]

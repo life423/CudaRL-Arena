@@ -1,0 +1,37 @@
+{
+  "seed": 1247037242,
+  "frozen_8s_passes": 0,
+  "preserved_utc": "2026-10-31T22:35:15.9691992Z",
+  "run_executable_sha256": "070D8DD359B11020372EDF40E7C059304D75C4823F4A0F4FD1FA45BDFA440464",
+  "task": 6,
+  "source_run": "explore-pair-v1-s1247037242-smooth",
+  "fresh_initialization": true,
+  "teacher_examples_or_imported_weights": false,
+  "rho": 0.8,
+  "actor": [
+    40,
+    32,
+    32,
+    4
+  ],
+  "source_started_utc": "2026-10-31T22:24:07.0211415Z",
+  "action_mapping": 3,
+  "reward": 4,
+  "status": "research only; NOT accepted or installed",
+  "critic": [
+    40,
+    32,
+    32,
+    1
+  ],
+  "checkpoint_sha256": "DD5413FF77A464974A098EB64BA195F44A4612656B8A7E8D5FD57CCD48E99BAF",
+  "protocol_sha256": "CC948A47FDC59EF22D265BF6CB75325689CC73DF3B96E8070DF402C26603D321",
+  "candidate_accepted": false,
+  "initialization_sha256": "52EE0EB2FAAA1215C541D9EC0BFD9595EEE08B37859BE4AE23B48E03AA377CB4",
+  "source_ended_utc": "2026-10-31T22:24:32.2327952Z",
+  "algorithm": "native CUDA PPO",
+  "schema": 3,
+  "updates": 128,
+  "long_fault": "CPU physical safety stop",
+  "model": 6
+}

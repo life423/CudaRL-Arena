@@ -1,0 +1,80 @@
+{
+  "algorithm": "Native C++/CUDA PPO",
+  "status": "Rejected startup candidates; baseline336 remains preserved, no runtime adoption",
+  "source_checkpoint": "../update-336-episode64/ppo-update-336.bin",
+  "source_SHA256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+  "reward_version": 7,
+  "parent_reward_version": 5,
+  "protocol_version": 14,
+  "only_behavioral_change": "Horizontal-speed reward active from first control; original acceptance still2-8s/2-4s windows",
+  "source_run": "build/ppo/startup-speed-r7-336to352-v1",
+  "source_commit": "0baf97a28155c25a99d5eaef2e60099539893cee",
+  "protocol_SHA256": "167EA678BA532245564F14D0B55C8274E98AF5AE7ABF3BA3D8AB1D46D93D22A1",
+  "checkpoints": [
+    {
+      "long_windows_total": 30,
+      "path": "ppo-update-344.bin",
+      "short_total": 4,
+      "update": 344,
+      "long_total": 2,
+      "failed_gates": "Only startup head/body combined tilt: poses1,3 peak10.3255deg vs10; both2-4 speed windows pass",
+      "long_windows_passed": 15,
+      "accepted": false,
+      "long_passes": 1,
+      "short_passes": 2,
+      "SHA256": "AC75AA377913D99A9E2EDEE020BF0E6ECAC4AB05ADFCF521A346C84273CF2B57"
+    },
+    {
+      "long_windows_total": 30,
+      "path": "ppo-update-352.bin",
+      "short_total": 4,
+      "update": 352,
+      "long_total": 2,
+      "failed_gates": "Only startup combined tilt:10.5756/10.9606deg vs10; both2-4 speed windows pass",
+      "long_windows_passed": 0,
+      "accepted": false,
+      "long_passes": 0,
+      "short_passes": 0,
+      "SHA256": "A53F7EB8A822611D928B97C8785FD41CA51052BCBA2E1CF612FDCB8B0FCB3B37"
+    }
+  ],
+  "controls": 662144,
+  "physical_substeps": 6621440,
+  "training_controls": 655360,
+  "PPO_updates": 16,
+  "actor_optimizer_steps_added": 5120,
+  "critic_optimizer_steps_added": 5120,
+  "safety_stops": 0,
+  "retries": 0,
+  "endurance300_runs": 0,
+  "endurance_reason": "Neither candidate passed every original short and60s criterion",
+  "preserved_original336_hash_verified": true,
+  "training_started_utc": "2026-11-02T22:14:54.2261925Z",
+  "first_update_utc": "2026-11-02T22:14:56.0821085Z",
+  "execution": {
+    "command": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-336to352-v1/startup-runner.exe --run \"C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\startup-speed-r7-336to352-v1\" --startup-speed 1 --actor-lr 0.00025 --depth-offsets 1 --episode-controls 1280 --updates 16",
+    "completed_utc": "2026-11-02T22:15:19.8345584Z",
+    "cwd": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation",
+    "launched_utc": "2026-11-02T22:14:53.7051038Z",
+    "phase": "completed",
+    "pid": 38840,
+    "wall_seconds": 26.1268796,
+    "exit_code": 0
+  },
+  "checks": {
+    "zero_step_checkpoint_loads_passed": 2,
+    "CPU_tests_skipped": 0,
+    "checkpoint_load_optimizer_steps": 0,
+    "note": "Load-only checks use ordinary default lesson in readiness; no training launched from those prepared directories. Stored candidate checkpoint reward_version remains7.",
+    "checkpoint_load_physical_steps": 0,
+    "CPU_tests_passed": 7,
+    "synthetic_CUDA_reward_cases_passed": 4
+  },
+  "interpretation": "Startup speed objective improves acceleration but adds initial tilt that violates unchanged acceptance. Long window tilt maxima are cumulative, so one early excursion marks later windows failed even after tilt returns below10deg.",
+  "trace_conventions": "Control-end samples50ms; initialreverse from negative successiveforwardCOMincrements; late drift OLSposition30-60s; signeddepthpositiveabove; no interpolation",
+  "source_snapshots": {
+    "straight_task_SHA256": "C2D12D58B3D48D5447E540F6FB19FB95723756B032D3E3EE78A78268B13292A8",
+    "runner_executable_SHA256": "D0E2AE1AF0472C9C7B98CCA5F89A4AF36C34423BE9A691D386979FE0C8ECFE43",
+    "runner_source_SHA256": "31621E3C151BB87F06462BD47E5FF821114F9B40BDE63E4DAD379566B8190ADB"
+  }
+}

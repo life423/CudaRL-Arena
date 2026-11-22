@@ -1,0 +1,26 @@
+[
+  {
+    "max_lane_mm": 0.878059625626,
+    "passed_windows": 28,
+    "update": 344,
+    "max_tilt_deg": 8.86833572388,
+    "retained4to60_windows": 28,
+    "max_depth_mm": 0.707273483276
+  },
+  {
+    "max_lane_mm": 1.04604411125,
+    "passed_windows": 28,
+    "update": 352,
+    "max_tilt_deg": 8.89852237701,
+    "retained4to60_windows": 28,
+    "max_depth_mm": 0.394158363342
+  },
+  {
+    "max_lane_mm": 1.28234755993,
+    "passed_windows": 0,
+    "update": 368,
+    "max_tilt_deg": 8.03362846375,
+    "retained4to60_windows": 0,
+    "max_depth_mm": 0.349779129028
+  }
+]
