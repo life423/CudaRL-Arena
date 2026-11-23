@@ -1,0 +1,622 @@
+[
+  {
+    "path": "approved-protocol.md",
+    "sha256": "E3C816D9A5CDCE9A1A095E56350BF124921927523A92FBB089A4AEB01462FF4D",
+    "bytes": 22955
+  },
+  {
+    "path": "coordinator-evidence/galilean-diagnostic.json",
+    "sha256": "014D163D8F350002F20245D1773329D0FD219AD042ADA166C7295CCBA9E91F75",
+    "bytes": 3255
+  },
+  {
+    "path": "coordinator-evidence/gate-stable-zero.log",
+    "sha256": "04F5B02445FB1B6893014ACBCFD6BBE996F95F119DF71F75E40FA4F89016FB3E",
+    "bytes": 35
+  },
+  {
+    "path": "coordinator-evidence/gate-zero-final.log",
+    "sha256": "99FCABBEAFBFDA68A2FA21C5D0121B78A2EA26A4382B5BC3370987F4648D9722",
+    "bytes": 54
+  },
+  {
+    "path": "coordinator-evidence/gate-zero.log",
+    "sha256": "92FEF86ED5440F67D9E89CF6AB07C5663B88538D15915FB27089A8316DF66876",
+    "bytes": 44
+  },
+  {
+    "path": "coordinator-evidence/preparation-history.json",
+    "sha256": "3CD6F02E2A79609EDA795730C4B6FBBD6C2B4A7CF42F4DC679B04A7A18BEEFD8",
+    "bytes": 526
+  },
+  {
+    "path": "coordinator-evidence/preservation-after.json",
+    "sha256": "5532B45F2859A527CEF119476192714C8A3FCA7195BBD803C68659527A07D1B0",
+    "bytes": 100
+  },
+  {
+    "path": "executed-launch/evidence.py",
+    "sha256": "ACCBAF194FCAFD96369EB50B69EB13AEB46B1868469C8AFCB88F1D409ED45E0D",
+    "bytes": 3357
+  },
+  {
+    "path": "executed-launch/launch.ps1",
+    "sha256": "68183BC78039D210444BBFDB42EA15690792AFACAF7771A97B5F9DA4EFC1B95B",
+    "bytes": 4133
+  },
+  {
+    "path": "executed-source/CMakeLists.txt",
+    "sha256": "2E78B42AEAF4589CEE43DA462D6ADEB6959A4DF3F62E1F42F9F8C50B6556D0A5",
+    "bytes": 10119
+  },
+  {
+    "path": "executed-source/src/core/checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770",
+    "bytes": 4620
+  },
+  {
+    "path": "executed-source/src/core/checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D",
+    "bytes": 2413
+  },
+  {
+    "path": "executed-source/src/core/hd.h",
+    "sha256": "2A8D1C759D9F8B8E268EDB95134F749DCEDBCF200E83200C628BBB213C98D7AC",
+    "bytes": 337
+  },
+  {
+    "path": "executed-source/src/core/rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627",
+    "bytes": 1401
+  },
+  {
+    "path": "executed-source/src/cuda/block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77",
+    "bytes": 752
+  },
+  {
+    "path": "executed-source/src/cuda/cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00",
+    "bytes": 4350
+  },
+  {
+    "path": "executed-source/src/cuda/device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F",
+    "bytes": 1532
+  },
+  {
+    "path": "executed-source/src/cuda/device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D",
+    "bytes": 765
+  },
+  {
+    "path": "executed-source/src/godot/frozen_swimmer.cpp",
+    "sha256": "D57BAE27DC2B61394E6F79B8E51F72DA1CC5C67B8DA7F266349964F28236F296",
+    "bytes": 6365
+  },
+  {
+    "path": "executed-source/src/godot/frozen_swimmer.h",
+    "sha256": "EDE742975234972B1539D1504A1C4D47CF4F7B5D3AFC11A6B1B1D29A57ACDF90",
+    "bytes": 749
+  },
+  {
+    "path": "executed-source/src/godot/hold_lab_preview.cpp",
+    "sha256": "CDAC616FF68CBE5B1AAF22E571C3A36B019DC827877C1610750DE0A364806CF3",
+    "bytes": 13762
+  },
+  {
+    "path": "executed-source/src/godot/hold_lab_preview.h",
+    "sha256": "F56F74FB4D50EABB533056CA8FE44E8DE5B9AF8A5FBF3B603CD1D9AF69282F9B",
+    "bytes": 827
+  },
+  {
+    "path": "executed-source/src/godot/register_live_types.cpp",
+    "sha256": "D893122F633851578C3E222CA47E9A28890E761031C64FA46871E5821560FD62",
+    "bytes": 935
+  },
+  {
+    "path": "executed-source/src/nn/adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3",
+    "bytes": 5719
+  },
+  {
+    "path": "executed-source/src/nn/adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9",
+    "bytes": 2093
+  },
+  {
+    "path": "executed-source/src/nn/adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73",
+    "bytes": 585
+  },
+  {
+    "path": "executed-source/src/nn/gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4",
+    "bytes": 9200
+  },
+  {
+    "path": "executed-source/src/nn/gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6",
+    "bytes": 2434
+  },
+  {
+    "path": "executed-source/src/nn/loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572",
+    "bytes": 910
+  },
+  {
+    "path": "executed-source/src/nn/loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA",
+    "bytes": 356
+  },
+  {
+    "path": "executed-source/src/nn/mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153",
+    "bytes": 6814
+  },
+  {
+    "path": "executed-source/src/nn/mlp_gpu.cu",
+    "sha256": "37BC9915F97B3EECEE3D5490D027F7AC3B00EB24A0C57BC6FF8F06A3344787B5",
+    "bytes": 8320
+  },
+  {
+    "path": "executed-source/src/nn/mlp_gpu.h",
+    "sha256": "0AD0D2107E8C5B4EC3BC6FC4C5AF001D9546CF7883269B00600BD01AF7E983FE",
+    "bytes": 2594
+  },
+  {
+    "path": "executed-source/src/nn/mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF",
+    "bytes": 6090
+  },
+  {
+    "path": "executed-source/src/nn/motor/controller_contract.txt",
+    "sha256": "40337BA0E21F0F5410C1DCCFD196C90A840327230E3833F34A3647C258DA849F",
+    "bytes": 314
+  },
+  {
+    "path": "executed-source/src/nn/motor/current_model_v1.h",
+    "sha256": "C412DA944333DC1897DBC7AE76C01D98B398EB706A2BA4FBD125DF4F1B7C16F6",
+    "bytes": 12767
+  },
+  {
+    "path": "executed-source/src/nn/motor/current_motor_v1.h",
+    "sha256": "EB0083EA311A9B6AD2474B9D534E89250A849BF4EB200FE5A346B251D94A7169",
+    "bytes": 5003
+  },
+  {
+    "path": "executed-source/src/nn/motor/current_task_v1.h",
+    "sha256": "926D4B3A2A3083D59FCC2FFB9446C5C3843CBDC5290F8F9C985724F5BCF801EB",
+    "bytes": 2324
+  },
+  {
+    "path": "executed-source/src/nn/motor/frozen_contract.in.h",
+    "sha256": "A4B6E7767924049BEBB4591322C71583F2DCFF3A7580133275A457DCEF2DE929",
+    "bytes": 222
+  },
+  {
+    "path": "executed-source/src/nn/motor/frozen_controller.cpp",
+    "sha256": "0E47A615C9CE9A749BAA03286081B674E4DCDDBDA6959AF7467FC9448B0C4896",
+    "bytes": 7960
+  },
+  {
+    "path": "executed-source/src/nn/motor/frozen_controller.h",
+    "sha256": "B82614CC700D5FC0976F253A4888EC8334B662646E594BAED4797CE05568DDB3",
+    "bytes": 2966
+  },
+  {
+    "path": "executed-source/src/nn/motor/hold_assessment.h",
+    "sha256": "CDDA2488E1AD54C902DFEC54FF1891E49E7638C50607ECF62D90DAFFBD8DC569",
+    "bytes": 4385
+  },
+  {
+    "path": "executed-source/src/nn/motor/joint_motor.h",
+    "sha256": "DC53D22CFF99352C5E378B6BCD919569C9A26455AA5DF9F8EC1C36172171314F",
+    "bytes": 5836
+  },
+  {
+    "path": "executed-source/src/nn/motor/movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5",
+    "bytes": 10657
+  },
+  {
+    "path": "executed-source/src/nn/motor/observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332",
+    "bytes": 617
+  },
+  {
+    "path": "executed-source/src/nn/motor/state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F",
+    "bytes": 2183
+  },
+  {
+    "path": "executed-source/src/nn/motor/straight_task.h",
+    "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22",
+    "bytes": 24241
+  },
+  {
+    "path": "executed-source/src/physics/contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6",
+    "bytes": 7503
+  },
+  {
+    "path": "executed-source/src/physics/dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6",
+    "bytes": 9192
+  },
+  {
+    "path": "executed-source/src/rl/append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B",
+    "bytes": 5009
+  },
+  {
+    "path": "executed-source/src/rl/ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797",
+    "bytes": 2719
+  },
+  {
+    "path": "executed-source/src/rl/gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7",
+    "bytes": 9242
+  },
+  {
+    "path": "executed-source/src/rl/gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D",
+    "bytes": 3307
+  },
+  {
+    "path": "executed-source/src/rl/gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700",
+    "bytes": 3304
+  },
+  {
+    "path": "executed-source/src/rl/motor_rollout.cuh",
+    "sha256": "5D2D479FD10654CCFED70225969304A7F5DC96AB0F1AFD187C646C7CED514A28",
+    "bytes": 8636
+  },
+  {
+    "path": "executed-source/src/rl/ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2",
+    "bytes": 8055
+  },
+  {
+    "path": "executed-source/src/rl/ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC",
+    "bytes": 3172
+  },
+  {
+    "path": "executed-source/src/rl/ppo_kernels.cu",
+    "sha256": "884AC4D2485E97D19D6049BE677CB218B5FB17B617A50F72545DF98B13D37E8C",
+    "bytes": 8861
+  },
+  {
+    "path": "executed-source/src/rl/ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8",
+    "bytes": 2657
+  },
+  {
+    "path": "executed-source/src/rl/ppo_math.h",
+    "sha256": "68E726DC7A84778E6900BC6894BED50126EC4545A1370618DFF0953374D25E8D",
+    "bytes": 6515
+  },
+  {
+    "path": "executed-source/src/simulation/world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8",
+    "bytes": 8888
+  },
+  {
+    "path": "executed-source/src/simulation/world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3",
+    "bytes": 6386
+  },
+  {
+    "path": "executed-source/src/simulation/world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441",
+    "bytes": 1945
+  },
+  {
+    "path": "executed-source/tools/append_hold8.cu",
+    "sha256": "5D46932E99F0245F0CCA81110671E256CEFD329B477C62E5247F156034A7EEB8",
+    "bytes": 26001
+  },
+  {
+    "path": "executed-source/tools/check_evidence_envelopes.cpp",
+    "sha256": "60AA60137A230C62C31DD3B80257CAA142624DF6888A92F5E971336E52EDB6F3",
+    "bytes": 1144
+  },
+  {
+    "path": "executed-source/tools/current_physics_gate.cu",
+    "sha256": "48C24389C60749CC9AD75106AF3984E008E771485E6093FF26AA29181E7BFB08",
+    "bytes": 26529
+  },
+  {
+    "path": "executed-source/tools/current_swim_math.h",
+    "sha256": "F6B791CFAA2B4D561E25C065B9E0A1C32A85141E6B6A27D144AE018CD11EDC25",
+    "bytes": 2116
+  },
+  {
+    "path": "executed-source/tools/current_swim_study.cu",
+    "sha256": "6C83FDB076C66C252281C689163A93F290B972A1F8252224C932F0ADECEB6705",
+    "bytes": 68484
+  },
+  {
+    "path": "executed-source/tools/frozen_brake_probe.cpp",
+    "sha256": "32D82E16EC10D9E750FBC35C38756A0797B4C35CC2390D67BD4DF03C07AD1113",
+    "bytes": 18762
+  },
+  {
+    "path": "executed-source/tools/hold_credit_study.cu",
+    "sha256": "FCCD01EA88FC8D42A878AC8E68CCFF9CF20E7F1E7D0697AA3A5FF076AAFE05A4",
+    "bytes": 42262
+  },
+  {
+    "path": "executed-source/tools/hold_exploration_math.h",
+    "sha256": "36301225BEE95809580204C62E291A1D3739B9AFC07E9C348206A2331370AC44",
+    "bytes": 1849
+  },
+  {
+    "path": "executed-source/tools/hold_exploration_study.cu",
+    "sha256": "B1EB3BD9DA089D22F95BFE35BF79810E31C14863FC3E975C734900144D7AA69B",
+    "bytes": 60650
+  },
+  {
+    "path": "executed-source/tools/hold_learned_amplitude_math.h",
+    "sha256": "54D39FA6E7081ABCF9F8A534821FBE839ACB7B14B7725680472C9D14C78F3D28",
+    "bytes": 1476
+  },
+  {
+    "path": "executed-source/tools/hold_learned_amplitude_study.cu",
+    "sha256": "954E5A910EB46828F0BA5ADF9C23C596C94B545454A18042D0054DAF18633EE5",
+    "bytes": 58915
+  },
+  {
+    "path": "executed-source/tools/hold_scale_study.cu",
+    "sha256": "728547AA895A460BDDE2964AA3A3AC2C60851A87320C8FC51C050E895EF34EC5",
+    "bytes": 23555
+  },
+  {
+    "path": "executed-source/tools/motor_compare.cpp",
+    "sha256": "3D16528CD11FD8AEC7300DEBB3AC27F557D416DED37B5C9A459320A664482CAA",
+    "bytes": 39429
+  },
+  {
+    "path": "executed-source/tools/ppo_motor.cu",
+    "sha256": "23ED56686A42F47249D07BD7CC5949C739C886696EC8A6284A4053A150A05875",
+    "bytes": 197600
+  },
+  {
+    "path": "executed-source/tools/rest_hold_measured_baseline.inc",
+    "sha256": "08B5E999343361BC453C89899289E87201644D66E770852B26D07BA4CD8B0D78",
+    "bytes": 12347
+  },
+  {
+    "path": "executed-source/tools/rest_hold_measured_baseline_phase_b.cu",
+    "sha256": "6EAFD9586AAEEC9FDFECC79423AD9BB9615A418571C21BB6A3EBD47C3A5EAAD2",
+    "bytes": 13495
+  },
+  {
+    "path": "executed-source/tools/rest_hold_measured_baseline_study.cu",
+    "sha256": "E17AA5972C325A15EBEA250B850BDEC5303E85A2B7AB7B79D92A757BD7EBB959",
+    "bytes": 154
+  },
+  {
+    "path": "executed-source/tools/rest_hold_reset_study.cu",
+    "sha256": "5D3A7CD10BBBB1F10BE960BBD65E6A572CFEDBD25DCB380F65D63B863CD0559F",
+    "bytes": 151
+  },
+  {
+    "path": "executed-source/tools/rest_hold_study.cu",
+    "sha256": "5F510F60CC65364C04320B48D0EFA73845E0C508D4EDA813C2D9046106330D1F",
+    "bytes": 47128
+  },
+  {
+    "path": "executed-source/tools/rest_hold_task_critic.inc",
+    "sha256": "53F9C61FF663268A30D6964D9F8C4143946B4986ABB28900640C82468DA840A5",
+    "bytes": 9816
+  },
+  {
+    "path": "executed-source/tools/rest_hold_task_critic_study.cu",
+    "sha256": "58E3A6603A3DD139174176298BE8C20AA84365F0FBEAF37C391E4E5D888950E9",
+    "bytes": 151
+  },
+  {
+    "path": "frozen-inputs.json",
+    "sha256": "1D3741791693B282EE85B477C7E44727B49FF89FD1814F1BC84C9B1FB494FEA7",
+    "bytes": 15173
+  },
+  {
+    "path": "git-head.txt",
+    "sha256": "2DF7347E22EA70B02EE0368BC1D98859C297916DD6F8E01D225CB0D525DA7927",
+    "bytes": 41
+  },
+  {
+    "path": "holding-parent.bin",
+    "sha256": "C54F73B57AB4280D99802A7253C13004F95C754E39E0ACF8F6833377BBB760C3",
+    "bytes": 10308
+  },
+  {
+    "path": "independent-verification.json",
+    "sha256": "0E9C770F94B3DEBFD93842C0DDD4BDAD75D9A39389699A868BDEFCC3FE93A1A8",
+    "bytes": 6260
+  },
+  {
+    "path": "initial-policy/current-policy-update-0.bin",
+    "sha256": "ADC2365587A0101BDD685E55A182F395CF45711F43AE5DB168187AA37D50D04B",
+    "bytes": 10516
+  },
+  {
+    "path": "layout.json",
+    "sha256": "72E274C0A1C87EACF7DAADD821A1B4FCDCEEA363C3903EE50733E5DD29AF9BD9",
+    "bytes": 236
+  },
+  {
+    "path": "migrated-initial.bin",
+    "sha256": "03D0A2BC0569605A4F111553BFE0257BACFD5F09291CC02D219EC5FB64C84242",
+    "bytes": 59796
+  },
+  {
+    "path": "parent-checkpoint.bin",
+    "sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+    "bytes": 59016
+  },
+  {
+    "path": "parent-protocol.bin",
+    "sha256": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+    "bytes": 292
+  },
+  {
+    "path": "physical-gate.stderr.log",
+    "sha256": "9C36FDB5F1F5284A2B8FE989EE5154990D5C32E4D75DFAB6C5C225C097DF6484",
+    "bytes": 40
+  },
+  {
+    "path": "physical-gate.stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "physics-gate/approved-protocol.md",
+    "sha256": "E3C816D9A5CDCE9A1A095E56350BF124921927523A92FBB089A4AEB01462FF4D",
+    "bytes": 22955
+  },
+  {
+    "path": "physics-gate/parent-checkpoint.bin",
+    "sha256": "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0",
+    "bytes": 59016
+  },
+  {
+    "path": "physics-gate/parent-protocol.bin",
+    "sha256": "FCAA74C5DA6ADC1E000282776CEBFC51F007B00633E7A6A29ED9D8A34E485E1E",
+    "bytes": 292
+  },
+  {
+    "path": "physics-gate/protocol.bin",
+    "sha256": "82A4AF4176C0A1ECE3D650D7F565C59DD8590C576C90FBCF0613D296C08A4C6A",
+    "bytes": 92
+  },
+  {
+    "path": "physics-gate/qualified-hold-preview.bin",
+    "sha256": "4B6400C4DB65873BD346C3E0C4FED384E3A77F9E5174D0DCEA5D74073B94616D",
+    "bytes": 11180
+  },
+  {
+    "path": "physics-gate/run-started/active-seconds.txt",
+    "sha256": "EEDC76EF3FE513AB812FC5338386169D76A947818BD2AEEDF81BC129308E9B37",
+    "bytes": 20
+  },
+  {
+    "path": "physics-gate/run-started/first-failure.bin",
+    "sha256": "C5957AB854788418E1F8971905A9E37A19D0AA9C5BDB4F000CA05CEA206EFD4F",
+    "bytes": 3064
+  },
+  {
+    "path": "physics-gate/run-started/result.json",
+    "sha256": "C907A0E0EDC36C37149E89393C3658D4369E26253A00E2DC1989BC95FB54F2B5",
+    "bytes": 291
+  },
+  {
+    "path": "physics-gate/run-started/states.bin",
+    "sha256": "9FD615AA76D9DDB31B802A88F88E193D9C8CC1A8A324DC01C96432CD767CD600",
+    "bytes": 2210004
+  },
+  {
+    "path": "physics-gate/run-started/states.csv",
+    "sha256": "4A8672B6BDF17551656717EE5B84FFE5EE8B4BAA8F25748F92323DD6F3E9A2BE",
+    "bytes": 1661329
+  },
+  {
+    "path": "physics-gate/zero-passed.bin",
+    "sha256": "4D6807842101FEB3E9F17C8862F9D6F68CA4B32C67E962D9BA67E05C15D261C3",
+    "bytes": 36
+  },
+  {
+    "path": "physics-gate/zero-started/assembly-probes.bin",
+    "sha256": "C21F3BE056B906F7B94C7B4DF1B0AAAB7AD8287E96DA431B86B40971BD9FF626",
+    "bytes": 73136
+  },
+  {
+    "path": "physics-gate/zero-started/result.json",
+    "sha256": "437584CEFD7A6D78686E1BF339BE3D4F4C2A48FBFB1ED0BF965CE0AF314C8852",
+    "bytes": 501
+  },
+  {
+    "path": "preflight-passed.txt",
+    "sha256": "DCB126901301405B399FEB3E7B404A4C70C7275C7CE29277DA9A678E38D5ECD9",
+    "bytes": 117
+  },
+  {
+    "path": "prepare-zero/initialization-zero.json",
+    "sha256": "CC53262D889008A5AA5B77412F445A674ADDB78F37414C5C3946F7121CDBE876",
+    "bytes": 320
+  },
+  {
+    "path": "prepare-zero/math/math-zero.json",
+    "sha256": "6804C1E77FE6E050ED49550E4AE26A9BDA03D0F30C77BF83627DDF40826EFE3D",
+    "bytes": 322
+  },
+  {
+    "path": "prepared.json",
+    "sha256": "100D032DDB712DF1019F72D4E6B7FDBABDEEF79B4B4C9DDED4FB12121C1E3D61",
+    "bytes": 165
+  },
+  {
+    "path": "process-execution.json",
+    "sha256": "4AAF34B57915F151BF1934153BAC2E5E9C5197E9B037BECCB21FC918C99A4E17",
+    "bytes": 258
+  },
+  {
+    "path": "protocol.bin",
+    "sha256": "3809BC7C82EDEB110153599C876F1CB0793FE19BF26F550041B8A0BE34FFE81B",
+    "bytes": 968
+  },
+  {
+    "path": "provenance.json",
+    "sha256": "42F4A7EA6806E488FAD9AFAAA9370520718A1443058443ED13B4B28B76645C90",
+    "bytes": 1875
+  },
+  {
+    "path": "README.md",
+    "sha256": "02995F74FD53D0F950B1232EAB27ACC28BE38C2600B4EA797A78B815E2A281BD",
+    "bytes": 1301
+  },
+  {
+    "path": "REPORT.md",
+    "sha256": "112FAC01E52A9CD2A1A36F3A87FD0B2EEF773B050A55FFCE2B6926BCE717CF81",
+    "bytes": 6981
+  },
+  {
+    "path": "study-result.json",
+    "sha256": "A9750EC8DB1B0DD567BFDB42823E070DB5C3A60649CCF8699E8F057B993515E6",
+    "bytes": 1513
+  },
+  {
+    "path": "verified-zero/initialization-zero.json",
+    "sha256": "CC53262D889008A5AA5B77412F445A674ADDB78F37414C5C3946F7121CDBE876",
+    "bytes": 320
+  },
+  {
+    "path": "verified-zero/math/math-zero.json",
+    "sha256": "6804C1E77FE6E050ED49550E4AE26A9BDA03D0F30C77BF83627DDF40826EFE3D",
+    "bytes": 322
+  },
+  {
+    "path": "verifier-source/verify_current_swim.py",
+    "sha256": "8F3FBF37A161E6E1244C864FAB9C218EBDABE14B093CF7D50302D7EEEB805D72",
+    "bytes": 55953
+  },
+  {
+    "path": "verifier-source/verify_hold_credit.py",
+    "sha256": "F235A59AFF99AE55EA5F28971DE2E427EAC5C0F993B90964B41F77CA88D9F3C3",
+    "bytes": 21511
+  },
+  {
+    "path": "zero-preparation-history/approved-protocol-before-clarification.md",
+    "sha256": "3306A23E2C81E14FCFB1F260E7F60E60ABDA436DCE60D89156289A40D00741ED",
+    "bytes": 21506
+  },
+  {
+    "path": "zero-preparation-history/assembly-probes-failed-nonzero-bitwise-check.bin",
+    "sha256": "C21F3BE056B906F7B94C7B4DF1B0AAAB7AD8287E96DA431B86B40971BD9FF626",
+    "bytes": 73136
+  }
+]

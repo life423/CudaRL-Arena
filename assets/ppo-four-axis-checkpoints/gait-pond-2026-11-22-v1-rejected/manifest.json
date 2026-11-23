@@ -1,0 +1,582 @@
+{
+  "schema": 1,
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "path": "approved-protocol.md",
+      "bytes": 19497,
+      "sha256": "b2bbc96b6ed2a8cd09274965594d9a2c03812d35281682cf78039f6dca66bf07"
+    },
+    {
+      "path": "frozen-inputs.json",
+      "bytes": 11325,
+      "sha256": "9b08b4da0dbda8380a81ac3f53980ca5bdca37192b8715ea85f10463b8450198"
+    },
+    {
+      "path": "gate-result.json",
+      "bytes": 578,
+      "sha256": "4f0a4091985e329820f46e3aad1d6b7bfa3e440075f63a62ab811bc60cda06b6"
+    },
+    {
+      "path": "gate-started/endpoints.bin",
+      "bytes": 891104,
+      "sha256": "5f841f97e5bdf16893085fd0860d84eec37eb7a897db50677c64bdeeee80388a"
+    },
+    {
+      "path": "Gate.stderr.log",
+      "bytes": 35,
+      "sha256": "91298ff776c9eb44b7ca77512c72569a26f254acbbea77b412126090cefec3f3"
+    },
+    {
+      "path": "Gate.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gpu-telemetry-Gate.csv",
+      "bytes": 232,
+      "sha256": "3b0c01c081e6798ebf7e56165901daf31de1a2b6679afeb7f6493fecfb57b577"
+    },
+    {
+      "path": "gpu-telemetry-Gate.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "holding-parent.bin",
+      "bytes": 10308,
+      "sha256": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3"
+    },
+    {
+      "path": "independent-preparation-verification.json",
+      "bytes": 19763,
+      "sha256": "2d15181b790882c29215cc36e1c9a9aba7f485c63e93a0420c63368d585dd010"
+    },
+    {
+      "path": "independent-verification.json",
+      "bytes": 22827,
+      "sha256": "e27b82492a2385c5b555786eda051973096ccd732126a9bb525c963c84355071"
+    },
+    {
+      "path": "initial-policy/gait-policy-update-0.bin",
+      "bytes": 10420,
+      "sha256": "6934d280006d01887716c3b318d9dc98d9f391e837ab8d0164412c043065f826"
+    },
+    {
+      "path": "layout.json",
+      "bytes": 465,
+      "sha256": "0aabbf9e4302a7d74ff35aebe63bb72044900fa8383908bcfa1210dedd48f242"
+    },
+    {
+      "path": "migrated-initial.bin",
+      "bytes": 59796,
+      "sha256": "a1734ada61c31a54f6b3c69c287a6f653fdf01934d0b597d94fdb2f085164d84"
+    },
+    {
+      "path": "offline-verifiers/verify_current_swim.py",
+      "bytes": 55953,
+      "sha256": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72"
+    },
+    {
+      "path": "offline-verifiers/verify_gait_pond.py",
+      "bytes": 48391,
+      "sha256": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b"
+    },
+    {
+      "path": "offline-verifiers/verify_hold_credit.py",
+      "bytes": 21511,
+      "sha256": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3"
+    },
+    {
+      "path": "parent-checkpoint.bin",
+      "bytes": 59016,
+      "sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0"
+    },
+    {
+      "path": "parent-protocol.bin",
+      "bytes": 292,
+      "sha256": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e"
+    },
+    {
+      "path": "preflight-passed.txt",
+      "bytes": 147,
+      "sha256": "241a0051b5b8f5a314694e73b9997215c61a041e54069528db7d55db6a093c20"
+    },
+    {
+      "path": "preparation-history/close_failed_gate_summary.py",
+      "bytes": 1954,
+      "sha256": "114cf5ec35df4afdf6c2d076f64fd91297bbf414881238d0f31109b0bdc4c6bd"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/gait-pond-native-2026-11-22/Release/ppo_gait_swim.exe",
+      "bytes": 6636032,
+      "sha256": "9afd3318bd33f8b709addf60e2fd664ff5806370d1dc8d0c287aa34a3f195184"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/approved-protocol.md",
+      "bytes": 19497,
+      "sha256": "b2bbc96b6ed2a8cd09274965594d9a2c03812d35281682cf78039f6dca66bf07"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/holding-parent.bin",
+      "bytes": 10308,
+      "sha256": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/initial-policy/gait-policy-update-0.bin",
+      "bytes": 10420,
+      "sha256": "6934d280006d01887716c3b318d9dc98d9f391e837ab8d0164412c043065f826"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/layout.json",
+      "bytes": 465,
+      "sha256": "0aabbf9e4302a7d74ff35aebe63bb72044900fa8383908bcfa1210dedd48f242"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/migrated-initial.bin",
+      "bytes": 59796,
+      "sha256": "a1734ada61c31a54f6b3c69c287a6f653fdf01934d0b597d94fdb2f085164d84"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/parent-checkpoint.bin",
+      "bytes": 59016,
+      "sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/parent-protocol.bin",
+      "bytes": 292,
+      "sha256": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/prepare-math/decode-zero.bin",
+      "bytes": 7724,
+      "sha256": "b1708bf33c2729f809979c849747cac5ba970d8dee01fa72547a0cff9873b46c"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/build/ppo/gait-pond-2026-11-22-v1/protocol.bin",
+      "bytes": 208,
+      "sha256": "fc2bc842300a5c7b1170a549a92ac9b06258a9d90cb627efedb2285146349d5e"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/manifest.json",
+      "bytes": 2896,
+      "sha256": "ff10dc91c49624a566d48472e34306edc0e294cac9b546e0ae5e34579abfc673"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/approved-protocol.md",
+      "bytes": 19497,
+      "sha256": "b2bbc96b6ed2a8cd09274965594d9a2c03812d35281682cf78039f6dca66bf07"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/holding-parent.bin",
+      "bytes": 10308,
+      "sha256": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/initial-policy/gait-policy-update-0.bin",
+      "bytes": 10420,
+      "sha256": "6934d280006d01887716c3b318d9dc98d9f391e837ab8d0164412c043065f826"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/layout.json",
+      "bytes": 465,
+      "sha256": "0aabbf9e4302a7d74ff35aebe63bb72044900fa8383908bcfa1210dedd48f242"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/migrated-initial.bin",
+      "bytes": 59796,
+      "sha256": "a1734ada61c31a54f6b3c69c287a6f653fdf01934d0b597d94fdb2f085164d84"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/parent-checkpoint.bin",
+      "bytes": 59016,
+      "sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/parent-protocol.bin",
+      "bytes": 292,
+      "sha256": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/prepare-math/decode-zero.bin",
+      "bytes": 7724,
+      "sha256": "b1708bf33c2729f809979c849747cac5ba970d8dee01fa72547a0cff9873b46c"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/run/protocol.bin",
+      "bytes": 208,
+      "sha256": "fc2bc842300a5c7b1170a549a92ac9b06258a9d90cb627efedb2285146349d5e"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/src/nn/motor/gait_policy_v1.h",
+      "bytes": 2160,
+      "sha256": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/src/nn/motor/gait_task_v1.h",
+      "bytes": 3635,
+      "sha256": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a"
+    },
+    {
+      "path": "preparation-history/failed-zero-1/tools/gait_swim_study.cu",
+      "bytes": 77187,
+      "sha256": "d7b94aa480a5d1e20fe6fdee77d18b584bbe113c853db74f1f174dcd57e7fbf4"
+    },
+    {
+      "path": "preparation-history/offline-audits/envelope-paths.txt",
+      "bytes": 4146,
+      "sha256": "44b5648f86b7c664bda34f52fd3e1c8e046449c85f6b19e98e88ae8062afc9e8"
+    },
+    {
+      "path": "preparation-history/offline-audits/verified-scripts/008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b.py",
+      "bytes": 48391,
+      "sha256": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b"
+    },
+    {
+      "path": "preparation-history/offline-audits/verified-scripts/258882b92c9d8eab367127b8adb2887ee3d622d4c31a42fae8d010d4d71c24f6.py",
+      "bytes": 42475,
+      "sha256": "258882b92c9d8eab367127b8adb2887ee3d622d4c31a42fae8d010d4d71c24f6"
+    },
+    {
+      "path": "preparation-history/offline-audits/verified-scripts/67bc9ff5b8a7b4cdbcdb4cb89ad7c5d4d42d308237be3c77636000391f810091.py",
+      "bytes": 47773,
+      "sha256": "67bc9ff5b8a7b4cdbcdb4cb89ad7c5d4d42d308237be3c77636000391f810091"
+    },
+    {
+      "path": "preparation-history/prepare.log",
+      "bytes": 45,
+      "sha256": "2681b619aceeb77f00a35dcb8c32457e6368f52d8eff091e276ff5cfe75b37d0"
+    },
+    {
+      "path": "prepare-math/bulk-gradient.bin",
+      "bytes": 188528,
+      "sha256": "085dff6d491d0ddfe1a71149437dd6e790868bbe474e20e14bbd8b1aad1cc554"
+    },
+    {
+      "path": "prepare-math/decode-zero.bin",
+      "bytes": 7724,
+      "sha256": "b1708bf33c2729f809979c849747cac5ba970d8dee01fa72547a0cff9873b46c"
+    },
+    {
+      "path": "prepare-math/math-zero-diagnostic.json",
+      "bytes": 237,
+      "sha256": "4a475ebcbb1fa6a2c107068ae5326a05c683ee325b69a5c4fad84e25b1242575"
+    },
+    {
+      "path": "prepare-math/math-zero.json",
+      "bytes": 313,
+      "sha256": "aa3265ad8988d12d72a74df5634a6e4248d9c5294d4d0d213b143f67793eb75e"
+    },
+    {
+      "path": "prepared.json",
+      "bytes": 168,
+      "sha256": "9a0933e06b4e7ecacd49aa63ee1ea2006fd8b4ac4fcfa01fddeb40a3cccfcab2"
+    },
+    {
+      "path": "process-execution.json",
+      "bytes": 250,
+      "sha256": "a223ac3cf8d29c16579f2631dc802540e79b7d23fd352406aa69d0e58c42f7c3"
+    },
+    {
+      "path": "protocol.bin",
+      "bytes": 208,
+      "sha256": "fc2bc842300a5c7b1170a549a92ac9b06258a9d90cb627efedb2285146349d5e"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 1468,
+      "sha256": "c45bff1a4d399881c6bb9c70fa8d46264d8ffbeabc459fece2538e051619841c"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1885,
+      "sha256": "a8afddef914327adf9b77e694e499a652033eea377dcd3f680226399323687e8"
+    },
+    {
+      "path": "source-snapshot/build/gait-pond-preparation-2026-11-22/evidence.py",
+      "bytes": 3207,
+      "sha256": "a0af12877a10b00655357e5dc448a96b96d83e0c3fe1abcb9f874afba0c9492d"
+    },
+    {
+      "path": "source-snapshot/build/gait-pond-preparation-2026-11-22/launch.ps1",
+      "bytes": 3376,
+      "sha256": "3de1a11be0a28c80f8e655c1f472c7e2966ded09846c9edc4ae240394a28f067"
+    },
+    {
+      "path": "source-snapshot/CMakeLists.txt",
+      "bytes": 11994,
+      "sha256": "cfedd022b1b4f6e7e22becd32acb60c62e8ced0efd21465d847a8c55814ee791"
+    },
+    {
+      "path": "source-snapshot/docs/GAIT_POND_PROTOCOL_2026-11-22.md",
+      "bytes": 19497,
+      "sha256": "b2bbc96b6ed2a8cd09274965594d9a2c03812d35281682cf78039f6dca66bf07"
+    },
+    {
+      "path": "source-snapshot/src/core/checkpoint.cpp",
+      "bytes": 4620,
+      "sha256": "17915cd45c2c381c8fcf15884891badb4d7ea408305c5fb0864e9c9065bfc770"
+    },
+    {
+      "path": "source-snapshot/src/core/checkpoint.h",
+      "bytes": 2413,
+      "sha256": "2f544f600fa3c1281f17629c4ad7faf08cbdb54b38376e1d7489a1921074f93d"
+    },
+    {
+      "path": "source-snapshot/src/core/hd.h",
+      "bytes": 337,
+      "sha256": "2a8d1c759d9f8b8e268edb95134f749dcedbcf200e83200c628bbb213c98d7ac"
+    },
+    {
+      "path": "source-snapshot/src/core/rng.h",
+      "bytes": 1401,
+      "sha256": "5d90e29d19c1e16ac963465a575de3711cbbc5a8910a876a7c69755aba803627"
+    },
+    {
+      "path": "source-snapshot/src/cuda/cuda_memory.h",
+      "bytes": 4350,
+      "sha256": "9abe88d058d17ef7b89155dfd756f8dcee5b24a8e4515856ce06f3f93672ab00"
+    },
+    {
+      "path": "source-snapshot/src/nn/adam.h",
+      "bytes": 2093,
+      "sha256": "1069ee7a5d8c1098c2305781bf2f87add6a9a3ebac3bdafa8792b6fc1ba2d7b9"
+    },
+    {
+      "path": "source-snapshot/src/nn/adam_config.h",
+      "bytes": 585,
+      "sha256": "e2ad8fcc7336749b736f74a579cfbd644cf55d758f7f8ee4b3fe31acaec19b73"
+    },
+    {
+      "path": "source-snapshot/src/nn/gemm.h",
+      "bytes": 2434,
+      "sha256": "f52a4c233d1be5e3eec2eccadad6675a3e5cc31ecf951b7e8b63ba7c568e4bd6"
+    },
+    {
+      "path": "source-snapshot/src/nn/mlp_cpu.h",
+      "bytes": 6814,
+      "sha256": "5566a16cd2d2d84bd2e5beb61dddd2642df452f43e3c47ef1b60df9264302153"
+    },
+    {
+      "path": "source-snapshot/src/nn/mlp_gpu.h",
+      "bytes": 2594,
+      "sha256": "0ad0d2107e8c5b4ec3bc6fc4c5af001d9546cf7883269b00600bd01af7e983fe"
+    },
+    {
+      "path": "source-snapshot/src/nn/mlp_spec.h",
+      "bytes": 6090,
+      "sha256": "762c60a18477c66085a8276de7ab46aad767b665826e01ffc923fb368646f9ef"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/frozen_controller.cpp",
+      "bytes": 7960,
+      "sha256": "0e47a615c9ce9a749baa03286081b674e4dcddbda6959af7467fc9448b0c4896"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/frozen_controller.h",
+      "bytes": 2966,
+      "sha256": "b82614cc700d5fc0976f253a4888ec8334b662646e594baed4797ce05568ddb3"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/gait_policy_v1.h",
+      "bytes": 2160,
+      "sha256": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/gait_task_v1.h",
+      "bytes": 3635,
+      "sha256": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/hold_assessment.h",
+      "bytes": 4385,
+      "sha256": "cdda2488e1ad54c902dfec54ff1891e49e7638c50607ecf62d90daffbd8dc569"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/joint_motor.h",
+      "bytes": 5836,
+      "sha256": "dc53d22cff99352c5e378b6bcd919569c9a26455aa5df9f8ec1c36172171314f"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/movement_model.h",
+      "bytes": 10657,
+      "sha256": "5ab30eb92a609ac8cfd50944bef8898cf199be3989dbb6550b05bf44bc5449d5"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/observation_contract.h",
+      "bytes": 617,
+      "sha256": "6d46b600194ce1c830fce11c01860143bbe3af9452996dc6bff07043f6c10332"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/state.h",
+      "bytes": 2183,
+      "sha256": "be6444f54b748d58b36f75a36e6cebb880863c0950207615495298fb13d8da6f"
+    },
+    {
+      "path": "source-snapshot/src/nn/motor/straight_task.h",
+      "bytes": 24241,
+      "sha256": "994f7719f497e237ad4428c74feac2d73ce57e2ea6ea8e12ab8085882e28df22"
+    },
+    {
+      "path": "source-snapshot/src/physics/contact.h",
+      "bytes": 7503,
+      "sha256": "3e88a73390f08803eb5f55abc8ab1d93533884169817bf5165f7da698dc152a6"
+    },
+    {
+      "path": "source-snapshot/src/physics/dynamics.h",
+      "bytes": 9192,
+      "sha256": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6"
+    },
+    {
+      "path": "source-snapshot/src/rl/append_hold_checkpoint.h",
+      "bytes": 5009,
+      "sha256": "0242c141c790bc9fe98ca95962c5da335ce38916236e735626cf01562f56966b"
+    },
+    {
+      "path": "source-snapshot/src/rl/ar_gaussian_math.h",
+      "bytes": 2719,
+      "sha256": "43c1d5402d4f86c26d69ca15d8030e8e42271cec4c411763211c6c5440d5f797"
+    },
+    {
+      "path": "source-snapshot/src/rl/gaussian_kernels.h",
+      "bytes": 3307,
+      "sha256": "52ce5311a2f89ac0fb14e253f221ba5da63172fabd04753fa398d97b803e267d"
+    },
+    {
+      "path": "source-snapshot/src/rl/gaussian_math.h",
+      "bytes": 3304,
+      "sha256": "2caec7f5f720d1c9562e5a25d0380bf766fca05eeab048e9cf859b683efe8700"
+    },
+    {
+      "path": "source-snapshot/src/rl/motor_rollout.cuh",
+      "bytes": 8636,
+      "sha256": "5d2d479fd10654ccfed70225969304a7f5dc96ab0f1afd187c646c7ced514a28"
+    },
+    {
+      "path": "source-snapshot/src/rl/ppo_checkpoint.h",
+      "bytes": 8055,
+      "sha256": "7dfa4807dc65d36d62bfa35d05e9c71604b7ccb84e37ed4de1d00b59072783c2"
+    },
+    {
+      "path": "source-snapshot/src/rl/ppo_diagnostics.h",
+      "bytes": 3172,
+      "sha256": "6d3bcdec41a53fde8a44fd70e740f78944aa6f36e271ae5cdf90f1340ce4feec"
+    },
+    {
+      "path": "source-snapshot/src/rl/ppo_kernels.h",
+      "bytes": 2657,
+      "sha256": "54edd3d7cdfa0abe6ac65ab24de08240f4b00d5bcb984eceb931cdd1984952c8"
+    },
+    {
+      "path": "source-snapshot/src/rl/ppo_math.h",
+      "bytes": 6515,
+      "sha256": "68e726dc7a84778e6900bc6894bed50126ec4545a1370618dff0953374d25e8d"
+    },
+    {
+      "path": "source-snapshot/src/simulation/world.cpp",
+      "bytes": 8888,
+      "sha256": "3fb892df82fdf739aaa58ee706e56d895229cd00fcc9a6c48c9d5f59708348e8"
+    },
+    {
+      "path": "source-snapshot/src/simulation/world.h",
+      "bytes": 6386,
+      "sha256": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3"
+    },
+    {
+      "path": "source-snapshot/tools/append_hold8.cu",
+      "bytes": 26001,
+      "sha256": "5d46932e99f0245f0cca81110671e256cefd329b477c62e5247f156034a7eeb8"
+    },
+    {
+      "path": "source-snapshot/tools/gait_swim_study.cu",
+      "bytes": 77662,
+      "sha256": "f15b7e746bd51f9d30b74424e021323426ece7b90d0e35b47b0c04a78f0adebe"
+    },
+    {
+      "path": "source-snapshot/tools/hold_learned_amplitude_math.h",
+      "bytes": 1476,
+      "sha256": "54d39fa6e7081abcf9f8a534821fbe839acb7b14b7725680472c9d14c78f3d28"
+    },
+    {
+      "path": "source-snapshot/tools/hold_scale_study.cu",
+      "bytes": 23555,
+      "sha256": "728547aa895a460bdde2964aa3a3ac2c60851a87320c8fc51c050e895ef34ec5"
+    },
+    {
+      "path": "source-snapshot/tools/ppo_motor.cu",
+      "bytes": 197600,
+      "sha256": "23ed56686a42f47249d07bd7cc5949c739c886696ec8a6284a4053a150a05875"
+    },
+    {
+      "path": "source-snapshot/tools/rest_hold_measured_baseline.inc",
+      "bytes": 12347,
+      "sha256": "08b5e999343361bc453c89899289e87201644d66e770852b26d07ba4cd8b0d78"
+    },
+    {
+      "path": "source-snapshot/tools/rest_hold_study.cu",
+      "bytes": 47128,
+      "sha256": "5f510f60cc65364c04320b48d0efa73845e0c508d4eda813c2d9046106330d1f"
+    },
+    {
+      "path": "source-snapshot/tools/rest_hold_task_critic.inc",
+      "bytes": 9816,
+      "sha256": "53f9c61ff663268a30d6964d9f8c4143946b4986abb28900640c82468da840a5"
+    },
+    {
+      "path": "source-snapshot-reference.json",
+      "bytes": 16578,
+      "sha256": "7cc66e8d0a8186671420ab9093b6127a13b126551ce6c00b6469353526bf472f"
+    },
+    {
+      "path": "status.json",
+      "bytes": 104,
+      "sha256": "e3dcf53f6aa36614cb9e554c15e92263befd1c515604db22beb58e275920228c"
+    },
+    {
+      "path": "study-result.json",
+      "bytes": 1616,
+      "sha256": "f7570bef6b68c59cd328e3ddb1254f1074c6c3604aeb2de61349446f98a73e80"
+    },
+    {
+      "path": "verified-math/bulk-gradient.bin",
+      "bytes": 188528,
+      "sha256": "085dff6d491d0ddfe1a71149437dd6e790868bbe474e20e14bbd8b1aad1cc554"
+    },
+    {
+      "path": "verified-math/decode-zero.bin",
+      "bytes": 7724,
+      "sha256": "b1708bf33c2729f809979c849747cac5ba970d8dee01fa72547a0cff9873b46c"
+    },
+    {
+      "path": "verified-math/math-zero-diagnostic.json",
+      "bytes": 237,
+      "sha256": "4a475ebcbb1fa6a2c107068ae5326a05c683ee325b69a5c4fad84e25b1242575"
+    },
+    {
+      "path": "verified-math/math-zero.json",
+      "bytes": 313,
+      "sha256": "aa3265ad8988d12d72a74df5634a6e4248d9c5294d4d0d213b143f67793eb75e"
+    },
+    {
+      "path": "verified-zero/bulk-policy-zero.json",
+      "bytes": 357,
+      "sha256": "b29be1ff705bad309c8333af4ab452300ebdf5bce9f26d1f8e4bad5884b5ed28"
+    },
+    {
+      "path": "verified-zero/initialization-zero.json",
+      "bytes": 300,
+      "sha256": "0deba8aae58ba404b6330d4689a826c0dd08f67b0327979b688e6e5d710964aa"
+    },
+    {
+      "path": "verified-zero/initialization.bin",
+      "bytes": 8716380,
+      "sha256": "8f23f08d9ebc5de3f798ba58e477ae838cdffaab6279ebf6b7c2967100ac0ecd"
+    },
+    {
+      "path": "zero-evidence-aliases.json",
+      "bytes": 662,
+      "sha256": "7ec25f21f401b81ed00fb585d18976506a7e8c3e2860012eac64f0022ab5e2b8"
+    }
+  ],
+  "excluded_self": "manifest.json"
+}

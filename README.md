@@ -1,17 +1,39 @@
-# CudaRL creature motor
+# Tadpole Pond
+
+**Mission: create an evolving reinforcement-learning creature that users can
+interact with, drawing on what it has learned and learning from new experiences
+to adapt and thrive.**
+
+The intended experience is its own persistent pond world: a creature to feed,
+observe and interact with as it explores, rests and learns. The current motor
+inspector is an intermediate tool; that integrated world remains to be built.
 
 Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
 motion comes from torque-limited internal joints and water forces; Godot supplies
 presentation only. The motor supplies four independent joint-angle targets through bounded servos.
 
-The mission is a physical creature that starts as a dependable swimmer, learns
-from player interaction while retaining its skills, then grows into more capable
-movement: underwater limbs, shallow crawling, land movement and eventually
-manipulation. One learned goal chooser and one reusable body motor are the
-intended design. Those later stages and the interactive learning loop are not
-implemented in this minimal research project yet.
+Dependable movement is a foundation for that experience. Core aquatic abilities
+include swimming and steering in still water and currents, braking, holding a
+position against flow, and recovering while retaining previously learned skills.
+User interaction should lead to measurable adaptation, with actual RL updates
+distinguished from the use of existing training. The longer journey includes
+physical growth, underwater limbs, shallow crawling, land movement and eventually
+manipulation. One learned goal chooser and one reusable body motor remain the
+intended design. The interactive learning loop and later body stages remain to
+build; current-capable swimming is not yet qualified.
 
 ## Current state
+
+**Current work:** the explicitly approved [corrected GPU current study](docs/CURRENT_SWIM_V2_RESULTS_2026-11-22.md)
+passed its fresh physics gate and completed 32 native PPO updates. Original
+current-swimming cases improved from **4/16 to 8/16**, short of the unchanged
+16/16 gate. The candidate is not qualified or installed; further withheld/current
+endurance tests did not run. The viewer keeps the qualified calm policy and
+discloses the latest result in Details. The selected 16,384-world CUDA workload
+measured about 500,294 control steps/second including evidence writes. The study
+used 89,566,320 controls and 344 Adam steps, then closed without retries or an
+extension. [The first numerical failure](docs/CURRENT_SWIM_RESULTS_2026-11-22.md)
+and all prior evidence remain preserved.
 
 **November 22:** [learned persistent amplitude](docs/HOLD_LEARNED_AMPLITUDE_RESULTS_2026-11-22.md)
 now passes all six original and six withheld 64-second calm holds, plus both
@@ -96,9 +118,11 @@ records that choice and rejects mismatched frozen evaluators.
 The current single Godot frontend loads the qualified saved research policy from
 `res://research_data/learned-amplitude-v1.bin`, with its matching `viewer.json`
 metadata. It starts paused; Play runs actual native physics with frozen inference.
-Hold/Swim selection restarts the isolated task from rest, so switching is not a
+Rest/Swim selection restarts the isolated task from rest, so switching is not a
 braking test. The viewer has no optimizer or background learning worker. See
 [the interface and verification guide](docs/POND_UI_REVIEW_2026-11-22.md).
+It starts in a close aerial creature view; Side view changes the angle, and
+scroll/pinch or + / - adjusts zoom. Title/status use an opaque high-contrast surface.
 
 The earlier imitation-trained controllers and dedicated supervised training paths
 were removed by user request. Missing or incompatible policies produce a usable

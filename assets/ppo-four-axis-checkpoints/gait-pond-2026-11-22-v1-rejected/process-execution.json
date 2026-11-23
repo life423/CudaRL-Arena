@@ -1,0 +1,14 @@
+{
+  "active_process_seconds": 0.4549515,
+  "cap_seconds": 900,
+  "steps": [
+    {
+      "label": "Gate",
+      "mode": "--gate",
+      "pid": 21776,
+      "status": "failed",
+      "seconds": 0.4549515,
+      "exit_code": 3
+    }
+  ]
+}

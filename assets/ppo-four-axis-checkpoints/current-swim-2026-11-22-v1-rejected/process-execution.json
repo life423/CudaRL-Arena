@@ -1,0 +1,14 @@
+{
+  "active_process_seconds": 3.1245796,
+  "cap_seconds": 900,
+  "steps": [
+    {
+      "label": "physical-gate",
+      "mode": "--run",
+      "pid": 12148,
+      "status": "failed",
+      "seconds": 3.1245796,
+      "exit_code": 3
+    }
+  ]
+}

@@ -1,3 +1,6 @@
 # Evidence manifests hash exact bytes. Never normalize immutable study archives.
 assets/** -text -diff
 live/research_data/*.bin -text
+live/research_data/current-study.json -text
+live/research_data/current-study-result.json -text -diff
+live/research_data/current-study-verification.json -text -diff

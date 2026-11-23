@@ -1,13 +1,18 @@
 #include "hold_lab_preview.h"
+#include "pond_view_domain.h"
 #include "core/checkpoint.h"
 #include "motor/frozen_controller.h"
 #include "motor/hold_assessment.h"
+#include "motor/gait_policy_v1.h"
+#include "motor/gait_task_v1.h"
+#include "gait_preview_contract.h"
 #include "../../tools/hold_learned_amplitude_math.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/vector3.hpp>
+#include <godot_cpp/variant/vector2.hpp>
 #include <array>
 #include <cmath>
 #include <stdexcept>
@@ -18,9 +23,16 @@ namespace model = cudarl::movement;
 namespace p = cudarl::physics;
 namespace cp = cudarl::checkpoint;
 namespace nn = cudarl::nn;
+namespace gait = cudarl::gait_policy_v1;
+namespace gait_task = cudarl::gait_task_v1;
 namespace {
 Vector3 point(const p::V& v) { return Vector3(v.x,v.y,v.z); }
 constexpr char canonical[] = "810DBD593CE39475CDD6E95B709BEF3FDB34D50C9FCBBB2C345C7A8882A0BEF0";
+bool hexadecimal_sha(const std::vector<uint8_t>& value) {
+    if(value.size()!=64) return false;
+    for(auto c:value) if(!((c>='0'&&c<='9')||(c>='a'&&c<='f')||(c>='A'&&c<='F'))) return false;
+    return true;
+}
 }
 struct HoldLabPreview::Impl {
     nn::CpuMlp<float> actor{{{41,32,32,4},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}}};
@@ -32,6 +44,9 @@ struct HoldLabPreview::Impl {
     std::array<float,2> head_parameters{0,0};
     uint32_t package_version=0,policy_method=0;
     float learned_sigma=0;
+    std::array<float,8> gait_means{};
+    uint32_t gait_updates=0;
+    std::string gait_checkpoint_sha;
     bool loaded=false,paused=true,holding=true,qualified=false;
     int case_id=0,lesson_updates=0;
     uint64_t controls=0,substeps=0,protocol=0;
@@ -56,25 +71,28 @@ bool HoldLabPreview::load_controller(const String& path) {
     auto& s=*impl_; s.loaded=false; s.paused=true; s.error.clear();
     s.qualified=false;s.lesson_updates=0;s.protocol=0;s.failure_recorded=false;
     s.package_version=0;s.policy_method=0;s.head_parameters={0,0};s.learned_sigma=0;
+    s.gait_means.fill(0);s.gait_updates=0;s.gait_checkpoint_sha.clear();
     try {
         const auto global=ProjectSettings::get_singleton()->globalize_path(path);
         const auto bytes=cp::read(global.utf8().get_data()); cp::Reader r{bytes};
         if(r.value<uint32_t>()!=0x31564c48) throw std::runtime_error("Wrong research motor package magic");
         const auto version=r.value<uint32_t>();
-        if(version!=1 && version!=2) throw std::runtime_error("Unsupported research motor package version");
+        if(version!=1 && version!=2 && version!=3) throw std::runtime_error("Unsupported research motor package version");
         if(r.value<uint32_t>()!=model::kVersion || r.value<uint32_t>()!=sm::kTaskVersion ||
            r.value<uint32_t>()!=cudarl::joint_motor::kActionVersion || r.value<uint32_t>()!=4 ||
            r.value<uint32_t>()!=41 || r.value<uint32_t>()!=4 || r.value<uint32_t>()!=336)
             throw std::runtime_error("Incompatible research motor package");
-        const auto method=version==2?r.value<uint32_t>():0u;
-        if(version==2 && method!=1) throw std::runtime_error("Unsupported learned motor method");
+        const auto method=version>=2?r.value<uint32_t>():0u;
+        if((version==2 && method!=1)||(version==3 && method!=3)) throw std::runtime_error("Unsupported learned motor method");
         const auto updates=r.value<uint32_t>(),qualified=r.value<uint32_t>();
         if(updates>32 || qualified>1) throw std::runtime_error("Invalid lesson metadata");
+        if(version==3 && (updates!=7 || qualified!=1)) throw std::runtime_error("Gait package must preserve the qualified holding parent");
         const auto protocol=r.value<uint64_t>();
         if(protocol==0) throw std::runtime_error("Missing research protocol identity");
         const auto parent=r.array<uint8_t>(64);
         if(std::string(parent.begin(),parent.end())!=canonical) throw std::runtime_error("Wrong preserved parent");
-        const auto contracts=cudarl::motor::FrozenController::source_contract_hashes();
+        auto contracts=cudarl::motor::FrozenController::source_contract_hashes();
+        if(version==3) for(const char* hash:cudarl::gait_preview::kContracts) contracts.emplace_back(hash);
         if(r.value<uint32_t>()!=contracts.size()) throw std::runtime_error("Source contract count mismatch");
         for(auto expected:contracts) {
             const auto text=r.array<uint8_t>(64);
@@ -96,6 +114,20 @@ bool HoldLabPreview::load_controller(const String& path) {
                 throw std::runtime_error("Learned amplitude mapping does not match its saved parameters");
             gains.fill(gain);
         }
+        std::array<float,8> gait_means{};uint32_t gait_updates=0;std::string gait_sha;
+        if(version==3) {
+            if(r.value<uint32_t>()!=gait::version || r.value<uint32_t>()!=gait_task::task_version ||
+               r.value<uint32_t>()!=gait_task::observation_version) throw std::runtime_error("Unsupported gait policy/task/observations");
+            gait_updates=r.value<uint32_t>();
+            const auto raw_means=r.array<float>(8);
+            const float gait_sigma=r.value<float>(),bias_limit=r.value<float>(),gain_ratio=r.value<float>();
+            const auto source_sha=r.array<uint8_t>(64);
+            if(gait_updates>64 || raw_means.size()!=8 || gait_sigma!=gait::fixed_sigma ||
+               bias_limit!=gait::bias_limit || gain_ratio!=2.f || !hexadecimal_sha(source_sha))
+                throw std::runtime_error("Invalid qualified gait payload");
+            for(float x:raw_means) if(!std::isfinite(x)) throw std::runtime_error("Nonfinite gait policy mean");
+            std::copy(raw_means.begin(),raw_means.end(),gait_means.begin());gait_sha.assign(source_sha.begin(),source_sha.end());
+        }
         r.finish();
         if(parameters.size()!=2532) throw std::runtime_error("Wrong motor parameter shape");
         for(float x:parameters) if(!std::isfinite(x)) throw std::runtime_error("Nonfinite backbone weight");
@@ -103,6 +135,7 @@ bool HoldLabPreview::load_controller(const String& path) {
         s.actor.params()=std::move(parameters);std::copy(gains.begin(),gains.end(),s.gains.begin());
         s.package_version=version;s.policy_method=method;s.head_parameters=head;s.learned_sigma=sigma;
         s.lesson_updates=static_cast<int>(updates);s.qualified=qualified!=0;s.protocol=protocol;s.loaded=true;
+        s.gait_means=gait_means;s.gait_updates=gait_updates;s.gait_checkpoint_sha=std::move(gait_sha);
         if(!reset(0,true)) {s.loaded=false;return false;}
         return true;
     } catch(const std::exception& e) {s.error=e.what();return false;}
@@ -133,21 +166,32 @@ bool HoldLabPreview::start() {
 void HoldLabPreview::pause() {impl_->paused=true;}
 bool HoldLabPreview::step() {
     auto& s=*impl_;if(!s.loaded || s.paused || !s.error.empty() || s.controls>=static_cast<uint64_t>(s.config.maximum_controls)) return false;
+    if(!cudarl::pond_view::contains(s.world.physical.body)) {
+        s.error="The creature reached the edge of the supported pond area";s.paused=true;return false;
+    }
     if(!sm::in_domain(s.world,s.config) || (s.holding && !sm::update_velocity_request(s.world,s.config,s.task))) {
         s.error="Native preview domain/request stop";s.paused=true;return false;
     }
     float observation[41]{};
     if(!sm::observe_appended(s.task,s.world,s.config,observation)) {s.error="Invalid native observation";s.paused=true;return false;}
     s.actor.forward(observation,1);float means[4];
-    for(int j=0;j<4;++j) means[j]=s.holding?s.gains[j]*s.actor.output()[j]:s.actor.output()[j];
+    if(s.policy_method==3) gait::motor_latents(s.holding,s.gait_means.data(),s.actor.output(),s.gains[0],means);
+    else for(int j=0;j<4;++j) means[j]=s.holding?s.gains[j]*s.actor.output()[j]:s.actor.output()[j];
     sm::Action action;
     if(!sm::action_from_latent(means,action)){s.error="Invalid learned joint command";s.paused=true;return false;}
     const auto before=s.world.attempted_substeps;
     s.failed_before=s.failed_candidate=s.world.physical.body;
     ++s.attempted_controls;
-    const bool advanced=cudarl::joint_motor::step_state(s.world,action.command,nullptr,&s.failed_before,&s.failed_candidate);
-    s.substeps+=s.world.attempted_substeps-before;
-    if(!advanced || s.world.attempted_substeps-before!=10) {s.failure_recorded=true;s.error="Native physical stop: "+std::to_string(s.world.failure_code);s.paused=true;return false;}
+    auto next=s.world;
+    const bool advanced=cudarl::joint_motor::step_state(next,action.command,nullptr,&s.failed_before,&s.failed_candidate);
+    const auto attempted=next.attempted_substeps-before;s.substeps+=attempted;
+    if(!advanced || attempted!=10) {s.world=next;s.failure_recorded=true;s.error="Native physical stop: "+std::to_string(s.world.failure_code);s.paused=true;return false;}
+    if(!cudarl::pond_view::contains(next.physical.body)) {
+        s.failed_before=s.world.physical.body;s.failed_candidate=next.physical.body;s.failure_recorded=true;
+        s.world.attempted_substeps=next.attempted_substeps;
+        s.error="The creature reached the edge of the supported pond area";s.paused=true;return false;
+    }
+    s.world=next;
     ++s.controls;const auto transition=s.holding?sm::record_hold_control(s.task,s.world,s.config):sm::record_control(s.task,s.world,s.config);
     if(!transition.accepted || (s.holding && !s.hold_score.record(static_cast<int>(s.controls),transition.metrics))) {
         s.error="Native preview interval rejected";s.paused=true;return false;
@@ -160,6 +204,9 @@ Dictionary HoldLabPreview::get_geometry() const {
     Dictionary out;out["model"]=6;out["scale_m"]=p::scale;out["rod_radius_m"]=model::Geometry::rod_radius;
     out["fin_extension_m"]=model::Geometry::fin_extension;out["fin_thickness_m"]=model::Geometry::fin_thickness;
     out["arena_width_m"]=1.2f;out["arena_depth_m"]=.8f;out["floor_y_m"]=cudarl::contact::bounds_min_model().y*p::scale;
+    out["pond_flat_radii_m"]=Vector2(cudarl::pond_view::flat_radius_x_m,cudarl::pond_view::flat_radius_z_m);
+    out["pond_domain_radii_m"]=Vector2(cudarl::pond_view::domain_radius_x_m,cudarl::pond_view::domain_radius_z_m);
+    out["pond_water_radii_m"]=Vector2(cudarl::pond_view::water_radius_x_m,cudarl::pond_view::water_radius_z_m);
     Array links;for(int i=0;i<3;++i) {const auto g=model::body_geometry(i);Dictionary d;d["length"]=g.length;d["half_height"]=g.half_height;d["half_width"]=g.half_width;links.append(d);}out["links"]=links;return out;
 }
 Dictionary HoldLabPreview::get_state() const {
@@ -169,16 +216,20 @@ Dictionary HoldLabPreview::get_state() const {
     out["model"]=6;out["controls"]=static_cast<int64_t>(s.controls);out["substeps"]=static_cast<int64_t>(s.substeps);out["time_s"]=s.controls*p::dt;
     out["attempted_controls"]=static_cast<int64_t>(s.attempted_controls);out["failure_recorded"]=s.failure_recorded;
     out["live_physics"]=true;out["stochastic_exploration"]=false;out["runtime_adopted"]=false;
+    out["pond_domain_valid"]=cudarl::pond_view::contains(body);out["pond_domain_version"]=1;
     if(s.failure_recorded){Dictionary first,candidate;
         first["position"]=point(s.failed_before.position);first["orientation"]=Quaternion(s.failed_before.orientation.x,s.failed_before.orientation.y,s.failed_before.orientation.z,s.failed_before.orientation.w);
         candidate["position"]=point(s.failed_candidate.position);candidate["orientation"]=Quaternion(s.failed_candidate.orientation.x,s.failed_candidate.orientation.y,s.failed_candidate.orientation.z,s.failed_candidate.orientation.w);
         for(int j=0;j<4;++j){first[String("j")+String::num_int64(j)]=s.failed_before.angle[j];candidate[String("j")+String::num_int64(j)]=s.failed_candidate.angle[j];}
         out["failure_before"]=first;out["failure_candidate"]=candidate;}
     out["training_update"]=336;out["holding_updates"]=s.lesson_updates;out["observation_schema"]=4;out["action_mapping"]=cudarl::joint_motor::kActionVersion;
-    out["package_version"]=s.package_version;out["policy_method"]=String(s.policy_method==1?"learned_persistent_amplitude":s.loaded?"four_axis_hold_gains":"unloaded");
-    out["holding_parameter_count"]=s.policy_method==1?2:4;out["backbone_frozen"]=true;
-    if(s.policy_method==1){out["policy_mu"]=s.head_parameters[0];out["policy_variance_coordinate"]=s.head_parameters[1];
+    out["package_version"]=s.package_version;out["policy_method"]=String(s.policy_method==3?"gait_trim_gain":s.policy_method==1?"learned_persistent_amplitude":s.loaded?"four_axis_hold_gains":"unloaded");
+    out["holding_parameter_count"]=s.policy_method>=1?2:4;out["backbone_frozen"]=true;
+    if(s.policy_method>=1){out["policy_mu"]=s.head_parameters[0];out["policy_variance_coordinate"]=s.head_parameters[1];
         out["policy_sigma"]=s.learned_sigma;out["deterministic_amplitude"]=s.gains[0];}
+    out["gait_available"]=s.loaded&&s.policy_method==3;out["gait_updates"]=static_cast<int64_t>(s.gait_updates);
+    out["gait_parameter_count"]=s.policy_method==3?8:0;out["gait_checkpoint_sha256"]=String(s.gait_checkpoint_sha.c_str());
+    out["gait_tail_bend_degrees"]=gait_task::tail_vertical_bend_degrees(body);
     out["maximum_controls"]=s.config.maximum_controls;out["duration_s"]=static_cast<double>(s.config.maximum_controls)*.05;
     out["target_speed_m_s"]=s.holding?0.f:.008f;out["speed_m_s"]=p::norm(z.velocity_m_s);out["depth_m"]=z.depth_m;out["lateral_m"]=z.lateral_m;
     out["anchor_error_m"]=s.holding?p::norm(z.hold_error_m):0.f;out["tilt_deg"]=z.tilt_deg;out["forward_m"]=z.forward_m;

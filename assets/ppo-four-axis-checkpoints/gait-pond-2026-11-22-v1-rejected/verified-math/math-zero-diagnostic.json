@@ -1,0 +1,1 @@
+{"objective":"mean_minibatch_PPO_loss","gradient_scale":0.00048828125,"max_gradient_error":2.9157178472842549e-10,"max_stats_error":2.7070499974968243e-07,"max_FD_error":7.5724582854208577e-14,"physical_controls":0,"optimizer_steps":0}

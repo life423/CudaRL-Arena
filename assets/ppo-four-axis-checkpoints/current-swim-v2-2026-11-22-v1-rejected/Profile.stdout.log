@@ -1,0 +1,12 @@
+PROFILE_V2 N=2048 sample=0 seconds=0.257491 controls=82576
+PROFILE_V2 N=2048 sample=1 seconds=0.223428 controls=148112
+PROFILE_V2 N=2048 sample=2 seconds=0.227756 controls=213648
+PROFILE_V2 N=4096 sample=0 seconds=0.312646 controls=344720
+PROFILE_V2 N=4096 sample=1 seconds=0.314636 controls=475792
+PROFILE_V2 N=4096 sample=2 seconds=0.320353 controls=606864
+PROFILE_V2 N=8192 sample=0 seconds=0.555581 controls=869008
+PROFILE_V2 N=8192 sample=1 seconds=0.553563 controls=1131152
+PROFILE_V2 N=8192 sample=2 seconds=0.565933 controls=1393296
+PROFILE_V2 N=16384 sample=0 seconds=1.08073 controls=1917584
+PROFILE_V2 N=16384 sample=1 seconds=1.06133 controls=2441872
+PROFILE_V2 N=16384 sample=2 seconds=1.03459 controls=2966160

@@ -1,0 +1,46 @@
+{
+  "active_process_seconds": 199.26704329999998,
+  "cap_seconds": 900,
+  "steps": [
+    {
+      "label": "Gate",
+      "mode": "--run",
+      "pid": 37104,
+      "status": "completed",
+      "seconds": 2.859778,
+      "exit_code": 0
+    },
+    {
+      "label": "Baseline",
+      "mode": "--baseline",
+      "pid": 23560,
+      "status": "completed",
+      "seconds": 2.4500433,
+      "exit_code": 0
+    },
+    {
+      "label": "Profile",
+      "mode": "--profile",
+      "pid": 30928,
+      "status": "completed",
+      "seconds": 6.8468868,
+      "exit_code": 0
+    },
+    {
+      "label": "Calibrate",
+      "mode": "--calibrate",
+      "pid": 26768,
+      "status": "completed",
+      "seconds": 4.4270029,
+      "exit_code": 0
+    },
+    {
+      "label": "Train",
+      "mode": "--train",
+      "pid": 28868,
+      "status": "completed",
+      "seconds": 182.6833323,
+      "exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"passed":true,"actual_bulk_rows":2048,"max_gradient_error":2.9157178472842549e-10,"max_stats_error":2.7070499974968243e-07,"max_FD_error":7.5724582854208577e-14,"CUDA_decode_cases":96,"max_decode_error":2.384185791015625e-07,"holding_exact":true,"identity_exact":true,"physical_controls":0,"optimizer_steps":0}

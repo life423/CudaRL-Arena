@@ -1,0 +1,1 @@
+Gait bulk PPO/FD, identity, exact holding branch, CPU/CUDA body/input/RNG/ABI and fresh Adam checked; zero physical controls and optimizer steps.

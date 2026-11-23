@@ -1,5 +1,25 @@
 # AI status — November 22, 2026
 
+The product mission is an evolving reinforcement-learning creature that users
+can interact with, using its training and new experience to adapt and thrive.
+Swimming in currents is a core aquatic requirement alongside dependable
+still-water movement. Motor research is a foundation for the interactive learner.
+
+Latest November 23 presentation update: the aerial camera starts close to the
+creature, with manual zoom and a separate side angle. The rejected whole-pond fit
+is superseded. An opaque header provides measured 11.16:1 title and 5.53:1 status
+contrast. Four rendered viewports pass 140 camera/UI assertions with zero physical
+controls. These changes affect no policy or learned capability.
+
+The later gait-v1 attempt is also closed: its closed-loop CPU/CUDA comparison
+stopped after 960 controls / 9,600 substeps, before calibration or PPO. The first
+distal-yaw-rate difference was 2.0951e-5 rad/s against the fixed 2e-5 limit;
+legacy/identity CPU states were exact and physical step status remained valid.
+The independently audited rejected archive is
+`assets/ppo-four-axis-checkpoints/gait-pond-2026-11-22-v1-rejected`.
+Goal-directed turning, corrected gait and qualified current swimming remain
+outstanding; the proposed combined study has not run and no new actor is adopted.
+
 This minimal-foundation worktree is the active motor research project. The
 original checkout remains the preserved legacy pond. Native C++/CUDA owns PPO
 and physical simulation; Godot presents native state. The intended architecture
@@ -7,7 +27,64 @@ remains one goal chooser and one reusable request-conditioned motor. The reduced
 project currently exercises the motor with scheduled requests; it has no
 integrated chooser or interactive learning worker.
 
+The [corrected v2 current study](CURRENT_SWIM_V2_RESULTS_2026-11-22.md) is closed:
+its fresh 26-fixture CPU/CUDA physics gate passed at the original tolerances,
+then 32 native PPO updates improved original current-swimming cases from **4/16
+to 8/16**. All eight remaining failures miss the 7.2 mm/s minimum ground speed;
+five also exceed the 2 mm lane limit. Sixteen learned flow-residual means extend
+the same frozen four-output motor. No critic was used. This is actual restricted
+parameter learning, not a fully trainable body network or qualified current
+competence. The final policy is rejected for adoption. Withheld current and
+64-second current endurance suites did not run because 16/16 was not reached.
+Independent saved-evidence/closure verification passes all 32 training batches,
+32 current assessments, 33 selected-size policy states and 988 SHA bindings.
+Final calm retention passes six holds, four short swims and the same 28/30
+long-window keys. All 6,482 protected prior files and both causal seals are
+unchanged; this audit pass validates the rejected result, not current competence.
+
+The approved GPU benchmark selected **16,384 worlds**, about **500,294 control
+steps/second** including evidence writes. Total spend was **89,566,320 controls /
+895,663,200 substeps**, 32 PPO updates and 344 Adam steps; combined process time
+was 199.267 seconds of the 900-second cap. Across 181 one-second telemetry samples,
+GPU activity peaked at 100% but averaged 25.27%; evidence writes and high
+register/local-memory use limit sustained use. This is not full GPU efficiency. All unused
+allowances are closed. No retry, new study, production adoption or publication
+is authorized by this result.
+
+The earlier [v1 failure](CURRENT_SWIM_RESULTS_2026-11-22.md) remains preserved:
+a tiny CUDA buoyancy-rounding drift exceeded the fixed agreement limit after
+2,634 controls, before PPO. V2 explicitly versions that arithmetic correction
+without changing the old calm path, body, torque caps or acceptance gates.
+The viewer retains the qualified calm-water package and presents v2's latest
+result separately in Details. Current holding, changing flow and disturbance
+recovery remain unvalidated. The world's 7.5 mm/s configuration limit does not
+establish motor ability; v2 study conditions were bounded to 2.5 mm/s.
+
 ## Preserved swimming baseline
+
+### Visible gait feedback — November 22
+
+The user wants the creature in its own persistent pond world and identified the
+current "crooked V" swimming as a product problem. Saved calm-swim evidence
+confirms a sustained learned bend: in both 60-second cases, from 4–60 seconds,
+distal pitch averages -27.73 degrees, ranging from -37.94 to -16.92 degrees and
+remaining negative throughout. The source is
+`build/ppo/learned-amplitude-2026-11-22-v1/training-started/assessment-7/all-cpu-poses.csv`
+(category `long`, both cases, controls 80–1200). The short-swim controller tracks
+its bent target with about 0.32 degrees mean error, so poor servo tracking does
+not explain it. Reset pitch is zero, and Godot displays native link quaternions
+unchanged. The rectangular fin emphasizes the angular shape, but its axes match
+the physical model.
+
+The current reward constrains head posture, speed, depth and path; a sustained
+distal-pitch bias is permitted. Existing acceptance results remain valid within
+those declared gates; they do not establish natural gait quality. Review a
+warm-started motor-learning change for balanced tail movement while retaining
+travel and holding. Do not force every joint straight or hide the actual bend
+with rendering. The exact zero-flow current residual cannot correct the calm
+gait. This diagnosis used existing source/recordings only: no new simulation,
+training, geometry, renderer or policy change occurred. The integrated pond and
+interactive learner remain product work beyond the current inspector.
 
 **Latest result:** the [learned-amplitude study](HOLD_LEARNED_AMPLITUDE_RESULTS_2026-11-22.md)
 qualified calm holding from rest: 6/6 original 64-second cases, 6/6 withheld

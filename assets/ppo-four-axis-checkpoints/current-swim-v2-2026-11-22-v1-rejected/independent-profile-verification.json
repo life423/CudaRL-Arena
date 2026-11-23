@@ -1,0 +1,2653 @@
+{
+  "passed": true,
+  "qualified": false,
+  "phase": "profile",
+  "scope": "Independent saved-evidence audit; zero new physical or optimizer steps",
+  "envelopes": {
+    "passed": true,
+    "files": 167,
+    "payload_bytes": 1722328872,
+    "physical_controls": 0,
+    "optimizer_steps": 0
+  },
+  "gate": {
+    "passed": true,
+    "controls": 3760,
+    "substeps": 37600,
+    "active_seconds": 2.7961274,
+    "assembly": [
+      {
+        "backend": "CPU",
+        "probes": 8,
+        "maximum_force_error": 1.810346577507671e-13,
+        "maximum_R_difference": 0.0,
+        "maximum_direct_dissipation_W": 0.0,
+        "maximum_direct_supply_W": 0.0
+      },
+      {
+        "backend": "CUDA",
+        "probes": 8,
+        "maximum_force_error": 1.3322182983513398e-13,
+        "maximum_R_difference": 1.1641532182693481e-10,
+        "maximum_direct_dissipation_W": 0.0,
+        "maximum_direct_supply_W": 0.0
+      }
+    ],
+    "maximum_position_error_model": 3.5762786865234375e-06
+  },
+  "neutral_force_probes": [
+    {
+      "backend": "CPU",
+      "probes": 12,
+      "old_static_force_max": 0.0,
+      "v2_static_force_max": 0.0,
+      "mass_resistance_inertia_unchanged": true,
+      "legacy_zero_delegation_exact": true
+    },
+    {
+      "backend": "CUDA",
+      "probes": 12,
+      "old_static_force_max": 1.3829324469437354e-10,
+      "v2_static_force_max": 0.0,
+      "mass_resistance_inertia_unchanged": true,
+      "legacy_zero_delegation_exact": true
+    }
+  ],
+  "counted_controls": 2966160,
+  "counted_substeps": 29661600,
+  "study_freeze": {
+    "frozen_inputs": 113,
+    "changed": 0
+  },
+  "initial_policy": {
+    "worlds": 2048,
+    "update": 0,
+    "Adam_steps": 0,
+    "means": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "deterministic_coefficients": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "sha256": "3a0c3ca3e63cb89da49c8861154f0e9f5f08dd735bab83e080970605844f510f"
+  },
+  "preparation": {
+    "prepare-zero": [
+      {
+        "worlds": 2048,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 3.6009746189336056e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 2048,
+          "minibatch_episodes": 512,
+          "loss_grid_blocks": 4,
+          "checked_rows": 2048,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 2.2458231467223366e-08,
+          "max_reduced_gradient_error": 9.596497338448806e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 2.414469841942324e-09,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      },
+      {
+        "worlds": 4096,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 3.6009746189336056e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 4096,
+          "minibatch_episodes": 1024,
+          "loss_grid_blocks": 8,
+          "checked_rows": 4096,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 1.312291557148057e-08,
+          "max_reduced_gradient_error": 7.182534581180212e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 4.823191452349787e-10,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      },
+      {
+        "worlds": 8192,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 4.669750293118113e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 8192,
+          "minibatch_episodes": 2048,
+          "loss_grid_blocks": 16,
+          "checked_rows": 8192,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 7.648140462959696e-09,
+          "max_reduced_gradient_error": 5.7526441322314215e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 1.076663113048007e-09,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      },
+      {
+        "worlds": 16384,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 4.669750293118113e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 16384,
+          "minibatch_episodes": 4096,
+          "loss_grid_blocks": 32,
+          "checked_rows": 16384,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 4.6153851083856334e-09,
+          "max_reduced_gradient_error": 3.0913687609768203e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 9.392356117572491e-11,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      }
+    ],
+    "verified-zero": [
+      {
+        "worlds": 2048,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 3.6009746189336056e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 2048,
+          "minibatch_episodes": 512,
+          "loss_grid_blocks": 4,
+          "checked_rows": 2048,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 2.2458231467223366e-08,
+          "max_reduced_gradient_error": 9.596497338448806e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 2.414469841942324e-09,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      },
+      {
+        "worlds": 4096,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 3.6009746189336056e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 4096,
+          "minibatch_episodes": 1024,
+          "loss_grid_blocks": 8,
+          "checked_rows": 4096,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 1.312291557148057e-08,
+          "max_reduced_gradient_error": 7.182534581180212e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 4.823191452349787e-10,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      },
+      {
+        "worlds": 8192,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 4.669750293118113e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 8192,
+          "minibatch_episodes": 2048,
+          "loss_grid_blocks": 16,
+          "checked_rows": 8192,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 7.648140462959696e-09,
+          "max_reduced_gradient_error": 5.7526441322314215e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 1.076663113048007e-09,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      },
+      {
+        "worlds": 16384,
+        "observation_error": 9.719905165184173e-07,
+        "backbone_error": 1.522894985672707e-07,
+        "probability_error": 4.669750293118113e-06,
+        "rng_error": 2.384185791015625e-07,
+        "bulk_loss": {
+          "passed": true,
+          "worlds": 16384,
+          "minibatch_episodes": 4096,
+          "loss_grid_blocks": 32,
+          "checked_rows": 16384,
+          "checked_last_rows": 4,
+          "max_row_gradient_error": 4.6153851083856334e-09,
+          "max_reduced_gradient_error": 3.0913687609768203e-08,
+          "max_stats_error": 1.2342956186017773e-06,
+          "max_last_row_gradient_error": 9.392356117572491e-11,
+          "physical_controls": 0,
+          "optimizer_steps": 0
+        }
+      }
+    ]
+  },
+  "baseline": {
+    "calm": {
+      "short_passes": 4,
+      "hold_passes": 6,
+      "long_passes": 28,
+      "long_pass_keys": [
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          20
+        ],
+        [
+          0,
+          24
+        ],
+        [
+          0,
+          28
+        ],
+        [
+          0,
+          32
+        ],
+        [
+          0,
+          36
+        ],
+        [
+          0,
+          40
+        ],
+        [
+          0,
+          44
+        ],
+        [
+          0,
+          48
+        ],
+        [
+          0,
+          52
+        ],
+        [
+          0,
+          56
+        ],
+        [
+          0,
+          60
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          3,
+          12
+        ],
+        [
+          3,
+          16
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          3,
+          28
+        ],
+        [
+          3,
+          32
+        ],
+        [
+          3,
+          36
+        ],
+        [
+          3,
+          40
+        ],
+        [
+          3,
+          44
+        ],
+        [
+          3,
+          48
+        ],
+        [
+          3,
+          52
+        ],
+        [
+          3,
+          56
+        ],
+        [
+          3,
+          60
+        ]
+      ],
+      "controls": 10720,
+      "short": [
+        {
+          "pose": 0,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.560574441695758,
+            "RMSE_mm_s": 1.198870403801991,
+            "lateral_mm": 0.7565473033532621,
+            "depth_mm": 0.18769061537295129,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.633314239020367,
+            "work_J_per_m": 0.00031972880295586377,
+            "forward_mm": 50.89663823858368
+          }
+        },
+        {
+          "pose": 1,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.598195196409552,
+            "RMSE_mm_s": 1.1658146117044423,
+            "lateral_mm": 0.6750174844826784,
+            "depth_mm": 0.16338298292856157,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 1.288235160503631,
+            "work_J_per_m": 0.0003184311426092097,
+            "forward_mm": 51.36451078678807
+          }
+        },
+        {
+          "pose": 2,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.5605831464672235,
+            "RMSE_mm_s": 1.1988704213810584,
+            "lateral_mm": 0.7565378144001329,
+            "depth_mm": 0.18768944302433033,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.6332959262069602,
+            "work_J_per_m": 0.00031972867106235865,
+            "forward_mm": 50.89669336950439
+          }
+        },
+        {
+          "pose": 3,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.598196362876092,
+            "RMSE_mm_s": 1.1658156985041694,
+            "lateral_mm": 0.675020528395717,
+            "depth_mm": 0.16338160929786627,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 1.2882457321383274,
+            "work_J_per_m": 0.0003184311004773793,
+            "forward_mm": 51.36451758286061
+          }
+        }
+      ],
+      "holds": [
+        {
+          "case": 0,
+          "pose": 0,
+          "passed": true,
+          "gates": {
+            "max_speed_mm_s": true,
+            "max_anchor_mm": true,
+            "max_depth_mm": true,
+            "max_lane_mm": true,
+            "max_tilt_deg": true,
+            "final8_excursion_mm": true
+          },
+          "peaks": {
+            "max_speed_mm_s": 0.047829687343291585,
+            "max_anchor_mm": 0.38553432045579816,
+            "max_depth_mm": 0.3415570976705862,
+            "max_lane_mm": 0.175909369257329,
+            "max_tilt_deg": 1.2738000897799762,
+            "final8_excursion_mm": 7.315627402274536e-05
+          }
+        },
+        {
+          "case": 1,
+          "pose": 3,
+          "passed": true,
+          "gates": {
+            "max_speed_mm_s": true,
+            "max_anchor_mm": true,
+            "max_depth_mm": true,
+            "max_lane_mm": true,
+            "max_tilt_deg": true,
+            "final8_excursion_mm": true
+          },
+          "peaks": {
+            "max_speed_mm_s": 0.0915044090922038,
+            "max_anchor_mm": 0.3791509722281674,
+            "max_depth_mm": 0.36476549521646806,
+            "max_lane_mm": 0.10427889754073814,
+            "max_tilt_deg": 1.4984162824947782,
+            "final8_excursion_mm": 1.6570102401069407e-05
+          }
+        },
+        {
+          "case": 2,
+          "pose": 0,
+          "passed": true,
+          "gates": {
+            "max_speed_mm_s": true,
+            "max_anchor_mm": true,
+            "max_depth_mm": true,
+            "max_lane_mm": true,
+            "max_tilt_deg": true,
+            "final8_excursion_mm": true
+          },
+          "peaks": {
+            "max_speed_mm_s": 0.052962191260551184,
+            "max_anchor_mm": 0.5000018960240882,
+            "max_depth_mm": 0.5000018960240882,
+            "max_lane_mm": 0.16558526616537156,
+            "max_tilt_deg": 1.6665962315090592,
+            "final8_excursion_mm": 0.00010102943049226145
+          }
+        },
+        {
+          "case": 3,
+          "pose": 3,
+          "passed": true,
+          "gates": {
+            "max_speed_mm_s": true,
+            "max_anchor_mm": true,
+            "max_depth_mm": true,
+            "max_lane_mm": true,
+            "max_tilt_deg": true,
+            "final8_excursion_mm": true
+          },
+          "peaks": {
+            "max_speed_mm_s": 0.09890365438606054,
+            "max_anchor_mm": 0.5000018960240882,
+            "max_depth_mm": 0.5000018960240882,
+            "max_lane_mm": 0.08156953049535934,
+            "max_tilt_deg": 1.9066992847075985,
+            "final8_excursion_mm": 2.4993975730152175e-05
+          }
+        },
+        {
+          "case": 4,
+          "pose": 0,
+          "passed": true,
+          "gates": {
+            "max_speed_mm_s": true,
+            "max_anchor_mm": true,
+            "max_depth_mm": true,
+            "max_lane_mm": true,
+            "max_tilt_deg": true,
+            "final8_excursion_mm": true
+          },
+          "peaks": {
+            "max_speed_mm_s": 0.04270351978482524,
+            "max_anchor_mm": 0.8292317228678787,
+            "max_depth_mm": 0.808241653419417,
+            "max_lane_mm": 0.18369292493132716,
+            "max_tilt_deg": 1.3924075534943585,
+            "final8_excursion_mm": 7.429716624384169e-05
+          }
+        },
+        {
+          "case": 5,
+          "pose": 3,
+          "passed": true,
+          "gates": {
+            "max_speed_mm_s": true,
+            "max_anchor_mm": true,
+            "max_depth_mm": true,
+            "max_lane_mm": true,
+            "max_tilt_deg": true,
+            "final8_excursion_mm": true
+          },
+          "peaks": {
+            "max_speed_mm_s": 0.08392619369562979,
+            "max_anchor_mm": 0.8381852447083029,
+            "max_depth_mm": 0.8292791743020334,
+            "max_lane_mm": 0.12405245564876693,
+            "max_tilt_deg": 1.536842417865756,
+            "final8_excursion_mm": 1.5368693201288627e-05
+          }
+        }
+      ],
+      "long": [
+        {
+          "pose": 0,
+          "end_s": 4,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.026014957250781,
+            "RMSE_mm_s": 1.546659579614435,
+            "lateral_mm": 0.6074423154907285,
+            "depth_mm": 0.18769061537295129,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.7210278553217326,
+            "work_J_per_m": 0.00028273765316689104
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 8,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.827854183918247,
+            "RMSE_mm_s": 0.9797231445985001,
+            "lateral_mm": 0.7565473033532621,
+            "depth_mm": 0.18769061537295129,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.593947349460884,
+            "work_J_per_m": 0.00020967635734444958
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 12,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.890023415919535,
+            "RMSE_mm_s": 0.9102820452923944,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.33876045510275454,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.22104410564659943,
+            "work_J_per_m": 0.00020841521887040822
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 16,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.895203570762651,
+            "RMSE_mm_s": 0.9138465373614717,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4375749285446817,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.5434815252488835,
+            "work_J_per_m": 0.0002076939709461962
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 20,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.909133885597575,
+            "RMSE_mm_s": 0.9481146605777029,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.4515010072433505,
+            "work_J_per_m": 0.0002090321838020751
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 24,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.925518771843947,
+            "RMSE_mm_s": 0.9357437223571352,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.19013525734697218,
+            "work_J_per_m": 0.00020665293012590396
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 28,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.988979978919742,
+            "RMSE_mm_s": 0.961538609358106,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.9690279546691034,
+            "work_J_per_m": 0.00020587315979094615
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 32,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.144056048512384,
+            "RMSE_mm_s": 0.972827718266002,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.509949331106035,
+            "work_J_per_m": 0.00020943908152435878
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 36,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.266227033264803,
+            "RMSE_mm_s": 1.0031959830337434,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.029586778426995974,
+            "work_J_per_m": 0.0002068442849006005
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 40,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.301296482784656,
+            "RMSE_mm_s": 1.022293852193661,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.1772141824663933,
+            "work_J_per_m": 0.00020637944527688762
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 44,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.241797907568179,
+            "RMSE_mm_s": 0.9808389184776999,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.1699440012965088,
+            "work_J_per_m": 0.0002032270579096764
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 48,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.156963830151465,
+            "RMSE_mm_s": 0.9545853584337511,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.0022598711488641078,
+            "work_J_per_m": 0.00020779118924472086
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 52,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.149713542960749,
+            "RMSE_mm_s": 0.9653098573813547,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 1.1227405876952548,
+            "work_J_per_m": 0.00020614137090649426
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 56,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.173065162703578,
+            "RMSE_mm_s": 0.9681154673467763,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.39506448766530344,
+            "work_J_per_m": 0.00021030603354979725
+          }
+        },
+        {
+          "pose": 0,
+          "end_s": 60,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.196114512590311,
+            "RMSE_mm_s": 0.9753733401556621,
+            "lateral_mm": 0.9647922395686014,
+            "depth_mm": 0.4560321983109322,
+            "tilt_deg": 8.827882469393996,
+            "path_deg": 0.2612244368595515,
+            "work_J_per_m": 0.00020775027467423494
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 4,
+          "passed": false,
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.116208537067856,
+            "RMSE_mm_s": 1.4767500830693998,
+            "lateral_mm": 0.675020528395717,
+            "depth_mm": 0.16338160929786627,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 1.1010491866717744,
+            "work_J_per_m": 0.00027856465320405847
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 8,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.8391902757802105,
+            "RMSE_mm_s": 0.9738038613578234,
+            "lateral_mm": 0.675020528395717,
+            "depth_mm": 0.16338160929786627,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 1.3732029207756518,
+            "work_J_per_m": 0.00020830864573182078
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 12,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.892847796782402,
+            "RMSE_mm_s": 0.9118486619355803,
+            "lateral_mm": 0.8367646823676353,
+            "depth_mm": 0.30326134748505373,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.3001842587403813,
+            "work_J_per_m": 0.0002075947541585939
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 16,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.91358181778971,
+            "RMSE_mm_s": 0.9119455643812544,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.34951223892150385,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.04074002867193782,
+            "work_J_per_m": 0.00020775730884970336
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 20,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.961462356914827,
+            "RMSE_mm_s": 0.9479128848986873,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 1.4882125914635627,
+            "work_J_per_m": 0.00021106071253685664
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 24,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 7.999639584749661,
+            "RMSE_mm_s": 0.9380430248083174,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.19021026840292474,
+            "work_J_per_m": 0.0002071917696125552
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 28,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.0199247047477,
+            "RMSE_mm_s": 0.9556160106265863,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.49005536631374996,
+            "work_J_per_m": 0.0002048904374521829
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 32,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.123474235642652,
+            "RMSE_mm_s": 0.9682159685341953,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.7090375621234822,
+            "work_J_per_m": 0.0002087774713817977
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 36,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.231418486582589,
+            "RMSE_mm_s": 0.9935224235374329,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.34231773121852854,
+            "work_J_per_m": 0.00020653783112385186
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 40,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.286357183631356,
+            "RMSE_mm_s": 1.0131962012387397,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.9426098599423126,
+            "work_J_per_m": 0.00020696884344812482
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 44,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.258267442477598,
+            "RMSE_mm_s": 0.9874504422503921,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.09951630015409324,
+            "work_J_per_m": 0.0002034127255921741
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 48,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.17514325192242,
+            "RMSE_mm_s": 0.9596577593626107,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.3333298555339926,
+            "work_J_per_m": 0.0002074684014683831
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 52,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.142933167939029,
+            "RMSE_mm_s": 0.9617369112032529,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 1.0957625786910703,
+            "work_J_per_m": 0.00020510988006301696
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 56,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.15531509231363,
+            "RMSE_mm_s": 0.9608313671372108,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.15610803102298254,
+            "work_J_per_m": 0.00020991441598362196
+          }
+        },
+        {
+          "pose": 3,
+          "end_s": 60,
+          "passed": true,
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "metrics": {
+            "steady_mm_s": 8.188334487793073,
+            "RMSE_mm_s": 0.9710091454498809,
+            "lateral_mm": 0.8516494345075283,
+            "depth_mm": 0.3507188992695337,
+            "tilt_deg": 9.357673321070344,
+            "path_deg": 0.02327457033971802,
+            "work_J_per_m": 0.00020805318393550423
+          }
+        }
+      ]
+    },
+    "current": {
+      "passes": 4,
+      "cases": [
+        {
+          "case": 0,
+          "pose": 0,
+          "flow_m_s": [
+            0.0010000000474974513,
+            0.0,
+            0.0
+          ],
+          "passed": true,
+          "metrics": {
+            "steady_mm_s": 7.9974257973458425,
+            "RMSE_mm_s": 1.0929079495833303,
+            "lateral_mm": 0.6756132488681407,
+            "depth_mm": 0.1854065728294496,
+            "tilt_deg": 8.792585970337429,
+            "path_deg": 1.3850579527050029,
+            "work_J_per_m": 0.0002897322423156115,
+            "forward_mm": 53.86547648190096
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 1,
+          "pose": 0,
+          "flow_m_s": [
+            -0.0010000000474974513,
+            0.0,
+            0.0
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.10341839894732,
+            "RMSE_mm_s": 1.443678780302678,
+            "lateral_mm": 0.9171081502298315,
+            "depth_mm": 0.19062319115691062,
+            "tilt_deg": 8.862529693766145,
+            "path_deg": 1.7910621199559806,
+            "work_J_per_m": 0.0003569157086825369,
+            "forward_mm": 47.79623871157081
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 2,
+          "pose": 0,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            0.0010000000474974513
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.530574642191016,
+            "RMSE_mm_s": 1.2924413745748773,
+            "lateral_mm": 3.5700653795394572,
+            "depth_mm": 0.23377962053953982,
+            "tilt_deg": 8.77225411370305,
+            "path_deg": 3.895390328432415,
+            "work_J_per_m": 0.00031910665542124884,
+            "forward_mm": 50.756133430746026
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 3,
+          "pose": 0,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            -0.0010000000474974513
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.213774868137587,
+            "RMSE_mm_s": 1.3136631766654312,
+            "lateral_mm": 2.7575981059138948,
+            "depth_mm": 0.1533339608904838,
+            "tilt_deg": 8.892117565626972,
+            "path_deg": 1.0570471882150587,
+            "work_J_per_m": 0.0003170824296683594,
+            "forward_mm": 48.781820751714406
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 4,
+          "pose": 0,
+          "flow_m_s": [
+            0.0020000000949949026,
+            0.0,
+            0.0
+          ],
+          "passed": true,
+          "metrics": {
+            "steady_mm_s": 8.415804639335072,
+            "RMSE_mm_s": 1.1457193517210127,
+            "lateral_mm": 0.744114279915546,
+            "depth_mm": 0.19331830520405435,
+            "tilt_deg": 8.752997559053792,
+            "path_deg": 1.0589146078052794,
+            "work_J_per_m": 0.00026450615948341196,
+            "forward_mm": 56.72311058200869
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 5,
+          "pose": 0,
+          "flow_m_s": [
+            -0.0020000000949949026,
+            0.0,
+            0.0
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 6.623398873550282,
+            "RMSE_mm_s": 1.7879301338128162,
+            "lateral_mm": 1.0906871847600426,
+            "depth_mm": 0.19838426768550854,
+            "tilt_deg": 8.902098281962438,
+            "path_deg": 1.8787879797003313,
+            "work_J_per_m": 0.0003986481471039123,
+            "forward_mm": 44.53897817333101
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 6,
+          "pose": 0,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            0.0020000000949949026
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.111278396342144,
+            "RMSE_mm_s": 1.649389819197652,
+            "lateral_mm": 6.7899623432276695,
+            "depth_mm": 0.29804811921201046,
+            "tilt_deg": 9.358765435574615,
+            "path_deg": 7.128241328980799,
+            "work_J_per_m": 0.0003130660040645963,
+            "forward_mm": 48.283577127017146
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": false,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 7,
+          "pose": 0,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            -0.0020000000949949026
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 6.524152599030551,
+            "RMSE_mm_s": 1.9119752019818932,
+            "lateral_mm": 6.529043510946353,
+            "depth_mm": 0.12804562907646477,
+            "tilt_deg": 8.966704330714844,
+            "path_deg": 5.719923261567571,
+            "work_J_per_m": 0.00030829095167566234,
+            "forward_mm": 44.61518402061434
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": false,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 8,
+          "pose": 3,
+          "flow_m_s": [
+            0.0010000000474974513,
+            0.0,
+            0.0
+          ],
+          "passed": true,
+          "metrics": {
+            "steady_mm_s": 8.063622577697116,
+            "RMSE_mm_s": 1.0861561761288732,
+            "lateral_mm": 0.6489591413951309,
+            "depth_mm": 0.16906401363567247,
+            "tilt_deg": 9.31607894710774,
+            "path_deg": 1.4028292773615172,
+            "work_J_per_m": 0.000288307287472606,
+            "forward_mm": 54.5143716885525
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 9,
+          "pose": 3,
+          "flow_m_s": [
+            -0.0010000000474974513,
+            0.0,
+            0.0
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.113882325144266,
+            "RMSE_mm_s": 1.4133322267966242,
+            "lateral_mm": 0.7486763085932875,
+            "depth_mm": 0.15890784362640464,
+            "tilt_deg": 9.39837423435443,
+            "path_deg": 1.1412815293836542,
+            "work_J_per_m": 0.0003547142750222497,
+            "forward_mm": 48.09182640656334
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 10,
+          "pose": 3,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            0.0010000000474974513
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.5477696347294225,
+            "RMSE_mm_s": 1.2624722703594058,
+            "lateral_mm": 3.156229994825888,
+            "depth_mm": 0.21298388974723415,
+            "tilt_deg": 9.325736118467137,
+            "path_deg": 3.4408971575698555,
+            "work_J_per_m": 0.0003240860110652764,
+            "forward_mm": 51.05115050636223
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 11,
+          "pose": 3,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            -0.0010000000474974513
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.268626716938506,
+            "RMSE_mm_s": 1.2756045919775314,
+            "lateral_mm": 3.1495991131003236,
+            "depth_mm": 0.12324991546651398,
+            "tilt_deg": 9.399252551043938,
+            "path_deg": 1.4842680015055592,
+            "work_J_per_m": 0.00030942298527187066,
+            "forward_mm": 49.402580703139705
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 12,
+          "pose": 3,
+          "flow_m_s": [
+            0.0020000000949949026,
+            0.0,
+            0.0
+          ],
+          "passed": true,
+          "metrics": {
+            "steady_mm_s": 8.511038188725315,
+            "RMSE_mm_s": 1.1901368347291346,
+            "lateral_mm": 0.8944711722419069,
+            "depth_mm": 0.2000845640252047,
+            "tilt_deg": 9.270166610545415,
+            "path_deg": 1.5018498774940474,
+            "work_J_per_m": 0.0002628977307374638,
+            "forward_mm": 57.55464649715892
+          },
+          "gates": {
+            "speed": true,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 13,
+          "pose": 3,
+          "flow_m_s": [
+            -0.0020000000949949026,
+            0.0,
+            0.0
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 6.609534552816009,
+            "RMSE_mm_s": 1.7744958142150342,
+            "lateral_mm": 0.8396826649228213,
+            "depth_mm": 0.15547994522073505,
+            "tilt_deg": 9.443772852497295,
+            "path_deg": 0.972159918344522,
+            "work_J_per_m": 0.00039539823286782,
+            "forward_mm": 44.6801550946886
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": true,
+            "depth": true,
+            "tilt": true,
+            "path": true,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 14,
+          "pose": 3,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            0.0020000000949949026
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 7.104731844209526,
+            "RMSE_mm_s": 1.6109336432345525,
+            "lateral_mm": 6.196895850434033,
+            "depth_mm": 0.2845960718666496,
+            "tilt_deg": 9.30077162174878,
+            "path_deg": 6.339017189018615,
+            "work_J_per_m": 0.0003256345380556334,
+            "forward_mm": 48.38470637874473
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": false,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        },
+        {
+          "case": 15,
+          "pose": 3,
+          "flow_m_s": [
+            0.0,
+            0.0,
+            -0.0020000000949949026
+          ],
+          "passed": false,
+          "metrics": {
+            "steady_mm_s": 6.599612515810855,
+            "RMSE_mm_s": 1.8936791293906494,
+            "lateral_mm": 7.1624751460854945,
+            "depth_mm": 0.09338259211681688,
+            "tilt_deg": 9.452094675461355,
+            "path_deg": 6.4948072293441195,
+            "work_J_per_m": 0.0002927892687270566,
+            "forward_mm": 45.40869044211453
+          },
+          "gates": {
+            "speed": false,
+            "RMSE": true,
+            "lane": false,
+            "depth": true,
+            "tilt": true,
+            "path": false,
+            "work": true
+          },
+          "windows": [],
+          "controls": 160
+        }
+      ],
+      "controls": 2560,
+      "substeps": 25600,
+      "mean_cost": 0.11190467639966875
+    },
+    "native": {
+      "schema": 2,
+      "controls": 17040,
+      "substeps": 170400,
+      "active_seconds": 2.3979807,
+      "prior_active_seconds": 2.7961274,
+      "PPO_updates": 0,
+      "actor_steps": 0,
+      "critic_steps": 0,
+      "critic_forward_calls": 0,
+      "fault": "",
+      "gate": "",
+      "baseline_current_passes": 4,
+      "final_current_passes": 4,
+      "withheld_passes": 0,
+      "endurance_passes": 0,
+      "qualified": false,
+      "baseline_only": false,
+      "selected_worlds": 0,
+      "phase_closed": true,
+      "closed": false,
+      "runtime_adopted": false,
+      "retries": 0
+    },
+    "release": {
+      "controls": 17040,
+      "substeps": 170400,
+      "active_seconds": 5.1945820000000005,
+      "worlds": 0
+    },
+    "final_calm": null,
+    "withheld": null,
+    "endurance": null
+  },
+  "profile": {
+    "selected_worlds": 16384,
+    "selection_payload_checksum": 9442394614755971818,
+    "controls": 2949120,
+    "sizes": [
+      {
+        "worlds": 2048,
+        "controls_per_second": 290506.62678347336,
+        "batches": [
+          {
+            "worlds": 2048,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 0,
+            "controls": 65536,
+            "substeps": 655360,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 1.7881393432617188e-07,
+            "maximum_errors": {
+              "observations": 7.09209642815907e-06,
+              "backbone": 1.101784249613047e-06,
+              "actions": 3.19470787601972e-07,
+              "rewards": 1.6910991071893144e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 1.771287969631885e-07,
+              "filter_rate": 6.920737649629416e-07,
+              "geometry": 0.00019749000933511063,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 2048,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 0,
+              "controls": 65536,
+              "observe_ms": 5.083711918443441,
+              "network_ms": 0.9349119942635298,
+              "physics_ms": 81.89094400405884,
+              "readback_wall_seconds": 0.0091299,
+              "validation_seconds": 0.0048566,
+              "evidence_seconds": 0.1300941,
+              "end_to_end_seconds": 0.2574912,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 4399140248847865698,
+            "timing_checksum": 2963529327379230665
+          },
+          {
+            "worlds": 2048,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 1,
+            "controls": 65536,
+            "substeps": 655360,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.259088102316586e-06,
+              "backbone": 1.0410180539821567e-06,
+              "actions": 3.367833931733344e-07,
+              "rewards": 1.2960543311745648e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 1.7791296191838057e-07,
+              "filter_rate": 6.669448517904186e-07,
+              "geometry": 0.00012725567839311225,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 2048,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 1,
+              "controls": 65536,
+              "observe_ms": 1.8114240020513535,
+              "network_ms": 0.7902079951018095,
+              "physics_ms": 74.0576000213623,
+              "readback_wall_seconds": 0.008779,
+              "validation_seconds": 0.0047218,
+              "evidence_seconds": 0.1310635,
+              "end_to_end_seconds": 0.2234282,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 715105759371672563,
+            "timing_checksum": 8420435514176270030
+          },
+          {
+            "worlds": 2048,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 2,
+            "controls": 65536,
+            "substeps": 655360,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 1.7881393432617188e-07,
+            "maximum_errors": {
+              "observations": 7.012935262486197e-06,
+              "backbone": 9.955793882632236e-07,
+              "actions": 3.172559144282161e-07,
+              "rewards": 1.3578065776332499e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.0168498227057796e-07,
+              "filter_rate": 6.518543500533269e-07,
+              "geometry": 9.194494762487793e-05,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 2048,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 2,
+              "controls": 65536,
+              "observe_ms": 1.5247999913990498,
+              "network_ms": 0.6802879981696606,
+              "physics_ms": 74.18044900894165,
+              "readback_wall_seconds": 0.0105384,
+              "validation_seconds": 0.004809,
+              "evidence_seconds": 0.1337814,
+              "end_to_end_seconds": 0.227756,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 17494313800502508127,
+            "timing_checksum": 12402407092501120798
+          }
+        ]
+      },
+      {
+        "worlds": 4096,
+        "controls_per_second": 412832.2182487513,
+        "batches": [
+          {
+            "worlds": 4096,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 0,
+            "controls": 131072,
+            "substeps": 1310720,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.09209642815907e-06,
+              "backbone": 1.101784249613047e-06,
+              "actions": 3.19470787601972e-07,
+              "rewards": 1.6910991071893144e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 1.9927467487246275e-07,
+              "filter_rate": 6.920737649629416e-07,
+              "geometry": 0.00019749000933511063,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 4096,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 0,
+              "controls": 131072,
+              "observe_ms": 1.5688960030674934,
+              "network_ms": 0.8299519922584295,
+              "physics_ms": 72.8796796798706,
+              "readback_wall_seconds": 0.0170697,
+              "validation_seconds": 0.011126,
+              "evidence_seconds": 0.206323,
+              "end_to_end_seconds": 0.3126462,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 2665032990741477635,
+            "timing_checksum": 10310581348447315573
+          },
+          {
+            "worlds": 4096,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 1,
+            "controls": 131072,
+            "substeps": 1310720,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.259088102316586e-06,
+              "backbone": 1.0410180539821567e-06,
+              "actions": 3.367833931733344e-07,
+              "rewards": 1.394754794406712e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 1.9341642687464855e-07,
+              "filter_rate": 6.683066127166626e-07,
+              "geometry": 0.00012725567839311225,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 4096,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 1,
+              "controls": 131072,
+              "observe_ms": 1.5715200081467628,
+              "network_ms": 0.8338560052216053,
+              "physics_ms": 72.2382402420044,
+              "readback_wall_seconds": 0.0176471,
+              "validation_seconds": 0.0108151,
+              "evidence_seconds": 0.2087447,
+              "end_to_end_seconds": 0.314636,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 13954178470925749906,
+            "timing_checksum": 17820301493709204633
+          },
+          {
+            "worlds": 4096,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 2,
+            "controls": 131072,
+            "substeps": 1310720,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 1.7881393432617188e-07,
+            "maximum_errors": {
+              "observations": 7.012935262486197e-06,
+              "backbone": 1.087272262889627e-06,
+              "actions": 3.3151401623854326e-07,
+              "rewards": 1.5680170003997546e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.0168498227057796e-07,
+              "filter_rate": 6.740946303374074e-07,
+              "geometry": 9.194494762487793e-05,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 4096,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 2,
+              "controls": 131072,
+              "observe_ms": 1.5576639994978905,
+              "network_ms": 0.8333759978413582,
+              "physics_ms": 73.18614363670349,
+              "readback_wall_seconds": 0.0195221,
+              "validation_seconds": 0.0105327,
+              "evidence_seconds": 0.2119533,
+              "end_to_end_seconds": 0.3203532,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 3139269256195389774,
+            "timing_checksum": 8482094014519334227
+          }
+        ]
+      },
+      {
+        "worlds": 8192,
+        "controls_per_second": 468324.6554769378,
+        "batches": [
+          {
+            "worlds": 8192,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 0,
+            "controls": 262144,
+            "substeps": 2621440,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.09209642815907e-06,
+              "backbone": 1.101784249613047e-06,
+              "actions": 3.305817664056576e-07,
+              "rewards": 1.6910991071893144e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.187853571644638e-07,
+              "filter_rate": 6.920737649629416e-07,
+              "geometry": 0.0004053481253558644,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 8192,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 0,
+              "controls": 262144,
+              "observe_ms": 2.223487965762615,
+              "network_ms": 1.0742719992995262,
+              "physics_ms": 113.45478439331055,
+              "readback_wall_seconds": 0.0324342,
+              "validation_seconds": 0.0342416,
+              "evidence_seconds": 0.3676156,
+              "end_to_end_seconds": 0.5555805,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 18237045334984236101,
+            "timing_checksum": 18034353843589035617
+          },
+          {
+            "worlds": 8192,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 1,
+            "controls": 262144,
+            "substeps": 2621440,
+            "sampled_complete_passes": null,
+            "probability_error": 5.7220458984375e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.259088102316586e-06,
+              "backbone": 1.0410180539821567e-06,
+              "actions": 3.419629366341326e-07,
+              "rewards": 1.5272019461554098e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 1.9399045703138995e-07,
+              "filter_rate": 7.078693533557612e-07,
+              "geometry": 0.00012725567839311225,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 8192,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 1,
+              "controls": 262144,
+              "observe_ms": 2.221983976662159,
+              "network_ms": 1.0725759975612164,
+              "physics_ms": 113.36876845359802,
+              "readback_wall_seconds": 0.035471,
+              "validation_seconds": 0.0357589,
+              "evidence_seconds": 0.3611847,
+              "end_to_end_seconds": 0.5535634,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 16881067337102471583,
+            "timing_checksum": 16679479865238986702
+          },
+          {
+            "worlds": 8192,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 2,
+            "controls": 262144,
+            "substeps": 2621440,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 1.7881393432617188e-07,
+            "maximum_errors": {
+              "observations": 7.050109057715748e-06,
+              "backbone": 1.087272262889627e-06,
+              "actions": 3.388199343312692e-07,
+              "rewards": 1.5680170003997546e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.0410528045466947e-07,
+              "filter_rate": 8.400515425499577e-07,
+              "geometry": 0.00019619897205058745,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 8192,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 2,
+              "controls": 262144,
+              "observe_ms": 2.3149759843945503,
+              "network_ms": 1.0758079998195171,
+              "physics_ms": 113.8101441860199,
+              "readback_wall_seconds": 0.0346043,
+              "validation_seconds": 0.0362619,
+              "evidence_seconds": 0.3736528,
+              "end_to_end_seconds": 0.5659335,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 11110270562256032739,
+            "timing_checksum": 2639418304957950988
+          }
+        ]
+      },
+      {
+        "worlds": 16384,
+        "controls_per_second": 500293.97595718957,
+        "batches": [
+          {
+            "worlds": 16384,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 0,
+            "controls": 524288,
+            "substeps": 5242880,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.09209642815907e-06,
+              "backbone": 1.143432472261452e-06,
+              "actions": 3.704251643199541e-07,
+              "rewards": 1.6910991071893144e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.187853571644638e-07,
+              "filter_rate": 7.120663791937432e-07,
+              "geometry": 0.0004053481253558644,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 16384,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 0,
+              "controls": 524288,
+              "observe_ms": 3.751552015542984,
+              "network_ms": 1.872416004538536,
+              "physics_ms": 252.1119351387024,
+              "readback_wall_seconds": 0.0668865,
+              "validation_seconds": 0.0716007,
+              "evidence_seconds": 0.6753956,
+              "end_to_end_seconds": 1.0807348,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 701957203938043296,
+            "timing_checksum": 12491435166658539416
+          },
+          {
+            "worlds": 16384,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 1,
+            "controls": 524288,
+            "substeps": 5242880,
+            "sampled_complete_passes": null,
+            "probability_error": 5.7220458984375e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.259088102316586e-06,
+              "backbone": 1.1294236421655057e-06,
+              "actions": 3.6108008849566886e-07,
+              "rewards": 1.7573897932374183e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.129715764853657e-07,
+              "filter_rate": 7.537056765372085e-07,
+              "geometry": 0.00013012246463994792,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 16384,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 1,
+              "controls": 524288,
+              "observe_ms": 3.953888013958931,
+              "network_ms": 1.615104015916586,
+              "physics_ms": 244.3656964302063,
+              "readback_wall_seconds": 0.0655059,
+              "validation_seconds": 0.0709631,
+              "evidence_seconds": 0.6676249,
+              "end_to_end_seconds": 1.0613315,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 8378465613041184449,
+            "timing_checksum": 4767830143396514237
+          },
+          {
+            "worlds": 16384,
+            "ticks": 32,
+            "purpose": 2,
+            "index": 2,
+            "controls": 524288,
+            "substeps": 5242880,
+            "sampled_complete_passes": null,
+            "probability_error": 3.814697265625e-06,
+            "rng_error": 2.384185791015625e-07,
+            "maximum_errors": {
+              "observations": 7.220949153997208e-06,
+              "backbone": 1.1085195126270264e-06,
+              "actions": 3.986512240317097e-07,
+              "rewards": 1.5680170003997546e-08,
+              "continuity": 5.877141884269577e-09,
+              "filter_angle": 2.1097125935121142e-07,
+              "filter_rate": 8.400515425499577e-07,
+              "geometry": 0.0002730192257338615,
+              "steady": 0.0
+            },
+            "timing": {
+              "worlds": 16384,
+              "ticks": 32,
+              "purpose": 2,
+              "sample": 2,
+              "controls": 524288,
+              "observe_ms": 3.2189439982175827,
+              "network_ms": 1.6176959946751595,
+              "physics_ms": 226.03478336334229,
+              "readback_wall_seconds": 0.0653022,
+              "validation_seconds": 0.0748914,
+              "evidence_seconds": 0.6564833,
+              "end_to_end_seconds": 1.0345882,
+              "optimizer_steps": 0,
+              "PPO_data": false
+            },
+            "batch_manifest_checksum": 15037256074100595354,
+            "timing_checksum": 10757209963515487585
+          }
+        ]
+      }
+    ],
+    "release": {
+      "controls": 2966160,
+      "substeps": 29661600,
+      "active_seconds": 11.972190600000001,
+      "worlds": 16384
+    }
+  },
+  "input_sha256": {
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\verify_current_swim_v2.py": "979cecb6ae6e3aa9490536ad8263a57ef491f5ba52d02cbcaabd851b2998bd9b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\verify_current_swim.py": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\verify_hold_credit.py": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\learned-amplitude-preparation-2026-11-22\\check-evidence.exe": "75e9ac1d75bf5658926faf42a42bed0dd4235570d0074b31f697d3c6a5c5afb3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\approved-protocol.md": "770342c47155e9314c7cffe4529d2d58bad7897588e0cd236db6e869a635cf1e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\approved-protocol.md": "770342c47155e9314c7cffe4529d2d58bad7897588e0cd236db6e869a635cf1e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\gate-frozen-inputs.json": "aa42b7b0afec074b4d73140876b3b5e0a8e17b11e566ebec69082933d4266a9b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\current-gate-v2-preparation-2026-11-22\\build\\Release\\current_physics_gate_v2.exe": "d81b9c75785adbcbd242b86174ba5066aad4eaca375a556c48e4d3021edc7d36",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\current-swim-v2-preparation-2026-11-22\\evidence.py": "54a0d3e97613078d44f59990724eb09db3d2c36aa0e4cddafaa515167f156cea",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\parent-checkpoint.bin": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\parent-protocol.bin": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\preserved-v1-first-failure.bin": "c5957ab854788418e1f8971905a9e37a19d0aa9c5bdb4f000ca05cea206efd4f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\protocol.bin": "af01889fd8f7ca6856db86fdf631d71f19babb1668d320f3f1e3233020ad2f96",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\qualified-hold-preview.bin": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\zero-passed.bin": "aac49a51f0bae5703ada2d2509fbdba8505b6621ab08ac77d462d190eaf4a706",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\zero-started\\assembly-probes.bin": "1fcc783288ab17bede2f89c97ae732392fa01133f169bb7ea1d2f60c8179a9c6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\zero-started\\neutral-force-probes.bin": "528e43f8bc832e3a5b96a41bb970ea72ad290b3c5d416503c0d3f526f3966004",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\zero-started\\result.json": "a2994d64b1d6572daf56e6bcf498e1493bb58bfc392eed0fe1fb64e04e077c5a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\Release\\creature_gpu.lib": "349aae591e22617aba5d4c7c6eca63c8d9ac355abe78b9de2df3231338ed526b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\Release\\creature_physics.lib": "feb2e6db5824485da39da5a35c7fa20f4d6e63804216162c718159efb67eff2e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\Release\\frozen_controller.lib": "8aa669f63b5292ab2090a0078aa6a9178de55c62a527747b19f48fd0390922a8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\docs\\CURRENT_SWIM_V2_PROTOCOL_2026-11-22.md": "770342c47155e9314c7cffe4529d2d58bad7897588e0cd236db6e869a635cf1e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\checkpoint.cpp": "17915cd45c2c381c8fcf15884891badb4d7ea408305c5fb0864e9c9065bfc770",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\checkpoint.h": "2f544f600fa3c1281f17629c4ad7faf08cbdb54b38376e1d7489a1921074f93d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\hd.h": "2a8d1c759d9f8b8e268edb95134f749dcedbcf200e83200c628bbb213c98d7ac",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\core\\rng.h": "5d90e29d19c1e16ac963465a575de3711cbbc5a8910a876a7c69755aba803627",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\cuda\\cuda_memory.h": "9abe88d058d17ef7b89155dfd756f8dcee5b24a8e4515856ce06f3f93672ab00",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\adam_config.h": "e2ad8fcc7336749b736f74a579cfbd644cf55d758f7f8ee4b3fe31acaec19b73",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_cpu.h": "5566a16cd2d2d84bd2e5beb61dddd2642df452f43e3c47ef1b60df9264302153",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_spec.h": "762c60a18477c66085a8276de7ab46aad767b665826e01ffc923fb368646f9ef",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\current_model_v1.h": "c412da944333dc1897dbc7ae76c01d98b398eb706a2ba4fbd125df4f1b7c16f6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\current_model_v2.h": "3e4eba48a8961a132a0836105fb6c1c013c1ee1956679d25a8b8cb1731552c5f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\current_motor_v2.h": "142a678c16bc694a25b64dad3fd07423365325671532d7b6b39647a42ed590e5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\frozen_controller.cpp": "0e47a615c9ce9a749baa03286081b674e4dcddbda6959af7467fc9448b0c4896",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\hold_assessment.h": "cdda2488e1ad54c902dfec54ff1891e49e7638c50607ecf62d90daffbd8dc569",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\joint_motor.h": "dc53d22cff99352c5e378b6bcd919569c9a26455aa5df9f8ec1c36172171314f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\movement_model.h": "5ab30eb92a609ac8cfd50944bef8898cf199be3989dbb6550b05bf44bc5449d5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\observation_contract.h": "6d46b600194ce1c830fce11c01860143bbe3af9452996dc6bff07043f6c10332",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\state.h": "be6444f54b748d58b36f75a36e6cebb880863c0950207615495298fb13d8da6f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\straight_task.h": "994f7719f497e237ad4428c74feac2d73ce57e2ea6ea8e12ab8085882e28df22",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\contact.h": "3e88a73390f08803eb5f55abc8ab1d93533884169817bf5165f7da698dc152a6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\dynamics.h": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\append_hold_checkpoint.h": "0242c141c790bc9fe98ca95962c5da335ce38916236e735626cf01562f56966b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\gaussian_math.h": "2caec7f5f720d1c9562e5a25d0380bf766fca05eeab048e9cf859b683efe8700",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_checkpoint.h": "7dfa4807dc65d36d62bfa35d05e9c71604b7ccb84e37ed4de1d00b59072783c2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_math.h": "68e726dc7a84778e6900bc6894bed50126ec4545a1370618dff0953374d25e8d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\simulation\\world.cpp": "3fb892df82fdf739aaa58ee706e56d895229cd00fcc9a6c48c9d5f59708348e8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\simulation\\world.h": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\current_physics_gate_v2.cu": "e96581b10fa60225f172a07c6f5deb0fc43b0c8ec59a9164977f5b30aa9fc112",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\hold_learned_amplitude_math.h": "54d39fa6e7081abcf9f8a534821fbe839acb7b14b7725680472c9d14c78f3d28",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\run-started\\result.json": "a0a1df41c55913df2a36a2a24707baa2a1e59b1a68b1eeedb2acecc4963364c8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\gate-passed.bin": "d4ab0a47542817ddb23e3cf59a3627bc9738d6f558eaaa1dd154170f95fda997",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\run-started\\active-seconds.txt": "52524026bdec5a4449748a590b86842f4ec6b2f6d8c7cb1e3217f067765dab3e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\run-started\\states.csv": "b07b4e9a0ee4fd0fecc27f11786fce7aed3fd695b8b3bad557a6bcabbbe9017f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\physics-gate\\run-started\\states.bin": "937093d23695290f1b18e02325a36765ee93ffb40f3d6c39b5cc62024518ec8f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\study-frozen-inputs.json": "eeb5f402b8c4950f52c71c5038f2ebec896ae51380614c14d006c922b41d2c15",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\Release\\ppo_current_swim_v2.exe": "359eeed59d6792ff62a7f5ec225e5c607ebb11559189d2a4d9009b4b28ed4d49",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\current-swim-v2-preparation-2026-11-22\\launch.ps1": "2e658f3d3b8e0b9fa8fadc5a864bded339a8a204d2a18d2b930ecd5b4a2876cc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\Gate.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\Gate.stdout.log": "85cf8c10cce5ba6ce96ebdf7597bad59c7c9b03633e40e78448d8b21e9ca271d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\gpu-telemetry-Gate.csv": "74a9cf9ab1b3931a18bb39202d7d6db9b51fb5eb64be99da028d6bb8a2c645e4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\gpu-telemetry-Gate.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\holding-parent.bin": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\independent-envelope-paths.txt": "3bc95833ebfb39a413ee3aa03cfcdcf6d7785c13b007b605cec1c2db1838f4a4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\independent-gate-verification.json": "7f3a0291bff3397df5289b1f695d84fc21915d579255d25cff2c4e556ee12186",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\initial-policy\\current-policy-update-0.bin": "3a0c3ca3e63cb89da49c8861154f0e9f5f08dd735bab83e080970605844f510f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\layout.json": "72e274c0a1c87eacf7daadd821a1b4fcdceea363c3903ee50733e5dd29af9bd9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\migrated-initial.bin": "dfea7d12744e791268a7c0c9a61d53c33c51d05cb1a9b1202c04b6b5bd60b99b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\parent-checkpoint.bin": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\parent-protocol.bin": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\preflight-passed.txt": "cd6bc9f6eb5176b7833057f89508279c52741a95cf31dabe1f6b854ce815bf33",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-16384\\bulk-policy-zero.json": "02c243025df8c94700d4c4e269e1466b4fba1eac0b5d7315ca52b89b30b3d34a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-16384\\initialization-zero.json": "892ab5683226eaa448d3f9d9b701532a72324b771efc5162d6cd7dff35c8055e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-16384\\initialization.bin": "a1cdfe32b0171fe542fd8289509caecdbbc77e6a7bef52ddbb78c1f20fed2c7e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-2048\\bulk-policy-zero.json": "06ecfbf7d6f5cd4c5c4ec2eefcfcbea07939eab72ebd0ea5f127b54972361ae1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-2048\\initialization-zero.json": "0cb0617ce7ab34d0cecd8c36d88bc0e90255533af4dc85659ce679487c53026c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-2048\\initialization.bin": "76f9b62af68e037e1d7dc18014b8c72fbb0b70c9717f6b0adbd0715165caeefc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-4096\\bulk-policy-zero.json": "66b299d7e440b744b77e7b09e2f675b530c54de0230ea36ac8712daef6150e2d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-4096\\initialization-zero.json": "c536da44e00c1e9ae4bc0a4cc09ed24276f558787e8776f34eff86c810926b87",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-4096\\initialization.bin": "6f731007ea8da9a5ff2bded5285421745d3b5316f7641de0ed687306de4b96f9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-8192\\bulk-policy-zero.json": "737a9e4f40daba3c2856f95c02122a0c8588552997265872ad0354e47f089ae1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-8192\\initialization-zero.json": "30dad7eae372ae967e96e740797e8a0c835c8770caae56392861526a6ad72e89",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\N-8192\\initialization.bin": "12a90e3ddf12660f70e1f7b037b783660db06ca27c1c0cadb8bb11fbb930fb63",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\gpu-kernel-metadata.json": "a62e2c204993012d13e136cf7f0df5b34927e9fb79167f194755884034136f05",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\math\\math-zero.json": "6804c1e77fe6e050ed49550e4ae26a9bda03d0f30c77bf83627ddf40826efe3d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepare-zero\\summary.json": "f8a5faf38f3da71c799c103fd0ab06ac20ca8c948a06375035867f9b0001242f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\prepared.json": "da308ff93013c380e44053018453ffd687793c2a8de08263174ad8081e3415f4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\protocol.bin": "ca5c46a7414194493b38d153c85eb48aabccd7732a4759e4246f4701489418a4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-16384\\bulk-policy-zero.json": "02c243025df8c94700d4c4e269e1466b4fba1eac0b5d7315ca52b89b30b3d34a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-16384\\initialization-zero.json": "892ab5683226eaa448d3f9d9b701532a72324b771efc5162d6cd7dff35c8055e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-16384\\initialization.bin": "a1cdfe32b0171fe542fd8289509caecdbbc77e6a7bef52ddbb78c1f20fed2c7e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-2048\\bulk-policy-zero.json": "06ecfbf7d6f5cd4c5c4ec2eefcfcbea07939eab72ebd0ea5f127b54972361ae1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-2048\\initialization-zero.json": "0cb0617ce7ab34d0cecd8c36d88bc0e90255533af4dc85659ce679487c53026c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-2048\\initialization.bin": "76f9b62af68e037e1d7dc18014b8c72fbb0b70c9717f6b0adbd0715165caeefc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-4096\\bulk-policy-zero.json": "66b299d7e440b744b77e7b09e2f675b530c54de0230ea36ac8712daef6150e2d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-4096\\initialization-zero.json": "c536da44e00c1e9ae4bc0a4cc09ed24276f558787e8776f34eff86c810926b87",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-4096\\initialization.bin": "6f731007ea8da9a5ff2bded5285421745d3b5316f7641de0ed687306de4b96f9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-8192\\bulk-policy-zero.json": "737a9e4f40daba3c2856f95c02122a0c8588552997265872ad0354e47f089ae1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-8192\\initialization-zero.json": "30dad7eae372ae967e96e740797e8a0c835c8770caae56392861526a6ad72e89",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\N-8192\\initialization.bin": "12a90e3ddf12660f70e1f7b037b783660db06ca27c1c0cadb8bb11fbb930fb63",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\gpu-kernel-metadata.json": "a62e2c204993012d13e136cf7f0df5b34927e9fb79167f194755884034136f05",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\math\\math-zero.json": "6804c1e77fe6e050ed49550e4ae26a9bda03d0f30c77bf83627ddf40826efe3d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\verified-zero\\summary.json": "f8a5faf38f3da71c799c103fd0ab06ac20ca8c948a06375035867f9b0001242f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\adam.h": "1069ee7a5d8c1098c2305781bf2f87add6a9a3ebac3bdafa8792b6fc1ba2d7b9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\gemm.h": "f52a4c233d1be5e3eec2eccadad6675a3e5cc31ecf951b7e8b63ba7c568e4bd6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\mlp_gpu.h": "0ad0d2107e8c5b4ec3bc6fc4c5af001d9546cf7883269b00600bd01af7e983fe",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\current_task_v2.h": "47da1967616d0233922a173b4850aa988f596066162897b532a461627e6f4627",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\nn\\motor\\frozen_controller.h": "b82614cc700d5fc0976f253a4888ec8334b662646e594baed4797ce05568ddb3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ar_gaussian_math.h": "43c1d5402d4f86c26d69ca15d8030e8e42271cec4c411763211c6c5440d5f797",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\gaussian_kernels.h": "52ce5311a2f89ac0fb14e253f221ba5da63172fabd04753fa398d97b803e267d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\motor_rollout.cuh": "5d2d479fd10654ccfed70225969304a7f5dc96ab0f1afd187c646c7ced514a28",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_diagnostics.h": "6d3bcdec41a53fde8a44fd70e740f78944aa6f36e271ae5cdf90f1340ce4feec",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\ppo_kernels.h": "54edd3d7cdfa0abe6ac65ab24de08240f4b00d5bcb984eceb931cdd1984952c8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\append_hold8.cu": "5d46932e99f0245f0cca81110671e256cefd329b477c62e5247f156034a7eeb8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\current_swim_math.h": "f6b791cfaa2b4d561e25c065b9e0a1c32a85141e6b6a27d144ae018cd11edc25",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\current_swim_v2_study.cu": "e452047d18c0bd17f86c3f44671d24537bded693205e97a923e5e16ee40aefb7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\hold_scale_study.cu": "728547aa895a460bdde2964aa3a3ac2c60851a87320c8fc51c050e895ef34ec5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\ppo_motor.cu": "23ed56686a42f47249d07bd7cc5949c739c886696ec8a6284a4053a150a05875",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\rest_hold_measured_baseline.inc": "08b5e999343361bc453c89899289e87201644d66e770852b26d07ba4cd8b0d78",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\rest_hold_study.cu": "5f510f60cc65364c04320b48d0efa73845e0c508d4eda813c2d9046106330d1f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\rest_hold_task_critic.inc": "53f9c61ff663268a30d6964d9f8c4143946b4986abb28900640c82468da840a5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-calm\\states.csv": "40d6aeaa115766531f835b4527e94f4b28761fe743541451b7f24a1c81d2f57c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-calm\\short-evaluation.csv": "055f903511fd7b56a4f7f3ad4847923d99e2603120e6aabe5e5d48ff705f8b27",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-calm\\holds.csv": "4177ae10e24d49db36ddf7c4b479ca5ac901c839354288876efcd6e7feafebc1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-calm\\hold-controls.csv": "32922c2fbe30ffff7ebbe3d2f2606f11b4e0160060e54e46118876d89987e435",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-calm\\long\\sustained-windows.csv": "5bc295e0a7a0a8ab3260f7cc976e9b3a33715001b8328b63d9e33943abafd3a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\summary.csv": "572d3d0d8ab876a2a40f5e14ffb49be396c76f42570dfdcd4443247ff8d183ee",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\cases.csv": "53ba1836fc9da3bd74f5f4b682c3cab62a17cdef9c0dfa410e1b0ccf7e148060",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\controls.csv": "a8ddf7bfcfbdef41ae10f2f8a1f6c46287d79bcbe4e5693fa0cb77cda3ede6f0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\states.csv": "e1b13a6d95188b5f292ea9af96fbf3fbf68d1eb4376cf7621a6e1af019c5c0de",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\initial.csv": "99f072b7c680a143ebb442554b050754460fc7b955ae1c34c7d47e044712ccad",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\windows.csv": "38e94007c61d708e7ad0916e8987a5934f56aa257b18657fcb6a972895a662ea",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-current\\poses.csv": "1473c8b5cdf013d4e71fbb2cac44937ac1ee7f35c784de9d4ad1219af616fe9c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-result.json": "6d1d0329068f5705c016931773c4efb9c09a7edc14fc5d474f46a63b9b9830c2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\baseline-ready.bin": "23b9a7de5751c1e0f4d7ac99c6a1f8f29fd95ebfbd7259ee2a2b51d2c7567552",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-manifest.json": "3873d62fa418e22e4363015ac740ae1cf9aaf4b7df1360f2798fe0f553d02767",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\meta.bin": "b1862efca3ee0f7721df2daf3100d44569f98affdcf313d74f2c18bee5e3e602",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\manifest.json": "edad27d1d52137b6e040ceff8a0933de7afd0293d25b1d05e1bba5f6634ab7eb",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\observations.bin": "af3efb79adb699da7df2130ef2b0a3933be8e4353cde06168d00596847d062c7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\flow.bin": "d2f4b11bc3a84cd2c2597d0565d002d25f89915fe850916d3f516e2cc3af1a38",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\base.bin": "ceeb7efd6a1e949e152124f221b4944584912333ac3af5224b19c1997f8cd346",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\joint-latent.bin": "14386d0dd90b2443927fea6ac5526b8ab39a95effc2ee82ab52eb24b3d1ee63c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\reward.bin": "2acb1ca4d2af477bb03e0f282056f526e8d54a71a6d28156839063aff374d83e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\metrics.bin": "0efa67522019815d4af799f2c46afae6814ec9b8069f4ab6e89343c8476fafdd",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\pre-state.bin": "8f26e0d3b9ea1d2efff8842a122a8648d048ab47e6d9fbac7cd1824f3194ab86",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\post-state.bin": "31a9b3722b60f176e7f81d47c717d10ea9001cc5b99d08d1b74267b39a3759bb",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\episodes.csv": "8a43715b2f96a83aa401b38cdeda2a7b034d6443caf8dda2fca1d7c1ee7a211c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-0\\timing.json": "0dd7d018917e4227e3d36955527a53ede5d756382ccb8858317ac4231ab5a5af",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\meta.bin": "581c5b4d28f7cca0b94677a78ba9ea28ee1d32c7bcc3ab9b1c1baa9aa5b2ee7d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\manifest.json": "96a0772e4316b677174b5db878cbfb44c4de7396b61e7ecd7eab634ad75b32fd",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\observations.bin": "a475d2e0dddfd53698e2530b9e3af1dd780fe8ce36e916171d10302449139e2d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\flow.bin": "656be2e592a391e082f710e9ef97c67865ff7347392803fa677696182d2d2bac",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\base.bin": "443d6369c55c056becc1b930c9c984c2c923151c2c274575bfe289c603c90742",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\joint-latent.bin": "369d8f4911892ff7ffe775e7ed558271c5e511275b9762323946f7dd15c5baf3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\reward.bin": "48bab302f609a5d277d31ff6becae6e0227dca613932734f6a91c22057ef36c5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\metrics.bin": "0defd5d161bd65f0e53bf2cc619264700037e735e513cdc708328343f046c070",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\pre-state.bin": "7ba6a183e55cc6231b749edd01a30e687ebb56a0492b9e14f1b095ebfe1d78e5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\post-state.bin": "857c6156e785d23a2db2fb89f5a92a87eb40b6b0d5fe462b533573c6f0520dea",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\episodes.csv": "62129b49800b45a975e36f5004b3c061295714191ff63a624a75f2bf23751986",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-1\\timing.json": "9fb4bf9fd04c96c85f3cf8bad5ac431e55c25da80e70614b89755c4d6d7de261",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\meta.bin": "47a69d829e5881c4245654f032d8dff32fd0473dc1e4863a796e0b819c9a4210",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\manifest.json": "4f4fac0a3629db235c90aa673ef3d7621c71272ed5b79aa52705c71a5f19b648",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\observations.bin": "7c5a485ad2010af65583e3c4fd090e4904bceff1521896d2ab78fc1aa315e00d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\flow.bin": "701ba1c62e6706d2a401f9f6d87ad3e8eed42749ed268a9a4e23da7c82e5e665",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\base.bin": "513ac19fda5074c5af2ac44b1cced200589303f76ebd7c699864c12c2c4c0e4a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\joint-latent.bin": "6c383e32e78ec694eaa815f8f3e92771b6ad607b3d51ac4ceb467d48f143aa0e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\reward.bin": "68107ccd4225b979870047c8bfaf23d5a901826257017b0827c803f765fdadd9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\metrics.bin": "40f791308edde34e4b2d646e897c3576ca71e44ab9a1087bc28f1a843963cc9e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\pre-state.bin": "3b69a5016d7c34dcab08ae5de74fa9eca6262a76f0a9b9520bfec0b60d928b9b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\post-state.bin": "76706edc7d28b06cc809a5638cc2309e52eb81a1f33557d434bec0f24010a6e9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\episodes.csv": "81f2d56ece2450a8641f36dfda754157a8bc59ed30e3ba452d13295aa4779ff3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-2048\\profile-batch-2\\timing.json": "c1049817b05eec967928e384425ef4021ba98a222e733b5972f6b5108666f5ec",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\meta.bin": "a81b366cd3115ca01e8e965c4ad5a92c2cbaaf2386a59ee52234c55d23da2057",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\manifest.json": "8e32b645e64c70f3d8fa380105408c8f7a7d52b5393841a501617d1667850773",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\observations.bin": "959f367394d4121d83e9fc844b490c98692b9a71d77db6f0b031c937d0f8f9dd",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\flow.bin": "07be0f227b543e113f76edd3fe85fc7da220f31616e2dff415c2aa4d26c73e86",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\base.bin": "96d5061d54c42a6e5b4685485d947535c45d7a1311f18cc7877536319362f4ca",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\joint-latent.bin": "e06dc1a83337ba36a14f0a68b7fc386ad4dd17b7cda5a0ddf8091d471efc0faa",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\reward.bin": "0fe158ff094c7bf8b3f3df224245594e45d144677980bf998c58ee7bd8d40ac1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\metrics.bin": "76cc5f847ae6c10cd10d135cd33d8cec205164fe0002b00f42c56077ff972ea9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\pre-state.bin": "9a3efc9d8b43ffadd6030064abfb19e883a7927bfaab679f657101bede53863d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\post-state.bin": "65e242f32f479770bf119ab03a61acc89c843629035b88c9b3883a4338ee75f8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\episodes.csv": "7f536d4e2171a7954bea7f8c7a5f2c8d96db9355db99b628ed1bd60c9ae39439",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-0\\timing.json": "a887990468274ab26234b12bb5346ce7a8638fa37ca3422933d1a1cf7c4339f3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\meta.bin": "62656627f8cea5b6be3076be0a601e268e56b3174c7ba6f92cc040413149306c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\manifest.json": "cdddda2ad32f4a7d4d4a242427d58b3dae34da06bea3e386ce43f44af0740c8c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\observations.bin": "7a7c1bb0cc3bd42701f12fe04ba95ef3538ac5425eeb41e2cfe6adbdee8f2568",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\flow.bin": "8c6ddb414b91b84b7dfc06a5db32a5d052aad8737dbf2ff2dc733ac9650ad055",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\base.bin": "4fbd2ddc40ac52e178a355a6e0f72037032b7ad1b0123b0be109af260c37fa72",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\joint-latent.bin": "6b7be067c153621373cac5da3b8e37d68d7762a473837be0a4a87a4e1090ad85",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\reward.bin": "4081180c1a38a4fd79b534c3255d204c229878d41efdc0fadb26ef280294be61",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\metrics.bin": "38554650b3bff608f5df7e1ca16da396474ece6ef3020f93fc0f63853c1e5cdd",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\pre-state.bin": "8293b0b9e3629ecec06bf85d1663e542c196053880c57b5745abe50b06877609",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\post-state.bin": "6109dd335d093fae9540f3345ced4726b675cf826ee9119bea29ff0b0ef00d48",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\episodes.csv": "fb74b589c7266421ed157f3fc2305b567ff3c931aa176dfeb6d2fa3336531b41",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-1\\timing.json": "58c50b025f2774e605bb0d0423483b8eedbe3915c35d9b92960b615d581d1a5e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\meta.bin": "e8259a4f041a71de020095bc9e87086f8bfbaa2cf45c170eb7325e3991917ba7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\manifest.json": "992f25c0923009a748e8bd07562638fa83fe16f2feeef5e83e303df84dc565ba",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\observations.bin": "08447116fc383d42a5efeed4d8c465a8c170db36711dc5bfd081dbda35dd09a9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\flow.bin": "3bfa0fc06c33e09dd50417f4f60629528cfa95ff021070c6f5e88b2aa2bfbf74",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\base.bin": "0b1197b355373ff758958e0ece1b9d8b2b150a841dcba5bae8075477c651c203",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\joint-latent.bin": "c94f511464953506089755ceeb6fd3ee1bbb5510dfd253356fc9750fc03d68e8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\reward.bin": "f9eb7b34c7725c5b3d9a7c69d10ba103417de3462a311f3120fc04606aae64ca",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\metrics.bin": "323ce95e7c5cdbd4f1fac9b70dba0f3bedd59b541a03186145e6dd88e5e34669",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\pre-state.bin": "0521c5944c6f86a5241d6ab4f5f37979a3fde2d9c78951f3db4cd1e828559952",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\post-state.bin": "79bccc7faf267e0c7da4caa1c16f32474c1450e9d320fa7113e18595ab670847",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\episodes.csv": "6d01f2f62bac2224b1c79b12f1ad3e128056560ec760f202a18dc3d8854ed1d4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-4096\\profile-batch-2\\timing.json": "37870a77cee59c220e660f2a785819a88a9b890115fa9561d79f1de2f86f8014",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\meta.bin": "fd5922116778a0e9c2ca05d44589690d51c14fdcb4069778bf8c103dd682f6ba",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\manifest.json": "79e8eba845243a01a7e3b404665c1582773f9a41894ac00447b360ed7225d991",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\observations.bin": "1a031f7f38a4f9a04c10b32baf64d5417ee4531e34236efff65a8d2ce52f5297",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\flow.bin": "f310ab0a45e9b7157117e9430374eebcbbf2d5eb2ac3a1a2af4d4d93d4f6d45c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\base.bin": "d0d78eb52a92fac411286b6796dc181312041042599ea5a37e403c080cbe42f2",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\joint-latent.bin": "9b266186ae116e9ccbe825913c8759b07d64e5ee86710eb0cea9fe55a01f8890",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\reward.bin": "c348249211582f038d2f21d71a82c370ce51ebe5697af29be565daaecb9c1e31",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\metrics.bin": "8b509fb088bb5965ba8cc76b8b59d1663c214c3368e622b1ab5af9127878ab2f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\pre-state.bin": "73714f75cb91af793d8988bd845d857b86805e7b4cf52d7f5e1a46a73cceb1d8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\post-state.bin": "d6d9560f6ea8ae7426e8894179b0dfc1070a1c7535a6dfde0dbe30fc5d19b0aa",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\episodes.csv": "f7f414c3d06849644ec6677c8a895a48be509bfcb62d34e0ee35ec3e7865e6ca",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-0\\timing.json": "bc7a0f2355be501199aa886118fa056bb68b979738d12e2cedbad5c4bb3d9891",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\meta.bin": "59d03fae2ddc0896a9f89c00fbcc6bcfa439602d7cc0908d80c94025efb2ddcf",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\manifest.json": "1e5b8f16c5993e021df23176859285efd07223243d5bee533b6876846a874050",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\observations.bin": "b49f7962514cb6c134cc8bcb89e271abafa496b59524e10bbb0a18d4ba9c68b8",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\flow.bin": "c3507470bccc96587af2c505759b2b561c921e154c87260b05408133d21fe3fd",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\base.bin": "c2578bd07772e63b3ee1fc8371922e7981ee66ba41c3d8c14ffe7b12df9ce0e9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\joint-latent.bin": "82dace94ddbb46f928a1ce08471c1b9a57e2eb2f7c124fc3fb1d0bbec2d8e65e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\reward.bin": "0dc4df9a0d9562ef657768ccec4d3c7a21689add06b34d35063b582fc8e87b65",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\metrics.bin": "444b1c7d3200ba1036504487645276f4ea49be003af98e71998057702fd2f402",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\pre-state.bin": "4850772d971ff76bc452585e45ed130653899337c1a6db7fac8275456491f3c3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\post-state.bin": "5b1ef4534e06226b88660d87b6b3d7ca483a5cbd8148579514179c140b3abc91",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\episodes.csv": "f631fea832f723674541795bc78c369ef26f274b2048cfdb63759e7246085b05",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-1\\timing.json": "324e3487708728c09f2ae8c5572c396bfb4f15ebf9b7bd75c9330c7d00b50d58",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\meta.bin": "6f645295b285ddc7e4b0d3ec73d53b76bf8cd1cd3613bb37bcaa06088e4ba78c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\manifest.json": "501dfe9922b54571b5f1a118bd79243ed205938ab8c42ba61879d78311c7a808",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\observations.bin": "a2912cf54f6927f089d6fde463d602b3ab894f76301679007b7b0c8ef7e7a799",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\flow.bin": "fe7f1db012e000a0909cbe76024552a36fd3d2ec42aa12ffc6119cc6fe477030",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\base.bin": "07ba76a8a2053ca9c494c946dd382e7eb000933e3fb66c191ba1459949f5ebd7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\joint-latent.bin": "c1996edcc1d2a96de61b721b5c55e318e4e3928c6c2b165dc752f968eadd01f7",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\reward.bin": "83668e855904e21ffe3e0e24aecb4365e8bbc9f555f103b5bf249426c258f526",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\metrics.bin": "1c0685c3bb0ce546832114950e391430afcd1ef077c771593673e64033fea57c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\pre-state.bin": "ed2949761cd22896edd7993fba5916ebfd0c4d7bf260e530fa85574822407522",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\post-state.bin": "6778ca898425c8fe18e5a2bd1675170810009a00fc912d69201358b858e083f6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\episodes.csv": "4f9d5c1d737eee1f539c12d1b50d129bb610f7768129afc07d68e28235b5c21b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-8192\\profile-batch-2\\timing.json": "93ebca8005ab6d7a9de2270e2d5e23e89b8a87d49599e64ea8d8c307ac65a72f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\meta.bin": "d8fdbc8bfc14b184d88661176ed9406524ec63e383136edc0e565054598301d9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\manifest.json": "6eaf854519f84378b324877fc9f3917704fb62042bda05524f097239a9d73f9c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\observations.bin": "51b747debdf52a413b9b6ab2cac780106f8bb0db33e58c0748ae5e80ad8337a1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\flow.bin": "f95dfcd1c320a5852dc6885dabc4d9bcba24b7abfa379dc9facccb36718a58e1",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\base.bin": "86af134fbcfd410fa904d3c6d1a4e035b71b5f0bd6e6fffdea90c0910655dbc6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\joint-latent.bin": "35ef22561fc1503d59a82590a8cf392528ffa107505be96a66fef4851691ed34",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\reward.bin": "13205698c320dbdeedb0d87a4cbd9c474e837608790e90287568ba93adf32b2f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\metrics.bin": "cb91c56ca1ff47526cb96e2d8a16ab5483e6d4473db8cd58fec614540b569cef",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\pre-state.bin": "185f6015f64337ecb98a7b4f6b08c733e0b6751d4a4b479e4f353d0546ebe148",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\post-state.bin": "3d1b87f69a8086316379411af976c018e1a964b6366030ac793e800e0e102ca5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\episodes.csv": "77f0ab8ac6fb186f5b1a45a62b58326c16abc1978126ebb9586399153f4cc92e",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-0\\timing.json": "46062a1633104a6e86273971a5f872a94510bc1c5c149ea521abb7e92207163b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\meta.bin": "5e070a5eab810e1df0b461df6988d44f35400c5030cdc1bf6875e43408427ab9",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\manifest.json": "376497688138b3bdfd0ce0d9ca149a7da54122a8a18faf72d6f875761d5671cc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\observations.bin": "aa04e8213213b221f1781182056f0d7858fcabfa75d9abe4891016aa23207c8c",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\flow.bin": "64aaf23036af9b79aad4c90a95bdbc01fc7dc311ab7a19eb761d9172e09b9422",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\base.bin": "8e785154ae1d39900f542d4273ec4f9c615048637b1fa68cf88521633796c265",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\joint-latent.bin": "09bb4297f19b3d643e91ad7b49df4aec16091486bafb0eda412bbf826dbf4d9d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\reward.bin": "5050356dd3f9f2cc47157b1e583f603065c97d3e82fd270e206ebc0056320046",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\metrics.bin": "26f5c1c34204296f646b3c9ccc4f22ef70a5b796d138ee07ef7322b9abaa96fa",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\pre-state.bin": "078de2d437f2f9f0bea131f7280f06b9a4d4a3ccd1a0716cdf57a16d6ffd74df",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\post-state.bin": "a6a89ea5c01b99c54b77f33194cb2f0510677ec2020f2cc4fe3c934f2669c29a",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\episodes.csv": "7244ff75304b7374249d2c06170d87bb214d7f7f24510201be8efd151dfdcea0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-1\\timing.json": "eaa08276a6413f703dc59e1c252caad2f503f066994cea255c8ec292fd19caad",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\meta.bin": "da4ebce91e4dc24427798dedabdb13bf3b3dbb6751732331401784c49cb9276d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\manifest.json": "c636638e4a681cee5d25a725f7f5231654c1e42a760f6de4f6490990b16c3b15",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\observations.bin": "d9f30a6bf14c688cf25bea4f1f68c2b9ec64b2e69a3528a29beed8fdb2a09b72",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\flow.bin": "455f41a231ecffcee7b8be4230e664bb80f343698407551373a78c30ce0f9ab4",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\base.bin": "e72c54e06bde1de9fb719cd2ee4467b74ae6d47168315cf00898dfd819daef6b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\joint-latent.bin": "8128bdc6ec1a59b981ee807791eefeb4d9424b78e80e5f1c34cb35d9f890f103",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\reward.bin": "e3d571ff87013006250b5e6759507ae406ca3fa92bd31dea032d6d7e91d66e76",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\metrics.bin": "61ba7402770433e4afe0383910f6860300b80ce9fcede0a6fcc450ed702a2ffd",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\pre-state.bin": "c7abcb351ffe2f6d9971a2dbf71378acd9ba9e169efe8b52c65d67704cd51596",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\post-state.bin": "c91d36fac91350cc7777437e5d706dcc6836891602b30a27345e22ef930fc540",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\episodes.csv": "83476d1264d3111bfd7bd5a943131ebe45e872da89836e53b26baaae2062cc19",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-started\\N-16384\\profile-batch-2\\timing.json": "9166704e4ccc190106f343f10770eda6decb1c00c1eaf28653c4d3ecc33fbc61",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\selected-size.bin": "49c1dc39df50daaf59297b9bfaeeb662fb19dab0803a9cad9567dff4377eeccc",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-result.json": "f8cf182783f27c1e490bb4f389bf33a647ada52031d2c5656352f6b9ed7d5d50",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\profile-ready.bin": "0cb7bdf2a4fd5e810e759c2c39f3e546a52bb3304b44fcf19388368da1c87e3e"
+  }
+}

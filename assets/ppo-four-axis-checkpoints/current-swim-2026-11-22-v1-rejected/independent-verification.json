@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "qualified": false,
+  "phase": "closed_physics_gate_failure",
+  "scope": "Independent saved-evidence verification; zero new physical or optimizer steps",
+  "envelopes": {
+    "passed": true,
+    "files": 26,
+    "payload_bytes": 2781740,
+    "physical_controls": 0,
+    "optimizer_steps": 0
+  },
+  "initial_policy": {
+    "update": 0,
+    "Adam_steps": 0,
+    "means": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "deterministic_coefficients": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "sha256": "adc2365587a0101bdd685e55a182f395cf45711f43ae5db168187aa37d50d04b"
+  },
+  "closed_gate": {
+    "closed_failure_verified": true,
+    "controls": 2634,
+    "substeps": 26340,
+    "PPO_updates": 0,
+    "optimizer_steps": 0,
+    "finished_cases": 18,
+    "assembly": [
+      {
+        "backend": "CPU",
+        "probes": 8,
+        "maximum_force_error": 1.810346577507671e-13,
+        "maximum_R_difference": 0.0,
+        "maximum_direct_dissipation_W": 0.0,
+        "maximum_direct_supply_W": 0.0
+      },
+      {
+        "backend": "CUDA",
+        "probes": 8,
+        "maximum_force_error": 1.3322182983513398e-13,
+        "maximum_R_difference": 1.1641532182693481e-10,
+        "maximum_direct_dissipation_W": 0.0,
+        "maximum_direct_supply_W": 0.0
+      }
+    ],
+    "first_parity_violation": {
+      "group": "flow_zero_target_servo",
+      "case": 0,
+      "control": 77,
+      "field": "v1",
+      "CPU": 0.0,
+      "CUDA": 2.0137041190082527e-07,
+      "error": 2.0137041190082527e-07,
+      "limit": 2e-07
+    },
+    "physical_step_faults": 0,
+    "qualified": false,
+    "current_behavioral_suites_executed": false,
+    "active_seconds": 3.0577047
+  },
+  "input_sha256": {
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\verify_current_swim.py": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\verify_hold_credit.py": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\learned-amplitude-preparation-2026-11-22\\check-evidence.exe": "75e9ac1d75bf5658926faf42a42bed0dd4235570d0074b31f697d3c6a5c5afb3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\protocol.bin": "3809bc7c82edeb110153599c876f1cb0793fe19bf26f550041b8a0be34ffe81b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\approved-protocol.md": "e3c816d9a5cdce9a1a095e56350bf124921927523a92fbb089a4aeb01462ff4d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\parent-checkpoint.bin": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\holding-parent.bin": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\migrated-initial.bin": "03d0a2bc0569605a4f111553bfe0257bacfd5f09291cc02d219ec5fb64c84242",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\initial-policy\\current-policy-update-0.bin": "adc2365587a0101bdd685e55a182f395cf45711f43ae5db168187aa37d50d04b",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\study-result.json": "a9750ec8db1b0dd567bfdb42823e070db5c3a60649ccf8699e8f057b993515e6",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\run-started\\result.json": "c907a0e0edc36c37149e89393c3658d4369e26253a00e2dc1989bc95fb54f2b5",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\approved-protocol.md": "e3c816d9a5cdce9a1a095e56350bf124921927523a92fbb089a4aeb01462ff4d",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\zero-started\\assembly-probes.bin": "c21f3be056b906f7b94c7b4df1b0aaab7ad8287e96da431b86b40971bd9ff626",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\zero-started\\result.json": "437584cefd7a6d78686e1bf339be3d4f4c2a48fbfb1ed0bf965ce0af314c8852",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\run-started\\states.bin": "9fd615aa76d9ddb31b802a88f88e193d9c8cc1a8a324dc01c96432cd767cd600",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\run-started\\states.csv": "4a8672b6bdf17551656717ee5b84ffe5ee8b4baa8f25748f92323dd6f3e9a2be",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\run-started\\first-failure.bin": "c5957ab854788418e1f8971905a9e37a19d0aa9c5bdb4f000ca05cea206efd4f",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-2026-11-22-v1\\physics-gate\\run-started\\active-seconds.txt": "eedc76ef3fe513ab812fc5338386169d76a947818bd2aeedf81bc129308e9b37"
+  }
+}

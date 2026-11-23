@@ -1,0 +1,1 @@
+{"passed":false,"fault":"CPU/CUDA generalized velocity mismatch","attempted_controls":2634,"completed_controls":2634,"physical_substeps":26340,"finished_cases":18,"maximum_position_error_model":1.0251998901367188e-05,"active_seconds":3.0577046999999999,"PPO_updates":0,"optimizer_steps":0}
