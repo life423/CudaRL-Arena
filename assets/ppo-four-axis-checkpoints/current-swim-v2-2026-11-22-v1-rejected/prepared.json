@@ -1,0 +1,1 @@
+{"schema":2,"prepared":true,"world_sizes":[2048,4096,8192,16384],"controls_per_episode":160,"profile_controls":2949120,"updates_max":32,"controls_cap":89571440,"substeps_cap":895714400,"initial_disk_free_bytes":55834574848,"projected_study_bytes":47145287680,"physical_controls":0,"optimizer_steps":0}

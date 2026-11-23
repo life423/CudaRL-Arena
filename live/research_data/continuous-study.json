@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "source": {
+    "path": "res://research_data/continuous-study-result.json",
+    "sha256": "b7ffeb125d2b453dabead2a00d4256b9effb84f2e015dacd4cd2b4a3ea45198c"
+  },
+  "verification": {
+    "path": "res://research_data/continuous-study-verification.json",
+    "sha256": "3c66c7864f3e6cabf93f3c4be46edc4d15f716d55d158d9b14c566c2699c0399"
+  }
+}

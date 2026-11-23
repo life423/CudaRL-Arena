@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "source": {
+    "path": "res://research_data/interface-comparison-study-result.json",
+    "sha256": "17920b9acca3d854bf93ee08ad36623a794b751ef212497d781c86af4e549bb8",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\frozen-interface-comparison-2026-11-23-v1\\result.json"
+  },
+  "verification": {
+    "path": "res://research_data/interface-comparison-study-verification.json",
+    "sha256": "b89f33803aff753d3f80386f7ffe94abb0e5ed78d56414ca3f3445ba00bcffe6"
+  }
+}

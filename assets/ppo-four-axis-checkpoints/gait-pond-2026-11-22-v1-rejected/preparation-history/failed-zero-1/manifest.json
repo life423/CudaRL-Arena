@@ -1,0 +1,71 @@
+{
+  "scope": "First pre-freeze gait zero-only preparation failure: FD compared unscaled pg_loss with correctly minibatch-scaled gradient. Zero physical controls and zero optimizer steps. Captured before source correction.",
+  "repository_base_commit": "40ce06685e139f00b552d12b8ffc9b00554a6280",
+  "files": [
+    {
+      "original_path": "tools/gait_swim_study.cu",
+      "bytes": 77187,
+      "sha256": "d7b94aa480a5d1e20fe6fdee77d18b584bbe113c853db74f1f174dcd57e7fbf4"
+    },
+    {
+      "original_path": "src/nn/motor/gait_policy_v1.h",
+      "bytes": 2160,
+      "sha256": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67"
+    },
+    {
+      "original_path": "src/nn/motor/gait_task_v1.h",
+      "bytes": 3635,
+      "sha256": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a"
+    },
+    {
+      "original_path": "build/gait-pond-native-2026-11-22/Release/ppo_gait_swim.exe",
+      "bytes": 6636032,
+      "sha256": "9afd3318bd33f8b709addf60e2fd664ff5806370d1dc8d0c287aa34a3f195184"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/approved-protocol.md",
+      "bytes": 19497,
+      "sha256": "b2bbc96b6ed2a8cd09274965594d9a2c03812d35281682cf78039f6dca66bf07"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/holding-parent.bin",
+      "bytes": 10308,
+      "sha256": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/layout.json",
+      "bytes": 465,
+      "sha256": "0aabbf9e4302a7d74ff35aebe63bb72044900fa8383908bcfa1210dedd48f242"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/migrated-initial.bin",
+      "bytes": 59796,
+      "sha256": "a1734ada61c31a54f6b3c69c287a6f653fdf01934d0b597d94fdb2f085164d84"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/parent-checkpoint.bin",
+      "bytes": 59016,
+      "sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/parent-protocol.bin",
+      "bytes": 292,
+      "sha256": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/protocol.bin",
+      "bytes": 208,
+      "sha256": "fc2bc842300a5c7b1170a549a92ac9b06258a9d90cb627efedb2285146349d5e"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/initial-policy/gait-policy-update-0.bin",
+      "bytes": 10420,
+      "sha256": "6934d280006d01887716c3b318d9dc98d9f391e837ab8d0164412c043065f826"
+    },
+    {
+      "original_path": "build/ppo/gait-pond-2026-11-22-v1/prepare-math/decode-zero.bin",
+      "bytes": 7724,
+      "sha256": "b1708bf33c2729f809979c849747cac5ba970d8dee01fa72547a0cff9873b46c"
+    }
+  ]
+}

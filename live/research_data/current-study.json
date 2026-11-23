@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "source": {
+    "path": "res://research_data/current-study-result.json",
+    "sha256": "120f9b485a25373cb42cef6cc3bd8659325a04a4a0547c3639369b586f8dc982",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\current-swim-v2-2026-11-22-v1\\study-result.json"
+  },
+  "verification": {
+    "path": "res://research_data/current-study-verification.json",
+    "sha256": "6f0c0d04c093b607d31d9ad0cf09c31c44b8180e8b4f27950f896555e32b8b70"
+  }
+}

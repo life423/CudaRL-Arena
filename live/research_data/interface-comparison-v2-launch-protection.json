@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "study": "frozen_interface_comparison_v2",
+  "passed": true,
+  "files": 10457,
+  "bytes": 63006197911,
+  "manifest_sha256": "803cfe0a14c167a26241300ad526ff00f7f9dd0a46cf3a7217a69763fa824ab4",
+  "physical_controls": 0,
+  "optimizer_steps": 0,
+  "launch_stop_verification_sha256": "aa45fa23cd4a1f02483269624c42301cb3d636b24ab75749a53d2664df9fa742",
+  "process_execution_sha256": "67ff45bba4a710fe6618be810c587735ccea3e3dba0f8f43433b9434e63853df",
+  "arithmetic_preparation_sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052",
+  "content_verification_sha256": "76fe14b0c338d739ea99afe5bb76acfdb3fca5a725f043384c51243e92425f9f"
+}

@@ -1,0 +1,1 @@
+V2 runtime-N Gaussian, policy, body/flow, LOO, source/checkpoint and kernel-metadata checks passed with zero physical controls/optimizer steps.

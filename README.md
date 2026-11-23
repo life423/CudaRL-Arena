@@ -1,17 +1,101 @@
-# CudaRL creature motor
+# Tadpole Pond
+
+**Mission: create an evolving reinforcement-learning creature that users can
+interact with, drawing on what it has learned and learning from new experiences
+to adapt and thrive.**
+
+The intended experience is its own persistent pond world: a creature to feed,
+observe and interact with as it explores, rests and learns. The current motor
+inspector is an intermediate tool; that integrated world remains to be built.
 
 Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
 motion comes from torque-limited internal joints and water forces; Godot supplies
 presentation only. The motor supplies four independent joint-angle targets through bounded servos.
 
-The mission is a physical creature that starts as a dependable swimmer, learns
-from player interaction while retaining its skills, then grows into more capable
-movement: underwater limbs, shallow crawling, land movement and eventually
-manipulation. One learned goal chooser and one reusable body motor are the
-intended design. Those later stages and the interactive learning loop are not
-implemented in this minimal research project yet.
+Dependable movement is a foundation for that experience. Core aquatic abilities
+include swimming and steering in still water and currents, braking, holding a
+position against flow, and recovering while retaining previously learned skills.
+User interaction should lead to measurable adaptation, with actual RL updates
+distinguished from the use of existing training. The longer journey includes
+physical growth, underwater limbs, shallow crawling, land movement and eventually
+manipulation. One learned goal chooser and one reusable body motor remain the
+intended design. The interactive learning loop and later body stages remain to
+build; current-capable swimming is not yet qualified.
 
 ## Current state
+
+**Godot Swim is now untimed.** The unchanged saved motor continues past the
+old eight-second cutoff, preserving body/request/servo state until Pause or
+an existing physical/pond-domain stop. One independently audited product check
+swam188.9mm over25.45seconds before the original supported-boundary check
+paused it. This is extended straight playback, not autonomous pond turning.
+The updated app is open with Swim selected and elapsed/distance measurements
+enabled. Rest and finite research APIs keep their original durations.
+See the [verification report](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md).
+
+**Newest November 23 result:** [comparison v2 is blocked before physics](docs/FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md).
+Fixed-state CPU/CUDA arithmetic checks pass after isolated rounding corrections,
+but the single launch failed while enumerating long evidence paths. No fresh
+parity, retention or interface trajectory ran: **0/88 cases, no winner**.
+Behavioral retention is unassessed; saved weights/runtime remain unchanged.
+No training or optimizer update occurred. The attempt is closed without retry.
+The actual Godot app was refreshed and inspected with this outcome in Details;
+the correct live project remains selected in Godot Manager.
+
+**Earlier November 23 comparison:** the [controlled request-interface comparison](docs/FROZEN_INTERFACE_COMPARISON_RESULTS_2026-11-23.md)
+stopped at its CPU/CUDA prerequisite after 214 controls / 2,140 substeps, before
+any of 88 main cases. Identical commands produced an angular-rate discrepancy
+just beyond the fixed tolerance. Independent stopped-data verification passed;
+there is no interface winner, motor replacement or retraining. All 10,183
+protected original files remain unchanged. Godot Details discloses the stop.
+
+For engineering review, use the [copy-ready AI handoff](docs/AI_HANDOFF_2026-11-23.md).
+It distinguishes measured behavior, failed approaches and unrun preparation,
+including the missing bank observations and future shore-climbing requirement.
+
+**Earlier November 23 check:** the user-approved
+[requested-turn probe](docs/FROZEN_REQUEST_TURN_RESULTS_2026-11-23.md) is closed
+and independently verified. The saved motor responds to small +/-5-degree
+course changes at 7.75–7.83 mm/s. Larger requests lose speed/posture; all eight
+60/90-degree cases stop at the tilt guard. All 22 cases were measured in one
+13.71-second process, using 5,782 controls and 57,800 substeps. No weights were
+trained or replaced. Continuous pond swimming is still unqualified; the next
+learning need is sustained requested turns in the same motor. Godot Details
+discloses the measured result while keeping the existing saved swimmer.
+
+**Earlier November 23 study:** the [food-free pond study](docs/CONTINUOUS_POND_RESULTS_2026-11-23.md)
+completed 64 native GPU PPO updates without a physics fault, but passed **0/16**
+sixty-second swimming starts. A sixteen-second objective rewarded behavior
+that later slowed/stalled. All prior swimming/recovery tests and 14 holding
+cases passed again. Independent evidence verification passes; the candidate
+is rejected and the qualified calm swimmer stays active. Details displays the
+verified result. No food, scripted turn or rescue was added.
+
+The [code/design audit](docs/CONTINUOUS_POND_DESIGN_AUDIT_2026-11-23.md) holds the
+unexecuted next run: fix failure scoring and establish requested turning before
+another whole-pond lesson. Numerical preparation alone did not establish that
+the proposed controller could solve it.
+
+The [turn-probe preparation](docs/FROZEN_REQUEST_TURN_PREPARATION_2026-11-23.md)
+preserves its original zero-integration checks and frozen inputs. Its one
+physical allocation is now closed; no retry or new training follows automatically.
+
+The [held four-axis proposal](docs/CONTINUOUS_POND_V2_PROTOCOL_2026-11-23.md)
+uses sixty-second credit and bounded depth/state feedback on all four existing
+motor outputs. Its native code is prepared with zero physical/optimizer steps;
+another physical study requires fresh explicit approval. No additional study is
+authorized by the failed run. The original data and closed budgets remain intact.
+
+**Previous current study:** the explicitly approved [corrected GPU current study](docs/CURRENT_SWIM_V2_RESULTS_2026-11-22.md)
+passed its fresh physics gate and completed 32 native PPO updates. Original
+current-swimming cases improved from **4/16 to 8/16**, short of the unchanged
+16/16 gate. The candidate is not qualified or installed; further withheld/current
+endurance tests did not run. The viewer keeps the qualified calm policy and
+discloses the latest result in Details. The selected 16,384-world CUDA workload
+measured about 500,294 control steps/second including evidence writes. The study
+used 89,566,320 controls and 344 Adam steps, then closed without retries or an
+extension. [The first numerical failure](docs/CURRENT_SWIM_RESULTS_2026-11-22.md)
+and all prior evidence remain preserved.
 
 **November 22:** [learned persistent amplitude](docs/HOLD_LEARNED_AMPLITUDE_RESULTS_2026-11-22.md)
 now passes all six original and six withheld 64-second calm holds, plus both
@@ -96,9 +180,13 @@ records that choice and rejects mismatched frozen evaluators.
 The current single Godot frontend loads the qualified saved research policy from
 `res://research_data/learned-amplitude-v1.bin`, with its matching `viewer.json`
 metadata. It starts paused; Play runs actual native physics with frozen inference.
-Hold/Swim selection restarts the isolated task from rest, so switching is not a
+Swim is untimed and preserves state through Pause/resume; the supported pond
+boundary and physical checks still pause it. Rest remains a64-second check.
+Rest/Swim selection restarts the isolated task from rest, so switching is not a
 braking test. The viewer has no optimizer or background learning worker. See
 [the interface and verification guide](docs/POND_UI_REVIEW_2026-11-22.md).
+It starts in a close aerial creature view; Side view changes the angle, and
+scroll/pinch or + / - adjusts zoom. Title/status use an opaque high-contrast surface.
 
 The earlier imitation-trained controllers and dedicated supervised training paths
 were removed by user request. Missing or incompatible policies produce a usable

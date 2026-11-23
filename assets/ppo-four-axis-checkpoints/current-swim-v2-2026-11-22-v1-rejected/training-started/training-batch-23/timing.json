@@ -1,0 +1,1 @@
+{"worlds":16384,"ticks":160,"purpose":1,"sample":23,"controls":2621440,"observe_ms":17.932640060782433,"network_ms":8.2423360273241997,"physics_ms":1180.1790399551392,"readback_wall_seconds":0.31386389999999997,"validation_seconds":0.41017429999999999,"evidence_seconds":3.4996101999999998,"end_to_end_seconds":5.4567943999999997,"optimizer_steps":0,"PPO_data":true}

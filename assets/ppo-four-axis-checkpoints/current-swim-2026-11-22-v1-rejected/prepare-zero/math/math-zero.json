@@ -1,0 +1,1 @@
+{"passed":true,"actual_CUDA_cases":24,"max_logp_error":8.4769989694422065e-07,"max_gradient_error":2.5712164180013986e-06,"max_finite_difference_error":5.5729554304662088e-10,"max_decode_error":7.5444283709202864e-08,"LOO_own_return_excluded":true,"exact_calm_passthrough":true,"physical_controls":0,"optimizer_steps":0}

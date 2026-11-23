@@ -1,0 +1,8 @@
+timestamp, name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.free [MiB], power.draw [W], power.limit [W], clocks.current.sm [MHz], clocks.current.memory [MHz]
+2026/11/22 18:49:48.654, NVIDIA GeForce RTX 5070, 4 %, 1 %, 2673 MiB, 9271 MiB, 31.05 W, 250.00 W, 1432 MHz, 14001 MHz
+2026/11/22 18:49:49.688, NVIDIA GeForce RTX 5070, 81 %, 8 %, 3581 MiB, 8363 MiB, 53.60 W, 250.00 W, 3000 MHz, 13801 MHz
+2026/11/22 18:49:50.705, NVIDIA GeForce RTX 5070, 99 %, 21 %, 3888 MiB, 8056 MiB, 63.98 W, 250.00 W, 2992 MHz, 13801 MHz
+2026/11/22 18:49:51.731, NVIDIA GeForce RTX 5070, 1 %, 1 %, 3803 MiB, 8141 MiB, 55.52 W, 250.00 W, 2992 MHz, 13801 MHz
+2026/11/22 18:49:52.742, NVIDIA GeForce RTX 5070, 19 %, 2 %, 4547 MiB, 7397 MiB, 80.79 W, 250.00 W, 2985 MHz, 13801 MHz
+2026/11/22 18:49:53.754, NVIDIA GeForce RTX 5070, 74 %, 18 %, 4560 MiB, 7384 MiB, 66.68 W, 250.00 W, 2992 MHz, 13801 MHz
+2026/11/22 18:49:54.768, NVIDIA GeForce RTX 5070, 99 %, 28 %, 4539 MiB, 7405 MiB, 69.99 W, 250.00 W, 2985 MHz, 13801 MHz

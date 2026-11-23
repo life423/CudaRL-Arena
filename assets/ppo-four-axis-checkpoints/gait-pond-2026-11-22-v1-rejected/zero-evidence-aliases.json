@@ -1,0 +1,17 @@
+[
+  {
+    "original_path": "prepare-zero/bulk-policy-zero.json",
+    "archive_equivalent": "verified-zero/bulk-policy-zero.json",
+    "sha256": "b29be1ff705bad309c8333af4ab452300ebdf5bce9f26d1f8e4bad5884b5ed28"
+  },
+  {
+    "original_path": "prepare-zero/initialization-zero.json",
+    "archive_equivalent": "verified-zero/initialization-zero.json",
+    "sha256": "0deba8aae58ba404b6330d4689a826c0dd08f67b0327979b688e6e5d710964aa"
+  },
+  {
+    "original_path": "prepare-zero/initialization.bin",
+    "archive_equivalent": "verified-zero/initialization.bin",
+    "sha256": "8f23f08d9ebc5de3f798ba58e477ae838cdffaab6279ebf6b7c2967100ac0ecd"
+  }
+]

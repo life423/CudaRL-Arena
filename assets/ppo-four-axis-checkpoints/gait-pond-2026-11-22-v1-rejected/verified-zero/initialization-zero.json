@@ -1,0 +1,1 @@
+{"passed":true,"worlds":8192,"observation_error":9.7199051651841728e-07,"backbone_error":5.3644180297851562e-07,"RNG_error":1.7881393432617188e-07,"GPU_SM_count":48,"kernel_registers":255,"kernel_local_bytes":5440,"active_blocks_per_SM":2,"grid_blocks":64,"physical_controls":0,"optimizer_steps":0}

@@ -1,0 +1,162 @@
+[
+  {
+    "backend": "CPU",
+    "case": 0,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 1,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 2,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 3,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 4,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 5,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 6,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CPU",
+    "case": 7,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 0.0,
+    "mass_changed": 0,
+    "drag_changed": 0,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 0,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 2.9103830456733704e-11,
+    "mass_changed": 0,
+    "drag_changed": 4,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 1,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 2.9103830456733704e-11,
+    "mass_changed": 0,
+    "drag_changed": 4,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 2,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 1.1641532182693481e-10,
+    "mass_changed": 0,
+    "drag_changed": 17,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 3,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 1.1641532182693481e-10,
+    "mass_changed": 0,
+    "drag_changed": 17,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 4,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 2.9103830456733704e-11,
+    "mass_changed": 0,
+    "drag_changed": 5,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 5,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 2.9103830456733704e-11,
+    "mass_changed": 0,
+    "drag_changed": 5,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 6,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 1.1641532182693481e-10,
+    "mass_changed": 0,
+    "drag_changed": 21,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  },
+  {
+    "backend": "CUDA",
+    "case": 7,
+    "mass_max_abs": 0.0,
+    "drag_max_abs": 1.1641532182693481e-10,
+    "mass_changed": 0,
+    "drag_changed": 21,
+    "direct_D": 0.0,
+    "direct_P": 0.0
+  }
+]

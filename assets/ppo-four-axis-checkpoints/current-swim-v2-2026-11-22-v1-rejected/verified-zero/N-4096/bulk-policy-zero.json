@@ -1,0 +1,1 @@
+{"passed":true,"worlds":4096,"minibatch_episodes":1024,"loss_grid_blocks":8,"checked_rows":4096,"checked_last_rows":4,"max_row_gradient_error":1.312291557148057e-08,"max_reduced_gradient_error":7.1825345811802124e-08,"max_stats_error":1.2342956186017773e-06,"max_last_row_gradient_error":4.8231914523497871e-10,"physical_controls":0,"optimizer_steps":0}
