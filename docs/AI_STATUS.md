@@ -1,5 +1,67 @@
 # AI status — November 23, 2026
 
+**Latest product change: untimed Godot Swim installed and inspected.**
+The saved motor and physical model are unchanged. A distinct interactive
+reset_untimed_swim path removes episode completion while preserving requests,
+body/servo/filter state, ordering/finite checks and original pond guards.
+Legacy finite reset(false) and Rest/research scorers remain unchanged.
+One [bounded product check](UNTIMED_SWIM_RESULTS_2026-11-23.md) passed:
+509accepted/510attemptedcontrols,5100executedsubsteps,25.45s/188.907mm, then
+the original supported-domain stop. First160poses match old CPU evidence
+within4.998e-12 (2e-6limit); pause/resume preservedstate.333pure bookkeeping
+and160zero-physics UI assertions pass; an independent raw-data audit passes.
+Actual Godot4.4.1/updatedDLL was reopened in the correct live project, inspected
+paused with Swim selected and measurements visible. Saved policy hashes match;
+no optimizer or research case ran. The product check is closed. Repeated turns,
+indefinite pond navigation and the blocked88-case comparison remain unverified.
+
+**V2 CLOSED: comparison blocked before physics.**
+The [v2 report](FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md) records
+passing fixed-state arithmetic after isolated FMA/cbrtf rounding corrections,
+then a0.096864s exit2 during evidence-directory enumeration. Nested paths reach
+356characters and the executable lacks longPathAware. No probe-started/native
+result was created:0 physical controls/substeps,0/88 interface cases, no winner.
+Corrected-runtime original swimming/rest retention is unassessed, not passed.
+The single-process allocation is closed; no restart or training followed.
+Preserve197frozen causal files and all failed evidence. Nextprepare long-path
+support plus a final-tree native inventory preflight before a separately
+authorized unchanged gate/retention/comparison. No motor/chooser optimizer may run.
+All10457protected original files passed the post-attempt hash check; saved
+checkpoints, old sources and failed-run evidence are unchanged.
+Godot4.4.1 in the correct worktree was refreshed and visually inspected paused
+with the launch stop,0/88 and unassessed retention visible in Details.27parser,
+26exporter and64rendered assertions passed across four sizes with0extra physics.
+
+**Controlled comparison CLOSED at the CPU/CUDA gate.** The
+[independently verified result](FROZEN_INTERFACE_COMPARISON_RESULTS_2026-11-23.md)
+records214 controls/2140 substeps and0/88 main trajectories. At straight-case
+control107, global-X angular-rate difference2.30819e-5rad/s exceeds the fixed
+2e-5 tolerance despite bit-identical commands. No interface winner, policy
+adoption or retraining exists. All10183 protected files are unchanged.
+The next question is backend arithmetic agreement, not another PPO allocation.
+The single attempt is closed; no retry or unused-budget reuse is authorized.
+
+**Scope of the closed attempt:** the user approved the saved-motor
+lane-following versus heading-only comparison. Its
+[protocol](FROZEN_INTERFACE_COMPARISON_PROTOCOL_2026-11-23.md) fixes
+88 trajectories plus a fresh CPU/CUDA gate, 35,200 controls / 352,000 substeps,
+240 seconds native process and 512 MiB evidence. The gate failure closed that
+allocation. Godot Details now exposes the verified stop and 0/88 main cases.
+Root observed the actual worktree app paused with the updated Details;
+34 parser and 60 rendered assertions passed with zero additional physics/PPO.
+
+The [combined continuous-swimming plan](CONTINUOUS_SWIMMING_PLAN_2026-11-23.md)
+records the intended route: a bounded matched interface comparison, conditional
+shared-motor PPO, then a bank-aware chooser above a qualified motor. Backend
+agreement must now be addressed before proposing a fresh comparison. No
+retraining or future execution is authorized by that saved plan.
+
+At the user's explicit request, the [living idea register](IDEA_REGISTER_2026-11-23.md)
+preserves their goals, both PDF reviews, the third pasted review, critiques,
+alternative designs and exact original source copies/hashes. Those proposals
+are not blanket authorization to train, alter physics or publish. Prior
+capability/results below remain unchanged.
+
 The user-approved [requested-turn check](FROZEN_REQUEST_TURN_RESULTS_2026-11-23.md)
 is closed and independently verified: 22 cases, 5,782 physical controls /
 57,800 substeps, 13.7060028 seconds of process time. All four matched-command

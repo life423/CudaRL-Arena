@@ -1,0 +1,129 @@
+## Conclusion
+
+**The smallest defensible solution is one motor that can reliably follow a persistent swimming request, plus one learned chooser that selects safe requests from bank observations.** First test the corrected turning interface already present in your preparation. If the inherited swimmer cannot turn tightly enough through that interface, fine-tune the existing motor’s four outputs.
+
+I checked the published branches. The latest relevant work is still **`codex/current-swimming-v1`**, at [`dbc00f7`](https://github.com/life423/CudaRL-Arena/commit/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6), two commits ahead of `main`. I reviewed the code, saved results and their hash bindings. **I did not run training, advance physics, change checkpoints or deploy anything.**
+
+### 1. The most important finding: your turning probe also demanded a new straight lane
+
+The completed probe changed the desired heading, rebased the lane origin once, and continued supplying the original lane-tracking observations. A physically curved turn naturally moves away from that newly imposed straight line. The inherited policy then receives growing lateral error—scaled by just **2 mm**—while also being asked to change course.
+
+That creates a plausible conflict between **making a curved turn** and **correcting the new lane immediately**. It does not prove this caused all the failures, but it is a concrete confound in interpreting the tests. See the probe’s [`latch()` and observer](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/tools/frozen_requested_turn_probe.cu#L56-L67) and the [lane-error calculation](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/straight_task.h#L282-L314).
+
+Your new preparation makes a sensible correction: **retain the persistent requested course and original depth, while removing horizontal lane error during heading-only movement.** It removes that error in world coordinates before rotating observations into the body frame, which preserves the depth signal when the creature tilts. Its benefit remains unmeasured. [New observer](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/requested_turn_task_v1.h#L85-L106)
+
+**Therefore, the existing failures do not yet establish that full motor retraining is necessary under the corrected interface.** They establish that the tested policy/interface combination cannot deliver dependable large turns.
+
+### 2. Why the earlier approach struggled
+
+The evidence supports several interacting problems:
+
+| Finding | Consequence |
+|---|---|
+| The failed wrapper replaced desired heading with current head direction every control. | It removed the persistent directional error that should tell the motor where it still needs to go. |
+| It froze the swimming network and learned episode-persistent steering coefficients. | It restricted how the stroke could adapt, especially coordinated yaw, pitch and depth control. |
+| Training rewarded 16-second behavior while qualification required 60 seconds. | Improved training return did not establish sustained swimming. |
+| The held V2 allowed negative running rewards with a fixed failure penalty. | Ending early could avoid more negative reward. |
+| Old Swim/Rest bypassed the new corrections. | Their preservation did not demonstrate competence of the autonomous path. |
+
+These are documented in the [control audit](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/docs/CONTINUOUS_POND_CONTROL_AUDIT_2026-11-23.md) and [design audit](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/docs/CONTINUOUS_POND_DESIGN_AUDIT_2026-11-23.md). The outcome is particularly revealing: the short training score improved while evaluated mean speed fell from **6.11 to 3.70 mm/s**, with qualification remaining **0/16**. [Recorded results](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/docs/CONTINUOUS_POND_RESULTS_2026-11-23.md)
+
+I found no clear joint-axis wiring error. The action path is four angle targets, filtering, torque-limited internal servos and articulated water forces. However, model6 uses simplified drag and coincident mass/buoyancy centers. Numerical agreement cannot establish hydrodynamic fidelity, and the evidence does not yet justify blaming insufficient torque or changing the physics. [Actuator path](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/joint_motor.h) · [Physical model](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/movement_model.h)
+
+## 3. The smallest architecture I recommend
+
+| Component | Responsibility |
+|---|---|
+| **Native observations** | Body and joint state, filtered actuator state, whole-body COM motion, persistent requested motion, and native hazard geometry. |
+| **One learned goal chooser** | Use bank clearance, approach velocity, current intention and task context to select a feasible swimming direction. |
+| **One reusable motor** | Convert the requested direction/speed/depth or holding request into the same four joint-angle outputs. |
+| **Existing servos and physics** | Produce every movement through the unchanged physical action path. |
+| **Godot** | Display the native state and submit user intentions; expose actual capabilities and failures. |
+
+**You already have useful bank sensors.** `turning_task_v1::raw_sensors()` calculates directional clearance from conservative geometry around all three links. Reuse this for the chooser, adding approach velocity and the current persistent goal. The new 42-input motor need not make navigation decisions itself. [Existing sensors](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/turning_task_v1.h#L42-L102)
+
+The chooser should act more slowly than the motor. When it selects a relative direction, convert that selection **once** into a world-frame intention and retain it between decisions. Repeatedly computing “another five degrees from my current heading” would keep moving the target.
+
+This hierarchy has relevant research precedent, including a simulated swimming snake. The important qualification is that the reusable motor must first support the commands the chooser will issue; a straight swimmer is not automatically such a motor. [arxiv.org](https://arxiv.org/abs/1610.05182?utm_source=chatgpt.com)
+
+### The next decision should be a small capability test
+
+After completing the missing gates, compare the inherited motor under matched conditions:
+
+- Original lane-following requests versus the new heading-only requests.
+- Persistent left/right requests and smoothly changing requests that accumulate into substantial turns.
+- Repeated turns followed by straight swimming, without resetting physical or actuator state.
+
+Measure **course response, speed, depth, tilt, turn radius, response delay and swept tail clearance**.
+
+If these turns fit the pond with useful speed, training the chooser around that measured capability is the smaller solution. Otherwise, use native per-control PPO to fine-tune **all weights of the same motor**, with swimming and holding practice mixed in.
+
+A ±5° request preserving propulsion does not establish a usable turning radius. Actual robotic-fish research likewise measures radius and turning period as consequences of coordinated asymmetric tail motion. [fileadmin.cs.lth.se](https://fileadmin.cs.lth.se/ai/Proceedings/ICRA2010/MainConference/data/papers/1329.pdf?utm_source=chatgpt.com)
+
+## 4. Reward changes that address the actual shortcuts
+
+### Preserve travel credit during a legitimate turn
+
+The new full-motor preparation is substantially better than the rejected wrapper: it uses persistent intent, per-control credit, the actual candidate for retention, and bounded utility with a remaining-time failure cost.
+
+But its movement utility multiplies all credit by desired-direction progress and a sharp velocity-tracking term. **Calculated from that formula**, an otherwise ideal swimmer still moving at 8 mm/s along its old course receives approximately:
+
+| New request | Immediate movement quality |
+|---|---:|
+| 30° change | 0.22 |
+| 60° change | 0.003 |
+| 90° change | Effectively zero |
+
+These are analytical examples, not new simulation results. They show that a useful curved transition initially receives very little credit. [Current reward formula](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/requested_turn_task_v1.h#L163-L199)
+
+**Separate bounded continued-travel utility from command-tracking quality**, while retaining depth, posture, effort and final course requirements. A moving turn should have a learning advantage over stopping while trying to align.
+
+### Make each shortcut explicitly unprofitable—and independently measurable
+
+| Shortcut | Reward and validation response |
+|---|---|
+| Tail movement without travel | Measure mass-weighted whole-body COM displacement across several strokes. |
+| Spinning | Require translational progress and useful trajectory-course changes; angular movement earns no travel credit. |
+| Stalling | During continuous-SWIM, the chooser cannot select HOLD or zero speed. Preserve HOLD as a separate explicit task of the same motor. |
+| Moving back and forth | Use persistent intentions and signed progress; supplement arc length with short-window displacement and sustained spatial coverage. |
+| Repeated bank approach/retreat | Charge for hazardous proximity and use signed clearance shaping. |
+| Early termination | Preserve correct failure accounting; unfinished failed time must not become free zero-cost time. |
+
+Your current two-second stall detector sums **COM arc length**, so small oscillations can count as movement. Its existence alone does not close the back-and-forth loophole. [Detector](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/nn/motor/requested_turn_task_v1.h#L184-L192)
+
+For clearance shaping, use a bounded, task-conditioned potential:
+
+\[
+F_t=\gamma\Phi(s_{t+1},m_{t+1})-\Phi(s_t,m_t).
+\]
+
+Make it flat outside the relevant hazard zone. **Do not reward only positive increases in clearance**: that permits approaching and retreating to collect repeated rewards. Potential-based shaping addresses that incentive when discounting and terminal handling are consistent; it cannot repair a defective base movement objective. [people.eecs.berkeley.edu](https://people.eecs.berkeley.edu/~russell/papers/icml99-shaping.pdf?utm_source=chatgpt.com)
+
+### Train the continuing task as a continuing task
+
+The proposed 12-second lesson can teach a primitive. For pond swimming, collection cutoffs should bootstrap from the final state rather than teach the policy that its future disappears at the cutoff. Physical failure remains distinct from a training time limit. This distinction is established in the time-limit literature. [proceedings.mlr.press](https://proceedings.mlr.press/v80/pardo18a.html?utm_source=chatgpt.com)
+
+## 5. What should count as continuous-swimming validation
+
+Retain the existing planned **16 initial 60-second cases, followed by eight withheld 30-minute runs**, but strengthen the measurements. These are proposed acceptance gates, not completed tests. [Existing endurance protocol](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/docs/CONTINUOUS_POND_PROTOCOL_2026-11-23.md)
+
+| Gate | Required evidence |
+|---|---|
+| **Turning primitive** | Both directions and repeated requests; useful COM speed; settled course error ≤5°; depth error ≤1 mm and tilt ≤10° across accepted physical states. Record turn radius and delay. |
+| **Continuous motion** | Mean horizontal travel ≥6 mm/s; every complete eight-second post-startup window ≥3 mm/s. Add displacement over several strokes so oscillation cannot satisfy these through arc length alone. |
+| **Navigation** | No boundary failures, contacts outside supported scope, hidden resets, repositioning or rescue. Evaluate clearance across all links and their turning sweep. |
+| **Useful pond travel** | Preserve spatial-coverage requirements and evaluate coverage repeatedly throughout the run. Count meaningful turns using COM trajectory course, with a minimum-speed condition. |
+| **Skill retention** | The actual candidate must retain all four short swims, 28 previously passing 60-second windows, three recoveries, 148 previously passing 300-second windows and all 14 holds. Keep the known startup misses explicitly recorded. |
+| **Deployment** | Test the packaged policy in the actual native CPU/Godot path. Matched-command CPU/CUDA agreement alone does not prove long closed-loop behavior on both. |
+
+Do not require large start-to-finish displacement over the entire run: successful pond circuits can return near their starting point. Judge sustained movement and coverage over appropriate windows.
+
+Passing this suite would support **“validated for eight uninterrupted 30-minute calm-pond runs.”** It would not establish unlimited reliability.
+
+## 6. Deployment and future climbing
+
+The current Godot bridge still implements bounded tests, and changing Rest/Swim restarts the physical fixture. That does not demonstrate braking or a continuous mode transition. Navigation deployment needs persistent command changes within one native world, together with accurate capability labels. [Current bridge](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/godot/hold_lab_preview.cpp#L175-L259)
+
+Bank avoidance should depend on the mission. During swimming, the bank is a hazard; during a future shore-approach task, a selected shoreline can become a destination. However, the current shoreline is presentation around a restricted free-water domain. **Climbing will require validated contact and partial-immersion physics as well as limbs.** Changing a reward flag cannot supply those mechanics. [Domain contract](https://github.com/life423/CudaRL-Arena/blob/dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6/src/godot/pond_view_domain.h)
+
+**My recommended next implementation is the corrected persistent-request interface and its bounded capability test, followed by shared-motor PPO only if needed. Then train the bank-aware chooser against actual sustained travel.** Keep the rejected studies frozen, complete the unfinished gates and auditors, and require the candidate itself to preserve the old skills.

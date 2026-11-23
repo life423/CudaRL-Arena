@@ -3,6 +3,9 @@ extends Node3D
 const PondWorld = preload("res://pond_world.gd")
 const ContinuousStudy = preload("res://continuous_study.gd")
 const RequestTurnStudy = preload("res://request_turn_study.gd")
+const InterfaceComparisonStudy = preload("res://interface_comparison_study.gd")
+const InterfaceComparisonStudyV2 = preload("res://interface_comparison_study_v2.gd")
+const InterfaceComparisonLaunchStopV2 = preload("res://interface_comparison_launch_stop_v2.gd")
 const TEXT := Color("243e37")
 const MUTED := Color("566b61")
 const MINT := Color("2d6757")
@@ -117,7 +120,7 @@ func _ready() -> void:
 		if bool(preview.call("reset_free_swim",0)): snapshot = preview.call("get_state")
 	elif loaded and int(snapshot.get("gait_updates",0))>0:
 		task.select(1)
-		if bool(preview.call("reset",0,false)): snapshot = preview.call("get_state")
+		if bool(preview.call("reset_untimed_swim",0)): snapshot = preview.call("get_state")
 	get_window().size_changed.connect(_layout)
 	_layout()
 	_refresh()
@@ -266,6 +269,9 @@ func _load_native() -> void:
 	if preview == null:
 		error = "The native pond module could not start."
 		return
+	if not preview.has_method("reset_untimed_swim"):
+		error = "The app components do not match. Reopen the updated Tadpole Pond app."
+		return
 	if not FileAccess.file_exists(policy_path):
 		error = "The saved policy is missing. No simulation has started."
 		return
@@ -354,7 +360,7 @@ func _build_interface() -> void:
 	choice_menu.add_theme_stylebox_override("hover",panel(Color("dce7d6"),8))
 	choice_menu.add_theme_color_override("font_color",TEXT)
 	choice_menu.add_theme_color_override("font_hover_color",TEXT)
-	task.tooltip_text = "Choose the movement request. Changing it restarts the task."
+	task.tooltip_text = "Swim runs until paused or a bank/physical check stops it. Changing the request restarts the creature."
 	task.item_selected.connect(func(_index: int): _restart())
 	controls.add_child(task)
 	target_caption = label("Target",12,MINT)
@@ -405,8 +411,8 @@ func _build_details() -> void:
 	drawer_scroll.add_child(drawer_text)
 	measurement_toggle = CheckBox.new()
 	measurement_toggle.text = "Show measurements"
-	measurement_toggle.add_theme_color_override("font_color",TEXT)
-	measurement_toggle.add_theme_color_override("font_hover_color",TEXT)
+	for state in ["font_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_focus_color"]:
+		measurement_toggle.add_theme_color_override(state,TEXT)
 	measurement_toggle.button_pressed = show_measurements
 	measurement_toggle.custom_minimum_size.y = 48
 	measurement_toggle.toggled.connect(func(value: bool): show_measurements = value; _layout())
@@ -461,7 +467,10 @@ func _restart() -> void:
 	running = false
 	accumulator = 0
 	var choice := task.get_selected_id()
-	var reset_ok := bool(preview.call("reset_free_swim",0)) if choice==2 else bool(preview.call("reset",0,choice==0))
+	var reset_ok := false
+	if choice==2: reset_ok=bool(preview.call("reset_free_swim",0))
+	elif choice==1: reset_ok=bool(preview.call("reset_untimed_swim",0))
+	else: reset_ok=bool(preview.call("reset",0,true))
 	if not reset_ok: error = str(preview.call("get_error"))
 	snapshot = preview.call("get_state")
 	last_action = "Rest restarted" if choice==0 else ("Free swim restarted" if choice==2 else "Swim restarted")
@@ -496,9 +505,16 @@ func _refresh() -> void:
 		var holding := bool(snapshot.get("holding",true))
 		var amount := float(snapshot.get("anchor_error_m",0) if holding else snapshot.get("forward_m",0))*1000
 		displacement.text = ("%.1f mm away" % amount) if holding else ("%.1f mm swum" % amount)
-		if bool(snapshot.get("continuous",false)):
+		if bool(snapshot.get("untimed_swim",false)):
+			var elapsed := int(float(snapshot.get("time_s",0)))
+			displacement.text = "%d:%02d · %.1f mm" % [floori(elapsed/60.0),elapsed%60,amount]
+			displacement.tooltip_text = "Elapsed swimming time · forward distance travelled"
+		elif bool(snapshot.get("continuous",false)):
 			var elapsed := int(float(snapshot.get("time_s",0)))
 			displacement.text = "%d:%02d swimming" % [floori(elapsed/60.0),elapsed%60]
+			displacement.tooltip_text = "Elapsed swimming time"
+		else:
+			displacement.tooltip_text = "Distance from the rest anchor" if holding else "Forward distance travelled"
 		depth.text = "%.2f mm off depth" % (float(snapshot.get("depth_m",0))*1000)
 		error = str(snapshot.get("error",error))
 	else: status.text = "Preview unavailable"
@@ -522,7 +538,14 @@ func _open_details() -> void:
 	_refresh()
 	var result: Dictionary = metadata.get("result",{})
 	var policy: Dictionary = metadata.get("policy",{})
-	drawer_text.text = "[b]A saved policy in a physical world[/b]\nThe creature moves through native C++ physics. This view uses saved weights; it does not train or update them.\n\n[b]Latest assessment[/b]\n"
+	drawer_text.text = "[b]A saved policy in a physical world[/b]\nThe creature moves through native C++ physics. This view uses saved weights; it does not train or update them.\n"
+	if FileAccess.file_exists("res://research_data/interface-comparison-v2-launch-stop.json"):
+		drawer_text.append_text(InterfaceComparisonLaunchStopV2.text("res://research_data/interface-comparison-v2-launch-stop.json"))
+	elif FileAccess.file_exists("res://research_data/interface-comparison-v2-study.json"):
+		drawer_text.append_text(InterfaceComparisonStudyV2.text("res://research_data/interface-comparison-v2-study.json"))
+	else:
+		drawer_text.append_text(InterfaceComparisonStudy.text("res://research_data/interface-comparison-study.json"))
+	drawer_text.append_text("\n[b]Saved motor assessment[/b]\n")
 	if result.is_empty(): drawer_text.append_text(metadata_issue+"\n")
 	else: drawer_text.append_text("%s\nHolding: %d / %d\nSwimming: %d / 4 short tests\nLong windows: %d / 30; %d / 28 prior passes retained\n\n%s\n" % [str(result.get("outcome","See source evidence")),int(result.get("hold_passes",0)),int(result.get("hold_total",6)),int(result.get("short_passes",0)),int(result.get("long_passes",0)),int(result.get("long_retained",0)),str(result.get("method",""))])
 	if not str(result.get("validation_note","")).is_empty(): drawer_text.append_text("\n[b]Additional validation[/b]\n"+str(result.validation_note)+"\n")
@@ -533,7 +556,7 @@ func _open_details() -> void:
 	if continuous_available:
 		drawer_text.append_text("Free swim has no session timer or food target. The saved PPO motor steers using its physical state and distance from the bank. It receives no scripted route, bounce or rescue. Pause leaves the world in place.\n\n"+str(result.get("continuous_validation_note","See the saved continuous-swimming assessment."))+"\n\n")
 	else:
-		drawer_text.append_text("Rest and Swim use bounded tests and pause when complete.\n\n")
+		drawer_text.append_text("Swim has no session timer. It runs until you Pause or a bank/physical check stops it. Rest remains a 64-second check. Reliable turns around the pond are still unverified.\n\n")
 	drawer_text.append_text("Changing the request or choosing Restart starts a new physical state; it does not demonstrate braking. This view does not run learning updates. Current swimming remains separate research.\n")
 	if not policy.is_empty(): drawer_text.append_text("\n[b]Saved generation[/b]\n%s\n%d lesson updates\n" % [str(policy.get("family","Saved research motor")),int(policy.get("holding_updates",0))])
 	var history: Array = metadata.get("history",[])

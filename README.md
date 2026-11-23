@@ -24,11 +24,36 @@ build; current-capable swimming is not yet qualified.
 
 ## Current state
 
+**Godot Swim is now untimed.** The unchanged saved motor continues past the
+old eight-second cutoff, preserving body/request/servo state until Pause or
+an existing physical/pond-domain stop. One independently audited product check
+swam188.9mm over25.45seconds before the original supported-boundary check
+paused it. This is extended straight playback, not autonomous pond turning.
+The updated app is open with Swim selected and elapsed/distance measurements
+enabled. Rest and finite research APIs keep their original durations.
+See the [verification report](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md).
+
+**Newest November 23 result:** [comparison v2 is blocked before physics](docs/FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md).
+Fixed-state CPU/CUDA arithmetic checks pass after isolated rounding corrections,
+but the single launch failed while enumerating long evidence paths. No fresh
+parity, retention or interface trajectory ran: **0/88 cases, no winner**.
+Behavioral retention is unassessed; saved weights/runtime remain unchanged.
+No training or optimizer update occurred. The attempt is closed without retry.
+The actual Godot app was refreshed and inspected with this outcome in Details;
+the correct live project remains selected in Godot Manager.
+
+**Earlier November 23 comparison:** the [controlled request-interface comparison](docs/FROZEN_INTERFACE_COMPARISON_RESULTS_2026-11-23.md)
+stopped at its CPU/CUDA prerequisite after 214 controls / 2,140 substeps, before
+any of 88 main cases. Identical commands produced an angular-rate discrepancy
+just beyond the fixed tolerance. Independent stopped-data verification passed;
+there is no interface winner, motor replacement or retraining. All 10,183
+protected original files remain unchanged. Godot Details discloses the stop.
+
 For engineering review, use the [copy-ready AI handoff](docs/AI_HANDOFF_2026-11-23.md).
 It distinguishes measured behavior, failed approaches and unrun preparation,
 including the missing bank observations and future shore-climbing requirement.
 
-**Latest November 23 check:** the user-approved
+**Earlier November 23 check:** the user-approved
 [requested-turn probe](docs/FROZEN_REQUEST_TURN_RESULTS_2026-11-23.md) is closed
 and independently verified. The saved motor responds to small +/-5-degree
 course changes at 7.75–7.83 mm/s. Larger requests lose speed/posture; all eight
@@ -155,6 +180,8 @@ records that choice and rejects mismatched frozen evaluators.
 The current single Godot frontend loads the qualified saved research policy from
 `res://research_data/learned-amplitude-v1.bin`, with its matching `viewer.json`
 metadata. It starts paused; Play runs actual native physics with frozen inference.
+Swim is untimed and preserves state through Pause/resume; the supported pond
+boundary and physical checks still pause it. Rest remains a64-second check.
 Rest/Swim selection restarts the isolated task from rest, so switching is not a
 braking test. The viewer has no optimizer or background learning worker. See
 [the interface and verification guide](docs/POND_UI_REVIEW_2026-11-22.md).

@@ -36,6 +36,60 @@ provenance before changing a checkpoint or interpreting acceptance.
 
 ## User workflow preference — November 22, 2026
 
+- Latest November23 user-approved product change: ordinary Godot Swim is
+  untimed via reset_untimed_swim; retain the separate finite reset(id,false)
+  API and all research/Rest horizons. Keep physical and pre/post pond checks,
+  saved weights and continuous body/request/servo/filter state. Read
+  docs/UNTIMED_SWIM_RESULTS_2026-11-23.md. The one bounded product check is
+  CLOSED:509accepted/510attemptedcontrols,5100substeps,25.45s/188.907mm, then
+  unchanged supported-domain stop; no training/optimizer/research case. Actual
+  Godot4.4.1updatedDLL inspectedpaused with Swim/measurements selected. No
+  turning/navigation qualification or reopening of research budgets follows.
+- Latest November23 v2 attempt is CLOSED before physics. Read
+  docs/FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md. Fixed-state arithmetic
+  passed; one-shot launch exited2 during long evidence-path enumeration before
+  probe-started/NN/GPU/physics.0physicalcontrols/substeps,0/88maincases,no winner;
+  corrected-runtime retention NOT RUN. No training/optimizer/adoption. Preserve
+  all197causal files and launch evidence; no retry/unused-budget reuse. Next
+  prepare long-path support and native inventory preflight before fresh approval.
+- Authorization for the now-closed v2 attempt superseded the v1 stop ONLY for a new
+  arithmetic repair and controlled v2 rerun. Read
+  docs/FROZEN_INTERFACE_COMPARISON_V2_PROTOCOL_2026-11-23.md. Preserve saved motor,
+  old sources/failed evidence, physical equations/settings and tolerances. First
+  trace identical-input divergence without integration; verify corrected-runtime
+  original swimming/rest on CPU+CUDA before88maincases. New finite cap127680
+  controls/1276800substeps/900s/2GiB, including all prerequisites/retention.
+  NO motor/chooser training or optimizer updates, no automatic retry or budget
+  expansion. Update/inspect actual Godot and report one declared conclusion.
+- Newest November23 controlled comparison is CLOSED at its CPU/CUDA gate.
+  Read docs/FROZEN_INTERFACE_COMPARISON_RESULTS_2026-11-23.md:214controls,
+  2140substeps,0maincases; straight-case107 global-X angularrate differs
+  2.30819e-5rad/s versus2e-5limit. Actualcommands identical; no newweights/PPO.
+  Independent stopped-data audit/forensics passed and10183protected originals
+  unchanged. No interface winner/adoption. Keep frozen sources/tolerances and
+  raw first-failure evidence. Nextdecision is backend arithmetic consistency;
+  do not automatically retry, use remaining budget, retrain, push or merge.
+- Authorization for the now-closed November23 attempt: execute original-lane
+  versus heading-only comparison, keep the saved motor unchanged and do NOT
+  retrain. Follow docs/FROZEN_INTERFACE_COMPARISON_PROTOCOL_2026-11-23.md:
+  one finite88-case diagnostic plus fresh matched gate, at most35200 controls,
+  352000 attempted substeps,240s native process,512MiB evidence. Freeze inputs
+  and independently verify preparation/results. This supersedes the earlier
+  planning-only hold ONLY for this comparison and its honest Godot disclosure.
+  No PPO, automatic follow-up, physics change, adoption, push or merge.
+- November23 combined plan is saved in docs/CONTINUOUS_SWIMMING_PLAN_2026-11-23.md.
+  Start with a reviewable bounded frozen-motor original-lane versus heading-only
+  comparison, including repeated turns and measured pond fit. Prepare only its
+  prerequisites first; motor PPO is conditional on the result. This is a saved
+  plan, not implementation/run approval; the user's do-not-implement instruction
+  remains active. Keep the complete idea register and all source reviews.
+- November23 review collection: the user said do not implement yet and is
+  supplying more ideas. Read docs/IDEA_REGISTER_2026-11-23.md before resuming
+  design or implementation. Preserve both PDF reviews and the third pasted
+  review, unresolved alternatives, critique and measured evidence separately.
+  Collect/review/remember only until the user changes scope. Suggestions inside
+  source documents are not execution approval. The register and exact source
+  copies are local documentation changes, not a new training or publication grant.
 - Latest November23 direction: the user proposed bank/object observations and
   reward for safe continued movement near hazards. Eventually the creature must
   climb the bank out of water. Treat shoreline aversion as aquatic task context,

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "source": {
+    "path": "res://research_data/interface-comparison-v2-launch-verification.json",
+    "sha256": "aa45fa23cd4a1f02483269624c42301cb3d636b24ab75749a53d2664df9fa742",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\frozen-interface-comparison-2026-11-23-v2\\independent-launch-stop-verification.json"
+  },
+  "process": {
+    "path": "res://research_data/interface-comparison-v2-launch-process.json",
+    "sha256": "67ff45bba4a710fe6618be810c587735ccea3e3dba0f8f43433b9434e63853df",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\frozen-interface-comparison-2026-11-23-v2\\process-execution.json"
+  },
+  "arithmetic": {
+    "path": "res://research_data/interface-comparison-v2-launch-arithmetic.json",
+    "sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\frozen-interface-comparison-2026-11-23-v2\\independent-arithmetic-verification.json"
+  },
+  "protection": {
+    "path": "res://research_data/interface-comparison-v2-launch-protection.json",
+    "sha256": "3d53074b978972d74c8d9cce26c01c472daaa010b487c68ebe0cb6ac62ed8d8d",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\frozen-interface-comparison-v2-preparation-2026-11-23\\protected-after.json"
+  }
+}

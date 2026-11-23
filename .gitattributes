@@ -6,3 +6,9 @@ live/research_data/current-study-result.json -text -diff
 live/research_data/current-study-verification.json -text -diff
 live/research_data/continuous-study*.json -text -diff
 live/research_data/request-turn-study*.json -text -diff
+live/research_data/interface-comparison-study*.json -text -diff
+live/research_data/interface-comparison-v2-study*.json -text -diff
+live/research_data/interface-comparison-v2-launch*.json -text -diff
+# User review sources are retained byte-for-byte for their recorded SHA-256.
+docs/design-reviews/*.pdf -text -diff
+docs/design-reviews/*.txt -text

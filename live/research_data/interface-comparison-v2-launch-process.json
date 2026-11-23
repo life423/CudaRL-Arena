@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "study": "frozen_interface_comparison_v2",
+  "seconds": 0.096864,
+  "exit_code": 2,
+  "terminated_at_cap": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\frozen-interface-comparison-v2-native-2026-11-23\\Release\\frozen_interface_comparison_v2.exe",
+  "executable_sha256": "732de230f539438567ba6168144ff4ecaf0d70f3ce79899225dafc28a9c00cae",
+  "PPO_updates": 0,
+  "optimizer_steps": 0
+}

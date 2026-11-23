@@ -1,5 +1,6 @@
 #include "hold_lab_preview.h"
 #include "pond_view_domain.h"
+#include "untimed_swim_preview.h"
 #include "core/checkpoint.h"
 #include "motor/frozen_controller.h"
 #include "motor/hold_assessment.h"
@@ -60,7 +61,7 @@ struct HoldLabPreview::Impl {
     uint32_t turning_updates=0;
     std::string turning_checkpoint_sha;
     turning_task::Task free_task{};
-    bool continuous=false;
+    bool continuous=false,untimed_swim=false;
     bool loaded=false,paused=true,holding=true,qualified=false;
     int case_id=0,lesson_updates=0;
     uint64_t controls=0,substeps=0,protocol=0;
@@ -68,12 +69,16 @@ struct HoldLabPreview::Impl {
     p::BodyState failed_before{},failed_candidate{};
     bool failure_recorded=false;
     std::string error;
+    bool finished() const {
+        return loaded && !continuous && !untimed_swim && controls>=static_cast<uint64_t>(config.maximum_controls);
+    }
 };
 HoldLabPreview::HoldLabPreview() : impl_(std::make_unique<Impl>()) {}
 HoldLabPreview::~HoldLabPreview() = default;
 void HoldLabPreview::_bind_methods() {
     ClassDB::bind_method(D_METHOD("load_controller","path"),&HoldLabPreview::load_controller);
     ClassDB::bind_method(D_METHOD("reset","case_id","holding"),&HoldLabPreview::reset);
+    ClassDB::bind_method(D_METHOD("reset_untimed_swim","case_id"),&HoldLabPreview::reset_untimed_swim);
     ClassDB::bind_method(D_METHOD("reset_free_swim","case_id"),&HoldLabPreview::reset_free_swim);
     ClassDB::bind_method(D_METHOD("start"),&HoldLabPreview::start);
     ClassDB::bind_method(D_METHOD("pause"),&HoldLabPreview::pause);
@@ -87,7 +92,7 @@ bool HoldLabPreview::load_controller(const String& path) {
     s.qualified=false;s.lesson_updates=0;s.protocol=0;s.failure_recorded=false;
     s.package_version=0;s.policy_method=0;s.head_parameters={0,0};s.learned_sigma=0;
     s.gait_means.fill(0);s.gait_updates=0;s.gait_checkpoint_sha.clear();
-    s.turning_means.fill(0);s.turning_updates=0;s.turning_checkpoint_sha.clear();s.continuous=false;s.free_task={};
+    s.turning_means.fill(0);s.turning_updates=0;s.turning_checkpoint_sha.clear();s.continuous=false;s.untimed_swim=false;s.free_task={};
     try {
         const auto global=ProjectSettings::get_singleton()->globalize_path(path);
         const auto bytes=cp::read(global.utf8().get_data()); cp::Reader r{bytes};
@@ -176,7 +181,7 @@ bool HoldLabPreview::reset(int id,bool holding) {
     auto& s=*impl_;s.paused=true;
     if(!s.loaded) {s.error="Load a research motor package first";return false;}
     if(id<0 || id>(holding?5:3)) {s.error="Case outside the recorded lesson";return false;}
-    s.continuous=false;s.free_task={};
+    s.continuous=false;s.untimed_swim=false;s.free_task={};
     s.error.clear();s.case_id=id;s.holding=holding;s.controls=s.substeps=s.attempted_controls=0;s.failure_recorded=false;
     s.world=sm::initial_world(holding?(id%2?3:0):id);s.world.arena=sm::long_swim_arena();
     s.config=sm::config_for_speed(.008f);s.config.observation_schema=4;
@@ -192,6 +197,11 @@ bool HoldLabPreview::reset(int id,bool holding) {
     if(holding && !s.hold_score.record(0,sm::measure(s.task,s.world))) {s.error="Invalid holding reset";return false;}
     return true;
 }
+bool HoldLabPreview::reset_untimed_swim(int id) {
+    if(!reset(id,false)) return false;
+    impl_->untimed_swim=true;
+    return true;
+}
 bool HoldLabPreview::reset_free_swim(int id) {
     auto& s=*impl_;s.paused=true;
     if(!s.loaded || !s.qualified || s.package_version!=4 || s.policy_method!=4) {
@@ -201,16 +211,16 @@ bool HoldLabPreview::reset_free_swim(int id) {
     if(!turning_task::initialize(id,next,task,0)) {s.error="This free-swimming start is unavailable";return false;}
     auto config=sm::config_for_speed(.008f);config.observation_schema=4;
     sm::ForwardTask display;if(!sm::begin_forward(next,config,display)) {s.error="Native free-swimming reset rejected";return false;}
-    s.world=next;s.free_task=task;s.task=display;s.config=config;s.case_id=id;s.holding=false;s.continuous=true;
+    s.world=next;s.free_task=task;s.task=display;s.config=config;s.case_id=id;s.holding=false;s.continuous=true;s.untimed_swim=false;
     s.controls=s.substeps=s.attempted_controls=0;s.failure_recorded=false;s.error.clear();s.hold_score={};return true;
 }
 bool HoldLabPreview::start() {
-    auto& s=*impl_;if(!s.loaded || !s.error.empty() || (s.continuous?s.free_task.done:s.controls>=static_cast<uint64_t>(s.config.maximum_controls))) return false;
+    auto& s=*impl_;if(!s.loaded || !s.error.empty() || (s.continuous?s.free_task.done:s.finished())) return false;
     s.paused=false;return true;
 }
 void HoldLabPreview::pause() {impl_->paused=true;}
 bool HoldLabPreview::step() {
-    auto& s=*impl_;if(!s.loaded || s.paused || !s.error.empty() || (!s.continuous&&s.controls>=static_cast<uint64_t>(s.config.maximum_controls))) return false;
+    auto& s=*impl_;if(!s.loaded || s.paused || !s.error.empty() || s.finished()) return false;
     if(s.continuous) {
         float observation[41]{},raw[8]{},latent[4]{};
         if(!turning_task::observe(s.free_task,s.world,observation,raw)) {s.error="Free swimming stopped at a safety check";s.paused=true;return false;}
@@ -225,6 +235,9 @@ bool HoldLabPreview::step() {
         ++s.controls;
         if(transition.boundary_terminal) {s.paused=true;s.error="Free swimming paused near the bank";}
         return true;
+    }
+    if(s.untimed_swim && s.task.controls==std::numeric_limits<int>::max()) {
+        s.error="Swimming paused at the session counter limit";s.paused=true;return false;
     }
     if(!cudarl::pond_view::contains(s.world.physical.body)) {
         s.error="The creature reached the edge of the supported pond area";s.paused=true;return false;
@@ -252,11 +265,12 @@ bool HoldLabPreview::step() {
         s.error="The creature reached the edge of the supported pond area";s.paused=true;return false;
     }
     s.world=next;
-    ++s.controls;const auto transition=s.holding?sm::record_hold_control(s.task,s.world,s.config):sm::record_control(s.task,s.world,s.config);
+    ++s.controls;const auto transition=s.holding?sm::record_hold_control(s.task,s.world,s.config):
+        s.untimed_swim?cudarl::untimed_swim_preview::record(s.task,s.world,s.config):sm::record_control(s.task,s.world,s.config);
     if(!transition.accepted || (s.holding && !s.hold_score.record(static_cast<int>(s.controls),transition.metrics))) {
         s.error="Native preview interval rejected";s.paused=true;return false;
     }
-    if(s.controls>=static_cast<uint64_t>(s.config.maximum_controls)) s.paused=true;
+    if(s.finished()) s.paused=true;
     return true;
 }
 String HoldLabPreview::get_error() const {return String(impl_->error.c_str());}
@@ -271,7 +285,8 @@ Dictionary HoldLabPreview::get_geometry() const {
 }
 Dictionary HoldLabPreview::get_state() const {
     const auto& s=*impl_;const auto& body=s.world.physical.body;const auto z=sm::measure(s.task,s.world);Dictionary out;
-    out["loaded"]=s.loaded;out["paused"]=s.paused;out["finished"]=s.loaded && !s.continuous && s.controls>=static_cast<uint64_t>(s.config.maximum_controls);
+    out["loaded"]=s.loaded;out["paused"]=s.paused;out["finished"]=s.finished();
+    out["untimed_swim"]=s.loaded&&s.untimed_swim;
     out["training"]=false;out["holding"]=s.holding;out["qualified_candidate"]=s.qualified;out["error"]=get_error();out["case"]=s.case_id;
     out["model"]=6;out["controls"]=static_cast<int64_t>(s.controls);out["substeps"]=static_cast<int64_t>(s.substeps);out["time_s"]=s.continuous?s.world.physical.time_seconds:s.controls*p::dt;
     out["attempted_controls"]=static_cast<int64_t>(s.attempted_controls);out["failure_recorded"]=s.failure_recorded;
@@ -293,8 +308,14 @@ Dictionary HoldLabPreview::get_state() const {
     out["has_continuous"]=s.loaded&&s.qualified&&s.package_version==4&&s.policy_method==4;out["continuous"]=s.continuous;
     out["turning_updates"]=static_cast<int64_t>(s.turning_updates);out["turning_parameter_count"]=s.policy_method==4?16:0;
     out["turning_checkpoint_sha256"]=String(s.turning_checkpoint_sha.c_str());out["continuous_boundary_terminal"]=s.free_task.boundary_terminal;
-    out["continuous_reason"]=s.free_task.reason;out["maximum_controls"]=s.continuous?0:s.config.maximum_controls;
-    out["duration_s"]=s.continuous?0.:static_cast<double>(s.config.maximum_controls)*.05;
+    out["continuous_reason"]=s.free_task.reason;out["maximum_controls"]=s.continuous||s.untimed_swim?0:s.config.maximum_controls;
+    out["duration_s"]=s.continuous||s.untimed_swim?0.:static_cast<double>(s.config.maximum_controls)*.05;
+    out["world_controls"]=static_cast<int64_t>(s.world.physical.control_steps);out["task_controls"]=s.task.controls;
+    out["request_origin"]=point(s.task.start_com_model);out["request_heading"]=point(s.task.request.heading);
+    out["request_position"]=point(s.task.request.position);out["terminal_velocity"]=point(s.task.request.terminal_velocity);
+    Array targets,rates,torques;
+    for(int j=0;j<4;++j){targets.append(s.world.physical.held_targets[j]);rates.append(s.world.reference_rate[j]);torques.append(s.world.physical.last_actual_torques[j]);}
+    out["held_targets"]=targets;out["reference_rates"]=rates;out["previous_torques"]=torques;
     out["target_speed_m_s"]=s.holding?0.f:.008f;out["speed_m_s"]=p::norm(z.velocity_m_s);out["depth_m"]=z.depth_m;out["lateral_m"]=z.lateral_m;
     out["anchor_error_m"]=s.holding?p::norm(z.hold_error_m):0.f;out["tilt_deg"]=z.tilt_deg;out["forward_m"]=s.continuous?s.free_task.path_length_m:double(z.forward_m);
     out["anchor_position"]=point(s.holding?s.task.hold_anchor_model:s.task.start_com_model);out["com_position"]=point(cudarl::motor::motion(body).com_model);

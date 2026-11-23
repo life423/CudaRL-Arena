@@ -1,5 +1,9 @@
 # Build output
 build/
+# Original local diagnostic archive includes a copied CUDA compiler. Preserve
+# it unchanged locally; publish the explicitly inventoried public subset.
+assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence.zip
+assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/manifest.json
 *.obj
 *.o
 *.a

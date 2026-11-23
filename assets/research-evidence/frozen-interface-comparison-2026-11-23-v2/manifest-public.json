@@ -1,0 +1,1187 @@
+{
+  "schema": 1,
+  "study": "frozen_interface_comparison_v2",
+  "publication_subset": true,
+  "original_local_archive_sha256": "e6af9d8ea725a7b8681183e61bdb6b08f602f2f73e11e7baff05cff3a2e18dc7",
+  "original_local_archive_member_count": 234,
+  "original_local_manifest_sha256": "efdb56534649126c2e70bf3ae4efe784a2a8e80270866de7eb0972e845276d81",
+  "archive": "evidence-public.zip",
+  "archive_sha256": "7c587b8dc38b80b626f1f6989640834f3b6bb7c2211a67b319a66bca4dbceb15",
+  "archive_bytes": 21499721,
+  "included_files": [
+    {
+      "path": "build/frozen-interface-comparison-v2-preparation-2026-11-23/protected-after.json",
+      "bytes": 683,
+      "sha256": "3d53074b978972d74c8d9cce26c01c472daaa010b487c68ebe0cb6ac62ed8d8d"
+    },
+    {
+      "path": "build/frozen-interface-comparison-v2-preparation-2026-11-23/protected-before.json",
+      "bytes": 2171420,
+      "sha256": "803cfe0a14c167a26241300ad526ff00f7f9dd0a46cf3a7217a69763fa824ab4"
+    },
+    {
+      "path": "build/frozen-interface-comparison-v2-preparation-2026-11-23/protected-content-after.json",
+      "bytes": 272,
+      "sha256": "76fe14b0c338d739ea99afe5bb76acfdb3fca5a725f043384c51243e92425f9f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/approved-protocol.md",
+      "bytes": 14500,
+      "sha256": "ac3d1dc891374be20f7ed165c89f328408771bf95a6fd40d2df954f8c5916da9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/arithmetic-profile.json",
+      "bytes": 482,
+      "sha256": "5d87b0e86feeab14aba1a3901b68441336cae8331621903e180d5ce6835e4ddc"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/authorization.bin",
+      "bytes": 2936,
+      "sha256": "3cf200279765a1260c215a038f06a38d5172c7a770c02b14d2fd388b9f8d76aa"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/authorization.json",
+      "bytes": 915,
+      "sha256": "b2a5adaba9953a950caa0a7039e672aa0fc94a8d65e78e338d4da1970d1f65f3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/cases.json",
+      "bytes": 43819,
+      "sha256": "d808632ef2c191059e18fef0b40b4b1d2521f15a21851242a8d3a184494f02e6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/execution.stderr.log",
+      "bytes": 86,
+      "sha256": "93b1c1126a645e5b62dbf0943e5dd4499cf50eb26a2b329164f038da19442a10"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/execution.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/fixtures.bin",
+      "bytes": 770948,
+      "sha256": "dd3c79ff9f3f3bbc22dab5ff6f7ea9c1e07b1b0054da9392de79a983767e62b9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/continuous-pond-native-2026-11-23/CMakeCache.txt",
+      "bytes": 31068,
+      "sha256": "647174b41f923822d877c0ce354986ccda8150261b3eeab2d9bc582b7a7a92c5"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/continuous-pond-native-2026-11-23/Release/creature_gpu.lib",
+      "bytes": 2128952,
+      "sha256": "96b95eac5bb28880afc00027dc919ad00484d490cb7ec0f693c7e8022d7393eb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/continuous-pond-native-2026-11-23/Release/creature_physics.lib",
+      "bytes": 434428,
+      "sha256": "494f214161c8e0cebf0435a3b108cd829d12aa01e5dad2acbcf066739d556d78"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/ALL_BUILD.vcxproj",
+      "bytes": 37500,
+      "sha256": "bf95bcabfbf345732191d6e2eb78e6291df984c5a90c338823765b4e393204ce"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/CMakeCache.txt",
+      "bytes": 29997,
+      "sha256": "9134b2829238ceac9ec2cc4a3147cbbc787c74f4ef7f24b4d2bceac58d15e3b3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/frozen_interface_arithmetic_corrected_v2.vcxproj",
+      "bytes": 56688,
+      "sha256": "bf5a8400fd5dac3d7f362f9ae1510daa2c12ff4f217f8b647abdf7d837e1501c"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/frozen_interface_arithmetic_fused_reference_v2.vcxproj",
+      "bytes": 56776,
+      "sha256": "4110ff1d32c2e5908a26a5dbde1f2793b4e04bb25966cd6d77c8693f9cc43a42"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/frozen_interface_arithmetic_v2.vcxproj",
+      "bytes": 56508,
+      "sha256": "c095b82fc7f201720eb47894bd32fe0eee3117eb9cf1a30c9fde79a813fde0ba"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/frozen_interface_comparison_v2.vcxproj",
+      "bytes": 56508,
+      "sha256": "31deb760ba90f84d2c399f965384a86c7b3052f7f65e267ca19f15b4f1557692"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/frozen_interface_drag_arithmetic_v2.vcxproj",
+      "bytes": 56598,
+      "sha256": "cf819d72c8f5a4eba3d2d2d331a1ed567c21722cb5ff08025bed3a947c61479f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_arithmetic_corrected_v2.exe",
+      "bytes": 1478656,
+      "sha256": "8fe5af4cbae8b434a77f12ab17301852772f5798df24f9133eca76ab6369c2ad"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_arithmetic_fused_reference_v2.exe",
+      "bytes": 1383936,
+      "sha256": "3198f4f6f541d2602cc105198506a706bb1b1341c26975f10c0959f5bd6a4891"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_arithmetic_v2.exe",
+      "bytes": 1477632,
+      "sha256": "8aa0d3e9deaa87fb38067685b916360d3febb42d96cf204fd1176f73ec1b80fb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_comparison_v2.exe",
+      "bytes": 11057152,
+      "sha256": "732de230f539438567ba6168144ff4ecaf0d70f3ce79899225dafc28a9c00cae"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_drag_arithmetic_v2.exe",
+      "bytes": 998912,
+      "sha256": "bbef94e5e5e2406f1fe27fbe8d9d6abbdacb03769cce9360cce93b881492e914"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/ZERO_CHECK.vcxproj",
+      "bytes": 35984,
+      "sha256": "c161410c5d940c584a1dbad684615ede9d1c1416444dd813030a164b55a37337"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-corrected-final/canonical-radius.json",
+      "bytes": 266,
+      "sha256": "98995195e9c23ea9785b9303945af2105ce326c22bed028552e43619c27087d0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-corrected-final/summary.json",
+      "bytes": 605,
+      "sha256": "c132cb25eb0a07874753a992b2c1a07c9a0b2365d133ef47c46563b9477f6a24"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-corrected-final/trace-layout.json",
+      "bytes": 1760,
+      "sha256": "33be559384059c62f616deb6e6fd1a0333957fb5bceda20846fa1bb03cfb87ef"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-corrected-final/trace.bin",
+      "bytes": 6666604,
+      "sha256": "39ca92e4d84002252bac25817f25acbe35f61c15cbfb82160e4985f0c92116aa"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-drag/layout.json",
+      "bytes": 39310,
+      "sha256": "3229ad274b176b0f8b2edb947984271604acf01f29f45d92d4b2e82cd0f22386"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-drag/summary.json",
+      "bytes": 327,
+      "sha256": "16d0128eb7ce86379abb8e52154b256f31da86a22e2155f14d6d02e2f655de24"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-drag/trace.bin",
+      "bytes": 21150120,
+      "sha256": "782f7d6f02e26b33947a5dc8ac9990b544ecab370c891adfeb87ae744de9cfec"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-fused/summary.json",
+      "bytes": 606,
+      "sha256": "0d878f2ce926a40dd8405d1acc11dd75ebcd132417002d6d71d02dc120cf44dc"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-fused/trace-layout.json",
+      "bytes": 1760,
+      "sha256": "33be559384059c62f616deb6e6fd1a0333957fb5bceda20846fa1bb03cfb87ef"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-fused/trace.bin",
+      "bytes": 6666604,
+      "sha256": "bf4558fa940d7d024f3044b64dfd0987a5ec230f9a6d2894c6ce1a96c3d79829"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-input.bin",
+      "bytes": 102768,
+      "sha256": "299b941c78988e2148d5df47eb19683de4f38a9ac8d3021a13132c87d8cfdebb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-input.json",
+      "bytes": 591,
+      "sha256": "97c4efeb6c3887d1ea17dfc4635dd0e535b265b69a28104799c61fa7ea547fad"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-unfused/summary.json",
+      "bytes": 605,
+      "sha256": "c132cb25eb0a07874753a992b2c1a07c9a0b2365d133ef47c46563b9477f6a24"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-unfused/trace-layout.json",
+      "bytes": 1760,
+      "sha256": "33be559384059c62f616deb6e6fd1a0333957fb5bceda20846fa1bb03cfb87ef"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-unfused/trace.bin",
+      "bytes": 6666604,
+      "sha256": "e069713b17da7a3115f0255724b458f405b54b2e7680020ab3bab6ec1a5db1c0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/closed-proof-reader.py",
+      "bytes": 78961,
+      "sha256": "d5a07af9ec95add78774652517e055494534180bec284a81ee8708e7b30755b1"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/failure.json",
+      "bytes": 32362,
+      "sha256": "39d6da5f00ec1944a0abbb4024ed09f53686062b1f75405ce2b090ffb730e300"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/CMakeCache.txt",
+      "bytes": 29997,
+      "sha256": "9134b2829238ceac9ec2cc4a3147cbbc787c74f4ef7f24b4d2bceac58d15e3b3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/CMakeFiles/3.31.6-msvc6/CMakeCUDACompiler.cmake",
+      "bytes": 4182,
+      "sha256": "43aa5eac46d2654f534f75d0fa2c24a2db33421783d409e1acd4cb586ae62778"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_arithmetic_fused_reference_v2.exe",
+      "bytes": 1383936,
+      "sha256": "3198f4f6f541d2602cc105198506a706bb1b1341c26975f10c0959f5bd6a4891"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-native-2026-11-23/Release/frozen_interface_arithmetic_v2.exe",
+      "bytes": 1477632,
+      "sha256": "8aa0d3e9deaa87fb38067685b916360d3febb42d96cf204fd1176f73ec1b80fb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-fused/summary.json",
+      "bytes": 606,
+      "sha256": "0d878f2ce926a40dd8405d1acc11dd75ebcd132417002d6d71d02dc120cf44dc"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-fused/trace-layout.json",
+      "bytes": 1760,
+      "sha256": "33be559384059c62f616deb6e6fd1a0333957fb5bceda20846fa1bb03cfb87ef"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-fused/trace.bin",
+      "bytes": 6666604,
+      "sha256": "bf4558fa940d7d024f3044b64dfd0987a5ec230f9a6d2894c6ce1a96c3d79829"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-input.bin",
+      "bytes": 102768,
+      "sha256": "299b941c78988e2148d5df47eb19683de4f38a9ac8d3021a13132c87d8cfdebb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-unfused/summary.json",
+      "bytes": 605,
+      "sha256": "c132cb25eb0a07874753a992b2c1a07c9a0b2365d133ef47c46563b9477f6a24"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-unfused/trace-layout.json",
+      "bytes": 1760,
+      "sha256": "33be559384059c62f616deb6e6fd1a0333957fb5bceda20846fa1bb03cfb87ef"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/arithmetic-unfused/trace.bin",
+      "bytes": 6666604,
+      "sha256": "e069713b17da7a3115f0255724b458f405b54b2e7680020ab3bab6ec1a5db1c0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v1/layout.json",
+      "bytes": 703,
+      "sha256": "6b43d58f0531d10937771d5aa480fbebbd8c617ef4ddbf48a4f8ed6a712e182c"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v1/probe-started/states.bin",
+      "bytes": 232452,
+      "sha256": "2d6767da44f59c08e51ca6c8ee844dc09d197336f4bafc58cd4106265629835b"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/continuous_pond_v2_batch_audit.py",
+      "bytes": 25470,
+      "sha256": "a56fed61e28035478947ebec76c6f772b0e748144d3c6f1914895ed8dd3f6ed3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/frozen_interface_arithmetic_v2.cu",
+      "bytes": 9764,
+      "sha256": "a5f3f825ce5714214130dff96602eca2cbcd2f5fd002560a9a04dca5aab0bca0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/prepare_frozen_interface_arithmetic_v2.py",
+      "bytes": 2621,
+      "sha256": "4cc0e57199c83181a1ae0d785f26a80dcef473c3fae9ef4e722613289c6b32e9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_continuous_pond.py",
+      "bytes": 82270,
+      "sha256": "c032485c0922899571c1277319ade71fc5fd1bca7e79b7742451dd7ef7be62c7"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_continuous_pond_v2.py",
+      "bytes": 49939,
+      "sha256": "dd48e8e8d1d0daa56430c63c64d5a45bcb0a1d1bbb9ad9ea86ed9c811f6cba21"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_current_swim.py",
+      "bytes": 55953,
+      "sha256": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_current_swim_v2.py",
+      "bytes": 51840,
+      "sha256": "337a426805751146dbd32d15dc8d575175116a8365af398c4dbfceb9833fb627"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_frozen_interface_comparison_v2.py",
+      "bytes": 78961,
+      "sha256": "d5a07af9ec95add78774652517e055494534180bec284a81ee8708e7b30755b1"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_frozen_requested_turn_preparation.py",
+      "bytes": 9579,
+      "sha256": "ae913b442ef7bf616fc8ffa99b3e1f9f3197178098ef328b591eef66d11e560e"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_frozen_requested_turn_result.py",
+      "bytes": 33362,
+      "sha256": "f62d771e8df630287268c4557dc898554f1f295ce04924684b5e1da24339489a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_gait_pond.py",
+      "bytes": 48391,
+      "sha256": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/verify_hold_credit.py",
+      "bytes": 21511,
+      "sha256": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs.json",
+      "bytes": 13724,
+      "sha256": "63751e1370d202aeeaabda2c39ed1fc9685c7d798c26e5ba72ebc17a36a51935"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/independent-arithmetic-verification.json",
+      "bytes": 71878,
+      "sha256": "925496c40154f7d879c09d1af04820713ffd2c5ea150c5be75357825e0c14c10"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/verify_frozen_interface_comparison_v2.py",
+      "bytes": 77059,
+      "sha256": "439f2bdcffcd3a9e10a972808347fc45c412efb7f6b31ccc69f235392b77e779"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/independent-arithmetic-verification-pre-final-assurance.json",
+      "bytes": 83555,
+      "sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/independent-arithmetic-verification.json",
+      "bytes": 83555,
+      "sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/protected-before.json",
+      "bytes": 2171420,
+      "sha256": "803cfe0a14c167a26241300ad526ff00f7f9dd0a46cf3a7217a69763fa824ab4"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/user-authorization.txt",
+      "bytes": 2872,
+      "sha256": "a7d712cf27d8349967e72dc9a06b234c4833138d62c6558d07f32de07a819461"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/approved-protocol.md",
+      "bytes": 14500,
+      "sha256": "ac3d1dc891374be20f7ed165c89f328408771bf95a6fd40d2df954f8c5916da9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/arithmetic-profile.json",
+      "bytes": 482,
+      "sha256": "5d87b0e86feeab14aba1a3901b68441336cae8331621903e180d5ce6835e4ddc"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/cases.json",
+      "bytes": 43819,
+      "sha256": "d808632ef2c191059e18fef0b40b4b1d2521f15a21851242a8d3a184494f02e6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/fixtures.bin",
+      "bytes": 770948,
+      "sha256": "dd3c79ff9f3f3bbc22dab5ff6f7ea9c1e07b1b0054da9392de79a983767e62b9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/holding-parent.bin",
+      "bytes": 10308,
+      "sha256": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/independent-arithmetic-verification.json",
+      "bytes": 83555,
+      "sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/layout.json",
+      "bytes": 1190,
+      "sha256": "30b55cc720ca17d6e6b78b76bcf2ce003a60d31612638568d2c480ab19877a34"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/parent-checkpoint.bin",
+      "bytes": 59016,
+      "sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/parent-protocol.bin",
+      "bytes": 292,
+      "sha256": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/preparation.json",
+      "bytes": 753,
+      "sha256": "ab6fccb7cd66d257accde0d4201c0aecae570b4660f60a67718e754bdb524c2d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/prepared.bin",
+      "bytes": 80,
+      "sha256": "f5ba6e367404c1b100263219699ed52d58ef76e9264cf942934a3e5156c38372"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/protocol.bin",
+      "bytes": 180,
+      "sha256": "8f6d515d4a638617db59b08b140c350dacc4362cc86465780824ed1583559f19"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/pure-guards.bin",
+      "bytes": 35276,
+      "sha256": "69b740fda7f6d26838d227c1a5877073dc24675bf1659d7af836ef83abb9b8cf"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/pure-latches.bin",
+      "bytes": 4559404,
+      "sha256": "6a768b398a42870639191e7b5b63ab5d745f1ea926f3f3cbcb45bacfa95d5c13"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/retention-cases.json",
+      "bytes": 4644,
+      "sha256": "4ca306994992bb9fe37d5779e3215389f787824eaccc1422109e2235cb2f3d6a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/retention-fixtures.bin",
+      "bytes": 146060,
+      "sha256": "c11e57ebbd3be5ed43f62ed7d39a8676bff8d73ce88eb2b95135b95ca9799043"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/ppo/frozen-interface-comparison-2026-11-23-v2/user-authorization.txt",
+      "bytes": 2872,
+      "sha256": "a7d712cf27d8349967e72dc9a06b234c4833138d62c6558d07f32de07a819461"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/docs/FROZEN_INTERFACE_COMPARISON_V2_PROTOCOL_2026-11-23.md",
+      "bytes": 14500,
+      "sha256": "ac3d1dc891374be20f7ed165c89f328408771bf95a6fd40d2df954f8c5916da9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/core/checkpoint.cpp",
+      "bytes": 4620,
+      "sha256": "17915cd45c2c381c8fcf15884891badb4d7ea408305c5fb0864e9c9065bfc770"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/core/checkpoint.h",
+      "bytes": 2413,
+      "sha256": "2f544f600fa3c1281f17629c4ad7faf08cbdb54b38376e1d7489a1921074f93d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/core/hd.h",
+      "bytes": 337,
+      "sha256": "2a8d1c759d9f8b8e268edb95134f749dcedbcf200e83200c628bbb213c98d7ac"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/core/rng.h",
+      "bytes": 1401,
+      "sha256": "5d90e29d19c1e16ac963465a575de3711cbbc5a8910a876a7c69755aba803627"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/cuda/block_reduce.h",
+      "bytes": 752,
+      "sha256": "45eef82ba03ffde295c9446f0a39ff0241d5d25118e51c30e9a335335ad8ce77"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/cuda/cuda_memory.h",
+      "bytes": 4350,
+      "sha256": "9abe88d058d17ef7b89155dfd756f8dcee5b24a8e4515856ce06f3f93672ab00"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/cuda/device.cu",
+      "bytes": 1532,
+      "sha256": "81befa7245a44a048870bf11c87b52892fd9ad3cbd46f8613cae1c6e9303a98f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/cuda/device.h",
+      "bytes": 765,
+      "sha256": "ee5443a0805c41cb472a7b2ed6df9d4de34b3ed24c7e86d97f389db7d96ae44d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/frozen_swimmer.cpp",
+      "bytes": 6365,
+      "sha256": "d57bae27dc2b61394e6f79b8e51f72da1cc5c67b8da7f266349964f28236f296"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/frozen_swimmer.h",
+      "bytes": 749,
+      "sha256": "ede742975234972b1539d1504a1c4d47cf4f7b5d3afc11a6b1b1d29a57acdf90"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/gait_preview_contract.in.h",
+      "bytes": 123,
+      "sha256": "62f74a59d05a929c5ee095397e213aee920d8cd392f8ea29df8c798fcefe6218"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/hold_lab_preview.cpp",
+      "bytes": 22801,
+      "sha256": "4b70222115a4cb2976bd0b442967899ff41a0781c710a0106a961b1369283382"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/hold_lab_preview.h",
+      "bytes": 866,
+      "sha256": "6b789b50d89f4fcd455d9a2f743effbdd1018430deceda7e18584eba9b63555d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/pond_view_domain.h",
+      "bytes": 1268,
+      "sha256": "a05eb1011b7c293b606191d607057a307f18abc47bd11dfa836a8ede56569d5a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/register_live_types.cpp",
+      "bytes": 935,
+      "sha256": "d893122f633851578c3e222ca47e9a28890e761031c64fa46871e5821560fd62"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/godot/turning_preview_contract.in.h",
+      "bytes": 129,
+      "sha256": "9f56b9b1534b67ec973dcc79f1069a4cafcb2b5cc77845e68ecfa57d92377a64"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/adam.cu",
+      "bytes": 5719,
+      "sha256": "00cfe5ddcfed6c6ce05ec378bf1da31be7c288978c7fad6bad3481a05b13d6f3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/adam.h",
+      "bytes": 2093,
+      "sha256": "1069ee7a5d8c1098c2305781bf2f87add6a9a3ebac3bdafa8792b6fc1ba2d7b9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/adam_config.h",
+      "bytes": 585,
+      "sha256": "e2ad8fcc7336749b736f74a579cfbd644cf55d758f7f8ee4b3fe31acaec19b73"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/gemm.cu",
+      "bytes": 9200,
+      "sha256": "f7b71b2b55ae9513e0292525412cc4686808894e07ee95b143f885ee99b5ebf4"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/gemm.h",
+      "bytes": 2434,
+      "sha256": "f52a4c233d1be5e3eec2eccadad6675a3e5cc31ecf951b7e8b63ba7c568e4bd6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/loss.cu",
+      "bytes": 910,
+      "sha256": "a88b55906efd9b811377d8aa78c0634b084c93ba855027bc4ba3035bfc050572"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/loss.h",
+      "bytes": 356,
+      "sha256": "49b613b80fc3112081181ccfc428e128755635b4bbbd4eee67e847c401777faa"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/mlp_cpu.h",
+      "bytes": 6814,
+      "sha256": "5566a16cd2d2d84bd2e5beb61dddd2642df452f43e3c47ef1b60df9264302153"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/mlp_gpu.cu",
+      "bytes": 8320,
+      "sha256": "37bc9915f97b3eecee3d5490d027f7ac3b00eb24a0c57bc6ff8f06a3344787b5"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/mlp_gpu.h",
+      "bytes": 2594,
+      "sha256": "0ad0d2107e8c5b4ec3bc6fc4c5af001d9546cf7883269b00600bd01af7e983fe"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/mlp_spec.h",
+      "bytes": 6090,
+      "sha256": "762c60a18477c66085a8276de7ab46aad767b665826e01ffc923fb368646f9ef"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/current_model_v1.h",
+      "bytes": 12767,
+      "sha256": "c412da944333dc1897dbc7ae76c01d98b398eb706a2ba4fbd125df4f1b7c16f6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/current_model_v2.h",
+      "bytes": 13499,
+      "sha256": "3e4eba48a8961a132a0836105fb6c1c013c1ee1956679d25a8b8cb1731552c5f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/current_motor_v1.h",
+      "bytes": 5003,
+      "sha256": "eb0083ea311a9b6ad2474b9d534e89250a849bf4eb200fe5a346b251d94a7169"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/current_motor_v2.h",
+      "bytes": 5107,
+      "sha256": "142a678c16bc694a25b64dad3fd07423365325671532d7b6b39647a42ed590e5"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/current_task_v1.h",
+      "bytes": 2324,
+      "sha256": "926d4b3a2a3083d59fcc2ffb9446c5c3843cbdc5290f8f9c985724f5bcf801eb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/current_task_v2.h",
+      "bytes": 2362,
+      "sha256": "47da1967616d0233922a173b4850aa988f596066162897b532a461627e6f4627"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/frozen_contract.in.h",
+      "bytes": 222,
+      "sha256": "a4b6e7767924049bebb4591322c71583f2dcff3a7580133275a457dcef2de929"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/frozen_controller.cpp",
+      "bytes": 7960,
+      "sha256": "0e47a615c9ce9a749baa03286081b674e4dcddbda6959af7467fc9448b0c4896"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/frozen_controller.h",
+      "bytes": 2966,
+      "sha256": "b82614cc700d5fc0976f253a4888ec8334b662646e594baed4797ce05568ddb3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/gait_policy_v1.h",
+      "bytes": 2160,
+      "sha256": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/gait_task_v1.h",
+      "bytes": 3635,
+      "sha256": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/hold_assessment.h",
+      "bytes": 4385,
+      "sha256": "cdda2488e1ad54c902dfec54ff1891e49e7638c50607ecf62d90daffbd8dc569"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/joint_motor.h",
+      "bytes": 5836,
+      "sha256": "dc53d22cff99352c5e378b6bcd919569c9a26455aa5df9f8ec1c36172171314f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/movement_model.h",
+      "bytes": 10657,
+      "sha256": "5ab30eb92a609ac8cfd50944bef8898cf199be3989dbb6550b05bf44bc5449d5"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/observation_contract.h",
+      "bytes": 617,
+      "sha256": "6d46b600194ce1c830fce11c01860143bbe3af9452996dc6bff07043f6c10332"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/requested_turn_task_v1.h",
+      "bytes": 16455,
+      "sha256": "45c286d3caa4c52355e10e39156499e3d46f77c5c8cf7c92adf6f099be6599f2"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/state.h",
+      "bytes": 2183,
+      "sha256": "be6444f54b748d58b36f75a36e6cebb880863c0950207615495298fb13d8da6f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/straight_task.h",
+      "bytes": 24241,
+      "sha256": "994f7719f497e237ad4428c74feac2d73ce57e2ea6ea8e12ab8085882e28df22"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/turning_policy_v1.h",
+      "bytes": 2876,
+      "sha256": "25b6e25d87c1aa71a12a0ff00c77e0a812976da05b7eda6343252998934fab99"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/turning_policy_v2.h",
+      "bytes": 2905,
+      "sha256": "4450974a5679f5670c5f41ee70cde7dd0f95582888f359ca5838b1bfd4993a39"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/turning_task_v1.h",
+      "bytes": 14182,
+      "sha256": "fe4d5ae3aaa5c470e906987ae13f92d53b8c1e303b9651a43db855a1373d5d4e"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/nn/motor/turning_task_v2.h",
+      "bytes": 17498,
+      "sha256": "cbca6b57f421155ee002bb63270001493e1a56442d47e71dc813bb1b4df159fb"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/physics/contact.h",
+      "bytes": 7503,
+      "sha256": "3e88a73390f08803eb5f55abc8ab1d93533884169817bf5165f7da698dc152a6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/physics/dynamics.h",
+      "bytes": 9192,
+      "sha256": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/append_hold_checkpoint.h",
+      "bytes": 5009,
+      "sha256": "0242c141c790bc9fe98ca95962c5da335ce38916236e735626cf01562f56966b"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/ar_gaussian_math.h",
+      "bytes": 2719,
+      "sha256": "43c1d5402d4f86c26d69ca15d8030e8e42271cec4c411763211c6c5440d5f797"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/gaussian_kernels.cu",
+      "bytes": 9242,
+      "sha256": "cd45c1ada693ce171d3c7545d05f3debd15984430f5bbf528f3de7a33e9d16b7"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/gaussian_kernels.h",
+      "bytes": 3307,
+      "sha256": "52ce5311a2f89ac0fb14e253f221ba5da63172fabd04753fa398d97b803e267d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/gaussian_math.h",
+      "bytes": 3304,
+      "sha256": "2caec7f5f720d1c9562e5a25d0380bf766fca05eeab048e9cf859b683efe8700"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/motor_rollout.cuh",
+      "bytes": 8636,
+      "sha256": "5d2d479fd10654ccfed70225969304a7f5dc96ab0f1afd187c646c7ced514a28"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/ppo_checkpoint.h",
+      "bytes": 8055,
+      "sha256": "7dfa4807dc65d36d62bfa35d05e9c71604b7ccb84e37ed4de1d00b59072783c2"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/ppo_diagnostics.h",
+      "bytes": 3172,
+      "sha256": "6d3bcdec41a53fde8a44fd70e740f78944aa6f36e271ae5cdf90f1340ce4feec"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/ppo_kernels.cu",
+      "bytes": 8861,
+      "sha256": "884ac4d2485e97d19d6049be677cb218b5fb17b617a50f72545df98b13d37e8c"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/ppo_kernels.h",
+      "bytes": 2657,
+      "sha256": "54edd3d7cdfa0abe6ac65ab24de08240f4b00d5bcb984eceb931cdd1984952c8"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/rl/ppo_math.h",
+      "bytes": 6515,
+      "sha256": "68e726dc7a84778e6900bc6894bed50126ec4545a1370618dff0953374d25e8d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/simulation/world.cpp",
+      "bytes": 8888,
+      "sha256": "3fb892df82fdf739aaa58ee706e56d895229cd00fcc9a6c48c9d5f59708348e8"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/simulation/world.h",
+      "bytes": 6386,
+      "sha256": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/src/simulation/world_cuda.cu",
+      "bytes": 1945,
+      "sha256": "3efd6521852738ae8fafafa8f920368e1091643c6f60e43a64edff69da388441"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/analyze_frozen_interface_gate_failure.py",
+      "bytes": 6750,
+      "sha256": "d3b2b6c84fb2a71f35db736752c54fac4bf038554dd6196179d84502b4674167"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/analyze_frozen_interface_gate_failure_verified.py",
+      "bytes": 7131,
+      "sha256": "fc4e010b5e2cf1e22936fd28f1411b99cef919b7ad57d6ca43705549b790d429"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/archive_continuous_pond.py",
+      "bytes": 3289,
+      "sha256": "b8b55a2a60753af9d55fd5b5b82c1496eb35e2679353d7f586b299730bb405de"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/audit_continuous_pond_design.py",
+      "bytes": 7062,
+      "sha256": "d932485c8efe4552dfdb615fb09877720bae5b726a2d15f42915bf41c3283312"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/audit_hold_exploration.py",
+      "bytes": 5386,
+      "sha256": "d3d01396160f19389f1662fcf4a4c5741d7694d9421ca4a2f4a57fad52de3f9f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/audit_hold_gradients.py",
+      "bytes": 14709,
+      "sha256": "5c06799057b9d31ff7d1bef89dd0edd456da2ae8f926c309e6b2d8d72984c33c"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/audit_hold_saved.py",
+      "bytes": 12634,
+      "sha256": "9e8cf5cf490a22da063386a037903639bd3acdae5ac888c9963034a863d064fe"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/authorize_continuous_pond_v2.py",
+      "bytes": 5157,
+      "sha256": "423ddda9fa9d2a0913b30aa7d58602a7fe8bd93ec651614d7b15d9e852d9d136"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/authorize_frozen_requested_turn.py",
+      "bytes": 4386,
+      "sha256": "067b205ca5fd4ce14e7c9978b5aa7d26b44ca04236d65b5c01bcb52052a9b0a9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/continuous_pond_inputs.py",
+      "bytes": 4487,
+      "sha256": "78704eb293aef9ecc767388e25c10586f6967308f640bc5dc5efce807f5db8d2"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/continuous_pond_v2_batch_audit.py",
+      "bytes": 25470,
+      "sha256": "a56fed61e28035478947ebec76c6f772b0e748144d3c6f1914895ed8dd3f6ed3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/continuous_pond_v2_inputs.py",
+      "bytes": 5588,
+      "sha256": "c39985a3be2d73b075c998aa3c0046dd5a1e25bec17dc357c2541b1d967f1141"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_current_preview.py",
+      "bytes": 14412,
+      "sha256": "38763c99315daa4c3b80cd19dd3daec5542313880aac65b8bd4cb946b1d2d1e5"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_gait_preview.py",
+      "bytes": 12145,
+      "sha256": "3da6d6238a50beb5c13291424bf5c23e41214ab8234fdbf19fad3b99b85534bd"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_hold_preview.py",
+      "bytes": 7612,
+      "sha256": "916c88e227746d52e6a4d9f3ecb81b63c5bc0a3ce030ee09d76b0d667b13d684"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_disclosure.py",
+      "bytes": 9945,
+      "sha256": "df3992adeb87590a869744e9e49e47a366df5e4edd80d5a12dbac50a82141663"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_stop_disclosure.py",
+      "bytes": 10002,
+      "sha256": "e7a6a9e2b36a9a74074f388de4071714484a0d025230f0a9404bb0bf67846a89"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_v2_disclosure.py",
+      "bytes": 17700,
+      "sha256": "a6efb8e1289742f5d7837ead5e77d3f0eb168734aa21ca50583b019a1c7d7cbf"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_pond_view.py",
+      "bytes": 4123,
+      "sha256": "6bcaf9b4e60ef3476bceea3ee3bcc00214aa266946cb962c753f145f9917ff1d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_turning_preview.py",
+      "bytes": 12381,
+      "sha256": "82c20572661eee8181c3dcbc2416d80da617f22dc5dc1b1ad757ef24e22cc757"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/freeze_frozen_requested_turn_inputs.py",
+      "bytes": 2814,
+      "sha256": "9b1224710313b2e25f18a8baa050038eaf44c62aac5a12ce92dcfde11ef8d017"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen-interface-comparison-v2/CMakeLists.txt",
+      "bytes": 2249,
+      "sha256": "2889bc7bcb07d2c3c0e0409a38fdbebaef5dc364cbfa6a4c45088a1452b5651a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_corrected_v2.cu",
+      "bytes": 915,
+      "sha256": "a61965d6aaa70534b660e92ffb0216489a6060f1efc914e1e6f16a0a87fabc2a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_profile_v2.h",
+      "bytes": 2205,
+      "sha256": "96707f4b6674a06d57b015ceef3795d8b72a624ccbbbf139f551be37b3fee337"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_v2.cu",
+      "bytes": 9764,
+      "sha256": "a5f3f825ce5714214130dff96602eca2cbcd2f5fd002560a9a04dca5aab0bca0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_authorization_v2.h",
+      "bytes": 1790,
+      "sha256": "02ac8b4a47da5abee534e1d16e70e04ddf5bb9bd89c9fe845bb0684c032a5bb4"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_comparison_v2.cu",
+      "bytes": 35262,
+      "sha256": "f2e59fe0d8dc1fe073d2f1bc63e28d234b3d44ff6f66e38ad2b35913da015e91"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_comparison_v2_common.inc",
+      "bytes": 6930,
+      "sha256": "93d8dafd97033a266e7abe612215201ab02b05c06b7e3d437e33898e3676709a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_drag_arithmetic_v2.cu",
+      "bytes": 8701,
+      "sha256": "a49d6ec9cf6958a7bc1199770c83e694f027b3ae971a58a4cab5769f3a7d442f"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_retention_v2.inc",
+      "bytes": 12241,
+      "sha256": "f0b6fbf2b5e559cbc0189c9e8f3658a782c883f9d63865487ca100108824f7e6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/manage_frozen_interface_comparison.py",
+      "bytes": 8105,
+      "sha256": "1006a3cafab528f34261966863fd2779876f6b89c386cd43bc60d6f488043013"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/manage_frozen_interface_comparison_v2.py",
+      "bytes": 9506,
+      "sha256": "0fcccb314c67febf38b8924856799acfd5d67a1a891368cd1ac186decaf6533c"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/package_current_study.py",
+      "bytes": 3953,
+      "sha256": "daab1741647be67853f8167cdb54dc0b33965c7a7d8408f77b74fc041b61eddd"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/prepare_frozen_interface_arithmetic_v2.py",
+      "bytes": 2621,
+      "sha256": "4cc0e57199c83181a1ae0d785f26a80dcef473c3fae9ef4e722613289c6b32e9"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/run-frozen-interface-comparison-v2.ps1",
+      "bytes": 3563,
+      "sha256": "b1cf21b78c215b13057cf582e15e64dbe5f08258a9ec4b373b412ee434e8398d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_continuous_pond.py",
+      "bytes": 82270,
+      "sha256": "c032485c0922899571c1277319ade71fc5fd1bca7e79b7742451dd7ef7be62c7"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_continuous_pond_v2.py",
+      "bytes": 49939,
+      "sha256": "dd48e8e8d1d0daa56430c63c64d5a45bcb0a1d1bbb9ad9ea86ed9c811f6cba21"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_current_swim.py",
+      "bytes": 55953,
+      "sha256": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_current_swim_v2.py",
+      "bytes": 51840,
+      "sha256": "337a426805751146dbd32d15dc8d575175116a8365af398c4dbfceb9833fb627"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_current_swim_v2_close.py",
+      "bytes": 6882,
+      "sha256": "9d675775bd36406874aa287c39c2114ba6c4cdfece3378bd44fab8f5f3199a45"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_frozen_interface_comparison.py",
+      "bytes": 45749,
+      "sha256": "22b8779e7b3d2fe0d19c080e6ef684085b16f18ab19dd116ba5ffc878ec1aab6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_frozen_interface_comparison_v2.py",
+      "bytes": 89640,
+      "sha256": "a7ee2b6cd1c2abe8eedd82d7a4c13922f4e11f0956e787fd2719120fb4fccbb6"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_frozen_requested_turn_preparation.py",
+      "bytes": 9579,
+      "sha256": "ae913b442ef7bf616fc8ffa99b3e1f9f3197178098ef328b591eef66d11e560e"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_frozen_requested_turn_result.py",
+      "bytes": 33362,
+      "sha256": "f62d771e8df630287268c4557dc898554f1f295ce04924684b5e1da24339489a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_gait_pond.py",
+      "bytes": 48391,
+      "sha256": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_hold_credit.py",
+      "bytes": 21511,
+      "sha256": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_hold_exploration.py",
+      "bytes": 22815,
+      "sha256": "dc27792ac3f12ec23b6962644687d388407b8425eac39a871f1267b5c78d16ee"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_hold_learned_amplitude.py",
+      "bytes": 23313,
+      "sha256": "98832ac5b5c7a36af11dbf325b6a7eeca930642d6e8637aa8401a5f725438cba"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-inputs.json",
+      "bytes": 101361,
+      "sha256": "262fee70793710c1c591f5af7fd83ea6b3ed9188821bdf5f8dbf6f90c75f5ddf"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/holding-parent.bin",
+      "bytes": 10308,
+      "sha256": "c54f73b57ab4280d99802a7253c13004f95c754e39e0acf8f6833377bbb760c3"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/independent-arithmetic-verification.json",
+      "bytes": 83555,
+      "sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/independent-launch-stop-verification.json",
+      "bytes": 112898,
+      "sha256": "aa45fa23cd4a1f02483269624c42301cb3d636b24ab75749a53d2664df9fa742"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/independent-preparation-verification.json",
+      "bytes": 108087,
+      "sha256": "1e8fe71e03f9f3d5f250c72822f9c69a27d82b322f5edfc9e10250de1b069547"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/layout.json",
+      "bytes": 1190,
+      "sha256": "30b55cc720ca17d6e6b78b76bcf2ce003a60d31612638568d2c480ab19877a34"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/parent-checkpoint.bin",
+      "bytes": 59016,
+      "sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/parent-protocol.bin",
+      "bytes": 292,
+      "sha256": "fcaa74c5da6adc1e000282776cebfc51f007b00633e7a6a29ed9d8a34e485e1e"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/preparation.json",
+      "bytes": 753,
+      "sha256": "ab6fccb7cd66d257accde0d4201c0aecae570b4660f60a67718e754bdb524c2d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/prepared.bin",
+      "bytes": 80,
+      "sha256": "f5ba6e367404c1b100263219699ed52d58ef76e9264cf942934a3e5156c38372"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/process-execution.json",
+      "bytes": 488,
+      "sha256": "67ff45bba4a710fe6618be810c587735ccea3e3dba0f8f43433b9434e63853df"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/protected-after.json",
+      "bytes": 683,
+      "sha256": "3d53074b978972d74c8d9cce26c01c472daaa010b487c68ebe0cb6ac62ed8d8d"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/protocol.bin",
+      "bytes": 180,
+      "sha256": "8f6d515d4a638617db59b08b140c350dacc4362cc86465780824ed1583559f19"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/pure-guards.bin",
+      "bytes": 35276,
+      "sha256": "69b740fda7f6d26838d227c1a5877073dc24675bf1659d7af836ef83abb9b8cf"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/pure-latches.bin",
+      "bytes": 4559404,
+      "sha256": "6a768b398a42870639191e7b5b63ab5d745f1ea926f3f3cbcb45bacfa95d5c13"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/retention-cases.json",
+      "bytes": 4644,
+      "sha256": "4ca306994992bb9fe37d5779e3215389f787824eaccc1422109e2235cb2f3d6a"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/retention-fixtures.bin",
+      "bytes": 146060,
+      "sha256": "c11e57ebbd3be5ed43f62ed7d39a8676bff8d73ce88eb2b95135b95ca9799043"
+    },
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/user-authorization.txt",
+      "bytes": 2872,
+      "sha256": "a7d712cf27d8349967e72dc9a06b234c4833138d62c6558d07f32de07a819461"
+    },
+    {
+      "path": "docs/FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md",
+      "bytes": 6940,
+      "sha256": "88606159ad79e4ad6f6390898171e94f166295254baf41c15d0647f8384e3f48"
+    },
+    {
+      "path": "live/research_data/interface-comparison-v2-launch-arithmetic.json",
+      "bytes": 83555,
+      "sha256": "9b37ac0b4e45e258245964a0e32c0d6f6f9e533231324a2c1d09d185632ad052"
+    },
+    {
+      "path": "live/research_data/interface-comparison-v2-launch-process.json",
+      "bytes": 488,
+      "sha256": "67ff45bba4a710fe6618be810c587735ccea3e3dba0f8f43433b9434e63853df"
+    },
+    {
+      "path": "live/research_data/interface-comparison-v2-launch-protection.json",
+      "bytes": 683,
+      "sha256": "3d53074b978972d74c8d9cce26c01c472daaa010b487c68ebe0cb6ac62ed8d8d"
+    },
+    {
+      "path": "live/research_data/interface-comparison-v2-launch-stop.json",
+      "bytes": 1576,
+      "sha256": "c3a11be0571f090c27bb09682fc3ee03081999bebbc2583de0b308a7dfc735e5"
+    },
+    {
+      "path": "live/research_data/interface-comparison-v2-launch-verification.json",
+      "bytes": 112898,
+      "sha256": "aa45fa23cd4a1f02483269624c42301cb3d636b24ab75749a53d2664df9fa742"
+    },
+    {
+      "path": "tools/export_interface_comparison_v2_launch_stop.py",
+      "bytes": 13134,
+      "sha256": "b0528d278051e249821ed4fd6567bbf8aef0bcadcac79eeae62dd0e83aee54d7"
+    },
+    {
+      "path": "tools/verify_frozen_interface_launch_stop_v2.py",
+      "bytes": 7911,
+      "sha256": "c5d40130b42fc6e2febd69e3bb1dfdb7ba47c5435564aed47cb43ae91b1a3cea"
+    }
+  ],
+  "excluded_files": [
+    {
+      "path": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/external/537980c3892ecddb/nvcc.exe",
+      "bytes": 19793008,
+      "sha256": "537980c3892ecddbb278de6497f849cd896f9e359a5bf0001167d82f3a3cc2e3",
+      "reason": "Installed third-party CUDA compiler; retain checksum and installation prerequisite, not copied toolchain bytes"
+    }
+  ],
+  "limitation": "Publication copy omits one copied CUDA compiler executable. All original local archive/proofs/records remain unchanged. Their original hash bindings are not rewritten. Install matching CUDA tooling separately for full local verification."
+}
