@@ -24,7 +24,44 @@ build; current-capable swimming is not yet qualified.
 
 ## Current state
 
-**Current work:** the explicitly approved [corrected GPU current study](docs/CURRENT_SWIM_V2_RESULTS_2026-11-22.md)
+For engineering review, use the [copy-ready AI handoff](docs/AI_HANDOFF_2026-11-23.md).
+It distinguishes measured behavior, failed approaches and unrun preparation,
+including the missing bank observations and future shore-climbing requirement.
+
+**Latest November 23 check:** the user-approved
+[requested-turn probe](docs/FROZEN_REQUEST_TURN_RESULTS_2026-11-23.md) is closed
+and independently verified. The saved motor responds to small +/-5-degree
+course changes at 7.75–7.83 mm/s. Larger requests lose speed/posture; all eight
+60/90-degree cases stop at the tilt guard. All 22 cases were measured in one
+13.71-second process, using 5,782 controls and 57,800 substeps. No weights were
+trained or replaced. Continuous pond swimming is still unqualified; the next
+learning need is sustained requested turns in the same motor. Godot Details
+discloses the measured result while keeping the existing saved swimmer.
+
+**Earlier November 23 study:** the [food-free pond study](docs/CONTINUOUS_POND_RESULTS_2026-11-23.md)
+completed 64 native GPU PPO updates without a physics fault, but passed **0/16**
+sixty-second swimming starts. A sixteen-second objective rewarded behavior
+that later slowed/stalled. All prior swimming/recovery tests and 14 holding
+cases passed again. Independent evidence verification passes; the candidate
+is rejected and the qualified calm swimmer stays active. Details displays the
+verified result. No food, scripted turn or rescue was added.
+
+The [code/design audit](docs/CONTINUOUS_POND_DESIGN_AUDIT_2026-11-23.md) holds the
+unexecuted next run: fix failure scoring and establish requested turning before
+another whole-pond lesson. Numerical preparation alone did not establish that
+the proposed controller could solve it.
+
+The [turn-probe preparation](docs/FROZEN_REQUEST_TURN_PREPARATION_2026-11-23.md)
+preserves its original zero-integration checks and frozen inputs. Its one
+physical allocation is now closed; no retry or new training follows automatically.
+
+The [held four-axis proposal](docs/CONTINUOUS_POND_V2_PROTOCOL_2026-11-23.md)
+uses sixty-second credit and bounded depth/state feedback on all four existing
+motor outputs. Its native code is prepared with zero physical/optimizer steps;
+another physical study requires fresh explicit approval. No additional study is
+authorized by the failed run. The original data and closed budgets remain intact.
+
+**Previous current study:** the explicitly approved [corrected GPU current study](docs/CURRENT_SWIM_V2_RESULTS_2026-11-22.md)
 passed its fresh physics gate and completed 32 native PPO updates. Original
 current-swimming cases improved from **4/16 to 8/16**, short of the unchanged
 16/16 gate. The candidate is not qualified or installed; further withheld/current

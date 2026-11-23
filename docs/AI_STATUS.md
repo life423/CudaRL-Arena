@@ -1,4 +1,63 @@
-# AI status — November 22, 2026
+# AI status — November 23, 2026
+
+The user-approved [requested-turn check](FROZEN_REQUEST_TURN_RESULTS_2026-11-23.md)
+is closed and independently verified: 22 cases, 5,782 physical controls /
+57,800 substeps, 13.7060028 seconds of process time. All four matched-command
+CPU/CUDA prechecks passed. Small +/-5-degree requests maintain 7.75–7.83 mm/s
+with depth below 0.67 mm and tilt below 9.36 degrees. +/-15-degree requests
+slow and fail to settle accurately; +/-30-degree requests slow to 2.20–2.34 mm/s.
+All eight +/-60/90-degree cases stop on the 20-degree tilt guard. There are no
+hard physics faults, bank/depth terminations, PPO updates or actor replacements.
+Proof: `06bf4c4dd44b597a9bdbae8f93e3708b5cf25e8ecc3bf7745973e2ea5ef3acfb`.
+Godot receives the portable verified outcome; continuous pond swimming remains
+unqualified. Sustained requested turns in the same motor are the next learning
+need. Repeated incremental requests and whole-pond navigation are untested;
+no further physical study or training is authorized by this completed check.
+
+The [second-AI review handoff](AI_HANDOFF_2026-11-23.md) records the user's
+bank/object-sensing reward idea and eventual bank climbing. The full-motor
+requested-turn proposal is unexecuted source preparation: its standalone CUDA
+target now compiles with warnings as errors, and its separate task passed
+2,615 synthetic CPU assertions. No new full-actor CUDA numerical fixture,
+physical rollout or Adam update has run. Its actor42 has no bank observations;
+it cannot by itself deliver autonomous pond navigation. Fresh physical-gate
+implementation and independent calibration/training/optimizer-ledger auditing
+remain unfinished. The draft is not ready for physical execution or adoption.
+
+The earlier [food-free continuous-swimming study](CONTINUOUS_POND_RESULTS_2026-11-23.md)
+is closed and unqualified: 64 native GPU PPO updates / 632 Adam steps completed
+without a physics fault, but the candidate passed 0/16 sixty-second starts.
+It learned to slow/stall instead of making dependable moving turns. The
+sixteen-second objective improved while sustained motion deteriorated.
+All old native swimming/recovery gates and all 14 holding cases passed again.
+Final independent evidence verification passed (qualified=false); no new policy
+is adopted. Details shows the portable verified rejection alongside the active
+saved swimmer. The original frozen sources/GUI remain in the causal snapshot.
+No reserved 30-minute validation, ablation or viewer physical capture ran.
+Total actual spend was 75,555,675 controls / 755,025,046 substeps and 232.991457 s
+combined native process time. The old calm swimmer, camera, zoom and saves stay
+available. The subsequent narrow turning check is reported above; no new trial
+follows automatically.
+
+The [design audit](CONTINUOUS_POND_DESIGN_AUDIT_2026-11-23.md) now holds the
+unexecuted V2 proposal: early-failure reward, bounded target authority and
+removed persistent heading/lane feedback remain unresolved. The next lesson
+must establish requested left/right turns before whole-pond learning. This is
+an audit decision, not a claim that turning is physically impossible.
+
+The [turning-check preparation](FROZEN_REQUEST_TURN_PREPARATION_2026-11-23.md)
+preserves the frozen inputs and zero-integration checks made before its explicit
+approval. Actual execution stayed inside 7,360 controls / 120 seconds / 128 MiB;
+its old allocation is closed. The running saved swimmer remains unchanged.
+
+The [V2 source](CONTINUOUS_POND_V2_PROTOCOL_2026-11-23.md) was prepared
+with 60-second credit,80 state/depth coefficients across all four existing
+outputs and ordinary failed-episode guards for stopping/depth/tilt. Native
+compilation, CUDA zero-integration checks and independent preparation proof
+`d25c1d99212317160facc6822a6f445e7cfda0f606a1703b19ead4f2037d9bfa`
+pass with zero physical/optimizer steps. All physical entry points reject
+without a fresh protocol-bound user authorization. No such authorization exists,
+and the authorization writer also refuses the explicit design-hold marker.
 
 The product mission is an evolving reinforcement-learning creature that users
 can interact with, using its training and new experience to adapt and thrive.

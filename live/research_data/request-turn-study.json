@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "source": {
+    "path": "res://research_data/request-turn-study-result.json",
+    "sha256": "3be6d18ac4857f449946408dee7db521a88a54d5271a9ff14b8f6c85569972f2",
+    "verification_input": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\ppo\\frozen-request-turn-2026-11-23-v1\\result.json"
+  },
+  "verification": {
+    "path": "res://research_data/request-turn-study-verification.json",
+    "sha256": "06bf4c4dd44b597a9bdbae8f93e3708b5cf25e8ecc3bf7745973e2ea5ef3acfb"
+  }
+}

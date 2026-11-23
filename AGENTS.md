@@ -36,6 +36,60 @@ provenance before changing a checkpoint or interpreting acceptance.
 
 ## User workflow preference — November 22, 2026
 
+- Latest November23 direction: the user proposed bank/object observations and
+  reward for safe continued movement near hazards. Eventually the creature must
+  climb the bank out of water. Treat shoreline aversion as aquatic task context,
+  not a permanent wall/bounce or blanket prohibition on future shore contact.
+  See docs/AI_HANDOFF_2026-11-23.md. The user requested a second-AI handoff and
+  commit/push of this branch WITHOUT merging main. No further physical/PPO run
+  is authorized by that publication request.
+- New requested-turn full-actor PPO files are UNRUN SOURCE PREPARATION, not a
+  working navigation learner: actor42 has body/request/intention inputs, no bank
+  sensors; critic43 is auxiliary. New gate utility/independent full-training
+  auditor are unfinished. Do not claim readiness or indefinite swimming from
+  this code, synthetic tests or a successful compile. Old budgets remain closed.
+- November 23 user reminder: update the actual Godot app when the work is ready,
+  reopen the correct worktree project, and verify the visible result. A source
+  edit, report or separate research executable alone does not satisfy the request.
+  Expose validated capabilities honestly; keep unqualified actors unavailable.
+- November 23 food-free swimming study is CLOSED and unqualified. Native GPU
+  PPO ran 64 updates / 632 Adam steps without physics faults, but 0/16
+  sixty-second starts passed. It optimized sixteen-second behavior that later
+  slowed/stalled. All old 4 short swims / 28 long60 keys / 3 recoveries /
+  148 long300 keys and 14 holds were retained and
+  independently audited. Read docs/CONTINUOUS_POND_RESULTS_2026-11-23.md.
+  The candidate is not adopted; no thirty-minute withheld/ablation/viewer
+  capture ran.
+- November 23 code/design audit HOLDS the unexecuted V2 proposal. Read
+  docs/CONTINUOUS_POND_DESIGN_AUDIT_2026-11-23.md and the control audit. Numerical
+  correctness is not physical feasibility: the failure score can favor early
+  exit, +/-0.75 latent steering has restricted target authority, and local-forward
+  observation removes persistent heading/lane correction. Inspect/test requested
+  turns through the intended motor interface before another whole-pond lesson.
+  Do not request approval for or execute the held proposal unchanged; preserve
+  its frozen preparation and explicit design-hold marker. No new training ran.
+- The small requested-turn probe is CLOSED after the user's explicit November23
+  approval. Read docs/FROZEN_REQUEST_TURN_RESULTS_2026-11-23.md. One run measured
+  22 cases using 5,782 controls / 57,800 substeps in13.7060028process seconds;
+  14 cases reached16s and eight60/90-degree cases stopped at20-degree tilt.
+  Small+/-5-degree requests retained7.75–7.83mm/s, while larger turns lost speed
+  and posture. Four matched-command prechecks and independent full saved-data
+  audit passed (proof06bf4c4d...). Zero PPO/optimizer steps and no actor adoption.
+  Continuous swimming and repeated incremental course requests remain unproved.
+  Preserve originals and this closed allocation. No retries, training or larger
+  probe follow automatically. Godot must disclose the actual verified result.
+- V2 code/protocol are PREPARATION ONLY: 80 bounded state/depth
+  coefficients across the same four outputs, sixty-second episodes, 2,048 worlds,
+  and 24 updates maximum. Read docs/CONTINUOUS_POND_V2_PROTOCOL_2026-11-23.md.
+  No new physical or optimizer run is authorized yet. Its executable rejects
+  every physical entry without a separate protocol-bound authorization marker
+  containing the user's actual fresh approval. Never create that marker from
+  elapsed time, earlier approvals, a passed preparation or this memory entry.
+- Keep the current request food-free. Maintain native PPO/GPU, original saved
+  weights/skills, the close aerial view/manual zoom and measured contrast.
+  Never remove the swim timer alone, script a route/rotation/bounce/rescue, or
+  enable an unqualified policy to suggest that indefinite swimming is solved.
+
 - Latest November 23 camera correction supersedes the whole-pond fit: the user
   rejected that as still too far away. Start in a close aerial creature view,
   centered on actual native body poses; allow shoreline to extend offscreen.

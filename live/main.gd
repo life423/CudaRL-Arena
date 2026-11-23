@@ -1,6 +1,8 @@
 extends Node3D
 ## One frontend and one native world. No UI physics, replay actor or optimizer.
 const PondWorld = preload("res://pond_world.gd")
+const ContinuousStudy = preload("res://continuous_study.gd")
+const RequestTurnStudy = preload("res://request_turn_study.gd")
 const TEXT := Color("243e37")
 const MUTED := Color("566b61")
 const MINT := Color("2d6757")
@@ -12,6 +14,8 @@ var metadata: Dictionary = {}
 var metadata_issue := "Assessment metadata is unavailable. No success claim is made."
 var policy_path := "res://research_data/learned-amplitude-v1.bin"
 var metadata_path := "res://research_data/viewer.json"
+var continuous_metadata_path := "res://research_data/continuous-pond-v1.json"
+var continuous_available := false
 var current_study_path := "res://research_data/current-study.json"
 var current_study: Dictionary = {}
 var current_study_issue := ""
@@ -99,6 +103,7 @@ func _ready() -> void:
 		if argument.begins_with("--pond-capture="): capture_path = argument.trim_prefix("--pond-capture=")
 		if argument.begins_with("--pond-policy="): policy_path = argument.trim_prefix("--pond-policy=")
 		if argument.begins_with("--pond-metadata="): metadata_path = argument.trim_prefix("--pond-metadata=")
+	_select_continuous_package()
 	_read_metadata()
 	_load_native()
 	_bind_metadata()
@@ -108,7 +113,9 @@ func _ready() -> void:
 	add_child(world)
 	world.set_overview(pond_overview)
 	_build_interface()
-	if loaded and int(snapshot.get("gait_updates",0))>0:
+	if continuous_available:
+		if bool(preview.call("reset_free_swim",0)): snapshot = preview.call("get_state")
+	elif loaded and int(snapshot.get("gait_updates",0))>0:
 		task.select(1)
 		if bool(preview.call("reset",0,false)): snapshot = preview.call("get_state")
 	get_window().size_changed.connect(_layout)
@@ -116,6 +123,23 @@ func _ready() -> void:
 	_refresh()
 	play_button.grab_focus()
 	if not capture_path.is_empty(): _capture.call_deferred()
+
+func _select_continuous_package() -> void:
+	# Explicit developer overrides keep their own policy and assessment binding.
+	if policy_path!="res://research_data/learned-amplitude-v1.bin" or metadata_path!="res://research_data/viewer.json": return
+	var candidate := _dictionary_file(continuous_metadata_path)
+	var declared: Variant=candidate.get("policy",{})
+	if int(candidate.get("schema",0))!=1 or not declared is Dictionary: return
+	if declared.get("qualified",false)!=true: return
+	var saved_path := "res://research_data/continuous-pond-v1.bin"
+	if not FileAccess.file_exists(saved_path): return
+	if str(declared.get("package_sha256","")).to_lower()!=FileAccess.get_sha256(saved_path).to_lower(): return
+	var assessment := _bound_study_file(candidate.get("assessment",{}))
+	var proof := _bound_study_file(candidate.get("verification",{}))
+	if assessment.get("qualified",false)!=true or proof.get("passed",false)!=true or proof.get("qualified",false)!=true: return
+	if str(proof.get("assessment_sha256","")).to_lower()!=str(candidate.get("assessment",{}).get("sha256","")).to_lower(): return
+	policy_path=saved_path
+	metadata_path=continuous_metadata_path
 
 func _read_metadata() -> void:
 	if not FileAccess.file_exists(metadata_path): return
@@ -246,7 +270,9 @@ func _load_native() -> void:
 		error = "The saved policy is missing. No simulation has started."
 		return
 	loaded = bool(preview.call("load_controller",ProjectSettings.globalize_path(policy_path)))
-	if loaded: snapshot = preview.call("get_state")
+	if loaded:
+		snapshot = preview.call("get_state")
+		continuous_available=bool(snapshot.get("has_continuous",false))
 	else: error = "This saved policy could not load. " + str(preview.call("get_error"))
 
 func _build_interface() -> void:
@@ -303,8 +329,12 @@ func _build_interface() -> void:
 	restart_button.tooltip_text = "Restart this task from its original physical state"
 	controls.add_child(restart_button)
 	task = OptionButton.new()
-	task.add_item("Rest",0)
-	task.add_item("Swim",1)
+	if continuous_available:
+		task.add_item("Free swim",2)
+		task.add_item("Rest",0)
+	else:
+		task.add_item("Rest",0)
+		task.add_item("Swim",1)
 	task.custom_minimum_size = Vector2(100,48)
 	task.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	task.add_theme_font_size_override("font_size",15)
@@ -331,6 +361,7 @@ func _build_interface() -> void:
 	target_caption.add_theme_stylebox_override("normal",panel(SURFACE,5))
 	canvas.add_child(target_caption)
 	notice = label("",15,TEXT)
+	notice.add_theme_stylebox_override("normal",panel(SURFACE,12))
 	notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	canvas.add_child(notice)
@@ -401,8 +432,8 @@ func _layout() -> void:
 	var world_top := view_button.position.y+64 if size.x<600 else maxf(96,12+identity_height+12)
 	world.viewport_area = Rect2(inset,world_top,size.x-inset*2,maxf(80,rail.position.y-world_top-16))
 	world.fit_view()
-	notice.position = Vector2(inset,rail.position.y-76)
-	notice.size = Vector2(size.x-inset*2,60)
+	notice.position = Vector2(inset,rail.position.y-112)
+	notice.size = Vector2(size.x-inset*2,96)
 	var drawer_width := minf(440,size.x-inset*2)
 	drawer.position = Vector2(size.x-inset-drawer_width,inset)
 	drawer.size = Vector2(drawer_width,size.y-inset*2)
@@ -429,9 +460,11 @@ func _restart() -> void:
 	preview.call("pause")
 	running = false
 	accumulator = 0
-	if not bool(preview.call("reset",0,task.selected==0)): error = str(preview.call("get_error"))
+	var choice := task.get_selected_id()
+	var reset_ok := bool(preview.call("reset_free_swim",0)) if choice==2 else bool(preview.call("reset",0,choice==0))
+	if not reset_ok: error = str(preview.call("get_error"))
 	snapshot = preview.call("get_state")
-	last_action = "Rest restarted" if task.selected==0 else "Swim restarted"
+	last_action = "Rest restarted" if choice==0 else ("Free swim restarted" if choice==2 else "Swim restarted")
 	_refresh()
 
 func _process(delta: float) -> void:
@@ -456,12 +489,16 @@ func _refresh() -> void:
 	play_button.text = "Pause" if running else "Play"
 	if loaded:
 		var state := ("Resting" if bool(snapshot.get("holding",true)) else "Swimming") if running else ("Session complete" if bool(snapshot.get("finished",false)) else "Paused")
+		if not str(snapshot.get("error","")).is_empty(): state="Stopped"
 		status.text = (last_action+" · saved policy") if not running and not last_action.is_empty() else state+" · live, saved policy"
 		world.show_state(snapshot)
 		speed.text = "%.2f mm/s" % (float(snapshot.get("speed_m_s",0))*1000)
 		var holding := bool(snapshot.get("holding",true))
 		var amount := float(snapshot.get("anchor_error_m",0) if holding else snapshot.get("forward_m",0))*1000
 		displacement.text = ("%.1f mm away" % amount) if holding else ("%.1f mm swum" % amount)
+		if bool(snapshot.get("continuous",false)):
+			var elapsed := int(float(snapshot.get("time_s",0)))
+			displacement.text = "%d:%02d swimming" % [floori(elapsed/60.0),elapsed%60]
 		depth.text = "%.2f mm off depth" % (float(snapshot.get("depth_m",0))*1000)
 		error = str(snapshot.get("error",error))
 	else: status.text = "Preview unavailable"
@@ -489,8 +526,15 @@ func _open_details() -> void:
 	if result.is_empty(): drawer_text.append_text(metadata_issue+"\n")
 	else: drawer_text.append_text("%s\nHolding: %d / %d\nSwimming: %d / 4 short tests\nLong windows: %d / 30; %d / 28 prior passes retained\n\n%s\n" % [str(result.get("outcome","See source evidence")),int(result.get("hold_passes",0)),int(result.get("hold_total",6)),int(result.get("short_passes",0)),int(result.get("long_passes",0)),int(result.get("long_retained",0)),str(result.get("method",""))])
 	if not str(result.get("validation_note","")).is_empty(): drawer_text.append_text("\n[b]Additional validation[/b]\n"+str(result.validation_note)+"\n")
+	drawer_text.append_text(RequestTurnStudy.text("res://research_data/request-turn-study.json"))
+	drawer_text.append_text(ContinuousStudy.text("res://research_data/continuous-study.json"))
 	_append_current_study()
-	drawer_text.append_text("\n[b]Your pond[/b]\nThe aerial camera stays above the creature; Side view lowers the angle. Scroll, pinch or use + / − to zoom in and out. The body, water and boundaries come from the native simulation.\n\n[b]Movement scope[/b]\nRest and Swim each start from rest. Changing the request restarts the physical state; it does not demonstrate braking. Saved policies run bounded sessions and pause when complete. This view does not run learning updates. Current swimming remains separate research.\n")
+	drawer_text.append_text("\n[b]Your pond[/b]\nThe aerial camera stays above the creature; Side view lowers the angle. Scroll, pinch or use + / − to zoom in and out. The body, water and boundaries come from the native simulation.\n\n[b]Movement scope[/b]\n")
+	if continuous_available:
+		drawer_text.append_text("Free swim has no session timer or food target. The saved PPO motor steers using its physical state and distance from the bank. It receives no scripted route, bounce or rescue. Pause leaves the world in place.\n\n"+str(result.get("continuous_validation_note","See the saved continuous-swimming assessment."))+"\n\n")
+	else:
+		drawer_text.append_text("Rest and Swim use bounded tests and pause when complete.\n\n")
+	drawer_text.append_text("Changing the request or choosing Restart starts a new physical state; it does not demonstrate braking. This view does not run learning updates. Current swimming remains separate research.\n")
 	if not policy.is_empty(): drawer_text.append_text("\n[b]Saved generation[/b]\n%s\n%d lesson updates\n" % [str(policy.get("family","Saved research motor")),int(policy.get("holding_updates",0))])
 	var history: Array = metadata.get("history",[])
 	if not history.is_empty():
