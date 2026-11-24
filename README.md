@@ -4,15 +4,14 @@
 interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
-Godot presents the creature in its own pond. The current food-free Swim and
-Rest modes run a saved neural motor in native water physics. Separate food-free turning
-exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
-depths and speeds, and adaptation during player interaction are longer-term
-goals.
+Godot presents the flexible-tail creature in its own pond. Its saved motor
+starts swimming from rest and executes gentle left and right turn requests
+in native water physics. Learned whole-pond exploration is still under study.
 
 Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
-motion comes from torque-limited internal joints and water forces; Godot supplies
-presentation only. The motor supplies four independent joint-angle targets through bounded servos.
+motion comes from torque-limited internal joints and water forces. Godot supplies
+presentation and user controls. The flexible tail has an active root joint with
+yaw and pitch targets, and passive tail bending.
 
 Dependable movement is a foundation for that experience. Core aquatic abilities
 include swimming and steering in still water and currents, braking, holding a
@@ -26,13 +25,26 @@ build; current-capable swimming is not yet qualified.
 
 ## Current state
 
-**The registered Godot project runs the corrected full shoreline and the
-original saved motor.** Select **Swim** and press **Play** to watch. To try the
-saved motor's heading response, open **Details** while in Swim mode. The drawer
-pauses the pond and offers left and right 5° requests. Close it and press Play
-to see the response.
+**Open Tadpole Pond | Flexible Tail in Godot Project Manager and click Run.**
+In **Live pond**, press **Play**, then use **Left 15°** and **Right 15°** to
+request a turn. The motor measures two complete tail beats before issuing a
+queued request. **P** plays or pauses and **Q / E** request left or right.
+**Pond view**, **Zoom to tadpole** and the zoom controls adjust the camera.
+**Recordings** opens the saved swimming, turning and station-holding clips.
 
-Two separate residual PPO candidates completed 32 updates each while the
+The live project loads the frozen fitted gait and update-eight yaw offset.
+Both directions passed continuous three-turn sequences and local bank-turn
+checks. The latest chooser completed four further CUDA PPO updates, then
+failed all 12 bank-clearance tests. Autonomous navigation remains unfinished.
+[Latest results](docs/AI_STATUS.md)
+
+The native extension builds and stages with the
+[flexible-tail build target](tools/pond-flexible-tail-live/README.md).
+The older **CudaRL Frozen Live Demo** entry retains the previous body and
+its saved motor for comparison.
+
+Earlier four-axis experiments used two residual PPO candidates that completed
+32 updates each while the
 original motor stayed frozen. Both finished at 2/16 independent turns against
 the baseline's 3/16. Their straight-swim and resting branches use the original
 motor exactly. The checks reused archived retention evidence after verifying

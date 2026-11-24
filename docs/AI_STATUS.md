@@ -1,5 +1,15 @@
 # AI status — November 24, 2026
 
+**The flexible-tail Godot entry is ready for live swimming and manual turns.**
+Project Manager's **Tadpole Pond | Flexible Tail** opens the saved
+motor from rest with Play, left/right 15° requests and zoom. The
+native Godot check completed a left turn and a right turn on one
+continuous body, returning to swimming at 9.49 and 9.61 mm/s with
+zero measured tilt and depth error. All 70 GUI checks passed across
+four viewport sizes. The native build now includes an explicit stage
+target for the addon DLL.
+[Build and launch instructions](../tools/pond-flexible-tail-live/README.md)
+
 **The bank-practice chooser turned earlier on all 12 held-out starts.**
 Four CUDA PPO updates took 14.098 seconds, with the fitted motor and
 yaw offset frozen. All 12 fixed cases lasted longer, with a median of
