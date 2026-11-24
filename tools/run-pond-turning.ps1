@@ -152,7 +152,7 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
     Assert-Condition ($ExpectedHash -match '^[a-fA-F0-9]{64}$' -and (File-Hash $PlanPath) -eq $ExpectedHash.ToLowerInvariant()) 'Exact reviewed protocol SHA256 required'
     $script:Plan=Read-Json $PlanPath;$plan=$script:Plan
     Assert-Condition ($plan.status -eq 'SEALED_BEFORE_CANDIDATE_INITIALIZATION') 'Protocol is not sealed for initialization'
-    Assert-Condition ($plan.protocol_id -in @('pond-motor-ppo-v2-2026-11-23','pond-motor-ppo-v3-curriculum-2026-11-23','pond-motor-ppo-v3-course-2026-11-23')) 'Unsupported study ID'
+    Assert-Condition ($plan.protocol_id -in @('pond-motor-ppo-v2-2026-11-23','pond-motor-ppo-v3-curriculum-2026-11-23','pond-motor-ppo-v3-course-2026-11-23','pond-motor-ppo-v4-repeated-2026-11-24')) 'Unsupported study ID'
     Assert-Condition ($plan.max_updates -le 32 -and $Target -le $plan.max_updates -and $plan.worlds -eq 512 -and $plan.rollout_controls -eq 64) 'Requested exercise exceeds sealed plan/settings'
     foreach($pair in @(@('trainer_executable_path_absolute','trainer_executable_sha256'),@('evaluator_executable_path_absolute','evaluator_executable_sha256'),@('parent_policy_path_absolute','parent_policy_sha256'),@('cpu_gate_path_absolute','cpu_gate_sha256'),@('cuda_gate_path_absolute','cuda_gate_sha256'),@('long_reference_path_absolute','long_reference_sha256'),@('human_protocol_path_absolute','human_protocol_sha256'))){
         $path=[string](Field $plan $pair[0]);Assert-Condition ([IO.Path]::IsPathRooted($path) -and (File-Hash $path) -eq [string](Field $plan $pair[1])) "Sealed input changed: $path"
@@ -162,7 +162,7 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
     if($null -ne $property){$modeArguments=@($property.Value)}
     Assert-Condition ($modeArguments.Count%2 -eq 0) 'Opt-in arguments must be flag/program pairs'
     for($i=0;$i -lt $modeArguments.Count;$i+=2){
-        Assert-Condition ($modeArguments[$i] -in @('--turn-curriculum','--turn-reward','--reward-program','--turn-reward-program','--course-reward') -and $modeArguments[$i+1] -match '^[a-z0-9-]+$') 'Opt-in arguments cannot replace core flags or budgets'
+        Assert-Condition ($modeArguments[$i] -in @('--turn-curriculum','--turn-reward','--reward-program','--turn-reward-program','--course-reward','--turn-schedule') -and $modeArguments[$i+1] -match '^[a-z0-9-]+$') 'Opt-in arguments cannot replace core flags or budgets'
     }
     if($plan.protocol_id -ne 'pond-motor-ppo-v2-2026-11-23'){Assert-Condition ($modeArguments.Count -gt 0) 'Future study requires its exact sealed native opt-in arguments'}
     $root=[IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($plan.ledger_path_absolute))
@@ -269,7 +269,7 @@ function Test-Runner {
     $tests=0
     foreach($scenario in @('success','short-finish','baseline-failure','bad-receipt','bad-inner-seal','retention-failure','partial-training-failure')) {
         $root=Join-Path $temporary $scenario;New-Item -ItemType Directory -Path $root | Out-Null
-        $plan=[ordered]@{status='SEALED_BEFORE_CANDIDATE_INITIALIZATION';protocol_id='pond-motor-ppo-v3-course-2026-11-23';max_updates=32;worlds=512;rollout_controls=64;source_identity_fnv1a64='101';retention_evaluator_source_fnv1a64='202';qualified_physics_source_sha256=('a'*64);ledger_path_absolute=(Join-Path $root 'training-ledger.bin');evaluation_ledger_path_absolute=(Join-Path $root 'evaluation-ledger.bin');trainer_opt_in_arguments=@('--turn-reward','course-error-v1')}
+        $plan=[ordered]@{status='SEALED_BEFORE_CANDIDATE_INITIALIZATION';protocol_id='pond-motor-ppo-v4-repeated-2026-11-24';max_updates=32;worlds=512;rollout_controls=64;source_identity_fnv1a64='101';retention_evaluator_source_fnv1a64='202';qualified_physics_source_sha256=('a'*64);ledger_path_absolute=(Join-Path $root 'training-ledger.bin');evaluation_ledger_path_absolute=(Join-Path $root 'evaluation-ledger.bin');trainer_opt_in_arguments=@('--turn-schedule','repeated-headings-v1')}
         foreach($entry in @(@('trainer_executable','trainer'),@('evaluator_executable','evaluator'),@('parent_policy','parent'),@('cpu_gate','cpu'),@('cuda_gate','cuda'),@('long_reference','reference'),@('human_protocol','human'))){
             $path=Join-Path $root ($entry[1]+'.fixture');if($entry[0] -eq 'parent_policy'){Write-SyntheticCheckpoint $path ([byte[]]@(1,2,3))}else{[IO.File]::WriteAllText($path,'SYNTHETIC ONLY')}
             $plan[$entry[0]+'_path_absolute']=$path;$plan[$entry[0]+'_sha256']=File-Hash $path
@@ -295,8 +295,17 @@ if($SelfTest){
     if(-not [string]::IsNullOrWhiteSpace($Protocol)) {
         Assert-Condition ((File-Hash $Protocol) -eq $ProtocolSha256) 'Actual native fixture protocol mismatch'
         $script:Plan=Read-Json $Protocol;$script:ParentChecksum=(Read-Checkpoint $script:Plan.parent_policy_path_absolute).Checksum;$script:ProtocolChecksum=Fnv64 ([IO.File]::ReadAllBytes($Protocol))
-        $proof=Check-BaselineRecovery ([IO.Path]::GetDirectoryName($script:Plan.ledger_path_absolute)) $ProtocolSha256
-        $result['actual_native_receipt_and_zero_training_ledgers_verified']=$true;$result['actual_fixture_proof']=$proof
+        $root=[IO.Path]::GetDirectoryName($script:Plan.ledger_path_absolute)
+        Check-Retention (Read-Json (Join-Path $root 'baseline0/result.json')) 0 (Join-Path $root 'init/candidate-0.bin') (Join-Path $root 'baseline0/baseline-receipt.bin')
+        $result['actual_native_schema3_baseline_receipt_verified']=$true
+        $ledger=Read-Checkpoint $script:Plan.ledger_path_absolute -VerifyPayload
+        if([BitConverter]::ToUInt32($ledger.Payload,24) -eq 2) {
+            $result['actual_fixture_proof']=Check-BaselineRecovery $root $ProtocolSha256
+        } else {
+            $rejected=$false;try{Check-BaselineRecovery $root $ProtocolSha256|Out-Null}catch{$rejected=$true}
+            Assert-Condition $rejected 'Completed/active/trained ledger incorrectly allowed baseline recovery'
+            $result['trained_ledger_baseline_recovery_correctly_rejected']=$true
+        }
     }
     $result | ConvertTo-Json -Depth 5;return
 }

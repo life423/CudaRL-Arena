@@ -1,0 +1,19 @@
+# Repeated heading requests in a continuous swimming episode
+
+Study ID `pond-motor-ppo-v4-repeated-2026-11-24`. Run one separate food-free candidate against the completed course-reward exercise. Test whether giving a moving swimmer more opportunities to start and finish turns improves its performance on the existing 16 independent turn trials.
+
+## One learning change
+
+Only the timing of training requests changes. Start from saved motor 336 and the same holding gain, seed, fixtures, mode mix, course-sensitive reward and 8 mm/s target as exercise 3. Keep 60-second training episodes. The first turn in a Turn episode still starts after two seconds and uses the original signed-angle draw. Later requests draw from the same uniform set of ±5°, ±15°, ±30°, ±60° and ±90° using a separate deterministic request counter. Straight swimming and rest use the original program.
+
+Each later request starts from the recent measured horizontal center-of-mass course and preserves the original target depth. A request stays active while the network drives the physical joints. Changing the heading preserves the body, velocities, joint positions and rates, servo targets, filters, water and accumulated physical state.
+
+Count one training completion per issued request. Use a full four-second post-request window of measured horizontal COM velocity. Its mean course must be within 5° of the request with at least 6 mm/s mean projected speed. Depth error must stay within 1 mm and tilt within 10° throughout the window. Require 20 consecutive qualifying control samples (one second at 20 Hz) before considering the turn stable. After each fourth completion, hold the achieved course for four additional seconds. For an unfinished turn, allow 20 simulated seconds before scheduling a new request. Previously observed −15° completions took up to 16 seconds. Defer a replacement while the measured course speed is below 3 mm/s. Count timed-out, interrupted and pending requests separately from completed ones. Episode termination and genuine invalid physics keep their original meanings.
+
+## Run and evaluation
+
+Use the native C++/CUDA batched trainer with eight threads per world-step block, 512 worlds and 64 controls per world per update. Retain 10 physical substeps per control, four optimizer passes, minibatches of 4,096 and all exercise 3 optimizer settings. Use the same original checkpoint and qualified CPU/CUDA shoreline results. Bind the binaries, inputs, scheduler state and protocol before the first optimizer call. Checkpoint resumption must preserve the live request and the stabilization history.
+
+Run at most 32 updates (1,048,576 transitions, 10,485,760 substeps and 1,024 actor plus 1,024 critic Adam calls). Use the local stage runner. At updates 0, 8, 16, 24 and 32, measure all 16 original turns and require all 28 historical long-swim windows, four short swims and 14 rests to pass. Keep the 60-second drift tests, 5° course / 6 mm/s projected speed / depth / tilt thresholds and existing hard-failure rules. Incomplete turning remains a learning measurement. Stop on failed retention, invalid physics, nonfinite data, KL above 0.05 or exhausted budget. Existing aggregate caps remain 1,200 training seconds / 4 GiB and 184,000 evaluation controls / 900 seconds / 1 GiB.
+
+Compare actual starts, stabilized completions, timeouts, unfinished requests and their measured rates per minute of native training wall time. Also report total elapsed time and transitions. Apply the same training completion definition to recorded exercise 3 motion wherever available. The independent evaluation measures turn passes, turn completion times and whole-body course error at the scheduled checkpoints. A higher practice count alone does not qualify the motor. Preserve the original actor, previous checkpoint, GPU receipts and failed evidence. Godot must identify which motor runs live and which result is a frozen assessment.

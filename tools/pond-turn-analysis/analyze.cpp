@@ -299,7 +299,8 @@ Stage stage(const fs::path &root, const std::string &name) {
     s.result_text = text(directory / "result.json");
     const auto protocol_id = scalar(s.result_text, "protocol_id");
     require((protocol_id == "pond-motor-ppo-v2-2026-11-23" ||
-             protocol_id == "pond-motor-ppo-v3-course-2026-11-23") &&
+             protocol_id == "pond-motor-ppo-v3-course-2026-11-23" ||
+             protocol_id == "pond-motor-ppo-v4-repeated-2026-11-24") &&
                 scalar(s.result_text, "preflight_only") == "false",
             "Wrong recorded assessment protocol");
     s.update = std::stoi(scalar(s.result_text, "update"));
