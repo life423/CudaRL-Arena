@@ -40,7 +40,7 @@ foreach(relative IN ITEMS
         src/nn/motor/pond_motor_observation.h src/nn/motor/saved_motor_contract.cpp
         src/nn/motor/saved_motor_contract.h src/nn/motor/movement_model.h
         src/nn/motor/joint_motor.h src/nn/motor/state.h src/physics/dynamics.h src/physics/contact.h
-        src/simulation/world.h src/rl/pond_ppo_contract.h src/rl/pond_ppo_task.h
+        src/simulation/world.h src/rl/pond_ppo_contract.h src/rl/pond_ppo_task.h src/rl/pond_ppo_schedule.h
         src/rl/gaussian_math.h src/rl/ar_gaussian_math.h src/rl/gaussian_kernels.cu
         src/rl/gaussian_kernels.h src/rl/ppo_math.h src/rl/ppo_kernels.h src/rl/learned_amplitude_math.h
         src/rl/ppo_kernels.cu src/nn/mlp_gpu.cu src/nn/mlp_gpu.h src/nn/mlp_spec.h

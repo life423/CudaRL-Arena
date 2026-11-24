@@ -2,6 +2,7 @@
 // No work runs at build time. The original package is read-only.
 #include "cuda/pond_math_profile.h"
 #include "rl/pond_ppo_task.h"
+#include "rl/pond_ppo_schedule.h"
 #include "rl/pond_ppo_contract.h"
 #include "motor/saved_motor_contract.h"
 #include "rl/learned_amplitude_math.h"
@@ -33,6 +34,7 @@
 namespace fs=std::filesystem;
 namespace pp=cudarl::rl::pond_ppo;
 namespace pt=cudarl::rl::pond_ppo_task;
+namespace ps=cudarl::rl::pond_ppo_schedule;
 namespace pr=cudarl::pond_runtime;
 namespace po=cudarl::pond_motor_observation;
 namespace cp=cudarl::checkpoint;
@@ -55,8 +57,9 @@ struct Options {
     uint32_t to_update=8,study_program=pt::curriculum_off;
 };
 struct Package {std::vector<float> weights;float gain=0;uint64_t checksum=0;};
-const char* study_id(uint32_t program){return program==pt::course_direction_v1?pp::course_study_protocol_id:(program==pt::paired_gentle_moderate_v1?pp::curriculum_study_protocol_id:pp::default_study_protocol_id);}
-const char* program_name(uint32_t program){return program==pt::course_direction_v1?"course-direction-v1":(program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off");}
+const char* study_id(uint32_t program){return program==pt::repeated_headings_v1?pp::repeated_study_protocol_id:(program==pt::course_direction_v1?pp::course_study_protocol_id:(program==pt::paired_gentle_moderate_v1?pp::curriculum_study_protocol_id:pp::default_study_protocol_id));}
+const char* program_name(uint32_t program){return program==pt::repeated_headings_v1?"repeated-headings-v1":(program==pt::course_direction_v1?"course-direction-v1":(program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off"));}
+uint32_t task_stride(uint32_t program){return static_cast<uint32_t>(program==pt::repeated_headings_v1?sizeof(ps::SavedTask):sizeof(pt::Task));}
 void require(bool yes,const std::string& reason){if(!yes)throw std::runtime_error(reason);}
 std::string json_escape(const std::string& value) {
     std::string result;
@@ -88,6 +91,7 @@ Options options(int argc,char** argv) {
         else if(arg=="--retention-receipt")result.retention=next();else if(arg=="--evaluator-source")result.evaluator_source=std::stoull(next());
         else if(arg=="--turn-curriculum"){require(result.study_program==0,"Study programs are mutually exclusive");require(next()=="paired-gentle-moderate-v1","Unknown training-only curriculum");result.study_program=pt::paired_gentle_moderate_v1;}
         else if(arg=="--turn-reward"){require(result.study_program==0,"Study programs are mutually exclusive");require(next()=="course-direction-v1","Unknown turn reward program");result.study_program=pt::course_direction_v1;}
+        else if(arg=="--turn-schedule"){require(result.study_program==0,"Study programs are mutually exclusive");require(next()=="repeated-headings-v1","Unknown turn schedule");result.study_program=pt::repeated_headings_v1;}
         else if(arg=="--to-update"){const auto value=std::stoull(next());require(value<=32,"Update budget exceeds32");result.to_update=static_cast<uint32_t>(value);}
         else throw std::runtime_error("Unknown argument: "+arg);}
     require(int(result.run)+int(result.preflight)+int(result.describe)+int(result.initialize_only)==1,"Use exactly --describe, --preflight, --initialize-only or --run");
@@ -101,9 +105,12 @@ struct TransitionTrace {
     double minimum_gap=0;
     uint32_t episode=0,control=0,kind=0,occupied_cells=0,occupied_grid[8]{};
     float bank_near_seconds=0,contact_seconds=0,postwarmup_stall_seconds=0;
+    float heading_x=0,heading_z=0,requested_angle=0;
+    uint32_t request_serial=0,onset_control=0,request_age=0,qualifying_streak=0,events=0,active=0,succeeded=0,long_hold=0;
+    uint64_t onsets=0,successes=0,timeouts=0,interrupted=0,early_terminal=0,long_holds=0;
 };
 struct Buffer {
-    device_ptr<pr::World> worlds{N};device_ptr<pt::Task> tasks{N};
+    device_ptr<pr::World> worlds{N};device_ptr<pt::Task> tasks{N};device_ptr<ps::State> schedules{N};
     device_ptr<float> observation{Rows*D},latent{Rows*A},logp{Rows},value{Rows},reward{Rows},done{Rows},truncated{Rows};
     device_ptr<float> final_value{Rows},final_observation{N*D},last_observation{N*D},last_value{N};
     device_ptr<float> advantages{Rows},returns{Rows},adv_stats{2},log_std{A};
@@ -114,16 +121,22 @@ struct Buffer {
     device_ptr<float> dmean{MB*A},dlog_std{MB*A},dvalue{MB},row_stats{MB*rl::kGaussianStats},stats{rl::kGaussianStats};
 };
 __device__ void fail(int* fault,int env){atomicMin(fault,env);}
-__global__ void initialize_kernel(pr::World* worlds,pt::Task* tasks,uint32_t seed,uint32_t curriculum,int* fault) {
+__global__ void initialize_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,uint32_t seed,uint32_t curriculum,int* fault) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
+    schedules[i]=ps::State{};
     if(!pt::initialize(worlds[i],tasks[i],static_cast<uint32_t>(i),0,seed,curriculum))fail(fault,i);
 }
-__global__ void observe_kernel(pr::World* worlds,pt::Task* tasks,float* output,int* fault) {
+__global__ void observe_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,float* output,int* fault,uint32_t program,uint32_t seed,bool collecting) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
-    if(!pr::valid_state(worlds[i])||!pt::observe(tasks[i],worlds[i],output+i*D))fail(fault,i);
+    if(program==pt::repeated_headings_v1){
+        if(collecting){ps::before(schedules[i],tasks[i],static_cast<uint32_t>(i),seed);
+            if(!pr::valid_state(worlds[i])||!pt::observe(tasks[i],worlds[i],output+i*D,false))fail(fault,i);}
+        else {auto task=tasks[i];auto schedule=schedules[i];ps::before(schedule,task,static_cast<uint32_t>(i),seed);
+            if(!pr::valid_state(worlds[i])||!pt::observe(task,worlds[i],output+i*D,false))fail(fault,i);}
+    }else if(!pr::valid_state(worlds[i])||!pt::observe(tasks[i],worlds[i],output+i*D))fail(fault,i);
 }
-__global__ void step_kernel(pr::World* worlds,pt::Task* tasks,const float* latent,float gain,float* reward,
-        float* done,float* truncated,float* final_observation,uint64_t* attempted,uint64_t* substeps,int* reason,TransitionTrace* trace,int* fault,uint32_t program) {
+__global__ void step_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,const float* latent,float gain,float* reward,
+        float* done,float* truncated,float* final_observation,uint64_t* attempted,uint64_t* substeps,int* reason,TransitionTrace* trace,int* fault,uint32_t program,uint32_t seed) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
     float command[A]{};const float amplitude=tasks[i].request.holding?gain:1.f;
     for(int j=0;j<A;++j){const float z=latent[i*A+j];if(!p::finite_number(z)){reason[i]=20;fail(fault,i);return;}command[j]=tanhf(amplitude*z);}
@@ -139,13 +152,23 @@ __global__ void step_kernel(pr::World* worlds,pt::Task* tasks,const float* laten
     row.kind=static_cast<uint32_t>(tasks[i].kind);row.occupied_cells=tasks[i].occupied_cells;
     for(int word=0;word<8;++word)row.occupied_grid[word]=tasks[i].occupied_grid[word];
     row.bank_near_seconds=tasks[i].bank_near_seconds;row.contact_seconds=tasks[i].contact_seconds;row.postwarmup_stall_seconds=tasks[i].postwarmup_stall_seconds;
+    if(program==pt::repeated_headings_v1){auto& schedule=schedules[i];ps::after(schedule,tasks[i],{row.vx,row.vz,row.depth,row.tilt},transition.terminal,transition.truncated);
+        row.heading_x=tasks[i].request.request.heading.x;row.heading_z=tasks[i].request.request.heading.z;row.requested_angle=schedule.angle;
+        row.request_serial=schedule.serial;row.onset_control=schedule.onset_control;row.request_age=schedule.age;row.qualifying_streak=schedule.streak;row.events=schedule.events;row.active=schedule.active;row.succeeded=schedule.succeeded;row.long_hold=schedule.long_hold;
+        row.onsets=schedule.onsets;row.successes=schedule.successes;row.timeouts=schedule.timeouts;row.interrupted=schedule.interrupted;row.early_terminal=schedule.early_terminal;row.long_holds=schedule.long_holds;}
     trace[i]=row;
     done[i]=transition.terminal?1.f:0.f;truncated[i]=transition.truncated?1.f:0.f;reason[i]=transition.reason;
-    if(!p::finite_number(reward[i])||!pt::observe(tasks[i],worlds[i],final_observation+i*D))fail(fault,i);
+    bool observed=false;
+    if(program==pt::repeated_headings_v1){auto task=tasks[i];auto schedule=schedules[i];
+        if(!transition.terminal)ps::before(schedule,task,static_cast<uint32_t>(i),seed);
+        observed=pt::observe(task,worlds[i],final_observation+i*D,false);
+    }else observed=pt::observe(tasks[i],worlds[i],final_observation+i*D);
+    if(!p::finite_number(reward[i])||!observed)fail(fault,i);
 }
-__global__ void reset_terminal_kernel(pr::World* worlds,pt::Task* tasks,const float* done,uint32_t seed,uint32_t curriculum,int* fault) {
+__global__ void reset_terminal_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,const float* done,uint32_t seed,uint32_t curriculum,int* fault) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N||done[i]==0)return;
     const auto episode=tasks[i].episode_index+1;
+    if(curriculum==pt::repeated_headings_v1)ps::reset_episode(schedules[i]);
     if(!pt::initialize(worlds[i],tasks[i],static_cast<uint32_t>(i),episode,seed,curriculum))fail(fault,i);
 }
 __global__ void audit_kernel(const float* obs,const float* latent,const float* logp,const float* value,const float* reward,
@@ -193,6 +216,19 @@ template<class Type> std::vector<uint8_t> raw_bytes(const std::vector<Type>& val
 template<class Type> void restore(device_ptr<Type>& target,const std::vector<uint8_t>& bytes) {
     require(bytes.size()==target.size()*sizeof(Type),"Carried-state shape mismatch");
     CUDA_CHECK_THROW(cudaMemcpy(target.get(),bytes.data(),bytes.size(),cudaMemcpyHostToDevice));
+}
+std::vector<uint8_t> saved_tasks(Buffer& b,uint32_t program,cudaStream_t stream) {
+    const auto tasks=download(b.tasks,N,stream);if(program!=pt::repeated_headings_v1)return raw_bytes(tasks);
+    const auto schedules=download(b.schedules,N,stream);std::vector<ps::SavedTask> saved(N);
+    for(int i=0;i<N;++i){saved[i].task=tasks[i];saved[i].schedule=schedules[i];}return raw_bytes(saved);
+}
+void restore_tasks(Buffer& b,const std::vector<uint8_t>& bytes,uint32_t program) {
+    if(program!=pt::repeated_headings_v1){restore(b.tasks,bytes);return;}
+    require(bytes.size()==N*sizeof(ps::SavedTask),"Saved repeated-request context stride mismatch");
+    std::vector<ps::SavedTask> saved(N);std::memcpy(saved.data(),bytes.data(),bytes.size());
+    std::vector<pt::Task> tasks(N);std::vector<ps::State> schedules(N);
+    for(int i=0;i<N;++i){tasks[i]=saved[i].task;schedules[i]=saved[i].schedule;}
+    restore(b.tasks,raw_bytes(tasks));restore(b.schedules,raw_bytes(schedules));
 }
 void clear_fault(Buffer& b,cudaStream_t stream){const int good=INT_MAX;CUDA_CHECK_THROW(cudaMemcpyAsync(b.fault.get(),&good,sizeof(good),cudaMemcpyHostToDevice,stream));CUDA_CHECK_THROW(cudaStreamSynchronize(stream));}
 int fault(Buffer& b,cudaStream_t stream){return download(b.fault,1,stream)[0];}
@@ -268,7 +304,7 @@ HostBatch batch(Buffer& b,cudaStream_t stream,int steps) {
 std::vector<uint8_t> batch_payload(const HostBatch& h,uint32_t update,int steps,uint64_t serial,
         const std::vector<uint8_t>& initial_world,const std::vector<uint8_t>& initial_task,
         const std::vector<float>& actor,const std::vector<float>& critic) {
-    cp::Writer out;out.value(uint32_t{0x31425450});out.value(uint32_t{1});out.value(update);out.value(steps);out.value(serial);
+    cp::Writer out;out.value(uint32_t{0x31425450});out.value(uint32_t{2});out.value(update);out.value(steps);out.value(serial);
     out.value(source_identity());out.array(initial_world);out.array(initial_task);out.array(actor);out.array(critic);
     for(const auto* values:{&h.observation,&h.latent,&h.logp,&h.value,&h.reward,&h.done,&h.truncated,&h.final_value,&h.last_value})out.array(*values);
     out.array(h.attempted);out.array(h.substeps);out.array(h.reason);out.value(static_cast<uint32_t>(sizeof(TransitionTrace)));out.array(raw_bytes(h.trace));return out.data;
@@ -276,17 +312,17 @@ std::vector<uint8_t> batch_payload(const HostBatch& h,uint32_t update,int steps,
 nn::MlpSpec actor_spec(){return {{D,32,32,A},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}};}
 nn::MlpSpec critic_spec(){return {{D,32,32,1},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}};}
 void save_failure(Resources& resources,const fs::path& out,Buffer& b,nn::GpuMlp& actor,nn::GpuMlp& critic,
-        nn::GpuAdam& actor_adam,nn::GpuAdam& critic_adam,const pp::Counters& counters,cudaStream_t stream) {
+        nn::GpuAdam& actor_adam,nn::GpuAdam& critic_adam,const pp::Counters& counters,cudaStream_t stream,uint32_t program) {
     cp::Writer data;data.value(uint32_t{0x31465050});data.value(counters);data.array(actor.get_params());data.array(critic.get_params());
     cp::Writer a,c;actor_adam.save(a);critic_adam.save(c);data.array(a.data);data.array(c.data);
-    data.array(raw_bytes(download(b.worlds,N,stream)));data.array(raw_bytes(download(b.tasks,N,stream)));
+    data.array(raw_bytes(download(b.worlds,N,stream)));data.array(saved_tasks(b,program,stream));
     resources.save(out/"failed-state.bin",data.data);
 }
 pp::CandidateState checkpoint(Buffer& b,nn::GpuMlp& actor,nn::GpuMlp& critic,nn::GpuAdam& actor_adam,nn::GpuAdam& critic_adam,
-        pp::CandidateState state,Resources& resources,cudaStream_t stream) {
+        pp::CandidateState state,Resources& resources,cudaStream_t stream,uint32_t program) {
     state.actor=actor.get_params();state.critic=critic.get_params();state.log_std=download(b.log_std,A,stream);
     cp::Writer a,c;actor_adam.save(a);critic_adam.save(c);state.actor_adam=std::move(a.data);state.critic_adam=std::move(c.data);
-    state.world_state=raw_bytes(download(b.worlds,N,stream));state.task_state=raw_bytes(download(b.tasks,N,stream));
+    state.world_state=raw_bytes(download(b.worlds,N,stream));state.task_state=saved_tasks(b,program,stream);
     // Conservatively reserve five seconds for this checkpoint's write and final
     // report. The reserve is carried once at the next process boundary.
     state.wall_seconds_used=resources.wall()+5;state.evidence_bytes_used=resources.bytes;return state;
@@ -296,9 +332,9 @@ void run(const Options& o,const Package& package) {
     require(o.initialize_only==o.resume.empty(),"Initialize candidate0 once, then resume its exact carried state after baseline assessment");
     const auto protocol_checksum=cp::checksum(whole_file(o.protocol));pp::CandidateState state;uint64_t last_checkpoint=0;
     state.parent_package_checksum=package.checksum;state.protocol_checksum=protocol_checksum;state.source_identity_checksum=source_identity();
-    state.seed=default_seed;state.world_stride=static_cast<uint32_t>(sizeof(pr::World));state.task_stride=static_cast<uint32_t>(sizeof(pt::Task));state.frozen_gain=package.gain;
+    state.seed=default_seed;state.world_stride=static_cast<uint32_t>(sizeof(pr::World));state.task_stride=task_stride(o.study_program);state.frozen_gain=package.gain;
     if(!o.resume.empty()) {
-        const auto saved=cp::read(o.resume.string());state=pp::read_candidate(saved,package.checksum,protocol_checksum,source_identity(),static_cast<uint32_t>(sizeof(pr::World)),static_cast<uint32_t>(sizeof(pt::Task)));
+        const auto saved=cp::read(o.resume.string());state=pp::read_candidate(saved,package.checksum,protocol_checksum,source_identity(),static_cast<uint32_t>(sizeof(pr::World)),task_stride(o.study_program));
         last_checkpoint=cp::checksum(saved);require(state.seed==default_seed,"Saved sampler seed differs from this study");
         require(!o.retention.empty()&&o.evaluator_source!=0,"Specific candidate retention receipt required before continuation");
         const auto receipt=pp::read_retention_receipt(cp::read(o.retention.string()),cp::checksum(saved),package.checksum,protocol_checksum,o.evaluator_source,state.counters.completed_updates==0);
@@ -317,26 +353,26 @@ void run(const Options& o,const Package& package) {
     nn::GpuAdam actor_adam(pp::actor_weights,config),critic_adam(pp::critic_weights,config);
     std::vector<float> logs(A,pp::fixed_log_std());b.log_std.copy_from_host(logs.data(),logs.size());
     if(o.resume.empty()) {
-        actor.set_params(package.weights);initialize_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),state.seed,o.study_program,b.fault.get());check_cuda();
-        if(fault(b,stream.value)!=INT_MAX){save_failure(resources,o.out,b,actor,critic,actor_adam,critic_adam,state.counters,stream.value);
+        actor.set_params(package.weights);initialize_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),state.seed,o.study_program,b.fault.get());check_cuda();
+        if(fault(b,stream.value)!=INT_MAX){save_failure(resources,o.out,b,actor,critic,actor_adam,critic_adam,state.counters,stream.value,o.study_program);
             std::ofstream failed(o.out/"result.json");resources.text(failed,"{\"passed\":false,\"reason\":\"initial_GPU_certificate_failed\",\"attempted_controls\":0,\"attempted_substeps\":0,\"optimizer_calls\":0}\n");
             throw std::runtime_error("Initial GPU world certificate failed before collection");}
-        state=checkpoint(b,actor,critic,actor_adam,critic_adam,state,resources,stream.value);
+        state=checkpoint(b,actor,critic,actor_adam,critic_adam,state,resources,stream.value,o.study_program);
         auto initial=pp::write_candidate(state);state.evidence_bytes_used=resources.bytes+initial.size()+24;initial=pp::write_candidate(state);resources.save(o.out/"candidate-0.bin",initial);
         std::ofstream initialized(o.out/"result.json");resources.text(initialized,"{\"initialized\":true,\"baseline_assessment_required\":true,\"physical_controls\":0,\"physical_substeps\":0,\"optimizer_calls\":0}\n");
         ledger.finish(2,cp::checksum(initial),true,0,0);
         return;
     } else {
         actor.set_params(state.actor);critic.set_params(state.critic);cp::Reader a{state.actor_adam},c{state.critic_adam};actor_adam.load(a);critic_adam.load(c);a.finish();c.finish();
-        restore(b.worlds,state.world_state);restore(b.tasks,state.task_state);
+        restore(b.worlds,state.world_state);restore_tasks(b,state.task_state,o.study_program);
     }
-    const int physical_threads=o.study_program==pt::course_direction_v1?8:32;
+    const int physical_threads=o.study_program>=pt::course_direction_v1?8:32;
     bool success=false,accounting_known=true;std::string reason="chunk_complete_retention_required";ActiveBatch active;
     uint64_t control_upper=state.counters.attempted_controls,substep_upper=state.counters.attempted_substeps;
     try {
         for(uint32_t update=static_cast<uint32_t>(state.counters.completed_updates)+1;update<=o.to_update;++update) {
             resources.guard(32ull*1024*1024);require(state.counters.attempted_controls+Rows<=pp::total_controls,"Physical training budget exhausted");clear_fault(b,stream.value);
-            const auto start_world=raw_bytes(download(b.worlds,N,stream.value)),start_task=raw_bytes(download(b.tasks,N,stream.value));
+            const auto start_world=raw_bytes(download(b.worlds,N,stream.value)),start_task=saved_tasks(b,o.study_program,stream.value);
             const auto start_actor=actor.get_params(),start_critic=critic.get_params();const auto first_serial=state.sampler_decision_serial;
             active={};active.update=update;active.serial=first_serial;active.before=state.counters;active.world=start_world;active.task=start_task;active.actor=start_actor;active.critic=start_critic;
             for(auto* values:{&b.observation,&b.latent,&b.logp,&b.value,&b.reward,&b.done,&b.truncated,&b.final_value,&b.last_value})CUDA_CHECK_THROW(cudaMemsetAsync(values->get(),0,values->size_bytes(),stream.value));
@@ -345,24 +381,24 @@ void run(const Options& o,const Package& package) {
             Timer collection,physics;collection.start(stream.value);float physics_ms=0;int steps=0;bool collection_failed=false;
             for(int t=0;t<T;++t) {
                 resources.work_guard();float* observation=b.observation.get()+t*N*D;
-                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),observation,b.fault.get());check_cuda();
+                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),observation,b.fault.get(),o.study_program,state.seed,true);check_cuda();
                 if(fault(b,stream.value)!=INT_MAX){collection_failed=true;steps=t;break;}
                 actor.forward(observation,N,stream.value);critic.forward(observation,N,stream.value);
                 CUDA_CHECK_THROW(cudaMemcpyAsync(b.value.get()+t*N,critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,stream.value));
                 rl::sample_gaussian(actor.output(),b.log_std.get(),N,A,state.seed,static_cast<uint32_t>(state.sampler_decision_serial++),b.latent.get()+t*N*A,b.logp.get()+t*N,stream.value);
                 physics.start(stream.value);
                 active.steps=t+1;ledger.physical_started=true;
-                step_kernel<<<(N+physical_threads-1)/physical_threads,physical_threads,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.latent.get()+t*N*A,state.frozen_gain,
-                    b.reward.get()+t*N,b.done.get()+t*N,b.truncated.get()+t*N,b.final_observation.get(),b.attempted.get()+t*N,b.substeps.get()+t*N,b.reason.get()+t*N,b.trace.get()+t*N,b.fault.get(),o.study_program);check_cuda();
+                step_kernel<<<(N+physical_threads-1)/physical_threads,physical_threads,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.latent.get()+t*N*A,state.frozen_gain,
+                    b.reward.get()+t*N,b.done.get()+t*N,b.truncated.get()+t*N,b.final_observation.get(),b.attempted.get()+t*N,b.substeps.get()+t*N,b.reason.get()+t*N,b.trace.get()+t*N,b.fault.get(),o.study_program,state.seed);check_cuda();
                 physics_ms+=physics.stop(stream.value);steps=t+1;
                 if(fault(b,stream.value)!=INT_MAX){collection_failed=true;break;}
                 critic.forward(b.final_observation.get(),N,stream.value);
                 CUDA_CHECK_THROW(cudaMemcpyAsync(b.final_value.get()+t*N,critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,stream.value));
-                reset_terminal_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.done.get()+t*N,state.seed,o.study_program,b.fault.get());check_cuda();
+                reset_terminal_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.done.get()+t*N,state.seed,o.study_program,b.fault.get());check_cuda();
                 if(fault(b,stream.value)!=INT_MAX){collection_failed=true;break;}
             }
             if(!collection_failed) {
-                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.last_observation.get(),b.fault.get());check_cuda();
+                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.last_observation.get(),b.fault.get(),o.study_program,state.seed,false);check_cuda();
                 critic.forward(b.last_observation.get(),N,stream.value);CUDA_CHECK_THROW(cudaMemcpyAsync(b.last_value.get(),critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,stream.value));
                 audit_kernel<<<(Rows+255)/256,256,0,stream.value>>>(b.observation.get(),b.latent.get(),b.logp.get(),b.value.get(),b.reward.get(),b.done.get(),b.truncated.get(),b.final_value.get(),b.fault.get());check_cuda();
                 finite_kernel<<<(N+255)/256,256,0,stream.value>>>(b.last_value.get(),N,b.fault.get());check_cuda();
@@ -419,7 +455,7 @@ void run(const Options& o,const Package& package) {
             require(fault(b,stream.value)==INT_MAX,"Nonfinite final rollout KL");rl::mean_std(b.kl.get(),Rows,b.adv_stats.get(),stream.value);
             last_kl=download(b.adv_stats,2,stream.value)[0];require(std::isfinite(last_kl)&&last_kl<=maximum_approx_kl,"Final whole-rollout approximate KL stop");
             const float optimization_ms=optimize.stop(stream.value);state.counters.completed_updates=update;
-            state=checkpoint(b,actor,critic,actor_adam,critic_adam,state,resources,stream.value);
+            state=checkpoint(b,actor,critic,actor_adam,critic_adam,state,resources,stream.value,o.study_program);
             auto payload=pp::write_candidate(state);state.evidence_bytes_used=resources.bytes+payload.size()+24;payload=pp::write_candidate(state);
             resources.save(o.out/("candidate-"+std::to_string(update)+".bin"),payload);
             last_checkpoint=cp::checksum(payload);active.active=false;
@@ -437,7 +473,7 @@ void run(const Options& o,const Package& package) {
             control_upper=active.before.attempted_controls+static_cast<uint64_t>(active.steps)*N;
             substep_upper=active.before.attempted_substeps+static_cast<uint64_t>(active.steps)*N*10;
         }
-        try{save_failure(resources,o.out,b,actor,critic,actor_adam,critic_adam,state.counters,stream.value);}catch(const std::exception& dump){reason+="; failure dump: "+std::string(dump.what());}
+        try{save_failure(resources,o.out,b,actor,critic,actor_adam,critic_adam,state.counters,stream.value,o.study_program);}catch(const std::exception& dump){reason+="; failure dump: "+std::string(dump.what());}
     }
     if(accounting_known){control_upper=state.counters.attempted_controls;substep_upper=state.counters.attempted_substeps;}
     std::ostringstream result;result<<std::setprecision(17)<<"{\"passed\":"<<(success?"true":"false")<<",\"reason\":\""<<json_escape(reason)
@@ -454,7 +490,7 @@ int main(int argc,char** argv) {
     try {
         const auto o=options(argc,argv);
         if(o.describe){std::cout<<"{\"protocol_id\":\""<<study_id(o.study_program)<<"\",\"source_sha256\":\""<<ph::source_sha256()<<"\",\"source_identity_fnv1a64\":\""<<source_identity()<<"\",\"runtime\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"observation_schema\":"<<pp::observation_schema<<",\"task_version\":"<<pt::version<<",\"retention_receipt_schema\":"<<pp::retention_schema
-            <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program==pt::course_direction_v1?8:32)<<",\"turn_curriculum_program\":\""<<(o.study_program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off")<<"\",\"qualified_physics_source_sha256\":\""<<ph::physics_source_sha256()<<"\",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<sizeof(pt::Task)<<",\"optimizer_calls\":0,\"physical_controls\":0}\n";return 0;}
+            <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program>=pt::course_direction_v1?8:32)<<",\"turn_curriculum_program\":\""<<(o.study_program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off")<<"\",\"qualified_physics_source_sha256\":\""<<ph::physics_source_sha256()<<"\",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<task_stride(o.study_program)<<",\"base_task_stride\":"<<sizeof(pt::Task)<<",\"schedule_stride\":"<<sizeof(ps::State)<<",\"trace_stride\":"<<sizeof(TransitionTrace)<<",\"trace_heading_offset\":"<<offsetof(TransitionTrace,heading_x)<<",\"trace_serial_offset\":"<<offsetof(TransitionTrace,request_serial)<<",\"trace_counters_offset\":"<<offsetof(TransitionTrace,onsets)<<",\"optimizer_calls\":0,\"physical_controls\":0}\n";return 0;}
         const auto package=load_package(o.policy);
         if(o.preflight){if(!o.protocol.empty())prerequisites(o,package.checksum);cudarl::pond_math_profile::validate_host_geometry();uint64_t visits=0;uint32_t observation_checks=0;
             for(uint32_t env=0;env<32;++env){pr::World world;pt::Task task;
@@ -469,7 +505,7 @@ int main(int argc,char** argv) {
             require(!fs::exists(o.out)&&fs::create_directories(o.out),"Unique preflight output required");
             std::ofstream out(o.out/"preflight.json");out<<"{\"passed\":true,\"protocol_id\":\""<<study_id(o.study_program)<<"\",\"parent_package_unchanged\":true,\"source_sha256\":\""<<ph::source_sha256()
                 <<"\",\"actor_weights\":2532,\"critic_weights\":2433,\"prepared_worlds\":32,\"pure_geometry_visits\":"<<visits<<",\"observation_checks\":"<<observation_checks
-                <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program==pt::course_direction_v1?8:32)<<",\"training_control_cap\":1048576,\"Adam_call_cap\":2048,\"physics_prerequisites_checked\":"<<(!o.protocol.empty()?"true":"false")<<",\"physics_controls\":0,\"physics_substeps\":0,\"optimizer_calls\":0,\"CUDA_calls\":0}\n";return 0;}
+                <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program>=pt::course_direction_v1?8:32)<<",\"training_control_cap\":1048576,\"Adam_call_cap\":2048,\"physics_prerequisites_checked\":"<<(!o.protocol.empty()?"true":"false")<<",\"physics_controls\":0,\"physics_substeps\":0,\"optimizer_calls\":0,\"CUDA_calls\":0}\n";return 0;}
         run(o,package);return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
 }

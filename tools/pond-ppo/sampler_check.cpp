@@ -30,7 +30,7 @@ int main(){try{
     uint64_t default_requests=0,paired_requests=0;
     const std::array<uint32_t,3> seeds{0x504f4e44u,7u,4813u};
     for(uint32_t seed:seeds)for(uint32_t episode:{0u,1u,7u}){
-        for(uint32_t env=0;env<512;++env){const auto actual=pt::sample_request(env,episode,seed);check(equal(actual,v2_reference(env,episode,seed)),"Default requests differ from frozen v2 formulas");check(equal(actual,pt::sample_request(env,episode,seed,pt::curriculum_off)),"Implicit/explicit off differ");check(equal(actual,pt::sample_request(env,episode,seed,pt::course_direction_v1)),"Reward-only program changed v2 requests");++default_requests;}
+        for(uint32_t env=0;env<512;++env){const auto actual=pt::sample_request(env,episode,seed);check(equal(actual,v2_reference(env,episode,seed)),"Default requests differ from frozen v2 formulas");check(equal(actual,pt::sample_request(env,episode,seed,pt::curriculum_off)),"Implicit/explicit off differ");check(equal(actual,pt::sample_request(env,episode,seed,pt::course_direction_v1)),"Reward-only program changed v2 requests");check(equal(actual,pt::sample_request(env,episode,seed,pt::repeated_headings_v1)),"Schedule changed original first requests");++default_requests;}
         uint32_t kinds[3]{};bool magnitudes[3]{};
         const std::array<float,3> allowed=episode==0?std::array<float,3>{7,12,18}:std::array<float,3>{18,24,33};
         for(uint32_t pair=0;pair<256;++pair){const auto left=pt::sample_request(pair*2,episode,seed,pt::paired_gentle_moderate_v1),right=pt::sample_request(pair*2+1,episode,seed,pt::paired_gentle_moderate_v1);
@@ -46,7 +46,7 @@ int main(){try{
         }
         check(kinds[pt::Hold]>0&&kinds[pt::Straight]>0&&kinds[pt::Turn]>0,"Hold/Straight/Turn representation missing");for(bool used:magnitudes)check(used,"Declared magnitude never sampled");
     }
-    check(pt::sample_request(0,0,0,3).kind<0,"Unknown opt-in program accepted");
+    check(pt::sample_request(0,0,0,4).kind<0,"Unknown opt-in program accepted");
     check(pt::direction_factor({0,0,0},{1,0,0})==1.f,"Zero-speed direction factor is not finite/neutral");
     check(pt::direction_factor({1,0,0},{1,0,0})==1.f,"Aligned direction factor changed");
     for(float degrees:{0.f,15.f,30.f,90.f,180.f}){

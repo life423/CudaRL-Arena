@@ -14,8 +14,8 @@ namespace obs = pond_motor_observation;
 namespace p = physics;
 
 enum TaskKind : int { Hold = 0, Straight = 1, Turn = 2 };
-inline constexpr uint32_t version = 3;
-inline constexpr uint32_t curriculum_off = 0, paired_gentle_moderate_v1 = 1, course_direction_v1 = 2;
+inline constexpr uint32_t version = 4;
+inline constexpr uint32_t curriculum_off = 0, paired_gentle_moderate_v1 = 1, course_direction_v1 = 2, repeated_headings_v1 = 3;
 inline constexpr uint32_t turn_control = 40, episode_limit = 1200;
 inline constexpr float target_speed_m_s = .008f, control_seconds = .05f;
 
@@ -49,7 +49,7 @@ struct RequestSample {
 CUDARL_HD inline RequestSample sample_request(uint32_t env,uint32_t episode,uint32_t seed,
                                              uint32_t curriculum=curriculum_off) {
     RequestSample sample;
-    if(curriculum>course_direction_v1){sample.kind=-1;return sample;}
+    if(curriculum>repeated_headings_v1){sample.kind=-1;return sample;}
     const uint32_t key=curriculum==paired_gentle_moderate_v1?env/2:env;
     const uint32_t mode=rng::bits(seed,rng::hash_u32(key^0x6c9a24d1u),episode)%4u;
     sample.kind=mode==0?Hold:(mode==1?Straight:Turn);
@@ -93,11 +93,11 @@ CUDARL_HD inline bool initialize(runtime::World& world, Task& task, uint32_t env
     return runtime::prepare(world);
 }
 
-CUDARL_HD inline bool observe(Task& task, runtime::World& world, float* output) {
+CUDARL_HD inline bool observe(Task& task, runtime::World& world, float* output, bool automatic_first_request = true) {
     if (task.kind < Hold || task.kind > Turn) return false;
     // Rotate the ORIGINAL persistent world request exactly once after forty
     // successful controls. Preserve its depth, body, filter and torque history.
-    if (task.kind == Turn && task.episode_controls == turn_control && !task.request_changed) {
+    if (automatic_first_request && task.kind == Turn && task.episode_controls == turn_control && !task.request_changed) {
         const auto rotation = p::axis_rotation({0, 1, 0}, task.turn_radians);
         auto& request = task.request.request;
         request.heading = rotation.rotate(request.heading);
@@ -135,7 +135,7 @@ CUDARL_HD inline float direction_factor(p::V horizontal_velocity,p::V requested_
 CUDARL_HD inline float moving_reward_terms(float speed_quality,float positive_requested_progress,
         p::V horizontal_velocity,p::V requested_heading,int kind,bool request_changed,uint32_t program) {
     float rewarded_progress=positive_requested_progress;
-    if(program==course_direction_v1&&kind==Turn&&request_changed)
+    if((program==course_direction_v1||program==repeated_headings_v1)&&kind==Turn&&request_changed)
         rewarded_progress*=direction_factor(horizontal_velocity,requested_heading);
     return .35f*speed_quality+.65f*rewarded_progress;
 }
