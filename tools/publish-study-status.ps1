@@ -26,8 +26,23 @@ function CheckpointRecord([string]$path) {
         if($reader.ReadUInt64() -ne [uint64]0x31504B434C524443){throw 'Wrong native checkpoint envelope'}
         $payloadBytes=$reader.ReadUInt64();$checksum=$reader.ReadUInt64()
         if($payloadBytes -ne $file.Length-24){throw 'Truncated checkpoint envelope'}
+        $magic=$reader.ReadUInt32()
+        $stream.Position=24
+        if($magic -eq 0x31504c52){
+            foreach($expected in @(0x31504c52,1,42,16)){if($reader.ReadUInt32() -ne $expected){throw 'Wrong residual actor shape'}}
+            $outputs=$reader.ReadUInt32();$parameters=$reader.ReadUInt32()
+            if(!(($outputs -eq 2 -and $parameters -eq 722) -or ($outputs -eq 4 -and $parameters -eq 756))){throw 'Unknown residual control axes'}
+            $updates=$reader.ReadUInt32()
+            $parent=$reader.ReadUInt64();$protocol=$reader.ReadUInt64()
+            $controls=$reader.ReadUInt64();$substeps=$reader.ReadUInt64()
+            $actorAdam=$reader.ReadUInt64();$criticAdam=$reader.ReadUInt64()
+            if($updates -gt 32 -or $updates%8 -ne 0 -or $controls -ne $updates*32768 -or $substeps -ne $controls*10 -or $actorAdam -ne $updates*32 -or $criticAdam -ne $actorAdam){throw 'Residual actor counters disagree'}
+            if($reader.ReadUInt64() -ne $parameters){throw 'Wrong residual parameter count'}
+            return [ordered]@{schema=1;controller='frozen_motor_with_learned_residual';file_sha256=(Sha $path);file_bytes=$file.Length;payload_checksum_fnv1a64=$checksum.ToString($culture);parent_payload_checksum_fnv1a64=$parent.ToString($culture);protocol_checksum_fnv1a64=$protocol.ToString($culture);actor_inputs=42;hidden_neurons=16;actor_outputs=$outputs;actor_parameters=$parameters;completed_updates=$updates;training_controls=$controls;training_substeps=$substeps;actor_Adam_calls=$actorAdam;critic_Adam_calls=$criticAdam;original_motor_frozen=$true;raw_checkpoint_in_app=$false;repository_checkpoint=$RepositoryCheckpoint;validation='Native assessment verified and evaluated the frozen motor combined with this separate residual actor.'}
+        }
         $header=@();for($i=0;$i -lt 11;$i++){$header+=$reader.ReadUInt32()}
-        if($header[0] -ne 0x31505044 -or $header[1] -ne 1 -or $header[2] -ne 4 -or $header[3] -ne 2 -or $header[4] -notin @(4,5) -or $header[7] -ne 41 -or $header[8] -ne 4){throw 'Unsupported recorded candidate header'}
+        $knownShape=($header[4] -in @(4,5) -and $header[7] -eq 41) -or ($header[4] -eq 6 -and $header[7] -eq 42)
+        if($header[0] -ne 0x31505044 -or $header[1] -ne 1 -or $header[2] -ne 4 -or $header[3] -ne 2 -or !$knownShape -or $header[8] -ne 4){throw 'Unsupported recorded candidate header'}
         for($i=0;$i -lt 2;$i++){$count=$reader.ReadUInt64();if($count -ne 64){throw 'Wrong parent identity size'};$null=$reader.ReadBytes(64)}
         $null=$reader.ReadUInt64();$protocol=$reader.ReadUInt64();$source=$reader.ReadUInt64();$serial=$reader.ReadUInt64()
         $null=$reader.ReadDouble();$null=$reader.ReadUInt64()
@@ -62,13 +77,29 @@ $controlsPath=Join-Path $evaluationRoot 'controls.csv'
 $columns=([IO.File]::ReadLines($controlsPath)|Select-Object -First 1).Split(',')
 $index=@{};for($i=0;$i -lt $columns.Length;$i++){$index[$columns[$i]]=$i}
 foreach($column in @('suite','case','lane_m','depth_m','tilt_deg')){if(-not $index.ContainsKey($column)){throw ('Missing native metric '+$column)}}
-$metrics=[ordered]@{};$rows=0;$first=$true
+$suiteIndex=$index.suite;$caseIndex=$index.case
+$laneIndex=$index.lane_m;$depthIndex=$index.depth_m;$tiltIndex=$index.tilt_deg
+$splitLimit=2+[int](($suiteIndex,$caseIndex,$laneIndex,$depthIndex,$tiltIndex|Measure-Object -Maximum).Maximum)
+$metrics=[ordered]@{};$rows=0;$first=$true;$lastKey=$null
 foreach($line in [IO.File]::ReadLines($controlsPath)) {
     if($first){$first=$false;continue};if(-not $line){continue}
-    $fields=$line.Split(',');$key=$fields[$index.suite]+':'+$fields[$index.case]
-    if(-not $metrics.Contains($key)){$metrics[$key]=[ordered]@{suite=$fields[$index.suite];case=[int]$fields[$index.case];accepted_control_rows=0;maximum_lane_m=0.;maximum_depth_m=0.;maximum_tilt_deg=0.}}
-    $entry=$metrics[$key];$entry.accepted_control_rows++;$rows++
-    foreach($pair in @(@('lane_m','maximum_lane_m'),@('depth_m','maximum_depth_m'),@('tilt_deg','maximum_tilt_deg'))){$number=[double]::Parse($fields[$index[$pair[0]]],$culture);if(-not [double]::IsFinite($number)){throw 'Nonfinite recorded metric'};$entry[$pair[1]]=[math]::Max($entry[$pair[1]],$number)}
+    $fields=$line.Split([char]',',$splitLimit,[StringSplitOptions]::None)
+    $key=$fields[$suiteIndex]+':'+$fields[$caseIndex]
+    if($key -ne $lastKey){
+        if(-not $metrics.Contains($key)){
+            $metrics[$key]=[ordered]@{suite=$fields[$suiteIndex];case=[int]$fields[$caseIndex];accepted_control_rows=0;maximum_lane_m=0.;maximum_depth_m=0.;maximum_tilt_deg=0.}
+        }
+        $lastKey=$key
+        $entry=$metrics[$key]
+    }
+    $lane=[double]::Parse($fields[$laneIndex],$culture)
+    $depth=[double]::Parse($fields[$depthIndex],$culture)
+    $tilt=[double]::Parse($fields[$tiltIndex],$culture)
+    if(!([double]::IsFinite($lane) -and [double]::IsFinite($depth) -and [double]::IsFinite($tilt))){throw 'Nonfinite recorded metric'}
+    if($lane -gt $entry.maximum_lane_m){$entry.maximum_lane_m=$lane}
+    if($depth -gt $entry.maximum_depth_m){$entry.maximum_depth_m=$depth}
+    if($tilt -gt $entry.maximum_tilt_deg){$entry.maximum_tilt_deg=$tilt}
+    $entry.accepted_control_rows++;$rows++
 }
 $summary=[ordered]@{schema=1;source_controls_sha256=(Sha $controlsPath);source_controls_bytes=(Get-Item -LiteralPath $controlsPath).Length;accepted_control_rows=$rows;raw_controls_in_app=$false;cases=@($metrics.Values)}
 WriteJson (Join-Path $output 'movement-summary.json') $summary

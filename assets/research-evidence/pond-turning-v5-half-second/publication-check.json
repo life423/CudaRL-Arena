@@ -1,0 +1,13 @@
+{
+  "protocol_id": "pond-motor-ppo-v5-half-second-2026-11-24",
+  "updates": 8,
+  "transitions": 262144,
+  "through_training_and_final_skill_checks_s": 10.775187599999999,
+  "publication_only": true,
+  "this_invocation_through_headless_Godot_s": 1.9228888,
+  "turns_passed": 3,
+  "turns_attempted": 16,
+  "long_windows_retained": 28,
+  "short_swims_passed": 4,
+  "rests_passed": 14
+}

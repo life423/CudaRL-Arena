@@ -6,18 +6,28 @@
 #include "rl/learned_amplitude_math.h"
 #include "nn/mlp_cpu.h"
 #include "pond_candidate_identity.h"
+#ifdef CUDARL_RESIDUAL_FOUR_EVALUATOR
+#include "../pond-residual-four-ppo/contract.h"
+namespace residual_contract=cudarl::residual_four_ppo;
+#else
+#include "../pond-residual-ppo/contract.h"
+namespace residual_contract=cudarl::residual_ppo;
+#endif
 #include <windows.h>
 #include <bcrypt.h>
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <charconv>
 #include <cmath>
+#include <cstring>
 #include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
+#include <locale>
 #include <memory>
 #include <set>
 #include <sstream>
@@ -27,6 +37,7 @@
 namespace fs=std::filesystem;
 namespace pp=cudarl::rl::pond_ppo;
 namespace pt=cudarl::rl::pond_ppo_task;
+namespace ps=cudarl::rl::pond_ppo_schedule;
 namespace pr=cudarl::pond_runtime;
 namespace po=cudarl::pond_motor_observation;
 namespace pg=cudarl::pond_geometry_v1;
@@ -38,6 +49,7 @@ constexpr uint64_t evaluation_controls=36800,evaluation_substeps=368000;
 constexpr uint64_t aggregate_controls=184000,aggregate_substeps=1840000,evidence_cap=1024ull*1024*1024;
 constexpr double aggregate_seconds=900;
 constexpr const char* protocol_id=pp::default_study_protocol_id;
+constexpr const char* distillation_protocol_id="pond-motor-mirror-distill-v1-2026-11-24";
 static_assert(pr::version==pp::runtime_version,"Candidate evaluator must use the exact qualified runtime");
 using Keys=std::set<std::pair<int,int>>;
 void require(bool value,const std::string& message){if(!value)throw std::runtime_error(message);}
@@ -65,26 +77,52 @@ std::string scalar(const std::string& text,const std::string& name) {
         if(key==name)return value;ws();if(i<text.size()&&text[i]==','){++i;continue;}break;}
     throw std::runtime_error("Missing root JSON field: "+name);
 }
-struct Options {bool describe=false,self_test=false,preflight=false,run=false,baseline=false,final_partial=false;fs::path parent,candidate,protocol,out,ledger,reference;std::string study_id=protocol_id;};
+struct Options {
+    bool describe=false,self_test=false,preflight=false,run=false,baseline=false,final_partial=false,reuse_baseline=false;
+    fs::path parent,candidate,protocol,out,ledger,reference,distilled_actor;
+    std::string study_id=protocol_id,distilled_actor_sha256;
+    uint64_t inherited_checkpoint_checksum=0,distilled_actor_checksum=0;
+    uint32_t supervised_adam_calls=0;
+    bool residual_evaluation=false,turn_first=false,full_retention_executed=false,retention_reused_after_exact_inactive_proof=false;
+};
 std::string validated_study_id(const std::string& text){const auto id=scalar(text,"protocol_id");
-    require(id==pp::default_study_protocol_id||id==pp::curriculum_study_protocol_id||id==pp::course_study_protocol_id||id==pp::repeated_study_protocol_id,"Wrong evaluation protocol");
+    require(id==residual_contract::protocol_id||id==distillation_protocol_id||id==pp::default_study_protocol_id||id==pp::curriculum_study_protocol_id||id==pp::course_study_protocol_id||id==pp::repeated_study_protocol_id||id==pp::half_second_study_protocol_id||id==pp::signed_course_study_protocol_id,"Wrong evaluation protocol");
+    if(id==residual_contract::protocol_id)require(scalar(text,"max_updates")=="32","Wrong residual PPO allocation");
+    if(id==distillation_protocol_id)require(scalar(text,"max_PPO_updates")=="0"&&scalar(text,"max_supervised_Adam_calls")=="64","Wrong distillation allocation");
+    if(id==pp::signed_course_study_protocol_id)require(scalar(text,"study_program")=="signed-half-second-v1"&&scalar(text,"max_updates")=="8","Wrong signed actor study or budget");
+    if(id==pp::half_second_study_protocol_id)require(scalar(text,"study_program")=="half-second-course-v1"&&scalar(text,"max_updates")=="8","Wrong half-second exercise or budget");
     if(id==pp::curriculum_study_protocol_id)require(scalar(text,"turn_curriculum_program")=="paired-gentle-moderate-v1","Unbound curriculum study");
     if(id==pp::course_study_protocol_id)require(scalar(text,"study_program")=="course-direction-v1","Unbound course-reward study");
     if(id==pp::repeated_study_protocol_id)require(scalar(text,"study_program")=="repeated-headings-v1","Unbound repeated-request study");return id;}
 uint32_t expected_task_stride(const std::string& id) {
+    if(id==pp::signed_course_study_protocol_id||id==distillation_protocol_id||id==residual_contract::protocol_id)return sizeof(ps::SignedCourseTask);
+    if(id==pp::half_second_study_protocol_id)return sizeof(cudarl::rl::pond_ppo_schedule::HalfSecondTask);
     return static_cast<uint32_t>(id==pp::repeated_study_protocol_id?sizeof(cudarl::rl::pond_ppo_schedule::SavedTask):sizeof(pt::Task));
 }
 Options options(int argc,char** argv) {
     Options out;for(int i=1;i<argc;++i){const std::string arg=argv[i];const auto next=[&](){require(i+1<argc,"Missing argument value");return fs::path(argv[++i]);};
-        if(arg=="--describe")out.describe=true;else if(arg=="--self-test")out.self_test=true;else if(arg=="--preflight")out.preflight=true;else if(arg=="--run")out.run=true;else if(arg=="--baseline")out.baseline=true;else if(arg=="--final-partial")out.final_partial=true;
+        if(arg=="--describe")out.describe=true;else if(arg=="--self-test")out.self_test=true;else if(arg=="--preflight")out.preflight=true;else if(arg=="--run")out.run=true;else if(arg=="--baseline")out.baseline=true;else if(arg=="--final-partial")out.final_partial=true;else if(arg=="--reuse-verified-baseline")out.reuse_baseline=true;else if(arg=="--turn-first")out.turn_first=true;
         else if(arg=="--parent")out.parent=next();else if(arg=="--candidate")out.candidate=next();else if(arg=="--protocol")out.protocol=next();
-        else if(arg=="--out")out.out=next();else if(arg=="--ledger")out.ledger=next();else if(arg=="--long-reference")out.reference=next();else throw std::runtime_error("Unknown argument: "+arg);}
+        else if(arg=="--out")out.out=next();else if(arg=="--ledger")out.ledger=next();else if(arg=="--long-reference")out.reference=next();else if(arg=="--distilled-actor")out.distilled_actor=next();else if(arg=="--residual-candidate"){out.candidate=next();out.residual_evaluation=true;}else throw std::runtime_error("Unknown argument: "+arg);}
     require(int(out.describe)+int(out.self_test)+int(out.preflight)+int(out.run)==1,"Choose one mode");
     require(!(out.baseline&&out.final_partial),"Baseline and final-partial modes are exclusive");
+    require(!out.reuse_baseline||(out.run&&out.baseline),"Only a zero-update baseline can use a recorded assessment");
+    require(out.distilled_actor.empty()||(!out.baseline&&!out.final_partial&&!out.reuse_baseline),"Distilled actor requires one independent assessment");
     if(!out.describe&&!out.self_test)require(!out.parent.empty()&&!out.candidate.empty()&&!out.protocol.empty()&&!out.out.empty()&&!out.reference.empty(),"Candidate, parent, protocol, output and reference required");
     if(out.run)require(!out.ledger.empty(),"Aggregate ledger required");return out;
 }
-struct Parent {uint64_t checksum=0;float gain=0;};
+std::vector<float> distilled_weights(const std::vector<uint8_t>& payload,uint64_t parent,uint64_t protocol) {
+    const auto body=pp::checked_body(payload,64*1024);cp::Reader in{body};
+    for(uint32_t expected:{0x31445350u,1u,pp::signed_inputs,static_cast<uint32_t>(pp::actions),
+            pp::actor_parameter_count(pp::signed_inputs),64u})
+        require(in.value<uint32_t>()==expected,"Distilled actor header mismatch");
+    require(in.value<uint64_t>()==parent&&in.value<uint64_t>()==protocol,"Distilled actor parent or protocol mismatch");
+    auto actor=in.array<float>(pp::actor_parameter_count(pp::signed_inputs));in.finish();
+    require(actor.size()==pp::actor_parameter_count(pp::signed_inputs),"Distilled actor parameter count");
+    for(float value:actor)require(std::isfinite(value),"Distilled actor contains nonfinite parameters");
+    return actor;
+}
+struct Parent {uint64_t checksum=0;float gain=0;std::vector<float> actor;};
 Parent load_parent(const fs::path& path) {
     require(sha256(file(path))==pp::parent_package_sha256,"Parent package bytes changed");const auto bytes=cp::read(path.string());cp::Reader in{bytes};Parent out;out.checksum=cp::checksum(bytes);
     for(uint32_t value:{0x31564c48u,2u,6u,6u,3u,4u,41u,4u,336u,1u,7u,1u})require(in.value<uint32_t>()==value,"Parent package contract changed");
@@ -94,7 +132,7 @@ Parent load_parent(const fs::path& path) {
     for(auto hash:hashes){const auto bytes_hash=in.array<uint8_t>(64);require(std::string(bytes_hash.begin(),bytes_hash.end())==hash,"Parent provenance mismatch");}
     const auto actor=in.array<float>(pp::actor_weights),head=in.array<float>(2);const float gain=in.value<float>(),sigma=in.value<float>();in.finish();
     require(actor.size()==pp::actor_weights&&head.size()==2,"Parent parameter count");out.gain=cudarl::learned_amplitude::sigmoid(head[0]);
-    require(out.gain==pp::frozen_holding_gain&&std::abs(gain-out.gain)<=2e-7f&&std::abs(sigma-cudarl::learned_amplitude::standard_deviation(head[1]))<=2e-6f,"Parent gain changed");return out;
+    require(out.gain==pp::frozen_holding_gain&&std::abs(gain-out.gain)<=2e-7f&&std::abs(sigma-cudarl::learned_amplitude::standard_deviation(head[1]))<=2e-6f,"Parent gain changed");out.actor=actor;return out;
 }
 struct Ledger {uint64_t parent=0,protocol=0,source=0,mask=0,controls=0,substeps=0,bytes=0;double seconds=0;bool active=false,closed=false;};
 void save_ledger(const fs::path& path,const Ledger& ledger) {
@@ -183,6 +221,17 @@ void pure_tests() {
     check(validated_study_id(R"({"protocol_id":"pond-motor-ppo-v4-repeated-2026-11-24","study_program":"repeated-headings-v1"})")==pp::repeated_study_protocol_id);
     rejects([&](){validated_study_id(R"({"protocol_id":"pond-motor-ppo-v4-repeated-2026-11-24","study_program":"course-direction-v1"})");});
     check(expected_task_stride(pp::default_study_protocol_id)==sizeof(pt::Task)&&expected_task_stride(pp::repeated_study_protocol_id)==sizeof(cudarl::rl::pond_ppo_schedule::SavedTask)&&sizeof(cudarl::rl::pond_ppo_schedule::SavedTask)>sizeof(pt::Task));
+    cp::Writer distill;
+    for(uint32_t value:{0x31445350u,1u,pp::signed_inputs,static_cast<uint32_t>(pp::actions),
+            pp::actor_parameter_count(pp::signed_inputs),64u})distill.value(value);
+    distill.value(uint64_t{23});distill.value(uint64_t{29});
+    distill.array(std::vector<float>(pp::actor_parameter_count(pp::signed_inputs),.125f));pp::seal(distill);
+    check(distilled_weights(distill.data,23,29).size()==pp::actor_parameter_count(pp::signed_inputs));
+    rejects([&](){distilled_weights(distill.data,24,29);});
+    rejects([&](){distilled_weights(distill.data,23,30);});
+    auto damaged=distill.data;damaged[0]^=1;rejects([&](){distilled_weights(damaged,23,29);});
+    check(validated_study_id(R"({"protocol_id":"pond-motor-mirror-distill-v1-2026-11-24","max_PPO_updates":0,"max_supervised_Adam_calls":64})")==distillation_protocol_id);
+    check(expected_task_stride(distillation_protocol_id)==sizeof(ps::SignedCourseTask));
     assessment_pure_tests(assertions);
     std::cout<<"{\"passed\":true,\"assertions\":"<<assertions<<",\"physical_controls\":0,\"physical_substeps\":0,\"CUDA_kernels\":0,\"optimizer_steps\":0}\n";
 }
@@ -269,10 +318,31 @@ struct TurnScore {
     double projection(p::V heading)const{return late_samples?(late_x*heading.x+late_z*heading.z)/late_samples:0;}
     bool passed(int completed,p::V heading)const{return completed==400&&late_samples==800&&projection(heading)>=.006&&course_error(heading)<=5&&maximum_depth<=.001f&&maximum_tilt<=10.f;}
 };
+// The CPU assessment exports round-trippable doubles in the classic locale.
+// Convert directly to that representation without a locale lookup per digit.
+class EvidenceNumbers final : public std::num_put<char> {
+protected:
+    iter_type do_put(iter_type out, std::ios_base& format, char fill, double value) const override {
+        if ((format.flags() & std::ios_base::floatfield) != 0 || format.precision() != 17 ||
+            format.width() != 0 || (format.flags() & (std::ios_base::showpos | std::ios_base::showpoint | std::ios_base::uppercase)) != 0) {
+            return std::num_put<char>::do_put(out, format, fill, value);
+        }
+        char buffer[64];
+        const auto result = std::to_chars(buffer, buffer + sizeof(buffer), value, std::chars_format::general, 17);
+        if (result.ec != std::errc{})
+            throw std::runtime_error("Failed to format a recorded motion value");
+        return std::copy(buffer, result.ptr, out);
+    }
+};
+
 struct Output {
-    fs::path root;std::ofstream controls,cases,windows,turn_substeps;std::set<std::pair<std::string,int>> attempted;
+    fs::path root;std::ofstream controls,cases,windows,turn_substeps;std::set<std::pair<std::string,int>> attempted;bool retention_reused=false;
     explicit Output(const fs::path& path):root(path),controls(path/"controls.csv"),cases(path/"cases.csv"),windows(path/"long-windows.csv"),turn_substeps(path/"turn-substeps.csv") {
-        for(auto* stream:{&controls,&cases,&windows,&turn_substeps})*stream<<std::setprecision(17);
+        const std::locale evidence_locale(std::locale::classic(),new EvidenceNumbers);
+        for(auto* stream:{&controls,&cases,&windows,&turn_substeps}){
+            stream->imbue(evidence_locale);
+            *stream<<std::setprecision(17);
+        }
         controls<<"suite,case,control,time_s,command0,command1,command2,command3,COM_vx,COM_vy,COM_vz,forward_m,lane_m,depth_m,tilt_deg,anchor_error_m,minimum_control_gap_m,minimum_lifetime_gap_m,heading_x,heading_y,heading_z,energy_residual_J,passive_excess_J";
         body_header(controls);for(const char* name:{"held","reference_rate","last_actual"})for(int j=0;j<4;++j)controls<<','<<name<<j;controls<<'\n';
         cases<<"suite,case,pose,offset_m,turn_degrees,planned_controls,attempted_controls,accepted_controls,attempted_substeps,completed,passed,hard_failure,late_horizontal_speed_m_s,late_projected_speed_m_s,late_course_error_deg,max_depth_m,max_tilt_deg,minimum_body_gap_m,arc_m,reason\n";
@@ -299,19 +369,40 @@ struct Output {
     }
     ~Output() {
         for(const auto& spec:specs())if(attempted.count({spec.suite,spec.id})==0)
-            cases<<spec.suite<<','<<spec.id<<','<<spec.pose<<','<<spec.offset<<','<<spec.turn_degrees<<','<<spec.controls<<",0,0,0,0,0,0,0,0,180,0,0,0,0,skipped_after_stop\n";
+            cases<<spec.suite<<','<<spec.id<<','<<spec.pose<<','<<spec.offset<<','<<spec.turn_degrees<<','<<spec.controls<<",0,0,0,0,0,0,0,0,180,0,0,0,0,"<<(retention_reused&&!spec.turn?"archived_retention_exact_inactive_proof":"skipped_after_stop")<<'\n';
     }
 };
 struct Outcome {bool completed=false,passed=false,hard=false;std::string reason;Keys long_keys;};
-Outcome evaluate(const Spec& spec,const pp::CandidateState& candidate,nn::CpuMlp<float>& actor,Budget& budget,Output& output,const Keys& expected_keys) {
+void motor_command(const float* base,const float* correction,int dimensions,bool active,float gain,float* command) {
+    float latent[4];std::copy_n(base,4,latent);
+    if(active){
+        if(dimensions==2){latent[0]+=correction[0];latent[2]+=correction[1];}
+        else for(int j=0;j<4;++j)latent[j]+=correction[j];
+    }
+    for(int j=0;j<4;++j)command[j]=tanhf(gain*latent[j]);
+}
+Outcome evaluate(const Spec& spec,const pp::CandidateState& candidate,nn::CpuMlp<float>& actor,Budget& budget,Output& output,const Keys& expected_keys,nn::CpuMlp<float>* residual=nullptr) {
     output.attempted.emplace(spec.suite,spec.id);auto f=fixture(spec);HoldScore hold(spec.controls);SwimScore swim;TurnScore turn;Outcome result;
+    ps::CourseHistory history;ps::HorizontalCourse movement;
+    const bool signed_turn=spec.turn && (residual||candidate.actor_inputs==pp::signed_inputs);
+    auto record_position=[&]() {
+        const auto position=po::motion(f.world.motor.physical.body).com_model*p::scale;
+        p::V velocity{};
+        if(history.append(position.x,position.z,velocity))movement={velocity.x,velocity.z};
+    };
+    if(signed_turn)record_position();
     const uint64_t before_controls=budget.controls,before_substeps=budget.substeps;int accepted=0;
     const auto first=po::measure(f.task.request,f.world.motor.physical.body);if(spec.holding)hold.record(0,first);
     try {
         for(int control=1;control<=spec.controls;++control) {
-            float observation[41]{},command[4]{};
-            require(pt::observe(f.task,f.world,observation),"Candidate observation failed");actor.forward(observation,1);
-            for(int j=0;j<4;++j)command[j]=tanhf((spec.holding?candidate.frozen_gain:1.f)*actor.output()[j]);
+            float observation[pp::signed_inputs]{},command[4]{};
+            require(pt::observe(f.task,f.world,observation),"Candidate observation failed");
+            if(signed_turn)observation[pp::observations]=ps::signed_course_input(f.task,movement);
+            actor.forward(observation,1);
+            const bool steering_active=residual&&spec.turn&&f.task.request_changed;
+            if(steering_active)residual->forward(observation,1);
+            motor_command(actor.output(),steering_active?residual->output():nullptr,residual?residual->spec().output_size():0,
+                steering_active,spec.holding?candidate.frozen_gain:1.f,command);
             budget.guard();++budget.controls;const auto prior=f.world.motor.attempted_substeps;
             pr::SubstepTrace trace[20];const bool advanced=pr::step(f.world,command,.005f,spec.turn?trace:nullptr);
             const auto steps=f.world.motor.attempted_substeps-prior;budget.substeps+=steps;
@@ -322,6 +413,7 @@ Outcome evaluate(const Spec& spec,const pp::CandidateState& candidate,nn::CpuMlp
                     f.world.failure==100+static_cast<int>(cudarl::pond_body_geometry::DryLandScope)));
                 break;
             }
+            if(signed_turn)record_position();
             ++accepted;++f.task.episode_controls;++f.task.request.controls;
             const auto metrics=po::measure(f.task.request,f.world.motor.physical.body);
             if(spec.holding)hold.record(control,metrics);
@@ -404,11 +496,25 @@ void write_result(const Options& options,const pp::CandidateState& candidate,con
     out<<std::setprecision(17)<<"{\"schema\":2,\"protocol_id\":\""<<options.study_id<<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"preflight_only\":"<<(preflight?"true":"false")
         <<",\"passed\":"<<((preflight||(summary.retention&&assessment_completed(summary)))&&!summary.hard?"true":"false")
         <<",\"baseline_only\":"<<(options.baseline?"true":"false")<<",\"assessment_completed\":"<<(assessment_completed(summary)?"true":"false")
+        <<",\"reused_archived_baseline\":"<<(options.reuse_baseline?"true":"false")
+        <<",\"archived_retention_controls\":"<<((options.reuse_baseline||options.retention_reused_after_exact_inactive_proof)&&summary.retention?30400:0)
+        <<",\"archived_retention_substeps\":"<<((options.reuse_baseline||options.retention_reused_after_exact_inactive_proof)&&summary.retention?304000:0)
+        <<",\"full_retention_executed\":"<<(options.full_retention_executed?"true":"false")
+        <<",\"retention_reused_after_exact_inactive_proof\":"<<(options.retention_reused_after_exact_inactive_proof?"true":"false")
+        <<",\"actual_retention_cases_attempted\":"<<((options.reuse_baseline||options.retention_reused_after_exact_inactive_proof)?0:summary.retention_attempted)
         <<",\"training_admission_qualified\":"<<(!preflight&&summary.retention&&assessment_completed(summary)?"true":"false")
         <<",\"final_partial\":"<<(options.final_partial?"true":"false")<<",\"stopped_training_ledger_checksum\":"<<summary.stopped_training_checksum
         <<",\"training_continuation_authorized\":false"
         <<",\"reason\":\""<<escape(summary.reason)
         <<"\",\"checkpoint_checksum\":"<<checkpoint<<",\"update\":"<<candidate.counters.completed_updates<<",\"eval_source_identity\":"<<eval_source()
+        <<",\"distilled_actor\":"<<(!options.distilled_actor.empty()?"true":"false")
+        <<",\"distilled_actor_sha256\":\""<<options.distilled_actor_sha256<<"\""
+        <<",\"distilled_actor_checksum\":"<<options.distilled_actor_checksum
+        <<",\"inherited_checkpoint_checksum\":"<<options.inherited_checkpoint_checksum
+        <<",\"inherited_PPO_updates\":"<<(options.residual_evaluation?0:candidate.counters.completed_updates)
+        <<",\"supervised_Adam_calls\":"<<options.supervised_adam_calls
+        <<",\"new_PPO_updates\":"<<(options.residual_evaluation?candidate.counters.completed_updates:0)
+        <<",\"residual_evaluation\":"<<(options.residual_evaluation?"true":"false")
         <<",\"candidate_actor_adam_calls\":"<<candidate.counters.actor_adam_calls<<",\"candidate_critic_adam_calls\":"<<candidate.counters.critic_adam_calls
         <<",\"retention_passed\":"<<(summary.retention?"true":"false")<<",\"retention_cases_passed\":"<<summary.retention_passed<<",\"retention_cases_attempted\":"<<summary.retention_attempted
         <<",\"retention_cases_total\":20,\"retention_controls\":"<<budget.retention_controls<<",\"retention_substeps\":"<<budget.retention_substeps
@@ -422,42 +528,152 @@ void write_result(const Options& options,const pp::CandidateState& candidate,con
         <<",\"wall_seconds\":"<<budget.seconds()<<",\"optimizer_steps\":0,\"PPO_updates\":0,\"CUDA_kernels\":0,\"autonomous_navigation_qualified\":false}\n";
     out.flush();require(bool(out),"Evaluation result write failed");
 }
+
+// The evaluator starts each fixed test from its own fixture. At update zero it
+// consumes only the deterministic actor parameters and holding gain. Rollout
+// buffers, critic moments and training-only episode state are never consulted.
+pp::RetentionReceipt verified_prior_baseline(const std::string& plan, const Options& options,
+        const pp::CandidateState& candidate, uint64_t parent, Summary& summary) {
+    require((options.study_id==pp::half_second_study_protocol_id||options.study_id==pp::signed_course_study_protocol_id||options.study_id==residual_contract::protocol_id)&&options.baseline&&
+            candidate.counters.completed_updates==0,"Baseline reuse outside the authorized study");
+    const auto verify_input=[&](const std::string& name) {
+        const fs::path path=scalar(plan,name+"_path_absolute");
+        require(path.is_absolute()&&sha256(file(path))==scalar(plan,name+"_sha256"),
+                "Changed prior baseline artifact: "+name);
+        return path;
+    };
+    const auto prior_plan_path=verify_input("previous_protocol");
+    require(sha256(file(prior_plan_path))=="23e3fac490f3959dff6356912d18afc8722ef89662524c388ac0b0bf59936766",
+            "Expected the sealed repeated-request study");
+    const auto prior_plan=file(prior_plan_path);
+    const std::string prior_text(prior_plan.begin(),prior_plan.end());
+    const auto prior_protocol=cp::checksum(prior_plan);
+    require(sha256(file(options.reference))==scalar(prior_text,"long_reference_sha256")&&
+            scalar(plan,"qualified_physics_source_sha256")==scalar(prior_text,"qualified_physics_source_sha256"),
+            "Baseline physics or long-swim reference changed");
+    const auto prior_payload=cp::read(verify_input("previous_candidate_zero").string());
+    const auto prior=pp::read_candidate(prior_payload,parent,prior_protocol,
+            std::stoull(scalar(prior_text,"source_identity_fnv1a64")),sizeof(pr::World),
+            expected_task_stride(pp::repeated_study_protocol_id));
+    const auto expanded=pp::initial_actor(prior.actor,candidate.actor_inputs);
+    require(prior.counters.completed_updates==0&&expanded.size()==candidate.actor.size()&&
+            std::memcmp(expanded.data(),candidate.actor.data(),expanded.size()*sizeof(float))==0&&
+            prior.frozen_gain==candidate.frozen_gain,"Recorded baseline actor or gain differs");
+    if(candidate.actor_inputs==pp::signed_inputs){
+        // CPU MLP visits input weights in index order. The appended zero
+        // gives identical action means for every finite course input.
+        constexpr int samples=64;
+        nn::CpuMlp<float> inherited({{pp::observations,32,32,4},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}});
+        nn::CpuMlp<float> widened({{int(pp::signed_inputs),32,32,4},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}});
+        inherited.params()=prior.actor;widened.params()=candidate.actor;
+        std::vector<float> original(samples*pp::observations),full(samples*pp::signed_inputs);
+        for(int i=0;i<samples;++i){
+            for(int j=0;j<pp::observations;++j)original[i*pp::observations+j]=float(int((i*83+j*13)%251)-125)/64.f;
+            std::copy_n(original.data()+i*pp::observations,pp::observations,full.data()+i*pp::signed_inputs);
+            full[i*pp::signed_inputs+pp::observations]=2.f*i/(samples-1)-1.f;
+        }
+        inherited.forward(original.data(),samples);widened.forward(full.data(),samples);
+        require(std::memcmp(inherited.output(),widened.output(),samples*pp::actions*sizeof(float))==0,
+                "Widened zero-weight actor failed exact initial equivalence");
+    }
+    const auto prior_checksum=cp::checksum(prior_payload);
+    const auto prior_eval=std::stoull(scalar(prior_text,"retention_evaluator_source_fnv1a64"));
+    auto receipt=pp::read_retention_receipt(cp::read(verify_input("previous_baseline_receipt").string()),
+            prior_checksum,parent,prior_protocol,prior_eval,true);
+    const auto bytes=file(verify_input("previous_baseline_result"));
+    const std::string result(bytes.begin(),bytes.end());
+    require(scalar(result,"protocol_id")==pp::repeated_study_protocol_id&&
+            scalar(result,"checkpoint_checksum")==std::to_string(prior_checksum)&&
+            scalar(result,"eval_source_identity")==std::to_string(prior_eval)&&
+            scalar(result,"update")=="0"&&scalar(result,"baseline_only")=="true"&&
+            scalar(result,"preflight_only")=="false"&&scalar(result,"assessment_completed")=="true"&&
+            scalar(result,"hard_failure")=="false"&&scalar(result,"passed")=="true",
+            "Invalid archived physical baseline");
+    const auto value=[&](const char* key){return static_cast<uint32_t>(std::stoul(scalar(result,key)));};
+    summary.retention_passed=value("retention_cases_passed");summary.retention_completed=value("retention_cases_completed");
+    summary.retention_attempted=value("retention_cases_attempted");
+    summary.short_passed=value("short_swim_cases_passed");summary.short_attempted=value("short_swim_cases_attempted");
+    summary.hold_passed=value("rest_cases_passed");summary.hold_attempted=value("rest_cases_attempted");
+    summary.long_passed=value("long_swim_cases_passed");summary.long_attempted=value("long_swim_cases_attempted");
+    summary.retained_long_passes=value("retained_parent_long_window_passes");summary.actual_long_passes=value("candidate_long_window_passes");
+    summary.turn_passed=value("turn_cases_passed");summary.turn_completed=value("turn_cases_completed");summary.turn_attempted=value("turn_cases_attempted");
+    Budget historical;historical.retention_controls=value("retention_controls");historical.retention_substeps=value("retention_substeps");
+    require(retention_qualified(summary,historical)&&assessment_completed(summary)&&
+            historical.retention_controls==receipt.controls&&historical.retention_substeps==receipt.substeps,
+            "Archived baseline did not meet complete retention and assessment gates");
+    summary.retention=true;summary.reason="identical_initial_actor_reused_verified_v4_baseline";
+    return receipt;
 }
+}
+#ifdef CUDARL_RESIDUAL_EVALUATOR
+#include "../pond-residual-ppo/evaluator.h"
+#else
 int main(int argc,char** argv) {
     Options o;pp::CandidateState candidate;Budget budget;Summary summary;bool owns_output=false,ledger_started=false;uint64_t checkpoint=0,parent_checksum=0,protocol_checksum=0;
     Ledger ledger;std::unique_ptr<cp::Lease> ledger_lease;std::unique_ptr<StoppedTrainingLease> stopped_lease;
     try {
         o=options(argc,argv);
         if(o.self_test){pure_tests();return 0;}
-        if(o.describe){if(!o.protocol.empty()){const auto bytes=file(o.protocol);o.study_id=validated_study_id({bytes.begin(),bytes.end()});}std::cout<<"{\"protocol_id\":\""<<o.study_id<<"\",\"supported_protocol_ids\":[\""<<pp::default_study_protocol_id<<"\",\""<<pp::curriculum_study_protocol_id<<"\",\""<<pp::course_study_protocol_id<<"\",\""<<pp::repeated_study_protocol_id<<"\"],\"assessment_schema\":2,\"eval_source_identity_fnv1a64\":\""<<eval_source()<<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256
+        if(o.describe){if(!o.protocol.empty()){const auto bytes=file(o.protocol);o.study_id=validated_study_id({bytes.begin(),bytes.end()});}std::cout<<"{\"protocol_id\":\""<<o.study_id<<"\",\"supported_protocol_ids\":[\""<<pp::default_study_protocol_id<<"\",\""<<pp::curriculum_study_protocol_id<<"\",\""<<pp::course_study_protocol_id<<"\",\""<<pp::repeated_study_protocol_id<<"\",\""<<pp::half_second_study_protocol_id<<"\",\""<<pp::signed_course_study_protocol_id<<"\"],\"assessment_schema\":2,\"eval_source_identity_fnv1a64\":\""<<eval_source()<<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256
             <<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<expected_task_stride(o.study_id)
             <<",\"retention_cases\":20,\"retention_controls\":30400,\"rest_cases\":14,\"short_swim_cases\":4,\"required_parent_long_window_keys\":28,\"turn_cases\":16,\"complete_baseline_retention_required\":true,\"assess_all_soft_failures\":true,\"turning_is_training_prerequisite\":false,\"max_controls_per_checkpoint\":36800,\"max_assessments\":5,\"max_aggregate_controls\":184000,\"max_aggregate_substeps\":1840000,\"max_wall_seconds\":900,\"final_partial_requires_stopped_last_good\":true,\"final_partial_closes_ledger\":true,\"optimizer_steps\":0}\n";return 0;}
         require(!fs::exists(o.out)&&fs::create_directories(o.out),"Evaluation output already exists");owns_output=true;
         const auto parent=load_parent(o.parent);parent_checksum=parent.checksum;const auto protocol=file(o.protocol);protocol_checksum=cp::checksum(protocol);
         const std::string text(protocol.begin(),protocol.end());o.study_id=validated_study_id(text);
-        const auto training_source=std::stoull(scalar(text,"source_identity_fnv1a64"));const auto payload=cp::read(o.candidate.string());checkpoint=cp::checksum(payload);
-        candidate=pp::read_candidate(payload,parent.checksum,protocol_checksum,training_source,static_cast<uint32_t>(sizeof(pr::World)),expected_task_stride(o.study_id));
+        const bool distilled=o.study_id==distillation_protocol_id;
+        require(distilled==!o.distilled_actor.empty(),"Distillation protocol and external actor must be selected together");
+        uint64_t candidate_protocol=protocol_checksum,training_source=0;
+        if(distilled) {
+            const fs::path source_plan=scalar(text,"candidate_source_protocol_path_absolute");
+            require(source_plan.is_absolute()&&sha256(file(source_plan))==scalar(text,"candidate_source_protocol_sha256"),"Candidate source protocol changed");
+            const auto bytes=file(source_plan);const std::string source_text(bytes.begin(),bytes.end());
+            require(validated_study_id(source_text)==pp::signed_course_study_protocol_id,"Distillation requires the saved v6 candidate");
+            candidate_protocol=cp::checksum(bytes);training_source=std::stoull(scalar(source_text,"source_identity_fnv1a64"));
+            require(fs::equivalent(o.candidate,fs::path(scalar(text,"parent_candidate_path_absolute")))&&
+                sha256(file(o.candidate))==scalar(text,"parent_candidate_sha256"),"Distillation parent candidate changed");
+            require(std::stoull(scalar(text,"retention_evaluator_source_fnv1a64"))==eval_source(),"Distillation evaluator source changed");
+            require(sha256(file(o.reference))==scalar(text,"long_reference_sha256"),"Distillation long reference changed");
+        } else training_source=std::stoull(scalar(text,"source_identity_fnv1a64"));
+        const auto payload=cp::read(o.candidate.string());const uint64_t source_checkpoint=cp::checksum(payload);checkpoint=source_checkpoint;
+        candidate=pp::read_candidate(payload,parent.checksum,candidate_protocol,training_source,static_cast<uint32_t>(sizeof(pr::World)),expected_task_stride(o.study_id),(distilled||o.study_id==pp::signed_course_study_protocol_id)?pp::signed_inputs:pp::observations);
+        if(distilled) {
+            require(candidate.counters.completed_updates==8,"Distillation parent must be the saved update-eight candidate");
+            const auto external=cp::read(o.distilled_actor.string());
+            candidate.actor=distilled_weights(external,source_checkpoint,protocol_checksum);
+            o.inherited_checkpoint_checksum=source_checkpoint;o.distilled_actor_checksum=cp::checksum(external);
+            o.distilled_actor_sha256=sha256(file(o.distilled_actor));o.supervised_adam_calls=64;
+            checkpoint=o.distilled_actor_checksum;
+        }
         const uint64_t update=candidate.counters.completed_updates;
         const int expected_slot=o.final_partial?static_cast<int>(update/8)+1:static_cast<int>(update/8);
         require(expected_slot<5,"Checkpoint is outside the five assessment slots");
-        assessment_slot(update,o.baseline,o.final_partial,(uint64_t{1}<<expected_slot)-1);
+        if(!distilled)assessment_slot(update,o.baseline,o.final_partial,(uint64_t{1}<<expected_slot)-1);
         if(o.final_partial) {
             stopped_lease=std::make_unique<StoppedTrainingLease>(fs::path(scalar(text,"ledger_path_absolute")),o.run);
             stopped_training(cp::read(stopped_lease->path.string()),protocol_checksum,training_source,checkpoint,candidate);
             summary.stopped_training_checksum=stopped_lease->checksum;
         }
         const auto expected_keys=long_reference(o.reference);
-        nn::CpuMlp<float> actor({{41,32,32,4},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}});actor.params()=candidate.actor;
+        nn::CpuMlp<float> actor({{int(candidate.actor_inputs),32,32,4},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}});actor.params()=candidate.actor;
         if(o.preflight) {
-            float input[41]{};actor.forward(input,1);for(int j=0;j<4;++j)require(std::isfinite(actor.output()[j]),"Candidate zero-input inference nonfinite");
+            float input[pp::signed_inputs]{};actor.forward(input,1);for(int j=0;j<4;++j)require(std::isfinite(actor.output()[j]),"Candidate zero-input inference nonfinite");
             summary.reason="candidate_and_Adam_bytes_parsed_without_optimizer_or_physics";
             write_result(o,candidate,budget,summary,true,checkpoint);return 0;
         }
         ledger_lease=std::make_unique<cp::Lease>(o.ledger.string()+".assessment");
         ledger=load_ledger(o.ledger,parent.checksum,protocol_checksum);budget.prior=ledger;
-        const int slot=assessment_slot(update,o.baseline,o.final_partial,ledger.mask);
+        const int slot=distilled?0:assessment_slot(update,o.baseline,o.final_partial,ledger.mask);
+        if(distilled)require(ledger.mask==0,"Distilled actor already used its one assessment");
         require(ledger.controls+evaluation_controls<=aggregate_controls&&ledger.substeps+evaluation_substeps<=aggregate_substeps,"Aggregate evaluation reservation exceeded");
-        ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=o.final_partial||update==32;save_ledger(o.ledger,ledger);ledger_started=true;
+        ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=distilled||o.final_partial||update==32||((o.study_id==pp::half_second_study_protocol_id||o.study_id==pp::signed_course_study_protocol_id)&&update==8);save_ledger(o.ledger,ledger);ledger_started=true;
+        if(o.reuse_baseline) {
+            auto receipt=verified_prior_baseline(text,o,candidate,parent.checksum,summary);
+            receipt.protocol_checksum=protocol_checksum;receipt.checkpoint_checksum=checkpoint;receipt.eval_source_identity=eval_source();
+            cp::write_atomic((o.out/"baseline-receipt.bin").string(),pp::write_retention_receipt(receipt));
+            write_result(o,candidate,budget,summary,false,checkpoint);
+            ledger.seconds+=budget.seconds();ledger.bytes+=directory_bytes(o.out);ledger.active=false;save_ledger(o.ledger,ledger);
+            return 0;
+        }
         Keys candidate_keys;
         // Windows can report a stale file size until the last writer closes.
         {
@@ -482,7 +698,8 @@ int main(int argc,char** argv) {
         for(const auto& key:expected_keys)summary.retained_long_passes+=candidate_keys.count(key)?1u:0u;
         summary.retention=retention_qualified(summary,budget);
         if(!summary.hard&&!summary.retention)summary.reason=summary.first_retention_failure.empty()?"exact_retention_or_long_window_keys_failed":"retention_failed_"+summary.first_retention_failure;
-        require(cp::checksum(cp::read(o.candidate.string()))==checkpoint&&cp::checksum(cp::read(o.parent.string()))==parent_checksum&&cp::checksum(file(o.protocol))==protocol_checksum,"Evaluation immutable input changed");
+        require(cp::checksum(cp::read(o.candidate.string()))==source_checkpoint&&cp::checksum(cp::read(o.parent.string()))==parent_checksum&&cp::checksum(file(o.protocol))==protocol_checksum,"Evaluation immutable input changed");
+        if(distilled)require(cp::checksum(cp::read(o.distilled_actor.string()))==checkpoint&&sha256(file(o.distilled_actor))==o.distilled_actor_sha256,"Distilled actor changed during assessment");
         if(stopped_lease)stopped_lease->unchanged();
         require(budget.prior.bytes+directory_bytes(o.out)<=evidence_cap,"Aggregate evaluation evidence cap");
         if(summary.retention&&assessment_completed(summary)) {
@@ -501,3 +718,4 @@ int main(int argc,char** argv) {
         std::cerr<<error.what()<<'\n';return 2;
     }
 }
+#endif

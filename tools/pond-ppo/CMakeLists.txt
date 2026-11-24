@@ -33,10 +33,10 @@ set(identity "CUDA=${CMAKE_CUDA_COMPILER_VERSION};CXX=${CMAKE_CXX_COMPILER_VERSI
 set(physics_identity "CUDA=${CMAKE_CUDA_COMPILER_VERSION};CXX=${CMAKE_CXX_COMPILER_VERSION};sm120;physics-fmad-false;physics-optimized;")
 set(source_manifest "")
 foreach(relative IN ITEMS
-        tools/pond-ppo/train.cu tools/pond-ppo/CMakeLists.txt
+        tools/pond-ppo/train.cu tools/pond-ppo/transition_trace.h tools/pond-ppo/CMakeLists.txt
         tools/pond-ppo/admission.h tools/pond-ppo/admission.cpp
         src/cuda/pond_math_profile.h src/environment/pond_geometry_v1.h
-        src/environment/pond_body_geometry.h src/simulation/pond_runtime.h
+        src/environment/pond_body_geometry.h src/environment/pond_swept_clearance.h src/simulation/pond_runtime.h
         src/nn/motor/pond_motor_observation.h src/nn/motor/saved_motor_contract.cpp
         src/nn/motor/saved_motor_contract.h src/nn/motor/movement_model.h
         src/nn/motor/joint_motor.h src/nn/motor/state.h src/physics/dynamics.h src/physics/contact.h

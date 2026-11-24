@@ -1,0 +1,90 @@
+[
+  {
+    "arm": "pond-residual-yaw-v1",
+    "update": 8,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.61904389575171,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6388
+  },
+  {
+    "arm": "pond-residual-yaw-v1",
+    "update": 16,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.54053350069682,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6400
+  },
+  {
+    "arm": "pond-residual-yaw-v1",
+    "update": 24,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.51039909773232,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6400
+  },
+  {
+    "arm": "pond-residual-yaw-v1",
+    "update": 32,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.40131008035843,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6400
+  },
+  {
+    "arm": "pond-residual-four-v1",
+    "update": 8,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.720040142130504,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6344
+  },
+  {
+    "arm": "pond-residual-four-v1",
+    "update": 16,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.554887969705376,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6400
+  },
+  {
+    "arm": "pond-residual-four-v1",
+    "update": 24,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.6077560614297,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6400
+  },
+  {
+    "arm": "pond-residual-four-v1",
+    "update": 32,
+    "turns_passed": 2,
+    "left_passed": 1,
+    "right_passed": 1,
+    "mean_abs_course_error_deg": 22.562943331127002,
+    "full_retention_executed": false,
+    "retention_reused_after_exact_inactive_proof": true,
+    "attempted_controls": 6400
+  }
+]

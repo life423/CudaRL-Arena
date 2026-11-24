@@ -1,13 +1,42 @@
 # AI status — November 24, 2026
 
-**The registered Godot app now accepts player-requested 5° turns in Swim
-mode.** Its original saved motor passed four small left/right turns from two
+**Both residual PPO arms are closed after 32 updates each.** The two-output
+yaw head and the four-output head each finished at 2/16 fixed turns, compared
+with 3/16 before training. Motor 336 and its holding gain stayed frozen.
+Straight swimming and resting bypass the residual, with exact inactive
+equivalence checked before archived retention evidence was reused. Neither
+arm met the turn-improvement trigger for a fresh full swimming/resting suite.
+The registered Godot swimmer continues using the original saved motor.
+
+Conservative swept-clearance rejection passed its matched CPU/CUDA
+benchmark. One late-state control across 512 worlds fell from 149.9369 ms
+to 2.0219 ms. Earlier-state and bank-contact timings differ. This 74.16×
+result describes that control workload. The one full-collector attempt hit
+its four-second cap before issuing any physics. It completed zero controls
+and zero optimizer calls. Full-rollout qualification remains pending, and the
+new training mode stays gated. The next focused task is measuring startup
+before the first issued control.
+[GPU results and evidence](GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Residual protocol](POND_RESIDUAL_PPO_PROTOCOL_2026-11-24.md) · [Motor input audit](MOTOR_336_INPUT_AUDIT_2026-11-24.md)
+
+## Previous half-second feedback exercise
+
+**Eight GPU PPO updates and all fixed skill checks finished in 10.78 seconds.**
+The half-second feedback candidate stabilized five right 10° practice requests.
+Its independent score stayed at 3/16, with all four short swims, 28 required
+long-swim windows and 14 rests retained. The registered Godot app still plays
+original motor 336. Optional steering checks are in Swim → Details.
+Publishing the record and verifying Godot finished after a script repair,
+49.82 seconds from the original launch. [Exercise, checkpoint and timing](POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
+
+## Previous exercise with repeated heading requests
+
+The original saved motor passed four small left/right turns from two
 starting poses. A separate candidate completed 32 GPU PPO updates using
 repeated heading requests. Practice increased from 138 to 274 starts per
 training minute, with zero stabilized training completions. The candidate
 retained all 28 required long-swim windows, four short swims and 14 rests.
 It passed the same 3/16 independent turns. Reliable autonomous navigation
-remains open. [Latest exercise, timing and checkpoint](POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md)
+remains open. [Repeated-request exercise, timing and checkpoint](POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md)
 
 ## Previous exercise with a course-sensitive reward
 

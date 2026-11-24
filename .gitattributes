@@ -17,6 +17,7 @@ live/research_data/studies/** -text whitespace=trailing-space,space-before-tab,c
 live/research_data/live-steering*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/POND_TURNING_PPO*PROTOCOL*.md -text
 docs/POND_TURNING_REPEATED_REQUESTS_PROTOCOL_*.md -text
+docs/POND_TURNING_HALF_SECOND_PROTOCOL_*.md -text
 # User review sources are retained byte-for-byte for their recorded SHA-256.
 docs/design-reviews/*.pdf -text -diff
 docs/design-reviews/*.txt -text

@@ -1,0 +1,83 @@
+{
+  "scope": "Godot HUD and Details drawer using the registered project",
+  "project_manager_path_present": true,
+  "godot": "4.4.1 Windows",
+  "saved_motor_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "gui_sha256": "9ac917cf13e0053aadf884513b9cf4df6a3960b63dc8e4d1c1e34916947bc954",
+  "test_sha256": "1becd20d96b72412b04a377c3ed87491e1aa9590f1a822b75e46df470626ce0a",
+  "viewports": [
+    {
+      "size": [
+        1280,
+        800
+      ],
+      "passed": true,
+      "check_count": 78,
+      "physical_controls": 0,
+      "substeps": 0,
+      "result_sha256": "3ce4f473bbd93a8104d7a6a8a302320e89f0747999091feaa7966a57116452c3",
+      "swim_image_sha256": "d8ebb10854e2ab55608937e5a555f119b5be8d65a3659d972ae6e1139f45dc35",
+      "details_image_sha256": "bd69a35ef0c2a649b2dc4cb666e6a1a6b73bd8b10ed03353765f8e5aa37847a8"
+    },
+    {
+      "size": [
+        390,
+        844
+      ],
+      "passed": true,
+      "check_count": 78,
+      "physical_controls": 0,
+      "substeps": 0,
+      "result_sha256": "e8de35dc6f862c26112f5e65e00a47814130814b30eaf44fd2e83c9580a40f57",
+      "swim_image_sha256": "101e8d332d882617f506ba6452806f5d700c1237efa2470d05f162afec4e7248",
+      "details_image_sha256": "eb27cbb44110268c4f3a6bc7f704b1efe10f996183bebaab0a3a153122a5af0c"
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "passed": true,
+      "check_count": 78,
+      "physical_controls": 0,
+      "substeps": 0,
+      "result_sha256": "6ec26270b56550513d8cfdd24187001933c4014a9a9b9e72b7ec69fde54834c5",
+      "swim_image_sha256": "c7aa86bba24443803b691e7dc386c98c2f14da10cf6a731ffcf09c32c19a9ddc",
+      "details_image_sha256": "9fbc621c0d867eb6541722244b616193704fd284ac217fd5ff9de41bd2d4f332"
+    },
+    {
+      "size": [
+        844,
+        390
+      ],
+      "passed": true,
+      "check_count": 78,
+      "physical_controls": 0,
+      "substeps": 0,
+      "result_sha256": "0a03ccea39bdf02770e1acc7d48c2533baff01eafa2753d0f60d3d0a8ffeb041",
+      "swim_image_sha256": "e983394b9cca63602d21ca62939406ebf10d3a6adf7444a32ae841c3a2de7b6d",
+      "details_image_sha256": "bc252fb54bcd198185eec0e9e573a94cb2c72ba830033a58236abe1102bed8e7"
+    }
+  ],
+  "check_count": 312.0,
+  "covered": [
+    "No steering controls on pond HUD or Rest Details",
+    "Swim Details pauses active simulation, two reachable focusable buttons",
+    "Pressing left and right updates requested heading, preserves body/filters/time",
+    "Requested heading and resume instruction visible inside drawer",
+    "Closing returns keyboard focus to Details"
+  ],
+  "internal_review": {
+    "usability": 9,
+    "hierarchy": 9,
+    "accessibility": 9,
+    "consistency": 9,
+    "responsiveness": 9,
+    "feedback": 9,
+    "performance": 9,
+    "scope": "Internal heuristic review. Rendered checks verify the interaction, layout, and motor bindings.",
+    "correction": "Moved the steering keyboard-focus ring horizontally inside the buttons so the scroll container cannot clip it."
+  },
+  "simulated_controls": 0,
+  "optimizer_calls": 0
+}

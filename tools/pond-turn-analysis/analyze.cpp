@@ -24,6 +24,8 @@
 #include <vector>
 namespace fs = std::filesystem;
 namespace {
+constexpr char half_second_study[] = "pond-motor-ppo-v5-half-second-2026-11-24";
+constexpr char signed_course_study[] = "pond-motor-ppo-v6-signed-course-2026-11-24";
 constexpr double pi = 3.141592653589793238462643383279502884;
 constexpr int change_control = 40, window_controls = 80, registered_end = 400;
 constexpr double seconds_per_control = .05, minimum_projection = .006, maximum_course_error = 5,
@@ -304,7 +306,11 @@ Stage stage(const fs::path &root, const std::string &name) {
     const auto protocol_id = scalar(s.result_text, "protocol_id");
     require((protocol_id == "pond-motor-ppo-v2-2026-11-23" ||
              protocol_id == "pond-motor-ppo-v3-course-2026-11-23" ||
-             protocol_id == "pond-motor-ppo-v4-repeated-2026-11-24") &&
+             protocol_id == "pond-motor-ppo-v4-repeated-2026-11-24" || protocol_id == half_second_study ||
+             protocol_id == signed_course_study ||
+             protocol_id == "pond-motor-mirror-distill-v1-2026-11-24" ||
+             protocol_id == "pond-motor-residual-ppo-v1-2026-11-24" ||
+             protocol_id == "pond-motor-residual-four-ppo-v1-2026-11-24") &&
                 scalar(s.result_text, "preflight_only") == "false",
             "Wrong recorded assessment protocol");
     s.update = std::stoi(scalar(s.result_text, "update"));
@@ -607,7 +613,7 @@ RecordedBatch recorded_batch(const fs::path &path) {
     };
     require(u32() == 0x31425450, "Wrong recorded batch magic");
     b.version = u32();
-    require(b.version == 1 || b.version == 2, "Unknown batch version");
+    require(b.version >= 1 && b.version <= 3, "Unknown batch version");
     b.update = u32();
     b.steps = u32();
     cursor += 16;
@@ -632,7 +638,9 @@ RecordedBatch recorded_batch(const fs::path &path) {
                 b.trace.count == 32768 * b.stride && cursor == b.bytes.size(),
             "Recorded batch dimensions changed");
     require((b.version == 1 && b.stride == 104 && b.tasks.count == 512 * 184) ||
-                (b.version == 2 && b.stride == 192 && b.tasks.count == 512 * 272),
+                (b.version == 2 && b.stride == 192 &&
+                    (b.tasks.count == 512 * 272 || b.tasks.count == 512 * 360)) ||
+                (b.version == 3 && b.stride == 192 && b.tasks.count == 512 * 368),
             "Unknown recorded task/trace ABI");
     return b;
 }
@@ -672,10 +680,12 @@ struct PracticeRequest {
 uint32_t practice_streak(uint32_t age, bool qualified, uint32_t previous) {
     return age > 100 && qualified ? previous + 1 : 0;
 }
-bool practice_qualified(float vx, float vz, float hx, float hz, float depth, float tilt) {
-    const float speed = std::sqrt(vx * vx + vz * vz), projected = vx * hx + vz * hz;
-    return std::isfinite(speed) && speed > 0 && projected / speed >= .9961946980917455f &&
-           projected >= .006f && depth <= .001f && tilt <= 10.f;
+bool course_within_tolerance(float vx, float vz, float hx, float hz) {
+    const float speed = std::sqrt(vx * vx + vz * vz);
+    return std::isfinite(speed) && speed > 0 && (vx * hx + vz * hz) / speed >= .9961946980917455f;
+}
+bool practice_qualified(bool good_course, float projected_speed, float depth, float tilt) {
+    return good_course && projected_speed >= .006f && depth <= .001f && tilt <= 10.f;
 }
 void training_pure_tests() {
     uint32_t streak = 0;
@@ -685,11 +695,12 @@ void training_pure_tests() {
     }
     require(practice_streak(120, true, streak) == 20, "Earliest completion is not age120");
     require(practice_streak(120, false, streak) == 0, "Failed training tick did not reset streak");
-    require(practice_qualified(.008f, 0, 1, 0, .001f, 10), "Inclusive training limits rejected");
-    require(!practice_qualified(.0059f, 0, 1, 0, 0, 0), "Slow training tick accepted");
-    require(!practice_qualified(.008f, .008f, 1, 0, 0, 0), "Wrong course training tick accepted");
-    require(!practice_qualified(.008f, 0, 1, 0, .00101f, 0), "Depth training limit ignored");
-    require(!practice_qualified(.008f, 0, 1, 0, 0, 10.01f), "Tilt training limit ignored");
+    require(practice_qualified(course_within_tolerance(.008f, 0, 1, 0), .008f, .001f, 10), "Inclusive training limits rejected");
+    require(!practice_qualified(true, .0059f, 0, 0), "Slow training tick accepted");
+    require(!practice_qualified(course_within_tolerance(.008f, .008f, 1, 0), .008f, 0, 0),
+            "Wrong course training tick accepted");
+    require(!practice_qualified(true, .008f, .00101f, 0), "Depth training limit ignored");
+    require(!practice_qualified(true, .008f, 0, 10.01f), "Tilt training limit ignored");
     std::cout << "Training streak/predicate pure checks passed; new physical "
                  "controls=0 optimizer=0\n";
 }
@@ -709,7 +720,10 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
     require(maximum_update > 0 && maximum_update <= 32, "Training analysis update cap");
     const auto protocol = text(root / "protocol.json");
     const auto id = scalar(protocol, "protocol_id");
-    const bool repeated = id == "pond-motor-ppo-v4-repeated-2026-11-24";
+    const bool signed_course = id == signed_course_study;
+    const bool half_second = signed_course || id == half_second_study;
+    const bool repeated = id == "pond-motor-ppo-v4-repeated-2026-11-24" || half_second;
+    require(!half_second || maximum_update <= 8, "Half-second exercise ends at update 8");
     require(repeated || id == "pond-motor-ppo-v3-course-2026-11-23", "Unsupported training study");
     std::vector<fs::path> paths;
     std::vector<std::string> hashes;
@@ -719,7 +733,10 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
         const auto directory = "updates-" + std::to_string(last - 7) + "-" + std::to_string(last);
         const auto path = root / directory / ("batch-" + std::to_string(update) + ".bin");
         const auto b = recorded_batch(path);
-        require(b.update == static_cast<uint32_t>(update) && repeated == (b.version == 2),
+        const uint32_t version = signed_course ? 3 : (repeated ? 2 : 1);
+        const size_t task_stride = signed_course ? 368 : (half_second ? 360 : (repeated ? 272 : 184));
+        require(b.update == static_cast<uint32_t>(update) && b.version == version &&
+                    b.tasks.count == 512 * task_stride,
                 "Study/batch source version mismatch");
         paths.push_back(path);
         hashes.push_back(sha256(path));
@@ -736,6 +753,9 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
     using RequestKey = std::tuple<uint32_t, uint32_t, uint32_t>;
     std::map<RequestKey, PracticeRequest> requests;
     std::array<std::pair<float, float>, 512> previous{};
+    // Turn episodes settle for 40 ticks. By the first request, every slot
+    // holds a position from this episode, including across rollout boundaries.
+    std::array<std::array<std::pair<float,float>,10>,512> com_history{};
     std::array<std::array<uint64_t, 6>, 512> counters{};
     uint64_t accepted = 0, native_onsets = 0, native_successes = 0, native_timeouts = 0,
              native_caps = 0, native_terminals = 0, rule_mismatches = 0;
@@ -752,6 +772,16 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
                         depth = b.at<float>(at + 20), tilt = b.at<float>(at + 24);
             const auto episode = b.at<uint32_t>(at + 40), control = b.at<uint32_t>(at + 44),
                        kind = b.at<uint32_t>(at + 48);
+            float course_vx = vx, course_vz = vz;
+            if (half_second && kind == 2) {
+                const auto x = b.at<float>(at), z = b.at<float>(at + 4);
+                auto& old = com_history[env][control % 10];
+                if (control > 10) {
+                    course_vx = (x - old.first) / .5f;
+                    course_vz = (z - old.second) / .5f;
+                }
+                old = {x,z};
+            }
             if (repeated) {
                 const auto events = b.at<uint32_t>(at + 128);
                 const uint32_t bits[6] = {1, 2, 4, 8, 16, 1};
@@ -765,7 +795,7 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
                 }
             }
             const auto prior = previous[env];
-            previous[env] = {vx, vz};
+            previous[env] = {course_vx, course_vz};
             if (kind != 2 || control <= 40)
                 continue;
             const uint32_t serial = repeated ? b.at<uint32_t>(at + 112) : 1,
@@ -786,6 +816,8 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
                     require(events & 1u, "First repeated request row lacks native onset");
                     r.angle = static_cast<int>(
                         std::lround(b.at<float>(at + 108) * 180 / 3.14159265358979323846f));
+                    require(!half_second || (std::abs(r.angle) >= 10 && std::abs(r.angle) <= 15),
+                            "Training request outside the declared 10 to 15 degree range");
                 } else
                     r.angle = original_angle(env, episode);
                 r.start_course_known = std::hypot(prior.first, prior.second) >= .003;
@@ -809,21 +841,21 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
                 }
             }
             const float speed = std::sqrt(vx * vx + vz * vz), projection = vx * r.hx + vz * r.hz;
-            r.final_course = course(vx, vz);
+            r.final_course = course(course_vx, course_vz);
             r.final_speed = speed;
             r.final_projection = projection;
             if (r.heading_known)
                 r.final_error = wrap(r.final_course - course(r.hx, r.hz));
             require(r.heading_known || age <= 100,
                     "Eligible v3 request lacks exact saved post-onset world heading");
-            const bool qualified =
-                r.heading_known && practice_qualified(vx, vz, r.hx, r.hz, depth, tilt);
+            const bool good_course = course_within_tolerance(course_vx, course_vz, r.hx, r.hz);
+            const bool qualified = r.heading_known && practice_qualified(good_course, projection, depth, tilt);
             r.streak = practice_streak(age, qualified, r.streak);
             if (age > 100 && age <= 400) {
                 ++r.eligible_ticks;
                 r.qualified_ticks += qualified ? 1 : 0;
                 r.max_streak = std::max(r.max_streak, r.streak);
-                r.course_fail += !(speed > 0 && projection / speed >= .9961946980917455f) ? 1 : 0;
+                r.course_fail += !good_course ? 1 : 0;
                 r.speed_fail += !(projection >= .006f) ? 1 : 0;
                 r.depth_fail += !(depth <= .001f) ? 1 : 0;
                 r.tilt_fail += !(tilt <= 10.f) ? 1 : 0;
@@ -962,7 +994,7 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
             "Checkpoint native timing evidence missing");
     const double elapsed = last_end - first_start;
     fs::create_directories(output);
-    const std::string prefix = repeated ? "v4" : "v3";
+    const std::string prefix = signed_course ? "v6" : (half_second ? "v5" : (repeated ? "v4" : "v3"));
     std::ofstream csv(output / (prefix + "-training-requests.csv"));
     csv << std::setprecision(17);
     csv << "environment,episode,request_serial,angle_deg,onset_update,last_age_"
@@ -1052,11 +1084,12 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
         << ",\"protocol_sha256\":" << quote(sha256(root / "protocol.json"))
         << ",\"requests_csv_sha256\":"
         << quote(sha256(output / (prefix + "-training-requests.csv")))
-        << ",\"predicate_note\":\"Training predicates use instantaneous "
-           "post-control COM velocity. "
+        << ",\"predicate_note\":\"" << (half_second ?
+            "Course is horizontal COM displacement between endpoints 0.5s apart. Projected speed, depth and tilt use the control endpoint. " :
+            "Training predicates use instantaneous post-control COM velocity. ") <<
            "Failure counters overlap. They differ from deterministic held-out "
            "four-second mean "
-           "criteria. Cumulative v4 native counters and every event increment "
+           "criteria. For repeated requests, cumulative native counters and every event increment "
            "are checked.\",\"raw_batches\":[";
     for (size_t i = 0; i < paths.size(); ++i) {
         if (i)
@@ -1100,13 +1133,28 @@ int main(int argc, char **argv) {
             training_analysis(fs::absolute(argv[2]), fs::absolute(argv[3]), std::stoi(argv[4]));
             return 0;
         }
-        require(argc == 3, "Use --self-test, INPUT_ROOT OUTPUT_DIRECTORY, or --training INPUT_ROOT "
-                           "OUTPUT_DIRECTORY THROUGH_UPDATE");
+        require(argc == 3 || argc == 5, "Use INPUT_ROOT OUTPUT_DIRECTORY [--archived-baseline BASELINE_DIR], "
+                           "--self-test, or --training INPUT_ROOT OUTPUT_DIRECTORY THROUGH_UPDATE");
         const auto input = fs::absolute(argv[1]), output = fs::absolute(argv[2]);
+        const bool use_archive = argc == 5;
+        require(!use_archive || std::string(argv[3]) == "--archived-baseline", "Unexpected analysis option");
         std::vector<Stage> stages;
-        for (const char *name : {"baseline0", "eval8", "eval16", "eval24", "eval32"})
-            if (fs::exists(input / name / "result.json"))
-                stages.push_back(stage(input, name));
+        for (const char *name : {"baseline0", "eval8", "eval16", "eval24", "eval32"}) {
+            const auto receipt = input / name / "result.json";
+            if (!fs::exists(receipt)) continue;
+            if (use_archive && std::string(name) == "baseline0") {
+                const auto archived = fs::absolute(argv[4]);
+                require(scalar(text(receipt), "reused_archived_baseline") == "true" &&
+                        scalar(text(receipt), "attempted_controls") == "0" &&
+                        scalar(text(input / "protocol.json"), "previous_baseline_result_sha256") ==
+                            sha256(archived / "result.json"), "Unbound archived baseline");
+                auto baseline = stage(archived.parent_path(), archived.filename().string());
+                require(baseline.update == 0, "Expected archived update zero");
+                baseline.name = "archived-baseline0";
+                baseline.hashes.emplace_back(receipt.generic_string(), sha256(receipt));
+                stages.push_back(std::move(baseline));
+            } else stages.push_back(stage(input, name));
+        }
         require(!stages.empty(), "No completed recorded assessments found");
         write_outputs(stages, input, output);
         std::cout << "Analyzed " << stages.size() << " completed checkpoints, " << stages.size() * 16

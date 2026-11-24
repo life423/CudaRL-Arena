@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.24)
+project(PondRecordedCredit LANGUAGES CXX)
+add_executable(pond_credit_audit main.cpp ../../src/core/checkpoint.cpp)
+target_include_directories(pond_credit_audit PRIVATE ../../src)
+target_compile_features(pond_credit_audit PRIVATE cxx_std_17)

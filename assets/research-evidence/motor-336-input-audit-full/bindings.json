@@ -1,0 +1,53 @@
+{
+  "type": "read_only_inference",
+  "motor_historical_sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0",
+  "motor_live_package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "source_batch_sha256": "8268e99e36ab83d1a1aca1ac862fac8189648f18615058466d70e28882ca0b33",
+  "source_long_controls_sha256": "4a482bc118db7d7e414cb099d61885249923aa2785dca86c2ca28c62fed69ac2",
+  "raw_batch_rows": 32768,
+  "reconstructed_long_range_rows": 582,
+  "stochastic_swim_sensitivity_rows": 2592,
+  "long_swim_sensitivity_rows": 582,
+  "total_sensitivity_rows": 3174,
+  "new_physics_controls": 0,
+  "optimizer_updates": 0,
+  "notes": "The audit.json pose_rows, preaction_controls and state_time_seconds describe the stochastic subset. Long-swim endpoints span 2–60 seconds and are separately recorded in long-swim-replay.json.",
+  "files": [
+    {
+      "path": "tools/pond-input-audit/audit.cpp",
+      "sha256": "ce5166c7169bf2882f8c6711fbe2b8b2e42108798e3c8e7eca4f65d799bfb58a"
+    },
+    {
+      "path": "tools/pond-input-audit/CMakeLists.txt",
+      "sha256": "e8623d4e0bbf3541e0ddfa0a42a2c52cbcf3f617de4696dc70da20d3958e530e"
+    },
+    {
+      "path": "src/nn/motor/pond_motor_observation.h",
+      "sha256": "3cb25c6cc4538e6030a6bde4df49704bed6470a605b06e9d137a55ab1767103c"
+    },
+    {
+      "path": "src/rl/pond_ppo_task.h",
+      "sha256": "097dd8c88710dad833abbdec0501c02cf03dcf4b20800c705124c862e03e8e68"
+    },
+    {
+      "path": "src/nn/mlp_cpu.h",
+      "sha256": "5566a16cd2d2d84bd2e5beb61dddd2642df452f43e3c47ef1b60df9264302153"
+    },
+    {
+      "path": "src/nn/mlp_spec.h",
+      "sha256": "762c60a18477c66085a8276de7ab46aad767b665826e01ffc923fb368646f9ef"
+    },
+    {
+      "path": "src/physics/dynamics.h",
+      "sha256": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6"
+    },
+    {
+      "path": "build/input-audit/native/Release/pond_input_audit.exe",
+      "sha256": "bc5bcebebb3b3b4dfbe742bb151047940bfe25501214e1de9da136748e6f64dd"
+    },
+    {
+      "path": "docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md",
+      "sha256": "e06341ffb79cf468400788d78da1c4d4c3ca4448447eb1bb5a15ff0892aae599"
+    }
+  ]
+}

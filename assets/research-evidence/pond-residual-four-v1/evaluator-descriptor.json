@@ -1,0 +1,16 @@
+{
+  "protocol_id": "pond-motor-residual-four-ppo-v1-2026-11-24",
+  "eval_source_identity_fnv1a64": "11126179642391678719",
+  "eval_source_sha256": "a380c6099435db255cf22acb49c0852c8f175463d369eb29723eede02315b2ca",
+  "runtime_version": 4,
+  "query_arithmetic_version": 2,
+  "task_stride": 368,
+  "actor_inputs": 42,
+  "actor_parameters": 756,
+  "base_actor_inputs": 41,
+  "retention_cases": 20,
+  "turn_cases": 16,
+  "max_controls_per_checkpoint": 36800,
+  "max_assessments": 5,
+  "optimizer_steps": 0
+}

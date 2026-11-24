@@ -36,6 +36,22 @@ provenance before changing a checkpoint or interpreting acceptance.
 
 ## User workflow preference — November 22, 2026
 
+- November 24 current state: read docs/GPU_CLEARANCE_RESULTS_2026-11-24.md,
+  docs/AI_STATUS.md and docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md first. The
+  user authorized committing/pushing/merging the current branch. Both frozen-
+  motor residual arms are CLOSED at 32 updates each, 2/16 turns versus the
+  baseline's 3/16. Neither candidate was adopted. Original motor 336 remains
+  protected and active. The full 41-input numerical audit is complete.
+  Conservative swept contact rejection passed matched CPU/CUDA controls,
+  including real bank contact, but its single full-collector attempt timed out
+  at the user's new FOUR-SECOND process cap before issuing any physics.
+  The new accelerated training mode remains gated and unqualified. Preserve
+  that failed attempt. No automatic retry, budget reuse or new PPO follows
+  from the measured single-control speedup. Investigate pre-issue startup
+  separately from turning-learning changes. No Python, food, scripted steering,
+  force shortcuts or tolerance relaxation. The Godot app records the failed
+  turning result and explicitly identifies reused archived retention evidence.
+
 - Latest November23 shoreline feedback: fix the mismatch between visible water
   and the smaller supported domain, and use all three saved design reviews.
   The user explicitly insists that turn direction and creature behavior come

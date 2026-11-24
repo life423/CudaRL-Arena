@@ -8,9 +8,12 @@ pond_turn_analysis.exe build/turn32 assets/research-evidence/pond-turning-v2
 pond_turn_analysis.exe build/turn34 assets/research-evidence/pond-turning-v4-repeated
 pond_turn_analysis.exe --training build/turn33 assets/research-evidence/pond-turning-v4-repeated 32
 pond_turn_analysis.exe --training build/turn34 assets/research-evidence/pond-turning-v4-repeated 32
+pond_turn_analysis.exe build/turn35 assets/research-evidence/pond-turning-v5-half-second --archived-baseline build/turn34/baseline0
+pond_turn_analysis.exe --training build/turn35 assets/research-evidence/pond-turning-v5-half-second 8
 ```
 
-It reads only completed existing v2, v3-course or v4-repeated assessments at updates0/8/16/24/32. It does not
+It reads completed v2–v5 assessments. The optional archived baseline must match
+the new protocol's recorded prior result and zero-work reuse receipt. It does not
 include a simulator, neural network, CUDA runtime or optimizer. Raw CSV/JSON
 SHA256s and derived-file SHA256s are recorded in `analysis.json`. Running again
 after a new checkpoint completes refreshes the reproducible derived tables.
@@ -42,6 +45,12 @@ Training mode reads the saved native batch files, verifies each checkpoint
 wrapper checksum and dimensions, and binds raw-file SHA256s. It writes
 `v3-training-requests.csv`/`v4-training-requests.csv` and their summary JSONs.
 The final argument is the completed-update prefix to inspect (1–32).
+
+For v5, provide a prefix of 1–8. The reader reconstructs course independently
+from horizontal whole-body COM positions ten control ticks apart. The projected
+speed, depth and tilt checks still use the current endpoint. The signed request
+angles must fall between 10° and 15° in magnitude. V5 writes its own request
+CSV and summary.
 
 The shared training completion definition requires at least100 post-onset ticks,
 then20 consecutive qualifying instantaneous COM samples: course error≤5°,

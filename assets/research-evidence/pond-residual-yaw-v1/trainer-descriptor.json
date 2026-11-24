@@ -1,0 +1,30 @@
+{
+  "protocol_id": "pond-motor-residual-ppo-v1-2026-11-24",
+  "source_sha256": "f053435d27061d2ddae9467f73b572ea4a21a79fde60ffeadcf14b4e2c139be4",
+  "source_identity_fnv1a64": "10956369867553689541",
+  "qualified_physics_source_sha256": "195a8b13b39fe8591f5d0ec49293e5ab46f5a5987f27b1d6b555166b80fecdfa",
+  "actor_inputs": 42,
+  "critic_inputs": 41,
+  "residual_parameters": 722,
+  "base_parameters": 2532,
+  "world_stride": 1384,
+  "task_stride": 368,
+  "trace_stride": 192,
+  "turn_practice_degrees": [
+    15,
+    30,
+    60,
+    90
+  ],
+  "curriculum_ordinal": "lifetime_per_world_issued_requests",
+  "max_updates": 32,
+  "worlds": 512,
+  "rollout_controls": 64,
+  "minibatch": 4096,
+  "epochs": 4,
+  "actor_learning_rate": 0.0003,
+  "critic_learning_rate": 0.001,
+  "base_Adam_calls": 0,
+  "physical_controls": 0,
+  "optimizer_calls": 0
+}

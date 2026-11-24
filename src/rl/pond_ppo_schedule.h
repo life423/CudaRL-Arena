@@ -14,6 +14,37 @@ struct State {
     uint64_t onsets=0,successes=0,timeouts=0,interrupted=0,early_terminal=0,long_holds=0;
 };
 struct SavedTask {pt::Task task{};State schedule{};};
+// x/z are mass-weighted COM positions in meters at control boundaries.
+// Ten stored endpoints make a half-second displacement at the next endpoint.
+struct CourseHistory {
+    static constexpr uint32_t intervals = 10;
+    float x[intervals]{}, z[intervals]{};
+    uint32_t next = 0, count = 0;
+    CUDARL_HD bool append(float x_m, float z_m, p::V& velocity) {
+        const bool ready = count == intervals;
+        if (ready) {
+            constexpr float duration = intervals * pt::control_seconds;
+            velocity = {(x_m - x[next]) / duration, 0, (z_m - z[next]) / duration};
+        } else {
+            ++count;
+        }
+        x[next] = x_m;
+        z[next] = z_m;
+        next = (next + 1) % intervals;
+        return ready;
+    }
+};
+struct HalfSecondTask {pt::Task task{};State schedule{};CourseHistory history{};};
+struct HorizontalCourse {float x=0,z=0;};
+struct SignedCourseTask {pt::Task task{};State schedule{};CourseHistory history{};HorizontalCourse movement{};};
+// Signed yaw in half-turns. Positive yaw turns +X towards -Z in the pond.
+// No estimate during settling, other tasks or zero displacement.
+CUDARL_HD inline float signed_course_input(const pt::Task& task, HorizontalCourse movement) {
+    if (task.kind != pt::Turn || !task.request_changed || (movement.x == 0 && movement.z == 0)) return 0;
+    const auto heading = task.request.request.heading;
+    return atan2f(movement.z * heading.x - movement.x * heading.z,
+                  movement.x * heading.x + movement.z * heading.z) / pt::obs::pi;
+}
 struct Sample {float vx=0,vz=0,depth=0,tilt=0;};
 CUDARL_HD inline void reset_episode(State& s) {
     const auto on=s.onsets,su=s.successes,to=s.timeouts,in=s.interrupted,early=s.early_terminal,longs=s.long_holds;
@@ -31,11 +62,12 @@ CUDARL_HD inline void course(State& s,const Sample& m) {
 }
 // Invoked before a control only. Thus a final episode tick cannot issue an
 // unexercised replacement, and a rollout/checkpoint edge has no timing effect.
-CUDARL_HD inline void before(State& s,pt::Task& task,uint32_t env,uint32_t seed) {
+CUDARL_HD inline void before(State& s,pt::Task& task,uint32_t env,uint32_t seed,uint32_t program=pt::repeated_headings_v1) {
     s.events=0;
     if(task.kind!=pt::Turn||s.active||task.episode_controls<pt::turn_control||task.episode_controls>=pt::episode_limit)return;
     const bool first=s.serial==0;
-    s.angle=first?task.turn_radians:angle_draw(env,task.episode_index,s.serial,seed);
+    s.angle=first?task.turn_radians:(pt::half_second_program(program)?
+        pt::paired_turn_angle(env,task.episode_index,s.serial,seed):angle_draw(env,task.episode_index,s.serial,seed));
     p::V heading=task.request.request.heading;
     if(!first&&s.valid_course)heading={s.last_course_x,0,s.last_course_z};
     const auto rotation=p::axis_rotation({0,1,0},s.angle);
@@ -50,14 +82,18 @@ CUDARL_HD inline void before(State& s,pt::Task& task,uint32_t env,uint32_t seed)
     s.long_hold=rng::bits(seed,rng::hash_u32(env^0x35c7b219u^rng::hash_u32(task.episode_index)),s.serial)%10u==0;
     if(s.long_hold)++s.long_holds;s.events|=Onset;
 }
-CUDARL_HD inline void after(State& s,const pt::Task& task,const Sample& m,bool terminal,bool truncated) {
-    course(s,m);
+CUDARL_HD inline void after(State& s,const pt::Task& task,const Sample& m,bool terminal,bool truncated,
+                            const p::V* measured_course_velocity=nullptr) {
+    const Sample movement = measured_course_velocity ?
+        Sample{measured_course_velocity->x,measured_course_velocity->z,m.depth,m.tilt} : m;
+    course(s,movement);
     if(task.kind!=pt::Turn||!s.active)return;
     ++s.age;
     const auto h=task.request.request.heading;
-    const float speed=sqrtf(m.vx*m.vx+m.vz*m.vz),projected=m.vx*h.x+m.vz*h.z;
-    const bool qualified=p::finite_number(speed)&&speed>0&&projected/speed>=.9961946980917455f&&
-        projected>=.006f&&m.depth<=.001f&&m.tilt<=10.f;
+    const float course_speed=sqrtf(movement.vx*movement.vx+movement.vz*movement.vz);
+    const float course_projection=movement.vx*h.x+movement.vz*h.z;
+    const bool qualified=p::finite_number(course_speed)&&course_speed>0&&course_projection/course_speed>=.9961946980917455f&&
+        m.vx*h.x+m.vz*h.z>=.006f&&m.depth<=.001f&&m.tilt<=10.f;
     if(!s.succeeded){
         s.streak=s.age>100&&qualified?s.streak+1:0;
         if(s.streak>=20){s.succeeded=true;++s.successes;s.events|=Success;if(!s.long_hold)s.active=false;}

@@ -1,0 +1,19 @@
+{
+  "distilled_actor_adopted": false,
+  "protocol_sha256": "2aa236851075ced1d172fb641f3fab6c3bfa421176bc394bc87aeef86329de1e",
+  "new_PPO_updates": 0,
+  "through_physical_assessment_seconds": 7.4817391,
+  "completed": false,
+  "stages": [
+    {
+      "seconds": 0.8319423,
+      "exit_code": 0,
+      "stage": "supervised_training"
+    },
+    {
+      "seconds": 6.5824825,
+      "exit_code": 2,
+      "stage": "physical_evaluation"
+    }
+  ]
+}
