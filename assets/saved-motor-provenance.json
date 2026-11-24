@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "kind": "immutable saved motor source provenance; not current runtime qualification",
+  "reference_runtime": "model6-appended41-amplitude-v2",
+  "reference_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+  "package_path": "live/research_data/learned-amplitude-v1.bin",
+  "package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "canonical_parent_sha256": "810dbd593ce39475cdd6e95b709bef3fdb34d50c9fcbbb2c345c7a8882a0bef0",
+  "source_hash_normalization": "CRLF to LF only, original package order",
+  "sources": [
+    {
+      "path": "src/nn/motor/movement_model.h",
+      "sha256_lf": "5ab30eb92a609ac8cfd50944bef8898cf199be3989dbb6550b05bf44bc5449d5",
+      "git_blob": "a1bd94b5c6098a3e2bc8f4b5819589988e1be00c"
+    },
+    {
+      "path": "src/nn/motor/joint_motor.h",
+      "sha256_lf": "dc53d22cff99352c5e378b6bcd919569c9a26455aa5df9f8ec1c36172171314f",
+      "git_blob": "7a9c09b8ce8d6a43d080a8f14cd1f7126a4b399a"
+    },
+    {
+      "path": "src/nn/motor/straight_task.h",
+      "sha256_lf": "994f7719f497e237ad4428c74feac2d73ce57e2ea6ea8e12ab8085882e28df22",
+      "git_blob": "f34d14765dcd67ec69a9112e1ae081f990a3cd22"
+    },
+    {
+      "path": "src/nn/motor/observation_contract.h",
+      "sha256_lf": "6d46b600194ce1c830fce11c01860143bbe3af9452996dc6bff07043f6c10332",
+      "git_blob": "110341c739a26050b76b8ee0da17613941a7e711"
+    },
+    {
+      "path": "src/nn/motor/state.h",
+      "sha256_lf": "b6141e4af555edf1dcd826047a081016296883ee005c4a6abc7438a9d83cab4c",
+      "git_blob": "8f6efcbda0327ebb8e07ddc2b5f84d4f99f033f0"
+    },
+    {
+      "path": "src/nn/motor/frozen_controller.cpp",
+      "sha256_lf": "9c6a9d3c31b09f8207c4091252c4f7ac963ff2b09b2b8ad3d278570b4f536e74",
+      "git_blob": "a46acf96fef4b35132f2450df6d888bfd2e51a9e"
+    },
+    {
+      "path": "src/nn/motor/frozen_controller.h",
+      "sha256_lf": "fa437b0429cb9fb3f7233dfb00548be57eda74417f98d27fa4c28c31e69ee2bc",
+      "git_blob": "8fff29a97935f3c8189aa32683bde26b49c7d05c"
+    },
+    {
+      "path": "src/physics/dynamics.h",
+      "sha256_lf": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6",
+      "git_blob": "e2fda4d054d916b72319eb5b0532c4ff4e98c350"
+    },
+    {
+      "path": "src/physics/contact.h",
+      "sha256_lf": "3e88a73390f08803eb5f55abc8ab1d93533884169817bf5165f7da698dc152a6",
+      "git_blob": "37c9b828365b8df7a0f310a08066d2f79095a404"
+    },
+    {
+      "path": "src/simulation/world.h",
+      "sha256_lf": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3",
+      "git_blob": "07001d7342212afec3b060ab04ed1740043ff50e"
+    },
+    {
+      "path": "src/nn/mlp_cpu.h",
+      "sha256_lf": "f848a64e32c0bbefdf418972d42e82eab7214195f574c0638e1cc85206eed9cb",
+      "git_blob": "f5bd5e21144eb1cf0b8deddf426a41fa61baeb41"
+    },
+    {
+      "path": "src/nn/mlp_spec.h",
+      "sha256_lf": "086a3b10b170094c4d6eee5ee1175baec7cbd3f85670dc39207a3dd41b0ef7eb",
+      "git_blob": "eeb6e5a0f739959ae3eec12992b99709d53d209b"
+    }
+  ]
+}
