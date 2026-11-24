@@ -1,0 +1,28 @@
+{
+  "native_ledger_bytes": 98351,
+  "actual_closed_assessment_files_bytes": 408844773,
+  "cap_bytes": 1073741824,
+  "stages": [
+    {
+      "stage": "baseline0",
+      "bytes": 81843354
+    },
+    {
+      "stage": "eval8",
+      "bytes": 81726458
+    },
+    {
+      "stage": "eval16",
+      "bytes": 81770658
+    },
+    {
+      "stage": "eval24",
+      "bytes": 81726731
+    },
+    {
+      "stage": "eval32",
+      "bytes": 81777572
+    }
+  ],
+  "explanation": "The native evaluator enumerated the CSV files before their writers closed. File sizes measured after closure correct the byte count. The five completed assessments stayed within the original cap."
+}

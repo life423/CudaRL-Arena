@@ -7,7 +7,7 @@ pond_turn_analysis.exe --self-test
 pond_turn_analysis.exe build/turn32 assets/research-evidence/pond-turning-v2
 ```
 
-It reads only completed existing assessments at updates0/8/16/24/32. It does not
+It reads only completed existing v2 or v3-course assessments at updates0/8/16/24/32. It does not
 include a simulator, neural network, CUDA runtime or optimizer. Raw CSV/JSON
 SHA256s and derived-file SHA256s are recorded in `analysis.json`. Running again
 after a new checkpoint completes refreshes the reproducible derived tables.

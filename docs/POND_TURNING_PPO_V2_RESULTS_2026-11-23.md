@@ -93,6 +93,12 @@ command times. This build lacked a dedicated evidence-writing timer, so those
 operations cannot be accurately separated retrospectively. The public
 [run summary](../assets/research-evidence/pond-turning-v2/final-summary.json)
 includes the individual stage times and the bounds of the end-to-end clock.
+The evaluator recorded 98,351 bytes in its ledger while its CSV files were
+open. The five assessment directories actually held 408,844,773 bytes after
+closure, within the 1 GiB allocation. The next evaluator closes the writers
+before charging the files to the ledger. Skill metrics and elapsed times
+come from the original assessments.
+[Closed-file byte audit](../assets/research-evidence/pond-turning-v2/evidence-byte-audit.json)
 
 The [update-32 research checkpoint](../assets/research-evidence/pond-turning-v2/candidate-32.bin)
 has SHA-256 `23b48585239dc2b2699a3c0ef1294877f3116412783a87a96e8a44b9beb48cfb`.

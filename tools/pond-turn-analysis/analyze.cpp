@@ -297,7 +297,9 @@ Stage stage(const fs::path &root, const std::string &name) {
          {"result.json", "cases.csv", "controls.csv", "turn-substeps.csv", "long-windows.csv"})
         s.hashes.emplace_back((directory / file).generic_string(), sha256(directory / file));
     s.result_text = text(directory / "result.json");
-    require(scalar(s.result_text, "protocol_id") == "pond-motor-ppo-v2-2026-11-23" &&
+    const auto protocol_id = scalar(s.result_text, "protocol_id");
+    require((protocol_id == "pond-motor-ppo-v2-2026-11-23" ||
+             protocol_id == "pond-motor-ppo-v3-course-2026-11-23") &&
                 scalar(s.result_text, "preflight_only") == "false",
             "Wrong recorded assessment protocol");
     s.update = std::stoi(scalar(s.result_text, "update"));

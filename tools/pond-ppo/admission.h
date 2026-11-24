@@ -21,5 +21,5 @@ void validate_gate_documents(const std::string& cpu,const std::string& gpu,
 void prerequisites(const std::filesystem::path& protocol,
                    const std::filesystem::path& cpu_gate,
                    const std::filesystem::path& cuda_gate,
-                   uint64_t evaluator_source,uint64_t parent_checksum);
+                   uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum=0);
 }

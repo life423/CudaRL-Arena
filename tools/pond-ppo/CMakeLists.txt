@@ -72,3 +72,7 @@ add_executable(pond_ppo_pure pure_check.cpp admission.cpp "${worktree}/src/core/
 target_include_directories(pond_ppo_pure PRIVATE "${worktree}/src" "${CMAKE_BINARY_DIR}")
 target_link_libraries(pond_ppo_pure PRIVATE bcrypt)
 pond_warnings(pond_ppo_pure)
+
+add_executable(pond_ppo_sampler_pure sampler_check.cpp)
+target_include_directories(pond_ppo_sampler_pure PRIVATE "${worktree}/src" "${worktree}/src/nn")
+pond_warnings(pond_ppo_sampler_pure)

@@ -75,7 +75,7 @@ under that historical simulator, not a matched before/after baseline for a v4
 candidate. A comparison across the simulator correction cannot attribute a change
 solely to learning. No new60s default-Godot trajectory was run in this v4 allocation.
 
-## Candidate-status text follow-up
+## Historical candidate v1 status
 
 Details now explicitly says that original motor336 is playing and that the
 separate candidate stopped after8 PPO updates after leaving the2mm lane. The
@@ -88,3 +88,30 @@ The changed registered entry passed10/10 zero-step checks. The existing rendered
 UI suite passed256/256 checks at the same four sizes, with no physical trajectory
 or optimizer calls. Candidate-status evidence is in
 `build/pw30/candidate-status-ui/verification.json`; the open user app was untouched.
+
+## Portable candidate v2 status
+
+The latest Details status records32 completed GPU PPO updates. All20 retention
+cases pass: the original28 passing long-swim windows,14 resting cases and4 short
+swims remain retained. Requested turns pass3/16, unchanged from the untrained
+baseline; turning and autonomous pond navigation remain unqualified. Original
+motor336 remains selected. The separate candidate was not installed.
+
+Small native receipts, case/window tables, a movement summary and a checkpoint
+digest are published under `live/research_data/studies/turn32-v2-2026-11-23/`.
+The candidate itself is preserved separately at
+`assets/research-evidence/pond-turning-v2/candidate-32.bin`,SHA256
+`23b48585239dc2b2699a3c0ef1294877f3116412783a87a96e8a44b9beb48cfb`.
+The app does not load these candidate weights. Its portable study files total
+35,720 bytes including the historical v1 record and README; large rollout traces
+remain outside the app. SHA-bound recorded results remain visible in a source
+checkout without the local DLL or ignored build directory. A new native build
+still needs its own qualification binding; historical results do not qualify it.
+
+Final verification passed10/10 registered-entry checks,8/8 source-only checks
+without a DLL or private build files, and128/128 rendered desktop/phone checks.
+Eight screenshots were saved and both verified Details views inspected. All
+checks used zero physical controls/substeps, optimizer updates or CUDA calls.
+The open user app was untouched. Evidence is in
+`build/turn32-ui/verification.json`,SHA256
+`42550fe0e1035d6909a8786ca72b9d5f778a210e4908ed7d1f8737d4cbf7449f`.

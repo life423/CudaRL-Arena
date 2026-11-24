@@ -6,6 +6,7 @@
 #endif
 #include "admission.h"
 #include "core/checkpoint.h"
+#include "rl/pond_ppo_contract.h"
 #include "pond_ppo_identity.h"
 #include <windows.h>
 #include <bcrypt.h>
@@ -81,10 +82,15 @@ void validate_gate_documents(const std::string& cpu,const std::string& gpu,
 void prerequisites(const std::filesystem::path& protocol_path,
                    const std::filesystem::path& cpu_gate,
                    const std::filesystem::path& cuda_gate,
-                   uint64_t evaluator_source,uint64_t parent_checksum) {
+                   uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum) {
     require(!protocol_path.empty()&&!cpu_gate.empty()&&!cuda_gate.empty(),"Sealed protocol and CPU/CUDA physics results required");
     const auto protocol=text_file(protocol_path);
-    require(scalar(protocol,"protocol_id")=="pond-motor-ppo-v2-2026-11-23","Wrong PPO protocol");
+    require(turn_curriculum<=2,"Unknown training-only study program");
+    require(scalar(protocol,"protocol_id")==
+        (turn_curriculum==2?pond_ppo::course_study_protocol_id:(turn_curriculum==0?pond_ppo::default_study_protocol_id:pond_ppo::curriculum_study_protocol_id)),
+        "Protocol and explicit curriculum differ; cross-study resume is prohibited");
+    if(turn_curriculum==1)require(scalar(protocol,"turn_curriculum_program")=="paired-gentle-moderate-v1","Missing bound curriculum program");
+    if(turn_curriculum==2)require(scalar(protocol,"study_program")=="course-direction-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound course-reward program/physical launch profile");
     require(scalar(protocol,"source_identity_fnv1a64")==std::to_string(source_identity()),"Trainer source identity changed");
     require(scalar(protocol,"qualified_physics_source_sha256")==physics_source_sha256(),"Qualified physics source binding differs from compiled model");
     require(scalar(protocol,"max_updates")=="32"&&scalar(protocol,"worlds")=="512"&&scalar(protocol,"rollout_controls")=="64","Protocol work allocation changed");

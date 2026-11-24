@@ -14,6 +14,9 @@
 // ppo_checkpoint.h: that historical reader owns a different 40-input topology.
 // Parsing these bytes constructs no world, CUDA allocation or optimizer.
 namespace cudarl::rl::pond_ppo {
+inline constexpr char default_study_protocol_id[]="pond-motor-ppo-v2-2026-11-23";
+inline constexpr char curriculum_study_protocol_id[]="pond-motor-ppo-v3-curriculum-2026-11-23";
+inline constexpr char course_study_protocol_id[]="pond-motor-ppo-v3-course-2026-11-23";
 
 inline constexpr uint32_t candidate_magic = 0x31505044u;
 inline constexpr uint32_t candidate_schema = 1;

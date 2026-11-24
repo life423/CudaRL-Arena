@@ -36,7 +36,7 @@ namespace {
 constexpr uint64_t evaluation_controls=36800,evaluation_substeps=368000;
 constexpr uint64_t aggregate_controls=184000,aggregate_substeps=1840000,evidence_cap=1024ull*1024*1024;
 constexpr double aggregate_seconds=900;
-constexpr const char* protocol_id="pond-motor-ppo-v2-2026-11-23";
+constexpr const char* protocol_id=pp::default_study_protocol_id;
 static_assert(pr::version==pp::runtime_version,"Candidate evaluator must use the exact qualified runtime");
 using Keys=std::set<std::pair<int,int>>;
 void require(bool value,const std::string& message){if(!value)throw std::runtime_error(message);}
@@ -64,7 +64,11 @@ std::string scalar(const std::string& text,const std::string& name) {
         if(key==name)return value;ws();if(i<text.size()&&text[i]==','){++i;continue;}break;}
     throw std::runtime_error("Missing root JSON field: "+name);
 }
-struct Options {bool describe=false,self_test=false,preflight=false,run=false,baseline=false,final_partial=false;fs::path parent,candidate,protocol,out,ledger,reference;};
+struct Options {bool describe=false,self_test=false,preflight=false,run=false,baseline=false,final_partial=false;fs::path parent,candidate,protocol,out,ledger,reference;std::string study_id=protocol_id;};
+std::string validated_study_id(const std::string& text){const auto id=scalar(text,"protocol_id");
+    require(id==pp::default_study_protocol_id||id==pp::curriculum_study_protocol_id||id==pp::course_study_protocol_id,"Wrong evaluation protocol");
+    if(id==pp::curriculum_study_protocol_id)require(scalar(text,"turn_curriculum_program")=="paired-gentle-moderate-v1","Unbound curriculum study");
+    if(id==pp::course_study_protocol_id)require(scalar(text,"study_program")=="course-direction-v1","Unbound course-reward study");return id;}
 Options options(int argc,char** argv) {
     Options out;for(int i=1;i<argc;++i){const std::string arg=argv[i];const auto next=[&](){require(i+1<argc,"Missing argument value");return fs::path(argv[++i]);};
         if(arg=="--describe")out.describe=true;else if(arg=="--self-test")out.self_test=true;else if(arg=="--preflight")out.preflight=true;else if(arg=="--run")out.run=true;else if(arg=="--baseline")out.baseline=true;else if(arg=="--final-partial")out.final_partial=true;
@@ -389,7 +393,7 @@ void assessment_pure_tests(uint32_t& assertions) {
 uint64_t directory_bytes(const fs::path& path) {uint64_t count=0;for(const auto& entry:fs::recursive_directory_iterator(path))if(entry.is_regular_file())count+=entry.file_size();return count;}
 void write_result(const Options& options,const pp::CandidateState& candidate,const Budget& budget,const Summary& summary,bool preflight,uint64_t checkpoint) {
     std::ofstream out(options.out/(preflight?"preflight.json":"result.json"));
-    out<<std::setprecision(17)<<"{\"schema\":2,\"protocol_id\":\""<<protocol_id<<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"preflight_only\":"<<(preflight?"true":"false")
+    out<<std::setprecision(17)<<"{\"schema\":2,\"protocol_id\":\""<<options.study_id<<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"preflight_only\":"<<(preflight?"true":"false")
         <<",\"passed\":"<<((preflight||(summary.retention&&assessment_completed(summary)))&&!summary.hard?"true":"false")
         <<",\"baseline_only\":"<<(options.baseline?"true":"false")<<",\"assessment_completed\":"<<(assessment_completed(summary)?"true":"false")
         <<",\"training_admission_qualified\":"<<(!preflight&&summary.retention&&assessment_completed(summary)?"true":"false")
@@ -417,12 +421,12 @@ int main(int argc,char** argv) {
     try {
         o=options(argc,argv);
         if(o.self_test){pure_tests();return 0;}
-        if(o.describe){std::cout<<"{\"protocol_id\":\""<<protocol_id<<"\",\"assessment_schema\":2,\"eval_source_identity_fnv1a64\":\""<<eval_source()<<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256
+        if(o.describe){if(!o.protocol.empty()){const auto bytes=file(o.protocol);o.study_id=validated_study_id({bytes.begin(),bytes.end()});}std::cout<<"{\"protocol_id\":\""<<o.study_id<<"\",\"supported_protocol_ids\":[\""<<pp::default_study_protocol_id<<"\",\""<<pp::curriculum_study_protocol_id<<"\",\""<<pp::course_study_protocol_id<<"\"],\"assessment_schema\":2,\"eval_source_identity_fnv1a64\":\""<<eval_source()<<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256
             <<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<sizeof(pt::Task)
             <<",\"retention_cases\":20,\"retention_controls\":30400,\"rest_cases\":14,\"short_swim_cases\":4,\"required_parent_long_window_keys\":28,\"turn_cases\":16,\"complete_baseline_retention_required\":true,\"assess_all_soft_failures\":true,\"turning_is_training_prerequisite\":false,\"max_controls_per_checkpoint\":36800,\"max_assessments\":5,\"max_aggregate_controls\":184000,\"max_aggregate_substeps\":1840000,\"max_wall_seconds\":900,\"final_partial_requires_stopped_last_good\":true,\"final_partial_closes_ledger\":true,\"optimizer_steps\":0}\n";return 0;}
         require(!fs::exists(o.out)&&fs::create_directories(o.out),"Evaluation output already exists");owns_output=true;
         const auto parent=load_parent(o.parent);parent_checksum=parent.checksum;const auto protocol=file(o.protocol);protocol_checksum=cp::checksum(protocol);
-        const std::string text(protocol.begin(),protocol.end());require(scalar(text,"protocol_id")==protocol_id,"Wrong evaluation protocol");
+        const std::string text(protocol.begin(),protocol.end());o.study_id=validated_study_id(text);
         const auto training_source=std::stoull(scalar(text,"source_identity_fnv1a64"));const auto payload=cp::read(o.candidate.string());checkpoint=cp::checksum(payload);
         candidate=pp::read_candidate(payload,parent.checksum,protocol_checksum,training_source,static_cast<uint32_t>(sizeof(pr::World)),static_cast<uint32_t>(sizeof(pt::Task)));
         const uint64_t update=candidate.counters.completed_updates;
@@ -446,21 +450,25 @@ int main(int argc,char** argv) {
         const int slot=assessment_slot(update,o.baseline,o.final_partial,ledger.mask);
         require(ledger.controls+evaluation_controls<=aggregate_controls&&ledger.substeps+evaluation_substeps<=aggregate_substeps,"Aggregate evaluation reservation exceeded");
         ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=o.final_partial||update==32;save_ledger(o.ledger,ledger);ledger_started=true;
-        Output output(o.out);Keys candidate_keys;
-        for(const auto& spec:specs()) {
-            const auto outcome=evaluate(spec,candidate,actor,budget,output,expected_keys);
-            if(spec.turn){++summary.turn_attempted;summary.turn_passed+=outcome.passed?1u:0u;summary.turn_completed+=outcome.completed?1u:0u;}
-            else {
-                ++summary.retention_attempted;summary.retention_passed+=outcome.passed?1u:0u;summary.retention_completed+=outcome.completed?1u:0u;
-                candidate_keys.insert(outcome.long_keys.begin(),outcome.long_keys.end());
-                if(spec.holding){++summary.hold_attempted;summary.hold_passed+=outcome.passed?1u:0u;}
-                else if(spec.long_swim){++summary.long_attempted;summary.long_passed+=outcome.passed?1u:0u;}
-                else {++summary.short_attempted;summary.short_passed+=outcome.passed?1u:0u;}
-                if(!outcome.passed&&summary.first_retention_failure.empty())summary.first_retention_failure=std::string(spec.suite)+"_"+std::to_string(spec.id);
+        Keys candidate_keys;
+        // Windows can report a stale file size until the last writer closes.
+        {
+            Output output(o.out);
+            for(const auto& spec:specs()) {
+                const auto outcome=evaluate(spec,candidate,actor,budget,output,expected_keys);
+                if(spec.turn){++summary.turn_attempted;summary.turn_passed+=outcome.passed?1u:0u;summary.turn_completed+=outcome.completed?1u:0u;}
+                else {
+                    ++summary.retention_attempted;summary.retention_passed+=outcome.passed?1u:0u;summary.retention_completed+=outcome.completed?1u:0u;
+                    candidate_keys.insert(outcome.long_keys.begin(),outcome.long_keys.end());
+                    if(spec.holding){++summary.hold_attempted;summary.hold_passed+=outcome.passed?1u:0u;}
+                    else if(spec.long_swim){++summary.long_attempted;summary.long_passed+=outcome.passed?1u:0u;}
+                    else {++summary.short_attempted;summary.short_passed+=outcome.passed?1u:0u;}
+                    if(!outcome.passed&&summary.first_retention_failure.empty())summary.first_retention_failure=std::string(spec.suite)+"_"+std::to_string(spec.id);
+                }
+                if(outcome.hard){summary.hard=true;summary.reason=outcome.reason;break;}
+                // Every predeclared skill is assessed after a soft miss. A failed
+                // retention assessment still blocks the next training chunk below.
             }
-            if(outcome.hard){summary.hard=true;summary.reason=outcome.reason;break;}
-            // Every predeclared skill is assessed after a soft miss. A failed
-            // retention assessment still blocks the next training chunk below.
         }
         summary.actual_long_passes=static_cast<uint32_t>(candidate_keys.size());
         for(const auto& key:expected_keys)summary.retained_long_passes+=candidate_keys.count(key)?1u:0u;
