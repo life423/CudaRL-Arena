@@ -5,11 +5,13 @@ param(
     [string]$ProtocolSha256,
     [ValidateSet(8,16,24,32)][int]$StopAfterUpdate=32,
     [switch]$Run,
+    [switch]$ResumeVerifiedBaseline,
     [switch]$SelfTest
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 $script:Stub=$null
+$script:RunnerPath=$PSCommandPath
 
 function Assert-Condition([bool]$Condition,[string]$Message) {
     if(-not $Condition){throw $Message}
@@ -55,7 +57,11 @@ function Check-Retention($Result,[int]$Update,[string]$Candidate,[string]$Receip
     Assert-Condition ([string](Field $Result 'checkpoint_checksum') -eq [string]$candidateChecksum) 'Assessment tested another candidate'
     Assert-Condition ([string](Field $Result 'eval_source_identity') -eq [string]$script:Plan.retention_evaluator_source_fnv1a64) 'Evaluator identity mismatch'
     $receiptData=Read-Checkpoint $Receipt -VerifyPayload
-    $reader=[IO.BinaryReader]::new([IO.MemoryStream]::new($receiptData.Payload,$false))
+    Assert-Condition ($receiptData.Payload.Length -eq 96) 'Wrong schema3 receipt payload length'
+    $body=[byte[]]::new(88)
+    [Array]::Copy($receiptData.Payload,0,$body,0,88)
+    Assert-Condition ((Fnv64 $body) -eq [BitConverter]::ToUInt64($receiptData.Payload,88)) 'Native receipt inner seal mismatch'
+    $reader=[IO.BinaryReader]::new([IO.MemoryStream]::new($body,$false))
     try {
         foreach($expected in @([uint32]0x31525044,3,4,2)){Assert-Condition ($reader.ReadUInt32() -eq $expected) 'Wrong typed receipt schema/runtime'}
         foreach($expected in @($candidateChecksum,$script:ParentChecksum,$script:ProtocolChecksum,[uint64]$script:Plan.retention_evaluator_source_fnv1a64)){
@@ -66,6 +72,43 @@ function Check-Retention($Result,[int]$Update,[string]$Candidate,[string]$Receip
         Assert-Condition ($reader.ReadUInt32() -eq 1 -and $reader.ReadUInt32() -eq [uint32]($Update -eq 0)) 'Failed or incorrectly typed receipt'
         Assert-Condition ($reader.BaseStream.Position -eq $reader.BaseStream.Length) 'Unexpected receipt bytes'
     } finally {$reader.Dispose()}
+}
+function Check-BaselineRecovery([string]$Root,[string]$PlanHash) {
+    $old=Join-Path $Root 'runner/result.json';$oldResult=Read-Json $old
+    $oldStart=Read-Json (Join-Path $Root 'runner/started.json')
+    Assert-Condition ($oldResult.status -eq 'STOPPED' -and $oldResult.error -eq 'Unexpected receipt bytes' -and $oldResult.last_passed_training_chunk_update -eq 0 -and $null -eq $oldResult.native_training_accounting) 'Recovery is only for the verified baseline parser stop before training'
+    Assert-Condition ($oldStart.protocol_sha256 -eq $PlanHash -and -not $oldStart.synthetic -and -not $oldResult.synthetic) 'Recovery must bind the real original invocation and unchanged protocol'
+    Assert-Condition (@($oldResult.commands|Where-Object {$_.stage -like 'train-*'}).Count -eq 0) 'Training was already attempted; baseline-only recovery forbidden'
+    $snapshot=Join-Path $Root 'runner-recovery-inputs/run-pond-turning-original.ps1'
+    Assert-Condition ((File-Hash $snapshot) -eq $script:Plan.runner_script_sha256) 'Original sealed runner snapshot mismatch'
+    Assert-Condition (-not (Test-Path -LiteralPath ($script:Plan.ledger_path_absolute+'.running')) -and -not (Test-Path -LiteralPath ($script:Plan.evaluation_ledger_path_absolute+'.assessment.lock'))) 'Native process state remains active/unresolved'
+    $initial=Read-Json (Join-Path $Root 'init/result.json')
+    Assert-Condition ($initial.initialized -and $initial.physical_controls -eq 0 -and $initial.physical_substeps -eq 0 -and $initial.optimizer_calls -eq 0) 'Recovery initialization was not zero-step'
+    $candidate=Join-Path $Root 'init/candidate-0.bin';$receipt=Join-Path $Root 'baseline0/baseline-receipt.bin'
+    $baseline=Read-Json (Join-Path $Root 'baseline0/result.json')
+    Assert-Condition ($baseline.candidate_actor_adam_calls -eq 0 -and $baseline.candidate_critic_adam_calls -eq 0) 'Baseline candidate has optimizer updates'
+    Check-Retention $baseline 0 $candidate $receipt
+    $training=Read-Checkpoint $script:Plan.ledger_path_absolute -VerifyPayload
+    $reader=[IO.BinaryReader]::new([IO.MemoryStream]::new($training.Payload,$false))
+    try {
+        Assert-Condition ($reader.ReadUInt32() -eq 0x314c5050 -and $reader.ReadUInt32() -eq 1) 'Wrong native training ledger'
+        Assert-Condition ($reader.ReadUInt64() -eq $script:ProtocolChecksum -and $reader.ReadUInt64() -eq [uint64]$script:Plan.source_identity_fnv1a64) 'Training ledger identity mismatch'
+        Assert-Condition ($reader.ReadUInt32() -eq 2 -and $reader.ReadUInt64() -eq (Read-Checkpoint $candidate).Checksum) 'Training ledger is not waiting at initialized candidate0'
+        for($i=0;$i -lt 5;++$i){Assert-Condition ($reader.ReadUInt64() -eq 0) 'Native training/optimizer work already occurred'}
+        $nativeSeconds=$reader.ReadDouble();$nativeBytes=$reader.ReadUInt64()
+        Assert-Condition ($nativeSeconds -ge 0 -and $nativeSeconds -le $script:Plan.max_wall_seconds -and $nativeBytes -le $script:Plan.max_evidence_bytes) 'Training resource ledger invalid'
+        Assert-Condition ($reader.ReadUInt32() -eq 1 -and $reader.ReadUInt64() -eq 0 -and $reader.ReadUInt64() -eq 0 -and $reader.BaseStream.Position -eq $reader.BaseStream.Length) 'Training ledger accounting unresolved/nonzero'
+    } finally {$reader.Dispose()}
+    $evaluation=Read-Checkpoint $script:Plan.evaluation_ledger_path_absolute -VerifyPayload
+    $reader=[IO.BinaryReader]::new([IO.MemoryStream]::new($evaluation.Payload,$false))
+    try {
+        Assert-Condition ($reader.ReadUInt32() -eq 0x314c4550 -and $reader.ReadUInt32() -eq 2) 'Wrong native evaluation ledger'
+        foreach($expected in @($script:ParentChecksum,$script:ProtocolChecksum,[uint64]$script:Plan.retention_evaluator_source_fnv1a64)){Assert-Condition ($reader.ReadUInt64() -eq $expected) 'Evaluation ledger identity mismatch'}
+        Assert-Condition ($reader.ReadUInt64() -eq 1 -and $reader.ReadUInt64() -eq $baseline.attempted_controls -and $reader.ReadUInt64() -eq $baseline.attempted_substeps) 'Evaluation ledger is not exactly the completed baseline slot'
+        [void]$reader.ReadUInt64();[void]$reader.ReadDouble()
+        Assert-Condition ($reader.ReadUInt32() -eq 0 -and $reader.ReadUInt32() -eq 0 -and $reader.BaseStream.Position -eq $reader.BaseStream.Length) 'Evaluation ledger active/closed or malformed'
+    } finally {$reader.Dispose()}
+    return @{candidate=$candidate;receipt=$receipt;previous_runner_result_sha256=(File-Hash $old);original_runner_sha256=(File-Hash $snapshot);recovery_runner_sha256=(File-Hash $script:RunnerPath);training_ledger_sha256=(File-Hash $script:Plan.ledger_path_absolute);evaluation_ledger_sha256=(File-Hash $script:Plan.evaluation_ledger_path_absolute);candidate_sha256=(File-Hash $candidate);receipt_sha256=(File-Hash $receipt)}
 }
 function Invoke-Stage([string]$Name,[string]$Executable,[string[]]$Arguments,[scriptblock]$Validate) {
     $stdout=Join-Path $script:LogRoot "$Name.stdout.txt"
@@ -105,7 +148,7 @@ function Invoke-Stage([string]$Name,[string]$Executable,[string[]]$Arguments,[sc
         Write-Json (Join-Path $script:LogRoot "$Name.command.json") $record
     }
 }
-function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool]$Execute) {
+function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool]$Execute,[bool]$RecoverBaseline=$false) {
     Assert-Condition ($ExpectedHash -match '^[a-fA-F0-9]{64}$' -and (File-Hash $PlanPath) -eq $ExpectedHash.ToLowerInvariant()) 'Exact reviewed protocol SHA256 required'
     $script:Plan=Read-Json $PlanPath;$plan=$script:Plan
     Assert-Condition ($plan.status -eq 'SEALED_BEFORE_CANDIDATE_INITIALIZATION') 'Protocol is not sealed for initialization'
@@ -125,14 +168,18 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
     $root=[IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($plan.ledger_path_absolute))
     Assert-Condition ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($plan.evaluation_ledger_path_absolute)) -eq $root) 'Training/evaluation ledgers must share the sealed study root'
     if(-not $Execute){return @{mode='inspect_only';protocol_id=$plan.protocol_id;stop_after_update=$Target;study_root=$root;physical_controls=0;optimizer_updates=0}}
-    foreach($path in @($plan.ledger_path_absolute,$plan.evaluation_ledger_path_absolute,(Join-Path $root 'runner'),(Join-Path $root 'init'),(Join-Path $root 'baseline0'))){Assert-Condition (-not (Test-Path -LiteralPath $path)) "Existing allocation/output; no restart: $path"}
-    foreach($update in @(8,16,24,32)){Assert-Condition (-not (Test-Path -LiteralPath (Join-Path $root "eval$update")) -and -not (Test-Path -LiteralPath (Join-Path $root "updates-$($update-7)-$update"))) 'Existing checkpoint output; no overwrite'}
-    $script:LogRoot=Join-Path $root 'runner';New-Item -ItemType Directory -Path $script:LogRoot -ErrorAction Stop | Out-Null
-    $script:Records=[Collections.Generic.List[object]]::new();$script:LastExit=$null;$script:LastTrainingResult=$null
     $script:ParentChecksum=(Read-Checkpoint $plan.parent_policy_path_absolute).Checksum
     $script:ProtocolChecksum=Fnv64 ([IO.File]::ReadAllBytes($PlanPath))
+    $recovery=$null
+    if($RecoverBaseline){$recovery=Check-BaselineRecovery $root $ExpectedHash}
+    else{foreach($path in @($plan.ledger_path_absolute,$plan.evaluation_ledger_path_absolute,(Join-Path $root 'runner'),(Join-Path $root 'init'),(Join-Path $root 'baseline0'))){Assert-Condition (-not (Test-Path -LiteralPath $path)) "Existing allocation/output; no restart: $path"}}
+    foreach($update in @(8,16,24,32)){Assert-Condition (-not (Test-Path -LiteralPath (Join-Path $root "eval$update")) -and -not (Test-Path -LiteralPath (Join-Path $root "updates-$($update-7)-$update"))) 'Existing checkpoint output; no overwrite'}
+    $script:LogRoot=Join-Path $root $(if($RecoverBaseline){'runner-recovered-baseline'}else{'runner'})
+    Assert-Condition (-not (Test-Path -LiteralPath $script:LogRoot)) 'Runner evidence already exists; no automatic recovery retry'
+    New-Item -ItemType Directory -Path $script:LogRoot -ErrorAction Stop | Out-Null
+    $script:Records=[Collections.Generic.List[object]]::new();$script:LastExit=$null;$script:LastTrainingResult=$null
     $clock=[Diagnostics.Stopwatch]::StartNew();$lastUpdate=0;$candidate=$null;$receipt=$null;$state='STOPPED';$failure=$null
-    Write-Json (Join-Path $script:LogRoot 'started.json') @{protocol_sha256=$ExpectedHash;stop_after_update=$Target;started_utc=[DateTime]::UtcNow.ToString('o');synthetic=($null -ne $script:Stub)}
+    Write-Json (Join-Path $script:LogRoot 'started.json') @{protocol_sha256=$ExpectedHash;stop_after_update=$Target;started_utc=[DateTime]::UtcNow.ToString('o');synthetic=($null -ne $script:Stub);verified_baseline_recovery=$recovery}
     try {
         $trainer=Invoke-Stage 'describe-trainer' $plan.trainer_executable_path_absolute (@('--describe')+$modeArguments) {param($path) Read-Json $path}
         Assert-Condition ([string]$trainer.source_identity_fnv1a64 -eq [string]$plan.source_identity_fnv1a64 -and $trainer.qualified_physics_source_sha256 -eq $plan.qualified_physics_source_sha256) 'Trainer/source/physics binding mismatch'
@@ -140,12 +187,16 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
         $evaluator=Invoke-Stage 'describe-evaluator' $plan.evaluator_executable_path_absolute @('--describe','--protocol',$PlanPath) {param($path) Read-Json $path}
         Assert-Condition ([string]$evaluator.eval_source_identity_fnv1a64 -eq [string]$plan.retention_evaluator_source_fnv1a64 -and $evaluator.protocol_id -eq $plan.protocol_id) 'Evaluator/protocol binding mismatch'
         $common=@('--policy',$plan.parent_policy_path_absolute,'--protocol',$PlanPath,'--cpu-gate',$plan.cpu_gate_path_absolute,'--cuda-gate',$plan.cuda_gate_path_absolute,'--evaluator-source',[string]$plan.retention_evaluator_source_fnv1a64)+$modeArguments
-        $initial=Join-Path $root 'init'
-        $candidate=Invoke-Stage 'initialize' $plan.trainer_executable_path_absolute (@('--initialize-only','--out',$initial,'--to-update','8')+$common) {
-            param($ignored) $value=Read-Json (Join-Path $initial 'result.json');Assert-Condition ($value.initialized -and $value.physical_controls -eq 0 -and $value.optimizer_calls -eq 0) 'Initialization did not remain zero-step';Join-Path $initial 'candidate-0.bin'
+        if($RecoverBaseline){$candidate=$recovery.candidate;$receipt=$recovery.receipt}
+        else {
+            $initial=Join-Path $root 'init'
+            $candidate=Invoke-Stage 'initialize' $plan.trainer_executable_path_absolute (@('--initialize-only','--out',$initial,'--to-update','8')+$common) {
+                param($ignored) $value=Read-Json (Join-Path $initial 'result.json');Assert-Condition ($value.initialized -and $value.physical_controls -eq 0 -and $value.optimizer_calls -eq 0) 'Initialization did not remain zero-step';Join-Path $initial 'candidate-0.bin'
+            }
         }
         foreach($update in @(0,8,16,24,32)) {
             if($update -gt $Target){break}
+            if($RecoverBaseline -and $update -eq 0){continue}
             if($update -gt 0) {
                 $chunk=Join-Path $root "updates-$($update-7)-$update"
                 $candidate=Invoke-Stage "train-$update" $plan.trainer_executable_path_absolute (@('--run','--out',$chunk,'--to-update',[string]$update,'--resume',$candidate,'--retention-receipt',$receipt)+$common) {
@@ -209,13 +260,14 @@ function Write-StubStage([string]$Name,[string[]]$Arguments,[string]$Stdout) {
     foreach($value in @($candidate,$script:ParentChecksum,$script:ProtocolChecksum,[uint64]$plan.retention_evaluator_source_fnv1a64)){$writer.Write([uint64]$value)}
     foreach($value in @(20,20,20,0)){$writer.Write([uint32]$value)}
     $writer.Write([uint64]30400);$writer.Write([uint64]304000);$writer.Write([uint32]1);$writer.Write([uint32]($update -eq 0));$writer.Flush()
+    $inner=Fnv64 $memory.ToArray();if($script:Stub.Scenario -eq 'bad-inner-seal'){$inner=0};$writer.Write([uint64]$inner);$writer.Flush()
     Write-SyntheticCheckpoint (Join-Path $out $(if($update -eq 0){'baseline-receipt.bin'}else{'retention-receipt.bin'})) $memory.ToArray();$writer.Dispose();return 0
 }
 function Test-Runner {
     $temporary=Join-Path ([IO.Path]::GetTempPath()) ("pond-runner-tests-"+[guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $temporary | Out-Null
     $tests=0
-    foreach($scenario in @('success','short-finish','baseline-failure','bad-receipt','retention-failure','partial-training-failure')) {
+    foreach($scenario in @('success','short-finish','baseline-failure','bad-receipt','bad-inner-seal','retention-failure','partial-training-failure')) {
         $root=Join-Path $temporary $scenario;New-Item -ItemType Directory -Path $root | Out-Null
         $plan=[ordered]@{status='SEALED_BEFORE_CANDIDATE_INITIALIZATION';protocol_id='pond-motor-ppo-v3-course-2026-11-23';max_updates=32;worlds=512;rollout_controls=64;source_identity_fnv1a64='101';retention_evaluator_source_fnv1a64='202';qualified_physics_source_sha256=('a'*64);ledger_path_absolute=(Join-Path $root 'training-ledger.bin');evaluation_ledger_path_absolute=(Join-Path $root 'evaluation-ledger.bin');trainer_opt_in_arguments=@('--turn-reward','course-error-v1')}
         foreach($entry in @(@('trainer_executable','trainer'),@('evaluator_executable','evaluator'),@('parent_policy','parent'),@('cpu_gate','cpu'),@('cuda_gate','cuda'),@('long_reference','reference'),@('human_protocol','human'))){
@@ -229,7 +281,7 @@ function Test-Runner {
         try{$result=Run-Exercise $path $hash $target $true}catch{$failed=$true;$caughtFailure=$_.Exception.Message}
         if($scenario -in @('success','short-finish')){Assert-Condition (-not $failed) "Synthetic $scenario failed: $caughtFailure";$expected=if($scenario -eq 'success'){'COMPLETED_ALLOCATION'}else{'INTENTIONAL_CHECKPOINT_FINISH'};Assert-Condition ($result.status -eq $expected) 'Wrong intentional/completed label'}
         else{Assert-Condition $failed "Synthetic $scenario unexpectedly admitted training"}
-        if($scenario -in @('baseline-failure','bad-receipt')){Assert-Condition (@($script:Stub.Calls|Where-Object {$_ -like 'train-*'}).Count -eq 0) 'Optimizer stage released without genuine baseline'}
+        if($scenario -in @('baseline-failure','bad-receipt','bad-inner-seal')){Assert-Condition (@($script:Stub.Calls|Where-Object {$_ -like 'train-*'}).Count -eq 0) 'Optimizer stage released without genuine baseline'}
         if($scenario -in @('retention-failure','short-finish')){Assert-Condition (-not $script:Stub.Calls.Contains('train-16')) 'Runner exceeded failed/intentional checkpoint'}
         if($scenario -eq 'partial-training-failure'){$record=Read-Json (Join-Path $root 'runner/result.json');Assert-Condition ($record.last_passed_training_chunk_update -eq 8 -and $record.native_training_accounting.completed_updates -eq 12 -and -not $script:Stub.Calls.Contains('eval16')) 'Partial native accounting was hidden or execution continued'}
         if($scenario -eq 'success'){$before=$script:Stub.Calls.Count;$rejected=$false;try{Run-Exercise $path $hash 32 $true|Out-Null}catch{$rejected=$true};Assert-Condition ($rejected -and $script:Stub.Calls.Count -eq $before) 'Existing study silently restarted'}
@@ -238,6 +290,15 @@ function Test-Runner {
     $script:Stub=$null
     return @{passed=$true;scenarios=$tests;evidence_directory=$temporary;physical_controls=0;optimizer_updates=0;note='Synthetic fixture outputs plus real cmd.exe exit0 process launches; no native trainer/evaluator execution.'}
 }
-if($SelfTest){Test-Runner | ConvertTo-Json -Depth 5;return}
+if($SelfTest){
+    $result=Test-Runner
+    if(-not [string]::IsNullOrWhiteSpace($Protocol)) {
+        Assert-Condition ((File-Hash $Protocol) -eq $ProtocolSha256) 'Actual native fixture protocol mismatch'
+        $script:Plan=Read-Json $Protocol;$script:ParentChecksum=(Read-Checkpoint $script:Plan.parent_policy_path_absolute).Checksum;$script:ProtocolChecksum=Fnv64 ([IO.File]::ReadAllBytes($Protocol))
+        $proof=Check-BaselineRecovery ([IO.Path]::GetDirectoryName($script:Plan.ledger_path_absolute)) $ProtocolSha256
+        $result['actual_native_receipt_and_zero_training_ledgers_verified']=$true;$result['actual_fixture_proof']=$proof
+    }
+    $result | ConvertTo-Json -Depth 5;return
+}
 Assert-Condition (-not [string]::IsNullOrWhiteSpace($Protocol)) 'Provide -Protocol and its reviewed -ProtocolSha256; use -Run only for an authorized sealed allocation'
-Run-Exercise ([IO.Path]::GetFullPath($Protocol)) $ProtocolSha256 $StopAfterUpdate $Run.IsPresent | ConvertTo-Json -Depth 12
+Run-Exercise ([IO.Path]::GetFullPath($Protocol)) $ProtocolSha256 $StopAfterUpdate $Run.IsPresent $ResumeVerifiedBaseline.IsPresent | ConvertTo-Json -Depth 12
