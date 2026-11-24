@@ -1,5 +1,116 @@
 # AI status — November 23, 2026
 
+**The second exercise completed all 32 native GPU PPO updates.** Restoring
+sideways feedback brought the untrained candidate back to 28/28 required
+long-swim windows. All five assessments, including update 32, retained those
+windows, four short swims and 14 rests. Turning stayed at 3/16. The registered
+Godot project continues to use the preserved motor 336. The trained checkpoint
+is saved separately for research.
+[Second exercise, measurements and evidence](POND_TURNING_PPO_V2_RESULTS_2026-11-23.md)
+
+## First exercise with heading-only moving requests
+
+**Food-free turning training reached update eight and stopped at its first
+retention check.** In the first long straight swim the candidate traveled at
+8.26 mm/s in the final window, but drifted 12.28 mm sideways in 60 s. The lane
+limit was 2 mm. Before its first optimizer update, the candidate had already
+drifted 11.78 mm in the same test. Its moving observation removed the horizontal
+position error that the saved motor used for course correction.
+
+The registered Godot project loads the original motor (336, with its learned
+holding gain) on runtime 4. The saved actor retained four short swims, 14 rests
+and all 28 previously passing long-swim windows on that runtime. All 36 CPU
+cases and all eight continued CPU/CUDA trajectory comparisons passed.
+[Shoreline verification](SHORELINE_RUNTIME_V4_RESULTS_2026-11-23.md)
+
+### First candidate exercise
+
+The standalone Release trainer `build/pt31/native/Release/pond_ppo.exe` ran
+on the RTX 5070. It statically links the worktree's `pond_ppo_gpu_core.lib`
+and CUDA runtime. The world-step kernel ran 16 blocks of 32 threads per control,
+one thread per physical world. One shared actor served all 512 worlds. World
+states, servo state, rollout buffers, networks and Adam moments resided on the GPU.
+The project's tiled GEMM, batched actor/critic, GAE, PPO and Adam ran on CUDA.
+The CPU coordinated launches, validated the simulation independently, and
+wrote the evidence. Godot played one saved motor independently of training.
+
+Each update collected 64 controls per world and made four passes with minibatches
+of 4,096. Across eight updates this produced 262,144 transitions, 2,621,440
+physical substeps and 256 actor plus 256 critic Adam calls. The first failed
+retention check ended training. Candidates 0 through 8 and all eight rollout
+batches are saved under `build/turn31`. The highest final-rollout approximate
+KL was 0.000860 (limit 0.05).
+[Candidate protocol](POND_TURNING_PPO_PROTOCOL_2026-11-23.md)
+
+### Matched skill checks before and after PPO
+
+| Skill | Candidate before PPO | Candidate after eight updates |
+| --- | ---: | ---: |
+| Short straight swims | 4/4 | 4/4 |
+| Rest on command, including two five-minute holds | 14/14 | 14/14 |
+| Long straight swims | 0/2 | 0/2 |
+| Previously passing long-swim windows retained | 6/28 | 6/28 |
+| Requested turns | 3/16 | 3/16 |
+
+Both checkpoints passed the same turns from pose 0: −15°, −5° and +5°.
+For the −30° and +30° requests from that pose, the trained candidate produced
+7.71 and 7.80 mm/s of projected COM speed but missed the requested courses by
+10.63° and 15.23° (limit 5°). Both +90° cases stopped at the depth limit.
+
+The two 60-second straight swims used identical starts, requests, corrected
+physics and candidate observation semantics. Forward speed below is the final
+four-second mean projected COM speed. The other three measures are maxima
+over the entire swim. Arrows go from update 0 to update 8.
+
+| Starting pose | Lane error (mm) | Forward speed (mm/s) | Depth error (mm) | Tilt (degrees) |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 11.778 → 12.281 | 8.225 → 8.256 | 0.461 → 0.470 | 8.925 → 8.916 |
+| 3 | 9.435 → 9.930 | 8.227 → 8.258 | 0.455 → 0.464 | 9.477 → 9.464 |
+
+Both candidates exceeded the 2 mm lane limit while meeting the final-window
+speed, depth and tilt thresholds. PPO slightly increased sideways drift,
+speed overshoot and depth error in both fixtures. Peak tilt fell slightly.
+The skill pass counts stayed the same. The original motor on the corrected
+runtime retained all 28 of its previously passing windows.
+
+The official checkpoint-eight test stopped on the first long-swim failure
+after five cases, as specified. Separate frozen-weight evaluation then
+measured the 31 previously unattempted cases from the same allocation.
+Together they used 36,685 controls, 366,850 substeps and 8.085 s of CPU
+evaluation time. No case was repeated and the stop decision stands.
+Raw before-and-after data are in `build/turn31/baseline0`,
+`build/turn31/eval8` and `build/turn31/characterization8`.
+
+The next motor experiment should restore the saved motor's lateral-error
+input on straight requests, verify the inherited actor recovers its long-swim
+performance and keep the turning objective learned. This targets an observed
+input difference without changing body physics or extending this run.
+
+### Timing
+
+| Measured work | Duration |
+| --- | --- |
+| Eight-update training command | 3.287 s, about 79,747 world-controls/s including checkpoints |
+| Rollout collection | 2.557 s, including 2.386 s of GPU physics. The remaining 0.172 s includes inference, sampling, other rollout kernels and waits. |
+| PPO optimization interval | 0.141 s. The timer covers minibatches and the final KL audit. GAE ran before this interval. |
+| Rollout readback and CPU reward aggregation | 0.026 s |
+| Independent CPU checks | Shoreline 21.779 s. Frozen candidate baseline 8.199 s. |
+| Fixed-input CPU/CUDA comparison | 16.001 s wall, including 13.413 s of GPU physics and 1.706 s of evidence work. |
+
+Training wrote 94.88 MiB of binary batches and checkpoints. The training
+driver measured no independent disk-write or inference-only interval. The CUDA
+timings above overlap collection and must not be added to total elapsed time.
+The 9.817 s training budget charge includes initialization and a five-second
+checkpoint reserve. Raw timings are in `build/turn31/updates-1-8/updates.csv`.
+
+Recorded training data showed zero contact controls, zero controls within
+10 mm of the bed and zero stalls among 172,753 post-warmup moving controls
+(stall threshold 3 mm/s). Moving episodes occupied 3–8 grid cells over the
+observed portion of each episode. Whole-pond coverage, perimeter looping and
+uninterrupted navigation require a separate navigation test.
+
+### Earlier product and research history
+
 **Latest product change: untimed Godot Swim installed and inspected.**
 The saved motor and physical model are unchanged. A distinct interactive
 reset_untimed_swim path removes episode completion while preserving requests,

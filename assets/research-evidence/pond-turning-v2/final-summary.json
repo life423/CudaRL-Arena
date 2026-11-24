@@ -1,0 +1,142 @@
+{
+  "study_status": "32_UPDATES_COMPLETE_RETENTION_PASSED_TURNING_UNQUALIFIED",
+  "commit_of_completed_v2_code": "e013b2a",
+  "PPO_updates": 32,
+  "actor_Adam_calls": 1024,
+  "critic_Adam_calls": 1024,
+  "training_controls": 1048576,
+  "training_substeps": 10485760,
+  "training_ledger_status": 5,
+  "evaluation_ledger_closed": true,
+  "evaluation_ledger_mask": 31,
+  "training_aggregate_budget_charge_seconds": 314.64938429999995,
+  "training_evidence_budget_upper_bound_bytes": 398846104,
+  "initial_candidate_charge_seconds": 7.7750854,
+  "checkpoint_boundary_reserve_seconds": 5,
+  "phase_command_and_capture_wall_seconds": {
+    "updates-1-8": 3.1647993,
+    "updates-9-16": 90.528661,
+    "updates-17-24": 85.6667407,
+    "updates-25-32": 112.8442734,
+    "eval8": 7.9835002,
+    "eval16": 8.138763,
+    "eval24": 7.8943513,
+    "eval32": 8.1836689
+  },
+  "phase_event_sums_ms": {
+    "updates-1-8": {
+      "collection_ms": 2520.1400000000003,
+      "physics_ms": 2363.033,
+      "optimization_ms": 127.2531,
+      "transfer_ms": 24.8115
+    },
+    "updates-9-16": {
+      "collection_ms": 89820.42,
+      "physics_ms": 89614.51,
+      "optimization_ms": 124.334,
+      "transfer_ms": 26.6352
+    },
+    "updates-17-24": {
+      "collection_ms": 85013.81999999999,
+      "physics_ms": 84820.0,
+      "optimization_ms": 128.2537,
+      "transfer_ms": 24.4271
+    },
+    "updates-25-32": {
+      "collection_ms": 112222.6,
+      "physics_ms": 112018.8,
+      "optimization_ms": 124.4487,
+      "transfer_ms": 24.0361
+    }
+  },
+  "sum_training_command_and_capture_wall_seconds": 292.20447440000004,
+  "initialization_tool_command_wall_seconds": 3.173944,
+  "baseline_tool_command_wall_seconds": 8.1571105,
+  "initialization_and_baseline_have_no_separate_Stopwatch_measurement": true,
+  "native_evaluation_wall_seconds_sum": 40.0479693,
+  "aggregate_evaluation_controls": 183458,
+  "aggregate_evaluation_substeps": 1834580,
+  "aggregate_evaluation_evidence_bytes": 98351,
+  "timings_overlap_do_not_add": true,
+  "dedicated_evidence_IO_timer_available": false,
+  "GPU_physics_time_is_nested_inside_collection_time": true,
+  "transfer_ms_is_host_allocation_copy_wait_and_mean_reward_time": true,
+  "actual_training_output_files_bytes": 398810825,
+  "assessments": [
+    {
+      "update": 0,
+      "retention_cases_passed": 20,
+      "rest_cases_passed": 14,
+      "short_swim_cases_passed": 4,
+      "retained_parent_long_window_passes": 28,
+      "turn_cases_passed": 3,
+      "attempted_controls": 36704,
+      "attempted_substeps": 367040,
+      "wall_seconds": 8.0275891,
+      "hard_failure": false
+    },
+    {
+      "update": 8,
+      "retention_cases_passed": 20,
+      "rest_cases_passed": 14,
+      "short_swim_cases_passed": 4,
+      "retained_parent_long_window_passes": 28,
+      "turn_cases_passed": 3,
+      "attempted_controls": 36685,
+      "attempted_substeps": 366850,
+      "wall_seconds": 7.9432847,
+      "hard_failure": false
+    },
+    {
+      "update": 16,
+      "retention_cases_passed": 20,
+      "rest_cases_passed": 14,
+      "short_swim_cases_passed": 4,
+      "retained_parent_long_window_passes": 28,
+      "turn_cases_passed": 3,
+      "attempted_controls": 36692,
+      "attempted_substeps": 366920,
+      "wall_seconds": 8.0956797,
+      "hard_failure": false
+    },
+    {
+      "update": 24,
+      "retention_cases_passed": 20,
+      "rest_cases_passed": 14,
+      "short_swim_cases_passed": 4,
+      "retained_parent_long_window_passes": 28,
+      "turn_cases_passed": 3,
+      "attempted_controls": 36684,
+      "attempted_substeps": 366840,
+      "wall_seconds": 7.8430199,
+      "hard_failure": false
+    },
+    {
+      "update": 32,
+      "retention_cases_passed": 20,
+      "rest_cases_passed": 14,
+      "short_swim_cases_passed": 4,
+      "retained_parent_long_window_passes": 28,
+      "turn_cases_passed": 3,
+      "attempted_controls": 36693,
+      "attempted_substeps": 366930,
+      "wall_seconds": 8.1383959,
+      "hard_failure": false
+    }
+  ],
+  "maximum_logged_final_rollout_KL": 0.000917149,
+  "original_package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "candidate32_sha256": "23b48585239dc2b2699a3c0ef1294877f3116412783a87a96e8a44b9beb48cfb",
+  "candidate32_payload_fnv1a64": 15412148521055685791,
+  "final_result_sha256": "cec8793255225cedaedd8b47cd432126e4c97533e90e2793c063be1db8b29218",
+  "no_new_optimizer_exercise_started": true,
+  "autonomous_navigation_qualified": false,
+  "timing_anchor_note": "First native process UTC start was not separately instrumented. NTFS initializer-directory creation through final evaluation result last-write is an explicit observed artifact span, not child-process-only wall.",
+  "paths": {
+    "final_checkpoint": "updates-25-32/candidate-32.bin",
+    "final_evaluation": "eval32/result.json",
+    "final_cases": "eval32/cases.csv",
+    "protocol": "protocol.json",
+    "source_snapshot": "source-snapshot-v2"
+  }
+}

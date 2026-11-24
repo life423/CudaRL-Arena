@@ -1,0 +1,9 @@
+{
+  "protocol_sha256": "b043e3fbba395bd68dbb67909e77e17683c91804f8c354d23757e4381ea35297",
+  "source_files_verified": 47,
+  "source_bindings_verified": 64,
+  "trainer_executable_sha256": "c595a3348a4fa61412aeba8a8f7e744aa4b787ad06509ed553810c24491303c7",
+  "evaluator_executable_sha256": "57c94619ef02a736855bfcab3a46d1f7e701612ea36a4451ab670585ff9d3963",
+  "new_physics_prerequisite_controls": 0,
+  "optimizer_calls": 0
+}

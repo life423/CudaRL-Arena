@@ -1,27 +1,30 @@
 extends Node3D
 ## One frontend and one native world. No UI physics, replay actor or optimizer.
 const PondWorld = preload("res://pond_world.gd")
-const ContinuousStudy = preload("res://continuous_study.gd")
-const RequestTurnStudy = preload("res://request_turn_study.gd")
-const InterfaceComparisonStudy = preload("res://interface_comparison_study.gd")
-const InterfaceComparisonStudyV2 = preload("res://interface_comparison_study_v2.gd")
-const InterfaceComparisonLaunchStopV2 = preload("res://interface_comparison_launch_stop_v2.gd")
 const TEXT := Color("243e37")
 const MUTED := Color("566b61")
 const MINT := Color("2d6757")
 const PAPER := Color("f7f5ed")
 const SURFACE := Color("fdfbf5")
+const VERIFICATION_ERROR := Color("8a3c2e")
+const SHORELINE_BINDING_PATH := "res://research_data/shoreline-runtime.json"
+const SHORELINE_CPU_PATH := "res://research_data/shoreline-cpu-v4.json"
+const SHORELINE_GPU_PATH := "res://research_data/shoreline-gpu-v4.json"
+const SHORELINE_UPDATE_PATH := "res://research_data/shoreline-update.json"
+const CANDIDATE_STUDY_PATH := "res://research_data/candidate-study.json"
+const STUDY_EVIDENCE_PREFIX := "res://research_data/studies/"
+const NATIVE_DLL_PATH := "res://addons/frozen_swimmer/bin/frozen_swimmer.dll"
 var preview: RefCounted
 var snapshot: Dictionary = {}
 var metadata: Dictionary = {}
 var metadata_issue := "Assessment metadata is unavailable. No success claim is made."
 var policy_path := "res://research_data/learned-amplitude-v1.bin"
 var metadata_path := "res://research_data/viewer.json"
-var continuous_metadata_path := "res://research_data/continuous-pond-v1.json"
-var continuous_available := false
-var current_study_path := "res://research_data/current-study.json"
-var current_study: Dictionary = {}
-var current_study_issue := ""
+var shoreline_binding: Dictionary = {}
+var shoreline_proof: Dictionary = {}
+var shoreline_qualified := false
+var cuda_qualified := false
+var shoreline_issue := "The shoreline verification files are unavailable. No qualification claim is made."
 var world: PondWorld
 var loaded := false
 var running := false
@@ -106,43 +109,25 @@ func _ready() -> void:
 		if argument.begins_with("--pond-capture="): capture_path = argument.trim_prefix("--pond-capture=")
 		if argument.begins_with("--pond-policy="): policy_path = argument.trim_prefix("--pond-policy=")
 		if argument.begins_with("--pond-metadata="): metadata_path = argument.trim_prefix("--pond-metadata=")
-	_select_continuous_package()
 	_read_metadata()
 	_load_native()
 	_bind_metadata()
-	_read_current_study()
+	_read_shoreline_status()
 	world = PondWorld.new()
-	if preview != null: world.geometry = preview.call("get_geometry")
+	if preview != null:
+		world.geometry = preview.call("get_geometry")
+		world.geometry_source = preview
 	add_child(world)
+	if world.landscape!=null and not world.landscape.geometry_ready:
+		error=str(world.landscape.geometry_issue)
+		loaded=false
 	world.set_overview(pond_overview)
 	_build_interface()
-	if continuous_available:
-		if bool(preview.call("reset_free_swim",0)): snapshot = preview.call("get_state")
-	elif loaded and int(snapshot.get("gait_updates",0))>0:
-		task.select(1)
-		if bool(preview.call("reset_untimed_swim",0)): snapshot = preview.call("get_state")
 	get_window().size_changed.connect(_layout)
 	_layout()
 	_refresh()
 	play_button.grab_focus()
 	if not capture_path.is_empty(): _capture.call_deferred()
-
-func _select_continuous_package() -> void:
-	# Explicit developer overrides keep their own policy and assessment binding.
-	if policy_path!="res://research_data/learned-amplitude-v1.bin" or metadata_path!="res://research_data/viewer.json": return
-	var candidate := _dictionary_file(continuous_metadata_path)
-	var declared: Variant=candidate.get("policy",{})
-	if int(candidate.get("schema",0))!=1 or not declared is Dictionary: return
-	if declared.get("qualified",false)!=true: return
-	var saved_path := "res://research_data/continuous-pond-v1.bin"
-	if not FileAccess.file_exists(saved_path): return
-	if str(declared.get("package_sha256","")).to_lower()!=FileAccess.get_sha256(saved_path).to_lower(): return
-	var assessment := _bound_study_file(candidate.get("assessment",{}))
-	var proof := _bound_study_file(candidate.get("verification",{}))
-	if assessment.get("qualified",false)!=true or proof.get("passed",false)!=true or proof.get("qualified",false)!=true: return
-	if str(proof.get("assessment_sha256","")).to_lower()!=str(candidate.get("assessment",{}).get("sha256","")).to_lower(): return
-	policy_path=saved_path
-	metadata_path=continuous_metadata_path
 
 func _read_metadata() -> void:
 	if not FileAccess.file_exists(metadata_path): return
@@ -168,96 +153,144 @@ func _dictionary_file(path: String) -> Dictionary:
 	if parser.parse(FileAccess.get_file_as_string(path))!=OK: return {}
 	return parser.data if parser.data is Dictionary else {}
 
-func _valid_study_count(value: Variant) -> bool:
-	if not (value is int or value is float): return false
-	var number := float(value)
-	return number>=0 and number<=1000000000000.0 and floorf(number)==number
+func _shoreline_validation_issue(binding: Dictionary, proof: Dictionary, dll_hash: String, cpu_hash: String, descriptor: Dictionary) -> String:
+	if int(binding.get("schema",0))!=1 or int(binding.get("runtime_version",0))!=4 or int(binding.get("query_arithmetic_version",0))!=2:
+		return "The shoreline verification has an incompatible version. Reopen the updated app."
+	if int(descriptor.get("runtime_version",0))!=4 or int(descriptor.get("query_arithmetic_version",0))!=2 or int(descriptor.get("collision_envelope_version",0))!=2 or descriptor.get("used_by_contact",false)!=true or descriptor.get("active_motion_domain","")!="shared_pond_terrain":
+		return "The shoreline update is still being installed. This app is using the previous runtime."
+	var declared_dll := str(binding.get("dll_sha256","")).to_lower()
+	if dll_hash.length()!=64 or declared_dll!=dll_hash.to_lower():
+		return "This native build has not been matched to the recorded shoreline verification."
+	return _cpu_proof_validation_issue(binding,proof,cpu_hash)
 
-func _bound_study_file(record: Variant) -> Dictionary:
-	if not record is Dictionary: return {}
-	var path: Variant=record.get("path",null)
-	var digest: Variant=record.get("sha256",null)
-	if not path is String or not digest is String or digest.length()!=64: return {}
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path).to_lower()!=digest.to_lower(): return {}
-	return _dictionary_file(path)
+func _cpu_proof_validation_issue(binding: Dictionary, proof: Dictionary, cpu_hash: String) -> String:
+	var source: Variant=binding.get("cpu_source",{})
+	if not source is Dictionary or source.get("path","")!=SHORELINE_CPU_PATH:
+		return "The shoreline verification is missing its CPU evidence binding."
+	if cpu_hash.length()!=64 or str(source.get("sha256","")).to_lower()!=cpu_hash.to_lower():
+		return "The shoreline evidence has changed or is missing. Verification cannot be confirmed."
+	if typeof(proof.get("passed",null))!=TYPE_BOOL or proof.get("passed",false)!=true or typeof(proof.get("preflight_only",null))!=TYPE_BOOL or proof.get("preflight_only",true)!=false:
+		return "The shoreline evidence does not report a completed physical pass."
+	if proof.get("protocol_id","")!="shoreline-product-v4-2026-11-23":
+		return "The shoreline evidence belongs to a different physical check."
+	var required := {"runtime_version":4,"query_arithmetic_version":2,"collision_envelope_version":2,"planned_cases":36,"attempted_cases":36,"completed_cases":36,"failed_cases":0,"skipped_cases":0,"attempted_controls":68000,"accepted_controls":68000,"attempted_substeps":688000,"retention_old_accepted_controls":30400,"retention_new_accepted_controls":30400,"bank_accepted_controls":1600,"half_step_accepted_controls":800,"outward_accepted_controls":4800,"optimizer_steps":0}
+	for key in required:
+		var value: Variant=proof.get(key,null)
+		if not (value is int or value is float) or not is_finite(float(value)) or float(value)!=float(required[key]):
+			return "The shoreline evidence is incomplete or has different case counts."
+	if typeof(proof.get("autonomous_navigation_qualified",null))!=TYPE_BOOL or proof.get("autonomous_navigation_qualified",true)!=false:
+		return "The shoreline evidence mixes physical verification with an unsupported navigation claim."
+	return ""
 
-func _load_current_study(path: String) -> Dictionary:
-	if not FileAccess.file_exists(path): return {}
-	var invalid := {"issue":"The current-study result is unavailable or does not match its saved evidence."}
-	var declared := _dictionary_file(path)
-	if not _valid_study_count(declared.get("schema",null)) or int(declared.schema)!=1: return invalid
-	var source := _bound_study_file(declared.get("source",null))
-	if not source.get("closed",null) is bool or not bool(source.closed) or not source.get("qualified",null) is bool: return invalid
-	for field in ["controls","substeps","PPO_updates","actor_steps"]:
-		if not _valid_study_count(source.get(field,null)): return invalid
-	if float(source.substeps)>10*float(source.controls): return invalid
-	var explicit_current_study: bool=source.get("study",null) is String and str(source.study) in ["current_swim_v1","current_swim_v2"]
-	var case_limits := {"baseline_current_passes":16,"final_current_passes":16,"withheld_passes":16,"endurance_passes":2}
-	for field in case_limits:
-		var count: Variant=source.get(field,null)
-		if count==null:
-			if not explicit_current_study or bool(source.qualified): return invalid
-		elif not _valid_study_count(count) or float(count)>float(case_limits[field]): return invalid
-	if not source.get("fault",null) is String or not source.get("gate",null) is String: return invalid
-	if bool(source.qualified) and not str(source.fault).is_empty(): return invalid
-	if str(source.get("phase",""))=="physics_gate_failed":
-		if bool(source.qualified) or int(source.PPO_updates)!=0 or int(source.actor_steps)!=0: return invalid
-		for field in ["training_started","current_suites_run"]:
-			if not source.get(field,null) is bool or bool(source[field]): return invalid
-	var suite_fields := {"withheld_suites_run":"withheld_passes","endurance_suites_run":"endurance_passes"}
-	for suite in suite_fields:
-		if source.has(suite):
-			if not source[suite] is bool: return invalid
-			if not bool(source[suite]) and (source.get(suite_fields[suite],null)!=null or bool(source.qualified)): return invalid
-	var verified := false
-	var proof := _bound_study_file(declared.get("verification",null))
-	var inputs: Variant=proof.get("input_sha256",{})
-	var source_identity: String
-	if declared.source.has("verification_input"):
-		var alias: Variant=declared.source.verification_input
-		if not alias is String or alias.strip_edges().is_empty(): return invalid
-		# This is the original audit's literal identity, not a file to open.
-		# Do not globalize an old Windows path on a different operating system.
-		source_identity=alias.replace("\\","/").simplify_path().to_lower()
-	else:
-		source_identity=ProjectSettings.globalize_path(str(declared.source.path)).replace("\\","/").simplify_path().to_lower()
-	if proof.get("passed",null) is bool and bool(proof.passed) and inputs is Dictionary:
-		for bound_path in inputs:
-			if str(bound_path).replace("\\","/").simplify_path().to_lower()==source_identity:
-				verified=str(inputs[bound_path]).to_lower()==str(declared.source.sha256).to_lower()
-	return {"result":source,"verified":verified,"source_path":str(declared.source.path)}
+func _shoreline_update_issue(update: Dictionary) -> String:
+	if int(update.get("schema",0))==1 and int(update.get("runtime_version",0))==4:
+		if update.get("status","")=="failed":
+			return "The corrected shoreline check did not pass (%d of 36 cases completed). The previous runtime remains installed." % int(update.get("completed_cases",0))
+		if update.get("status","")=="passed":
+			return "The corrected shoreline check passed. This running app still uses the previous runtime; reopen the updated app."
+	return "The corrected shoreline qualification is pending. This app is using the previous runtime."
 
-func _read_current_study() -> void:
-	var checked := _load_current_study(current_study_path)
-	current_study=checked if checked.has("result") else {}
-	current_study_issue=str(checked.get("issue",""))
+func _cuda_verification_valid(binding: Dictionary, proof: Dictionary, gpu_hash: String) -> bool:
+	var source: Variant=binding.get("gpu_source",{})
+	if not source is Dictionary or source.get("path","")!=SHORELINE_GPU_PATH or gpu_hash.length()!=64 or source.get("sha256","")!=gpu_hash:
+		return false
+	if source.get("cpu_sha256","")!=str(binding.get("cpu_source",{}).get("sha256","")):
+		return false
+	if proof.get("passed",false)!=true or proof.get("preflight_only",true)!=false or proof.get("CUDA_substep_readback_complete",false)!=true or proof.get("protocol_id","")!="shoreline-product-v4-cuda-2026-11-23":
+		return false
+	var required := {"runtime_version":4,"query_arithmetic_version":2,"controls_completed_per_case":128,"CPU_attempted_controls":1024,"CUDA_attempted_controls":1024,"CPU_attempted_substeps":10240,"CUDA_attempted_substeps":10240,"optimizer_steps":0,"PPO_updates":0,"GPU_NN_forward_calls":0}
+	for key in required:
+		var value: Variant=proof.get(key,null)
+		if not (value is int or value is float) or not is_finite(float(value)) or float(value)!=float(required[key]): return false
+	return proof.get("autonomous_navigation_qualified",true)==false
 
-func _append_current_study() -> void:
-	_read_current_study()
-	if current_study.is_empty() and current_study_issue.is_empty(): return
-	drawer_text.append_text("\n[b]Current swimming study[/b]\n")
-	if current_study.is_empty(): drawer_text.append_text(current_study_issue+"\n")
-	else:
-		var result: Dictionary=current_study.result
-		var physics_gate_failed := str(result.get("phase",""))=="physics_gate_failed"
-		if physics_gate_failed:
-			drawer_text.append_text("Physics check stopped · No PPO updates.\nCurrent swimming has not yet been assessed.\n")
-		elif bool(result.qualified) and bool(current_study.verified):
-			drawer_text.append_text("Current swimming passed this study's independent validation.\n")
-		elif bool(result.qualified):
-			drawer_text.append_text("Study closed; independent verification is unavailable.\n")
-		elif not str(result.fault).is_empty():
-			drawer_text.append_text("Study stopped at a safety or data check. Current swimming is not qualified.\n")
-		else: drawer_text.append_text("Study complete. Current swimming is not ready.\n")
-		if not physics_gate_failed: drawer_text.append_text("Native PPO updates: %d\n" % int(result.PPO_updates))
-		if _valid_study_count(result.get("final_current_passes",null)):
-			if _valid_study_count(result.get("baseline_current_passes",null)):
-				drawer_text.append_text("Current cases: %d → %d / 16\n" % [int(result.baseline_current_passes),int(result.final_current_passes)])
-			else: drawer_text.append_text("Current cases: %d / 16\n" % int(result.final_current_passes))
-		if _valid_study_count(result.get("withheld_passes",null)): drawer_text.append_text("Withheld cases: %d / 16\n" % int(result.withheld_passes))
-		if _valid_study_count(result.get("endurance_passes",null)): drawer_text.append_text("Endurance cases: %d / 2\n" % int(result.endurance_passes))
-		if bool(current_study.verified): drawer_text.append_text("Saved evidence independently checked.\n")
-	drawer_text.append_text("This preview still uses the saved calm-water policy. No current policy is adopted here.\n")
+func _recorded_runtime_verdicts() -> String:
+	var binding := _dictionary_file(SHORELINE_BINDING_PATH)
+	var cpu_hash := FileAccess.get_sha256(SHORELINE_CPU_PATH) if FileAccess.file_exists(SHORELINE_CPU_PATH) else ""
+	if not _cpu_proof_validation_issue(binding,_dictionary_file(SHORELINE_CPU_PATH),cpu_hash).is_empty(): return "Recorded shoreline evidence is unavailable.\n"
+	var text := "Recorded CPU physical checks: 36 / 36 passed.\n"
+	var gpu_hash := FileAccess.get_sha256(SHORELINE_GPU_PATH) if FileAccess.file_exists(SHORELINE_GPU_PATH) else ""
+	text += "Recorded CUDA agreement: 8 / 8 matched cases.\n" if _cuda_verification_valid(binding,_dictionary_file(SHORELINE_GPU_PATH),gpu_hash) else "Recorded CUDA agreement is unavailable.\n"
+	return text
+
+func _candidate_study_status(status_binding: Dictionary = {}) -> String:
+	var unavailable := "[color=#%s]Candidate assessment is unavailable. The original motor remains selected.[/color]" % VERIFICATION_ERROR.to_html(false)
+	# Historical results are independent of the fingerprint of a local rebuild.
+	var binding := status_binding if not status_binding.is_empty() else _dictionary_file(SHORELINE_BINDING_PATH)
+	var source: Variant=binding.get("candidate_source",{})
+	if not source is Dictionary or source.get("path","")!=CANDIDATE_STUDY_PATH or not FileAccess.file_exists(CANDIDATE_STUDY_PATH): return unavailable
+	if source.get("sha256","")!=FileAccess.get_sha256(CANDIDATE_STUDY_PATH): return unavailable
+	var receipt := _dictionary_file(CANDIDATE_STUDY_PATH)
+	var updates := int(receipt.get("completed_updates",-1))
+	if int(receipt.get("schema",0))!=2 or receipt.get("status","") not in ["stopped","completed"] or updates<0 or updates>32 or receipt.get("candidate_adopted",true)!=false: return unavailable
+	if receipt.get("playing_package_sha256","")!=FileAccess.get_sha256(policy_path): return unavailable
+	var references: Variant=receipt.get("sources",{})
+	if not references is Dictionary: return unavailable
+	for name in ["checkpoint","training","evaluation","movement","cases"]:
+		if not references.has(name): return unavailable
+	for name in references:
+		var reference: Variant=references.get(name,{})
+		if not reference is Dictionary: return unavailable
+		var path := str(reference.get("path",""))
+		var digest := str(reference.get("sha256",""))
+		if not path.begins_with(STUDY_EVIDENCE_PREFIX) or path.contains("..") or digest.length()!=64 or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=digest: return unavailable
+	var checkpoint := _dictionary_file(str(references.checkpoint.path))
+	var assessment := _dictionary_file(str(references.evaluation.path))
+	var training := _dictionary_file(str(references.training.path))
+	if checkpoint.get("raw_checkpoint_in_app",true)!=false or str(checkpoint.get("file_sha256","")).length()!=64 or int(checkpoint.get("completed_updates",-1))!=updates: return unavailable
+	if int(assessment.get("update",-1))!=updates or int(training.get("completed_updates",-1))!=updates or assessment.get("preflight_only",true)!=false: return unavailable
+	var prefix := "Recorded candidate stopped after %d PPO updates" % updates
+	match str(receipt.get("reason","")):
+		"long_swim_lane_drift":
+			var movement := _dictionary_file(str(references.movement.path))
+			var drifted := false
+			for item in movement.get("cases",[]):
+				if item is Dictionary and item.get("suite","")=="long" and float(item.get("maximum_lane_m",0))>.002: drifted=true
+			if not drifted or not str(assessment.get("reason","")).begins_with("retention_failed_long") or assessment.get("retention_passed",true)!=false: return unavailable
+			return prefix+": long-swim drift exceeded the 2 mm lane."
+		"rest_retention_failed":
+			if assessment.get("retention_passed",true)!=false or not str(assessment.get("reason","")).contains("hold"): return unavailable
+			return prefix+": resting checks regressed."
+		"long_swim_retention_failed":
+			if assessment.get("retention_passed",true)!=false or not str(assessment.get("reason","")).begins_with("retention_failed_long"): return unavailable
+			return prefix+": long-swim retention failed."
+		"physical_check_failed":
+			if assessment.get("hard_failure",false)!=true: return unavailable
+			return prefix+": a physical check failed."
+		"retention_failed":
+			if assessment.get("retention_passed",true)!=false: return unavailable
+			return prefix+": retained movement checks failed."
+		"turning_unqualified":
+			if assessment.get("retention_passed",false)!=true or int(assessment.get("retention_cases_passed",0))!=20: return unavailable
+			return "Recorded candidate completed %d PPO updates; swimming and resting retained. Turns: %d / %d passed." % [updates,int(assessment.get("turn_cases_passed",0)),int(assessment.get("turn_cases_total",16))]
+		"requested_turns_qualified":
+			if assessment.get("retention_passed",false)!=true or assessment.get("turning_qualified",false)!=true: return unavailable
+			return "Recorded candidate passed swimming, resting and requested-turn checks after %d PPO updates. Original 336 remains selected." % updates
+	return unavailable
+
+func _read_shoreline_status() -> void:
+	shoreline_binding.clear()
+	shoreline_proof.clear()
+	shoreline_qualified=false
+	cuda_qualified=false
+	shoreline_issue="The shoreline verification files are unavailable. No qualification claim is made."
+	if preview==null: return
+	var descriptor: Dictionary=preview.call("get_pond_geometry_descriptor")
+	if int(snapshot.get("runtime_version",0))!=4 or int(descriptor.get("runtime_version",0))!=4 or int(descriptor.get("query_arithmetic_version",0))!=2:
+		shoreline_issue=_shoreline_update_issue(_dictionary_file(SHORELINE_UPDATE_PATH))
+		return
+	var binding := _dictionary_file(SHORELINE_BINDING_PATH)
+	if binding.is_empty(): return
+	var proof := _dictionary_file(SHORELINE_CPU_PATH)
+	var dll_hash := FileAccess.get_sha256(NATIVE_DLL_PATH) if FileAccess.file_exists(NATIVE_DLL_PATH) else ""
+	var cpu_hash := FileAccess.get_sha256(SHORELINE_CPU_PATH) if FileAccess.file_exists(SHORELINE_CPU_PATH) else ""
+	shoreline_issue=_shoreline_validation_issue(binding,proof,dll_hash,cpu_hash,descriptor)
+	if not shoreline_issue.is_empty(): return
+	shoreline_binding=binding
+	shoreline_proof=proof
+	shoreline_qualified=true
+	var gpu_hash := FileAccess.get_sha256(SHORELINE_GPU_PATH) if FileAccess.file_exists(SHORELINE_GPU_PATH) else ""
+	cuda_qualified=_cuda_verification_valid(binding,_dictionary_file(SHORELINE_GPU_PATH),gpu_hash)
 
 func _load_native() -> void:
 	if not ClassDB.class_exists("HoldLabPreview"):
@@ -269,7 +302,7 @@ func _load_native() -> void:
 	if preview == null:
 		error = "The native pond module could not start."
 		return
-	if not preview.has_method("reset_untimed_swim"):
+	if not preview.has_method("reset_untimed_swim") or not preview.has_method("get_pond_geometry_descriptor") or not preview.has_method("sample_pond_outline") or not preview.has_method("sample_pond_surface"):
 		error = "The app components do not match. Reopen the updated Tadpole Pond app."
 		return
 	if not FileAccess.file_exists(policy_path):
@@ -278,7 +311,6 @@ func _load_native() -> void:
 	loaded = bool(preview.call("load_controller",ProjectSettings.globalize_path(policy_path)))
 	if loaded:
 		snapshot = preview.call("get_state")
-		continuous_available=bool(snapshot.get("has_continuous",false))
 	else: error = "This saved policy could not load. " + str(preview.call("get_error"))
 
 func _build_interface() -> void:
@@ -335,12 +367,8 @@ func _build_interface() -> void:
 	restart_button.tooltip_text = "Restart this task from its original physical state"
 	controls.add_child(restart_button)
 	task = OptionButton.new()
-	if continuous_available:
-		task.add_item("Free swim",2)
-		task.add_item("Rest",0)
-	else:
-		task.add_item("Rest",0)
-		task.add_item("Swim",1)
+	task.add_item("Rest",0)
+	task.add_item("Swim",1)
 	task.custom_minimum_size = Vector2(100,48)
 	task.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	task.add_theme_font_size_override("font_size",15)
@@ -370,6 +398,7 @@ func _build_interface() -> void:
 	notice.add_theme_stylebox_override("normal",panel(SURFACE,12))
 	notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	notice.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	canvas.add_child(notice)
 	_build_details()
 
@@ -436,10 +465,13 @@ func _layout() -> void:
 	rail.size = Vector2(rail_width,rail_height)
 	for reading in [speed,displacement,depth]: reading.add_theme_font_size_override("font_size",12 if size.x<500 else 13)
 	var world_top := view_button.position.y+64 if size.x<600 else maxf(96,12+identity_height+12)
-	world.viewport_area = Rect2(inset,world_top,size.x-inset*2,maxf(80,rail.position.y-world_top-16))
+	notice.size = Vector2(size.x-inset*2,48)
+	var notice_height := maxf(48,notice.get_combined_minimum_size().y)
+	notice.size.y = notice_height
+	notice.position = Vector2(inset,rail.position.y-notice_height-16)
+	var world_bottom := notice.position.y-16 if notice.visible else rail.position.y-16
+	world.viewport_area = Rect2(inset,world_top,size.x-inset*2,maxf(80,world_bottom-world_top))
 	world.fit_view()
-	notice.position = Vector2(inset,rail.position.y-112)
-	notice.size = Vector2(size.x-inset*2,96)
 	var drawer_width := minf(440,size.x-inset*2)
 	drawer.position = Vector2(size.x-inset-drawer_width,inset)
 	drawer.size = Vector2(drawer_width,size.y-inset*2)
@@ -468,12 +500,11 @@ func _restart() -> void:
 	accumulator = 0
 	var choice := task.get_selected_id()
 	var reset_ok := false
-	if choice==2: reset_ok=bool(preview.call("reset_free_swim",0))
-	elif choice==1: reset_ok=bool(preview.call("reset_untimed_swim",0))
+	if choice==1: reset_ok=bool(preview.call("reset_untimed_swim",0))
 	else: reset_ok=bool(preview.call("reset",0,true))
 	if not reset_ok: error = str(preview.call("get_error"))
 	snapshot = preview.call("get_state")
-	last_action = "Rest restarted" if choice==0 else ("Free swim restarted" if choice==2 else "Swim restarted")
+	last_action = "Rest restarted" if choice==0 else "Swim restarted"
 	_refresh()
 
 func _process(delta: float) -> void:
@@ -509,17 +540,16 @@ func _refresh() -> void:
 			var elapsed := int(float(snapshot.get("time_s",0)))
 			displacement.text = "%d:%02d · %.1f mm" % [floori(elapsed/60.0),elapsed%60,amount]
 			displacement.tooltip_text = "Elapsed swimming time · forward distance travelled"
-		elif bool(snapshot.get("continuous",false)):
-			var elapsed := int(float(snapshot.get("time_s",0)))
-			displacement.text = "%d:%02d swimming" % [floori(elapsed/60.0),elapsed%60]
-			displacement.tooltip_text = "Elapsed swimming time"
 		else:
 			displacement.tooltip_text = "Distance from the rest anchor" if holding else "Forward distance travelled"
 		depth.text = "%.2f mm off depth" % (float(snapshot.get("depth_m",0))*1000)
 		error = str(snapshot.get("error",error))
 	else: status.text = "Preview unavailable"
+	var previous_notice_visible := notice.visible
+	var previous_notice_text := notice.text
 	notice.text = error
 	notice.visible = not error.is_empty()
+	if notice.visible!=previous_notice_visible or (notice.visible and notice.text!=previous_notice_text): _layout()
 	_refresh_target()
 
 func _refresh_target() -> void:
@@ -533,41 +563,61 @@ func _open_details() -> void:
 	if preview != null:
 		preview.call("pause")
 		if loaded: snapshot = preview.call("get_state")
-	running = false
-	accumulator = 0
+	running=false
+	accumulator=0
 	_refresh()
-	var result: Dictionary = metadata.get("result",{})
-	var policy: Dictionary = metadata.get("policy",{})
-	drawer_text.text = "[b]A saved policy in a physical world[/b]\nThe creature moves through native C++ physics. This view uses saved weights; it does not train or update them.\n"
-	if FileAccess.file_exists("res://research_data/interface-comparison-v2-launch-stop.json"):
-		drawer_text.append_text(InterfaceComparisonLaunchStopV2.text("res://research_data/interface-comparison-v2-launch-stop.json"))
-	elif FileAccess.file_exists("res://research_data/interface-comparison-v2-study.json"):
-		drawer_text.append_text(InterfaceComparisonStudyV2.text("res://research_data/interface-comparison-v2-study.json"))
-	else:
-		drawer_text.append_text(InterfaceComparisonStudy.text("res://research_data/interface-comparison-study.json"))
-	drawer_text.append_text("\n[b]Saved motor assessment[/b]\n")
+	_read_shoreline_status()
+	var descriptor: Dictionary=preview.call("get_pond_geometry_descriptor") if preview!=null else {}
+	var terrain_contact := bool(descriptor.get("used_by_contact",false))
+	_append_shoreline_details(terrain_contact)
+	drawer_text.append_text("\n[b]The saved creature[/b]\nPlaying original motor 336.\n%s\nThis view does not train its saved weights.\n" % _candidate_study_status())
+	drawer_text.append_text("\n[b]Controls[/b]\nSwim has no session timer. Rest is a 64-second check. Pause preserves the world. Restart or changing the request creates a new starting state.\nScroll, pinch or use + / − to zoom. Side view changes the camera angle.\n")
+	var result: Dictionary=metadata.get("result",{})
+	drawer_text.append_text("\n[b]Saved motor reference assessment[/b]\n")
 	if result.is_empty(): drawer_text.append_text(metadata_issue+"\n")
-	else: drawer_text.append_text("%s\nHolding: %d / %d\nSwimming: %d / 4 short tests\nLong windows: %d / 30; %d / 28 prior passes retained\n\n%s\n" % [str(result.get("outcome","See source evidence")),int(result.get("hold_passes",0)),int(result.get("hold_total",6)),int(result.get("short_passes",0)),int(result.get("long_passes",0)),int(result.get("long_retained",0)),str(result.get("method",""))])
-	if not str(result.get("validation_note","")).is_empty(): drawer_text.append_text("\n[b]Additional validation[/b]\n"+str(result.validation_note)+"\n")
-	drawer_text.append_text(RequestTurnStudy.text("res://research_data/request-turn-study.json"))
-	drawer_text.append_text(ContinuousStudy.text("res://research_data/continuous-study.json"))
-	_append_current_study()
-	drawer_text.append_text("\n[b]Your pond[/b]\nThe aerial camera stays above the creature; Side view lowers the angle. Scroll, pinch or use + / − to zoom in and out. The body, water and boundaries come from the native simulation.\n\n[b]Movement scope[/b]\n")
-	if continuous_available:
-		drawer_text.append_text("Free swim has no session timer or food target. The saved PPO motor steers using its physical state and distance from the bank. It receives no scripted route, bounce or rescue. Pause leaves the world in place.\n\n"+str(result.get("continuous_validation_note","See the saved continuous-swimming assessment."))+"\n\n")
 	else:
-		drawer_text.append_text("Swim has no session timer. It runs until you Pause or a bank/physical check stops it. Rest remains a 64-second check. Reliable turns around the pond are still unverified.\n\n")
-	drawer_text.append_text("Changing the request or choosing Restart starts a new physical state; it does not demonstrate braking. This view does not run learning updates. Current swimming remains separate research.\n")
-	if not policy.is_empty(): drawer_text.append_text("\n[b]Saved generation[/b]\n%s\n%d lesson updates\n" % [str(policy.get("family","Saved research motor")),int(policy.get("holding_updates",0))])
-	var history: Array = metadata.get("history",[])
-	if not history.is_empty():
-		drawer_text.append_text("\n[b]Earlier results[/b]\n")
-		for entry in history: drawer_text.append_text("%s — %s\n" % [str(entry.get("name","Earlier study")),str(entry.get("outcome","See evidence"))])
-	drawer_text.append_text("\n[b]Evidence source[/b]\n"+str(result.get("source_run","Unavailable")))
-	scrim.visible = true
-	drawer.visible = true
+		drawer_text.append_text("%s\nHolding: %d / %d · Short swimming: %d / 4\nThese are the preserved reference tests, not qualification of new shoreline behavior.\n" % [str(result.get("outcome","See source evidence")),int(result.get("hold_passes",0)),int(result.get("hold_total",6)),int(result.get("short_passes",0))])
+	drawer_text.append_text("\n[b]Saved generation[/b]\nMotor 336 · %d holding updates\n" % int(snapshot.get("holding_updates",0)))
+	drawer_scroll.scroll_vertical=0
+	scrim.visible=true
+	drawer.visible=true
 	for control in [play_button,restart_button,task,details_button,view_button]: control.focus_mode=Control.FOCUS_NONE
 	close_button.grab_focus()
+
+func _append_shoreline_details(terrain_contact: bool) -> void:
+	drawer_text.clear()
+	drawer_text.append_text("[b]Pond world[/b]\n")
+	if shoreline_qualified:
+		drawer_text.append_text("Shared shoreline verified. The smaller legacy limit has been removed.\nThe visible bed and native contact use the same terrain. Original swimming and holding checks passed with the saved motor.\n")
+		drawer_text.append_text("CPU physical checks: 36 / 36 passed.\n")
+		drawer_text.append_text("CUDA agreement: 8 / 8 matched cases.\n" if cuda_qualified else "[color=#%s]CUDA verification is unavailable.[/color]\n" % VERIFICATION_ERROR.to_html(false))
+	else:
+		drawer_text.append_text("[color=#%s][b]Shoreline verification unavailable[/b]\n%s[/color]\n" % [VERIFICATION_ERROR.to_html(false),shoreline_issue])
+		drawer_text.append_text(_recorded_runtime_verdicts())
+		if not terrain_contact:
+			drawer_text.append_text("The shoreline upgrade is in progress. The visible bed uses native geometry; the installed app is awaiting the matching shoreline runtime.\n")
+	drawer_text.append_text(_current_physics_text(snapshot))
+	drawer_text.append_text("\nOriginal saved motor. Learned pond navigation is still unqualified. Physical contact is not a learned turn. Water exit is outside this submerged model.\n")
+
+func _current_physics_text(state: Dictionary) -> String:
+	var text := "\n[b]Right now[/b]\n"
+	var lower := float(state.get("whole_body_clearance_lower_m",NAN))
+	var upper := float(state.get("whole_body_clearance_upper_m",NAN))
+	if int(state.get("runtime_version",0))==4 and int(state.get("query_arithmetic_version",0))==2 and bool(state.get("whole_body_query_certified",false)) and is_finite(lower) and is_finite(upper) and lower<=upper:
+		var contact := "Clear of the bed now" if lower>=0 else "Bed contact now" if upper<0 else "Possible bed contact now"
+		text += "%s\nCertified whole-body clearance: %.3f to %.3f mm\n" % [contact,lower*1000,upper*1000]
+	else:
+		text += "[color=#%s]Current bed clearance is unavailable.[/color]\n" % VERIFICATION_ERROR.to_html(false)
+	var horizontal := float(state.get("horizontal_speed_m_s",NAN))
+	var velocity: Variant=state.get("terminal_velocity",null)
+	if is_finite(horizontal) and velocity is Vector3 and velocity.is_finite():
+		var requested := Vector2(velocity.x,velocity.z).length()*1000
+		text += "Horizontal COM speed: %.2f mm/s · Requested: %.2f mm/s\n" % [horizontal*1000,requested]
+	var tilt := float(state.get("tilt_deg",NAN))
+	var depth_error := float(state.get("depth_m",NAN))
+	if is_finite(tilt) and is_finite(depth_error):
+		text += "Tilt: %.1f° · Depth error: %.2f mm\n" % [tilt,depth_error*1000]
+	return text
 
 func _close_details() -> void:
 	scrim.visible = false

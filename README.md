@@ -4,9 +4,11 @@
 interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
-The intended experience is its own persistent pond world: a creature to feed,
-observe and interact with as it explores, rests and learns. The current motor
-inspector is an intermediate tool; that integrated world remains to be built.
+Godot presents the creature in its own pond. The current food-free Swim and
+Rest modes run a saved neural motor in native water physics. Two food-free turning
+exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
+depths and speeds, and adaptation during player interaction are longer-term
+goals.
 
 Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
 motion comes from torque-limited internal joints and water forces; Godot supplies
@@ -24,23 +26,18 @@ build; current-capable swimming is not yet qualified.
 
 ## Current state
 
-**Godot Swim is now untimed.** The unchanged saved motor continues past the
-old eight-second cutoff, preserving body/request/servo state until Pause or
-an existing physical/pond-domain stop. One independently audited product check
-swam188.9mm over25.45seconds before the original supported-boundary check
-paused it. This is extended straight playback, not autonomous pond turning.
-The updated app is open with Swim selected and elapsed/distance measurements
-enabled. Rest and finite research APIs keep their original durations.
-See the [verification report](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md).
+**The registered Godot project runs the corrected full shoreline and the
+original saved motor.** All eight CPU/CUDA trajectory comparisons passed.
+Restoring sideways feedback for straight requests recovered every one of
+the 28 required long-swim windows. A separate candidate retained them and all
+14 rests through 32 native GPU PPO updates. It passed three of 16 turn requests.
+Reliable turning and continuous exploration remain open.
+[Turning results and checkpoint](docs/POND_TURNING_PPO_V2_RESULTS_2026-11-23.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
 
-**Newest November 23 result:** [comparison v2 is blocked before physics](docs/FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md).
-Fixed-state CPU/CUDA arithmetic checks pass after isolated rounding corrections,
-but the single launch failed while enumerating long evidence paths. No fresh
-parity, retention or interface trajectory ran: **0/88 cases, no winner**.
-Behavioral retention is unassessed; saved weights/runtime remain unchanged.
-No training or optimizer update occurred. The attempt is closed without retry.
-The actual Godot app was refreshed and inspected with this outcome in Details;
-the correct live project remains selected in Godot Manager.
+Swim mode has no fixed playback duration. The earlier
+[untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the
+retired safety boundary. The earlier [request-interface comparison](docs/FROZEN_INTERFACE_COMPARISON_V2_RESULTS_2026-11-23.md)
+stopped before any of its 88 cases and established no winner.
 
 **Earlier November 23 comparison:** the [controlled request-interface comparison](docs/FROZEN_INTERFACE_COMPARISON_RESULTS_2026-11-23.md)
 stopped at its CPU/CUDA prerequisite after 214 controls / 2,140 substeps, before

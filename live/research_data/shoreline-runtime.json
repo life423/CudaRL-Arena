@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "runtime_version": 4,
+  "query_arithmetic_version": 2,
+  "collision_envelope_version": 2,
+  "dll_sha256": "1b69c205700b2ffbac913e5e088c93eb8f6c2e27467f244a22e4695ad3fbabb9",
+  "cpu_source": {
+    "path": "res://research_data/shoreline-cpu-v4.json",
+    "sha256": "3651799d383aa87cfd85e3f1aa254e214b0afcd567925c77ada7f8e585093920"
+  },
+  "gpu_source": {
+    "path": "res://research_data/shoreline-gpu-v4.json",
+    "sha256": "5299c8c1b27fa8e41421cdae490a75547b1ebab8bff9e27da17f49cc8ff56aee",
+    "cpu_sha256": "3651799d383aa87cfd85e3f1aa254e214b0afcd567925c77ada7f8e585093920"
+  },
+  "motor": "preserved_original",
+  "navigation_qualified": false,
+  "candidate_source": {
+    "path": "res://research_data/candidate-study.json",
+    "sha256": "bd293512f06db9d633078f84d811b0e825ecf4d4d0cdd77e972fe47fdccb384a"
+  }
+}

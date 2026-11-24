@@ -1,6 +1,7 @@
 extends Node3D
 ## Presentation only. Native poses and physical pond bounds remain authoritative.
 var geometry: Dictionary = {}
+var geometry_source: RefCounted
 var links: Array[Node3D] = []
 var camera: Camera3D
 var target: Node3D
@@ -88,6 +89,7 @@ func _build_light() -> void:
 
 func _build_pond() -> void:
 	landscape = preload("res://pond_landscape.gd").new()
+	landscape.geometry_source = geometry_source
 	landscape.scale_m = float(geometry.get("scale_m",.04))
 	landscape.floor_y = floor_y
 	landscape.flat_radii_m = geometry.get("pond_flat_radii_m",Vector2(.22,.14))
@@ -188,21 +190,6 @@ func zoom_by(factor: float) -> void:
 
 func native_bounds_model() -> AABB:
 	return AABB(Vector3(-half_width,floor_y,-half_depth),Vector3(half_width*2,-floor_y,half_depth*2))
-
-func screen_to_pond_goal(screen_position: Vector2) -> Variant:
-	# Coordinate projection only. No goal, request or native controller is changed.
-	if camera==null or not body_ready or not viewport_area.has_point(screen_position): return null
-	var origin := camera.project_ray_origin(screen_position)
-	var direction := camera.project_ray_normal(screen_position)
-	if absf(direction.y)<.00001: return null
-	var distance := (links[0].position.y-origin.y)/direction.y
-	if distance<=0: return null
-	var point := origin+direction*distance
-	var scale_m := float(geometry.get("scale_m",.04))
-	var radii: Vector2 = geometry.get("pond_domain_radii_m",Vector2(.20,.12))
-	radii = (radii-Vector2(.04,.015))/scale_m
-	if Vector2(point.x/radii.x,point.z/radii.y).length_squared()>1: return null
-	return point
 
 func fit_view() -> void:
 	if camera == null or links.is_empty(): return

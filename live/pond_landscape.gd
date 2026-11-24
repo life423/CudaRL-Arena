@@ -1,5 +1,11 @@
 extends Node3D
-## Organic presentation around an unchanged, flat native central basin.
+## Presentation of the shared native pond geometry; no movement or contact logic.
+var geometry_source: RefCounted
+var geometry_descriptor: Dictionary = {}
+var geometry_ready := false
+var geometry_issue := ""
+var native_query_batches := 0
+var native_geometry_points := 0
 var scale_m := .04
 var floor_y := -4.0
 var flat_radii := Vector2(.22,.14)/.04
@@ -12,49 +18,108 @@ const SPOKES := 160
 const RINGS := 128
 const INNER_RINGS := 72
 const WORLD_VIEW_RADIUS := 3.25
+const NATIVE_GEOMETRY_VERSION := 1
+var _height_cache: Dictionary = {}
+
+func _geometry_failure(message: String) -> void:
+	if geometry_issue.is_empty():
+		geometry_issue=message
+		push_error(message)
+	geometry_ready=false
+
+func _outline_points(samples: PackedVector2Array) -> PackedVector3Array:
+	if geometry_source==null:
+		_geometry_failure("The native pond geometry is unavailable.")
+		return PackedVector3Array()
+	var result: Variant=geometry_source.call("sample_pond_outline",samples)
+	native_query_batches+=1
+	native_geometry_points+=samples.size()
+	if not result is Dictionary or not bool(result.get("valid",false)) or int(result.get("version",0))!=NATIVE_GEOMETRY_VERSION:
+		_geometry_failure("The native shoreline query could not be verified.")
+		return PackedVector3Array()
+	var points: Variant=result.get("positions_m",null)
+	if not points is PackedVector3Array or points.size()!=samples.size():
+		_geometry_failure("The native shoreline query has an incompatible shape.")
+		return PackedVector3Array()
+	return points
+
+func _surface_points(positions_m: PackedVector3Array) -> Dictionary:
+	if geometry_source==null:
+		_geometry_failure("The native pond geometry is unavailable.")
+		return {}
+	var positions := PackedVector2Array()
+	for at in positions_m: positions.append(Vector2(at.x,at.z))
+	var result: Variant=geometry_source.call("sample_pond_surface",positions)
+	native_query_batches+=1
+	native_geometry_points+=positions.size()
+	if not result is Dictionary or not bool(result.get("valid",false)) or int(result.get("version",0))!=NATIVE_GEOMETRY_VERSION:
+		_geometry_failure("The native pond surface query could not be verified.")
+		return {}
+	var heights: Variant=result.get("heights_m",null)
+	var normals: Variant=result.get("normals",null)
+	if not heights is PackedFloat64Array or not normals is PackedVector3Array or heights.size()!=positions.size() or normals.size()!=positions.size():
+		_geometry_failure("The native pond surface query has an incompatible shape.")
+		return {}
+	return result
 
 func fit_points(whole_world := false) -> PackedVector3Array:
 	var points := PackedVector3Array([Vector3(0,floor_y,0)])
+	if not geometry_ready: return points
+	var samples := PackedVector2Array()
+	var reed_indices: Array[int] = []
 	for index in range(128):
 		var angle := TAU*float(index)/128
 		var radii := [WORLD_VIEW_RADIUS,1.30,1.0] if whole_world else [1.30,1.0]
-		for radius in radii:
-			var p := outline(angle,radius)
-			p.y = terrain_height(p.x,p.z)
-			points.append(p)
-		var reeds := outline(angle,1.18)
-		reeds.y = 1.7
-		points.append(reeds)
+		for radius in radii: samples.append(Vector2(angle,radius))
+		reed_indices.append(samples.size())
+		samples.append(Vector2(angle,1.18))
+	var positions_m := _outline_points(samples)
+	if positions_m.size()!=samples.size(): return points
+	var surface_data := _surface_points(positions_m)
+	if surface_data.is_empty(): return points
+	var heights: PackedFloat64Array=surface_data.heights_m
+	for index in positions_m.size():
+		var at: Vector3=positions_m[index]/scale_m
+		at.y=1.7 if index in reed_indices else heights[index]/scale_m
+		points.append(at)
 	return points
 
 func outline(angle: float, radius := 1.0) -> Vector3:
-	var edge := 1+.022*sin(angle*3+.8)+.014*cos(angle*5-.4)+.009*sin(angle*7)
-	return Vector3(cos(angle)*water_radii.x*radius*edge,0,sin(angle)*water_radii.y*radius*edge)
+	var points := _outline_points(PackedVector2Array([Vector2(angle,radius)]))
+	return points[0]/scale_m if points.size()==1 else Vector3.ZERO
 
 func terrain_height(x: float,z: float) -> float:
-	var angle := atan2(z/water_radii.y,x/water_radii.x)
-	var edge := 1+.022*sin(angle*3+.8)+.014*cos(angle*5-.4)+.009*sin(angle*7)
-	var radius := Vector2(x/water_radii.x,z/water_radii.y).length()/edge
-	var flat_radius := 1.0/(Vector2(cos(angle)*water_radii.x/flat_radii.x,sin(angle)*water_radii.y/flat_radii.y).length()*edge)
-	if radius<=flat_radius: return floor_y
-	if radius<=1:
-		var t := clampf((radius-flat_radius)/(1-flat_radius),0,1)
-		var slope := t*t*t*(t*(t*6-15)+10)
-		return lerpf(floor_y,0,slope)
-	var rise := smoothstep(1.0,1.075,radius)*.35
-	var undulation := sin(x*.57)*cos(z*.68)*.07*smoothstep(1.02,1.2,radius)
-	var open_land := smoothstep(1.32,2.4,radius)
-	var hills := 1.7+1.2*sin(x*.055+.6)*cos(z*.045-.3)+.55*sin(x*.11-z*.08)
-	var west_ridge := 3.8*exp(-((x+36)*(x+36)/540+(z+24)*(z+24)/230))
-	var east_ridge := 2.8*exp(-((x-37)*(x-37)/400+(z-18)*(z-18)/330))
-	return rise+undulation+open_land*(hills+west_ridge+east_ridge)
+	var key := Vector2(x,z)
+	if _height_cache.has(key): return float(_height_cache[key])
+	var surface_data := _surface_points(PackedVector3Array([Vector3(x*scale_m,0,z*scale_m)]))
+	if surface_data.is_empty(): return floor_y
+	var heights: PackedFloat64Array=surface_data.heights_m
+	var height := heights[0]/scale_m
+	_height_cache[key]=height
+	return height
 
 func _ready() -> void:
+	if geometry_source==null or not geometry_source.has_method("get_pond_geometry_descriptor") or not geometry_source.has_method("sample_pond_outline") or not geometry_source.has_method("sample_pond_surface"):
+		_geometry_failure("The app components do not match. Reopen the updated Tadpole Pond app.")
+		return
+	var descriptor: Variant=geometry_source.call("get_pond_geometry_descriptor")
+	if not descriptor is Dictionary or int(descriptor.get("version",0))!=NATIVE_GEOMETRY_VERSION or descriptor.get("units","")!="metres":
+		_geometry_failure("The native pond geometry description is incompatible.")
+		return
+	geometry_descriptor=descriptor
+	flat_radii_m=geometry_descriptor.flat_radii_m
+	water_radii_m=geometry_descriptor.water_radii_m
+	scale_m=float(geometry_descriptor.reference_scale_m)
+	floor_y=float(geometry_descriptor.floor_y_m)/scale_m
 	flat_radii = flat_radii_m/scale_m
 	water_radii = water_radii_m/scale_m
+	var terrain_mesh := _terrain()
+	if terrain_mesh==null: return
+	var water_mesh := _water()
+	if water_mesh==null: return
 	var land := MeshInstance3D.new()
 	land.name = "OrganicPondBasin"
-	land.mesh = _terrain()
+	land.mesh = terrain_mesh
 	var basin_material := ShaderMaterial.new()
 	basin_material.shader = preload("res://pond_basin.gdshader")
 	land.material_override = basin_material
@@ -63,7 +128,7 @@ func _ready() -> void:
 	add_child(land)
 	surface = MeshInstance3D.new()
 	surface.name = "ClearPondSurface"
-	surface.mesh = _water()
+	surface.mesh = water_mesh
 	var water_material := ShaderMaterial.new()
 	water_material.shader = preload("res://pond_water.gdshader")
 	surface.material_override = water_material
@@ -71,20 +136,28 @@ func _ready() -> void:
 	surface.add_to_group("pond_surface_visual")
 	add_child(surface)
 	_build_shore()
+	geometry_ready=geometry_issue.is_empty()
 
 func _terrain() -> ArrayMesh:
-	var tool := SurfaceTool.new()
-	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var samples := PackedVector2Array()
 	for ring in range(RINGS+1):
 		var radius := float(ring)/INNER_RINGS*1.2 if ring<=INNER_RINGS else 1.2+float(ring-INNER_RINGS)/(RINGS-INNER_RINGS)*10.8
 		for spoke in range(SPOKES+1):
-			var p := outline(float(spoke)/SPOKES*TAU,radius)
-			p.y = terrain_height(p.x,p.z)
-			var dx := (terrain_height(p.x+.01,p.z)-terrain_height(p.x-.01,p.z))/.02
-			var dz := (terrain_height(p.x,p.z+.01)-terrain_height(p.x,p.z-.01))/.02
-			tool.set_normal(Vector3(-dx,1,-dz).normalized())
-			tool.set_uv(Vector2(p.x,p.z)*.05)
-			tool.add_vertex(p)
+			samples.append(Vector2(float(spoke)/SPOKES*TAU,radius))
+	var positions_m := _outline_points(samples)
+	if positions_m.size()!=samples.size(): return null
+	var surface_data := _surface_points(positions_m)
+	if surface_data.is_empty(): return null
+	var heights: PackedFloat64Array=surface_data.heights_m
+	var normals: PackedVector3Array=surface_data.normals
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in positions_m.size():
+		var at: Vector3=positions_m[index]/scale_m
+		at.y=heights[index]/scale_m
+		tool.set_normal(normals[index])
+		tool.set_uv(Vector2(at.x,at.z)*.05)
+		tool.add_vertex(at)
 	for ring in range(RINGS):
 		for spoke in range(SPOKES):
 			var a := ring*(SPOKES+1)+spoke
@@ -92,10 +165,14 @@ func _terrain() -> ArrayMesh:
 	return tool.commit()
 
 func _water() -> ArrayMesh:
+	var samples := PackedVector2Array()
+	for spoke in range(SPOKES+1): samples.append(Vector2(float(spoke)/SPOKES*TAU,1))
+	var rim_m := _outline_points(samples)
+	if rim_m.size()!=samples.size(): return null
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for spoke in range(SPOKES):
-		for p in [Vector3.ZERO,outline(float(spoke+1)/SPOKES*TAU),outline(float(spoke)/SPOKES*TAU)]:
+		for p in [Vector3.ZERO,rim_m[spoke+1]/scale_m,rim_m[spoke]/scale_m]:
 			tool.set_normal(Vector3.UP)
 			tool.add_vertex(p)
 	return tool.commit()

@@ -1,0 +1,37 @@
+{
+  "schema": 2,
+  "study_id": "turn32-v2-2026-11-23",
+  "status": "completed",
+  "completed_updates": 32,
+  "reason": "turning_unqualified",
+  "playing_package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "lane_limit_m": 0.002,
+  "candidate_adopted": false,
+  "sources": {
+    "checkpoint": {
+      "path": "res://research_data/studies/turn32-v2-2026-11-23/checkpoint-digest.json",
+      "sha256": "0d094e5b855ded8449bee03c82416f1ec79f14cee59a119256caade3e08aa473"
+    },
+    "training": {
+      "path": "res://research_data/studies/turn32-v2-2026-11-23/training-result.json",
+      "sha256": "834edb34307ea90e60198c489479e5172ae5d03db0262a68b7a6ce184b19b7ab"
+    },
+    "evaluation": {
+      "path": "res://research_data/studies/turn32-v2-2026-11-23/assessment-result.json",
+      "sha256": "cec8793255225cedaedd8b47cd432126e4c97533e90e2793c063be1db8b29218"
+    },
+    "movement": {
+      "path": "res://research_data/studies/turn32-v2-2026-11-23/movement-summary.json",
+      "sha256": "94d12e53011fe2cc5121455061657a3adad143bbe5bc9950e01dc912fd20c879"
+    },
+    "cases": {
+      "path": "res://research_data/studies/turn32-v2-2026-11-23/cases.csv",
+      "sha256": "e827e8f93fd81a886555ffc020f9baf5f6b2e4e8b1af01f1d6f3b550d578fbd7"
+    },
+    "baseline": {
+      "path": "res://research_data/studies/turn32-v2-2026-11-23/baseline-assessment.json",
+      "sha256": "7b339aead79bda5978ecd13bff9b2e3e99379ee276de87f0bcc7d065156635c1"
+    }
+  },
+  "disclosure": "Recorded study result. Compact native outputs and checkpoint digests are portable; omitted raw controls/checkpoints remain preserved research evidence. No study is rerun by the app."
+}
