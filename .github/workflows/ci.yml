@@ -20,9 +20,9 @@ jobs:
         run: cmake --build build --config Release --parallel
       - name: Test
         run: ctest --test-dir build -C Release --output-on-failure
-      - name: Build untimed Swim bookkeeping checks
+      - name: Build native pond geometry checks
         run: |
-          cmake -S tools/untimed-swim-check -B build/untimed-swim
-          cmake --build build/untimed-swim --config Release --parallel
-      - name: Check untimed Swim bookkeeping without simulation
-        run: ./build/untimed-swim/Release/untimed_swim_bookkeeping_check.exe
+          cmake -S tools/pond-geometry-check -B build/pond-geometry
+          cmake --build build/pond-geometry --config Release --parallel
+      - name: Check shared pond geometry without simulation
+        run: ./build/pond-geometry/Release/pond_geometry_check.exe

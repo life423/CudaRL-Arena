@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "passed": true,
+  "study_id": "turn33-v3-course-2026-11-24",
+  "registered_entry_checks": 10,
+  "source_without_DLL_checks": 9,
+  "rendered_checks": 128.0,
+  "rendered_sizes": [
+    "1280x800",
+    "390x844"
+  ],
+  "screenshots_saved": 8,
+  "screenshots_inspected": 2,
+  "physical_controls": 0,
+  "physical_substeps": 0,
+  "optimizer_calls": 0,
+  "native_CUDA_kernels": 0,
+  "candidate_completed_updates": 32,
+  "retention_passed": true,
+  "turns_passed": 3,
+  "turns_total": 16,
+  "turning_qualified": false,
+  "candidate_adopted": false,
+  "original_motor": 336,
+  "original_motor_unchanged": true,
+  "native_DLL_unchanged": true,
+  "raw_candidate_weights_in_app": false,
+  "public_new_study_bytes": 24310,
+  "Git_preserves_evidence_bytes": true,
+  "registered_project": "C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/live/",
+  "statement": "Course learning · v3\nRecorded candidate completed 32 PPO updates; swimming and resting retained. Turns: 3 / 16 passed.",
+  "files": [
+    {
+      "path": "live/main.gd",
+      "sha256": "f1a88c4fe45fcafd89ee56bcb362159c9f4e2f2b3167c3c061c6ab967d3bf91c"
+    },
+    {
+      "path": "tests/godot/study_receipt_portability.gd",
+      "sha256": "001f537d4e23c373d65ff293fc90b8326305e4538031f417fdcf5acf76900ef3"
+    },
+    {
+      "path": "tools/publish-study-status.ps1",
+      "sha256": "3e154fa0357460df936311016051180a3d47d2039a20f480b46a24a0aab1b719"
+    },
+    {
+      "path": "live/research_data/candidate-study.json",
+      "sha256": "07e1e416d96ff4669e92d86fb14d5ae4b7cbb7d8748bcde3329be448cd7639be"
+    },
+    {
+      "path": "live/research_data/shoreline-runtime.json",
+      "sha256": "cc9adb4b001f16df45fb870d0c3b3618c3b39cbcc5ed8a8b06432cb511692dc0"
+    },
+    {
+      "path": "live/research_data/studies/README.md",
+      "sha256": "ca9c888471f4278e7743d8516a5206247f52fad2a2c76410e5f6f0ea5b39cd00"
+    },
+    {
+      "path": "docs/SHORELINE_RUNTIME_V4_RESULTS_2026-11-23.md",
+      "sha256": "5c14aa559508cc29bd8790e7bed93968ad1ce342b94384485504d2fc5dee75ce"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/assessment-result.json",
+      "sha256": "be0ad3d57f77877269d265786bda1e4bc612e051a5986914ec9e05d44f9b4dd1"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/baseline-assessment.json",
+      "sha256": "39feeac5416cc2f057400189932a881899caacdf0b940fe8c88e065583949beb"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/cases.csv",
+      "sha256": "f696b241284c8432aaf5f48aa8939b996a0bd187a3e4428220c99462a6948f25"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/checkpoint-digest.json",
+      "sha256": "fc6b939883d8ef8cc6cfa029fd635bbf4683f39a880deaad7df92e885158a9e4"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/long-windows.csv",
+      "sha256": "ff71c3986a97923c27e72ab2330406be56108aecef4c19766892133411af9ea2"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/movement-summary.json",
+      "sha256": "fbb45777549ffc0bdd682711dda6e3bd2036e7b3d82ba940d2873f3033fe31eb"
+    },
+    {
+      "path": "live/research_data/studies/turn33-v3-course-2026-11-24/training-result.json",
+      "sha256": "2ea1d2c47801e78f81d854221f4255b4e17949f62c6f96bb5c389fd0ba0e36cf"
+    }
+  ],
+  "limitations": [
+    "Headless ordinary-entry check and private rendered QA; no new visible Manager Run or user-app control.",
+    "Recorded candidate assessment is not fresh native-build qualification.",
+    "Native/runtime/weights were not changed by publication or UI QA."
+  ]
+}

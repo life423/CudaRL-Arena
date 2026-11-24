@@ -1,0 +1,30 @@
+[
+  {
+    "update": "1",
+    "attempted_controls": "32768",
+    "attempted_substeps": "327680",
+    "actor_Adam": "32",
+    "critic_Adam": "32",
+    "mean_reward": "0.0246539",
+    "collection_ms": "204.328",
+    "physics_ms": "144.367",
+    "optimization_ms": "17.4471",
+    "transfer_ms": "3.4667",
+    "approx_KL": "0.000847157",
+    "aggregate_wall_s": "8.14708"
+  },
+  {
+    "update": "32",
+    "attempted_controls": "1048576",
+    "attempted_substeps": "10485760",
+    "actor_Adam": "1024",
+    "critic_Adam": "1024",
+    "mean_reward": "0.0381662",
+    "collection_ms": "12764.6",
+    "physics_ms": "12744",
+    "optimization_ms": "15.4501",
+    "transfer_ms": "3.1003",
+    "approx_KL": "0.000757706",
+    "aggregate_wall_s": "314.649"
+  }
+]

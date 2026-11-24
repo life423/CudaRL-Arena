@@ -36,6 +36,22 @@ provenance before changing a checkpoint or interpreting acceptance.
 
 ## User workflow preference — November 22, 2026
 
+- Latest November23 shoreline feedback: fix the mismatch between visible water
+  and the smaller supported domain, and use all three saved design reviews.
+  The user explicitly insists that turn direction and creature behavior come
+  from the PPO neural network, with no scripted/clamped movement. Do not add
+  forced yaw, bank-triggered steering, position correction, bounce or resets.
+  Do not describe the current diagnostic bank pause as learned navigation.
+  The user chose to KEEP the current visible pond (water radii0.52/0.34m).
+  The live project now uses the corrected physical bank with the same native
+  shoreline and bed as Godot. The legacy interior guard has been removed.
+  The 36 CPU qualification cases passed, but the outward reference swims
+  stalled near the bank. The user authorized a separate candidate motor for a
+  bounded turning lesson after CPU/CUDA qualification. Preserve the original
+  motor. Read docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md and
+  docs/POND_TURNING_PPO_PROTOCOL_2026-11-23.md for the measured outcome and
+  limits. Earlier dated results below describe their original runtimes.
+
 - Latest November23 user-approved product change: ordinary Godot Swim is
   untimed via reset_untimed_swim; retain the separate finite reset(id,false)
   API and all research/Rest horizons. Keep physical and pre/post pond checks,

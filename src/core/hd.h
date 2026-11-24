@@ -9,4 +9,12 @@
 #define CUDARL_HD
 #endif
 
+// Keep the certified terrain search and contact solver out of each other's
+// device instruction bodies. On the CPU these remain inline header functions.
+#if defined(__CUDA_ARCH__)
+#define CUDARL_DEVICE_NOINLINE __noinline__
+#else
+#define CUDARL_DEVICE_NOINLINE inline
+#endif
+
 #endif // CUDARL_CORE_HD_H

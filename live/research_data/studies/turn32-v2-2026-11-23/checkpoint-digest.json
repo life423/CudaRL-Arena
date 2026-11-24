@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "file_sha256": "23b48585239dc2b2699a3c0ef1294877f3116412783a87a96e8a44b9beb48cfb",
+  "file_bytes": 862872,
+  "payload_checksum_fnv1a64": "15412148521055685791",
+  "protocol_checksum_fnv1a64": "2755271162695145187",
+  "source_identity_fnv1a64": "16308029809216107606",
+  "runtime_version": 4,
+  "collision_envelope_version": 2,
+  "observation_schema": 5,
+  "completed_updates": 32,
+  "training_controls": 1048576,
+  "training_substeps": 10485760,
+  "actor_Adam_calls": 1024,
+  "critic_Adam_calls": 1024,
+  "world_stride": 1384,
+  "task_stride": 184,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "assets/research-evidence/pond-turning-v2/candidate-32.bin",
+  "validation": "Native evaluation parsed this checkpoint; this export records its envelope, header, counters and file digest. It performs no new policy evaluation."
+}

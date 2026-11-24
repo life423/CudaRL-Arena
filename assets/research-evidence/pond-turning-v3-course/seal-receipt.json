@@ -1,0 +1,9 @@
+{
+  "protocol_sha256": "32eaa0a907e0ede2141834346ff838725f0077d3d6d30de1efdd925362e99f08",
+  "source_bindings_verified": 64,
+  "source_files_snapshotted": 51,
+  "trainer_source_identity": "11872924702645730211",
+  "evaluator_source_identity": "15135703865771306091",
+  "runner_sha256": "9a8fcb22d5ee426fab152f63d2b18689a98aa99c6fd606827dd7ad9e20b1ad8a",
+  "optimizer_calls_before_start": 0
+}

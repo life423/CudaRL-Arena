@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "file_sha256": "94a56463bbfc5fd08a5dcd953ec088dd3c65ce4db14338d7ffb686ab4beb4f74",
+  "file_bytes": 862872,
+  "payload_checksum_fnv1a64": "6036055368566642422",
+  "protocol_checksum_fnv1a64": "9218889541001234229",
+  "source_identity_fnv1a64": "15660394372328472733",
+  "runtime_version": 4,
+  "collision_envelope_version": 2,
+  "observation_schema": 4,
+  "completed_updates": 8,
+  "training_controls": 262144,
+  "training_substeps": 2621440,
+  "actor_Adam_calls": 256,
+  "critic_Adam_calls": 256,
+  "world_stride": 1384,
+  "task_stride": 184,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "",
+  "validation": "Native evaluation parsed this checkpoint; this export records its envelope, header, counters and file digest. It performs no new policy evaluation."
+}

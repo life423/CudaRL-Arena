@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "source_controls_sha256": "87ae279f3f4be1d7cd579436ddf653ce09b09548514f08b8b72b14e788836c0f",
+  "source_controls_bytes": 2026101,
+  "accepted_control_rows": 1840,
+  "raw_controls_in_app": false,
+  "cases": [
+    {
+      "suite": "short",
+      "case": 0,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 0.0006120167090557516,
+      "maximum_depth_m": 0.0002032756747212261,
+      "maximum_tilt_deg": 8.915616035461426
+    },
+    {
+      "suite": "short",
+      "case": 1,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 0.00067748106084764,
+      "maximum_depth_m": 0.00018132208788301796,
+      "maximum_tilt_deg": 9.463857650756836
+    },
+    {
+      "suite": "short",
+      "case": 2,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 0.0006120144971646369,
+      "maximum_depth_m": 0.0002032756747212261,
+      "maximum_tilt_deg": 8.915616035461426
+    },
+    {
+      "suite": "short",
+      "case": 3,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 0.0006774797802790999,
+      "maximum_depth_m": 0.00018132208788301796,
+      "maximum_tilt_deg": 9.463857650756836
+    },
+    {
+      "suite": "long",
+      "case": 0,
+      "accepted_control_rows": 1200,
+      "maximum_lane_m": 0.012281046248972416,
+      "maximum_depth_m": 0.00046972749987617135,
+      "maximum_tilt_deg": 8.915616035461426
+    }
+  ]
+}

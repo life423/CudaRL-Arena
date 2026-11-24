@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "protocol_id": "pond-frozen-v2-quick-layout-v1",
+  "frozen_commit": "e013b2a",
+  "frozen_trainer_source_fnv": "16308029809216107606",
+  "fixture_sha256": "ec7d81f204130a834ecd9825824b0e64cbb646406b141a888a69164d9d01ed0b",
+  "module_sha256": "b98d31be2dcc7a5da12486930e76912131d19bd123e08e9f7fd0a4ace03abde9",
+  "trainer_sha256": "c595a3348a4fa61412aeba8a8f7e744aa4b787ad06509ed553810c24491303c7",
+  "step_symbol": "_ZN36_GLOBAL__N__953fa975_8_train_cu_main11step_kernelEPN6cudarl12pond_runtime5WorldEPNS0_2rl13pond_ppo_task4TaskEPKffPfSA_SA_SA_PySB_PiPNS_15TransitionTraceESC_",
+  "measured_tool_sha256": "fa61477d82357c348ae7098a72a94829aefcc4c57d1bf3e8feffe0e8815d1f12",
+  "measured_tool_source_sha256": "2a14d645f0aaaeb65389f984e4834d84e9324586bda5a2b12d17cf94b60f223b",
+  "bench_cpp_sha256": "adfd6e349c59c7cc8d3246a4757bc9458c3ffbc5906354352fb9102f6c571562",
+  "cmake_sha256": "517d03f46a37134b0cb88ae7f4ccdebc62dea09f05f46135e0c471102df9c393",
+  "protocol_sha256": "f8b82d236a57ffe01df08d1de2357040bf490428a92ac2bdd628bde3630ff2f1",
+  "raw_six_poststate_files_kept_in": "build/quick32/run-01",
+  "source_snapshot": "build/turn32/source-snapshot-v2",
+  "candidate_adopted": false,
+  "optimizer_calls": 0,
+  "production_launch_changed": false,
+  "component": {
+    "executable_sha256": "a986014f6627f760e1265b9215d2af3e77ca4cc967c49a1ce0f23140c088548e",
+    "protocol_sha256": "2cd66f691ae36619e21eb175faf0795d27057a003bcc0f3a87c1d1cd8a85fcf3",
+    "queries_sha256": "0731dd9c91588360383aaca2f3ec2a672f703e7b8a6b22e45679a03c9916d68e",
+    "cmake_sha256": "528bed68b8e608f27f185726ddf4127ce213f6757b44d326105e296a95d23c6b",
+    "result_sha256": "e5f6566f44840472e4a05eda7b047ae98e32df7ab83cc465b51569e375edd97d",
+    "optimizer_calls": 0,
+    "hardware_counters": "Unavailable: ERR_NVGPUCTRPERM; no security changes",
+    "source_sha256": "a1bfa95ddde996e70d119d6a3845b98b38f8660cbbf6922dd212484238c93b9f",
+    "physical_controls": 0
+  }
+}

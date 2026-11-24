@@ -1,0 +1,1880 @@
+{
+  "schema": 1,
+  "purpose": "retire obsolete executable paths while preserving source/evidence and saved motor",
+  "base_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+  "no_physical_controls_or_optimizer_updates": true,
+  "files": [
+    {
+      "path": "live/continuous_study.gd",
+      "sha256": "15721044b6111b145d75a8299d17ce1dcc36c5a91e39fecea54981df4aee4ac3",
+      "bytes": 4385,
+      "sha256_lf": "15721044b6111b145d75a8299d17ce1dcc36c5a91e39fecea54981df4aee4ac3",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "dd93d18f6d1530eb57c2e227134071a2d661a39d",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/live/continuous_study.gd"
+    },
+    {
+      "path": "live/interface_comparison_launch_stop_v2.gd",
+      "sha256": "0112a97b7dba49a41136f2dd99e25457d8c43b6b1e8220f34bd4cd12fdfc9ab5",
+      "bytes": 6556,
+      "sha256_lf": "0112a97b7dba49a41136f2dd99e25457d8c43b6b1e8220f34bd4cd12fdfc9ab5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a32bcb99cc18401d238d6b3d10e0d7713ef9fc29",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "live/interface_comparison_study.gd",
+      "sha256": "d1ce78fb4ce486dfad33998a29486c5bcb87d1c50ea13d357c60ca16ef6668d1",
+      "bytes": 9966,
+      "sha256_lf": "d1ce78fb4ce486dfad33998a29486c5bcb87d1c50ea13d357c60ca16ef6668d1",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "881605a449f5dbe10e8d33c2e7d57b4948f6140a",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "live/interface_comparison_study_v2.gd",
+      "sha256": "531c0f5e61658b216da8cb31d3817e62a641d37730bef3637fa00eea73a999fc",
+      "bytes": 15431,
+      "sha256_lf": "531c0f5e61658b216da8cb31d3817e62a641d37730bef3637fa00eea73a999fc",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "ca71b4f8536ae1fb98d50fbc97206e3944d7f779",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "live/request_turn_study.gd",
+      "sha256": "cc51cb7d2c9415bf07e6e28fca8edab5724c4942506f01aa0b69a2cb0c3a4e19",
+      "bytes": 8014,
+      "sha256_lf": "cc51cb7d2c9415bf07e6e28fca8edab5724c4942506f01aa0b69a2cb0c3a4e19",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7e169bacb0973ba621cbb7ba6986fdea5f885a33",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "src/godot/frozen_swimmer.cpp",
+      "sha256": "d57bae27dc2b61394e6f79b8e51f72da1cc5c67b8da7f266349964f28236f296",
+      "bytes": 6365,
+      "sha256_lf": "0fcc67c52186cb435ca337f681c68e87e9e7faa49aac21b6a027a2b90216ffda",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "224f5621de266fcad5b195acbfaec38e3ec358f8",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/godot/frozen_swimmer.cpp",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/godot/frozen_swimmer.cpp",
+        "sha256": "d57bae27dc2b61394e6f79b8e51f72da1cc5c67b8da7f266349964f28236f296"
+      }
+    },
+    {
+      "path": "src/godot/frozen_swimmer.h",
+      "sha256": "ede742975234972b1539d1504a1c4d47cf4f7b5d3afc11a6b1b1d29a57acdf90",
+      "bytes": 749,
+      "sha256_lf": "7fe9b59ac3f8ca2528f18bacf378d9f875fbc0c62addf5558478f6419a0229cb",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b45207556a2285e568f500c8898fe46c6dd23f39",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/godot/frozen_swimmer.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/godot/frozen_swimmer.h",
+        "sha256": "ede742975234972b1539d1504a1c4d47cf4f7b5d3afc11a6b1b1d29a57acdf90"
+      }
+    },
+    {
+      "path": "src/godot/gait_preview_contract.in.h",
+      "sha256": "62f74a59d05a929c5ee095397e213aee920d8cd392f8ea29df8c798fcefe6218",
+      "bytes": 123,
+      "sha256_lf": "62f74a59d05a929c5ee095397e213aee920d8cd392f8ea29df8c798fcefe6218",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "88074ab1710bfe8ed7c53343e8e018975ec8d3e7",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/godot/gait_preview_contract.in.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/godot/gait_preview_contract.in.h",
+        "sha256": "62f74a59d05a929c5ee095397e213aee920d8cd392f8ea29df8c798fcefe6218"
+      }
+    },
+    {
+      "path": "src/godot/pond_view_domain.h",
+      "sha256": "a05eb1011b7c293b606191d607057a307f18abc47bd11dfa836a8ede56569d5a",
+      "sha256_lf": "a05eb1011b7c293b606191d607057a307f18abc47bd11dfa836a8ede56569d5a",
+      "bytes": 1268,
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "84912f992b8703f903bed173857d601f40dd531d",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/untimed-swim-2026-11-23/evidence.zip",
+        "member": "src/godot/pond_view_domain.h",
+        "sha256": "a05eb1011b7c293b606191d607057a307f18abc47bd11dfa836a8ede56569d5a"
+      }
+    },
+    {
+      "path": "src/godot/turning_preview_contract.in.h",
+      "sha256": "9f56b9b1534b67ec973dcc79f1069a4cafcb2b5cc77845e68ecfa57d92377a64",
+      "bytes": 129,
+      "sha256_lf": "9f56b9b1534b67ec973dcc79f1069a4cafcb2b5cc77845e68ecfa57d92377a64",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a660a2fd9a558a0137df8f2996c87c456b7d7304",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/godot/turning_preview_contract.in.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/godot/turning_preview_contract.in.h",
+        "sha256": "9f56b9b1534b67ec973dcc79f1069a4cafcb2b5cc77845e68ecfa57d92377a64"
+      }
+    },
+    {
+      "path": "src/godot/untimed_swim_preview.h",
+      "sha256": "ab661b0f512be23d4cca56a0c07fe24386736270184fc6a558c1d45b8aeb81a6",
+      "sha256_lf": "ab661b0f512be23d4cca56a0c07fe24386736270184fc6a558c1d45b8aeb81a6",
+      "bytes": 2565,
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "341f2185e34fc9d7702cec0b5cd188de5efeeb08",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/untimed-swim-2026-11-23/evidence.zip",
+        "member": "src/godot/untimed_swim_preview.h",
+        "sha256": "ab661b0f512be23d4cca56a0c07fe24386736270184fc6a558c1d45b8aeb81a6"
+      }
+    },
+    {
+      "path": "src/nn/motor/controller_contract.txt",
+      "sha256": "40337ba0e21f0f5410c1dccfd196c90a840327230e3833f34a3647c258da849f",
+      "bytes": 314,
+      "sha256_lf": "40337ba0e21f0f5410c1dccfd196c90a840327230e3833f34a3647c258da849f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "aef03710918483c11364625a17fd55de8a700a67",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/controller_contract.txt"
+    },
+    {
+      "path": "src/nn/motor/current_model_v1.h",
+      "sha256": "c412da944333dc1897dbc7ae76c01d98b398eb706a2ba4fbd125df4f1b7c16f6",
+      "bytes": 12767,
+      "sha256_lf": "c412da944333dc1897dbc7ae76c01d98b398eb706a2ba4fbd125df4f1b7c16f6",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "47835df896be73ed68aa5aabef6e71e8185775eb",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/current_model_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/current_model_v1.h",
+        "sha256": "c412da944333dc1897dbc7ae76c01d98b398eb706a2ba4fbd125df4f1b7c16f6"
+      }
+    },
+    {
+      "path": "src/nn/motor/current_model_v2.h",
+      "sha256": "3e4eba48a8961a132a0836105fb6c1c013c1ee1956679d25a8b8cb1731552c5f",
+      "sha256_lf": "a3125094ae2317bf31bf8ae5438bd8c1fba3dcfe4ebe584b60d70e3e57f33d59",
+      "bytes": 13499,
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "ad10b45f5594a3c0f9b99957793e4f5eee9be1b3",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/current_model_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/current_model_v2.h",
+        "sha256": "3e4eba48a8961a132a0836105fb6c1c013c1ee1956679d25a8b8cb1731552c5f"
+      }
+    },
+    {
+      "path": "src/nn/motor/current_motor_v1.h",
+      "sha256": "eb0083ea311a9b6ad2474b9d534e89250a849bf4eb200fe5a346b251d94a7169",
+      "bytes": 5003,
+      "sha256_lf": "eb0083ea311a9b6ad2474b9d534e89250a849bf4eb200fe5a346b251d94a7169",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "983cbdc32bc7d7199e96670faeb05a4df63fa1c2",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/current_motor_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/current_motor_v1.h",
+        "sha256": "eb0083ea311a9b6ad2474b9d534e89250a849bf4eb200fe5a346b251d94a7169"
+      }
+    },
+    {
+      "path": "src/nn/motor/current_motor_v2.h",
+      "sha256": "142a678c16bc694a25b64dad3fd07423365325671532d7b6b39647a42ed590e5",
+      "bytes": 5107,
+      "sha256_lf": "b49791b38f1f1a36cb3fecd9c86fd3665c2b2f1fa9067114cabfe801fdcbf098",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7f7a3e290ac88d42a053aa6605161994c1294995",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/current_motor_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/current_motor_v2.h",
+        "sha256": "142a678c16bc694a25b64dad3fd07423365325671532d7b6b39647a42ed590e5"
+      }
+    },
+    {
+      "path": "src/nn/motor/current_task_v1.h",
+      "sha256": "926d4b3a2a3083d59fcc2ffb9446c5c3843cbdc5290f8f9c985724f5bcf801eb",
+      "bytes": 2324,
+      "sha256_lf": "926d4b3a2a3083d59fcc2ffb9446c5c3843cbdc5290f8f9c985724f5bcf801eb",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6346245c98d528f12d0d6dc0801dc538ebd0ac26",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/current_task_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/current_task_v1.h",
+        "sha256": "926d4b3a2a3083d59fcc2ffb9446c5c3843cbdc5290f8f9c985724f5bcf801eb"
+      }
+    },
+    {
+      "path": "src/nn/motor/current_task_v2.h",
+      "sha256": "47da1967616d0233922a173b4850aa988f596066162897b532a461627e6f4627",
+      "bytes": 2362,
+      "sha256_lf": "7ba73c4a7a94642acea411e1c267fb896f0522d7dbdaec6b947aea8eaa61c2c5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "891113f21e6fa9aef6ce1064a099bb7850cb9ac0",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/current_task_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/current_task_v2.h",
+        "sha256": "47da1967616d0233922a173b4850aa988f596066162897b532a461627e6f4627"
+      }
+    },
+    {
+      "path": "src/nn/motor/frozen_contract.in.h",
+      "sha256": "a4b6e7767924049bebb4591322c71583f2dcff3a7580133275a457dcef2de929",
+      "bytes": 222,
+      "sha256_lf": "a4b6e7767924049bebb4591322c71583f2dcff3a7580133275a457dcef2de929",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "e454dbb186382d93f5792d3d942ae5953100397d",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/frozen_contract.in.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/frozen_contract.in.h",
+        "sha256": "a4b6e7767924049bebb4591322c71583f2dcff3a7580133275a457dcef2de929"
+      }
+    },
+    {
+      "path": "src/nn/motor/frozen_controller.cpp",
+      "sha256": "0e47a615c9ce9a749baa03286081b674e4dcddbda6959af7467fc9448b0c4896",
+      "bytes": 7960,
+      "sha256_lf": "9c6a9d3c31b09f8207c4091252c4f7ac963ff2b09b2b8ad3d278570b4f536e74",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a46acf96fef4b35132f2450df6d888bfd2e51a9e",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/frozen_controller.cpp",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/frozen_controller.cpp",
+        "sha256": "0e47a615c9ce9a749baa03286081b674e4dcddbda6959af7467fc9448b0c4896"
+      }
+    },
+    {
+      "path": "src/nn/motor/frozen_controller.h",
+      "sha256": "b82614cc700d5fc0976f253a4888ec8334b662646e594baed4797ce05568ddb3",
+      "bytes": 2966,
+      "sha256_lf": "fa437b0429cb9fb3f7233dfb00548be57eda74417f98d27fa4c28c31e69ee2bc",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "8fff29a97935f3c8189aa32683bde26b49c7d05c",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/frozen_controller.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/frozen_controller.h",
+        "sha256": "b82614cc700d5fc0976f253a4888ec8334b662646e594baed4797ce05568ddb3"
+      }
+    },
+    {
+      "path": "src/nn/motor/gait_policy_v1.h",
+      "sha256": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67",
+      "bytes": 2160,
+      "sha256_lf": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "0f1d08480aed85ac951a9f42e77129e14d062cf2",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/gait_policy_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/gait_policy_v1.h",
+        "sha256": "0d77f238b208e16b2117cf5e6baa2ffebb385167f28dbb8fd42b52442287df67"
+      }
+    },
+    {
+      "path": "src/nn/motor/gait_task_v1.h",
+      "sha256": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a",
+      "bytes": 3635,
+      "sha256_lf": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "69e14fad8bf1af71e353f592319927e0a547a88a",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/gait_task_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/gait_task_v1.h",
+        "sha256": "3602af8cb6008a846f02bb70268d039c9f95f505f07a65d9830f478df668045a"
+      }
+    },
+    {
+      "path": "src/nn/motor/requested_turn_task_v1.h",
+      "sha256": "45c286d3caa4c52355e10e39156499e3d46f77c5c8cf7c92adf6f099be6599f2",
+      "bytes": 16455,
+      "sha256_lf": "45c286d3caa4c52355e10e39156499e3d46f77c5c8cf7c92adf6f099be6599f2",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "8f78c1d4dcac2acd409d63e38df80d6f8728f32b",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/requested_turn_task_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/requested_turn_task_v1.h",
+        "sha256": "45c286d3caa4c52355e10e39156499e3d46f77c5c8cf7c92adf6f099be6599f2"
+      }
+    },
+    {
+      "path": "src/nn/motor/turning_policy_v1.h",
+      "sha256": "25b6e25d87c1aa71a12a0ff00c77e0a812976da05b7eda6343252998934fab99",
+      "bytes": 2876,
+      "sha256_lf": "25b6e25d87c1aa71a12a0ff00c77e0a812976da05b7eda6343252998934fab99",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "337b986a394b3b4f6eb7b3d00016dda5404c7a3a",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/turning_policy_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/turning_policy_v1.h",
+        "sha256": "25b6e25d87c1aa71a12a0ff00c77e0a812976da05b7eda6343252998934fab99"
+      }
+    },
+    {
+      "path": "src/nn/motor/turning_policy_v2.h",
+      "sha256": "4450974a5679f5670c5f41ee70cde7dd0f95582888f359ca5838b1bfd4993a39",
+      "bytes": 2905,
+      "sha256_lf": "4450974a5679f5670c5f41ee70cde7dd0f95582888f359ca5838b1bfd4993a39",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b665248bd32a7e6c09ea273d0147c1a4e3df2e83",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/turning_policy_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/turning_policy_v2.h",
+        "sha256": "4450974a5679f5670c5f41ee70cde7dd0f95582888f359ca5838b1bfd4993a39"
+      }
+    },
+    {
+      "path": "src/nn/motor/turning_task_v1.h",
+      "sha256": "fe4d5ae3aaa5c470e906987ae13f92d53b8c1e303b9651a43db855a1373d5d4e",
+      "bytes": 14182,
+      "sha256_lf": "fe4d5ae3aaa5c470e906987ae13f92d53b8c1e303b9651a43db855a1373d5d4e",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "2b017c6b1a6da74d50fc7fda4157224de5c65458",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/turning_task_v1.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/turning_task_v1.h",
+        "sha256": "fe4d5ae3aaa5c470e906987ae13f92d53b8c1e303b9651a43db855a1373d5d4e"
+      }
+    },
+    {
+      "path": "src/nn/motor/turning_task_v2.h",
+      "sha256": "cbca6b57f421155ee002bb63270001493e1a56442d47e71dc813bb1b4df159fb",
+      "bytes": 17498,
+      "sha256_lf": "cbca6b57f421155ee002bb63270001493e1a56442d47e71dc813bb1b4df159fb",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "ef209f35710e90b030d6037f57785dfb5ead2f94",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/src/nn/motor/turning_task_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/src/nn/motor/turning_task_v2.h",
+        "sha256": "cbca6b57f421155ee002bb63270001493e1a56442d47e71dc813bb1b4df159fb"
+      }
+    },
+    {
+      "path": "tests/godot/continuous_fidelity.gd",
+      "sha256": "3a38f822c3a997117c5d626cf86685810e7fa2edb441ef76993007199b7d5af5",
+      "bytes": 5179,
+      "sha256_lf": "3a38f822c3a997117c5d626cf86685810e7fa2edb441ef76993007199b7d5af5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "5d75b59df2eaace244216d036f25c3f3a21c722a",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tests/godot/continuous_fidelity.gd"
+    },
+    {
+      "path": "tests/godot/continuous_study_smoke.gd",
+      "sha256": "30c4f14e0146b9a586a8c618c33ffd2a0ed55c1662bd3375f6b49ba4585c76d4",
+      "bytes": 4474,
+      "sha256_lf": "30c4f14e0146b9a586a8c618c33ffd2a0ed55c1662bd3375f6b49ba4585c76d4",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "10a7f7af56ae9aefcc4365662dd97bbd277d4798",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/continuous_study_view_smoke.gd",
+      "sha256": "76d867553e57ee6944593baaedbd10727b705803e09db9732b8c272e709d65a7",
+      "bytes": 3490,
+      "sha256_lf": "76d867553e57ee6944593baaedbd10727b705803e09db9732b8c272e709d65a7",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "c1210af0f73220836fcedcbbed6a0f89bddc9834",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/current_study_metadata_smoke.gd",
+      "sha256": "fb8281dab2663714cb44c2fb229ebdd0933439d93b58a33a5c2da984f81c1c57",
+      "bytes": 10612,
+      "sha256_lf": "fb8281dab2663714cb44c2fb229ebdd0933439d93b58a33a5c2da984f81c1c57",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "f5e97fdb90d8d48d3245b09e1e2adff134112322",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/current_study_view_smoke.gd",
+      "sha256": "6f9c1372a6d0ebd21ee3112134e8de0a3bc4980a19058a13b5ac452f8688d7c9",
+      "bytes": 4513,
+      "sha256_lf": "6f9c1372a6d0ebd21ee3112134e8de0a3bc4980a19058a13b5ac452f8688d7c9",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6265daf18c1d596335cf759b065f42e66e5b6675",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/interface_comparison_launch_stop_v2_smoke.gd",
+      "sha256": "3d00c6967e2c988e4567ba4c4afc5660a501e363b94c5206b513e788ca5e859f",
+      "bytes": 5129,
+      "sha256_lf": "3d00c6967e2c988e4567ba4c4afc5660a501e363b94c5206b513e788ca5e859f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "be3ca7f461c581e3efaf41d32889d0433c045a64",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/interface_comparison_launch_stop_v2_view_smoke.gd",
+      "sha256": "71b71dcd8fccd878bcd5592e1cec10c40e6f43035fc5ad23ba6b13ea3a43bce7",
+      "bytes": 3886,
+      "sha256_lf": "71b71dcd8fccd878bcd5592e1cec10c40e6f43035fc5ad23ba6b13ea3a43bce7",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "5036d1062a24d4e29a321d4a0c8e1a06981fff54",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/interface_comparison_study_smoke.gd",
+      "sha256": "22ad458abc7e11ba32e8ad177c48a284ef640811bc7b1cf57c2096f220cfaeca",
+      "bytes": 9934,
+      "sha256_lf": "22ad458abc7e11ba32e8ad177c48a284ef640811bc7b1cf57c2096f220cfaeca",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "199db546e6e2935758fd2e746c67d9b6689bed26",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/interface_comparison_study_v2_smoke.gd",
+      "sha256": "2116a4905c1ae43279adf1cfe85ec75e634d7f9dbf2130916f6dbdf617214ad6",
+      "bytes": 16132,
+      "sha256_lf": "2116a4905c1ae43279adf1cfe85ec75e634d7f9dbf2130916f6dbdf617214ad6",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "bbeaec4cbd652afbdda48f83e64f3452f1e9ccd4",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/interface_comparison_study_v2_view_smoke.gd",
+      "sha256": "d2c31f31f3a963af7e8df1fcf318f1ec66d081c2006b7d3ca9243b280da5ee9a",
+      "bytes": 4462,
+      "sha256_lf": "d2c31f31f3a963af7e8df1fcf318f1ec66d081c2006b7d3ca9243b280da5ee9a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "aae1b740add7f39a471c9958f3e1f0ec97f5aea7",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/interface_comparison_study_view_smoke.gd",
+      "sha256": "cdaa94ed0f310585231dc805e396e61e58722acbb3b1b22997830eb686d64508",
+      "bytes": 3885,
+      "sha256_lf": "cdaa94ed0f310585231dc805e396e61e58722acbb3b1b22997830eb686d64508",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "953fc4eba75efae534592105363a2a118d8786a8",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/request_turn_study_smoke.gd",
+      "sha256": "005d8cc36aa8c1e40fd146d39260c7630b2fb4411be073212aed7b0e9cc88831",
+      "bytes": 7239,
+      "sha256_lf": "005d8cc36aa8c1e40fd146d39260c7630b2fb4411be073212aed7b0e9cc88831",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "8b9092201c6f0acf7c39be2480c05a66c26f6cdb",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/godot/request_turn_study_view_smoke.gd",
+      "sha256": "e0386036c98042248eedd0ce2ec0b6ab14526f427e42592382ebc3c527031b51",
+      "bytes": 3621,
+      "sha256_lf": "e0386036c98042248eedd0ce2ec0b6ab14526f427e42592382ebc3c527031b51",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "67dc03710e1f2ae39be47b3a8a9bdbfed6cc9802",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tests/requested_turn_task_v1_pure.cpp",
+      "sha256": "3f42ab010c8cfbe0c9d81506307e7c65487735efa62fcee990d7fa10d6040e20",
+      "bytes": 9296,
+      "sha256_lf": "3f42ab010c8cfbe0c9d81506307e7c65487735efa62fcee990d7fa10d6040e20",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "799e80a607ef5dbb1dce4d0c4f0c62984282528b",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/analyze_frozen_interface_gate_failure.py",
+      "sha256": "d3b2b6c84fb2a71f35db736752c54fac4bf038554dd6196179d84502b4674167",
+      "bytes": 6750,
+      "sha256_lf": "d3b2b6c84fb2a71f35db736752c54fac4bf038554dd6196179d84502b4674167",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "61c637a80be7b6de9f569d720fef4994da01f313",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/analyze_frozen_interface_gate_failure.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/analyze_frozen_interface_gate_failure.py",
+        "sha256": "d3b2b6c84fb2a71f35db736752c54fac4bf038554dd6196179d84502b4674167"
+      }
+    },
+    {
+      "path": "tools/analyze_frozen_interface_gate_failure_verified.py",
+      "sha256": "fc4e010b5e2cf1e22936fd28f1411b99cef919b7ad57d6ca43705549b790d429",
+      "bytes": 7131,
+      "sha256_lf": "fc4e010b5e2cf1e22936fd28f1411b99cef919b7ad57d6ca43705549b790d429",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "4a1a2b0f4aacf1e633960472621e4e8650713346",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/analyze_frozen_interface_gate_failure_verified.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/analyze_frozen_interface_gate_failure_verified.py",
+        "sha256": "fc4e010b5e2cf1e22936fd28f1411b99cef919b7ad57d6ca43705549b790d429"
+      }
+    },
+    {
+      "path": "tools/append_hold8.cu",
+      "sha256": "5d46932e99f0245f0cca81110671e256cefd329b477c62e5247f156034a7eeb8",
+      "bytes": 26001,
+      "sha256_lf": "5d46932e99f0245f0cca81110671e256cefd329b477c62e5247f156034a7eeb8",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "d82345e4962574341e38d1331f5d90b3a9a5edff",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/append_hold8.cu"
+    },
+    {
+      "path": "tools/archive_continuous_pond.py",
+      "sha256": "b8b55a2a60753af9d55fd5b5b82c1496eb35e2679353d7f586b299730bb405de",
+      "bytes": 3289,
+      "sha256_lf": "b8b55a2a60753af9d55fd5b5b82c1496eb35e2679353d7f586b299730bb405de",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "d5a8c3afbc6b1eeb0d7767633e3e1df752f60157",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/archive_continuous_pond.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/archive_continuous_pond.py",
+        "sha256": "b8b55a2a60753af9d55fd5b5b82c1496eb35e2679353d7f586b299730bb405de"
+      }
+    },
+    {
+      "path": "tools/audit_continuous_pond_design.py",
+      "sha256": "d932485c8efe4552dfdb615fb09877720bae5b726a2d15f42915bf41c3283312",
+      "bytes": 7062,
+      "sha256_lf": "d932485c8efe4552dfdb615fb09877720bae5b726a2d15f42915bf41c3283312",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "0a65e67d381cf0b0b886666bca59a2a3659ddd28",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/audit_continuous_pond_design.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/audit_continuous_pond_design.py",
+        "sha256": "d932485c8efe4552dfdb615fb09877720bae5b726a2d15f42915bf41c3283312"
+      }
+    },
+    {
+      "path": "tools/audit_hold_exploration.py",
+      "sha256": "d3d01396160f19389f1662fcf4a4c5741d7694d9421ca4a2f4a57fad52de3f9f",
+      "bytes": 5386,
+      "sha256_lf": "d3d01396160f19389f1662fcf4a4c5741d7694d9421ca4a2f4a57fad52de3f9f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "3e3ebd3efc14e2beb7525590c439f99fea8bb5ca",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/audit_hold_exploration.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/audit_hold_exploration.py",
+        "sha256": "d3d01396160f19389f1662fcf4a4c5741d7694d9421ca4a2f4a57fad52de3f9f"
+      }
+    },
+    {
+      "path": "tools/audit_hold_gradients.py",
+      "sha256": "5c06799057b9d31ff7d1bef89dd0edd456da2ae8f926c309e6b2d8d72984c33c",
+      "bytes": 14709,
+      "sha256_lf": "5c06799057b9d31ff7d1bef89dd0edd456da2ae8f926c309e6b2d8d72984c33c",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "46d9b896551c5d57700d6a44bdfe77a6ab5c354a",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/audit_hold_gradients.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/audit_hold_gradients.py",
+        "sha256": "5c06799057b9d31ff7d1bef89dd0edd456da2ae8f926c309e6b2d8d72984c33c"
+      }
+    },
+    {
+      "path": "tools/audit_hold_saved.py",
+      "sha256": "9e8cf5cf490a22da063386a037903639bd3acdae5ac888c9963034a863d064fe",
+      "bytes": 12634,
+      "sha256_lf": "9e8cf5cf490a22da063386a037903639bd3acdae5ac888c9963034a863d064fe",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6d34b3713e3bd253c77c3015b8e4b69b0730ca13",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/audit_hold_saved.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/audit_hold_saved.py",
+        "sha256": "9e8cf5cf490a22da063386a037903639bd3acdae5ac888c9963034a863d064fe"
+      }
+    },
+    {
+      "path": "tools/authorize_continuous_pond_v2.py",
+      "sha256": "423ddda9fa9d2a0913b30aa7d58602a7fe8bd93ec651614d7b15d9e852d9d136",
+      "bytes": 5157,
+      "sha256_lf": "423ddda9fa9d2a0913b30aa7d58602a7fe8bd93ec651614d7b15d9e852d9d136",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "22db262f2445ef422db968a1b0977c9f8f652042",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/authorize_continuous_pond_v2.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/authorize_continuous_pond_v2.py",
+        "sha256": "423ddda9fa9d2a0913b30aa7d58602a7fe8bd93ec651614d7b15d9e852d9d136"
+      }
+    },
+    {
+      "path": "tools/authorize_frozen_requested_turn.py",
+      "sha256": "067b205ca5fd4ce14e7c9978b5aa7d26b44ca04236d65b5c01bcb52052a9b0a9",
+      "bytes": 4386,
+      "sha256_lf": "067b205ca5fd4ce14e7c9978b5aa7d26b44ca04236d65b5c01bcb52052a9b0a9",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a599cfa1482f81bc756ffb51e6e68e6fe53a5211",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/authorize_frozen_requested_turn.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/authorize_frozen_requested_turn.py",
+        "sha256": "067b205ca5fd4ce14e7c9978b5aa7d26b44ca04236d65b5c01bcb52052a9b0a9"
+      }
+    },
+    {
+      "path": "tools/continuous_pond_inputs.py",
+      "sha256": "78704eb293aef9ecc767388e25c10586f6967308f640bc5dc5efce807f5db8d2",
+      "bytes": 4487,
+      "sha256_lf": "78704eb293aef9ecc767388e25c10586f6967308f640bc5dc5efce807f5db8d2",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "faaf16def249a31fe84e2f0f0ff46777c31e26f5",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/continuous_pond_inputs.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/continuous_pond_inputs.py",
+        "sha256": "78704eb293aef9ecc767388e25c10586f6967308f640bc5dc5efce807f5db8d2"
+      }
+    },
+    {
+      "path": "tools/continuous_pond_v2_batch_audit.py",
+      "sha256": "a56fed61e28035478947ebec76c6f772b0e748144d3c6f1914895ed8dd3f6ed3",
+      "bytes": 25470,
+      "sha256_lf": "e0450d19037ab8d2f70a75ab57423fba5e2f28718189b7d032b6c4389da732a2",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "f9cd2b3f8777f26414812ca6d161e390e7018dd6",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/continuous_pond_v2_batch_audit.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/continuous_pond_v2_batch_audit.py",
+        "sha256": "a56fed61e28035478947ebec76c6f772b0e748144d3c6f1914895ed8dd3f6ed3"
+      }
+    },
+    {
+      "path": "tools/continuous_pond_v2_inputs.py",
+      "sha256": "c39985a3be2d73b075c998aa3c0046dd5a1e25bec17dc357c2541b1d967f1141",
+      "bytes": 5588,
+      "sha256_lf": "c41ce752d493e1f9d2fc19085ea7ba844170f080687f0c1a96a1bbf5b537a476",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6cc2db55c8a5eb7011b32bfe6c156eab813bf483",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/continuous_pond_v2_inputs.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/continuous_pond_v2_inputs.py",
+        "sha256": "c39985a3be2d73b075c998aa3c0046dd5a1e25bec17dc357c2541b1d967f1141"
+      }
+    },
+    {
+      "path": "tools/current_physics_gate.cu",
+      "sha256": "48c24389c60749cc9ad75106af3984e008e771485e6093ff26aa29181e7bfb08",
+      "bytes": 26529,
+      "sha256_lf": "48c24389c60749cc9ad75106af3984e008e771485e6093ff26aa29181e7bfb08",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "3aba5d515b3b68a6f2cc150e105cdb2644db2805",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/current_physics_gate.cu"
+    },
+    {
+      "path": "tools/current_physics_gate_v2.cu",
+      "sha256": "e96581b10fa60225f172a07c6f5deb0fc43b0c8ec59a9164977f5b30aa9fc112",
+      "bytes": 32788,
+      "sha256_lf": "0d40d178af5732ceb6243b990e222fe1d2b63aba606aed25b1b3054045c177dd",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "235d470a977fffa061502f823684337f0bd0a369",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/current_physics_gate_v2.cu"
+    },
+    {
+      "path": "tools/current_swim_math.h",
+      "sha256": "f6b791cfaa2b4d561e25c065b9e0a1c32a85141e6b6a27d144ae018cd11edc25",
+      "bytes": 2116,
+      "sha256_lf": "f6b791cfaa2b4d561e25c065b9e0a1c32a85141e6b6a27d144ae018cd11edc25",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "d5ff6534c879e822e1381f02357f73aa79c16361",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/current_swim_math.h"
+    },
+    {
+      "path": "tools/current_swim_study.cu",
+      "sha256": "6c83fdb076c66c252281c689163a93f290b972a1f8252224c932f0adeceb6705",
+      "bytes": 68484,
+      "sha256_lf": "6c83fdb076c66c252281c689163a93f290b972a1f8252224c932f0adeceb6705",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "740802ddecbf31c2f7938fd56b18a1d5ae7a2a15",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/current_swim_study.cu"
+    },
+    {
+      "path": "tools/current_swim_v2_study.cu",
+      "sha256": "e452047d18c0bd17f86c3f44671d24537bded693205e97a923e5e16ee40aefb7",
+      "bytes": 93151,
+      "sha256_lf": "b1f22a50826f1dc7e8302759304d6587b410514dfb2398d8f9d49ae5bc8b1891",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "849678c029ccad4bdf8d0375a4e6f2b2c0723877",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/current_swim_v2_study.cu"
+    },
+    {
+      "path": "tools/export_current_preview.py",
+      "sha256": "38763c99315daa4c3b80cd19dd3daec5542313880aac65b8bd4cb946b1d2d1e5",
+      "bytes": 14412,
+      "sha256_lf": "38763c99315daa4c3b80cd19dd3daec5542313880aac65b8bd4cb946b1d2d1e5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a3551468b352493cfa8f8a021581aeee900e6e34",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/export_current_preview.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/export_current_preview.py",
+        "sha256": "38763c99315daa4c3b80cd19dd3daec5542313880aac65b8bd4cb946b1d2d1e5"
+      }
+    },
+    {
+      "path": "tools/export_gait_preview.py",
+      "sha256": "3da6d6238a50beb5c13291424bf5c23e41214ab8234fdbf19fad3b99b85534bd",
+      "bytes": 12145,
+      "sha256_lf": "3da6d6238a50beb5c13291424bf5c23e41214ab8234fdbf19fad3b99b85534bd",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7fce43951311262536e4423a1b63a415369fb3a2",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/export_gait_preview.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/export_gait_preview.py",
+        "sha256": "3da6d6238a50beb5c13291424bf5c23e41214ab8234fdbf19fad3b99b85534bd"
+      }
+    },
+    {
+      "path": "tools/export_hold_preview.py",
+      "sha256": "916c88e227746d52e6a4d9f3ecb81b63c5bc0a3ce030ee09d76b0d667b13d684",
+      "bytes": 7612,
+      "sha256_lf": "916c88e227746d52e6a4d9f3ecb81b63c5bc0a3ce030ee09d76b0d667b13d684",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "efd9295cb1400fff41ac1519aef14312d6e6b439",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/export_hold_preview.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/export_hold_preview.py",
+        "sha256": "916c88e227746d52e6a4d9f3ecb81b63c5bc0a3ce030ee09d76b0d667b13d684"
+      }
+    },
+    {
+      "path": "tools/export_interface_comparison_disclosure.py",
+      "sha256": "df3992adeb87590a869744e9e49e47a366df5e4edd80d5a12dbac50a82141663",
+      "bytes": 9945,
+      "sha256_lf": "df3992adeb87590a869744e9e49e47a366df5e4edd80d5a12dbac50a82141663",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "453027bd82e3517dd896d22c65011ac16a9b3fab",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/export_interface_comparison_disclosure.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/export_interface_comparison_disclosure.py",
+        "sha256": "df3992adeb87590a869744e9e49e47a366df5e4edd80d5a12dbac50a82141663"
+      }
+    },
+    {
+      "path": "tools/export_interface_comparison_stop_disclosure.py",
+      "sha256": "e7a6a9e2b36a9a74074f388de4071714484a0d025230f0a9404bb0bf67846a89",
+      "bytes": 10002,
+      "sha256_lf": "e7a6a9e2b36a9a74074f388de4071714484a0d025230f0a9404bb0bf67846a89",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "d98b015cfa804c69575c122d6f6b98c3475b06c0",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_stop_disclosure.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_stop_disclosure.py",
+        "sha256": "e7a6a9e2b36a9a74074f388de4071714484a0d025230f0a9404bb0bf67846a89"
+      }
+    },
+    {
+      "path": "tools/export_interface_comparison_v2_disclosure.py",
+      "sha256": "a6efb8e1289742f5d7837ead5e77d3f0eb168734aa21ca50583b019a1c7d7cbf",
+      "bytes": 17700,
+      "sha256_lf": "a6efb8e1289742f5d7837ead5e77d3f0eb168734aa21ca50583b019a1c7d7cbf",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "f56eb3d5f52820abfcb2aca29d34674ab1c6ca8b",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_v2_disclosure.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/export_interface_comparison_v2_disclosure.py",
+        "sha256": "a6efb8e1289742f5d7837ead5e77d3f0eb168734aa21ca50583b019a1c7d7cbf"
+      }
+    },
+    {
+      "path": "tools/export_interface_comparison_v2_launch_stop.py",
+      "sha256": "b0528d278051e249821ed4fd6567bbf8aef0bcadcac79eeae62dd0e83aee54d7",
+      "bytes": 13134,
+      "sha256_lf": "b0528d278051e249821ed4fd6567bbf8aef0bcadcac79eeae62dd0e83aee54d7",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "799407f11ef58dd8b8b10256851335ac3554b196",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "tools/export_interface_comparison_v2_launch_stop.py",
+        "sha256": "b0528d278051e249821ed4fd6567bbf8aef0bcadcac79eeae62dd0e83aee54d7"
+      }
+    },
+    {
+      "path": "tools/export_pond_view.py",
+      "sha256": "6bcaf9b4e60ef3476bceea3ee3bcc00214aa266946cb962c753f145f9917ff1d",
+      "bytes": 4123,
+      "sha256_lf": "6bcaf9b4e60ef3476bceea3ee3bcc00214aa266946cb962c753f145f9917ff1d",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "4cebd993d7bb3fa5c492963dddf68f67d96e765f",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/export_pond_view.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/export_pond_view.py",
+        "sha256": "6bcaf9b4e60ef3476bceea3ee3bcc00214aa266946cb962c753f145f9917ff1d"
+      }
+    },
+    {
+      "path": "tools/export_turning_preview.py",
+      "sha256": "82c20572661eee8181c3dcbc2416d80da617f22dc5dc1b1ad757ef24e22cc757",
+      "bytes": 12381,
+      "sha256_lf": "82c20572661eee8181c3dcbc2416d80da617f22dc5dc1b1ad757ef24e22cc757",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "c8c412bcf53f601dee81788e07992fa65e9a750a",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/export_turning_preview.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/export_turning_preview.py",
+        "sha256": "82c20572661eee8181c3dcbc2416d80da617f22dc5dc1b1ad757ef24e22cc757"
+      }
+    },
+    {
+      "path": "tools/freeze_frozen_requested_turn_inputs.py",
+      "sha256": "9b1224710313b2e25f18a8baa050038eaf44c62aac5a12ce92dcfde11ef8d017",
+      "bytes": 2814,
+      "sha256_lf": "9b1224710313b2e25f18a8baa050038eaf44c62aac5a12ce92dcfde11ef8d017",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "fdd5eab41b3d73e815211355558c74724cb569a5",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/freeze_frozen_requested_turn_inputs.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/freeze_frozen_requested_turn_inputs.py",
+        "sha256": "9b1224710313b2e25f18a8baa050038eaf44c62aac5a12ce92dcfde11ef8d017"
+      }
+    },
+    {
+      "path": "tools/frozen-interface-comparison-v2/CMakeLists.txt",
+      "sha256": "2889bc7bcb07d2c3c0e0409a38fdbebaef5dc364cbfa6a4c45088a1452b5651a",
+      "bytes": 2249,
+      "sha256_lf": "2889bc7bcb07d2c3c0e0409a38fdbebaef5dc364cbfa6a4c45088a1452b5651a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "929fd7b718d6bfa9f47bbee214f9db3522754b4e",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen-interface-comparison-v2/CMakeLists.txt",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen-interface-comparison-v2/CMakeLists.txt",
+        "sha256": "2889bc7bcb07d2c3c0e0409a38fdbebaef5dc364cbfa6a4c45088a1452b5651a"
+      }
+    },
+    {
+      "path": "tools/frozen-interface-comparison/CMakeLists.txt",
+      "sha256": "4b32113ea7f5f0f265c153854523806d967998dff4e477c4ff3827b5de80f75b",
+      "bytes": 1380,
+      "sha256_lf": "4b32113ea7f5f0f265c153854523806d967998dff4e477c4ff3827b5de80f75b",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "df76d03e3f651769983ad8d8fd51a115558d6ee1",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/frozen-interface-comparison/CMakeLists.txt",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/frozen-interface-comparison/CMakeLists.txt",
+        "sha256": "4b32113ea7f5f0f265c153854523806d967998dff4e477c4ff3827b5de80f75b"
+      }
+    },
+    {
+      "path": "tools/frozen-request-turn/CMakeLists.txt",
+      "sha256": "787a22c85a187bd93a439607d6fc291aa774118088fb28583dd33ec92a12f256",
+      "bytes": 1353,
+      "sha256_lf": "787a22c85a187bd93a439607d6fc291aa774118088fb28583dd33ec92a12f256",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "fa280f0e2fb8531bb4b2581fe53fd293a30e8bfa",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-request-turn-2026-11-23-v1/frozen-causal-inputs/tools/frozen-request-turn/CMakeLists.txt"
+    },
+    {
+      "path": "tools/frozen-request-turn/README.md",
+      "sha256": "b188c0b5179584a5146e634401f121b031583f586cadb31971c9d643c2537c35",
+      "bytes": 1093,
+      "sha256_lf": "b188c0b5179584a5146e634401f121b031583f586cadb31971c9d643c2537c35",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "e1e41d0b74fca7710d5be56f0f1fbef068686af0",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/frozen_brake_probe.cpp",
+      "sha256": "32d82e16ec10d9e750fbc35c38756a0797b4c35cc2390d67bd4df03c07ad1113",
+      "bytes": 18762,
+      "sha256_lf": "32d82e16ec10d9e750fbc35c38756a0797b4c35cc2390d67bd4df03c07ad1113",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b75d721b07898b8542c40639022b53d917954e96",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/frozen_brake_probe.cpp"
+    },
+    {
+      "path": "tools/frozen_interface_arithmetic_corrected_v2.cu",
+      "sha256": "a61965d6aaa70534b660e92ffb0216489a6060f1efc914e1e6f16a0a87fabc2a",
+      "bytes": 915,
+      "sha256_lf": "a61965d6aaa70534b660e92ffb0216489a6060f1efc914e1e6f16a0a87fabc2a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "855c1318d413f255885f6a667dc42be920561b7f",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_corrected_v2.cu",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_corrected_v2.cu",
+        "sha256": "a61965d6aaa70534b660e92ffb0216489a6060f1efc914e1e6f16a0a87fabc2a"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_arithmetic_profile_v2.h",
+      "sha256": "96707f4b6674a06d57b015ceef3795d8b72a624ccbbbf139f551be37b3fee337",
+      "bytes": 2205,
+      "sha256_lf": "96707f4b6674a06d57b015ceef3795d8b72a624ccbbbf139f551be37b3fee337",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "c0fb26178d302a6621170d0c97997ef0d2ef0de1",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_profile_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_profile_v2.h",
+        "sha256": "96707f4b6674a06d57b015ceef3795d8b72a624ccbbbf139f551be37b3fee337"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_arithmetic_v2.cu",
+      "sha256": "a5f3f825ce5714214130dff96602eca2cbcd2f5fd002560a9a04dca5aab0bca0",
+      "bytes": 9764,
+      "sha256_lf": "a5f3f825ce5714214130dff96602eca2cbcd2f5fd002560a9a04dca5aab0bca0",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "dd98f9dc886ab23dd54ae6f6986c73a564315fe9",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_arithmetic_v2.cu",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/frozen_interface_arithmetic_v2.cu",
+        "sha256": "a5f3f825ce5714214130dff96602eca2cbcd2f5fd002560a9a04dca5aab0bca0"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_authorization.h",
+      "sha256": "ab01bb5499347301de0a4bb86890621560ee9b4fbb99bad5b951be1106df1c1d",
+      "bytes": 1750,
+      "sha256_lf": "ab01bb5499347301de0a4bb86890621560ee9b4fbb99bad5b951be1106df1c1d",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b0f90f6c85f5b6b7935d3f9d9e616c7459de529d",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/frozen_interface_authorization.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/frozen_interface_authorization.h",
+        "sha256": "ab01bb5499347301de0a4bb86890621560ee9b4fbb99bad5b951be1106df1c1d"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_authorization_v2.h",
+      "sha256": "02ac8b4a47da5abee534e1d16e70e04ddf5bb9bd89c9fe845bb0684c032a5bb4",
+      "bytes": 1790,
+      "sha256_lf": "aaf9c767ac86843c1d5d777f993757919d4f64a7e809d2474d3912dc98589518",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "62b41b755b1ac550d119098bd184025993aea892",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_authorization_v2.h",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_authorization_v2.h",
+        "sha256": "02ac8b4a47da5abee534e1d16e70e04ddf5bb9bd89c9fe845bb0684c032a5bb4"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_comparison.cu",
+      "sha256": "3e3be8a895d1e114ac8faaca0d8e3ec8376dfdd3d95f274684df866f9ab47674",
+      "bytes": 29541,
+      "sha256_lf": "3e3be8a895d1e114ac8faaca0d8e3ec8376dfdd3d95f274684df866f9ab47674",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "22fc49608ebc20198ea54d8a390db00c4c8dd9e9",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/frozen_interface_comparison.cu",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/frozen_interface_comparison.cu",
+        "sha256": "3e3be8a895d1e114ac8faaca0d8e3ec8376dfdd3d95f274684df866f9ab47674"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_comparison_common.inc",
+      "sha256": "a80209a31b8688cbe7e2459317118f52ca3100cd6bb7302b1b204f03c67dec48",
+      "bytes": 6794,
+      "sha256_lf": "c5af955274406f707e9c14a50fb95e71f3cd1bfa483e2a65c3b3a72617af3edf",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "2fbbb68caf61eb5ac01b54260ef9d0fe4e84ba11",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/frozen_interface_comparison_common.inc",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/frozen_interface_comparison_common.inc",
+        "sha256": "a80209a31b8688cbe7e2459317118f52ca3100cd6bb7302b1b204f03c67dec48"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_comparison_v2.cu",
+      "sha256": "f2e59fe0d8dc1fe073d2f1bc63e28d234b3d44ff6f66e38ad2b35913da015e91",
+      "bytes": 35262,
+      "sha256_lf": "5eef4551bc8c073161197e16731d9f904c8f00c977952446db364ee06835e9b5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "5a9b48b6bbe10e1b35a45df4cc9b96dc78bcd532",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_comparison_v2.cu",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_comparison_v2.cu",
+        "sha256": "f2e59fe0d8dc1fe073d2f1bc63e28d234b3d44ff6f66e38ad2b35913da015e91"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_comparison_v2_common.inc",
+      "sha256": "93d8dafd97033a266e7abe612215201ab02b05c06b7e3d437e33898e3676709a",
+      "bytes": 6930,
+      "sha256_lf": "c8b8a5e97cb9c77737e619c6d7a67cd2ee3f109481fc13972e779055ae16a8a9",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "1e2087367346460d01a61b253960ad14e655fad6",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_comparison_v2_common.inc",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_comparison_v2_common.inc",
+        "sha256": "93d8dafd97033a266e7abe612215201ab02b05c06b7e3d437e33898e3676709a"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_drag_arithmetic_v2.cu",
+      "sha256": "a49d6ec9cf6958a7bc1199770c83e694f027b3ae971a58a4cab5769f3a7d442f",
+      "bytes": 8701,
+      "sha256_lf": "a49d6ec9cf6958a7bc1199770c83e694f027b3ae971a58a4cab5769f3a7d442f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "99b90b00c0ef224835100515e515e20b936d5e1e",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_drag_arithmetic_v2.cu",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_drag_arithmetic_v2.cu",
+        "sha256": "a49d6ec9cf6958a7bc1199770c83e694f027b3ae971a58a4cab5769f3a7d442f"
+      }
+    },
+    {
+      "path": "tools/frozen_interface_retention_v2.inc",
+      "sha256": "f0b6fbf2b5e559cbc0189c9e8f3658a782c883f9d63865487ca100108824f7e6",
+      "bytes": 12241,
+      "sha256_lf": "f0b6fbf2b5e559cbc0189c9e8f3658a782c883f9d63865487ca100108824f7e6",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "3baed85b6732ea32ce5e566b18e590afca233288",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_retention_v2.inc",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/frozen_interface_retention_v2.inc",
+        "sha256": "f0b6fbf2b5e559cbc0189c9e8f3658a782c883f9d63865487ca100108824f7e6"
+      }
+    },
+    {
+      "path": "tools/frozen_requested_turn_authorization.h",
+      "sha256": "e714988261eef1fc6f72bb5155c2816db564263711e33331f8208f82bb6bdf93",
+      "bytes": 1535,
+      "sha256_lf": "e714988261eef1fc6f72bb5155c2816db564263711e33331f8208f82bb6bdf93",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "dda3fdf729e5c3a03d65f270c6a79f3a92e197da",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-request-turn-2026-11-23-v1/frozen-causal-inputs/tools/frozen_requested_turn_authorization.h"
+    },
+    {
+      "path": "tools/frozen_requested_turn_probe.cu",
+      "sha256": "c880e57f92116073fc8bae400e25397e95ee8e417b081f52002dc208815b8f46",
+      "bytes": 33621,
+      "sha256_lf": "c880e57f92116073fc8bae400e25397e95ee8e417b081f52002dc208815b8f46",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "1fd05d48cde009fd52ef9e2512a820998960276c",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-request-turn-2026-11-23-v1/frozen-causal-inputs/tools/frozen_requested_turn_probe.cu"
+    },
+    {
+      "path": "tools/gait_swim_study.cu",
+      "sha256": "9927db7a839bc5b301eab7b1b750dec87ac3dc4d7b961090ac33f5ab1f98b23e",
+      "bytes": 77659,
+      "sha256_lf": "d1505bc045a79fb896cc74bd61ef71e6720cca1773554709bee58974e5d6fc89",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "5a7a68f313e2b42a89a2b3dc8346c7a4d545b982",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/gait_swim_study.cu"
+    },
+    {
+      "path": "tools/hold_credit_study.cu",
+      "sha256": "fccd01ea88fc8d42a878ac8e68ccff9cf20e7f1e7d0697aa3a5ff076aafe05a4",
+      "bytes": 42262,
+      "sha256_lf": "fccd01ea88fc8d42a878ac8e68ccff9cf20e7f1e7d0697aa3a5ff076aafe05a4",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "ec0b6515c9f7026e22b1587a751988d947ae4d1a",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/hold_credit_study.cu"
+    },
+    {
+      "path": "tools/hold_exploration_math.h",
+      "sha256": "36301225bee95809580204c62e291a1d3739b9afc07e9c348206a2331370ac44",
+      "bytes": 1849,
+      "sha256_lf": "36301225bee95809580204c62e291a1d3739b9afc07e9c348206a2331370ac44",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "1d4ec48d83171f7420265aa73d2ab4ded93268f0",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/hold_exploration_math.h"
+    },
+    {
+      "path": "tools/hold_exploration_study.cu",
+      "sha256": "b1eb3bd9da089d22f95bfe35bf79810e31c14863fc3e975c734900144d7aa69b",
+      "bytes": 60650,
+      "sha256_lf": "80f6ddf4b54d753f482a549054ee84a937c7a9f9212a17ac698e53995232fd0d",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "500faf30ca7af155f3320201710bc17c8aa2dead",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/hold_exploration_study.cu"
+    },
+    {
+      "path": "tools/hold_learned_amplitude_math.h",
+      "sha256": "54d39fa6e7081abcf9f8a534821fbe839acb7b14b7725680472c9d14c78f3d28",
+      "bytes": 1476,
+      "sha256_lf": "54d39fa6e7081abcf9f8a534821fbe839acb7b14b7725680472c9d14c78f3d28",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "8f68aab5e75ea3dd90e41be946b28170d1641e8f",
+      "action": "moved_current_math",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/hold_learned_amplitude_math.h"
+    },
+    {
+      "path": "tools/hold_learned_amplitude_study.cu",
+      "sha256": "954e5a910eb46828f0ba5adf9c23c596c94b545454a18042d0054daf18633ee5",
+      "bytes": 58915,
+      "sha256_lf": "99f13339252234cf6ffcc19e8019e92cef627efaca22a3554abcd4b3abd5bc3a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "670769e76ef014cb58eaa50d073891e074a2f6cc",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/hold_learned_amplitude_study.cu"
+    },
+    {
+      "path": "tools/hold_scale_study.cu",
+      "sha256": "728547aa895a460bdde2964aa3a3ac2c60851a87320c8fc51c050e895ef34ec5",
+      "bytes": 23555,
+      "sha256_lf": "728547aa895a460bdde2964aa3a3ac2c60851a87320c8fc51c050e895ef34ec5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "d50cfc68e646b54b8577ba3a3278b92fdec6ae28",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/hold_scale_study.cu"
+    },
+    {
+      "path": "tools/manage_frozen_interface_comparison.py",
+      "sha256": "1006a3cafab528f34261966863fd2779876f6b89c386cd43bc60d6f488043013",
+      "bytes": 8105,
+      "sha256_lf": "1006a3cafab528f34261966863fd2779876f6b89c386cd43bc60d6f488043013",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7d81675e483503182b25d921cc77f16f68e5e11b",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/manage_frozen_interface_comparison.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/manage_frozen_interface_comparison.py",
+        "sha256": "1006a3cafab528f34261966863fd2779876f6b89c386cd43bc60d6f488043013"
+      }
+    },
+    {
+      "path": "tools/manage_frozen_interface_comparison_v2.py",
+      "sha256": "0fcccb314c67febf38b8924856799acfd5d67a1a891368cd1ac186decaf6533c",
+      "bytes": 9506,
+      "sha256_lf": "ffb40bbd6f5af353166e8d39c4ed6be10a68d2b4f670d65e48009387b300975e",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "883e73b79b0ee1dc01d1f6d373d1a486076d8779",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/manage_frozen_interface_comparison_v2.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/manage_frozen_interface_comparison_v2.py",
+        "sha256": "0fcccb314c67febf38b8924856799acfd5d67a1a891368cd1ac186decaf6533c"
+      }
+    },
+    {
+      "path": "tools/motor_compare.cpp",
+      "sha256": "3d16528cd11fd8aec7300debb3ac27f557d416ded37b5c9a459320a664482caa",
+      "bytes": 39429,
+      "sha256_lf": "3d16528cd11fd8aec7300debb3ac27f557d416ded37b5c9a459320a664482caa",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b778fc00cb92f980cac509b1b2b07b7fd11b5fff",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/motor_compare.cpp"
+    },
+    {
+      "path": "tools/package_current_study.py",
+      "sha256": "daab1741647be67853f8167cdb54dc0b33965c7a7d8408f77b74fc041b61eddd",
+      "bytes": 3953,
+      "sha256_lf": "daab1741647be67853f8167cdb54dc0b33965c7a7d8408f77b74fc041b61eddd",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "c0bd611151de4f336424d809812c587fd1c901a2",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/package_current_study.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/package_current_study.py",
+        "sha256": "daab1741647be67853f8167cdb54dc0b33965c7a7d8408f77b74fc041b61eddd"
+      }
+    },
+    {
+      "path": "tools/ppo_motor.cu",
+      "sha256": "23ed56686a42f47249d07bd7cc5949c739c886696ec8a6284a4053a150a05875",
+      "bytes": 197600,
+      "sha256_lf": "23ed56686a42f47249d07bd7cc5949c739c886696ec8a6284a4053a150a05875",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6d083d2ff40b68bcfc0a9d1c096d525ed2b2b2ca",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/ppo_motor.cu"
+    },
+    {
+      "path": "tools/prepare_frozen_interface_arithmetic_v2.py",
+      "sha256": "4cc0e57199c83181a1ae0d785f26a80dcef473c3fae9ef4e722613289c6b32e9",
+      "bytes": 2621,
+      "sha256_lf": "4cc0e57199c83181a1ae0d785f26a80dcef473c3fae9ef4e722613289c6b32e9",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "1bb4ffe1be5c9ef688d80257a030c200fe71b240",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/prepare_frozen_interface_arithmetic_v2.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/build/frozen-interface-comparison-v2-preparation-2026-11-23/audit-attempt-1/frozen-inputs/tools/prepare_frozen_interface_arithmetic_v2.py",
+        "sha256": "4cc0e57199c83181a1ae0d785f26a80dcef473c3fae9ef4e722613289c6b32e9"
+      }
+    },
+    {
+      "path": "tools/requested-turn-ppo/CMakeLists.txt",
+      "sha256": "3049f5a3b67eff0cebf6544465a28791001822d5a2882f3f7fd55588321b5c9b",
+      "bytes": 1312,
+      "sha256_lf": "3049f5a3b67eff0cebf6544465a28791001822d5a2882f3f7fd55588321b5c9b",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "3eed57131585c8f32c02b97b49f70de5ac0a50e4",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/requested_turn_ppo_authorization_v1.h",
+      "sha256": "4efc202f8d4a38b15488106e87c6473b7f9fe721b84c03b223c57bd10cd664df",
+      "bytes": 1787,
+      "sha256_lf": "4efc202f8d4a38b15488106e87c6473b7f9fe721b84c03b223c57bd10cd664df",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "03bf5c77f427700627a120127802ee51e00c0d74",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/requested_turn_ppo_math_v1.h",
+      "sha256": "5ff0b40d716b2d015272b9e4bd22fc7e3c84b3ed1490f70c74f1444645f8eb7d",
+      "bytes": 1639,
+      "sha256_lf": "5ff0b40d716b2d015272b9e4bd22fc7e3c84b3ed1490f70c74f1444645f8eb7d",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "78712dd06823ea40825e991397a09d2bf9d4b209",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/requested_turn_ppo_v1.cu",
+      "sha256": "54f3fc828ac05e80e6bec00b3ce5578367929fc4eb5da2783f51b960e1b95a80",
+      "bytes": 70679,
+      "sha256_lf": "54f3fc828ac05e80e6bec00b3ce5578367929fc4eb5da2783f51b960e1b95a80",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "cd6b57d2f97b0abb0cc10c8de143c718e9bab140",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/requested_turn_ppo_v1_orchestration_proposal.json",
+      "sha256": "432cf15d58cd69fe39cdb349b6bb79901930f6ea829af6d6817d3db81087bb7a",
+      "bytes": 4730,
+      "sha256_lf": "432cf15d58cd69fe39cdb349b6bb79901930f6ea829af6d6817d3db81087bb7a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "44288d1875a215537920b670489725bfa1a0a3ff",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/requested_turn_retention_v1.h",
+      "sha256": "1070631940d5dfa5b7e184fd4beab19d4d423761550803fd9d6d6dbd6b28c3f4",
+      "bytes": 17734,
+      "sha256_lf": "bb3e878b9116b9399e059a6f1bb537473b378352d36d2c79e1415f671fbd9b06",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a7b7a963c0203868de740095a8f51909c4ea0c40",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/rest_hold_measured_baseline.inc",
+      "sha256": "08b5e999343361bc453c89899289e87201644d66e770852b26d07ba4cd8b0d78",
+      "bytes": 12347,
+      "sha256_lf": "08b5e999343361bc453c89899289e87201644d66e770852b26d07ba4cd8b0d78",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "ba8dd4500608c5d21441516441f4aecafcdb23e8",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_measured_baseline.inc"
+    },
+    {
+      "path": "tools/rest_hold_measured_baseline_phase_b.cu",
+      "sha256": "6eafd9586aaeec9fdfecc79423ad9bb9615a418571c21bb6a3ebd47c3a5eaad2",
+      "bytes": 13495,
+      "sha256_lf": "6eafd9586aaeec9fdfecc79423ad9bb9615a418571c21bb6a3ebd47c3a5eaad2",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a9a378b5b99f33fbdedabeee3533aa56b5429d3f",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_measured_baseline_phase_b.cu"
+    },
+    {
+      "path": "tools/rest_hold_measured_baseline_study.cu",
+      "sha256": "e17aa5972c325a15ebea250b850bdec5303e85a2b7ab7b79d92a757bd7ebb959",
+      "bytes": 154,
+      "sha256_lf": "e17aa5972c325a15ebea250b850bdec5303e85a2b7ab7b79d92a757bd7ebb959",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "43c563cd23e855e77d77b89d0edd76f5ee6d179c",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_measured_baseline_study.cu"
+    },
+    {
+      "path": "tools/rest_hold_reset_study.cu",
+      "sha256": "5d3a7cd10bbbb1f10be960bbd65e6a572cfedbd25dcb380f65d63b863cd0559f",
+      "bytes": 151,
+      "sha256_lf": "5d3a7cd10bbbb1f10be960bbd65e6a572cfedbd25dcb380f65d63b863cd0559f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b93df41bfdaf455fa286619ffffa4941463ddb42",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_reset_study.cu"
+    },
+    {
+      "path": "tools/rest_hold_study.cu",
+      "sha256": "5f510f60cc65364c04320b48d0efa73845e0c508d4eda813c2d9046106330d1f",
+      "bytes": 47128,
+      "sha256_lf": "5f510f60cc65364c04320b48d0efa73845e0c508d4eda813c2d9046106330d1f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a6802a42b5afc263cfbd86c29261330e4eadc6cb",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_study.cu"
+    },
+    {
+      "path": "tools/rest_hold_task_critic.inc",
+      "sha256": "53f9c61ff663268a30d6964d9f8c4143946b4986abb28900640c82468da840a5",
+      "bytes": 9816,
+      "sha256_lf": "53f9c61ff663268a30d6964d9f8c4143946b4986abb28900640c82468da840a5",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "e7237b68b5e38443e0b8c0a297aafbe6259adfa2",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_task_critic.inc"
+    },
+    {
+      "path": "tools/rest_hold_task_critic_study.cu",
+      "sha256": "58e3a6603a3dd139174176298be8c20aa84365f0fbeaf37c391e4e5d888950e9",
+      "bytes": 151,
+      "sha256_lf": "58e3a6603a3dd139174176298be8c20aa84365f0fbeaf37c391e4e5d888950e9",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a5f1b2f85f3a14aa2b177ecf7c90332b6561833e",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/rest_hold_task_critic_study.cu"
+    },
+    {
+      "path": "tools/run-frozen-brake-probe.ps1",
+      "sha256": "cf8d4298833355daf6d4d230365860ef0b7c3cb35d0d5e7f395da8576bed6ae4",
+      "bytes": 1916,
+      "sha256_lf": "cf8d4298833355daf6d4d230365860ef0b7c3cb35d0d5e7f395da8576bed6ae4",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "0119d620d079008fca637ae9e6aa30aa95e9bec0",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/run-frozen-brake-probe.ps1"
+    },
+    {
+      "path": "tools/run-frozen-interface-comparison-v2.ps1",
+      "sha256": "b1cf21b78c215b13057cf582e15e64dbe5f08258a9ec4b373b412ee434e8398d",
+      "bytes": 3563,
+      "sha256_lf": "3e14fcd85a17eb4f2bd2a61a99cbaf8e66afec15f13d19b85b5f6999237cf5a4",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7bb3abd0afadae2d6b0e38b76ca902c67af215e6",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/run-frozen-interface-comparison-v2.ps1",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/run-frozen-interface-comparison-v2.ps1",
+        "sha256": "b1cf21b78c215b13057cf582e15e64dbe5f08258a9ec4b373b412ee434e8398d"
+      }
+    },
+    {
+      "path": "tools/run-frozen-interface-comparison.ps1",
+      "sha256": "7aa50368663cb972dfcebaad98ac49e94db5635f459b2dd28ce89941a0bdeaff",
+      "bytes": 3517,
+      "sha256_lf": "7aa50368663cb972dfcebaad98ac49e94db5635f459b2dd28ce89941a0bdeaff",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6450c67d5142b2d2b6371db0f76ebf4bb14e1c60",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/run-frozen-interface-comparison.ps1",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/run-frozen-interface-comparison.ps1",
+        "sha256": "7aa50368663cb972dfcebaad98ac49e94db5635f459b2dd28ce89941a0bdeaff"
+      }
+    },
+    {
+      "path": "tools/run-frozen-request-turn-probe.ps1",
+      "sha256": "d4741e513be906b0bf11cb067c5013dfb9739eabfc35016fb81461ae4907a243",
+      "bytes": 3100,
+      "sha256_lf": "d4741e513be906b0bf11cb067c5013dfb9739eabfc35016fb81461ae4907a243",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "b86beeaf619ae5ff40da0cfbf84cd072a54c4a6d",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-request-turn-2026-11-23-v1/frozen-causal-inputs/tools/run-frozen-request-turn-probe.ps1"
+    },
+    {
+      "path": "tools/run-hold-scale-study.ps1",
+      "sha256": "18f285f6ce93040fcf319456980e35d52bcf0e717d24aeb6ca007f30017273c0",
+      "bytes": 2399,
+      "sha256_lf": "18f285f6ce93040fcf319456980e35d52bcf0e717d24aeb6ca007f30017273c0",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "92464b1dd56c4e5a3778cff61a5246ec31fba233",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/run-hold-scale-study.ps1"
+    },
+    {
+      "path": "tools/run-ppo.ps1",
+      "sha256": "8590abb72c6fdc9a9b5c12a501d6d31a7552c3b21d7e3383819f5302cddea445",
+      "bytes": 12556,
+      "sha256_lf": "ee3e4f3f2e98f0dac80c45b6e856bd765d20c49e80496efa109848ce929d11cb",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "a8379764d697c212f1c685bf5fc2edce302aa892",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/run-ppo.ps1"
+    },
+    {
+      "path": "tools/run-rest-hold-study.ps1",
+      "sha256": "72ed8b39c153d707df44429e11089bc5204839f23a14ea1ab476cb880055ba75",
+      "bytes": 2187,
+      "sha256_lf": "72ed8b39c153d707df44429e11089bc5204839f23a14ea1ab476cb880055ba75",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "ba4bce0146af4ba9028189adc1d2141ffc82bc40",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/run-rest-hold-study.ps1"
+    },
+    {
+      "path": "tools/run-status.psm1",
+      "sha256": "b46e91c94eab463990c87f34e88cbfdd0f2ac4766e0679daeb83d40baa19bc8e",
+      "bytes": 576,
+      "sha256_lf": "a44d97e2562577bde02204c96d8000d1b5d713c07b86f79702d810c913a239ac",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "4e402599b44b7e273bff18448fdec9fb97c54f42",
+      "action": "remove_obsolete_source"
+    },
+    {
+      "path": "tools/run_continuous_study.ps1",
+      "sha256": "9ebb58e8dfb416abee0173f2443fb9a0d20eac1798f4a147be8733a8ec4b6ca1",
+      "bytes": 2802,
+      "sha256_lf": "9ebb58e8dfb416abee0173f2443fb9a0d20eac1798f4a147be8733a8ec4b6ca1",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "66fa0035520c1c7025907e034d6456dc516ccc73",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/run_continuous_study.ps1"
+    },
+    {
+      "path": "tools/run_continuous_v2_study.ps1",
+      "sha256": "8e1ce6cf9ac9d91276d4b798c11e47a48ad54c7de9b22802218fdcb0907fb551",
+      "bytes": 3009,
+      "sha256_lf": "bf49029d5c94af36965c2a38e18b42d3a14ca3761b8b432acd9159843023775a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "8725977a52a31e211ef2f4cbc7b95eda63baa5c8",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/run_continuous_v2_study.ps1"
+    },
+    {
+      "path": "tools/test-run-status.ps1",
+      "sha256": "dbc5fc86b5cfda75ae348e8a8e401c6010e7f35076a2d42df63e2d5b0743b87a",
+      "bytes": 1689,
+      "sha256_lf": "dbc5fc86b5cfda75ae348e8a8e401c6010e7f35076a2d42df63e2d5b0743b87a",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "00cbb936503034f1361d398726de0ada41442954",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/test-run-status.ps1"
+    },
+    {
+      "path": "tools/turning_physics_gate.cu",
+      "sha256": "da37d098e763471f69518cf12cb5d5750b49a38228706068338018f61af5f50c",
+      "bytes": 24585,
+      "sha256_lf": "da37d098e763471f69518cf12cb5d5750b49a38228706068338018f61af5f50c",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "54a90b5d0ca4aed39a38c22ba84da23421fd55ab",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/turning_physics_gate.cu"
+    },
+    {
+      "path": "tools/turning_physics_gate_v2.cu",
+      "sha256": "059f6f6c4aba889e5df1513bd8b6c33baf8574aa01df8b5afcfc28ed0156f0b9",
+      "bytes": 29382,
+      "sha256_lf": "059f6f6c4aba889e5df1513bd8b6c33baf8574aa01df8b5afcfc28ed0156f0b9",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "9dc13e7bfd4ae72dcb36b380f5875bffd7497fcb",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/turning_physics_gate_v2.cu"
+    },
+    {
+      "path": "tools/turning_retention.h",
+      "sha256": "32fba9710974ad6203e41736d087589fdeee4f89ff085adb2d88e1eb391be4b3",
+      "bytes": 16001,
+      "sha256_lf": "3becb0811c07c6a8cdca893603704afb910616dd44fd5ce959cb1fdd057d6059",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "e1c787a0d6f9ebd82bbe2ae5a547149c2c32cc2e",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/turning_retention.h"
+    },
+    {
+      "path": "tools/turning_retention_v2.h",
+      "sha256": "4d5ac620830b1b8c4efe52b8e5a0c023159e95c6b94d822e0624f522ebf4c066",
+      "bytes": 16026,
+      "sha256_lf": "092678077cc7a7981e710167e94eddf5c28d35c6cfbc8e3d273c6b6f15ea825f",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "682e432b3284f6f4deab717d94019f9710ee5aaa",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/turning_retention_v2.h"
+    },
+    {
+      "path": "tools/turning_study_authorization.h",
+      "sha256": "d6ecafacd93343a83104a959d7f4cb0ed3b30855eb33436e28c423a811a1bb03",
+      "bytes": 1081,
+      "sha256_lf": "d6ecafacd93343a83104a959d7f4cb0ed3b30855eb33436e28c423a811a1bb03",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "f5fae277da45d501c18a054f156d352492542f70",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/turning_study_authorization.h"
+    },
+    {
+      "path": "tools/turning_swim_study.cu",
+      "sha256": "4f129d9fa1d1fca6d75860c61d588a7f97f75596e1399a96e4a82259e36516f3",
+      "bytes": 66386,
+      "sha256_lf": "13b3965f69f8c9ca42ddf63b5d80e2b3b65bf40000ca5e8d5687ec539c0657b4",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "98e0904e3f89ad33c777ca6dba17740af9e3c483",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/turning_swim_study.cu"
+    },
+    {
+      "path": "tools/turning_swim_v2_study.cu",
+      "sha256": "7956b48ce2dae015a65d7088da5e73f625c61a4210112cdaa3da748760a52209",
+      "bytes": 74435,
+      "sha256_lf": "fb0bb866dc0930caf5d733413d43b6e7f2dc6bdce73ee19cb30e28eb3b9a06f0",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "3b9e5302554e31171d651e16ba5a934f3b77e603",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/turning_swim_v2_study.cu"
+    },
+    {
+      "path": "tools/untimed-swim-check/CMakeLists.txt",
+      "sha256": "65965d5b0275703df2518de7f48a4568e961f07c1327fc7275aba3a98f35425c",
+      "bytes": 682,
+      "sha256_lf": "65965d5b0275703df2518de7f48a4568e961f07c1327fc7275aba3a98f35425c",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "3eec9764d7833d913ab4905c962137d85990b362",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/untimed-swim-2026-11-23/evidence.zip",
+        "member": "tools/untimed-swim-check/CMakeLists.txt",
+        "sha256": "65965d5b0275703df2518de7f48a4568e961f07c1327fc7275aba3a98f35425c"
+      }
+    },
+    {
+      "path": "tools/untimed-swim-check/bookkeeping_check.cpp",
+      "sha256": "88d4d2fbb04bc74432a8d2d07c98a597d0194693fd7bd17bd1324ca376550959",
+      "bytes": 8693,
+      "sha256_lf": "88d4d2fbb04bc74432a8d2d07c98a597d0194693fd7bd17bd1324ca376550959",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "cba6dc21c9d44052cd188c1fc3334f340e16f3aa",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/untimed-swim-2026-11-23/evidence.zip",
+        "member": "tools/untimed-swim-check/bookkeeping_check.cpp",
+        "sha256": "88d4d2fbb04bc74432a8d2d07c98a597d0194693fd7bd17bd1324ca376550959"
+      }
+    },
+    {
+      "path": "tools/verify_continuous_pond.py",
+      "sha256": "c032485c0922899571c1277319ade71fc5fd1bca7e79b7742451dd7ef7be62c7",
+      "bytes": 82270,
+      "sha256_lf": "c032485c0922899571c1277319ade71fc5fd1bca7e79b7742451dd7ef7be62c7",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "e5a31547a5d413e1080fe11aa5a1e5820383e664",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-v2-2026-11-23-v1/frozen-causal-inputs/tools/verify_continuous_pond.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_continuous_pond.py",
+        "sha256": "c032485c0922899571c1277319ade71fc5fd1bca7e79b7742451dd7ef7be62c7"
+      }
+    },
+    {
+      "path": "tools/verify_continuous_pond_v2.py",
+      "sha256": "dd48e8e8d1d0daa56430c63c64d5a45bcb0a1d1bbb9ad9ea86ed9c811f6cba21",
+      "bytes": 49939,
+      "sha256_lf": "dd48e8e8d1d0daa56430c63c64d5a45bcb0a1d1bbb9ad9ea86ed9c811f6cba21",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "45f379ef2f44ed00d447a3d670f4750b880327f7",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/verify_continuous_pond_v2.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_continuous_pond_v2.py",
+        "sha256": "dd48e8e8d1d0daa56430c63c64d5a45bcb0a1d1bbb9ad9ea86ed9c811f6cba21"
+      }
+    },
+    {
+      "path": "tools/verify_current_swim.py",
+      "sha256": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72",
+      "bytes": 55953,
+      "sha256_lf": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "63264d7d0a74546996e079ccb58d53fae7d23c05",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_current_swim.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_current_swim.py",
+        "sha256": "8f3fbf37a161e6e1244c864fab9c218ebdabe14b093cf7d50302d7eeeb805d72"
+      }
+    },
+    {
+      "path": "tools/verify_current_swim_v2.py",
+      "sha256": "337a426805751146dbd32d15dc8d575175116a8365af398c4dbfceb9833fb627",
+      "bytes": 51840,
+      "sha256_lf": "87fc1eefb0e16e342ff2998c6503105dacbdb5853773e70555a56f54933cf76d",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "886cb72aada7a22544de80d812302810939cf6bd",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_current_swim_v2.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_current_swim_v2.py",
+        "sha256": "337a426805751146dbd32d15dc8d575175116a8365af398c4dbfceb9833fb627"
+      }
+    },
+    {
+      "path": "tools/verify_current_swim_v2_close.py",
+      "sha256": "9d675775bd36406874aa287c39c2114ba6c4cdfece3378bd44fab8f5f3199a45",
+      "bytes": 6882,
+      "sha256_lf": "9d675775bd36406874aa287c39c2114ba6c4cdfece3378bd44fab8f5f3199a45",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "68951dff2c3b860d8b70f0983b152f68ca06617d",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_current_swim_v2_close.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_current_swim_v2_close.py",
+        "sha256": "9d675775bd36406874aa287c39c2114ba6c4cdfece3378bd44fab8f5f3199a45"
+      }
+    },
+    {
+      "path": "tools/verify_frozen_interface_comparison.py",
+      "sha256": "22b8779e7b3d2fe0d19c080e6ef684085b16f18ab19dd116ba5ffc878ec1aab6",
+      "bytes": 45749,
+      "sha256_lf": "22b8779e7b3d2fe0d19c080e6ef684085b16f18ab19dd116ba5ffc878ec1aab6",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "23aa6b7574040f6d2373baa50eff5bab2dda60ea",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/verify_frozen_interface_comparison.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_frozen_interface_comparison.py",
+        "sha256": "22b8779e7b3d2fe0d19c080e6ef684085b16f18ab19dd116ba5ffc878ec1aab6"
+      }
+    },
+    {
+      "path": "tools/verify_frozen_interface_comparison_v2.py",
+      "sha256": "a7ee2b6cd1c2abe8eedd82d7a4c13922f4e11f0956e787fd2719120fb4fccbb6",
+      "bytes": 89640,
+      "sha256_lf": "c7f412d37d9e77dcad48905279946cb5670dec51c8f4836817914fb389abb5f8",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "318e6b9f6a4f91ee69f5341309e4e8c53d1fd6ba",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_frozen_interface_comparison_v2.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "build/ppo/frozen-interface-comparison-2026-11-23-v2/frozen-causal-inputs/tools/verify_frozen_interface_comparison_v2.py",
+        "sha256": "a7ee2b6cd1c2abe8eedd82d7a4c13922f4e11f0956e787fd2719120fb4fccbb6"
+      }
+    },
+    {
+      "path": "tools/verify_frozen_interface_launch_stop_v2.py",
+      "sha256": "c5d40130b42fc6e2febd69e3bb1dfdb7ba47c5435564aed47cb43ae91b1a3cea",
+      "bytes": 7911,
+      "sha256_lf": "c5d40130b42fc6e2febd69e3bb1dfdb7ba47c5435564aed47cb43ae91b1a3cea",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "44c300958068f71d72329b11b48c821fe72e2907",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v2/evidence-public.zip",
+        "member": "tools/verify_frozen_interface_launch_stop_v2.py",
+        "sha256": "c5d40130b42fc6e2febd69e3bb1dfdb7ba47c5435564aed47cb43ae91b1a3cea"
+      }
+    },
+    {
+      "path": "tools/verify_frozen_requested_turn_preparation.py",
+      "sha256": "ae913b442ef7bf616fc8ffa99b3e1f9f3197178098ef328b591eef66d11e560e",
+      "bytes": 9579,
+      "sha256_lf": "ae913b442ef7bf616fc8ffa99b3e1f9f3197178098ef328b591eef66d11e560e",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "705e096507be67c1f9c0b3ff3ff69dfdbc9bf542",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/verify_frozen_requested_turn_preparation.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_frozen_requested_turn_preparation.py",
+        "sha256": "ae913b442ef7bf616fc8ffa99b3e1f9f3197178098ef328b591eef66d11e560e"
+      }
+    },
+    {
+      "path": "tools/verify_frozen_requested_turn_result.py",
+      "sha256": "f62d771e8df630287268c4557dc898554f1f295ce04924684b5e1da24339489a",
+      "bytes": 33362,
+      "sha256_lf": "3da2bc2886d83a72f339f66e441421a0cb97532c6d6cfd5fe79c32d986c21ce0",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "776bd83b440f00753c478d807f2dd22ab288d5db",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/frozen-interface-comparison-2026-11-23-v1/frozen-causal-inputs/tools/verify_frozen_requested_turn_result.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_frozen_requested_turn_result.py",
+        "sha256": "f62d771e8df630287268c4557dc898554f1f295ce04924684b5e1da24339489a"
+      }
+    },
+    {
+      "path": "tools/verify_gait_pond.py",
+      "sha256": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b",
+      "bytes": 48391,
+      "sha256_lf": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "782407afa06b40188f4d611a43c0eccf80776d55",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_gait_pond.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_gait_pond.py",
+        "sha256": "008cf604df5a3256fed1cb6e51bf592e4083245d2627dec6351864e910c4a64b"
+      }
+    },
+    {
+      "path": "tools/verify_hold_credit.py",
+      "sha256": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3",
+      "bytes": 21511,
+      "sha256_lf": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7d935db47c48eae2fb15b4c31eba979dfd16e34b",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_hold_credit.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_hold_credit.py",
+        "sha256": "f235a59aff99ae55ea5f28971de2e427eac5c0f993b90964b41f77ca88d9f3c3"
+      }
+    },
+    {
+      "path": "tools/verify_hold_exploration.py",
+      "sha256": "dc27792ac3f12ec23b6962644687d388407b8425eac39a871f1267b5c78d16ee",
+      "bytes": 22815,
+      "sha256_lf": "dc27792ac3f12ec23b6962644687d388407b8425eac39a871f1267b5c78d16ee",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "6a8555233b413f36781298d8da46457bd7f32aa4",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_hold_exploration.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_hold_exploration.py",
+        "sha256": "dc27792ac3f12ec23b6962644687d388407b8425eac39a871f1267b5c78d16ee"
+      }
+    },
+    {
+      "path": "tools/verify_hold_learned_amplitude.py",
+      "sha256": "98832ac5b5c7a36af11dbf325b6a7eeca930642d6e8637aa8401a5f725438cba",
+      "bytes": 23313,
+      "sha256_lf": "98832ac5b5c7a36af11dbf325b6a7eeca930642d6e8637aa8401a5f725438cba",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "7cb5b2fe00b35d949667379228cf8341d300a48c",
+      "action": "remove_obsolete_source",
+      "existing_exact_snapshot": "build/ppo/continuous-pond-2026-11-23-v1/frozen-causal-inputs/tools/verify_hold_learned_amplitude.py",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/frozen-interface-comparison-2026-11-23-v1/evidence.zip",
+        "member": "frozen-causal-inputs/tools/verify_hold_learned_amplitude.py",
+        "sha256": "98832ac5b5c7a36af11dbf325b6a7eeca930642d6e8637aa8401a5f725438cba"
+      }
+    },
+    {
+      "path": "tools/verify_untimed_swim_product.py",
+      "sha256": "79a74e12607f3b4b0709014e3a47ecc4a18eac6c52d077439c1e7c6d50dfc245",
+      "bytes": 10040,
+      "sha256_lf": "79a74e12607f3b4b0709014e3a47ecc4a18eac6c52d077439c1e7c6d50dfc245",
+      "preserved_git_commit": "495caff3c7bc01fe4ab1cf89f27cb8ce50424928",
+      "git_blob": "c108c68cf6fbe28aea9a695d4d8ebdee7fc94aed",
+      "action": "remove_obsolete_source",
+      "existing_exact_archive": {
+        "archive": "assets/research-evidence/untimed-swim-2026-11-23/evidence.zip",
+        "member": "tools/verify_untimed_swim_product.py",
+        "sha256": "79a74e12607f3b4b0709014e3a47ecc4a18eac6c52d077439c1e7c6d50dfc245"
+      }
+    }
+  ],
+  "retained_core": [
+    "src/core",
+    "src/cuda",
+    "src/nn MLP/GEMM/Adam/loss",
+    "src/rl PPO/checkpoint/math/kernels",
+    "shared movement/joint/straight-task/state/observation/hold-assessment needed by saved motor",
+    "src/physics",
+    "src/simulation"
+  ],
+  "remaining_unretired": [
+    "old domain/task/step helpers inside shared movement/joint/straight-task/state headers; observation/scorer dependencies remain",
+    "current Godot smoke checks retained for root update"
+  ],
+  "preserved_data": "All checkpoint/evidence trees, live/research_data and ignored experiments unchanged. Git preserves tracked source; snapshots bind raw bytes; Git blob normalization allows CRLF/LF only."
+}

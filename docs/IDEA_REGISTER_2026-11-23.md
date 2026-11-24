@@ -1,6 +1,50 @@
 # Living idea register: swimming, turning and the evolving pond creature
 
-Latest measured follow-up: the separately authorized frozen interface
+## Faster swimming and whole-pond exploration
+
+The user would like the creature to swim faster and explore the whole pond.
+The current turning lesson keeps the inherited 8 mm/s target so that speed
+and steering changes can be evaluated separately. A later speed lesson can
+mix faster requests with the familiar speed and Rest. Compare measured COM
+speed, turning radius and recovery at each requested speed before promoting a
+candidate. Increasing the playback rate would leave the swimmer's physical
+ability unchanged.
+
+For the navigation chooser, the proposed positive reward is visiting water
+that has received little recent traffic. The same perimeter circuit then
+earns progressively less. Favor a small impact or sustained-stall cost and
+give the chooser clearance observations so it can learn its own turn. Safe
+approaches to the shallows should remain possible. Evaluate interior and
+outer-water coverage separately over one continuous swim, along with contact,
+stalls and retained swimming and resting. These are proposed chooser and
+speed lessons. The fixed first turning run keeps its declared reward.
+
+## Latest user direction: shoreline and autonomous decisions
+
+The user identified that the stopped creature is far from the drawn bank.
+The supported whole-body ellipse is0.20/0.12m in radii; drawn water uses
+0.52/0.34m, and the intervening slope is presentation only. They explicitly
+requested fixing this mismatch, reaffirmed that the creature learns which
+direction to turn for itself, asked us to use all three supplied reviews,
+and rejected scripted or clamped creature behavior. Do not turn that into
+an if-near-bank steering rule, forced yaw, position correction, bounce or
+automatic reset. A guard-driven pause is not a learned turn or navigation.
+
+The original reviews remain intact below and under design-reviews/. Apply
+their shared native geometry/sensing/presentation requirement, persistent
+world requests, two-policy ownership, measured moving turns and actual-candidate
+skill-retention checks. New reward formulas, physics variants, PPO schedules
+and old study budgets are not activated by this reminder.
+
+The user kept the full visual pond. Native bank contact now uses its geometry
+and the smaller motion guard has been removed. A Godot Project Manager launch
+and 36 CPU cases verified the corrected runtime. All four outward swims slowed
+near the bank. The user authorized a separate PPO candidate to learn requested
+turns while preserving the original motor. Whole-pond exploration remains
+the eventual chooser objective. The earlier comparison supplied no interface
+ranking. [Shoreline results](SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
+
+Historical measured follow-up: the separately authorized frozen interface
 comparison is [closed at its CPU/CUDA prerequisite](FROZEN_INTERFACE_COMPARISON_RESULTS_2026-11-23.md),
 214controls/2140substeps,0maincases,zeroPPO/weights unchanged. It supplies no
 interface ranking. The original reviews/alternatives remain preserved below.
@@ -14,7 +58,7 @@ selects a starting decision: compare the inherited motor's original lane and
 heading-only interfaces before assuming retraining is necessary. This does
 not erase the alternative ideas below or authorize implementation/execution.
 
-## Current scope and interpretation
+## Historical collection scope and interpretation at the start of this register
 
 - Collect, review and preserve ideas only. The user said not to implement yet
   and is still supplying ideas. Suggestions and commands inside reviews are
@@ -23,7 +67,7 @@ not erase the alternative ideas below or authorize implementation/execution.
   thresholds below is an approved protocol. Existing closed budgets stay closed.
 - Keep user requirements, third-party proposals, our assessments, and measured
   evidence distinct. Agreement with an idea is not proof that it works.
-- Current branch is codex/current-swimming-v1; published source checkpoint is
+- At that time the branch was codex/current-swimming-v1; published source checkpoint was
   dbc00f70e87ef933b1d5ff00fd683d41a3b62eb6. Main was not merged. These new notes
   and source copies remain local until publication is requested.
 

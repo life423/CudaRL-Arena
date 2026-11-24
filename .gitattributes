@@ -9,6 +9,11 @@ live/research_data/request-turn-study*.json -text -diff
 live/research_data/interface-comparison-study*.json -text -diff
 live/research_data/interface-comparison-v2-study*.json -text -diff
 live/research_data/interface-comparison-v2-launch*.json -text -diff
+# The app verifies the exact bytes of its shoreline and training receipts.
+live/research_data/shoreline-*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+live/research_data/candidate-*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+live/research_data/studies/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/POND_TURNING_PPO*PROTOCOL*.md -text
 # User review sources are retained byte-for-byte for their recorded SHA-256.
 docs/design-reviews/*.pdf -text -diff
 docs/design-reviews/*.txt -text

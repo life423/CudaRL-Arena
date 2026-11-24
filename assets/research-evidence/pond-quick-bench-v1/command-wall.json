@@ -1,0 +1,7 @@
+{
+  "exit_code": 0,
+  "process_wall_ms": 867.0539,
+  "includes_process_startup_and_teardown": true,
+  "includes_stdout_stderr_io": true,
+  "optimizer_calls": 0
+}

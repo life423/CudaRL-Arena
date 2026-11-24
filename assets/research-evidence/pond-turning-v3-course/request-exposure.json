@@ -1,0 +1,79 @@
+{
+  "as_of_UTC": "2026-11-24T06:12:06.626149+00:00",
+  "updates_parsed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "first_update": 1,
+  "last_update": 32,
+  "definitions": {
+    "onset": "accepted Trace.kind==Turn(2) and episode control==41",
+    "postchange": "accepted Turn control>40",
+    "early_vs_late": "updates1..16 versus17..32",
+    "first_2s_postchange": "episode controls41..80 inclusive; remaining postchange>80"
+  },
+  "stages": {
+    "early_updates_1_16": {
+      "rows": 524288,
+      "attempted": 524288,
+      "accepted_full_controls": 524288,
+      "turn_controls": 236932,
+      "turn_onsets": 430,
+      "postchange_turn_controls": 219509,
+      "postchange_first_2s_controls": 15426,
+      "postchange_after_2s_controls": 204083
+    },
+    "late_updates_17_32": {
+      "rows": 524288,
+      "attempted": 524288,
+      "accepted_full_controls": 524288,
+      "turn_controls": 234182,
+      "turn_onsets": 221,
+      "postchange_turn_controls": 225438,
+      "postchange_first_2s_controls": 10447,
+      "postchange_after_2s_controls": 214991
+    }
+  },
+  "totals": {
+    "rows": 1048576,
+    "attempted": 1048576,
+    "accepted_full_controls": 1048576,
+    "turn_controls": 471114,
+    "turn_onsets": 651,
+    "postchange_turn_controls": 444947,
+    "postchange_first_2s_controls": 25873,
+    "postchange_after_2s_controls": 419074
+  },
+  "new_physics_controls": 0,
+  "new_optimizer_updates": 0
+}

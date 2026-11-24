@@ -1,0 +1,17 @@
+{
+  "protocol_sha256": "32eaa0a907e0ede2141834346ff838725f0077d3d6d30de1efdd925362e99f08",
+  "synthetic": false,
+  "started_utc": "2026-11-24T06:06:13.6798465Z",
+  "verified_baseline_recovery": {
+    "original_runner_sha256": "9a8fcb22d5ee426fab152f63d2b18689a98aa99c6fd606827dd7ad9e20b1ad8a",
+    "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn33\\baseline0\\baseline-receipt.bin",
+    "training_ledger_sha256": "0fd3394bfc59dbf91a5a436c2df827ca5d6f0f0535e1b7b82cd133f4222190a1",
+    "receipt_sha256": "99e2f4da4c11038c52574213e5cc2e8428ce561d76da19dc961529862ff1005d",
+    "candidate_sha256": "99eaac9f598f6aab617ad2a6bc3ec76897ea433c11cf8d732218f8bf05d33644",
+    "candidate": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn33\\init\\candidate-0.bin",
+    "previous_runner_result_sha256": "debad602a2bdfd806420c6238873fdbe931bd3f3166ef13c2d7ce2aed3857e51",
+    "evaluation_ledger_sha256": "af21bd3c840ce7e2aa34de5daaa70f7f7372b6094e259165730c332145a49a95",
+    "recovery_runner_sha256": "06d099dc28611c62d4a50d64784d45f8789b63edebf0c771e3997fd557f8611a"
+  },
+  "stop_after_update": 32
+}

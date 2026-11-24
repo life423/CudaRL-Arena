@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "runtime_version": 4,
+  "query_arithmetic_version": 2,
+  "status": "passed",
+  "completed_cases": 36,
+  "CUDA_matched_cases": 8,
+  "candidate_installed": false
+}
