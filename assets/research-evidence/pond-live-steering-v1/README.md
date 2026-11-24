@@ -29,6 +29,10 @@ time and clearance values matched within 7.1e−15, against the unchanged CPU
 tolerance of 2e−6. Each heading request itself preserved physical state exactly.
 The pure adapter comparison matched all 492 scalar observations exactly.
 
+The narrow steering check records motion metrics at 50 ms control boundaries;
+the shared runtime still executes and validates its original 5 ms substeps.
+This UI integration check supplements the existing physical gates.
+
 The existing runtime 4 physical sources are byte-identical to the qualified
 shoreline sources. The new bridge DLL has its own fingerprint and narrow
 comparison; the original qualified DLL and 36-case CPU / 8-case CUDA receipts

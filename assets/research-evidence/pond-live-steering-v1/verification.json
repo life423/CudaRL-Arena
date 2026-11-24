@@ -48,7 +48,7 @@
     },
     {
       "path": "tools/view-live.ps1",
-      "sha256": "2b09216c506b30a6973fcb224e1e28b615b1f1b1307821dff0f10f127846d51e"
+      "sha256": "5836e4b84cb5fdd8ed176461672e419932c8ca0fd9bfd7e77e585d5d2084702d"
     },
     {
       "path": "live/addons/frozen_swimmer/frozen_swimmer.gdextension",
@@ -71,5 +71,18 @@
     "Four isolated requested turns; repeated turns, autonomous navigation and new learned improvement are unqualified.",
     "Registered headless entry and private rendered checks by this agent. Root separately verified an actual Project Manager Run and live right5degree request.",
     "Graphical checks waited until native GPU training finished."
-  ]
+  ],
+  "build_safety": {
+    "native_default_output": "build/godot-staged",
+    "build_native_sha256": "5bd6419fada65499a18246dddd4bd056caaa784db0150a59df317ee6082a2685",
+    "post_physics_change_scope": "Only output staging, launcher/package checks and frontend status-priority correction; native inference/physics source and installed DLL unchanged.",
+    "package_check": "tools/test-live-package.ps1",
+    "CMake_sha256": "1845ad58b69d9d6631be306b82855732005d23202055ea311f96484cb3aa6c98",
+    "view_live_sha256": "5836e4b84cb5fdd8ed176461672e419932c8ca0fd9bfd7e77e585d5d2084702d",
+    "live_cached_output_redirected": true,
+    "ordinary_launcher_builds": false,
+    "configure_test": "build/steer35/staging-check/CMakeCache.txt"
+  },
+  "motion_metric_sample_seconds": 0.05,
+  "physical_substep_seconds": 0.005
 }
