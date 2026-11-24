@@ -223,6 +223,9 @@ func _candidate_study_status(status_binding: Dictionary = {}) -> String:
 	var receipt := _dictionary_file(CANDIDATE_STUDY_PATH)
 	var updates := int(receipt.get("completed_updates",-1))
 	if int(receipt.get("schema",0))!=2 or receipt.get("status","") not in ["stopped","completed"] or updates<0 or updates>32 or receipt.get("candidate_adopted",true)!=false: return unavailable
+	var label := str(receipt.get("study_label",""))
+	if label.length()>48 or label.contains("[") or label.contains("]") or label.contains("\n") or label.contains("\r"): return unavailable
+	var study_prefix := label+"\n" if not label.is_empty() else ""
 	if receipt.get("playing_package_sha256","")!=FileAccess.get_sha256(policy_path): return unavailable
 	var references: Variant=receipt.get("sources",{})
 	if not references is Dictionary: return unavailable
@@ -247,25 +250,25 @@ func _candidate_study_status(status_binding: Dictionary = {}) -> String:
 			for item in movement.get("cases",[]):
 				if item is Dictionary and item.get("suite","")=="long" and float(item.get("maximum_lane_m",0))>.002: drifted=true
 			if not drifted or not str(assessment.get("reason","")).begins_with("retention_failed_long") or assessment.get("retention_passed",true)!=false: return unavailable
-			return prefix+": long-swim drift exceeded the 2 mm lane."
+			return study_prefix+prefix+": long-swim drift exceeded the 2 mm lane."
 		"rest_retention_failed":
 			if assessment.get("retention_passed",true)!=false or not str(assessment.get("reason","")).contains("hold"): return unavailable
-			return prefix+": resting checks regressed."
+			return study_prefix+prefix+": resting checks regressed."
 		"long_swim_retention_failed":
 			if assessment.get("retention_passed",true)!=false or not str(assessment.get("reason","")).begins_with("retention_failed_long"): return unavailable
-			return prefix+": long-swim retention failed."
+			return study_prefix+prefix+": long-swim retention failed."
 		"physical_check_failed":
 			if assessment.get("hard_failure",false)!=true: return unavailable
-			return prefix+": a physical check failed."
+			return study_prefix+prefix+": a physical check failed."
 		"retention_failed":
 			if assessment.get("retention_passed",true)!=false: return unavailable
-			return prefix+": retained movement checks failed."
+			return study_prefix+prefix+": retained movement checks failed."
 		"turning_unqualified":
 			if assessment.get("retention_passed",false)!=true or int(assessment.get("retention_cases_passed",0))!=20: return unavailable
-			return "Recorded candidate completed %d PPO updates; swimming and resting retained. Turns: %d / %d passed." % [updates,int(assessment.get("turn_cases_passed",0)),int(assessment.get("turn_cases_total",16))]
+			return study_prefix+"Recorded candidate completed %d PPO updates; swimming and resting retained. Turns: %d / %d passed." % [updates,int(assessment.get("turn_cases_passed",0)),int(assessment.get("turn_cases_total",16))]
 		"requested_turns_qualified":
 			if assessment.get("retention_passed",false)!=true or assessment.get("turning_qualified",false)!=true: return unavailable
-			return "Recorded candidate passed swimming, resting and requested-turn checks after %d PPO updates. Original 336 remains selected." % updates
+			return study_prefix+"Recorded candidate passed swimming, resting and requested-turn checks after %d PPO updates. Original 336 remains selected." % updates
 	return unavailable
 
 func _read_shoreline_status() -> void:

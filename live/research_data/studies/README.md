@@ -28,3 +28,7 @@ Verify source portability with `tests/godot/study_receipt_portability.gd` in a
 copy of the prospective public `live` files without a native DLL or private build
 folder. It reads the records without starting a world or an actor. Evidence files
 use `-text` attributes so Git preserves the bytes addressed by their hashes.
+The optional study label in the latest receipt identifies which recorded study
+Details shows. It is covered by the same receipt hash and changes no selected
+actor. New terminal records preserve earlier study folders instead of replacing
+their evidence.

@@ -4,6 +4,7 @@ param(
     [Parameter(Mandatory)][string]$EvaluationDirectory,
     [Parameter(Mandatory)][string]$Checkpoint,
     [ValidateSet('stopped','completed')][string]$Status='stopped',
+    [ValidateLength(0,48)][ValidatePattern('^[^\[\]\r\n]*$')][string]$StudyLabel='',
     [string]$RepositoryCheckpoint='',
     [string]$BaselineDirectory=''
 )
@@ -83,7 +84,7 @@ if($assessment.hard_failure){$reason='physical_check_failed'}
 elseif($assessment.retention_passed){$reason=if($assessment.turning_qualified){'requested_turns_qualified'}else{'turning_unqualified'}}
 elseif($assessment.reason -like '*hold*'){$reason='rest_retention_failed'}
 elseif($assessment.reason -like '*long*'){$reason=if(@($metrics.Values|Where-Object{$_.suite -eq 'long' -and $_.maximum_lane_m -gt .002}).Count -gt 0){'long_swim_lane_drift'}else{'long_swim_retention_failed'}}
-$receipt=[ordered]@{schema=2;study_id=$StudyId;status=$Status;completed_updates=$digest.completed_updates;reason=$reason;playing_package_sha256='4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d';lane_limit_m=.002;candidate_adopted=$false;sources=$sources;disclosure='Recorded study result. Compact native outputs and checkpoint digests are portable; omitted raw controls/checkpoints remain preserved research evidence. No study is rerun by the app.'}
+$receipt=[ordered]@{schema=2;study_id=$StudyId;study_label=$StudyLabel;status=$Status;completed_updates=$digest.completed_updates;reason=$reason;playing_package_sha256='4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d';lane_limit_m=.002;candidate_adopted=$false;sources=$sources;disclosure='Recorded study result. Compact native outputs and checkpoint digests are portable; omitted raw controls/checkpoints remain preserved research evidence. No study is rerun by the app.'}
 WriteJson (Join-Path $repo 'live/research_data/candidate-study.json') $receipt
 $bindingPath=Join-Path $repo 'live/research_data/shoreline-runtime.json'
 $binding=Get-Content -LiteralPath $bindingPath -Raw|ConvertFrom-Json

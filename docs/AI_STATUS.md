@@ -1,4 +1,13 @@
-# AI status — November 23, 2026
+# AI status — November 24, 2026
+
+**The latest course-sensitive PPO exercise completed 32 updates and qualified
+three of 16 turns.** The 512 GPU worlds collected 1,048,576 transitions in
+282.51 seconds of training-process time, or 3,712 transitions/s. All five
+checkpoints retained 28 long-swim windows, four short swims and 14 rests.
+The visible swimmer uses the original motor 336. Whole-pond navigation
+remains unqualified. [Latest results and checkpoint](POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md)
+
+## Second exercise with restored straight-swim feedback
 
 **The second exercise completed all 32 native GPU PPO updates.** Restoring
 sideways feedback brought the untrained candidate back to 28/28 required

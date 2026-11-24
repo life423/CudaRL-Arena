@@ -5,7 +5,7 @@ interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
 Godot presents the creature in its own pond. The current food-free Swim and
-Rest modes run a saved neural motor in native water physics. Two food-free turning
+Rest modes run a saved neural motor in native water physics. Three food-free turning
 exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
 depths and speeds, and adaptation during player interaction are longer-term
 goals.
@@ -29,10 +29,12 @@ build; current-capable swimming is not yet qualified.
 **The registered Godot project runs the corrected full shoreline and the
 original saved motor.** All eight CPU/CUDA trajectory comparisons passed.
 Restoring sideways feedback for straight requests recovered every one of
-the 28 required long-swim windows. A separate candidate retained them and all
-14 rests through 32 native GPU PPO updates. It passed three of 16 turn requests.
-Reliable turning and continuous exploration remain open.
-[Turning results and checkpoint](docs/POND_TURNING_PPO_V2_RESULTS_2026-11-23.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
+the 28 required long-swim windows. The latest candidate kept those windows,
+four short swims and 14 rests at every check through 32 native GPU PPO
+updates. Even with a stronger reward for traveling in the requested direction,
+it passed the same three of 16 turns. Reliable turning and continuous
+exploration remain open.
+[Latest exercise and checkpoint](docs/POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md) · [Straight-swim feedback](docs/POND_TURNING_PPO_V2_RESULTS_2026-11-23.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
 
 Swim mode has no fixed playback duration. The earlier
 [untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the

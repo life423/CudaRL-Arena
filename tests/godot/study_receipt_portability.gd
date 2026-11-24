@@ -19,6 +19,7 @@ func _initialize() -> void:
 		"only_portable_evidence_paths":portable,
 		"recorded_candidate_visible":statement.contains("Recorded candidate") and not statement.contains("unavailable"),
 		"actual_update_count_visible":statement.contains("%d PPO updates" % int(receipt.get("completed_updates",-1))),
+		"recorded_study_label_visible":str(receipt.get("study_label","")).is_empty() or statement.begins_with(str(receipt.study_label)+"\n"),
 		"recorded_CPU_and_CUDA_visible":recorded.contains("Recorded CPU physical checks: 36 / 36 passed") and recorded.contains("Recorded CUDA agreement: 8 / 8 matched cases"),
 		"changed_receipt_rejected":view._candidate_study_status(bad_binding).contains("Candidate assessment is unavailable"),
 		"original_package_present":FileAccess.get_sha256(view.policy_path)=="4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",

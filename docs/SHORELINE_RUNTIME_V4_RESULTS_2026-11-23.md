@@ -115,3 +115,29 @@ checks used zero physical controls/substeps, optimizer updates or CUDA calls.
 The open user app was untouched. Evidence is in
 `build/turn32-ui/verification.json`,SHA256
 `42550fe0e1035d6909a8786ca72b9d5f778a210e4908ed7d1f8737d4cbf7449f`.
+
+## Course-learning v3 status — November 24
+
+The terminal v3 study is now the recorded result in Details, labelled
+“Course learning · v3”. It completed 32 GPU PPO updates and retained all 20
+original movement cases, including 14 resting cases, four short swims and all
+28 original passing long-swim windows. Requested turns remain 3 / 16, unchanged
+from its baseline. This is not qualified turning or autonomous navigation.
+
+Original motor 336 and the verified runtime DLL remain byte-identical and
+selected. The separate v3 checkpoint is preserved at
+`assets/research-evidence/pond-turning-v3-course/candidate-32.bin`, SHA256
+`e6415ff704750f331d7aefff28e06ef5d54db194aaef1057fb4123f8ffe4bcb6`.
+Portable native assessment/training outputs, baseline result, case/window tables,
+movement summary and checkpoint digest occupy 24,310 bytes under
+`live/research_data/studies/turn33-v3-course-2026-11-24/`. Candidate weights are
+not loaded by the app. Earlier v1/v2 records remain available.
+
+The registered ordinary main-scene entry passed 10 / 10 checks. A source-only
+copy without a native DLL or private build files passed 9 / 9; rendered desktop
+and phone views passed 128 / 128. Both latest Details screenshots were inspected,
+including the study label and full outcome. Eight screenshots were saved. These
+UI checks executed zero physical controls/substeps, optimizer updates or native
+CUDA kernels. The user's open app was not controlled or closed. Source changes
+take effect on its next normal Project Manager Run. Evidence is preserved under
+`build/turn33-ui/`.
