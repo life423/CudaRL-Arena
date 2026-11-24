@@ -23,6 +23,8 @@ All 861 same-episode replacements followed timeouts. Of the 459 earlier task end
 
 **What prevented the easiest turns from counting?** Across 310 requests for ±5°, course missed tolerance on 40,339 of 68,772 eligible ticks (58.7%). Projected speed missed on 873 ticks (1.3%). In each direction the longest streak satisfying all four conditions was eight ticks, or 0.40 s, against the required one second. A useful next check is to plot the stored per-tick horizontal velocity against the displacement over a full tail beat. This would distinguish a side-to-side oscillation around the desired path from a sustained course error before choosing the next PPO lesson. [Individual training turns](../assets/research-evidence/pond-turning-v4-repeated/v4-training-requests.csv)
 
+The final deterministic trials help isolate this effect. Looking at the last substep of each eligible control tick, the right 5° trial held all four conditions for at most four consecutive ticks (0.20 s). The left 5° trial reached seven (0.35 s). Both passed all 260 eligible samples for speed, depth and tilt. The course alone broke the streak, even with exploration noise switched off. Both paths passed the independent four-second mean-course test. [Fixed evaluation cases and trace hashes](../assets/research-evidence/pond-turning-v4-repeated/analysis.json)
+
 ## Independent movement and retention
 
 | PPO update | Qualified turns | Mean course error | Mean speed toward target | Right 15° completion | Long windows | Short swims | Rests |
