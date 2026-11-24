@@ -1,11 +1,22 @@
 # AI status — November 24, 2026
 
-**The latest course-sensitive PPO exercise completed 32 updates and qualified
+**The registered Godot app now accepts player-requested 5° turns in Swim
+mode.** Its original saved motor passed four small left/right turns from two
+starting poses. A separate candidate completed 32 GPU PPO updates using
+repeated heading requests. Practice increased from 138 to 274 starts per
+training minute, with zero stabilized training completions. The candidate
+retained all 28 required long-swim windows, four short swims and 14 rests.
+It passed the same 3/16 independent turns. Reliable autonomous navigation
+remains open. [Latest exercise, timing and checkpoint](POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md)
+
+## Previous exercise with a course-sensitive reward
+
+**The course-sensitive PPO exercise completed 32 updates and qualified
 three of 16 turns.** The 512 GPU worlds collected 1,048,576 transitions in
 282.51 seconds of training-process time, or 3,712 transitions/s. All five
 checkpoints retained 28 long-swim windows, four short swims and 14 rests.
 The visible swimmer uses the original motor 336. Whole-pond navigation
-remains unqualified. [Latest results and checkpoint](POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md)
+remains unqualified. [Course-sensitive results and checkpoint](POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md)
 
 ## Second exercise with restored straight-swim feedback
 

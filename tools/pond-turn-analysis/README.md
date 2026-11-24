@@ -5,9 +5,12 @@ Build this standalone native C++ utility, then run:
 ```
 pond_turn_analysis.exe --self-test
 pond_turn_analysis.exe build/turn32 assets/research-evidence/pond-turning-v2
+pond_turn_analysis.exe build/turn34 assets/research-evidence/pond-turning-v4-repeated
+pond_turn_analysis.exe --training build/turn33 assets/research-evidence/pond-turning-v4-repeated 32
+pond_turn_analysis.exe --training build/turn34 assets/research-evidence/pond-turning-v4-repeated 32
 ```
 
-It reads only completed existing v2 or v3-course assessments at updates0/8/16/24/32. It does not
+It reads only completed existing v2, v3-course or v4-repeated assessments at updates0/8/16/24/32. It does not
 include a simulator, neural network, CUDA runtime or optimizer. Raw CSV/JSON
 SHA256s and derived-file SHA256s are recorded in `analysis.json`. Running again
 after a new checkpoint completes refreshes the reproducible derived tables.
@@ -34,3 +37,25 @@ separate from the requested angle and signed residual.
 Retention margins summarize existing whole-body COM lane/depth/tilt/rest speed
 and post-startup long-swim windows. Turn lane distances remain descriptive.
 No pass requirement, learner, checkpoint or physical trajectory is changed.
+
+Training mode reads the saved native batch files, verifies each checkpoint
+wrapper checksum and dimensions, and binds raw-file SHA256s. It writes
+`v3-training-requests.csv`/`v4-training-requests.csv` and their summary JSONs.
+The final argument is the completed-update prefix to inspect (1–32).
+
+The shared training completion definition requires at least100 post-onset ticks,
+then20 consecutive qualifying instantaneous COM samples: course error≤5°,
+requested projection≥6mm/s, depth≤1mm and tilt≤10°. The first possible completion
+is tick120 (6s); comparable completion must occur by tick400 (20s). This differs
+from the deterministic held-out four-second mean measurement above. Predicate
+failure counts overlap; longest favorable streaks expose which requirement is
+interrupting success. Native v4 events and cumulative per-world counters are
+cross-checked at every recorded tick, including across rollout/checkpoint edges.
+
+V3 exact target headings come from recorded post-onset task snapshots; its
+nominal angle draws reproduce the frozen counter RNG. V3 did not replace failed
+requests at400 ticks, so comparable misses are not actual timeouts. Episode-cap,
+other task-terminal interruptions and final pending requests remain separate.
+V4 additionally records actual repeats and assigned long holds. Training-minute
+rates use native training child-process wall time; full elapsed rates include
+evaluations, runner bookkeeping and any parser-repair gap, excluding compilation.
