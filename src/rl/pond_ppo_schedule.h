@@ -35,6 +35,16 @@ struct CourseHistory {
     }
 };
 struct HalfSecondTask {pt::Task task{};State schedule{};CourseHistory history{};};
+struct HorizontalCourse {float x=0,z=0;};
+struct SignedCourseTask {pt::Task task{};State schedule{};CourseHistory history{};HorizontalCourse movement{};};
+// Signed yaw in half-turns. Positive yaw turns +X towards -Z in the pond.
+// No estimate during settling, other tasks or zero displacement.
+CUDARL_HD inline float signed_course_input(const pt::Task& task, HorizontalCourse movement) {
+    if (task.kind != pt::Turn || !task.request_changed || (movement.x == 0 && movement.z == 0)) return 0;
+    const auto heading = task.request.request.heading;
+    return atan2f(movement.z * heading.x - movement.x * heading.z,
+                  movement.x * heading.x + movement.z * heading.z) / pt::obs::pi;
+}
 struct Sample {float vx=0,vz=0,depth=0,tilt=0;};
 CUDARL_HD inline void reset_episode(State& s) {
     const auto on=s.onsets,su=s.successes,to=s.timeouts,in=s.interrupted,early=s.early_terminal,longs=s.long_holds;
@@ -56,7 +66,7 @@ CUDARL_HD inline void before(State& s,pt::Task& task,uint32_t env,uint32_t seed,
     s.events=0;
     if(task.kind!=pt::Turn||s.active||task.episode_controls<pt::turn_control||task.episode_controls>=pt::episode_limit)return;
     const bool first=s.serial==0;
-    s.angle=first?task.turn_radians:(program==pt::half_second_course_v1?
+    s.angle=first?task.turn_radians:(pt::half_second_program(program)?
         pt::paired_turn_angle(env,task.episode_index,s.serial,seed):angle_draw(env,task.episode_index,s.serial,seed));
     p::V heading=task.request.request.heading;
     if(!first&&s.valid_course)heading={s.last_course_x,0,s.last_course_z};

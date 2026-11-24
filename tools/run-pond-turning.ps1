@@ -50,7 +50,7 @@ function Check-Retention($Result,[int]$Update,[string]$Candidate,[string]$Receip
     }
     Assert-Condition (-not (Field $Result 'preflight_only') -and -not (Field $Result 'hard_failure')) 'Preflight or hard fault cannot admit training'
     Assert-Condition ((Field $Result 'update') -eq $Update -and (Field $Result 'baseline_only') -eq ($Update -eq 0)) 'Assessment checkpoint/type mismatch'
-    $historicalBaseline=$script:Plan.protocol_id -eq 'pond-motor-ppo-v5-half-second-2026-11-24' -and $Update -eq 0
+    $historicalBaseline=$Update -eq 0 -and $script:Plan.protocol_id -in @('pond-motor-ppo-v5-half-second-2026-11-24','pond-motor-ppo-v6-signed-course-2026-11-24')
     if($historicalBaseline){
         Assert-Condition ((Field $Result 'reused_archived_baseline') -eq $true -and (Field $Result 'attempted_controls') -eq 0 -and (Field $Result 'attempted_substeps') -eq 0) 'Baseline evidence reuse must execute zero physical controls'
     }
@@ -157,8 +157,16 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
     Assert-Condition ($ExpectedHash -match '^[a-fA-F0-9]{64}$' -and (File-Hash $PlanPath) -eq $ExpectedHash.ToLowerInvariant()) 'Exact reviewed protocol SHA256 required'
     $script:Plan=Read-Json $PlanPath;$plan=$script:Plan
     Assert-Condition ($plan.status -eq 'SEALED_BEFORE_CANDIDATE_INITIALIZATION') 'Protocol is not sealed for initialization'
-    Assert-Condition ($plan.protocol_id -in @('pond-motor-ppo-v2-2026-11-23','pond-motor-ppo-v3-curriculum-2026-11-23','pond-motor-ppo-v3-course-2026-11-23','pond-motor-ppo-v4-repeated-2026-11-24','pond-motor-ppo-v5-half-second-2026-11-24')) 'Unsupported study ID'
+    $signedCourse=$plan.protocol_id -eq 'pond-motor-ppo-v6-signed-course-2026-11-24'
+    Assert-Condition ($signedCourse -or $plan.protocol_id -in @('pond-motor-ppo-v2-2026-11-23','pond-motor-ppo-v3-curriculum-2026-11-23','pond-motor-ppo-v3-course-2026-11-23','pond-motor-ppo-v4-repeated-2026-11-24','pond-motor-ppo-v5-half-second-2026-11-24')) 'Unsupported study ID'
     $halfSecond=$plan.protocol_id -eq 'pond-motor-ppo-v5-half-second-2026-11-24'
+    if($signedCourse){
+        Assert-Condition ($Target -eq 8 -and $plan.max_updates -eq 8 -and $plan.study_program -eq 'signed-half-second-v1') 'Wrong signed-course allocation'
+        Assert-Condition ((File-Hash $script:RunnerPath) -eq $plan.runner_script_sha256) 'Signed-course runner differs from sealed protocol'
+        Assert-Condition ((File-Hash $plan.mirror_result_path_absolute) -eq $plan.mirror_result_sha256) 'Mirrored-physics result changed'
+        $mirror=Read-Json $plan.mirror_result_path_absolute
+        Assert-Condition ($mirror.physical_symmetry_passed -is [bool] -and $mirror.physical_symmetry_passed) 'Mirrored physics must pass before PPO'
+    }
     if($halfSecond){
         Assert-Condition ($Target -eq 8 -and $plan.max_updates -eq 8 -and $plan.study_program -eq 'half-second-course-v1') 'Half-second exercise requires exactly one eight-update allocation'
         Assert-Condition ((File-Hash $script:RunnerPath) -eq $plan.runner_script_sha256) 'Half-second runner differs from sealed protocol'
@@ -220,7 +228,7 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
             $evalArguments=@('--run','--parent',$plan.parent_policy_path_absolute,'--candidate',$candidate,'--protocol',$PlanPath,'--out',$evaluation,'--ledger',$plan.evaluation_ledger_path_absolute,'--long-reference',$plan.long_reference_path_absolute)
             if($update -eq 0){
                 $evalArguments+='--baseline'
-                if($halfSecond){$evalArguments+='--reuse-verified-baseline'}
+                if($halfSecond -or $signedCourse){$evalArguments+='--reuse-verified-baseline'}
             }
             $receipt=Invoke-Stage $name $plan.evaluator_executable_path_absolute $evalArguments {
                 param($ignored) $path=Join-Path $evaluation $(if($update -eq 0){'baseline-receipt.bin'}else{'retention-receipt.bin'})

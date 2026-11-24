@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.24)
+project(RecordedMotorGradient LANGUAGES CXX)
+add_executable(pond_motor_gradient main.cpp ../../src/core/checkpoint.cpp)
+target_include_directories(pond_motor_gradient PRIVATE ../../src)
+target_compile_features(pond_motor_gradient PRIVATE cxx_std_17)

@@ -25,6 +25,7 @@
 namespace fs = std::filesystem;
 namespace {
 constexpr char half_second_study[] = "pond-motor-ppo-v5-half-second-2026-11-24";
+constexpr char signed_course_study[] = "pond-motor-ppo-v6-signed-course-2026-11-24";
 constexpr double pi = 3.141592653589793238462643383279502884;
 constexpr int change_control = 40, window_controls = 80, registered_end = 400;
 constexpr double seconds_per_control = .05, minimum_projection = .006, maximum_course_error = 5,
@@ -305,7 +306,11 @@ Stage stage(const fs::path &root, const std::string &name) {
     const auto protocol_id = scalar(s.result_text, "protocol_id");
     require((protocol_id == "pond-motor-ppo-v2-2026-11-23" ||
              protocol_id == "pond-motor-ppo-v3-course-2026-11-23" ||
-             protocol_id == "pond-motor-ppo-v4-repeated-2026-11-24" || protocol_id == half_second_study) &&
+             protocol_id == "pond-motor-ppo-v4-repeated-2026-11-24" || protocol_id == half_second_study ||
+             protocol_id == signed_course_study ||
+             protocol_id == "pond-motor-mirror-distill-v1-2026-11-24" ||
+             protocol_id == "pond-motor-residual-ppo-v1-2026-11-24" ||
+             protocol_id == "pond-motor-residual-four-ppo-v1-2026-11-24") &&
                 scalar(s.result_text, "preflight_only") == "false",
             "Wrong recorded assessment protocol");
     s.update = std::stoi(scalar(s.result_text, "update"));
@@ -608,7 +613,7 @@ RecordedBatch recorded_batch(const fs::path &path) {
     };
     require(u32() == 0x31425450, "Wrong recorded batch magic");
     b.version = u32();
-    require(b.version == 1 || b.version == 2, "Unknown batch version");
+    require(b.version >= 1 && b.version <= 3, "Unknown batch version");
     b.update = u32();
     b.steps = u32();
     cursor += 16;
@@ -634,7 +639,8 @@ RecordedBatch recorded_batch(const fs::path &path) {
             "Recorded batch dimensions changed");
     require((b.version == 1 && b.stride == 104 && b.tasks.count == 512 * 184) ||
                 (b.version == 2 && b.stride == 192 &&
-                    (b.tasks.count == 512 * 272 || b.tasks.count == 512 * 360)),
+                    (b.tasks.count == 512 * 272 || b.tasks.count == 512 * 360)) ||
+                (b.version == 3 && b.stride == 192 && b.tasks.count == 512 * 368),
             "Unknown recorded task/trace ABI");
     return b;
 }
@@ -714,7 +720,8 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
     require(maximum_update > 0 && maximum_update <= 32, "Training analysis update cap");
     const auto protocol = text(root / "protocol.json");
     const auto id = scalar(protocol, "protocol_id");
-    const bool half_second = id == half_second_study;
+    const bool signed_course = id == signed_course_study;
+    const bool half_second = signed_course || id == half_second_study;
     const bool repeated = id == "pond-motor-ppo-v4-repeated-2026-11-24" || half_second;
     require(!half_second || maximum_update <= 8, "Half-second exercise ends at update 8");
     require(repeated || id == "pond-motor-ppo-v3-course-2026-11-23", "Unsupported training study");
@@ -726,8 +733,10 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
         const auto directory = "updates-" + std::to_string(last - 7) + "-" + std::to_string(last);
         const auto path = root / directory / ("batch-" + std::to_string(update) + ".bin");
         const auto b = recorded_batch(path);
-        require(b.update == static_cast<uint32_t>(update) && repeated == (b.version == 2) &&
-                    half_second == (b.tasks.count == 512 * 360),
+        const uint32_t version = signed_course ? 3 : (repeated ? 2 : 1);
+        const size_t task_stride = signed_course ? 368 : (half_second ? 360 : (repeated ? 272 : 184));
+        require(b.update == static_cast<uint32_t>(update) && b.version == version &&
+                    b.tasks.count == 512 * task_stride,
                 "Study/batch source version mismatch");
         paths.push_back(path);
         hashes.push_back(sha256(path));
@@ -985,7 +994,7 @@ void training_analysis(const fs::path &root, const fs::path &output, int maximum
             "Checkpoint native timing evidence missing");
     const double elapsed = last_end - first_start;
     fs::create_directories(output);
-    const std::string prefix = half_second ? "v5" : (repeated ? "v4" : "v3");
+    const std::string prefix = signed_course ? "v6" : (half_second ? "v5" : (repeated ? "v4" : "v3"));
     std::ofstream csv(output / (prefix + "-training-requests.csv"));
     csv << std::setprecision(17);
     csv << "environment,episode,request_serial,angle_deg,onset_update,last_age_"

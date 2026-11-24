@@ -1,0 +1,7 @@
+{"study":"pond-motor-ppo-v6-signed-course-2026-11-24","checkpoint":8,"source_sha256":{"candidate_0":"830b69a27b342c0d0ed1e3231708f09a5ae83e78aed1660631fff116ad877cab","candidate_8":"9b68920b345b4be6699f8b979729e07d9f9d7a451664e4ca99f34487f2ca4ded","batch_8":"2b5555a86e2a2fbcf56a0d476a5341f30c1de7eb36b8b9a07de3dde5c315c413"},
+"new_physics_steps":0,"new_updates":0,"initial_input_column_l2":0,"final_input_column_l2":0.001606038316,"max_absolute_column_weight":0.0005812890595,"batch_turn_rows":16256,"nonzero_feature_rows":16256,"mean_abs_feature_deg":10.68557672,"max_abs_feature_deg":23.9514935,
+"measurement":"Feed each recorded nonzero turn row of training batch eight through the frozen final actor twice, changing only the signed course-error feature to zero. Output difference is deterministic normalized joint target before physical filtering. Measured command sensitivity does not establish effective turning.",
+"front_yaw":{"mean_delta":-4.01132753e-06,"rms_delta":3.164538233e-05,"max_abs_delta":9.682774544e-05},
+"rear_yaw":{"mean_delta":-3.580525529e-06,"rms_delta":1.649559265e-05,"max_abs_delta":7.718801498e-05}
+}
+

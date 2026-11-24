@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "controller": "frozen_motor_with_learned_residual",
+  "file_sha256": "06c411d60269b4791209db01c07a58bc3ff31abb16fdfa61aa6d4e7c45cf9b38",
+  "file_bytes": 3004,
+  "payload_checksum_fnv1a64": "9362875651701469253",
+  "parent_payload_checksum_fnv1a64": "4517507952728352494",
+  "protocol_checksum_fnv1a64": "3097305981801700910",
+  "actor_inputs": 42,
+  "hidden_neurons": 16,
+  "actor_outputs": 2,
+  "actor_parameters": 722,
+  "completed_updates": 32,
+  "training_controls": 1048576,
+  "training_substeps": 10485760,
+  "actor_Adam_calls": 1024,
+  "critic_Adam_calls": 1024,
+  "original_motor_frozen": true,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "assets/research-evidence/pond-residual-yaw-v1/residual-32.bin",
+  "validation": "Native assessment verified and evaluated the frozen motor combined with this separate residual actor."
+}

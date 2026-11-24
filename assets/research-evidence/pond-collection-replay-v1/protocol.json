@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "authorization": "User-authorized targeted physics optimization, bounded four-second corrected collector qualification. No PPO or budget extension.",
+  "binding": {
+    "protocol": "pond-collection-replay-v1",
+    "source_sha256": "1966e281ca72ac5fe636837502d80711609c5eb64c5e4e7fabd0bdf791f0113b",
+    "batch_sha256": "5994cec04228de4a50c71ad782149194804905d33146356b4232d1922cb6b8da",
+    "original_package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+    "worlds": 512,
+    "ticks": 64,
+    "max_controls": 32768,
+    "max_substeps": 327680,
+    "max_wall_seconds": 4,
+    "optimizer_calls": 0
+  },
+  "executable_sha256": "24238bd9b70790d80f0a42b18241de15be5e8aa5b1292216f6c8aa5157381deb",
+  "normal_trainer_sha256": "5cc364a49ace8c5ec7010ba180a52b59a8331859ef30cede40ddb3d15b5d5db6",
+  "physical_source_sha256": "3c30e5ad6d9343a17814656af6e648508a02e68bf16206207db8bbf26b3bafde",
+  "strict_reference_update": 12,
+  "strict_reference_gpu_physics_ms": 12354.25977,
+  "maximum_attempts": 1,
+  "max_wall_seconds": 4,
+  "optimizer_updates": 0,
+  "required": "Match archived observations, actions, probabilities, rewards, episode/request accounting and motion at existing tolerances. Explicit quantitative versus threshold-only clearance tags. No tolerance or physical changes."
+}

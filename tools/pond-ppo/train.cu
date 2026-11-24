@@ -12,6 +12,7 @@
 #include "rl/gaussian_math.h"
 #include "rl/ppo_kernels.h"
 #include "admission.h"
+#include "transition_trace.h"
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -58,15 +59,19 @@ struct Options {
 };
 struct Package {std::vector<float> weights;float gain=0;uint64_t checksum=0;};
 const char* study_id(uint32_t program){
+    if(program==pt::signed_half_second_v1)return pp::signed_course_study_protocol_id;
     if(program==pt::half_second_course_v1)return pp::half_second_study_protocol_id;
     return program==pt::repeated_headings_v1?pp::repeated_study_protocol_id:(program==pt::course_direction_v1?pp::course_study_protocol_id:(program==pt::paired_gentle_moderate_v1?pp::curriculum_study_protocol_id:pp::default_study_protocol_id));
 }
 const char* program_name(uint32_t program){
+    if(program==pt::signed_half_second_v1)return "signed-half-second-v1";
     if(program==pt::half_second_course_v1)return "half-second-course-v1";
     return program==pt::repeated_headings_v1?"repeated-headings-v1":(program==pt::course_direction_v1?"course-direction-v1":(program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off"));
 }
-uint32_t update_budget(uint32_t program){return program==pt::half_second_course_v1?8:pp::updates;}
+uint32_t actor_inputs(uint32_t program){return program==pt::signed_half_second_v1?pp::signed_inputs:D;}
+uint32_t update_budget(uint32_t program){return pt::half_second_program(program)?8:pp::updates;}
 uint32_t task_stride(uint32_t program){
+    if(program==pt::signed_half_second_v1)return sizeof(ps::SignedCourseTask);
     if(program==pt::half_second_course_v1)return sizeof(ps::HalfSecondTask);
     return static_cast<uint32_t>(program==pt::repeated_headings_v1?sizeof(ps::SavedTask):sizeof(pt::Task));
 }
@@ -104,7 +109,8 @@ Options options(int argc,char** argv) {
         else if(arg=="--turn-schedule"){
             require(result.study_program==0,"Study programs are mutually exclusive");
             const auto name=next();
-            if(name=="half-second-course-v1")result.study_program=pt::half_second_course_v1;
+            if(name=="signed-half-second-v1")result.study_program=pt::signed_half_second_v1;
+            else if(name=="half-second-course-v1")result.study_program=pt::half_second_course_v1;
             else {require(name=="repeated-headings-v1","Unknown turn schedule");result.study_program=pt::repeated_headings_v1;}
         }
         else if(arg=="--to-update"){const auto value=std::stoull(next());require(value<=32,"Update budget exceeds32");result.to_update=static_cast<uint32_t>(value);}
@@ -116,18 +122,19 @@ Options options(int argc,char** argv) {
 void prerequisites(const Options& o,uint64_t parent_checksum) {
     ph::prerequisites(o.protocol,o.cpu_gate,o.cuda_gate,o.evaluator_source,parent_checksum,o.study_program);
 }
-struct TransitionTrace {
-    float x=0,z=0,vx=0,vy=0,vz=0,depth=0,tilt=0;
-    double minimum_gap=0;
-    uint32_t episode=0,control=0,kind=0,occupied_cells=0,occupied_grid[8]{};
-    float bank_near_seconds=0,contact_seconds=0,postwarmup_stall_seconds=0;
-    float heading_x=0,heading_z=0,requested_angle=0;
-    uint32_t request_serial=0,onset_control=0,request_age=0,qualifying_streak=0,events=0,active=0,succeeded=0,long_hold=0;
-    uint64_t onsets=0,successes=0,timeouts=0,interrupted=0,early_terminal=0,long_holds=0;
-};
+using TransitionTrace=pond_collection::Trace;
 struct Buffer {
     device_ptr<pr::World> worlds{N};device_ptr<pt::Task> tasks{N};device_ptr<ps::State> schedules{N};
     device_ptr<ps::CourseHistory> histories{N};
+    device_ptr<ps::HorizontalCourse> movement;
+    device_ptr<float> actor_observation,mb_actor_observation;
+    explicit Buffer(bool signed_actor) {
+        if(signed_actor) {
+            movement.allocate(N);
+            actor_observation.allocate(Rows*pp::signed_inputs);
+            mb_actor_observation.allocate(MB*pp::signed_inputs);
+        }
+    }
     device_ptr<float> observation{Rows*D},latent{Rows*A},logp{Rows},value{Rows},reward{Rows},done{Rows},truncated{Rows};
     device_ptr<float> final_value{Rows},final_observation{N*D},last_observation{N*D},last_value{N};
     device_ptr<float> advantages{Rows},returns{Rows},adv_stats{2},log_std{A};
@@ -138,13 +145,14 @@ struct Buffer {
     device_ptr<float> dmean{MB*A},dlog_std{MB*A},dvalue{MB},row_stats{MB*rl::kGaussianStats},stats{rl::kGaussianStats};
 };
 __device__ void fail(int* fault,int env){atomicMin(fault,env);}
-__global__ void initialize_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,uint32_t seed,uint32_t curriculum,int* fault) {
+__global__ void initialize_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,ps::HorizontalCourse* movement,uint32_t seed,uint32_t curriculum,int* fault) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
     schedules[i]=ps::State{};
-    if(curriculum==pt::half_second_course_v1)histories[i]=ps::CourseHistory{};
+    if(pt::half_second_program(curriculum))histories[i]=ps::CourseHistory{};
+    if(movement)movement[i]=ps::HorizontalCourse{};
     if(!pt::initialize(worlds[i],tasks[i],static_cast<uint32_t>(i),0,seed,curriculum))fail(fault,i);
 }
-__global__ void observe_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,float* output,int* fault,uint32_t program,uint32_t seed,bool collecting) {
+__global__ void observe_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,float* output,float* actor_output,const ps::HorizontalCourse* movement,int* fault,uint32_t program,uint32_t seed,bool collecting) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
     if(pt::repeating_program(program)){
         if(collecting){ps::before(schedules[i],tasks[i],static_cast<uint32_t>(i),seed,program);
@@ -152,19 +160,32 @@ __global__ void observe_kernel(pr::World* worlds,pt::Task* tasks,ps::State* sche
         else {auto task=tasks[i];auto schedule=schedules[i];ps::before(schedule,task,static_cast<uint32_t>(i),seed,program);
             if(!pr::valid_state(worlds[i])||!pt::observe(task,worlds[i],output+i*D,false))fail(fault,i);}
     }else if(!pr::valid_state(worlds[i])||!pt::observe(tasks[i],worlds[i],output+i*D))fail(fault,i);
+    if(actor_output){
+        float* row=actor_output+i*pp::signed_inputs;
+        for(int j=0;j<D;++j)row[j]=output[i*D+j];
+        row[D]=ps::signed_course_input(tasks[i],movement[i]);
+        if(!p::finite_number(row[D]))fail(fault,i);
+    }
 }
-__global__ void step_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,const float* latent,float gain,float* reward,
-        float* done,float* truncated,float* final_observation,uint64_t* attempted,uint64_t* substeps,int* reason,TransitionTrace* trace,int* fault,uint32_t program,uint32_t seed) {
+__global__ void step_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,ps::HorizontalCourse* movement,const float* latent,float gain,float* reward,
+        float* done,float* truncated,float* final_observation,uint64_t* attempted,uint64_t* substeps,int* reason,TransitionTrace* trace,int* fault,uint32_t program,uint32_t seed,
+        pr::ControlClearance* classes=nullptr) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
     float command[A]{};const float amplitude=tasks[i].request.holding?gain:1.f;
     for(int j=0;j<A;++j){const float z=latent[i*A+j];if(!p::finite_number(z)){reason[i]=20;fail(fault,i);return;}command[j]=tanhf(amplitude*z);}
     attempted[i]=1;const auto before=worlds[i].motor.attempted_substeps;
-    const bool accepted=pr::step(worlds[i],command);substeps[i]=worlds[i].motor.attempted_substeps-before;
+    auto* clearance=classes?classes+i:nullptr;
+    const bool accepted=clearance?pr::step_classified(worlds[i],command,*clearance):pr::step(worlds[i],command);
+    substeps[i]=worlds[i].motor.attempted_substeps-before;
     if(!accepted){reason[i]=1000+worlds[i].failure;fail(fault,i);return;}
+    if(clearance&&(!isfinite(clearance->lower_m)||(clearance->precise?!isfinite(worlds[i].minimum_control_gap_m):
+            (!isnan(worlds[i].minimum_control_gap_m)||clearance->lower_m<=pr::bank_threshold_m)))){
+        reason[i]=22;fail(fault,i);return;
+    }
     const auto motion=po::motion(worlds[i].motor.physical.body);
     p::V course_velocity{};
     const p::V* feedback=nullptr;
-    if(program==pt::half_second_course_v1 && tasks[i].kind==pt::Turn){
+    if(pt::half_second_program(program) && tasks[i].kind==pt::Turn){
         auto& history=histories[i];
         if(tasks[i].episode_controls==0){
             const auto start=tasks[i].request.start_com_model * p::scale;
@@ -176,7 +197,8 @@ __global__ void step_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedul
             reason[i]=21;fail(fault,i);return;
         }
     }
-    const auto transition=pt::record(tasks[i],worlds[i],program,feedback);reward[i]=transition.reward;
+    if(movement)movement[i]=feedback?ps::HorizontalCourse{feedback->x,feedback->z}:ps::HorizontalCourse{};
+    const auto transition=pt::record(tasks[i],worlds[i],program,feedback,clearance);reward[i]=transition.reward;
     const auto measured=po::measure(tasks[i].request,worlds[i].motor.physical.body);
     TransitionTrace row;row.x=motion.com_model.x*p::scale;row.z=motion.com_model.z*p::scale;
     row.vx=motion.velocity_m_s.x;row.vy=motion.velocity_m_s.y;row.vz=motion.velocity_m_s.z;row.depth=measured.depth_m;row.tilt=measured.tilt_deg;
@@ -197,11 +219,12 @@ __global__ void step_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedul
     }else observed=pt::observe(tasks[i],worlds[i],final_observation+i*D);
     if(!p::finite_number(reward[i])||!observed)fail(fault,i);
 }
-__global__ void reset_terminal_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,const float* done,uint32_t seed,uint32_t curriculum,int* fault) {
+__global__ void reset_terminal_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,ps::HorizontalCourse* movement,const float* done,uint32_t seed,uint32_t curriculum,int* fault) {
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N||done[i]==0)return;
     const auto episode=tasks[i].episode_index+1;
     if(pt::repeating_program(curriculum))ps::reset_episode(schedules[i]);
-    if(curriculum==pt::half_second_course_v1)histories[i]=ps::CourseHistory{};
+    if(pt::half_second_program(curriculum))histories[i]=ps::CourseHistory{};
+    if(movement)movement[i]=ps::HorizontalCourse{};
     if(!pt::initialize(worlds[i],tasks[i],static_cast<uint32_t>(i),episode,seed,curriculum))fail(fault,i);
 }
 __global__ void audit_kernel(const float* obs,const float* latent,const float* logp,const float* value,const float* reward,
@@ -253,6 +276,12 @@ template<class Type> void restore(device_ptr<Type>& target,const std::vector<uin
 std::vector<uint8_t> saved_tasks(Buffer& b,uint32_t program,cudaStream_t stream) {
     const auto tasks=download(b.tasks,N,stream);if(!pt::repeating_program(program))return raw_bytes(tasks);
     const auto schedules=download(b.schedules,N,stream);
+    if(program==pt::signed_half_second_v1) {
+        const auto histories=download(b.histories,N,stream);const auto movement=download(b.movement,N,stream);
+        std::vector<ps::SignedCourseTask> saved(N);
+        for(int i=0;i<N;++i)saved[i]={tasks[i],schedules[i],histories[i],movement[i]};
+        return raw_bytes(saved);
+    }
     if(program==pt::half_second_course_v1) {
         const auto histories=download(b.histories,N,stream);std::vector<ps::HalfSecondTask> saved(N);
         for(int i=0;i<N;++i)saved[i]={tasks[i],schedules[i],histories[i]};
@@ -264,6 +293,18 @@ std::vector<uint8_t> saved_tasks(Buffer& b,uint32_t program,cudaStream_t stream)
 void restore_tasks(Buffer& b,const std::vector<uint8_t>& bytes,uint32_t program) {
     if(!pt::repeating_program(program)){restore(b.tasks,bytes);return;}
     std::vector<pt::Task> tasks(N);std::vector<ps::State> schedules(N);
+    if(program==pt::signed_half_second_v1) {
+        require(bytes.size()==N*sizeof(ps::SignedCourseTask),"Signed actor history shape mismatch");
+        std::vector<ps::SignedCourseTask> saved(N);std::memcpy(saved.data(),bytes.data(),bytes.size());
+        std::vector<ps::CourseHistory> histories(N);std::vector<ps::HorizontalCourse> movement(N);
+        for(int i=0;i<N;++i){
+            tasks[i]=saved[i].task;schedules[i]=saved[i].schedule;histories[i]=saved[i].history;movement[i]=saved[i].movement;
+            require(histories[i].next<ps::CourseHistory::intervals && histories[i].count<=ps::CourseHistory::intervals &&
+                    std::isfinite(movement[i].x)&&std::isfinite(movement[i].z),"Invalid carried signed course");
+        }
+        restore(b.tasks,raw_bytes(tasks));restore(b.schedules,raw_bytes(schedules));restore(b.histories,raw_bytes(histories));
+        restore(b.movement,raw_bytes(movement));return;
+    }
     if(program==pt::half_second_course_v1) {
         require(bytes.size()==N*sizeof(ps::HalfSecondTask),"Half-second course history shape mismatch");
         std::vector<ps::HalfSecondTask> saved(N);std::memcpy(saved.data(),bytes.data(),bytes.size());
@@ -344,7 +385,7 @@ void account(const HostBatch& h,pp::Counters& counters,ActiveBatch& active) {
 }
 HostBatch batch(Buffer& b,cudaStream_t stream,int steps) {
     const auto rows=static_cast<size_t>(steps)*N;HostBatch result;
-    result.observation=download(b.observation,rows*D,stream);result.latent=download(b.latent,rows*A,stream);
+    result.observation=b.actor_observation.size()?download(b.actor_observation,rows*pp::signed_inputs,stream):download(b.observation,rows*D,stream);result.latent=download(b.latent,rows*A,stream);
     result.logp=download(b.logp,rows,stream);result.value=download(b.value,rows,stream);result.reward=download(b.reward,rows,stream);
     result.done=download(b.done,rows,stream);result.truncated=download(b.truncated,rows,stream);result.final_value=download(b.final_value,rows,stream);
     result.last_value=download(b.last_value,N,stream);result.attempted=download(b.attempted,rows,stream);result.substeps=download(b.substeps,rows,stream);result.reason=download(b.reason,rows,stream);
@@ -353,12 +394,12 @@ HostBatch batch(Buffer& b,cudaStream_t stream,int steps) {
 std::vector<uint8_t> batch_payload(const HostBatch& h,uint32_t update,int steps,uint64_t serial,
         const std::vector<uint8_t>& initial_world,const std::vector<uint8_t>& initial_task,
         const std::vector<float>& actor,const std::vector<float>& critic) {
-    cp::Writer out;out.value(uint32_t{0x31425450});out.value(uint32_t{2});out.value(update);out.value(steps);out.value(serial);
+    cp::Writer out;out.value(uint32_t{0x31425450});out.value(uint32_t(actor.size()==pp::actor_weights?2:3));out.value(update);out.value(steps);out.value(serial);
     out.value(source_identity());out.array(initial_world);out.array(initial_task);out.array(actor);out.array(critic);
     for(const auto* values:{&h.observation,&h.latent,&h.logp,&h.value,&h.reward,&h.done,&h.truncated,&h.final_value,&h.last_value})out.array(*values);
     out.array(h.attempted);out.array(h.substeps);out.array(h.reason);out.value(static_cast<uint32_t>(sizeof(TransitionTrace)));out.array(raw_bytes(h.trace));return out.data;
 }
-nn::MlpSpec actor_spec(){return {{D,32,32,A},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}};}
+nn::MlpSpec actor_spec(int width){return {{width,32,32,A},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}};}
 nn::MlpSpec critic_spec(){return {{D,32,32,1},{nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}};}
 void save_failure(Resources& resources,const fs::path& out,Buffer& b,nn::GpuMlp& actor,nn::GpuMlp& critic,
         nn::GpuAdam& actor_adam,nn::GpuAdam& critic_adam,const pp::Counters& counters,cudaStream_t stream,uint32_t program) {
@@ -381,9 +422,10 @@ void run(const Options& o,const Package& package) {
     require(o.initialize_only==o.resume.empty(),"Initialize candidate0 once, then resume its exact carried state after baseline assessment");
     const auto protocol_checksum=cp::checksum(whole_file(o.protocol));pp::CandidateState state;uint64_t last_checkpoint=0;
     state.parent_package_checksum=package.checksum;state.protocol_checksum=protocol_checksum;state.source_identity_checksum=source_identity();
+    state.actor_inputs=actor_inputs(o.study_program);
     state.seed=default_seed;state.world_stride=static_cast<uint32_t>(sizeof(pr::World));state.task_stride=task_stride(o.study_program);state.frozen_gain=package.gain;
     if(!o.resume.empty()) {
-        const auto saved=cp::read(o.resume.string());state=pp::read_candidate(saved,package.checksum,protocol_checksum,source_identity(),static_cast<uint32_t>(sizeof(pr::World)),task_stride(o.study_program));
+        const auto saved=cp::read(o.resume.string());state=pp::read_candidate(saved,package.checksum,protocol_checksum,source_identity(),static_cast<uint32_t>(sizeof(pr::World)),task_stride(o.study_program),actor_inputs(o.study_program));
         last_checkpoint=cp::checksum(saved);require(state.seed==default_seed,"Saved sampler seed differs from this study");
         require(!o.retention.empty()&&o.evaluator_source!=0,"Specific candidate retention receipt required before continuation");
         const auto receipt=pp::read_retention_receipt(cp::read(o.retention.string()),cp::checksum(saved),package.checksum,protocol_checksum,o.evaluator_source,state.counters.completed_updates==0);
@@ -396,13 +438,18 @@ void run(const Options& o,const Package& package) {
     resources.reserve_text();std::ofstream metrics(o.out/"updates.csv");resources.text(metrics,"update,attempted_controls,attempted_substeps,actor_Adam,critic_Adam,mean_reward,collection_ms,physics_ms,optimization_ms,transfer_ms,approx_KL,aggregate_wall_s\n");
     if(o.study_program!=pt::curriculum_off)resources.enable_save_timing(o.out/"save-times.csv");
     Ledger ledger(o,protocol_checksum,resources,state,last_checkpoint);
-    CUDA_CHECK_THROW(cudaSetDevice(0));Stream stream;Buffer b;clear_fault(b,stream.value);
-    nn::GpuMlp actor(actor_spec(),MB,state.seed),critic(critic_spec(),MB,state.seed+1);
+    CUDA_CHECK_THROW(cudaSetDevice(0));Stream stream;
+    const int width=state.actor_inputs,parameters=pp::actor_parameter_count(width);
+    const bool signed_actor=width==pp::signed_inputs;
+    Buffer b(signed_actor);clear_fault(b,stream.value);
+    float* actor_rows=signed_actor?b.actor_observation.get():b.observation.get();
+    float* actor_minibatch=signed_actor?b.mb_actor_observation.get():b.mb_observation.get();
+    nn::GpuMlp actor(actor_spec(width),MB,state.seed),critic(critic_spec(),MB,state.seed+1);
     nn::AdamConfig config;config.lr=pp::learning_rate;config.max_grad_norm=pp::gradient_clip;
-    nn::GpuAdam actor_adam(pp::actor_weights,config),critic_adam(pp::critic_weights,config);
+    nn::GpuAdam actor_adam(parameters,config),critic_adam(pp::critic_weights,config);
     std::vector<float> logs(A,pp::fixed_log_std());b.log_std.copy_from_host(logs.data(),logs.size());
     if(o.resume.empty()) {
-        actor.set_params(package.weights);initialize_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),state.seed,o.study_program,b.fault.get());check_cuda();
+        actor.set_params(pp::initial_actor(package.weights,width));initialize_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.movement.get(),state.seed,o.study_program,b.fault.get());check_cuda();
         if(fault(b,stream.value)!=INT_MAX){save_failure(resources,o.out,b,actor,critic,actor_adam,critic_adam,state.counters,stream.value,o.study_program);
             std::ofstream failed(o.out/"result.json");resources.text(failed,"{\"passed\":false,\"reason\":\"initial_GPU_certificate_failed\",\"attempted_controls\":0,\"attempted_substeps\":0,\"optimizer_calls\":0}\n");
             throw std::runtime_error("Initial GPU world certificate failed before collection");}
@@ -430,24 +477,24 @@ void run(const Options& o,const Package& package) {
             Timer collection,physics;collection.start(stream.value);float physics_ms=0;int steps=0;bool collection_failed=false;
             for(int t=0;t<T;++t) {
                 resources.work_guard();float* observation=b.observation.get()+t*N*D;
-                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),observation,b.fault.get(),o.study_program,state.seed,true);check_cuda();
+                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),observation,signed_actor?actor_rows+t*N*width:nullptr,b.movement.get(),b.fault.get(),o.study_program,state.seed,true);check_cuda();
                 if(fault(b,stream.value)!=INT_MAX){collection_failed=true;steps=t;break;}
-                actor.forward(observation,N,stream.value);critic.forward(observation,N,stream.value);
+                actor.forward(actor_rows+t*N*width,N,stream.value);critic.forward(observation,N,stream.value);
                 CUDA_CHECK_THROW(cudaMemcpyAsync(b.value.get()+t*N,critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,stream.value));
                 rl::sample_gaussian(actor.output(),b.log_std.get(),N,A,state.seed,static_cast<uint32_t>(state.sampler_decision_serial++),b.latent.get()+t*N*A,b.logp.get()+t*N,stream.value);
                 physics.start(stream.value);
                 active.steps=t+1;ledger.physical_started=true;
-                step_kernel<<<(N+physical_threads-1)/physical_threads,physical_threads,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.latent.get()+t*N*A,state.frozen_gain,
+                step_kernel<<<(N+physical_threads-1)/physical_threads,physical_threads,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.movement.get(),b.latent.get()+t*N*A,state.frozen_gain,
                     b.reward.get()+t*N,b.done.get()+t*N,b.truncated.get()+t*N,b.final_observation.get(),b.attempted.get()+t*N,b.substeps.get()+t*N,b.reason.get()+t*N,b.trace.get()+t*N,b.fault.get(),o.study_program,state.seed);check_cuda();
                 physics_ms+=physics.stop(stream.value);steps=t+1;
                 if(fault(b,stream.value)!=INT_MAX){collection_failed=true;break;}
                 critic.forward(b.final_observation.get(),N,stream.value);
                 CUDA_CHECK_THROW(cudaMemcpyAsync(b.final_value.get()+t*N,critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,stream.value));
-                reset_terminal_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.done.get()+t*N,state.seed,o.study_program,b.fault.get());check_cuda();
+                reset_terminal_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.movement.get(),b.done.get()+t*N,state.seed,o.study_program,b.fault.get());check_cuda();
                 if(fault(b,stream.value)!=INT_MAX){collection_failed=true;break;}
             }
             if(!collection_failed) {
-                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.last_observation.get(),b.fault.get(),o.study_program,state.seed,false);check_cuda();
+                observe_kernel<<<(N+31)/32,32,0,stream.value>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.last_observation.get(),nullptr,nullptr,b.fault.get(),o.study_program,state.seed,false);check_cuda();
                 critic.forward(b.last_observation.get(),N,stream.value);CUDA_CHECK_THROW(cudaMemcpyAsync(b.last_value.get(),critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,stream.value));
                 audit_kernel<<<(Rows+255)/256,256,0,stream.value>>>(b.observation.get(),b.latent.get(),b.logp.get(),b.value.get(),b.reward.get(),b.done.get(),b.truncated.get(),b.final_value.get(),b.fault.get());check_cuda();
                 finite_kernel<<<(N+255)/256,256,0,stream.value>>>(b.last_value.get(),N,b.fault.get());check_cuda();
@@ -463,7 +510,7 @@ void run(const Options& o,const Package& package) {
             require(steps==T,"Incomplete rollout");for(size_t i=0;i<h.attempted.size();++i)require(h.attempted[i]==1&&h.substeps[i]==10,"Batch physical accounting mismatch");
             // Check the entire batch's actual unscaled latent likelihood under
             // unchanged collection weights before ANY optimizer call.
-            for(int first=0;first<Rows;first+=MB){actor.forward(b.observation.get()+first*D,MB,stream.value);
+            for(int first=0;first<Rows;first+=MB){actor.forward(actor_rows+first*width,MB,stream.value);
                 likelihood_kernel<<<(MB+255)/256,256,0,stream.value>>>(actor.output(),b.log_std.get(),b.latent.get()+first*A,b.logp.get()+first,MB,b.fault.get());check_cuda();}
             require(fault(b,stream.value)==INT_MAX,"Stored unscaled latent likelihood failed before GAE/Adam");
             rl::compute_gae(T,N,b.reward.get(),b.value.get(),b.done.get(),b.truncated.get(),b.final_value.get(),b.last_value.get(),pp::gamma,pp::lambda,b.advantages.get(),b.returns.get(),stream.value);
@@ -475,11 +522,12 @@ void run(const Options& o,const Package& package) {
                 for(int first=0;first<Rows;first+=MB) {
                     resources.work_guard();
                     rl::gather_rows(permutation,first,MB,D,b.observation.get(),b.mb_observation.get(),stream.value);
+                    if(signed_actor)rl::gather_rows(permutation,first,MB,width,actor_rows,actor_minibatch,stream.value);
                     rl::gather_rows(permutation,first,MB,A,b.latent.get(),b.mb_latent.get(),stream.value);
                     rl::gather_rows(permutation,first,MB,1,b.logp.get(),b.mb_logp.get(),stream.value);
                     rl::gather_rows(permutation,first,MB,1,b.advantages.get(),b.mb_advantage.get(),stream.value);
                     rl::gather_rows(permutation,first,MB,1,b.returns.get(),b.mb_return.get(),stream.value);
-                    actor.forward(b.mb_observation.get(),MB,stream.value);critic.forward(b.mb_observation.get(),MB,stream.value);
+                    actor.forward(actor_minibatch,MB,stream.value);critic.forward(b.mb_observation.get(),MB,stream.value);
                     CUDA_CHECK_THROW(cudaMemsetAsync(b.stats.get(),0,b.stats.size_bytes(),stream.value));
                     rl::gaussian_ppo_loss_grad(actor.output(),b.log_std.get(),critic.output(),MB,A,b.mb_latent.get(),b.mb_logp.get(),b.mb_advantage.get(),b.mb_return.get(),b.adv_stats.get(),
                         {pp::clip,0,.5f},b.dmean.get(),b.dlog_std.get(),b.dvalue.get(),b.row_stats.get(),b.stats.get(),stream.value);
@@ -487,19 +535,19 @@ void run(const Options& o,const Package& package) {
                     last_kl=stats[3]/MB;require(last_kl<=maximum_approx_kl,"Predeclared KL stop; partial update is not a completed candidate");
                     actor.zero_grad(stream.value);critic.zero_grad(stream.value);
                     actor.backward(b.dmean.get(),MB,nullptr,stream.value);critic.backward(b.dvalue.get(),MB,nullptr,stream.value);
-                    finite_kernel<<<(pp::actor_weights+255)/256,256,0,stream.value>>>(actor.grads(),pp::actor_weights,b.fault.get());
+                    finite_kernel<<<(parameters+255)/256,256,0,stream.value>>>(actor.grads(),parameters,b.fault.get());
                     finite_kernel<<<(pp::critic_weights+255)/256,256,0,stream.value>>>(critic.grads(),pp::critic_weights,b.fault.get());check_cuda();
                     require(fault(b,stream.value)==INT_MAX,"Nonfinite gradient rejected before Adam");
                     actor_adam.step(actor.params(),actor.grads(),stream.value);++state.counters.actor_adam_calls;
                     critic_adam.step(critic.params(),critic.grads(),stream.value);++state.counters.critic_adam_calls;
-                    finite_kernel<<<(pp::actor_weights+255)/256,256,0,stream.value>>>(actor.params(),pp::actor_weights,b.fault.get());
+                    finite_kernel<<<(parameters+255)/256,256,0,stream.value>>>(actor.params(),parameters,b.fault.get());
                     finite_kernel<<<(pp::critic_weights+255)/256,256,0,stream.value>>>(critic.params(),pp::critic_weights,b.fault.get());check_cuda();
                     require(fault(b,stream.value)==INT_MAX,"Nonfinite updated parameters; candidate rejected");
                 }
             }
             // Audit final actor against this whole rollout after the last Adam
             // call as well; a final-step KL jump cannot become a good candidate.
-            for(int first=0;first<Rows;first+=MB){actor.forward(b.observation.get()+first*D,MB,stream.value);
+            for(int first=0;first<Rows;first+=MB){actor.forward(actor_rows+first*width,MB,stream.value);
                 kl_kernel<<<(MB+255)/256,256,0,stream.value>>>(actor.output(),b.log_std.get(),b.latent.get()+first*A,b.logp.get()+first,b.kl.get()+first,MB,b.fault.get());check_cuda();}
             require(fault(b,stream.value)==INT_MAX,"Nonfinite final rollout KL");rl::mean_std(b.kl.get(),Rows,b.adv_stats.get(),stream.value);
             last_kl=download(b.adv_stats,2,stream.value)[0];require(std::isfinite(last_kl)&&last_kl<=maximum_approx_kl,"Final whole-rollout approximate KL stop");
@@ -538,8 +586,8 @@ void run(const Options& o,const Package& package) {
 int main(int argc,char** argv) {
     try {
         const auto o=options(argc,argv);
-        if(o.describe){std::cout<<"{\"protocol_id\":\""<<study_id(o.study_program)<<"\",\"source_sha256\":\""<<ph::source_sha256()<<"\",\"source_identity_fnv1a64\":\""<<source_identity()<<"\",\"runtime\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"observation_schema\":"<<pp::observation_schema<<",\"task_version\":"<<pt::version<<",\"retention_receipt_schema\":"<<pp::retention_schema
-            <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program>=pt::course_direction_v1?8:32)<<",\"turn_curriculum_program\":\""<<(o.study_program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off")<<"\",\"qualified_physics_source_sha256\":\""<<ph::physics_source_sha256()<<"\",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<task_stride(o.study_program)<<",\"base_task_stride\":"<<sizeof(pt::Task)<<",\"schedule_stride\":"<<sizeof(ps::State)<<",\"trace_stride\":"<<sizeof(TransitionTrace)<<",\"trace_heading_offset\":"<<offsetof(TransitionTrace,heading_x)<<",\"trace_serial_offset\":"<<offsetof(TransitionTrace,request_serial)<<",\"trace_counters_offset\":"<<offsetof(TransitionTrace,onsets)<<",\"course_history_stride\":"<<(o.study_program==pt::half_second_course_v1?sizeof(ps::CourseHistory):0)<<",\"max_updates\":"<<update_budget(o.study_program)<<",\"optimizer_calls\":0,\"physical_controls\":0}\n";return 0;}
+        if(o.describe){std::cout<<"{\"protocol_id\":\""<<study_id(o.study_program)<<"\",\"source_sha256\":\""<<ph::source_sha256()<<"\",\"source_identity_fnv1a64\":\""<<source_identity()<<"\",\"runtime\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"observation_schema\":"<<pp::actor_schema(actor_inputs(o.study_program))<<",\"actor_inputs\":"<<actor_inputs(o.study_program)<<",\"critic_inputs\":"<<D<<",\"task_version\":"<<pt::version<<",\"retention_receipt_schema\":"<<pp::retention_schema
+            <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program>=pt::course_direction_v1?8:32)<<",\"turn_curriculum_program\":\""<<(o.study_program==pt::paired_gentle_moderate_v1?"paired-gentle-moderate-v1":"off")<<"\",\"qualified_physics_source_sha256\":\""<<ph::physics_source_sha256()<<"\",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<task_stride(o.study_program)<<",\"base_task_stride\":"<<sizeof(pt::Task)<<",\"schedule_stride\":"<<sizeof(ps::State)<<",\"trace_stride\":"<<sizeof(TransitionTrace)<<",\"trace_heading_offset\":"<<offsetof(TransitionTrace,heading_x)<<",\"trace_serial_offset\":"<<offsetof(TransitionTrace,request_serial)<<",\"trace_counters_offset\":"<<offsetof(TransitionTrace,onsets)<<",\"course_history_stride\":"<<(pt::half_second_program(o.study_program)?sizeof(ps::CourseHistory):0)<<",\"max_updates\":"<<update_budget(o.study_program)<<",\"optimizer_calls\":0,\"physical_controls\":0}\n";return 0;}
         const auto package=load_package(o.policy);
         if(o.preflight){if(!o.protocol.empty())prerequisites(o,package.checksum);cudarl::pond_math_profile::validate_host_geometry();uint64_t visits=0;uint32_t observation_checks=0;
             for(uint32_t env=0;env<32;++env){pr::World world;pt::Task task;
@@ -553,7 +601,7 @@ int main(int argc,char** argv) {
             }
             require(!fs::exists(o.out)&&fs::create_directories(o.out),"Unique preflight output required");
             std::ofstream out(o.out/"preflight.json");out<<"{\"passed\":true,\"protocol_id\":\""<<study_id(o.study_program)<<"\",\"parent_package_unchanged\":true,\"source_sha256\":\""<<ph::source_sha256()
-                <<"\",\"actor_weights\":2532,\"critic_weights\":2433,\"prepared_worlds\":32,\"pure_geometry_visits\":"<<visits<<",\"observation_checks\":"<<observation_checks
+                <<"\",\"actor_weights\":"<<pp::actor_parameter_count(actor_inputs(o.study_program))<<",\"critic_weights\":2433,\"prepared_worlds\":32,\"pure_geometry_visits\":"<<visits<<",\"observation_checks\":"<<observation_checks
                 <<",\"study_program\":\""<<program_name(o.study_program)<<"\",\"study_program_id\":"<<o.study_program<<",\"physical_kernel_block_threads\":"<<(o.study_program>=pt::course_direction_v1?8:32)<<",\"training_control_cap\":"<<update_budget(o.study_program)*pp::controls_per_update<<",\"Adam_call_cap\":"<<2*update_budget(o.study_program)*pp::adam_calls_per_update<<",\"physics_prerequisites_checked\":"<<(!o.protocol.empty()?"true":"false")<<",\"physics_controls\":0,\"physics_substeps\":0,\"optimizer_calls\":0,\"CUDA_calls\":0}\n";return 0;}
         run(o,package);return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}

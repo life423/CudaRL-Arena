@@ -276,6 +276,8 @@ func _candidate_study_status(status_binding: Dictionary = {}) -> String:
 			return study_prefix+prefix+": retained movement checks failed."
 		"turning_unqualified":
 			if assessment.get("retention_passed",false)!=true or int(assessment.get("retention_cases_passed",0))!=20: return unavailable
+			if assessment.get("retention_reused_after_exact_inactive_proof",false)==true:
+				return study_prefix+"Recorded candidate completed %d PPO updates. Turns: %d / %d passed. Original swimming/resting controller verified unchanged; archived skill checks reused." % [updates,int(assessment.get("turn_cases_passed",0)),int(assessment.get("turn_cases_total",16))]
 			return study_prefix+"Recorded candidate completed %d PPO updates; swimming and resting retained. Turns: %d / %d passed." % [updates,int(assessment.get("turn_cases_passed",0)),int(assessment.get("turn_cases_total",16))]
 		"requested_turns_qualified":
 			if assessment.get("retention_passed",false)!=true or assessment.get("turning_qualified",false)!=true: return unavailable

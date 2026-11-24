@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "phase": "full_native_collector",
+  "outcome": "four_second_wall_cap_before_physics",
+  "source_sha256": "1966e281ca72ac5fe636837502d80711609c5eb64c5e4e7fabd0bdf791f0113b",
+  "replay_executable_sha256": "24238bd9b70790d80f0a42b18241de15be5e8aa5b1292216f6c8aa5157381deb",
+  "normal_trainer_executable_sha256": "5cc364a49ace8c5ec7010ba180a52b59a8331859ef30cede40ddb3d15b5d5db6",
+  "protocol_sha256": "425553b782c32c8f3947f8baaa992595d0e5e9947e4500a7c3e68321bbacafe2",
+  "timeout_sha256": "97cb7fd59c2ad8db5c6beee15f4c7292b007bd34da5257dbd848ce032c676553",
+  "physics_controls": 0,
+  "physics_substeps": 0,
+  "optimizer_calls": 0,
+  "attempts": 1,
+  "automatic_retries": 0,
+  "accelerated_collection_qualified": false,
+  "normal_trainer_failed_receipt_admission": "Rejected before CUDA, output or allocation ledger: Missing root JSON binding: bindings",
+  "preflight": "32,768 archived rows parsed without simulation",
+  "timing_limit": "Deadline receipt does not isolate startup, allocation, transfers or first inference. No full-rollout speedup established.",
+  "preserved_inputs": "Hash-bound batch-12.bin and original amplitude package remain in ignored build evidence. Restore these for optional replay; standard CPU CI does not require them."
+}

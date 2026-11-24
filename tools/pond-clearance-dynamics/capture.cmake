@@ -1,0 +1,17 @@
+# A diagnostic copy adds passive outputs at the actual converged solver. All
+# original model expressions are copied verbatim and compile against each arm's geometry.
+file(READ "${source_root}/src/simulation/pond_runtime.h" replay_runtime)
+function(insert_after needle extra)
+    string(FIND "${replay_runtime}" "${needle}" at)
+    if(at LESS 0)
+        message(FATAL_ERROR "Unexpected runtime source at force capture point: ${needle}")
+    endif()
+    string(REPLACE "${needle}" "${needle}\n${extra}" patched "${replay_runtime}")
+    set(replay_runtime "${patched}" PARENT_SCOPE)
+endfunction()
+insert_after("struct StepInfo {" "    double observed_force[3][3]{}; int observed_mode[3]{};")
+insert_after("struct SubstepTrace {" "    double observed_force[3][3]{}; int observed_mode[3]{};")
+insert_after("trace->contact_iterations=info->contact_iterations;" "        for(int b=0;b<3;++b){ trace->observed_mode[b]=info->observed_mode[b]; for(int k=0;k<3;++k)trace->observed_force[b][k]=info->observed_force[b][k]; }")
+insert_after("const double rate=contact_rate(points[b],next);" "        const double observed=law.elastic_multiplier_N+law.damping_multiplier_N; info.observed_mode[b]=law.mode; info.observed_force[b][0]=observed*points[b].gradient.x; info.observed_force[b][1]=observed*points[b].gradient.y; info.observed_force[b][2]=observed*points[b].gradient.z;")
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/capture/${version}/simulation")
+file(WRITE "${CMAKE_BINARY_DIR}/capture/${version}/simulation/pond_runtime.h" "${replay_runtime}")

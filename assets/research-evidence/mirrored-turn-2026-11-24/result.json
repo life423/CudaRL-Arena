@@ -1,0 +1,13 @@
+{
+  "physical_symmetry_passed": true,
+  "matched_pairs": 16,
+  "max_mirrored_observation_error": 0,
+  "cpu_attempted_controls": 17332,
+  "cpu_attempted_substeps": 173320,
+  "cuda_attempted_controls": 640,
+  "cuda_attempted_substeps": 6400,
+  "native_cpu_seconds": 2.6788492,
+  "cuda_replay_seconds": 0.7283537,
+  "elapsed_seconds": 3.4076658,
+  "optimizer_steps": 0
+}

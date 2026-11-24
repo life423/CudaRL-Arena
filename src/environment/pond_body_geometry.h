@@ -101,7 +101,11 @@ CUDARL_HD inline Bounds wet_bounds(const terrain::Parameters& p) {
     return {fabs(p.floor_y_m)*1.875*G,fabs(p.floor_y_m)*(6*G*G+1.875*H)};
 }
 struct Patch {double u=0,v=0,hu=0,hv=0;int kind=0;};
-struct PatchGeometry {V point{},du{},dv{};double radius=0,remainder=0;};
+struct PatchGeometry {
+    V point{},du{},dv{};
+    double radius=0,remainder=0;
+    double cos_u=1,sin_u=0,cos_v=1,sin_v=0;
+};
 CUDARL_HD inline PatchGeometry patch_geometry(const Shape& s,const Patch& p) {
     PatchGeometry g;
     if(s.box) {
@@ -113,17 +117,20 @@ CUDARL_HD inline PatchGeometry patch_geometry(const Shape& s,const Patch& p) {
         g.point=transform(s,local);g.radius=length(g.du)*p.hu+length(g.dv)*p.hv;
     } else if(s.ellipsoid) {
         const double cu=cos(p.u),su=sin(p.u),cv=cos(p.v),sv=sin(p.v),r=maximum(s.a,maximum(s.b,s.c))*s.gain;
+        g.cos_u=cu;g.sin_u=su;g.cos_v=cv;g.sin_v=sv;
         g.point=transform(s,{s.a*cu*sv,s.b*su*sv,s.c*cv});
         g.du=s.axis[0]*(-s.a*su*sv)+s.axis[1]*(s.b*cu*sv);
         g.dv=s.axis[0]*(s.a*cu*cv)+s.axis[1]*(s.b*su*cv)+s.axis[2]*(-s.c*sv);
         g.radius=r*(p.hu+p.hv);g.remainder=.5*r*(p.hu+p.hv)*(p.hu+p.hv);
     } else if(p.kind==0) {
         const double cv=cos(p.v),sv=sin(p.v),r=maximum(s.b,s.c)*s.gain;
+        g.cos_v=cv;g.sin_v=sv;
         g.point=transform(s,{p.u,s.b*cv,s.c*sv});g.du=s.axis[0];
         g.dv=s.axis[1]*(-s.b*sv)+s.axis[2]*(s.c*cv);
         g.radius=s.gain*p.hu+r*p.hv;g.remainder=.5*r*p.hv*p.hv;
     } else {
         const double cv=cos(p.v),sv=sin(p.v),r=maximum(s.b,s.c)*s.gain;
+        g.cos_v=cv;g.sin_v=sv;
         g.point=transform(s,{p.kind==1?-s.a:s.a,p.u*s.b*cv,p.u*s.c*sv});
         g.du=s.axis[1]*(s.b*cv)+s.axis[2]*(s.c*sv);
         g.dv=s.axis[1]*(-p.u*s.b*sv)+s.axis[2]*(p.u*s.c*cv);
@@ -131,22 +138,24 @@ CUDARL_HD inline PatchGeometry patch_geometry(const Shape& s,const Patch& p) {
     }
     return g;
 }
-CUDARL_HD inline double min_sincos(double cosine,double sine,double low,double high) {
-    double result=minimum(cosine*cos(low)+sine*sin(low),cosine*cos(high)+sine*sin(high));
-    const double critical=atan2(sine,cosine)+terrain::pi;
-    const double candidate=critical+ceil((low-critical)/(2*terrain::pi))*(2*terrain::pi);
-    if(candidate<=high)result=minimum(result,-hypot(cosine,sine));
-    return result;
+CUDARL_HD inline double min_sincos(double a,double b,double cos_mid,double sin_mid,double half_width) {
+    // In midpoint coordinates the function is A cos(d) + B sin(d).
+    // All angular half widths are at most pi/8. Its minimum is either at
+    // an endpoint or at the stationary minimum inside that short arc.
+    const double A=a*cos_mid+b*sin_mid,B=b*cos_mid-a*sin_mid;
+    const double c=cos(half_width),s=sin(half_width);
+    if(A<0 && fabs(B)*c<=-A*s)return -hypot(a,b);
+    return A*c-fabs(B)*s;
 }
-CUDARL_HD inline double minimum_linear(const Shape& s,const Patch& patch,V gradient) {
-    if(s.box){const auto g=patch_geometry(s,patch);return dot(gradient,g.point)-fabs(dot(gradient,g.du))*patch.hu-fabs(dot(gradient,g.dv))*patch.hv;}
+CUDARL_HD inline double minimum_linear(const Shape& s,const Patch& patch,const PatchGeometry& g,V gradient) {
+    if(s.box)return dot(gradient,g.point)-fabs(dot(gradient,g.du))*patch.hu-fabs(dot(gradient,g.dv))*patch.hv;
     const double x=dot(s.axis[0],gradient),y=dot(s.axis[1],gradient),z=dot(s.axis[2],gradient);
     if(s.ellipsoid) {
         // sin(polar)>=0, so azimuth minimizes independently before polar.
-        const double azimuth=min_sincos(s.a*x,s.b*y,patch.u-patch.hu,patch.u+patch.hu);
-        return dot(gradient,s.center)+min_sincos(s.c*z,azimuth,patch.v-patch.hv,patch.v+patch.hv);
+        const double azimuth=min_sincos(s.a*x,s.b*y,g.cos_u,g.sin_u,patch.hu);
+        return dot(gradient,s.center)+min_sincos(s.c*z,azimuth,g.cos_v,g.sin_v,patch.hv);
     }
-    const double radial=min_sincos(s.b*y,s.c*z,patch.v-patch.hv,patch.v+patch.hv);
+    const double radial=min_sincos(s.b*y,s.c*z,g.cos_v,g.sin_v,patch.hv);
     if(patch.kind==0)return dot(gradient,s.center)+x*(x>=0?patch.u-patch.hu:patch.u+patch.hu)+radial;
     return dot(gradient,s.center)+x*(patch.kind==1?-s.a:s.a)+radial*(radial>=0?patch.u-patch.hu:patch.u+patch.hu);
 }
@@ -154,6 +163,7 @@ CUDARL_HD inline bool wet_ball(const terrain::Parameters& p,V center,double radi
     const double rho=hypot(center.x/p.water_radius_x_m,center.z/p.water_radius_z_m);
     const double dr=radius/minimum(p.water_radius_x_m,p.water_radius_z_m);
     double edge_min=.955;
+    if(rho+dr<=edge_min)return true;
     if(rho>dr)edge_min=maximum(edge_min,terrain::edge(atan2(center.z/p.water_radius_z_m,center.x/p.water_radius_x_m))-.199*asin(minimum(1.,dr/rho)));
     return rho+dr<=edge_min;
 }
@@ -191,6 +201,15 @@ CUDARL_HD inline bool sample(const terrain::Parameters& p,V point,LinkInspection
     }
     return true;
 }
+CUDARL_HD inline Patch root_patch(const Shape& s,int root) {
+    if(s.box){
+        const int fixed=root/2;
+        return {0,0,fixed==0?s.b:s.a,fixed==2?s.b:s.c,root};
+    }
+    if(s.ellipsoid)return {(root%8+.5)*terrain::pi/4,(root/8+.5)*terrain::pi/4,terrain::pi/8,terrain::pi/8,0};
+    if(root<8)return {0,(root+.5)*terrain::pi/4,s.a,terrain::pi/8,0};
+    return {.5,((root-8)%8+.5)*terrain::pi/4,.5,terrain::pi/8,root<16?1:2};
+}
 CUDARL_HD CUDARL_DEVICE_NOINLINE bool inspect_link(const Shape& s,const terrain::Parameters& p,Bounds bounds,double tolerance,
                                   uint32_t visit_limit,LinkInspection& out,Inspection& total) {
     if(flat_box(s,p)) {
@@ -211,34 +230,41 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool inspect_link(const Shape& s,const terrain:
     // Each head patch covers an azimuth/polar rectangle. Cylinder patches cover
     // the side and both COMPLETE end discs, not only axial end rings.
     const int roots=s.box?6:s.ellipsoid?32:24;
-    Patch root_patches[32];
+    // The first pass records every root's upper bound before pruning begins.
+    // Its terrain height and gradient also serve the first DFS visit. As the
+    // upper bound only decreases, resampling that point cannot improve it.
+    struct TerrainPoint { double height,gradient_x,gradient_z; };
+    TerrainPoint root_samples[32];
     for(int root=0;root<roots;++root) {
-        if(s.box) {
-            const int fixed=root/2;
-            root_patches[root]={0,0,fixed==0?s.b:s.a,fixed==2?s.b:s.c,root};
-        }
-        else if(s.ellipsoid)root_patches[root]={(root%8+.5)*terrain::pi/4,(root/8+.5)*terrain::pi/4,terrain::pi/8,terrain::pi/8,0};
-        else if(root<8)root_patches[root]={0,(root+.5)*terrain::pi/4,s.a,terrain::pi/8,0};
-        else root_patches[root]={.5,((root-8)%8+.5)*terrain::pi/4,.5,terrain::pi/8,root<16?1:2};
         terrain::Query q;
-        if(!sample(p,patch_geometry(s,root_patches[root]).point,out,total,visit_limit,q))return false;
+        if(!sample(p,patch_geometry(s,root_patch(s,root)).point,out,total,visit_limit,q))return false;
+        const V gradient=gap_gradient(q);
+        root_samples[root]={q.height_m,gradient.x,gradient.z};
     }
     for(int root=0;root<roots;++root) {
-        Patch stack[64];int size=1;stack[0]=root_patches[root];
+        Patch stack[64];int size=1;stack[0]=root_patch(s,root);
+        bool at_root=true;
         while(size>0) {
-            const Patch patch=stack[--size];const auto g=patch_geometry(s,patch);terrain::Query q;
-            if(!sample(p,g.point,out,total,visit_limit,q))return false;
+            const Patch patch=stack[--size];const auto g=patch_geometry(s,patch);
+            double height;V gradient;
+            if(at_root){
+                const auto saved=root_samples[root];
+                height=saved.height;gradient={saved.gradient_x,1,saved.gradient_z};at_root=false;
+            } else {
+                terrain::Query q;
+                if(!sample(p,g.point,out,total,visit_limit,q))return false;
+                height=q.height_m;gradient=gap_gradient(q);
+            }
             const double roundoff=arithmetic_margin(p,g.point);
             const double horizontal_radius=minimum(g.radius,hypot(g.du.x,g.du.z)*patch.hu+hypot(g.dv.x,g.dv.z)*patch.hv+g.remainder);
             const bool wet=wet_ball(p,g.point,horizontal_radius);
             double lower=-1e30;
             if(wet) {
-                const V gradient=gap_gradient(q);
                 // Exact minimum of the linear tangent potential over this
                 // complete shape patch; Taylor bounds only the terrain term.
-                const double linear=minimum_linear(s,patch,gradient)-dot(gradient,g.point);
-                const double taylor=g.point.y-q.height_m+linear-.5*bounds.hessian*horizontal_radius*horizontal_radius-roundoff;
-                const double lipschitz=g.point.y-q.height_m-sqrt(1+bounds.gradient*bounds.gradient)*g.radius-roundoff;
+                const double linear=minimum_linear(s,patch,g,gradient)-dot(gradient,g.point);
+                const double taylor=g.point.y-height+linear-.5*bounds.hessian*horizontal_radius*horizontal_radius-roundoff;
+                const double lipschitz=g.point.y-height-sqrt(1+bounds.gradient*bounds.gradient)*g.radius-roundoff;
                 lower=maximum(taylor,lipschitz);
             }
             if(wet&&lower>=out.upper_gap_m-tolerance) {terminal_lower=minimum(terminal_lower,lower);continue;}
@@ -251,8 +277,7 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool inspect_link(const Shape& s,const terrain:
             Patch first=patch,second=patch;
             if(split_u){first.hu=second.hu=patch.hu*.5;first.u-=first.hu;second.u+=second.hu;}
             else {first.hv=second.hv=patch.hv*.5;first.v-=first.hv;second.v+=second.hv;}
-            const V local_gradient=gap_gradient(q);
-            const double direction=dot(local_gradient,split_u?g.du:g.dv);
+            const double direction=dot(gradient,split_u?g.du:g.dv);
             // Visit the locally downhill half first to tighten the upper
             // bound before certifying its siblings. This changes no bound.
             if(direction>=0){stack[size++]=second;stack[size++]=first;}

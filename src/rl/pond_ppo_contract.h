@@ -4,6 +4,7 @@
 #include "core/checkpoint.h"
 #include "nn/adam_config.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -18,6 +19,7 @@ inline constexpr char default_study_protocol_id[]="pond-motor-ppo-v2-2026-11-23"
 inline constexpr char curriculum_study_protocol_id[]="pond-motor-ppo-v3-curriculum-2026-11-23";
 inline constexpr char repeated_study_protocol_id[]="pond-motor-ppo-v4-repeated-2026-11-24";
 inline constexpr char half_second_study_protocol_id[]="pond-motor-ppo-v5-half-second-2026-11-24";
+inline constexpr char signed_course_study_protocol_id[]="pond-motor-ppo-v6-signed-course-2026-11-24";
 inline constexpr char course_study_protocol_id[]="pond-motor-ppo-v3-course-2026-11-23";
 
 inline constexpr uint32_t candidate_magic = 0x31505044u;
@@ -28,6 +30,9 @@ inline constexpr uint32_t observation_schema = 5, action_mapping = 3;
 inline constexpr uint32_t parent_package_version = 2;
 inline constexpr int observations = 41, hidden = 32, actions = 4;
 inline constexpr int actor_weights = 2532, critic_weights = 2433;
+inline constexpr uint32_t signed_inputs = observations + 1;
+inline constexpr uint32_t actor_parameter_count(uint32_t inputs) { return actor_weights + (inputs - observations) * hidden; }
+inline constexpr uint32_t actor_schema(uint32_t inputs) { return inputs == signed_inputs ? 6u : observation_schema; }
 static_assert(actor_weights == observations * hidden + hidden + hidden * hidden + hidden + hidden * actions + actions);
 static_assert(critic_weights == observations * hidden + hidden + hidden * hidden + hidden + hidden + 1);
 
@@ -66,7 +71,7 @@ struct CandidateState {
     uint64_t source_identity_checksum = 0, sampler_decision_serial = 0;
     double wall_seconds_used = 0;
     uint64_t evidence_bytes_used = 0;
-    uint32_t seed = 0, world_stride = 0, task_stride = 0;
+    uint32_t actor_inputs = observations, seed = 0, world_stride = 0, task_stride = 0;
     Counters counters{};
     std::vector<float> actor, critic, log_std;
     float frozen_gain = frozen_holding_gain;
@@ -75,6 +80,19 @@ struct CandidateState {
 
 inline void require(bool condition, const char* message) {
     if (!condition) throw std::runtime_error(message);
+}
+
+// First-layer weights are output-major. Insert one zero in every row while
+// preserving the original weights, biases and all subsequent layers.
+inline std::vector<float> initial_actor(const std::vector<float>& parent, uint32_t inputs) {
+    require(parent.size() == actor_weights, "Invalid parent actor shape");
+    if (inputs == observations) return parent;
+    require(inputs == signed_inputs, "Unknown candidate actor shape");
+    std::vector<float> expanded(actor_parameter_count(inputs), 0.f);
+    for (int row = 0; row < hidden; ++row)
+        std::copy_n(parent.begin() + row * observations, observations, expanded.begin() + row * inputs);
+    std::copy(parent.begin() + hidden * observations, parent.end(), expanded.begin() + hidden * inputs);
+    return expanded;
 }
 
 inline void validate_counters(const Counters& counters) {
@@ -121,7 +139,8 @@ inline void validate_state(const CandidateState& state) {
     validate_counters(state.counters);
     require(state.sampler_decision_serial==state.counters.completed_updates*controls_per_world,
             "Saved sampler serial does not match completed collection");
-    require(state.actor.size() == actor_weights && state.critic.size() == critic_weights && state.log_std.size() == actions,
+    require((state.actor_inputs == observations || state.actor_inputs == signed_inputs) &&
+            state.actor.size() == actor_parameter_count(state.actor_inputs) && state.critic.size() == critic_weights && state.log_std.size() == actions,
             "Wrong pond PPO network topology");
     for (const auto* values : {&state.actor, &state.critic})
         for (float value : *values) require(std::isfinite(value), "Nonfinite pond PPO network parameter");
@@ -134,7 +153,7 @@ inline void validate_state(const CandidateState& state) {
     require(state.world_state.size() == uint64_t{state.world_stride} * worlds &&
                 state.task_state.size() == uint64_t{state.task_stride} * worlds,
             "Wrong pond PPO carried-state array size");
-    validate_adam(state.actor_adam, actor_weights, state.counters.actor_adam_calls);
+    validate_adam(state.actor_adam, actor_parameter_count(state.actor_inputs), state.counters.actor_adam_calls);
     validate_adam(state.critic_adam, critic_weights, state.counters.critic_adam_calls);
 }
 
@@ -157,8 +176,8 @@ inline std::vector<uint8_t> write_candidate(const CandidateState& state) {
     validate_state(state);
     checkpoint::Writer out;
     for (uint32_t value : {candidate_magic, candidate_schema, runtime_version, envelope_version,
-                          observation_schema, action_mapping, parent_package_version,
-                          uint32_t{observations}, uint32_t{actions}, uint32_t{actor_weights}, uint32_t{critic_weights}})
+                          actor_schema(state.actor_inputs), action_mapping, parent_package_version,
+                          state.actor_inputs, uint32_t{actions}, actor_parameter_count(state.actor_inputs), uint32_t{critic_weights}})
         out.value(value);
     out.array(identity_bytes(canonical_parent_sha256));
     out.array(identity_bytes(parent_package_sha256));
@@ -178,16 +197,19 @@ inline std::vector<uint8_t> write_candidate(const CandidateState& state) {
 
 inline CandidateState read_candidate(const std::vector<uint8_t>& bytes, uint64_t expected_parent,
                                      uint64_t expected_protocol, uint64_t expected_source,
-                                     uint32_t expected_world_stride, uint32_t expected_task_stride) {
+                                     uint32_t expected_world_stride, uint32_t expected_task_stride,
+                                     uint32_t expected_inputs = observations) {
+    require(expected_inputs == observations || expected_inputs == signed_inputs, "Unknown expected candidate actor shape");
     const auto body = checked_body(bytes, 2 * maximum_state_bytes + 2 * maximum_adam_bytes + 65536);
     checkpoint::Reader in{body};
     for (uint32_t expected : {candidate_magic, candidate_schema, runtime_version, envelope_version,
-                             observation_schema, action_mapping, parent_package_version,
-                             uint32_t{observations}, uint32_t{actions}, uint32_t{actor_weights}, uint32_t{critic_weights}})
+                             actor_schema(expected_inputs), action_mapping, parent_package_version,
+                             expected_inputs, uint32_t{actions}, actor_parameter_count(expected_inputs), uint32_t{critic_weights}})
         require(in.value<uint32_t>() == expected, "Wrong pond PPO schema/runtime/topology");
     require(in.array<uint8_t>(64) == identity_bytes(canonical_parent_sha256) &&
                 in.array<uint8_t>(64) == identity_bytes(parent_package_sha256), "Wrong immutable pond PPO parent identity");
     CandidateState state;
+    state.actor_inputs = expected_inputs;
     state.parent_package_checksum = in.value<uint64_t>(); state.protocol_checksum = in.value<uint64_t>();
     state.source_identity_checksum = in.value<uint64_t>(); state.sampler_decision_serial = in.value<uint64_t>();
     state.wall_seconds_used = in.value<double>(); state.evidence_bytes_used = in.value<uint64_t>();
@@ -200,7 +222,7 @@ inline CandidateState read_candidate(const std::vector<uint8_t>& bytes, uint64_t
     count.completed_updates = in.value<uint64_t>(); count.attempted_controls = in.value<uint64_t>();
     count.attempted_substeps = in.value<uint64_t>(); count.actor_adam_calls = in.value<uint64_t>();
     count.critic_adam_calls = in.value<uint64_t>();
-    state.actor = in.array<float>(actor_weights); state.critic = in.array<float>(critic_weights);
+    state.actor = in.array<float>(actor_parameter_count(expected_inputs)); state.critic = in.array<float>(critic_weights);
     state.log_std = in.array<float>(actions); state.frozen_gain = in.value<float>();
     state.actor_adam = in.array<uint8_t>(static_cast<size_t>(maximum_adam_bytes));
     state.critic_adam = in.array<uint8_t>(static_cast<size_t>(maximum_adam_bytes));

@@ -1,6 +1,7 @@
 #include "environment/pond_body_geometry.h"
 #include <cstdio>
 #include <limits>
+#include <random>
 namespace bg=cudarl::pond_body_geometry;
 namespace pg=cudarl::pond_geometry_v1;
 namespace p=cudarl::physics;
@@ -35,7 +36,46 @@ double dense(const bg::detail::Shape& s) {
     }
     return result;
 }
+void check_angular_minima() {
+    std::mt19937_64 random(7219);
+    std::uniform_real_distribution<double> uniform(0.,1.);
+    int trials=0;
+    double maximum_error=0;
+    auto compare=[&](double a,double b,double center,double half) {
+        const double lo=center-half,hi=center+half;
+        const auto value=[&](double t){return a*std::cos(t)+b*std::sin(t);};
+        double expected=std::min(value(lo),value(hi));
+        const double minimum_angle=std::atan2(b,a)+pg::pi;
+        // Enumerate full turns independently of the midpoint implementation.
+        for(int k=-3;k<=3;++k) {
+            const double stationary=minimum_angle+k*(2*pg::pi);
+            if(stationary>=lo && stationary<=hi)expected=std::min(expected,-std::hypot(a,b));
+        }
+        const double actual=bg::detail::min_sincos(a,b,std::cos(center),std::sin(center),half);
+        const double error=std::abs(actual-expected);
+        ++trials;
+        maximum_error=std::max(maximum_error,error);
+        check(error<=32*std::numeric_limits<double>::epsilon()*std::hypot(a,b),
+              "angular tangent minimum agrees with independent endpoints and stationary angles");
+    };
+    for(int k=0;k<8192;++k) {
+        const double center=(4*uniform(random)-2)*pg::pi;
+        const double half=std::ldexp(pg::pi/8,-(k%55));
+        compare(uniform(random)*2-1,uniform(random)*2-1,center,half);
+    }
+    for(double center:{0.,-.5*pg::pi,.5*pg::pi,pg::pi,2*pg::pi}) {
+        for(double half:{0.,std::ldexp(pg::pi/8,-53),pg::pi/8}) {
+            compare(0,0,center,half);
+            for(double t:{center-half,center,center+half}) {
+                for(double a:{std::nextafter(t,-10.),t,std::nextafter(t,10.)})
+                    compare(-std::cos(a),-std::sin(a),center,half);
+            }
+        }
+    }
+    std::printf("Angular patch oracle: %d comparisons, maximum absolute error %.17g\n",trials,maximum_error);
+}
 int main() {
+    check_angular_minima();
     const auto params=pg::current_visual_parameters();
     p::BodyState state;
     auto r=inspect(state);

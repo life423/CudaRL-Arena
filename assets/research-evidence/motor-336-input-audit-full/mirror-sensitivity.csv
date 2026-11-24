@@ -1,0 +1,2 @@
+states,front_yaw_mean,front_yaw_rms,front_yaw_min,front_yaw_max,front_pitch_mean,front_pitch_rms,front_pitch_min,front_pitch_max,rear_yaw_mean,rear_yaw_rms,rear_yaw_min,rear_yaw_max,rear_pitch_mean,rear_pitch_rms,rear_pitch_min,rear_pitch_max
+3174,0.1083531491,0.1355437666,-0.1734133363,0.3408149183,-0.181888671,0.7089180465,-1.330567479,1.085613608,-0.3883276349,0.7597021094,-1.446945906,1.062031388,0.02808343457,0.9985700258,-1.522690058,1.837551475

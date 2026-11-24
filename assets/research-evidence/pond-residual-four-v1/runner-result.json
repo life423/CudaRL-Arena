@@ -1,0 +1,202 @@
+{
+  "reason": "",
+  "original_motor_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "last_verified_update": 32,
+  "stages": [
+    {
+      "stage": "initialize",
+      "exit_code": 0,
+      "seconds": 1.721985,
+      "arguments": [
+        "--initialize-only",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\init"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\residual-four-ppo\\native\\Release\\pond_residual_ppo.exe"
+    },
+    {
+      "stage": "baseline0",
+      "exit_code": 0,
+      "seconds": 0.0394899,
+      "arguments": [
+        "--run",
+        "--baseline",
+        "--reuse-verified-baseline",
+        "--parent",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn34\\inputs\\original-amplitude-package.bin",
+        "--residual-candidate",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\init\\residual-0.bin",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\baseline0",
+        "--ledger",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\evaluation-ledger.bin",
+        "--long-reference",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64\\long-windows.csv"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\pce-residual-four\\native\\Release\\pond_candidate_check.exe"
+    },
+    {
+      "stage": "train-8",
+      "exit_code": 0,
+      "seconds": 2.0372046,
+      "arguments": [
+        "--run",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-1-8",
+        "--resume",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\init\\state-0.bin",
+        "--retention-receipt",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\baseline0\\baseline-receipt.bin"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\residual-four-ppo\\native\\Release\\pond_residual_ppo.exe"
+    },
+    {
+      "stage": "eval8",
+      "exit_code": 0,
+      "seconds": 1.4562676,
+      "arguments": [
+        "--run",
+        "--turn-first",
+        "--parent",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn34\\inputs\\original-amplitude-package.bin",
+        "--residual-candidate",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-1-8\\residual-8.bin",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval8",
+        "--ledger",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\evaluation-ledger.bin",
+        "--long-reference",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64\\long-windows.csv"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\pce-residual-four\\native\\Release\\pond_candidate_check.exe"
+    },
+    {
+      "stage": "train-16",
+      "exit_code": 0,
+      "seconds": 78.2404648,
+      "arguments": [
+        "--run",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-9-16",
+        "--resume",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-1-8\\state-8.bin",
+        "--retention-receipt",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval8\\retention-receipt.bin"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\residual-four-ppo\\native\\Release\\pond_residual_ppo.exe"
+    },
+    {
+      "stage": "eval16",
+      "exit_code": 0,
+      "seconds": 1.4598414,
+      "arguments": [
+        "--run",
+        "--turn-first",
+        "--parent",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn34\\inputs\\original-amplitude-package.bin",
+        "--residual-candidate",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-9-16\\residual-16.bin",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval16",
+        "--ledger",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\evaluation-ledger.bin",
+        "--long-reference",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64\\long-windows.csv"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\pce-residual-four\\native\\Release\\pond_candidate_check.exe"
+    },
+    {
+      "stage": "train-24",
+      "exit_code": 0,
+      "seconds": 7.9239804,
+      "arguments": [
+        "--run",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-17-24",
+        "--resume",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-9-16\\state-16.bin",
+        "--retention-receipt",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval16\\retention-receipt.bin"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\residual-four-ppo\\native\\Release\\pond_residual_ppo.exe"
+    },
+    {
+      "stage": "eval24",
+      "exit_code": 0,
+      "seconds": 1.4570657,
+      "arguments": [
+        "--run",
+        "--turn-first",
+        "--parent",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn34\\inputs\\original-amplitude-package.bin",
+        "--residual-candidate",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-17-24\\residual-24.bin",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval24",
+        "--ledger",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\evaluation-ledger.bin",
+        "--long-reference",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64\\long-windows.csv"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\pce-residual-four\\native\\Release\\pond_candidate_check.exe"
+    },
+    {
+      "stage": "train-32",
+      "exit_code": 0,
+      "seconds": 110.5572194,
+      "arguments": [
+        "--run",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-25-32",
+        "--resume",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-17-24\\state-24.bin",
+        "--retention-receipt",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval24\\retention-receipt.bin"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\residual-four-ppo\\native\\Release\\pond_residual_ppo.exe"
+    },
+    {
+      "stage": "eval32",
+      "exit_code": 0,
+      "seconds": 1.4760629,
+      "arguments": [
+        "--run",
+        "--turn-first",
+        "--parent",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn34\\inputs\\original-amplitude-package.bin",
+        "--residual-candidate",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\updates-25-32\\residual-32.bin",
+        "--protocol",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\protocol.json",
+        "--out",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\eval32",
+        "--ledger",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\turn39-residual-four\\evaluation-ledger.bin",
+        "--long-reference",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\ppo-four-axis-checkpoints\\update-336-episode64\\long-windows.csv"
+      ],
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\pce-residual-four\\native\\Release\\pond_candidate_check.exe"
+    }
+  ],
+  "protocol_sha256": "1447695c632fc87c9baf3296c079a010f916b14f5e72d2ccc40ac5ad6d9117f3",
+  "elapsed_seconds": 206.3960043,
+  "status": "COMPLETED_ALLOCATION"
+}

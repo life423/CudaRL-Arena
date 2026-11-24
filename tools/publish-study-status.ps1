@@ -26,8 +26,23 @@ function CheckpointRecord([string]$path) {
         if($reader.ReadUInt64() -ne [uint64]0x31504B434C524443){throw 'Wrong native checkpoint envelope'}
         $payloadBytes=$reader.ReadUInt64();$checksum=$reader.ReadUInt64()
         if($payloadBytes -ne $file.Length-24){throw 'Truncated checkpoint envelope'}
+        $magic=$reader.ReadUInt32()
+        $stream.Position=24
+        if($magic -eq 0x31504c52){
+            foreach($expected in @(0x31504c52,1,42,16)){if($reader.ReadUInt32() -ne $expected){throw 'Wrong residual actor shape'}}
+            $outputs=$reader.ReadUInt32();$parameters=$reader.ReadUInt32()
+            if(!(($outputs -eq 2 -and $parameters -eq 722) -or ($outputs -eq 4 -and $parameters -eq 756))){throw 'Unknown residual control axes'}
+            $updates=$reader.ReadUInt32()
+            $parent=$reader.ReadUInt64();$protocol=$reader.ReadUInt64()
+            $controls=$reader.ReadUInt64();$substeps=$reader.ReadUInt64()
+            $actorAdam=$reader.ReadUInt64();$criticAdam=$reader.ReadUInt64()
+            if($updates -gt 32 -or $updates%8 -ne 0 -or $controls -ne $updates*32768 -or $substeps -ne $controls*10 -or $actorAdam -ne $updates*32 -or $criticAdam -ne $actorAdam){throw 'Residual actor counters disagree'}
+            if($reader.ReadUInt64() -ne $parameters){throw 'Wrong residual parameter count'}
+            return [ordered]@{schema=1;controller='frozen_motor_with_learned_residual';file_sha256=(Sha $path);file_bytes=$file.Length;payload_checksum_fnv1a64=$checksum.ToString($culture);parent_payload_checksum_fnv1a64=$parent.ToString($culture);protocol_checksum_fnv1a64=$protocol.ToString($culture);actor_inputs=42;hidden_neurons=16;actor_outputs=$outputs;actor_parameters=$parameters;completed_updates=$updates;training_controls=$controls;training_substeps=$substeps;actor_Adam_calls=$actorAdam;critic_Adam_calls=$criticAdam;original_motor_frozen=$true;raw_checkpoint_in_app=$false;repository_checkpoint=$RepositoryCheckpoint;validation='Native assessment verified and evaluated the frozen motor combined with this separate residual actor.'}
+        }
         $header=@();for($i=0;$i -lt 11;$i++){$header+=$reader.ReadUInt32()}
-        if($header[0] -ne 0x31505044 -or $header[1] -ne 1 -or $header[2] -ne 4 -or $header[3] -ne 2 -or $header[4] -notin @(4,5) -or $header[7] -ne 41 -or $header[8] -ne 4){throw 'Unsupported recorded candidate header'}
+        $knownShape=($header[4] -in @(4,5) -and $header[7] -eq 41) -or ($header[4] -eq 6 -and $header[7] -eq 42)
+        if($header[0] -ne 0x31505044 -or $header[1] -ne 1 -or $header[2] -ne 4 -or $header[3] -ne 2 -or !$knownShape -or $header[8] -ne 4){throw 'Unsupported recorded candidate header'}
         for($i=0;$i -lt 2;$i++){$count=$reader.ReadUInt64();if($count -ne 64){throw 'Wrong parent identity size'};$null=$reader.ReadBytes(64)}
         $null=$reader.ReadUInt64();$protocol=$reader.ReadUInt64();$source=$reader.ReadUInt64();$serial=$reader.ReadUInt64()
         $null=$reader.ReadDouble();$null=$reader.ReadUInt64()

@@ -11,10 +11,17 @@ $repo=(Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $planFile=(Resolve-Path -LiteralPath $Protocol).Path
 $engine=(Resolve-Path -LiteralPath $GodotExe).Path
 $plan=Get-Content -Raw -LiteralPath $planFile | ConvertFrom-Json
-if($plan.protocol_id -ne 'pond-motor-ppo-v5-half-second-2026-11-24' -or $plan.max_updates -ne 8){throw 'Select the eight-update half-second course protocol.'}
+$signedCourse=$plan.protocol_id -eq 'pond-motor-ppo-v6-signed-course-2026-11-24'
+if((!$signedCourse -and $plan.protocol_id -ne 'pond-motor-ppo-v5-half-second-2026-11-24') -or $plan.max_updates -ne 8){throw 'Select a supported eight-update course protocol.'}
 $root=Split-Path $plan.ledger_path_absolute
 $studyId='turn35-v5-half-second-2026-11-24'
 $evidence='assets/research-evidence/pond-turning-v5-half-second'
+$studyLabel='Gentle turning · half-second course'
+if($signedCourse){
+    $studyId='turn36-v6-signed-course-2026-11-24'
+    $studyLabel='Gentle turning · signed course input'
+    $evidence='assets/research-evidence/pond-turning-v6-signed-course'
+}
 $destination=Join-Path $repo $evidence
 if($Run -and $PublishRecorded){throw 'Choose either a new run or publication of the completed record.'}
 if(($Run -or $PublishRecorded) -and (Test-Path (Join-Path $repo "live/research_data/studies/$studyId"))){throw 'A published run already exists for this study.'}
@@ -39,7 +46,7 @@ if(Test-Path -LiteralPath $publishedCandidate){
     if((Get-FileHash $candidate).Hash -ne (Get-FileHash $publishedCandidate).Hash){throw 'A different research checkpoint already exists.'}
 }else{Copy-Item -LiteralPath $candidate -Destination $destination}
 $publication=@{
-    StudyId=$studyId;StudyLabel='Gentle turning · half-second course'
+    StudyId=$studyId;StudyLabel=$studyLabel
     TrainingResult=(Join-Path $root 'updates-1-8/result.json');EvaluationDirectory=$evalDir
     Checkpoint=$candidate;Status='completed';RepositoryCheckpoint="$evidence/candidate-8.bin"
     BaselineDirectory=(Join-Path $root 'baseline0')

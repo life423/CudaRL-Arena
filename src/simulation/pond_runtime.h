@@ -2,6 +2,7 @@
 #define CUDARL_SIMULATION_POND_RUNTIME_H
 #include "motor/joint_motor.h"
 #include "environment/pond_body_geometry.h"
+#include "environment/pond_swept_clearance.h"
 
 // Product world v4: model6 water/inertia and the saved motor's actuator contract,
 // plus physical compliant contact with the same terrain Godot draws. No route,
@@ -37,6 +38,15 @@ struct StepInfo {
     uint32_t contact_points=0;
     uint32_t contact_iterations=0;
 };
+// Opt-in threshold telemetry for training. A finite lower bound describes
+// every accepted pose and each certified free sweep. Only a precise control
+// also has a measured numerical minimum in World::minimum_control_gap_m.
+struct ControlClearance {
+    double lower_m=1e30,minimum_exact_lower_m=1e30,minimum_free_lower_m=1e30;
+    uint32_t rejected_contacts=0,exact_queries=0,exact_steps=0,trial_free_solves=0;
+    bool precise=true;
+};
+constexpr double bank_threshold_m=.01;
 // Optional diagnostic output owned by the caller. Production passes nullptr;
 // tracing changes no equation, control, integration order or accepted state.
 constexpr uint32_t substep_trace_capacity=20,trace_energy_fields=12;
@@ -127,7 +137,7 @@ struct ContactResidual {double relative=0,merit=0;ContactLaw law[3];};
 CUDARL_HD inline bool contact_residual(const double base_A[10][10],const double* base_rhs,
         const ContactPoint* points,float h,const double* velocity,const float* torque,ContactResidual& residual) {
     residual={};double force[10]{};
-    for(int b=0;b<3;++b) {
+    for(int b=0;points&&b<3;++b) {
         auto& law=residual.law[b];law=contact_law(points[b].gap_m,h,contact_rate(points[b],velocity),points[b].damping_N_s_m);
         if(!pond_geometry_v1::finite(law.predicted_gap_m)||!pond_geometry_v1::finite(law.elastic_multiplier_N)||
            !pond_geometry_v1::finite(law.damping_multiplier_N)||!pond_geometry_v1::finite(law.resistance_N_s_m)||
@@ -149,8 +159,11 @@ CUDARL_HD inline bool contact_residual(const double base_A[10][10],const double*
 // an algebraic iterate, never a physical velocity/body state or timestep.
 CUDARL_HD CUDARL_DEVICE_NOINLINE bool solve_contacts(const p::BodyState& body,const p::System& base,
         const m::Reference& reference,float h,const ContactPoint* points,ContactSolution& solution,
-        m::Telemetry& telemetry,int& failure) {
-    if(!(h>0)||h>.005001f||!points||!p::finite_body(body)){failure=2;return false;}
+        m::Telemetry& telemetry,int& failure,bool free_trial=false) {
+    // A null list evaluates the tentative water-only system. Its caller must
+    // certify separation for both the initial guess and this solved velocity
+    // before it may use that solution to advance the body.
+    if(!(h>0)||h>.005001f||(!points&&!free_trial)||!p::finite_body(body)){failure=2;return false;}
     double desired_v[4]{};const double omega=2*static_cast<double>(m::pi)*3,zeta=.9;
     for(int j=0;j<4;++j) {
         if(!p::finite_number(reference.angle[j])||fabsf(reference.angle[j])>p::limit||!p::finite_number(reference.rate[j])||
@@ -159,7 +172,7 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool solve_contacts(const p::BodyState& body,co
         desired_v[j]=body.velocity[6+j]+h*acceleration;
     }
     double guess[10];for(int i=0;i<10;++i)guess[i]=body.velocity[i];
-    for(int b=0;b<3;++b) {
+    for(int b=0;points&&b<3;++b) {
         if(!pond_geometry_v1::finite(points[b].gap_m)||!p::finite_vector(points[b].gradient)||!p::finite_number(points[b].damping_N_s_m)||points[b].damping_N_s_m<0){failure=122;return false;}
         for(const auto& value:points[b].jacobian)if(!p::finite_vector(value)){failure=122;return false;}
     }
@@ -169,7 +182,7 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool solve_contacts(const p::BodyState& body,co
         double A[10][10]{},rhs[10]{},root_rhs[10]{},root_v[10]{};
         bool tangent_has_contact=false;
         for(int i=0;i<10;++i){rhs[i]=base_rhs[i];for(int j=0;j<10;++j)A[i][j]=base_A[i][j];}
-        for(int b=0;b<3;++b) {
+        for(int b=0;points&&b<3;++b) {
             const auto& point=points[b];const auto law=contact_law(point.gap_m,h,contact_rate(point,guess),point.damping_N_s_m);double row[10];
             if(!pond_geometry_v1::finite(law.constant_multiplier_N)||!pond_geometry_v1::finite(law.resistance_N_s_m)||law.resistance_N_s_m<0){failure=122;return false;}
             if(law.constant_multiplier_N==0&&law.resistance_N_s_m==0)continue;
@@ -261,25 +274,41 @@ CUDARL_HD inline bool prepare(World& w) {
     w.initial_potential_uncertainty_J=potential_uncertainty(w.inspection);w.prepared=true;return true;
 }
 CUDARL_HD CUDARL_DEVICE_NOINLINE bool substep(World& w,const m::Reference& reference,float h,StepInfo& info,
-                                              bool has_previous_post=false) {
+                                              bool has_previous_post=false,ControlClearance* clearance=nullptr) {
     auto& body=w.motor.physical.body;info={};w.failure_before=w.failure_candidate=body;
     if(!(h>0)||h>.005001f||!valid_state(w))return false;
     // At control entry the caller may have changed the state. Inside the same
     // control only the servo reference changes between an accepted POST and
     // the next PRE, so both refer to the identical body and terrain.
-    if(!has_previous_post && !inspect(w))return false;
-    info.potential_before=potential(w.inspection);
     const auto system=m::assemble(body,w.motor.physical.fluid,true);
     const auto links=m::shape(body);
-    ContactPoint points[3];
-    for(int b=0;b<3;++b){const auto& q=w.inspection.link[b];
-        const auto& link=links.link[b];const auto offset=q.point_m-link.center;
-        points[b].gap_m=q.upper_gap_m;points[b].gradient={static_cast<float>(-q.gradient_x),1,static_cast<float>(-q.gradient_z)};
-        points[b].damping_N_s_m=2*sqrtf(stiffness_N_m*link.mass);
-        for(int i=0;i<p::dofs;++i)points[b].jacobian[i]=link.linear[i]+p::cross(link.angular[i],offset);
-    }
     ContactSolution solution;
-    const bool solved=solve_contacts(body,system,reference,h,points,solution,info.dynamics,w.failure);
+    pond_swept_clearance::Certificate separation;
+    if(clearance&&w.contact_potential_J==0) {
+        int trial_failure=0;++clearance->trial_free_solves;
+        if(solve_contacts(body,system,reference,h,nullptr,solution,info.dynamics,trial_failure,true))
+            separation=pond_swept_clearance::certify(body,links,w.terrain,solution.velocity,h,bank_threshold_m+query_tolerance_m);
+    }
+    ContactPoint points[3];bool solved=separation.separated;
+    if(!separation.separated) {
+        if(!has_previous_post||!w.inspection.certified) {
+            if(clearance)++clearance->exact_queries;
+            if(!inspect(w))return false;
+        }
+        info.potential_before=potential(w.inspection);
+        if(clearance) {
+            ++clearance->exact_steps;
+            clearance->minimum_exact_lower_m=fmin(clearance->minimum_exact_lower_m,w.inspection.lower_gap_m);
+            solution={};info.dynamics={};
+        }
+        for(int b=0;b<3;++b){const auto& q=w.inspection.link[b];
+            const auto& link=links.link[b];const auto offset=q.point_m-link.center;
+            points[b].gap_m=q.upper_gap_m;points[b].gradient={static_cast<float>(-q.gradient_x),1,static_cast<float>(-q.gradient_z)};
+            points[b].damping_N_s_m=2*sqrtf(stiffness_N_m*link.mass);
+            for(int i=0;i<p::dofs;++i)points[b].jacobian[i]=link.linear[i]+p::cross(link.angular[i],offset);
+        }
+        solved=solve_contacts(body,system,reference,h,points,solution,info.dynamics,w.failure);
+    }
     info.contact_iterations=solution.iterations;w.contact_system_evaluations+=solution.iterations;
     if(!solved)return false;
     const auto* next=solution.velocity;
@@ -306,20 +335,36 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool substep(World& w,const m::Reference& refer
     candidate.work+=static_cast<float>(info.dynamics.positive_work);for(int i=0;i<10;++i)candidate.velocity[i]=static_cast<float>(next[i]);
     candidate.travel+=h*p::norm({candidate.velocity[0],candidate.velocity[1],candidate.velocity[2]})/p::scale;
     w.failure_candidate=candidate;
+    if(separation.separated) {
+        if(!p::finite_body(candidate)){w.failure=100+bg::InvalidInput;return false;}
+        // U=0 and its uncertainty is zero throughout this proved free sweep.
+        // No point/normal was measured. Invalidate the old witness explicitly.
+        ++clearance->rejected_contacts;
+        clearance->minimum_free_lower_m=fmin(clearance->minimum_free_lower_m,separation.lower_m);
+        body=candidate;w.inspection={};w.contact_potential_J=0;w.failure=0;return true;
+    }
+    if(clearance)++clearance->exact_queries;
     const auto after=bg::inspect(candidate,w.terrain,query_tolerance_m,query_visit_limit);
     if(!after.valid||!after.certified){w.failure=100+static_cast<int>(after.failure_reason);return false;}
-    w.minimum_gap_m=fmin(w.minimum_gap_m,after.lower_gap_m);w.minimum_control_gap_m=fmin(w.minimum_control_gap_m,after.lower_gap_m);
+    if(clearance)clearance->minimum_exact_lower_m=fmin(clearance->minimum_exact_lower_m,after.lower_gap_m);
+    // A historical minimum unavailable after threshold-only stepping cannot
+    // be recovered from subsequent samples.
+    if(pond_geometry_v1::finite(w.minimum_gap_m))w.minimum_gap_m=fmin(w.minimum_gap_m,after.lower_gap_m);
+    w.minimum_control_gap_m=fmin(w.minimum_control_gap_m,after.lower_gap_m);
     if(after.lower_gap_m< -overlap_limit_m){w.failure=110;return false;}
     info.potential_after=potential(after);info.dynamics.minimum_gap=static_cast<float>(after.lower_gap_m);
     body=candidate;w.inspection=after;w.contact_potential_J=info.potential_after;w.failure=0;return true;
 }
-CUDARL_HD inline bool step(World& w,const float* command,float h=.005f,SubstepTrace* trace=nullptr) {
+CUDARL_HD inline bool step_impl(World& w,const float* command,float h,SubstepTrace* trace,ControlClearance* clearance,bool precise_endpoint) {
     if(trace)for(uint32_t j=0;j<substep_trace_capacity;++j)trace[j]={};
     auto& s=w.motor.physical;if(!command||!w.prepared||s.paused||!valid_state(w)||w.failure!=0){
         capture_substep_trace(w,trace,s.body,nullptr,false,false);return false;}
     ++w.attempted_controls;for(int j=0;j<4;++j)if(!p::finite_number(command[j])||fabsf(command[j])>1){
         w.failure=10;capture_substep_trace(w,trace,s.body,nullptr,false,false);return false;}
-    s.telemetry={};float torque_square_sum=0;w.minimum_control_gap_m=w.inspection.lower_gap_m;
+    s.telemetry={};float torque_square_sum=0;
+    if(!clearance&&!w.inspection.certified&&!inspect(w))return false;
+    w.minimum_control_gap_m=w.inspection.certified?w.inspection.lower_gap_m:1e30;
+    if(clearance)clearance->minimum_exact_lower_m=w.minimum_control_gap_m;
     for(int j=0;j<4;++j)s.raw_action[j]=command[j];
     const int substeps=h==.005f?10:(h==.0025f?20:0);if(substeps==0){
         w.failure=11;capture_substep_trace(w,trace,s.body,nullptr,false,false);return false;}
@@ -331,7 +376,7 @@ CUDARL_HD inline bool step(World& w,const float* command,float h=.005f,SubstepTr
         if(k%(substeps/10)==0){if(!joint_motor::filter_targets(s.held_targets,w.motor.reference_rate,command,reference)){
             w.failure=10;capture_substep_trace(w,trace?trace+k:nullptr,trace_before,nullptr,false,false);return false;}}
         ++w.motor.attempted_substeps;StepInfo info;
-        if(!substep(w,reference,h,info,k>0)){
+        if(!substep(w,reference,h,info,k>0,clearance)){
             s.invalid=true;capture_substep_trace(w,trace?trace+k:nullptr,trace_before,&info,true,false);return false;}
         w.motor.signed_work+=info.dynamics.signed_work;w.motor.positive_work+=info.dynamics.positive_work;
         w.motor.fluid_loss+=info.dynamics.fluid_loss;w.motor.numerical_loss+=info.dynamics.numerical_loss;w.motor.external_work+=info.dynamics.external_work;
@@ -356,7 +401,38 @@ CUDARL_HD inline bool step(World& w,const float* command,float h=.005f,SubstepTr
             s.actual_torques[(k/(substeps/10))*4+j]=normalized;s.requested_torques[(k/(substeps/10))*4+j]=info.dynamics.requested[j];torque_square_sum+=normalized*normalized;}
         capture_substep_trace(w,trace?trace+k:nullptr,trace_before,&info,true,true);
     }
+    if(clearance) {
+        if(precise_endpoint&&!w.inspection.certified) {
+            ++clearance->exact_queries;
+            if(!inspect(w)){s.invalid=true;return false;}
+            clearance->minimum_exact_lower_m=fmin(clearance->minimum_exact_lower_m,w.inspection.lower_gap_m);
+        }
+        clearance->lower_m=fmin(clearance->minimum_exact_lower_m,clearance->minimum_free_lower_m);
+        // An unsampled pose has a 10um-certified lower endpoint at least
+        // physical gap minus query tolerance, including the query roundoff.
+        // A known lower endpoint below every such endpoint is the exact old
+        // numerical minimum. Otherwise only the threshold class is known.
+        clearance->precise=!clearance->rejected_contacts||
+            clearance->minimum_exact_lower_m+query_tolerance_m<=clearance->minimum_free_lower_m;
+        w.minimum_control_gap_m=clearance->precise?clearance->minimum_exact_lower_m:NAN;
+        if(pond_geometry_v1::finite(w.minimum_gap_m)) {
+            w.minimum_gap_m=fmin(w.minimum_gap_m,clearance->minimum_exact_lower_m);
+            if(clearance->rejected_contacts&&w.minimum_gap_m+query_tolerance_m>clearance->minimum_free_lower_m)
+                w.minimum_gap_m=NAN;
+        }
+    }
     s.mean_squared_torque=torque_square_sum/static_cast<float>(4*substeps);++s.control_steps;return true;
+}
+// Full quantitative geometry, extrema, witnesses and optional substep trace.
+CUDARL_HD inline bool step(World& w,const float* command,float h=.005f,SubstepTrace* trace=nullptr) {
+    return step_impl(w,command,h,trace,nullptr,false);
+}
+// Uses the same physical solve, filters, joint limits, energy gates and
+// timestep. Every ambiguous substep takes the full quantitative path.
+CUDARL_HD inline bool step_classified(World& w,const float* command,ControlClearance& result,
+        float h=.005f,bool precise_endpoint=false) {
+    result={};
+    return step_impl(w,command,h,nullptr,&result,precise_endpoint);
 }
 }
 #endif

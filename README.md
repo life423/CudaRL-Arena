@@ -5,7 +5,7 @@ interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
 Godot presents the creature in its own pond. The current food-free Swim and
-Rest modes run a saved neural motor in native water physics. Five food-free turning
+Rest modes run a saved neural motor in native water physics. Separate food-free turning
 exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
 depths and speeds, and adaptation during player interaction are longer-term
 goals.
@@ -32,12 +32,19 @@ saved motor's heading response, open **Details** while in Swim mode. The drawer
 pauses the pond and offers left and right 5° requests. Close it and press Play
 to see the response.
 
-A separate candidate practised 254 left and 254 right requests for 10–15°
-turns, using the last half second of actual movement for course feedback. The
-eight-update exercise retained all 28 required long-swim windows, four short
-swims and 14 rests. Five right 10° practice requests stabilized. Independent
-turns stayed at 3/16. Autonomous exploration remains open.
-[Gentle-turn exercise and timing](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md) · [Earlier repeated-request exercise](docs/POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
+Two separate residual PPO candidates completed 32 updates each while the
+original motor stayed frozen. Both finished at 2/16 independent turns against
+the baseline's 3/16. Their straight-swim and resting branches use the original
+motor exactly. The checks reused archived retention evidence after verifying
+that equivalence. Full swimming/resting suites were reserved for meaningful
+turn improvement, which neither candidate reached. The candidates remain
+research checkpoints. Autonomous exploration remains open.
+
+A conservative contact-rejection path preserves physical collisions and
+reports clearance bounds explicitly. Its measured late-state GPU speedup
+was 74.16× for one control across 512 worlds. The full collector then hit its
+four-second cap before issuing any physics. Its faster training mode remains
+gated. [GPU measurements and current limits](docs/GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Motor input audit](docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md) · [Earlier gentle-turn exercise](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
 
 Swim mode has no fixed playback duration. The earlier
 [untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the

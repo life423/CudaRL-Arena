@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.24)
+project(PondReadOnlyInputAudit LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+add_executable(pond_input_audit audit.cpp ../../src/core/checkpoint.cpp)
+target_include_directories(pond_input_audit PRIVATE ../../src ../../src/nn)
+target_compile_options(pond_input_audit PRIVATE /W4 /WX /permissive-)

@@ -1,37 +1,37 @@
 {
   "schema": 2,
-  "study_id": "turn35-v5-half-second-2026-11-24",
-  "study_label": "Gentle turning · half-second course",
+  "study_id": "residual-yaw-2026-11-24",
+  "study_label": "Yaw steering · frozen swimmer",
   "status": "completed",
-  "completed_updates": 8,
+  "completed_updates": 32,
   "reason": "turning_unqualified",
   "playing_package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
   "lane_limit_m": 0.002,
   "candidate_adopted": false,
   "sources": {
     "checkpoint": {
-      "path": "res://research_data/studies/turn35-v5-half-second-2026-11-24/checkpoint-digest.json",
-      "sha256": "44778c94deaa0a79c905b21134716839deab2d38717dd4f23710f58a00a37852"
+      "path": "res://research_data/studies/residual-yaw-2026-11-24/checkpoint-digest.json",
+      "sha256": "73326a9d47a90b4a7cb643d38ad37a308906eb9fb0a2d6d63b01befb07985db0"
     },
     "training": {
-      "path": "res://research_data/studies/turn35-v5-half-second-2026-11-24/training-result.json",
-      "sha256": "ca80177612ebe0dcdffdedd6cfa2cf5b17e02bfa1d4cf983a1a1b13852b3c17c"
+      "path": "res://research_data/studies/residual-yaw-2026-11-24/training-result.json",
+      "sha256": "b3de23b08acd31ba24403bb4758f2baeebb41554e8f69a9095c8c65459361eb0"
     },
     "evaluation": {
-      "path": "res://research_data/studies/turn35-v5-half-second-2026-11-24/assessment-result.json",
-      "sha256": "80f548f7891af682bfd23f6e28b895d3c909d0680644e3cc03b5fd0c4e4905a9"
+      "path": "res://research_data/studies/residual-yaw-2026-11-24/assessment-result.json",
+      "sha256": "6f1df855f7e34776fa636cea299752b7ff0ecbb861fc55bfa95c4d80971a176e"
     },
     "movement": {
-      "path": "res://research_data/studies/turn35-v5-half-second-2026-11-24/movement-summary.json",
-      "sha256": "6ec302d8c3aa841af1ff992a166ecd034dc5855755e5ad1cbaec8724df51d791"
+      "path": "res://research_data/studies/residual-yaw-2026-11-24/movement-summary.json",
+      "sha256": "e223f2ada955c9b3014eaafe5532d5b3e593964b41de10741d55360a01bb1853"
     },
     "cases": {
-      "path": "res://research_data/studies/turn35-v5-half-second-2026-11-24/cases.csv",
-      "sha256": "4b0d61c57593c352713da36e89263226aa9b129007160044176037e2e39628c4"
+      "path": "res://research_data/studies/residual-yaw-2026-11-24/cases.csv",
+      "sha256": "3bcf051ae2cba7a92ffa2b56eb3d3bfe04d008edf638a26457fae10a930e4738"
     },
     "baseline": {
-      "path": "res://research_data/studies/turn35-v5-half-second-2026-11-24/baseline-assessment.json",
-      "sha256": "4e108476ec7a5bb3140d2424dccca39f0b7cc77d0bc5593ff0814f55b3cb729d"
+      "path": "res://research_data/studies/residual-yaw-2026-11-24/baseline-assessment.json",
+      "sha256": "5284813d546215f83b3321e12903e48e604e535d22cb4f7b4c9b152faeb6ad08"
     }
   },
   "disclosure": "Recorded study result. Compact native outputs and checkpoint digests are portable; omitted raw controls/checkpoints remain preserved research evidence. No study is rerun by the app."

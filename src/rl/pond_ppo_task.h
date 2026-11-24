@@ -16,9 +16,12 @@ namespace p = physics;
 enum TaskKind : int { Hold = 0, Straight = 1, Turn = 2 };
 inline constexpr uint32_t version = 4;
 inline constexpr uint32_t curriculum_off = 0, paired_gentle_moderate_v1 = 1, course_direction_v1 = 2, repeated_headings_v1 = 3;
-inline constexpr uint32_t half_second_course_v1 = 4;
+inline constexpr uint32_t half_second_course_v1 = 4, signed_half_second_v1 = 5;
+CUDARL_HD inline bool half_second_program(uint32_t program) {
+    return program == half_second_course_v1 || program == signed_half_second_v1;
+}
 CUDARL_HD inline bool repeating_program(uint32_t program) {
-    return program == repeated_headings_v1 || program == half_second_course_v1;
+    return program == repeated_headings_v1 || half_second_program(program);
 }
 CUDARL_HD inline float paired_turn_angle(uint32_t environment, uint32_t episode, uint32_t serial, uint32_t seed) {
     // Pair worlds at the same episode and request ordinal. Alternate their signs on replacement.
@@ -59,13 +62,13 @@ struct RequestSample {
 CUDARL_HD inline RequestSample sample_request(uint32_t env,uint32_t episode,uint32_t seed,
                                              uint32_t curriculum=curriculum_off) {
     RequestSample sample;
-    if(curriculum>half_second_course_v1){sample.kind=-1;return sample;}
-    const uint32_t key=(curriculum==paired_gentle_moderate_v1||curriculum==half_second_course_v1)?env/2:env;
+    if(curriculum>signed_half_second_v1){sample.kind=-1;return sample;}
+    const uint32_t key=(curriculum==paired_gentle_moderate_v1||half_second_program(curriculum))?env/2:env;
     const uint32_t mode=rng::bits(seed,rng::hash_u32(key^0x6c9a24d1u),episode)%4u;
     sample.kind=mode==0?Hold:(mode==1?Straight:Turn);
     sample.start=rng::bits(seed,rng::hash_u32(key^0xa4175b39u),episode)%(sample.kind==Hold?6u:4u);
     if(sample.kind==Turn) {
-        if (curriculum == half_second_course_v1) {
+        if (half_second_program(curriculum)) {
             sample.turn_radians = paired_turn_angle(env, episode, 0, seed);
             return sample;
         }
@@ -158,7 +161,7 @@ CUDARL_HD inline float moving_reward_terms(float speed_quality,float positive_re
 // rejected by the collector before this call, not relabeled as an episode end.
 // A 64-control rollout segment is not a task episode boundary.
 CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t program=curriculum_off,
-                                   const p::V* measured_course_velocity=nullptr) {
+                                   const p::V* measured_course_velocity=nullptr,const runtime::ControlClearance* clearance=nullptr) {
     Transition transition;
     if (world.failure != 0 || world.motor.physical.invalid || world.motor.physical.unsafe) return transition;
     ++task.episode_controls; ++task.request.controls;
@@ -174,7 +177,10 @@ CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t pr
         if(column<16&&row<16){const uint32_t cell=row*16+column,bit=1u<<(cell%32);
             if((task.occupied_grid[cell/32]&bit)==0){task.occupied_grid[cell/32]|=bit;++task.occupied_cells;}}
     }
-    if(world.minimum_control_gap_m<=.01)task.bank_near_seconds+=control_seconds;
+    // Only the quantitative path can report a numerical minimum. The
+    // threshold-only path certifies the entire control above this distance.
+    const bool bank_near=clearance&&!clearance->precise?false:world.minimum_control_gap_m<=.01;
+    if(bank_near)task.bank_near_seconds+=control_seconds;
     if(world.contact_potential_J>0||world.contact_spring_work!=task.last_spring_work||world.contact_damping_loss!=task.last_damping_loss)
         task.contact_seconds+=control_seconds;
     task.last_spring_work=world.contact_spring_work;task.last_damping_loss=world.contact_damping_loss;

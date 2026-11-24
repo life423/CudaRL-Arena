@@ -100,7 +100,19 @@ int main(){try{
         check(kinds[pt::Hold]>0&&kinds[pt::Straight]>0&&kinds[pt::Turn]>0,"Hold/Straight/Turn representation missing");for(bool used:magnitudes)check(used,"Declared magnitude never sampled");
     }
     check_half_second_course();
-    check(pt::sample_request(0,0,0,5).kind<0,"Unknown opt-in program accepted");
+    pt::Task signed_task;signed_task.kind=pt::Turn;signed_task.request_changed=true;
+    for(float degrees:{-179.9f,-15.f,0.f,15.f,179.9f}){
+        const float radians=degrees*pt::obs::pi/180.f;
+        signed_task.request.request.heading={cosf(radians),0,-sinf(radians)};
+        check(std::abs(ps::signed_course_input(signed_task,{.008f,0})-degrees/180.f)<1e-6f,"Incorrect signed half-second course or wrap");
+    }
+    check(ps::signed_course_input(signed_task,{0,0})==0,"Undefined course must be neutral");
+    signed_task.kind=pt::Straight;
+    check(ps::signed_course_input(signed_task,{.008f,0})==0,"Straight must keep neutral course feature");
+    for(uint32_t env=0;env<512;++env)
+        check(equal(pt::sample_request(env,0,seeds[0],pt::signed_half_second_v1),pt::sample_request(env,0,seeds[0],pt::half_second_course_v1)),
+              "Signed actor program changed v5 request distribution");
+    check(pt::sample_request(0,0,0,6).kind<0,"Unknown opt-in program accepted");
     check(pt::direction_factor({0,0,0},{1,0,0})==1.f,"Zero-speed direction factor is not finite/neutral");
     check(pt::direction_factor({1,0,0},{1,0,0})==1.f,"Aligned direction factor changed");
     for(float degrees:{0.f,15.f,30.f,90.f,180.f}){
