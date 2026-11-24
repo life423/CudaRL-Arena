@@ -1,0 +1,17 @@
+# Half-second course feedback and gentle turning practice
+
+Study `pond-motor-ppo-v5-half-second-2026-11-24` starts a separate candidate from preserved motor 336 and its holding gain. Run native CUDA PPO once for eight updates. Keep 512 worlds, 64 controls per world, the existing eight-thread physics launch, 8 mm/s swimming, four optimizer passes and 4,096-transition minibatches. The allocation is 262,144 transitions, 2,621,440 substeps, 256 actor and 256 critic Adam calls. Stop on a hard physics fault, invalid numerics, KL above 0.05 or skill-retention failure. Higher update counts are outside this study.
+
+## Training changes
+
+Use horizontal displacement of the whole-body center of mass over the last ten completed 50 ms controls divided by 0.50 s to measure the swimmer's course during turning practice. Apply that direction to the training reward and request stabilization check. Retain real-time depth and tilt checks. Preserve the history, body, momentum, servos and actuator filters across heading switches and rollouts. True episode resets clear the history. Sampling pairs use opposite signs for the same integer magnitude from 10° through 15° with the same seed, episode and request ordinal. Record the actual selected angles, which can vary when worlds start different tasks. The task mix remains 25% rest, 25% straight and 50% turn. Food and a goal chooser are absent from this motor exercise.
+
+Settling takes two simulated seconds. Each request lasts at least five seconds. Success needs one continuous second inside the original heading, projected-speed, depth and tilt limits. Unsuccessful requests time out after 20 seconds. Ten percent of requests are selected for a full hold. The 60-second episode cap, original rewards outside the specified course change, native physical model and safety gates remain in force. Movement comes from four joint targets chosen by the neural motor and integrated through native physics.
+
+## Verification and timing
+
+The prior v4 zero-update baseline already physically measured motor 336 on every fixed fixture. Before the first optimizer update, check its archived candidate, receipt and result against the prior protocol and compare the deterministic actor and holding gain byte for byte with the new initialized candidate. The fixed fixtures, observations, evaluator measurements and tolerances, long-swim reference, and qualified CPU/CUDA runtime must match. Any mismatch stops the run. Charge zero new physical controls to reused evidence and label it explicitly. A trained checkpoint always requires a fresh physical assessment.
+
+At update eight, run all 16 original held-out turns, four short swims, two 60-second straight swims (28 required historical windows), and 14 rests including two five-minute rests. Assess all soft misses. Compare passing turns, whole-body course error and completion times to the baseline. Save the candidate separately. The visible Godot swimmer stays on the original motor.
+
+Target under 15 seconds for one warm local command from launching the wrapper through publishing the update-eight result and verifying the current registered Godot project in headless mode. Include process startup, hash validation, zero-step initialization, cache verification, all CUDA collection/PPO work, checkpoint writes and the full independent CPU assessment. Also time through the end of the assessment separately. Source edits, native builds and prior historical validations are outside that timing. The 15-second target is measured once and does not authorize a retry.

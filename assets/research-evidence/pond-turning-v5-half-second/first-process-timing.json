@@ -1,0 +1,9 @@
+{
+  "wall_seconds": 11.5973875,
+  "started_utc": "2026-11-24T06:54:02.6560992+00:00",
+  "ended_utc": "2026-11-24T06:54:14.2538313+00:00",
+  "exit_code": 1,
+  "complete_wrapper_command_including_powershell_startup_and_exit": true,
+  "protocol_sha256": "d18d76832b8128db55bfe075cb941ddaedafcd16cbe44952662ac39df20a8a1a",
+  "process_id": 33980
+}

@@ -5,7 +5,7 @@ interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
 Godot presents the creature in its own pond. The current food-free Swim and
-Rest modes run a saved neural motor in native water physics. Four food-free turning
+Rest modes run a saved neural motor in native water physics. Five food-free turning
 exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
 depths and speeds, and adaptation during player interaction are longer-term
 goals.
@@ -27,15 +27,17 @@ build; current-capable swimming is not yet qualified.
 ## Current state
 
 **The registered Godot project runs the corrected full shoreline and the
-original saved motor.** Select **Swim** and press **Play** to request left or
-right turns in 5° increments. The motor drives the joints as the simulation
-continues. It passed four small-turn trials across two starting poses.
+original saved motor.** Select **Swim** and press **Play** to watch. To try the
+saved motor's heading response, open **Details** while in Swim mode. The drawer
+pauses the pond and offers left and right 5° requests. Close it and press Play
+to see the response.
 
-A separate candidate practised repeated heading changes for 32 GPU PPO updates.
-It preserved all 28 required long-swim windows, four short swims and 14 rests
-at every assessment. It passed the same three of 16 independent turns as the
-starting motor. Reliable larger turns and autonomous exploration remain open.
-[Repeated-request results and checkpoint](docs/POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md) · [Prior course-reward exercise](docs/POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
+A separate candidate practised 254 left and 254 right requests for 10–15°
+turns, using the last half second of actual movement for course feedback. The
+eight-update exercise retained all 28 required long-swim windows, four short
+swims and 14 rests. Five right 10° practice requests stabilized. Independent
+turns stayed at 3/16. Autonomous exploration remains open.
+[Gentle-turn exercise and timing](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md) · [Earlier repeated-request exercise](docs/POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
 
 Swim mode has no fixed playback duration. The earlier
 [untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the

@@ -43,7 +43,8 @@ var rail: PanelContainer
 var play_button: Button
 var restart_button: Button
 var task: OptionButton
-var steering: HBoxContainer
+var steering: VBoxContainer
+var steering_status: Label
 var turn_left: Button
 var turn_right: Button
 var measurements: HBoxContainer
@@ -407,16 +408,6 @@ func _build_interface() -> void:
 	task.tooltip_text = "Selecting Rest or Swim restarts the creature. Swim continues until paused or a physical check stops it."
 	task.item_selected.connect(func(_index: int): _restart())
 	controls.add_child(task)
-	steering=HBoxContainer.new()
-	steering.add_theme_constant_override("separation",8)
-	steering.visible=false
-	column.add_child(steering)
-	turn_left=button("Turn left 5°",func(): _request_turn(1))
-	turn_right=button("Turn right 5°",func(): _request_turn(-1))
-	for control in [turn_left,turn_right]:
-		control.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-		control.tooltip_text="Ask the saved neural motor for a new heading; the body and physics continue."
-		steering.add_child(control)
 	target_caption = label("Target",12,MINT)
 	target_caption.add_theme_stylebox_override("normal",panel(SURFACE,5))
 	canvas.add_child(target_caption)
@@ -454,7 +445,30 @@ func _build_details() -> void:
 	drawer_scroll = ScrollContainer.new()
 	drawer_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	drawer_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	drawer_scroll.follow_focus = true
 	column.add_child(drawer_scroll)
+	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation",16)
+	drawer_scroll.add_child(content)
+	steering = VBoxContainer.new()
+	steering.add_theme_constant_override("separation",8)
+	content.add_child(steering)
+	steering.add_child(label("Test the saved motor",16))
+	var turns := HBoxContainer.new()
+	turns.add_theme_constant_override("separation",8)
+	steering.add_child(turns)
+	turn_left = button("Turn left 5°",func(): _request_turn(1))
+	turn_right = button("Turn right 5°",func(): _request_turn(-1))
+	for control in [turn_left,turn_right]:
+		control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var focus := control.get_theme_stylebox("focus") as StyleBoxFlat
+		focus.expand_margin_left = 0
+		focus.expand_margin_right = 0
+		turns.add_child(control)
+	steering_status = label("",14,MUTED)
+	steering_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	steering.add_child(steering_status)
 	drawer_text = RichTextLabel.new()
 	drawer_text.bbcode_enabled = true
 	drawer_text.fit_content = true
@@ -463,7 +477,7 @@ func _build_details() -> void:
 	drawer_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	drawer_text.add_theme_font_size_override("normal_font_size",15)
 	drawer_text.add_theme_color_override("default_color",TEXT)
-	drawer_scroll.add_child(drawer_text)
+	content.add_child(drawer_text)
 	measurement_toggle = CheckBox.new()
 	measurement_toggle.text = "Show measurements"
 	for state in ["font_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_focus_color"]:
@@ -485,7 +499,7 @@ func _layout() -> void:
 	view_button.position = Vector2(size.x-inset-112,12+identity_height+8) if size.x<600 else Vector2(size.x-inset-208,16)
 	view_button.size = Vector2(112,48)
 	measurements.visible = show_measurements
-	var rail_height := (108.0 if show_measurements else 72.0)+(56.0 if steering.visible else 0.0)
+	var rail_height := 108.0 if show_measurements else 72.0
 	var rail_width := minf(600,size.x-inset*2)
 	rail.position = Vector2((size.x-rail_width)/2,size.y-inset-rail_height)
 	rail.size = Vector2(rail_width,rail_height)
@@ -558,10 +572,17 @@ func _refresh() -> void:
 	play_button.disabled = not loaded or bool(snapshot.get("finished",false)) or not str(snapshot.get("error","")).is_empty()
 	restart_button.disabled = not loaded
 	task.disabled = not loaded
-	var steering_visible := loaded and preview.has_method("request_swim_turn") and not bool(snapshot.get("holding",true))
-	var steering_changed := steering.visible!=steering_visible
-	steering.visible=steering_visible
-	for control in [turn_left,turn_right]: control.disabled=not loaded or not str(snapshot.get("error","")).is_empty()
+	steering.visible = loaded and preview.has_method("request_swim_turn") and not bool(snapshot.get("holding",true))
+	if steering.visible:
+		var stopped := not str(snapshot.get("error","")).is_empty() or bool(snapshot.get("finished",false))
+		turn_left.disabled = stopped
+		turn_right.disabled = stopped
+		if stopped:
+			steering_status.text = "Restart Swim to test a heading."
+		elif bool(snapshot.get("heading_only_request",false)):
+			steering_status.text = "Requested turn %+.0f°. Close Details and press Play." % float(snapshot.get("requested_turn_degrees",0))
+		else:
+			steering_status.text = "Choose a turn, then close Details and press Play."
 	play_button.text = "Pause" if running else "Play"
 	if loaded:
 		var state := ("Resting" if bool(snapshot.get("holding",true)) else "Swimming") if running else ("Session complete" if bool(snapshot.get("finished",false)) else "Paused")
@@ -587,7 +608,7 @@ func _refresh() -> void:
 	var previous_notice_text := notice.text
 	notice.text = error
 	notice.visible = not error.is_empty()
-	if steering_changed or notice.visible!=previous_notice_visible or (notice.visible and notice.text!=previous_notice_text): _layout()
+	if notice.visible!=previous_notice_visible or (notice.visible and notice.text!=previous_notice_text): _layout()
 	_refresh_target()
 
 func _refresh_target() -> void:
@@ -609,7 +630,7 @@ func _open_details() -> void:
 	var terrain_contact := bool(descriptor.get("used_by_contact",false))
 	_append_shoreline_details(terrain_contact)
 	drawer_text.append_text("\n[b]The saved creature[/b]\nPlaying original motor 336.\n%s\nThis view does not train its saved weights.\n" % _candidate_study_status())
-	drawer_text.append_text("\n[b]Controls[/b]\nSwim has no session timer; Rest is a 64-second check. Pause preserves the world. Restart or selecting Rest/Swim creates a new starting state. Swim's left/right buttons request 5° turns without restarting; the original neural motor chooses joint actions. This is live steering, not autonomous navigation or new training. Repeated turns remain unqualified.\nScroll, pinch or use + / − to zoom. Side view changes the camera angle.\n")
+	drawer_text.append_text("\n[b]Controls[/b]\nSwim has no session timer. Rest is a 64-second check. Opening Details pauses the world. Restart or selecting Rest/Swim creates a new starting state.\nScroll, pinch or use + / − to zoom. Side view changes the camera angle.\n")
 	var result: Dictionary=metadata.get("result",{})
 	drawer_text.append_text("\n[b]Saved motor reference assessment[/b]\n")
 	if result.is_empty(): drawer_text.append_text(metadata_issue+"\n")
@@ -619,7 +640,7 @@ func _open_details() -> void:
 	drawer_scroll.scroll_vertical=0
 	scrim.visible=true
 	drawer.visible=true
-	for control in [play_button,restart_button,task,turn_left,turn_right,details_button,view_button]: control.focus_mode=Control.FOCUS_NONE
+	for control in [play_button,restart_button,task,details_button,view_button]: control.focus_mode=Control.FOCUS_NONE
 	close_button.grab_focus()
 
 func _append_shoreline_details(terrain_contact: bool) -> void:
@@ -660,7 +681,7 @@ func _current_physics_text(state: Dictionary) -> String:
 func _close_details() -> void:
 	scrim.visible = false
 	drawer.visible = false
-	for control in [play_button,restart_button,task,turn_left,turn_right,details_button,view_button]: control.focus_mode=Control.FOCUS_ALL
+	for control in [play_button,restart_button,task,details_button,view_button]: control.focus_mode=Control.FOCUS_ALL
 	details_button.grab_focus()
 
 func _unhandled_key_input(event: InputEvent) -> void:

@@ -1,4 +1,4 @@
-#include "rl/pond_ppo_task.h"
+#include "rl/pond_ppo_schedule.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 namespace pt=cudarl::rl::pond_ppo_task;
+namespace ps=cudarl::rl::pond_ppo_schedule;
 namespace rng=cudarl::rng;
 namespace {
 uint64_t assertions=0;
@@ -25,6 +26,58 @@ pt::RequestSample v2_reference(uint32_t env,uint32_t episode,uint32_t seed){
     return value;
 }
 bool equal(const pt::RequestSample& a,const pt::RequestSample& b){return a.kind==b.kind&&a.start==b.start&&a.stage==b.stage&&bits(a.turn_radians)==bits(b.turn_radians);}
+
+void check_half_second_course() {
+    std::array<unsigned,6> magnitudes{};
+    std::array<unsigned,3> kinds{};
+    for(uint32_t pair=0;pair<256;++pair) {
+        const auto first=pt::sample_request(2*pair,0,7,pt::half_second_course_v1);
+        const auto mirror=pt::sample_request(2*pair+1,0,7,pt::half_second_course_v1);
+        check(first.kind==mirror.kind && first.start==mirror.start,"Half-second training pairs differ");
+        ++kinds[first.kind];
+        if(first.kind!=pt::Turn)continue;
+        check(first.turn_radians==-mirror.turn_radians,"Unbalanced initial turn pair");
+        for(uint32_t serial=0;serial<8;++serial) {
+            const float angle=pt::paired_turn_angle(2*pair,0,serial,7);
+            const int degrees=static_cast<int>(std::lround(std::abs(angle)*180/pt::obs::pi));
+            check(degrees>=10 && degrees<=15,"Turn outside practice range");
+            ++magnitudes[degrees-10];
+            check(angle==-pt::paired_turn_angle(2*pair+1,0,serial,7),"Unbalanced repeated turn pair");
+        }
+    }
+    for(auto n:kinds)check(n>0,"A task mode is missing");
+    for(auto n:magnitudes)check(n>0,"A practice angle is missing");
+
+    ps::CourseHistory history;
+    cudarl::physics::V velocity{};
+    for(int tick=0;tick<25;++tick) {
+        const float x=.008f*pt::control_seconds*tick;
+        // Oscillating sideways endpoints cancel over every full ten-tick window.
+        const float z=tick%2?.0002f:-.0002f;
+        const bool ready=history.append(x,z,velocity);
+        check(ready==(tick>=10),"Course window has the wrong elapsed interval");
+        if(ready)check(std::abs(velocity.x-.008f)<1e-7f && velocity.z==0,"Wrong COM displacement velocity");
+    }
+    const auto saved=history;
+    cudarl::physics::V continued{};
+    auto restored=saved;
+    check(restored.append(.010f,.0002f,continued) && history.append(.010f,.0002f,velocity)
+          && velocity.x==continued.x && velocity.z==continued.z,"Checkpoint interrupted the course window");
+    pt::Task task;
+    task.kind=pt::Turn;
+    task.request.request.heading={1,0,0};
+    ps::State scheduled;
+    scheduled.active=true;
+    scheduled.age=100;
+    const cudarl::physics::V net_motion{.008f,0,0};
+    for(int tick=0;tick<20;++tick) {
+        ps::after(scheduled,task,{.008f,tick%2?.003f:-.003f,0,0},false,false,&net_motion);
+        check(scheduled.successes==uint64_t(tick==19),"Half-second course did not produce the expected stabilization");
+    }
+    scheduled=ps::State{};scheduled.active=true;scheduled.age=100;
+    ps::after(scheduled,task,{.005f,0,0,0},false,false,&net_motion);
+    check(scheduled.streak==0,"Averaging bypassed the instantaneous projected-speed gate");
+}
 }
 int main(){try{
     uint64_t default_requests=0,paired_requests=0;
@@ -46,7 +99,8 @@ int main(){try{
         }
         check(kinds[pt::Hold]>0&&kinds[pt::Straight]>0&&kinds[pt::Turn]>0,"Hold/Straight/Turn representation missing");for(bool used:magnitudes)check(used,"Declared magnitude never sampled");
     }
-    check(pt::sample_request(0,0,0,4).kind<0,"Unknown opt-in program accepted");
+    check_half_second_course();
+    check(pt::sample_request(0,0,0,5).kind<0,"Unknown opt-in program accepted");
     check(pt::direction_factor({0,0,0},{1,0,0})==1.f,"Zero-speed direction factor is not finite/neutral");
     check(pt::direction_factor({1,0,0},{1,0,0})==1.f,"Aligned direction factor changed");
     for(float degrees:{0.f,15.f,30.f,90.f,180.f}){

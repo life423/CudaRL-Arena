@@ -62,13 +62,29 @@ $controlsPath=Join-Path $evaluationRoot 'controls.csv'
 $columns=([IO.File]::ReadLines($controlsPath)|Select-Object -First 1).Split(',')
 $index=@{};for($i=0;$i -lt $columns.Length;$i++){$index[$columns[$i]]=$i}
 foreach($column in @('suite','case','lane_m','depth_m','tilt_deg')){if(-not $index.ContainsKey($column)){throw ('Missing native metric '+$column)}}
-$metrics=[ordered]@{};$rows=0;$first=$true
+$suiteIndex=$index.suite;$caseIndex=$index.case
+$laneIndex=$index.lane_m;$depthIndex=$index.depth_m;$tiltIndex=$index.tilt_deg
+$splitLimit=2+[int](($suiteIndex,$caseIndex,$laneIndex,$depthIndex,$tiltIndex|Measure-Object -Maximum).Maximum)
+$metrics=[ordered]@{};$rows=0;$first=$true;$lastKey=$null
 foreach($line in [IO.File]::ReadLines($controlsPath)) {
     if($first){$first=$false;continue};if(-not $line){continue}
-    $fields=$line.Split(',');$key=$fields[$index.suite]+':'+$fields[$index.case]
-    if(-not $metrics.Contains($key)){$metrics[$key]=[ordered]@{suite=$fields[$index.suite];case=[int]$fields[$index.case];accepted_control_rows=0;maximum_lane_m=0.;maximum_depth_m=0.;maximum_tilt_deg=0.}}
-    $entry=$metrics[$key];$entry.accepted_control_rows++;$rows++
-    foreach($pair in @(@('lane_m','maximum_lane_m'),@('depth_m','maximum_depth_m'),@('tilt_deg','maximum_tilt_deg'))){$number=[double]::Parse($fields[$index[$pair[0]]],$culture);if(-not [double]::IsFinite($number)){throw 'Nonfinite recorded metric'};$entry[$pair[1]]=[math]::Max($entry[$pair[1]],$number)}
+    $fields=$line.Split([char]',',$splitLimit,[StringSplitOptions]::None)
+    $key=$fields[$suiteIndex]+':'+$fields[$caseIndex]
+    if($key -ne $lastKey){
+        if(-not $metrics.Contains($key)){
+            $metrics[$key]=[ordered]@{suite=$fields[$suiteIndex];case=[int]$fields[$caseIndex];accepted_control_rows=0;maximum_lane_m=0.;maximum_depth_m=0.;maximum_tilt_deg=0.}
+        }
+        $lastKey=$key
+        $entry=$metrics[$key]
+    }
+    $lane=[double]::Parse($fields[$laneIndex],$culture)
+    $depth=[double]::Parse($fields[$depthIndex],$culture)
+    $tilt=[double]::Parse($fields[$tiltIndex],$culture)
+    if(!([double]::IsFinite($lane) -and [double]::IsFinite($depth) -and [double]::IsFinite($tilt))){throw 'Nonfinite recorded metric'}
+    if($lane -gt $entry.maximum_lane_m){$entry.maximum_lane_m=$lane}
+    if($depth -gt $entry.maximum_depth_m){$entry.maximum_depth_m=$depth}
+    if($tilt -gt $entry.maximum_tilt_deg){$entry.maximum_tilt_deg=$tilt}
+    $entry.accepted_control_rows++;$rows++
 }
 $summary=[ordered]@{schema=1;source_controls_sha256=(Sha $controlsPath);source_controls_bytes=(Get-Item -LiteralPath $controlsPath).Length;accepted_control_rows=$rows;raw_controls_in_app=$false;cases=@($metrics.Values)}
 WriteJson (Join-Path $output 'movement-summary.json') $summary

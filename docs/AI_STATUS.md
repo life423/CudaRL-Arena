@@ -1,13 +1,22 @@
 # AI status — November 24, 2026
 
-**The registered Godot app now accepts player-requested 5° turns in Swim
-mode.** Its original saved motor passed four small left/right turns from two
+**Eight GPU PPO updates and all fixed skill checks finished in 10.78 seconds.**
+The half-second feedback candidate stabilized five right 10° practice requests.
+Its independent score stayed at 3/16, with all four short swims, 28 required
+long-swim windows and 14 rests retained. The registered Godot app still plays
+original motor 336. Optional steering checks are in Swim → Details.
+Publishing the record and verifying Godot finished after a script repair,
+49.82 seconds from the original launch. [Exercise, checkpoint and timing](POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
+
+## Previous exercise with repeated heading requests
+
+The original saved motor passed four small left/right turns from two
 starting poses. A separate candidate completed 32 GPU PPO updates using
 repeated heading requests. Practice increased from 138 to 274 starts per
 training minute, with zero stabilized training completions. The candidate
 retained all 28 required long-swim windows, four short swims and 14 rests.
 It passed the same 3/16 independent turns. Reliable autonomous navigation
-remains open. [Latest exercise, timing and checkpoint](POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md)
+remains open. [Repeated-request exercise, timing and checkpoint](POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md)
 
 ## Previous exercise with a course-sensitive reward
 

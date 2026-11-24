@@ -16,6 +16,16 @@ namespace p = physics;
 enum TaskKind : int { Hold = 0, Straight = 1, Turn = 2 };
 inline constexpr uint32_t version = 4;
 inline constexpr uint32_t curriculum_off = 0, paired_gentle_moderate_v1 = 1, course_direction_v1 = 2, repeated_headings_v1 = 3;
+inline constexpr uint32_t half_second_course_v1 = 4;
+CUDARL_HD inline bool repeating_program(uint32_t program) {
+    return program == repeated_headings_v1 || program == half_second_course_v1;
+}
+CUDARL_HD inline float paired_turn_angle(uint32_t environment, uint32_t episode, uint32_t serial, uint32_t seed) {
+    // Pair worlds at the same episode and request ordinal. Alternate their signs on replacement.
+    const uint32_t key = rng::hash_u32((environment / 2u) ^ 0xe31f680bu ^ rng::hash_u32(episode));
+    const float magnitude = float(10u + rng::bits(seed, key, serial) % 6u);
+    return ((environment ^ serial) & 1u ? magnitude : -magnitude) * obs::pi / 180.f;
+}
 inline constexpr uint32_t turn_control = 40, episode_limit = 1200;
 inline constexpr float target_speed_m_s = .008f, control_seconds = .05f;
 
@@ -49,12 +59,16 @@ struct RequestSample {
 CUDARL_HD inline RequestSample sample_request(uint32_t env,uint32_t episode,uint32_t seed,
                                              uint32_t curriculum=curriculum_off) {
     RequestSample sample;
-    if(curriculum>repeated_headings_v1){sample.kind=-1;return sample;}
-    const uint32_t key=curriculum==paired_gentle_moderate_v1?env/2:env;
+    if(curriculum>half_second_course_v1){sample.kind=-1;return sample;}
+    const uint32_t key=(curriculum==paired_gentle_moderate_v1||curriculum==half_second_course_v1)?env/2:env;
     const uint32_t mode=rng::bits(seed,rng::hash_u32(key^0x6c9a24d1u),episode)%4u;
     sample.kind=mode==0?Hold:(mode==1?Straight:Turn);
     sample.start=rng::bits(seed,rng::hash_u32(key^0xa4175b39u),episode)%(sample.kind==Hold?6u:4u);
     if(sample.kind==Turn) {
+        if (curriculum == half_second_course_v1) {
+            sample.turn_radians = paired_turn_angle(env, episode, 0, seed);
+            return sample;
+        }
         const uint32_t draw=rng::bits(seed,rng::hash_u32(key^0xe31f680bu),episode);
         if(curriculum!=paired_gentle_moderate_v1) {
             const uint32_t turn=draw%10u,magnitude=turn%5u;
@@ -135,7 +149,7 @@ CUDARL_HD inline float direction_factor(p::V horizontal_velocity,p::V requested_
 CUDARL_HD inline float moving_reward_terms(float speed_quality,float positive_requested_progress,
         p::V horizontal_velocity,p::V requested_heading,int kind,bool request_changed,uint32_t program) {
     float rewarded_progress=positive_requested_progress;
-    if((program==course_direction_v1||program==repeated_headings_v1)&&kind==Turn&&request_changed)
+    if((program==course_direction_v1||repeating_program(program))&&kind==Turn&&request_changed)
         rewarded_progress*=direction_factor(horizontal_velocity,requested_heading);
     return .35f*speed_quality+.65f*rewarded_progress;
 }
@@ -143,7 +157,8 @@ CUDARL_HD inline float moving_reward_terms(float speed_quality,float positive_re
 // Called ONLY after one complete successful runtime control. A physical stop is
 // rejected by the collector before this call, not relabeled as an episode end.
 // A 64-control rollout segment is not a task episode boundary.
-CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t program=curriculum_off) {
+CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t program=curriculum_off,
+                                   const p::V* measured_course_velocity=nullptr) {
     Transition transition;
     if (world.failure != 0 || world.motor.physical.invalid || world.motor.physical.unsafe) return transition;
     ++task.episode_controls; ++task.request.controls;
@@ -180,13 +195,15 @@ CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t pr
         const float horizontal_speed = p::norm({current.velocity_m_s.x, 0, current.velocity_m_s.z});
         const float speed_quality = expf(-squared((horizontal_speed - target_speed_m_s) / .006f));
         const p::V horizontal_velocity{current.velocity_m_s.x, 0, current.velocity_m_s.z};
-        const float positive_requested_progress = p::clamp(p::dot(horizontal_velocity, task.request.request.heading) /
+        const p::V course_velocity = measured_course_velocity && task.kind == Turn && task.request_changed
+            ? *measured_course_velocity : horizontal_velocity;
+        const float positive_requested_progress = p::clamp(p::dot(course_velocity, task.request.request.heading) /
                                                            target_speed_m_s, 0, 1);
         const float motion_gate = p::clamp(horizontal_speed / target_speed_m_s, 0, 1);
         const float depth_quality = expf(-squared(metrics.depth_m / .003f));
         const float effort_quality = 1.f - .1f * p::clamp(physical.mean_squared_torque, 0, 1);
         transition.reward = control_seconds * motion_gate * moving_reward_terms(speed_quality,positive_requested_progress,
-            horizontal_velocity,task.request.request.heading,task.kind,task.request_changed,program) *
+            course_velocity,task.request.request.heading,task.kind,task.request_changed,program) *
             depth_quality * tilt_quality * effort_quality;
     }
     // All clamping above bounds reward factors only, never physical state.

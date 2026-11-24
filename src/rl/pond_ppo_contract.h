@@ -17,6 +17,7 @@ namespace cudarl::rl::pond_ppo {
 inline constexpr char default_study_protocol_id[]="pond-motor-ppo-v2-2026-11-23";
 inline constexpr char curriculum_study_protocol_id[]="pond-motor-ppo-v3-curriculum-2026-11-23";
 inline constexpr char repeated_study_protocol_id[]="pond-motor-ppo-v4-repeated-2026-11-24";
+inline constexpr char half_second_study_protocol_id[]="pond-motor-ppo-v5-half-second-2026-11-24";
 inline constexpr char course_study_protocol_id[]="pond-motor-ppo-v3-course-2026-11-23";
 
 inline constexpr uint32_t candidate_magic = 0x31505044u;
