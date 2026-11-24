@@ -1,0 +1,21 @@
+; Engine configuration file.
+
+config_version=5
+
+[application]
+
+config/name="Tadpole Pond | Flexible Tail"
+run/main_scene="res://flexible_tail_preview.tscn"
+config/features=PackedStringArray("4.4")
+
+[display]
+
+window/size/viewport_width=1100
+window/size/viewport_height=760
+window/size/min_width=360
+window/size/min_height=360
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

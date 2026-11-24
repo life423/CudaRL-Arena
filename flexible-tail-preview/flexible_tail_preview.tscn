@@ -1,0 +1,192 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://flexible_tail_preview.gd" id="1_preview"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(0.976, 0.972, 0.941, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="Theme" id="Theme_preview"]
+default_font_size = 15
+Label/colors/font_color = Color(0.099, 0.222, 0.194, 1)
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_recordings"]
+
+[node name="FlexibleTailPreview" type="Node3D"]
+script = ExtResource("1_preview")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+projection = 1
+current = true
+size = 8.8
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Overlay" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = SubResource("Theme_preview")
+
+[node name="Header" type="PanelContainer" parent="CanvasLayer/Overlay"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 252.0
+mouse_filter = 2
+
+[node name="Text" type="VBoxContainer" parent="CanvasLayer/Overlay/Header"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/Overlay/Header/Text"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Flexible tail"
+
+[node name="Source" type="Label" parent="CanvasLayer/Overlay/Header/Text"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Recorded physics"
+
+[node name="Metrics" type="Label" parent="CanvasLayer/Overlay/Header/Text"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 2
+
+[node name="Open" type="Button" parent="CanvasLayer/Overlay"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -132.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 64.0
+grow_horizontal = 0
+text = "Open trace"
+
+[node name="Message" type="PanelContainer" parent="CanvasLayer/Overlay"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -156.0
+offset_top = -42.0
+offset_right = 156.0
+offset_bottom = 42.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Status" type="Label" parent="CanvasLayer/Overlay/Message"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Open a native physics trace to see the tail in motion."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Transport" type="PanelContainer" parent="CanvasLayer/Overlay"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -152.0
+offset_top = -132.0
+offset_right = 152.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Playback" type="VBoxContainer" parent="CanvasLayer/Overlay/Transport"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Recordings" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Playback"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swim" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Recordings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_recordings")
+text = "Swim"
+
+[node name="Turn" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Recordings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_recordings")
+text = "Turn"
+
+[node name="Hold" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Recordings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_recordings")
+text = "Swim in place"
+tooltip_text = "Swim in place against a gentle current"
+
+[node name="Controls" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Playback"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Play" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Controls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 44)
+layout_mode = 2
+text = "Play"
+
+[node name="Timeline" type="HSlider" parent="CanvasLayer/Overlay/Transport/Playback/Controls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Seek to a time in the recorded trace"
+step = 0.01
+
+[node name="Time" type="Label" parent="CanvasLayer/Overlay/Transport/Playback/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0.0 / 0.0 s"
+horizontal_alignment = 2
+
+[node name="TraceDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a physics trace"
+initial_position = 2
+size = Vector2i(620, 440)
+ok_button_text = "Open trace"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json ; Physics trace")
+use_native_dialog = true
