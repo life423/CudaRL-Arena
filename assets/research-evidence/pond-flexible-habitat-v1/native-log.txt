@@ -1,0 +1,6 @@
+clearance_controls=1
+east_shoal pass=1 shoal_at_end=1 outside_previous_water=1 minimum_gap_mm=22.4815
+west_shoal pass=1 shoal_at_end=1 outside_previous_water=1 minimum_gap_mm=21.0864
+north_shoal pass=1 shoal_at_end=1 outside_previous_water=1 minimum_gap_mm=45.2216
+south_shoal pass=1 shoal_at_end=1 outside_previous_water=1 minimum_gap_mm=43.1242
+shoal_turns=4/4 elapsed_s=0.362671

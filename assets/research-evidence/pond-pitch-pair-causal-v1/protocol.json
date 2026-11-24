@@ -1,0 +1,28 @@
+{
+  "metadata_recovery_reason": "Pre-launch serialization failed because replacement_modes used integer dictionary keys. The intended constraints were constructed before launch, but this file was written after the single completed attempt. No physics rerun.",
+  "optimizer_steps": 0,
+  "runtime_sha256": "9b87804e5bad278b911f1636e64eec03cf52d7570dd119ee30067c3f3bf13d2a",
+  "metadata_recorded_after_execution": true,
+  "max_process_wall_seconds": 4,
+  "archive_sha256": "4a482bc118db7d7e414cb099d61885249923aa2785dca86c2ca28c62fed69ac2",
+  "replacement_modes": {
+    "2": "Rear pitch axis3 from matching-sign five-degree stream",
+    "0": "Untouched archived stream",
+    "3": "Both pitch axes1,3 from matching-sign five-degree stream",
+    "1": "Front pitch axis1 from matching-sign five-degree stream"
+  },
+  "source_sha256": "a0687739aba9d84011e6a63bf19b75f06f607ff769bb65d48c051b1210e1ea45",
+  "sharp_cases": [
+    -60,
+    -90,
+    60,
+    90
+  ],
+  "warmup_controls": 40,
+  "baseline_gate": "All archived warmup and untouched body/filter/torque/COM samples must match exactly before interventions",
+  "executable_sha256": "5d918cb04e695bff2a97981ad2ab068d35702112832bc7ef45c74696b467193b",
+  "max_substeps": 2740,
+  "max_controls": 274,
+  "post_request_controls": 13,
+  "protocol_id": "pitch-pair-causal-replay-v1-2026-11-24"
+}

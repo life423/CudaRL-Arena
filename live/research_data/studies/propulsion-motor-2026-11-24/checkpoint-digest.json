@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "file_sha256": "bfff9865249690882ff41ab231c1ffb85b045a9484ae5211d9048aab9faac1e4",
+  "file_bytes": 957464,
+  "payload_checksum_fnv1a64": "7134622903755386205",
+  "protocol_checksum_fnv1a64": "4686858391822330531",
+  "source_identity_fnv1a64": "13770614351647423271",
+  "runtime_version": 4,
+  "collision_envelope_version": 2,
+  "observation_schema": 6,
+  "completed_updates": 8,
+  "training_controls": 262144,
+  "training_substeps": 2621440,
+  "actor_Adam_calls": 256,
+  "critic_Adam_calls": 256,
+  "world_stride": 1384,
+  "task_stride": 368,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "assets/research-evidence/pond-propulsion-motor-v1/candidate-8.bin",
+  "validation": "Native evaluation parsed this checkpoint; this export records its envelope, header, counters and file digest. It performs no new policy evaluation."
+}

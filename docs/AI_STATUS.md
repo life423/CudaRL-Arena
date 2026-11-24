@@ -1,6 +1,285 @@
 # AI status — November 24, 2026
 
-**Both residual PPO arms are closed after 32 updates each.** The two-output
+**The bank-practice chooser turned earlier on all 12 held-out starts.**
+Four CUDA PPO updates took 14.098 seconds, with the fitted motor and
+yaw offset frozen. All 12 fixed cases lasted longer, with a median of
+46.12 seconds versus 37.82. The chooser turned at its first cue and
+requested right turns on 126 of 141 decisions. All 12 still stopped
+at the native clearance guard. Godot remains in its verified manual
+mode. [Bank-practice continuation](../assets/research-evidence/pond-flexible-tail-chooser-bank-v2/README.md)
+
+**The first GPU PPO chooser failed bank clearance on all 12 held-out starts.**
+It completed four updates on the RTX 5070 in 13.957 seconds using the
+frozen fitted gait and yaw offset. It kept course on 99 of 117 decisions
+and started turning only 3.24–7.51 seconds before it lost certified
+clearance. Swimming speed, tilt and depth remained healthy. The
+candidate is saved for analysis and the registered Godot app still
+runs live manual controls.
+[Chooser training and held-out results](../assets/research-evidence/pond-flexible-tail-chooser-v1/README.md)
+
+**Both live east-bank turns passed with the frozen flexible-tail motor.**
+At 80 mm depth the right and left turns cleared the bank by at least
+0.424 mm and 0.072 mm at cue setbacks of 407 mm and 316 mm.
+All 49,856 substeps were accepted in 0.349 seconds. The registered
+Godot project now opens a live pond with manual ±15° turn requests,
+native play and pause, zoom and a separate Recordings tab. A learned
+destination chooser is still needed for autonomous pond navigation.
+[Live bank turns and Godot controls](../assets/research-evidence/pond-flexible-tail-live-east-bank-v1/README.md)
+
+**The frozen flexible-tail motor completed both alternating-turn sequences.**
+All six ±15° turns passed both scored windows with no body resets.
+Minimum rolling speed was 9.30 mm/s, with zero measured tilt or depth
+error. The native east-bank geometry replay certified cue setbacks
+of 316 mm for right-to-left and 407 mm for left-to-right at 80 mm
+depth. Those estimates cover the tested trajectories. Live bank
+navigation remains to be evaluated. All 126,656 substeps were
+accepted in 0.845 seconds. Zero PPO updates ran.
+[Alternating handoff and bank results](../assets/research-evidence/pond-flexible-tail-alternating-handoff-v1/README.md)
+
+**One matched right-to-left handoff passed.** The frozen fitted motor and
+saved update-eight offset turned left after a shared right turn and onward
+swim. The left test finished within 4.16° of target, held within 2.18° in
+the onward window and retained at least 99.1% of matched full-beat
+frequency. Minimum rolling speed was 9.30 mm/s with zero tilt or depth
+error. All 37,760 substeps were accepted. No PPO ran.
+[Matched handoff results](../assets/research-evidence/pond-flexible-tail-handoff-pair-v1/README.md)
+
+**The right-turn reversal fell outside the scoring window.** Continuous
+traces found the next reversal 5.6–31.2 ms after the original end in all
+four cases. Mean right-turn cycle frequency retained 90–92% of the
+matched reference and motion remained above 9.43 mm/s during the
+extension, with zero tilt or depth error. The original reversal-count
+score remains 4/8. Left turns and all straight/rest cases reproduced.
+The timing diagnostic completed in 0.226 seconds with no new PPO.
+[Tail-beat timing evidence](../assets/research-evidence/pond-flexible-tail-beat-timing-v1/README.md)
+
+**The whole-beat yaw-offset pilot passed all four left turns.** After eight
+new CUDA PPO updates, all four right turns met the moving course, speed,
+tilt and depth gates. They fell short of the onward root-reversal gate
+with three reversals versus four in the matched baseline. The run took
+1.455 seconds on the RTX 5070 and retained 12/12 straight swims including
+8/8 rest starts. [Whole-beat turn results](../assets/research-evidence/pond-flexible-tail-yaw-beat-v1/README.md)
+
+**The flexible-tail yaw-offset pilot improved course without losing the stroke.**
+Eight CUDA PPO updates took 1.608 seconds. The final mean turn error fell
+from 15.00° to 8.77° and still missed the 5° gate in every case. It passed
+12/12 straight swims including 8/8 rest starts, with zero measured tilt
+or depth error. The frozen fitted motor and the passing straight-swim PPO
+motor remain archived. [Yaw-offset results](../assets/research-evidence/pond-flexible-tail-yaw-offset-v1/README.md)
+
+**Yaw-only PPO preserved flexible-tail swimming from rest.** The RTX 5070
+completed eight updates in 1.591 seconds with the fitted pitch channel
+held neutral. Both scheduled checkpoints passed 12/12. Update eight
+swam at 11.46–11.51 mm/s from rest, with zero measured tilt or depth error
+in the fixed calm-water suite. The passing PPO motor and original fitted
+motor are archived separately.
+[Retention results and checkpoints](../assets/research-evidence/pond-flexible-tail-gait-yaw-v1/README.md)
+
+**The flexible-tail actor now passes the fixed straight-swimming suite.**
+Training-only yaw reference data taught feedback from the actual root angle
+and rate. The fitted actor passed 12/12, with all eight rest starts reaching
+11.05–11.08 mm/s upright. Eight CUDA PPO updates increased speed, but the
+updated actor exceeded the depth and tilt limits. The passing fitted
+checkpoint is separate from the PPO checkpoints and Godot replays.
+[Yaw diagnostic and gait pilot](../assets/research-evidence/pond-flexible-tail-gait-v1/README.md)
+
+**The flexible-tail straight-swimming PPO pilot completed 12 updates.** The
+RTX 5070 accepted 3,145,728 substeps in a 2.020-second trainer process.
+The candidate stayed upright, but its best final speeds were 0.12 mm/s
+from rest and 2.86 mm/s from an existing swim. It passed 0/12, and the
+current flexible-tail preview continues to show recorded physics.
+[Straight-swimming pilot and preview.2 source audit](../assets/research-evidence/pond-flexible-tail-launch-v1/README.md)
+
+**The continuous flexible-tail PPO lesson completed eight updates.** Across
+256 worlds the RTX 5070 accepted 2,097,152 physics substeps in 1.604 seconds.
+The saved and trained actors both passed 0/4 held-out swim-turn-swim cases.
+All speeds were below 6 mm/s, both right requests turned left, and the
+candidate's left-turn tilt increased. The candidate remains in research.
+[Paired turning results](../assets/research-evidence/pond-flexible-tail-continuous-turn-ppo-v1/README.md)
+
+**The first fitted flexible-tail motor moved under learned control.** It
+completed 384 supervised CUDA Adam steps and zero PPO updates. All seven
+physical validation cases completed. Forward motion measured 4.93 mm/s,
+with 16.9° peak tilt, and the candidate passed 0/7 swim, turn and hold
+checks. A separate pitch comparison removed the tilt but also passed 0/7.
+The actor stays in research. [Motor pilot](../assets/research-evidence/pond-flexible-tail-motor-pilot-v1/README.md)
+
+**Four moving turns passed over the larger pond's shoals.** The native
+flexible-tail check and Godot preview share the same 1.76 × 1.20 m habitat.
+Across four starts, the diagnostic turned about 26° on 30° requests and
+retained at least 21 mm of conservative vertical clearance. This verifies
+submerged movement on the larger slope. Autonomous swimming still requires
+a learned flexible-tail motor and chooser. A continuous interior sequence
+passed four alternating turns over 54 simulated seconds. The two outward
+sequences reached the conservative clearance bound during the fourth and
+first cues, respectively. [Habitat results](../assets/research-evidence/pond-flexible-habitat-v1/README.md)
+
+**The flexible tail held station in a gentle current.** With native diagnostic
+root requests it held a fixed anchor in 0.75 mm/s flow for the 20-second
+trials. The disturbed case stayed within 1.11 mm of the anchor with peak hold
+speed of 0.293 mm/s, and repeated the pass at half the timestep. The matched
+passive body drifted 10.35 mm. Centered still-water rest passed. The existing
+swim-to-hold fixture passed 0/28 braking probes, so it cannot yet park on
+command from cruising speed. The updated Godot replay shows the native speed
+and anchor. [Hold results and trace](../assets/research-evidence/pond-flexible-tail-hold-v1/README.md)
+
+**The flexible-tail prototype has moving-turn authority in calm water.** One
+powered tail-root joint drives yaw and pitch. With diagnostic root targets the
+body swam forward at 8.76 mm/s and passed all four ±15° and ±30° moving-turn
+cases in the 12-second fixture. The ±30° cases achieved about ±26° of
+whole-body course change. The zero-angle stop trial ended at 4.30 mm/s and
+failed the stop criterion. No PPO ran. The existing live pond continues to
+load its saved motor, and a separate Godot scene plays the native prototype
+recording. [Fixture and recordings](../assets/research-evidence/pond-flexible-tail-v1/README.md)
+
+**The forward-only lesson found brief propulsion during exploration.** A
+fresh two-joint motor trained for eight native CUDA PPO updates with
+persistent exploration and a signed reward for forward center-of-mass
+movement at low speed. All 512 worlds practised straight swimming.
+Training collected 262,144 controls in 2.15 seconds. Initialization,
+training and both fixed assessments took 7.90 seconds.
+
+Mean forward speed in the sampled training controls climbed from
+0.050 to 0.241 mm/s. In update eight, a training world sustained at least
+1 mm/s for 2.05 seconds. Peak sampled forward speed was 1.18 mm/s. The
+saved deterministic candidate still passed 0/6 swims and 0/16 turns, and
+passed 14/14 fixed rest cases. Those rest cases measure holding position
+from rest. Braking from forward motion remains unverified.
+
+The original two-joint body remains in use. Godot Details displays the
+recorded forward lesson and keeps the original motor active.
+[Propulsion evidence](../assets/research-evidence/pond-propulsion-motor-v1)
+
+**Persistent exploration increased sampled movement and stopped at the
+process deadline.** Continuing the fresh motor from update eight saved
+seven complete updates through checkpoint 15. The first CUDA collection
+took 2.20 seconds and the four-second process watchdog stopped the final
+update. Later work accounting remains unresolved, and the allocation was
+not restarted. Peak sampled horizontal speed was 1.53 mm/s over the seven
+completed batches. None reached the 6 mm/s qualification floor, and no
+turn completed. The saved checkpoint scored 0/4 in a separate short-swim
+diagnostic, averaging about 0.0085 mm/s. The full update-16 assessment
+did not run. [Stopped run and saved-checkpoint check](../assets/research-evidence/pond-fresh-correlated-v1)
+
+**The first new motor trained from fresh weights.** The actor started with
+seeded hidden weights and zero output means. The critic started fresh.
+This trial used a neutral resting gain and inherited no motor 336 weights.
+It completed eight native CUDA PPO updates on 512 worlds, collecting
+262,144 transitions. Training took 2.11 seconds. Initialization, training
+and both full assessments took 7.93 seconds.
+
+Rest passed 14/14 at both checkpoints. Short swim remained 0/4, long swim
+0/2 and turns 0/16. The deterministic candidate remained almost stationary.
+Across the moving-task training controls, mean horizontal speed rose from
+0.088 mm/s in update one to 0.159 mm/s in update eight. The highest recorded
+speed was 0.661 mm/s. None reached the 6 mm/s evaluation floor. Training
+recorded 512 turn starts and zero stabilized completions. The exposure
+shows that the first lesson needs to elicit a sustained swimming stroke
+before it can teach useful steering.
+
+Godot Details shows the fresh motor's recorded assessment and continues
+to load motor 336. [Training evidence](../assets/research-evidence/pond-fresh-motor-v1)
+
+**Training on 15–30° requests retained existing skills and added no turns.**
+Two matched eight-update CUDA PPO arms practised 15°, 20°, 25° and 30° in
+both directions. The second applied the existing course factor to the
+speed term as well as forward progress during turning. Both passed 3/16
+fixed turns and 1/6 of the fixed ±15°/30° cases. Mean course error across
+those six was 10.60° with the original reward and 10.62° after the change.
+Every 30° case stayed below 10° tilt and completed with 7.68–7.87 mm/s of
+projected speed. They finished 10.52–15.10° short and exceeded the 1 mm
+depth criterion. All 20 fresh swimming and rest cases and 28 required
+long-swim windows passed in each arm.
+
+The two trials took 6.29 and 4.23 seconds end to end, with about 2.04 seconds
+of training each. Neither qualified for adoption. Godot Details shows the
+recorded result and motor 336 remains active.
+[Matched training evidence](../assets/research-evidence/pond-336-medium-turn-v1)
+
+A matched 0.65-second replay isolated the two pitch channels. Replacing
+both with the corresponding gentle-turn streams while preserving the sharp
+turn's yaw commands lowered peak tilt on the four ±60°/90° cases from
+11.54–14.77° to 5.02–9.22°. Rear pitch alone worsened the +90° case.
+The combined change did not establish successful steering. The diagnostic
+matched 14,310 archived values exactly before substitution and used
+274 controls in 0.43 seconds with no optimizer calls.
+[Joint replay evidence](../assets/research-evidence/pond-pitch-pair-causal-v1)
+
+**Separating the swimming direction from the turn target kept the creature
+upright through the sharp-turn tests.** After eight CUDA PPO updates the
+eight ±60°/90° cases stayed below 9.44° tilt and 0.25 mm depth error. All
+sixteen turns ran to completion. Only one turn passed because the candidate
+continued nearly straight, with 74.97° mean course error on the sharp cases.
+All 20 swimming and resting cases passed fresh, including all 28 required
+long-swim windows. Training took 2.03 seconds and the full trial with
+physical checks before and after training took 7.95 seconds. Godot Details
+shows the result and keeps motor 336 active.
+[Trial evidence](../assets/research-evidence/pond-336-course-context-v1)
+
+The matched pitch replay reconstructed the native warm-up state and matched
+14,310 archived values exactly. Substituting only a gentler front-pitch
+command in the first 0.65 seconds reduced peak tilt in all four sharp cases.
+The two rightward cases stayed below 10° during the diagnostic interval.
+Their COM did not make the requested turn. The replay ran 170 controls in
+0.41 seconds without training.
+[Pitch replay evidence](../assets/research-evidence/pond-front-pitch-causal-v1)
+
+A closed-loop check used the true request for motor 336's two yaw outputs
+and measured swimming direction for its two pitch outputs. It completed all
+16 tests in 0.55 seconds with zero training. Sharp-case tilt stayed below
+10°, but the final COM course fell well short of the requested angles. It
+passed one gentle turn and no sharp turns.
+[Closed-loop check](../assets/research-evidence/pond-yaw-pitch-observation-check-v1)
+
+**Direct retraining preserved swimming and rest and retained 3/16 turns.**
+An eight-update native CUDA PPO trial fine-tuned a separate copy of motor
+336 after verifying exact initialization. The candidate passed both ±5°
+cases and the −15° case. It passed 0/8 sharp turns. Mean sharp-course error
+was 37.47°, compared with 37.59° for the saved motor. Both +90° cases stopped
+at the depth limit. The candidate passed four short swims, both long swims
+with all 28 required windows, and 14 rests in a fresh evaluation.
+
+Training collected 262,144 transitions in 2.11 seconds. Eight concurrent CPU
+workers ran the unchanged 36-case assessment in 1.68 seconds, for a 4.51-second
+trial. We retained the earlier archived-baseline binding failure, which ran
+zero physics controls and zero optimizer updates. Godot Details shows the
+direct-retraining result. The package still runs the original motor and
+holding gain. [Evidence](../assets/research-evidence/pond-336-direct-retrain-v1)
+
+**The early posture trial finished without improving turn passes.** Eight
+native CUDA PPO updates took 1.77 seconds and the trial including fixed-turn
+evaluation took 5.53 seconds. The candidate passed the same two ±5° cases as
+the matched original-reward run, with no passes on the eight ±60°/90° cases.
+Average sharp-turn course error rose from 37.19° to 37.35°. Average peak tilt
+fell from 16.33° to 16.28°, and every sharp case crossed 10° at the same 5 ms
+sample in both runs. Both +90° cases still reached the depth task limit.
+
+The trial added a bounded posture cost above 5° during active turning. It
+changed only the separate four-output residual network. The evaluator
+confirmed exact inactive bypass and reused the original straight-swimming
+and resting checks. Godot Details shows the result and still runs motor
+336. [Trial evidence](../assets/research-evidence/pond-four-posture-v1)
+
+**The four-output course-rate comparison completed eight PPO updates per arm.**
+Each arm trained in about 1.82 seconds, collecting 262,144 transitions. Both
+passed 2/16 fixed turns and 0/8 direct 60°/90° turns. Mean course error on the
+eight sharp cases was 37.19° with the original reward and 37.39° with the
+course-rate term. The original motor passed 3/16. Both new trials are closed.
+
+The trial practised ±15°, ±30°, ±60° and ±90° from the first request. Each arm
+recorded 493 starts, including 246 sharp turns. Both sets of large-turn
+checks crossed 10° tilt by 2.15–2.65 s, before exceeding 1 mm depth error.
+The two +90° cases per arm stopped at the 5 mm depth task limit. This points
+to early posture control as the next measured failure to address.
+
+The four-output archive replay matched all 32,768 transitions in 2.32 s.
+Each training and evaluation process finished under four seconds. The
+original controller bypass during straight swimming and resting was verified
+exact, so the evaluator reused archived retention instead of repeating the
+full suite. Godot Details shows the recorded result with motor 336 still
+active. [Comparison and checkpoint evidence](../assets/research-evidence/pond-four-course-rate-v1/comparison.json)
+
+The previous yaw-only and four-output arms closed after 32 updates each. The two-output
 yaw head and the four-output head each finished at 2/16 fixed turns, compared
 with 3/16 before training. Motor 336 and its holding gain stayed frozen.
 Straight swimming and resting bypass the residual, with exact inactive
@@ -11,22 +290,21 @@ The registered Godot swimmer continues using the original saved motor.
 Conservative swept-clearance rejection passed its matched CPU/CUDA
 benchmark. One late-state control across 512 worlds fell from 149.9369 ms
 to 2.0219 ms. Earlier-state and bank-contact timings differ. This 74.16×
-result describes that control workload. The one full-collector attempt hit
-its four-second cap before issuing any physics. It completed zero controls
-and zero optimizer calls. Full-rollout qualification remains pending, and the
-new training mode stays gated. A follow-up completed data setup in 193 ms yet
-still timed out before issuing a control. A zero-kernel probe reproduced the
-stall in the 36 MB CUDA module load. The current performance target is reducing
-the generated module while keeping the physical calculations unchanged.
+result describes that control workload. The first two full-collector
+attempts hit the four-second cap before issuing any physics. Sharing the
+device terrain queries reduced the CUDA module from 36.12 MB to 14.15 MB.
+The first cold module probe passed in 2.10 s, the matched physics check in
+2.49 s, and the full saved 32,768-control rollout in 0.42 s from a new process
+after those gates. The replay matched its reference and ran zero optimizer
+updates. The training mode requires a separate sealed PPO allocation.
+Full PPO training time is still unmeasured.
 [GPU results and evidence](GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Residual protocol](POND_RESIDUAL_PPO_PROTOCOL_2026-11-24.md) · [Motor input audit](MOTOR_336_INPUT_AUDIT_2026-11-24.md)
 
-The independent review of main `058fda5` proposes one future paired experiment
-on a frozen 336 plus four-output residual. Both arms practise balanced ±15°
-turns. The proposed reward adds immediate credit for matching a corrective
-horizontal COM course rate based on signed course error divided by two seconds.
-The rate target is capped at ±10°/s and the proposed error scale is 7.5°/s.
-Keep alignment, speed, depth and posture scoring and all fixed evaluation
-criteria. This proposal is separate from the CUDA work and remains unrun.
+The course-rate comparison used the independent review's proposed reward
+factor on positive active turns. The desired rate was signed course error
+divided by two seconds, limited to ±10°/s, with a 7.5°/s error scale.
+Existing alignment, speed, depth and posture scoring stayed in the objective
+and both arms used the same practice schedule.
 
 ## Previous half-second feedback exercise
 

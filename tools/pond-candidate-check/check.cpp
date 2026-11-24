@@ -6,6 +6,7 @@
 #include "rl/learned_amplitude_math.h"
 #include "nn/mlp_cpu.h"
 #include "pond_candidate_identity.h"
+#include "../pond-ppo/turn_course_observation.h"
 #ifdef CUDARL_RESIDUAL_FOUR_EVALUATOR
 #include "../pond-residual-four-ppo/contract.h"
 namespace residual_contract=cudarl::residual_four_ppo;
@@ -17,6 +18,7 @@ namespace residual_contract=cudarl::residual_ppo;
 #include <bcrypt.h>
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <chrono>
 #include <charconv>
 #include <cmath>
@@ -33,6 +35,7 @@ namespace residual_contract=cudarl::residual_ppo;
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <vector>
 namespace fs=std::filesystem;
 namespace pp=cudarl::rl::pond_ppo;
@@ -84,10 +87,31 @@ struct Options {
     uint64_t inherited_checkpoint_checksum=0,distilled_actor_checksum=0;
     uint32_t supervised_adam_calls=0;
     bool residual_evaluation=false,turn_first=false,full_retention_executed=false,retention_reused_after_exact_inactive_proof=false;
+    uint32_t assessment_workers=0;
 };
+bool eight_update_residual_study(const std::string& id) {
+#ifdef CUDARL_RESIDUAL_FOUR_EVALUATOR
+    return id==residual_contract::course_rate_protocol_id||id==residual_contract::posture_protocol_id;
+#else
+    (void)id;
+    return false;
+#endif
+}
+bool residual_study(const std::string& id) {
+    return id==residual_contract::protocol_id||eight_update_residual_study(id);
+}
+bool direct_study(const std::string& id) {
+    return id==pp::direct_retrain_protocol_id||id==pp::course_context_protocol_id||id==pp::medium_turn_protocol_id||id==pp::fresh_motor_protocol_id||id==pp::correlated_motor_protocol_id||id==pp::propulsion_motor_protocol_id;
+}
+bool fresh_study(const std::string& id) {
+    return id==pp::fresh_motor_protocol_id||id==pp::correlated_motor_protocol_id||id==pp::propulsion_motor_protocol_id;
+}
 std::string validated_study_id(const std::string& text){const auto id=scalar(text,"protocol_id");
-    require(id==residual_contract::protocol_id||id==distillation_protocol_id||id==pp::default_study_protocol_id||id==pp::curriculum_study_protocol_id||id==pp::course_study_protocol_id||id==pp::repeated_study_protocol_id||id==pp::half_second_study_protocol_id||id==pp::signed_course_study_protocol_id,"Wrong evaluation protocol");
+    require(residual_study(id)||id==distillation_protocol_id||direct_study(id)||id==pp::default_study_protocol_id||id==pp::curriculum_study_protocol_id||id==pp::course_study_protocol_id||id==pp::repeated_study_protocol_id||id==pp::half_second_study_protocol_id||id==pp::signed_course_study_protocol_id,"Wrong evaluation protocol");
+    if(id==pp::correlated_motor_protocol_id)require(scalar(text,"max_updates")=="16"&&scalar(text,"additional_updates")=="8"&&scalar(text,"max_process_wall_seconds")=="4","Wrong correlated continuation allocation");
+    else if(direct_study(id))require(scalar(text,"max_updates")=="8"&&scalar(text,"max_process_wall_seconds")=="4","Wrong direct motor allocation");
     if(id==residual_contract::protocol_id)require(scalar(text,"max_updates")=="32","Wrong residual PPO allocation");
+    if(eight_update_residual_study(id))require(scalar(text,"max_updates")=="8"&&scalar(text,"max_process_wall_seconds")=="4","Wrong eight-update allocation");
     if(id==distillation_protocol_id)require(scalar(text,"max_PPO_updates")=="0"&&scalar(text,"max_supervised_Adam_calls")=="64","Wrong distillation allocation");
     if(id==pp::signed_course_study_protocol_id)require(scalar(text,"study_program")=="signed-half-second-v1"&&scalar(text,"max_updates")=="8","Wrong signed actor study or budget");
     if(id==pp::half_second_study_protocol_id)require(scalar(text,"study_program")=="half-second-course-v1"&&scalar(text,"max_updates")=="8","Wrong half-second exercise or budget");
@@ -95,7 +119,7 @@ std::string validated_study_id(const std::string& text){const auto id=scalar(tex
     if(id==pp::course_study_protocol_id)require(scalar(text,"study_program")=="course-direction-v1","Unbound course-reward study");
     if(id==pp::repeated_study_protocol_id)require(scalar(text,"study_program")=="repeated-headings-v1","Unbound repeated-request study");return id;}
 uint32_t expected_task_stride(const std::string& id) {
-    if(id==pp::signed_course_study_protocol_id||id==distillation_protocol_id||id==residual_contract::protocol_id)return sizeof(ps::SignedCourseTask);
+    if(id==pp::signed_course_study_protocol_id||direct_study(id)||id==distillation_protocol_id||residual_study(id))return sizeof(ps::SignedCourseTask);
     if(id==pp::half_second_study_protocol_id)return sizeof(cudarl::rl::pond_ppo_schedule::HalfSecondTask);
     return static_cast<uint32_t>(id==pp::repeated_study_protocol_id?sizeof(cudarl::rl::pond_ppo_schedule::SavedTask):sizeof(pt::Task));
 }
@@ -221,6 +245,24 @@ void pure_tests() {
     check(validated_study_id(R"({"protocol_id":"pond-motor-ppo-v4-repeated-2026-11-24","study_program":"repeated-headings-v1"})")==pp::repeated_study_protocol_id);
     rejects([&](){validated_study_id(R"({"protocol_id":"pond-motor-ppo-v4-repeated-2026-11-24","study_program":"course-direction-v1"})");});
     check(expected_task_stride(pp::default_study_protocol_id)==sizeof(pt::Task)&&expected_task_stride(pp::repeated_study_protocol_id)==sizeof(cudarl::rl::pond_ppo_schedule::SavedTask)&&sizeof(cudarl::rl::pond_ppo_schedule::SavedTask)>sizeof(pt::Task));
+    check(validated_study_id(std::string("{\"protocol_id\":\"")+pp::direct_retrain_protocol_id+"\",\"max_updates\":8,\"max_process_wall_seconds\":4}")==pp::direct_retrain_protocol_id);
+    rejects([&](){validated_study_id(std::string("{\"protocol_id\":\"")+pp::direct_retrain_protocol_id+"\",\"max_updates\":32,\"max_process_wall_seconds\":4}");});
+    check(expected_task_stride(pp::direct_retrain_protocol_id)==sizeof(ps::SignedCourseTask));
+    check(validated_study_id(std::string("{\"protocol_id\":\"")+pp::course_context_protocol_id+"\",\"max_updates\":8,\"max_process_wall_seconds\":4}")==pp::course_context_protocol_id);
+    rejects([&](){validated_study_id(std::string("{\"protocol_id\":\"")+pp::course_context_protocol_id+"\",\"max_updates\":32,\"max_process_wall_seconds\":4}");});
+    check(expected_task_stride(pp::course_context_protocol_id)==sizeof(ps::SignedCourseTask));
+    check(validated_study_id(std::string("{\"protocol_id\":\"")+pp::medium_turn_protocol_id+"\",\"max_updates\":8,\"max_process_wall_seconds\":4}")==pp::medium_turn_protocol_id);
+    rejects([&](){validated_study_id(std::string("{\"protocol_id\":\"")+pp::medium_turn_protocol_id+"\",\"max_updates\":32,\"max_process_wall_seconds\":4}");});
+    check(expected_task_stride(pp::medium_turn_protocol_id)==sizeof(ps::SignedCourseTask));
+    check(validated_study_id(std::string("{\"protocol_id\":\"")+pp::fresh_motor_protocol_id+"\",\"max_updates\":8,\"max_process_wall_seconds\":4}")==pp::fresh_motor_protocol_id);
+    rejects([&](){validated_study_id(std::string("{\"protocol_id\":\"")+pp::fresh_motor_protocol_id+"\",\"max_updates\":32,\"max_process_wall_seconds\":4}");});
+    check(expected_task_stride(pp::fresh_motor_protocol_id)==sizeof(ps::SignedCourseTask));
+    check(validated_study_id(std::string("{\"protocol_id\":\"")+pp::correlated_motor_protocol_id+"\",\"max_updates\":16,\"additional_updates\":8,\"max_process_wall_seconds\":4}")==pp::correlated_motor_protocol_id);
+    rejects([&](){validated_study_id(std::string("{\"protocol_id\":\"")+pp::correlated_motor_protocol_id+"\",\"max_updates\":8,\"additional_updates\":8,\"max_process_wall_seconds\":4}");});
+    check(expected_task_stride(pp::correlated_motor_protocol_id)==sizeof(ps::SignedCourseTask));
+    check(validated_study_id(std::string("{\"protocol_id\":\"")+pp::propulsion_motor_protocol_id+"\",\"max_updates\":8,\"max_process_wall_seconds\":4}")==pp::propulsion_motor_protocol_id);
+    rejects([&](){validated_study_id(std::string("{\"protocol_id\":\"")+pp::propulsion_motor_protocol_id+"\",\"max_updates\":32,\"max_process_wall_seconds\":4}");});
+    check(expected_task_stride(pp::propulsion_motor_protocol_id)==sizeof(ps::SignedCourseTask));
     cp::Writer distill;
     for(uint32_t value:{0x31445350u,1u,pp::signed_inputs,static_cast<uint32_t>(pp::actions),
             pp::actor_parameter_count(pp::signed_inputs),64u})distill.value(value);
@@ -336,8 +378,8 @@ protected:
 };
 
 struct Output {
-    fs::path root;std::ofstream controls,cases,windows,turn_substeps;std::set<std::pair<std::string,int>> attempted;bool retention_reused=false;
-    explicit Output(const fs::path& path):root(path),controls(path/"controls.csv"),cases(path/"cases.csv"),windows(path/"long-windows.csv"),turn_substeps(path/"turn-substeps.csv") {
+    fs::path root;std::ofstream controls,cases,windows,turn_substeps;std::set<std::pair<std::string,int>> attempted;bool retention_reused=false,complete_roster=true;
+    explicit Output(const fs::path& path,bool roster=true):root(path),controls(path/"controls.csv"),cases(path/"cases.csv"),windows(path/"long-windows.csv"),turn_substeps(path/"turn-substeps.csv"),complete_roster(roster) {
         const std::locale evidence_locale(std::locale::classic(),new EvidenceNumbers);
         for(auto* stream:{&controls,&cases,&windows,&turn_substeps}){
             stream->imbue(evidence_locale);
@@ -368,7 +410,7 @@ struct Output {
         cp::write_atomic((root/(stem+"-native.bin")).string(),out.data);
     }
     ~Output() {
-        for(const auto& spec:specs())if(attempted.count({spec.suite,spec.id})==0)
+        for(const auto& spec:specs())if(complete_roster&&attempted.count({spec.suite,spec.id})==0)
             cases<<spec.suite<<','<<spec.id<<','<<spec.pose<<','<<spec.offset<<','<<spec.turn_degrees<<','<<spec.controls<<",0,0,0,0,0,0,0,0,180,0,0,0,0,"<<(retention_reused&&!spec.turn?"archived_retention_exact_inactive_proof":"skipped_after_stop")<<'\n';
     }
 };
@@ -381,7 +423,7 @@ void motor_command(const float* base,const float* correction,int dimensions,bool
     }
     for(int j=0;j<4;++j)command[j]=tanhf(gain*latent[j]);
 }
-Outcome evaluate(const Spec& spec,const pp::CandidateState& candidate,nn::CpuMlp<float>& actor,Budget& budget,Output& output,const Keys& expected_keys,nn::CpuMlp<float>* residual=nullptr) {
+Outcome evaluate(const Spec& spec,const pp::CandidateState& candidate,nn::CpuMlp<float>& actor,Budget& budget,Output& output,const Keys& expected_keys,nn::CpuMlp<float>* residual=nullptr,bool course_context=false) {
     output.attempted.emplace(spec.suite,spec.id);auto f=fixture(spec);HoldScore hold(spec.controls);SwimScore swim;TurnScore turn;Outcome result;
     ps::CourseHistory history;ps::HorizontalCourse movement;
     const bool signed_turn=spec.turn && (residual||candidate.actor_inputs==pp::signed_inputs);
@@ -398,6 +440,7 @@ Outcome evaluate(const Spec& spec,const pp::CandidateState& candidate,nn::CpuMlp
             float observation[pp::signed_inputs]{},command[4]{};
             require(pt::observe(f.task,f.world,observation),"Candidate observation failed");
             if(signed_turn)observation[pp::observations]=ps::signed_course_input(f.task,movement);
+            if(course_context)cudarl::rl::pond_ppo_course_context::apply(f.task,f.world.motor.physical.body,movement,observation);
             actor.forward(observation,1);
             const bool steering_active=residual&&spec.turn&&f.task.request_changed;
             if(steering_active)residual->forward(observation,1);
@@ -496,10 +539,12 @@ void write_result(const Options& options,const pp::CandidateState& candidate,con
     out<<std::setprecision(17)<<"{\"schema\":2,\"protocol_id\":\""<<options.study_id<<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"preflight_only\":"<<(preflight?"true":"false")
         <<",\"passed\":"<<((preflight||(summary.retention&&assessment_completed(summary)))&&!summary.hard?"true":"false")
         <<",\"baseline_only\":"<<(options.baseline?"true":"false")<<",\"assessment_completed\":"<<(assessment_completed(summary)?"true":"false")
+        <<",\"fresh_motor\":"<<(fresh_study(options.study_id)?"true":"false")
         <<",\"reused_archived_baseline\":"<<(options.reuse_baseline?"true":"false")
         <<",\"archived_retention_controls\":"<<((options.reuse_baseline||options.retention_reused_after_exact_inactive_proof)&&summary.retention?30400:0)
         <<",\"archived_retention_substeps\":"<<((options.reuse_baseline||options.retention_reused_after_exact_inactive_proof)&&summary.retention?304000:0)
         <<",\"full_retention_executed\":"<<(options.full_retention_executed?"true":"false")
+        <<",\"assessment_workers\":"<<options.assessment_workers
         <<",\"retention_reused_after_exact_inactive_proof\":"<<(options.retention_reused_after_exact_inactive_proof?"true":"false")
         <<",\"actual_retention_cases_attempted\":"<<((options.reuse_baseline||options.retention_reused_after_exact_inactive_proof)?0:summary.retention_attempted)
         <<",\"training_admission_qualified\":"<<(!preflight&&summary.retention&&assessment_completed(summary)?"true":"false")
@@ -511,9 +556,9 @@ void write_result(const Options& options,const pp::CandidateState& candidate,con
         <<",\"distilled_actor_sha256\":\""<<options.distilled_actor_sha256<<"\""
         <<",\"distilled_actor_checksum\":"<<options.distilled_actor_checksum
         <<",\"inherited_checkpoint_checksum\":"<<options.inherited_checkpoint_checksum
-        <<",\"inherited_PPO_updates\":"<<(options.residual_evaluation?0:candidate.counters.completed_updates)
+        <<",\"inherited_PPO_updates\":"<<(options.study_id==pp::correlated_motor_protocol_id?8:(options.residual_evaluation||direct_study(options.study_id))?0:candidate.counters.completed_updates)
         <<",\"supervised_Adam_calls\":"<<options.supervised_adam_calls
-        <<",\"new_PPO_updates\":"<<(options.residual_evaluation?candidate.counters.completed_updates:0)
+        <<",\"new_PPO_updates\":"<<(options.study_id==pp::correlated_motor_protocol_id?8:(options.residual_evaluation||direct_study(options.study_id))?candidate.counters.completed_updates:0)
         <<",\"residual_evaluation\":"<<(options.residual_evaluation?"true":"false")
         <<",\"candidate_actor_adam_calls\":"<<candidate.counters.actor_adam_calls<<",\"candidate_critic_adam_calls\":"<<candidate.counters.critic_adam_calls
         <<",\"retention_passed\":"<<(summary.retention?"true":"false")<<",\"retention_cases_passed\":"<<summary.retention_passed<<",\"retention_cases_attempted\":"<<summary.retention_attempted
@@ -534,7 +579,7 @@ void write_result(const Options& options,const pp::CandidateState& candidate,con
 // buffers, critic moments and training-only episode state are never consulted.
 pp::RetentionReceipt verified_prior_baseline(const std::string& plan, const Options& options,
         const pp::CandidateState& candidate, uint64_t parent, Summary& summary) {
-    require((options.study_id==pp::half_second_study_protocol_id||options.study_id==pp::signed_course_study_protocol_id||options.study_id==residual_contract::protocol_id)&&options.baseline&&
+    require((options.study_id==pp::half_second_study_protocol_id||options.study_id==pp::signed_course_study_protocol_id||options.study_id==pp::direct_retrain_protocol_id||options.study_id==pp::medium_turn_protocol_id||residual_study(options.study_id))&&options.baseline&&
             candidate.counters.completed_updates==0,"Baseline reuse outside the authorized study");
     const auto verify_input=[&](const std::string& name) {
         const fs::path path=scalar(plan,name+"_path_absolute");
@@ -548,8 +593,16 @@ pp::RetentionReceipt verified_prior_baseline(const std::string& plan, const Opti
     const auto prior_plan=file(prior_plan_path);
     const std::string prior_text(prior_plan.begin(),prior_plan.end());
     const auto prior_protocol=cp::checksum(prior_plan);
+    const bool direct=options.study_id==pp::direct_retrain_protocol_id||options.study_id==pp::medium_turn_protocol_id;
+    if(direct) {
+        const auto dynamics=verify_input("current_physics_receipt");
+        require(sha256(file(dynamics))=="2706b16e46537410c3f623c80fb8eb05ece74221e7e13727d2e37d12250cb7d7"&&
+                scalar(plan,"qualified_physics_source_sha256")=="c25f83ddf969185be43e8fc8905e9a22fa3450069a957c9d93e722a5a2e430bc",
+                "Current exact CPU/GPU arithmetic qualification differs");
+    }
     require(sha256(file(options.reference))==scalar(prior_text,"long_reference_sha256")&&
-            scalar(plan,"qualified_physics_source_sha256")==scalar(prior_text,"qualified_physics_source_sha256"),
+            scalar(plan,direct?"archived_baseline_physics_source_sha256":"qualified_physics_source_sha256")==
+                scalar(prior_text,"qualified_physics_source_sha256"),
             "Baseline physics or long-swim reference changed");
     const auto prior_payload=cp::read(verify_input("previous_candidate_zero").string());
     const auto prior=pp::read_candidate(prior_payload,parent,prior_protocol,
@@ -604,6 +657,82 @@ pp::RetentionReceipt verified_prior_baseline(const std::string& plan, const Opti
     summary.retention=true;summary.reason="identical_initial_actor_reused_verified_v4_baseline";
     return receipt;
 }
+#ifndef CUDARL_RESIDUAL_EVALUATOR
+// Fixtures have independent initial body, servo and course-history state. Each
+// worker owns its actor, counters and files; arithmetic within a fixture remains
+// sequential and identical to the original evaluator. Aggregate evidence is
+// merged in the original fixture order after all started cases have finished.
+void parallel_assessment(Options& options,const pp::CandidateState& candidate,Budget& budget,
+        Summary& summary,const Keys& expected_keys,Keys& candidate_keys) {
+    const auto all=specs();
+    struct Item {Budget budget;Outcome outcome;fs::path path;bool started=false;};
+    std::vector<Item> items(all.size());
+    std::atomic<size_t> next{0};std::atomic<bool> stop{false};
+    options.assessment_workers=std::max(1u,std::min(8u,std::thread::hardware_concurrency()));
+    const auto worker=[&]() {
+        for(;;) {
+            if(stop.load())return;
+            const size_t index=next.fetch_add(1);if(index>=all.size())return;
+            auto& item=items[index];const auto& spec=all[index];item.started=true;
+            item.budget.began=budget.began;item.budget.prior=budget.prior;
+            item.path=options.out/("fixture-"+std::to_string(index));
+            try {
+                require(fs::create_directories(item.path),"Parallel fixture directory already exists");
+                nn::CpuMlp<float> actor({{int(candidate.actor_inputs),32,32,4},
+                    {nn::Activation::Tanh,nn::Activation::Tanh,nn::Activation::Identity}});
+                actor.params()=candidate.actor;
+                Output output(item.path,false);
+                item.outcome=evaluate(spec,candidate,actor,item.budget,output,expected_keys,nullptr,options.study_id==pp::course_context_protocol_id);
+            }catch(const std::exception& error) {
+                item.outcome.hard=true;item.outcome.reason=error.what();
+            }
+            if(item.outcome.hard)stop.store(true);
+        }
+    };
+    std::vector<std::thread> workers;
+    try {for(uint32_t i=0;i<options.assessment_workers;++i)workers.emplace_back(worker);}
+    catch(...) {stop.store(true);for(auto& thread:workers)thread.join();throw;}
+    for(auto& thread:workers)thread.join();
+    Output output(options.out);
+    const auto append=[&](std::ofstream& destination,const fs::path& path) {
+        std::ifstream input(path);require(bool(input),"Missing parallel fixture evidence");
+        std::string header;require(bool(std::getline(input,header)),"Missing parallel evidence header");
+        if(input.peek()!=std::char_traits<char>::eof())destination<<input.rdbuf();
+        require(bool(destination)&&!input.bad(),"Parallel fixture evidence merge failed");
+    };
+    for(size_t i=0;i<all.size();++i) {
+        const auto& spec=all[i];const auto& item=items[i];if(!item.started)continue;
+        const auto& outcome=item.outcome;
+        budget.controls+=item.budget.controls;budget.substeps+=item.budget.substeps;
+        budget.retention_controls+=item.budget.retention_controls;budget.retention_substeps+=item.budget.retention_substeps;
+        budget.turn_controls+=item.budget.turn_controls;budget.turn_substeps+=item.budget.turn_substeps;
+        if(fs::exists(item.path/"cases.csv")) {
+            output.attempted.emplace(spec.suite,spec.id);
+            append(output.controls,item.path/"controls.csv");append(output.cases,item.path/"cases.csv");
+            append(output.windows,item.path/"long-windows.csv");append(output.turn_substeps,item.path/"turn-substeps.csv");
+            std::ifstream rows(item.path/"cases.csv");std::string line;
+            std::getline(rows,line);
+            if(!std::getline(rows,line))output.cases<<spec.suite<<','<<spec.id<<','<<spec.pose<<','<<spec.offset<<','<<spec.turn_degrees<<','<<spec.controls
+                <<','<<item.budget.controls<<",0,"<<item.budget.substeps<<",0,0,1,0,0,180,0,0,0,0,parallel_fixture_setup_failed\n";
+        }
+        if(spec.turn){++summary.turn_attempted;summary.turn_passed+=outcome.passed?1u:0u;summary.turn_completed+=outcome.completed?1u:0u;}
+        else {
+            ++summary.retention_attempted;summary.retention_passed+=outcome.passed?1u:0u;summary.retention_completed+=outcome.completed?1u:0u;
+            candidate_keys.insert(outcome.long_keys.begin(),outcome.long_keys.end());
+            if(spec.holding){++summary.hold_attempted;summary.hold_passed+=outcome.passed?1u:0u;}
+            else if(spec.long_swim){++summary.long_attempted;summary.long_passed+=outcome.passed?1u:0u;}
+            else{++summary.short_attempted;summary.short_passed+=outcome.passed?1u:0u;}
+            if(!outcome.passed&&summary.first_retention_failure.empty())summary.first_retention_failure=std::string(spec.suite)+"_"+std::to_string(spec.id);
+        }
+        if(outcome.hard&&!summary.hard){summary.hard=true;summary.reason=outcome.reason;}
+    }
+    options.full_retention_executed=summary.retention_attempted==20;
+    require(budget.controls<=evaluation_controls&&budget.substeps<=evaluation_substeps&&
+        budget.prior.controls+budget.controls<=aggregate_controls&&budget.prior.substeps+budget.substeps<=aggregate_substeps,
+        "Parallel aggregate evaluation physical cap");
+    output.evidence_guard(budget.prior.bytes);
+}
+#endif
 }
 #ifdef CUDARL_RESIDUAL_EVALUATOR
 #include "../pond-residual-ppo/evaluator.h"
@@ -614,13 +743,16 @@ int main(int argc,char** argv) {
     try {
         o=options(argc,argv);
         if(o.self_test){pure_tests();return 0;}
-        if(o.describe){if(!o.protocol.empty()){const auto bytes=file(o.protocol);o.study_id=validated_study_id({bytes.begin(),bytes.end()});}std::cout<<"{\"protocol_id\":\""<<o.study_id<<"\",\"supported_protocol_ids\":[\""<<pp::default_study_protocol_id<<"\",\""<<pp::curriculum_study_protocol_id<<"\",\""<<pp::course_study_protocol_id<<"\",\""<<pp::repeated_study_protocol_id<<"\",\""<<pp::half_second_study_protocol_id<<"\",\""<<pp::signed_course_study_protocol_id<<"\"],\"assessment_schema\":2,\"eval_source_identity_fnv1a64\":\""<<eval_source()<<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256
+        if(o.describe){if(!o.protocol.empty()){const auto bytes=file(o.protocol);o.study_id=validated_study_id({bytes.begin(),bytes.end()});}std::cout<<"{\"protocol_id\":\""<<o.study_id<<"\",\"supported_protocol_ids\":[\""<<pp::default_study_protocol_id<<"\",\""<<pp::curriculum_study_protocol_id<<"\",\""<<pp::course_study_protocol_id<<"\",\""<<pp::repeated_study_protocol_id<<"\",\""<<pp::half_second_study_protocol_id<<"\",\""<<pp::signed_course_study_protocol_id<<"\",\""<<pp::direct_retrain_protocol_id<<"\",\""<<pp::course_context_protocol_id<<"\",\""<<pp::medium_turn_protocol_id<<"\",\""<<pp::fresh_motor_protocol_id<<"\",\""<<pp::correlated_motor_protocol_id<<"\",\""<<pp::propulsion_motor_protocol_id<<"\"],\"assessment_schema\":2,\"eval_source_identity_fnv1a64\":\""<<eval_source()<<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256
             <<"\",\"runtime_version\":"<<pp::runtime_version<<",\"query_arithmetic_version\":"<<pp::query_arithmetic_version<<",\"world_stride\":"<<sizeof(pr::World)<<",\"task_stride\":"<<expected_task_stride(o.study_id)
             <<",\"retention_cases\":20,\"retention_controls\":30400,\"rest_cases\":14,\"short_swim_cases\":4,\"required_parent_long_window_keys\":28,\"turn_cases\":16,\"complete_baseline_retention_required\":true,\"assess_all_soft_failures\":true,\"turning_is_training_prerequisite\":false,\"max_controls_per_checkpoint\":36800,\"max_assessments\":5,\"max_aggregate_controls\":184000,\"max_aggregate_substeps\":1840000,\"max_wall_seconds\":900,\"final_partial_requires_stopped_last_good\":true,\"final_partial_closes_ledger\":true,\"optimizer_steps\":0}\n";return 0;}
         require(!fs::exists(o.out)&&fs::create_directories(o.out),"Evaluation output already exists");owns_output=true;
         const auto parent=load_parent(o.parent);parent_checksum=parent.checksum;const auto protocol=file(o.protocol);protocol_checksum=cp::checksum(protocol);
         const std::string text(protocol.begin(),protocol.end());o.study_id=validated_study_id(text);
-        const bool distilled=o.study_id==distillation_protocol_id;
+        const bool distilled=o.study_id==distillation_protocol_id,direct=direct_study(o.study_id),fresh=fresh_study(o.study_id),correlated=o.study_id==pp::correlated_motor_protocol_id;
+        require(o.study_id!=pp::course_context_protocol_id||!o.reuse_baseline,"Course-context mode requires a fresh complete physical baseline");
+        require(!fresh||!o.reuse_baseline,"Fresh motor cannot reuse an inherited actor assessment");
+        require(!correlated||(!o.baseline&&!o.reuse_baseline&&!o.final_partial),"Correlated continuation has only one final update16 assessment");
         require(distilled==!o.distilled_actor.empty(),"Distillation protocol and external actor must be selected together");
         uint64_t candidate_protocol=protocol_checksum,training_source=0;
         if(distilled) {
@@ -635,7 +767,12 @@ int main(int argc,char** argv) {
             require(sha256(file(o.reference))==scalar(text,"long_reference_sha256"),"Distillation long reference changed");
         } else training_source=std::stoull(scalar(text,"source_identity_fnv1a64"));
         const auto payload=cp::read(o.candidate.string());const uint64_t source_checkpoint=cp::checksum(payload);checkpoint=source_checkpoint;
-        candidate=pp::read_candidate(payload,parent.checksum,candidate_protocol,training_source,static_cast<uint32_t>(sizeof(pr::World)),expected_task_stride(o.study_id),(distilled||o.study_id==pp::signed_course_study_protocol_id)?pp::signed_inputs:pp::observations);
+        candidate=pp::read_candidate(payload,parent.checksum,candidate_protocol,training_source,static_cast<uint32_t>(sizeof(pr::World)),expected_task_stride(o.study_id),(distilled||direct||o.study_id==pp::signed_course_study_protocol_id)?pp::signed_inputs:pp::observations,fresh?pp::fresh_actor_learning_rate:direct?pp::direct_retrain_actor_learning_rate:pp::learning_rate,fresh);
+        if(direct){
+            require(correlated?candidate.counters.completed_updates==16:(candidate.counters.completed_updates==0||candidate.counters.completed_updates==8),"Direct motor checkpoint outside allocation");
+            require(std::stoull(scalar(text,"retention_evaluator_source_fnv1a64"))==eval_source(),"Direct motor evaluator source changed");
+            require(sha256(file(o.reference))==scalar(text,"long_reference_sha256"),"Direct motor long reference changed");
+        }
         if(distilled) {
             require(candidate.counters.completed_updates==8,"Distillation parent must be the saved update-eight candidate");
             const auto external=cp::read(o.distilled_actor.string());
@@ -647,7 +784,7 @@ int main(int argc,char** argv) {
         const uint64_t update=candidate.counters.completed_updates;
         const int expected_slot=o.final_partial?static_cast<int>(update/8)+1:static_cast<int>(update/8);
         require(expected_slot<5,"Checkpoint is outside the five assessment slots");
-        if(!distilled)assessment_slot(update,o.baseline,o.final_partial,(uint64_t{1}<<expected_slot)-1);
+        if(!distilled&&!correlated)assessment_slot(update,o.baseline,o.final_partial,(uint64_t{1}<<expected_slot)-1);
         if(o.final_partial) {
             stopped_lease=std::make_unique<StoppedTrainingLease>(fs::path(scalar(text,"ledger_path_absolute")),o.run);
             stopped_training(cp::read(stopped_lease->path.string()),protocol_checksum,training_source,checkpoint,candidate);
@@ -662,10 +799,11 @@ int main(int argc,char** argv) {
         }
         ledger_lease=std::make_unique<cp::Lease>(o.ledger.string()+".assessment");
         ledger=load_ledger(o.ledger,parent.checksum,protocol_checksum);budget.prior=ledger;
-        const int slot=distilled?0:assessment_slot(update,o.baseline,o.final_partial,ledger.mask);
+        const int slot=(distilled||correlated)?0:assessment_slot(update,o.baseline,o.final_partial,ledger.mask);
         if(distilled)require(ledger.mask==0,"Distilled actor already used its one assessment");
+        if(correlated)require(ledger.mask==0&&ledger.controls==0&&ledger.substeps==0&&ledger.bytes==0,"Correlated continuation requires its fresh one-assessment ledger");
         require(ledger.controls+evaluation_controls<=aggregate_controls&&ledger.substeps+evaluation_substeps<=aggregate_substeps,"Aggregate evaluation reservation exceeded");
-        ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=distilled||o.final_partial||update==32||((o.study_id==pp::half_second_study_protocol_id||o.study_id==pp::signed_course_study_protocol_id)&&update==8);save_ledger(o.ledger,ledger);ledger_started=true;
+        ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=distilled||correlated||o.final_partial||update==32||((direct||o.study_id==pp::half_second_study_protocol_id||o.study_id==pp::signed_course_study_protocol_id)&&update==8);save_ledger(o.ledger,ledger);ledger_started=true;
         if(o.reuse_baseline) {
             auto receipt=verified_prior_baseline(text,o,candidate,parent.checksum,summary);
             receipt.protocol_checksum=protocol_checksum;receipt.checkpoint_checksum=checkpoint;receipt.eval_source_identity=eval_source();
@@ -676,7 +814,8 @@ int main(int argc,char** argv) {
         }
         Keys candidate_keys;
         // Windows can report a stale file size until the last writer closes.
-        {
+        if(direct)parallel_assessment(o,candidate,budget,summary,expected_keys,candidate_keys);
+        else {
             Output output(o.out);
             for(const auto& spec:specs()) {
                 const auto outcome=evaluate(spec,candidate,actor,budget,output,expected_keys);
@@ -698,6 +837,7 @@ int main(int argc,char** argv) {
         for(const auto& key:expected_keys)summary.retained_long_passes+=candidate_keys.count(key)?1u:0u;
         summary.retention=retention_qualified(summary,budget);
         if(!summary.hard&&!summary.retention)summary.reason=summary.first_retention_failure.empty()?"exact_retention_or_long_window_keys_failed":"retention_failed_"+summary.first_retention_failure;
+        if(fresh&&!summary.hard&&!summary.retention)summary.reason="fresh_motor_skills_unqualified_"+summary.first_retention_failure;
         require(cp::checksum(cp::read(o.candidate.string()))==source_checkpoint&&cp::checksum(cp::read(o.parent.string()))==parent_checksum&&cp::checksum(file(o.protocol))==protocol_checksum,"Evaluation immutable input changed");
         if(distilled)require(cp::checksum(cp::read(o.distilled_actor.string()))==checkpoint&&sha256(file(o.distilled_actor))==o.distilled_actor_sha256,"Distilled actor changed during assessment");
         if(stopped_lease)stopped_lease->unchanged();
@@ -710,7 +850,7 @@ int main(int argc,char** argv) {
         }
         write_result(o,candidate,budget,summary,false,checkpoint);
         ledger.controls+=budget.controls;ledger.substeps+=budget.substeps;ledger.seconds+=budget.seconds();ledger.bytes+=directory_bytes(o.out);ledger.active=false;save_ledger(o.ledger,ledger);
-        return summary.retention&&assessment_completed(summary)?0:2;
+        return (fresh||summary.retention)&&assessment_completed(summary)?0:2;
     }catch(const std::exception& error) {
         summary.hard=true;summary.reason=error.what();
         if(owns_output)write_result(o,candidate,budget,summary,o.preflight,checkpoint);

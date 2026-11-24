@@ -37,13 +37,27 @@ std::vector<uint8_t> read_bytes(const fs::path& path, size_t limit){
 
 namespace {
 constexpr int N=512,rows=N*64;
-constexpr char protocol[]="pond-collection-replay-v2";
+#if defined(POND_COLLECTION_FOUR_OUTPUT)
+#if defined(POND_POSTURE_LESSON)
+constexpr char protocol[]="pond-residual-four-posture-replay-v1";
+#else
+constexpr char protocol[]="pond-residual-four-collection-replay-v1";
+#endif
+constexpr char batch_path[]="build/turn39-residual-four/updates-9-16/batch-12.bin";
+constexpr char batch_sha[]="c4ea4ba3196142013ec7d322214047136ec76264c78a3d6989df7873b4d50457";
+constexpr int archive_version=2,residual_parameters=756,residual_outputs=4;
+#else
+constexpr char protocol[]="pond-collection-replay-v3";
+constexpr char batch_path[]="build/turn38-residual/updates-9-16/batch-12.bin";
 constexpr char batch_sha[]="5994cec04228de4a50c71ad782149194804905d33146356b4232d1922cb6b8da";
+constexpr int archive_version=1,residual_parameters=722,residual_outputs=2;
+#endif
 constexpr char package_sha[]="4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d";
 std::atomic<int> issued{0},completed{0};
 constexpr const char* phases[]={"seal_verification","archive_read","archive_verification","archive_decode",
     "motor_load","cuda_context","collection_buffers","inference_networks","input_upload",
-    "first_control_preparation","physics_collection","readback","cuda_cleanup","compare","evidence_write"};
+    "first_control_preparation","observation_kernel_load","physics_kernel_load","reset_kernel_load","initialize_kernel_load",
+    "physics_collection","readback","cuda_cleanup","compare","evidence_write"};
 Clock::time_point process_start;
 std::array<std::atomic<int64_t>,std::size(phases)> phase_start{};
 void mark(const char* phase){
@@ -80,7 +94,7 @@ struct Deadline {
 };
 template<class T>std::vector<T> array(cp::Reader& r,size_t n){auto v=r.array<T>(n);require(v.size()==n,"Frozen batch shape mismatch");return v;}
 void read(const fs::path& root,Inputs& inputs,Samples& ref){
-    const auto p=root/"build/turn38-residual/updates-9-16/batch-12.bin";const auto policy=root/"build/turn34/inputs/original-amplitude-package.bin";
+    const auto p=root/batch_path;const auto policy=root/"build/turn34/inputs/original-amplitude-package.bin";
     mark("archive_read");
     auto bytes=read_bytes(p,64*1024*1024);
     mark("archive_verification");
@@ -93,9 +107,9 @@ void read(const fs::path& root,Inputs& inputs,Samples& ref){
     bytes.erase(bytes.begin(),bytes.begin()+24);
     require(cp::checksum(bytes)==expected,"Frozen checkpoint payload checksum");
     mark("archive_decode");
-    cp::Reader r{bytes};require(r.value<uint32_t>()==0x31425252&&r.value<uint32_t>()==1&&r.value<int>()==12&&r.value<int>()==64,"Saved recording ABI");
-    inputs.worlds=array<uint8_t>(r,N*1384);inputs.tasks=array<uint8_t>(r,N*368);inputs.residual=array<float>(r,722);inputs.critic=array<float>(r,2433);
-    ref.obs=array<float>(r,rows*42);ref.residual=array<float>(r,rows*2);ref.mask=array<float>(r,rows);ref.base=array<float>(r,rows*4);ref.latent=array<float>(r,rows*4);
+    cp::Reader r{bytes};require(r.value<uint32_t>()==0x31425252&&r.value<uint32_t>()==archive_version&&r.value<int>()==12&&r.value<int>()==64,"Saved recording ABI");
+    inputs.worlds=array<uint8_t>(r,N*1384);inputs.tasks=array<uint8_t>(r,N*368);inputs.residual=array<float>(r,residual_parameters);inputs.critic=array<float>(r,2433);
+    ref.obs=array<float>(r,rows*42);ref.residual=array<float>(r,rows*residual_outputs);ref.mask=array<float>(r,rows);ref.base=array<float>(r,rows*4);ref.latent=array<float>(r,rows*4);
     ref.logp=array<float>(r,rows);ref.value=array<float>(r,rows);ref.reward=array<float>(r,rows);ref.done=array<float>(r,rows);ref.truncated=array<float>(r,rows);
     ref.final_value=array<float>(r,rows);ref.last_value=array<float>(r,N);ref.attempted=array<uint64_t>(r,rows);ref.substeps=array<uint64_t>(r,rows);
     ref.reason=array<int>(r,rows);require(r.value<uint32_t>()==sizeof(Trace),"Trace ABI mismatch");const auto trace=array<uint8_t>(r,rows*sizeof(Trace));
@@ -133,8 +147,11 @@ int main(int argc,char** argv){
           +"\",\"batch_sha256\":\""+batch_sha+"\",\"original_package_sha256\":\""+package_sha+"\",\"worlds\":512,\"ticks\":64,\"max_controls\":32768,\"max_substeps\":327680,\"max_wall_seconds\":4,\"optimizer_calls\":0}";
         if(argc==2&&std::string(argv[1])=="--describe"){std::cout<<binding<<'\n';return 0;}
         const bool pure=argc==3&&std::string(argv[1])=="--preflight";
-        require(pure||(argc==5&&std::string(argv[1])=="--run"),"Expected --describe, --preflight <root>, or --run <root> <seal> <SHA256>");
+        const bool module_only=argc==5&&std::string(argv[1])=="--probe-module";
+        require(pure||module_only||(argc==5&&std::string(argv[1])=="--run"),
+                "Expected --describe, --preflight <root>, or --run/--probe-module <root> <seal> <SHA256>");
         const auto root=fs::canonical(argv[2]);out=root/"assets/research-evidence"/protocol;
+        if(module_only)out=root/"assets/research-evidence"/(std::string(protocol)+"-module");
         if(!pure){
             mark("seal_verification");
             const auto sealed=read_bytes(argv[3],64*1024);
@@ -142,7 +159,22 @@ int main(int argc,char** argv){
             const std::string document(sealed.begin(),sealed.end());
             require(ph::scalar(document,"bindings")==binding&&ph::scalar(document,"maximum_attempts")=="1",
                     "Seal does not authorize this exact replay");
+            require(ph::scalar(document,"operation")== (module_only?"module_probe":"collection"),
+                    "Seal operation differs");
             require(!fs::exists(out)&&fs::create_directories(out),"The four-second replay has already been attempted");owns=true;deadline=std::make_unique<Deadline>(out,started);
+        }
+        if(module_only){
+            probe_module(mark);
+            mark("evidence_write");
+            const double wall=ms(started);
+            const bool passed=wall<4000;
+            std::ofstream o(out/"result.json");
+            o<<std::setprecision(17)<<"{\"passed\":"<<(passed?"true":"false")
+             <<",\"operation\":\"module_probe\",\"seal_sha256\":\""<<argv[4]<<"\",\"bindings\":"<<binding
+             <<",\"physical_controls\":0,\"optimizer_calls\":0,\"wall_ms\":"<<wall;
+            write_phases(o);o<<"}\n";o.close();
+            require(bool(o),"Could not close module timing result");
+            return passed?0:2;
         }
         Inputs inputs;Samples ref;read(root,inputs,ref);const double read_ms=ms(started);
         if(pure){std::cout<<"{\"archive_rows\":32768,\"physical_controls\":0,\"optimizer_calls\":0}\n";return 0;}

@@ -38,13 +38,17 @@ the baseline's 3/16. Their straight-swim and resting branches use the original
 motor exactly. The checks reused archived retention evidence after verifying
 that equivalence. Full swimming/resting suites were reserved for meaningful
 turn improvement, which neither candidate reached. The candidates remain
-research checkpoints. Autonomous exploration remains open.
+research checkpoints. The next four-output comparison ran eight updates per
+arm in about 1.82 seconds each. Both rewards passed 2/16 turns and 0/8 sharp
+60°/90° turns. Autonomous exploration remains open. [Latest results](docs/AI_STATUS.md)
 
 A conservative contact-rejection path preserves physical collisions and
-reports clearance bounds explicitly. Its measured late-state GPU speedup
-was 74.16× for one control across 512 worlds. The full collector then hit its
-four-second cap before issuing any physics. Its faster training mode remains
-gated. [GPU measurements and current limits](docs/GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Motor input audit](docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md) · [Earlier gentle-turn exercise](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
+reports clearance bounds explicitly. Shared device queries fixed a CUDA
+module-load timeout. The full saved 512-world rollout matched its reference
+in 0.42 seconds after two separate startup and physics gates. The four-output
+path also matched its saved rollout in 2.32 seconds and completed both
+eight-update training blocks under the four-second cap.
+[GPU measurements and current limits](docs/GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Motor input audit](docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md) · [Earlier gentle-turn exercise](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
 
 Swim mode has no fixed playback duration. The earlier
 [untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the

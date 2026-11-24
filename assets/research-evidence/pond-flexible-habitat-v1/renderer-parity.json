@@ -1,0 +1,7 @@
+{
+  "samples": 144,
+  "max_shore_x_mm": 0.00012089199996623279,
+  "max_shore_z_mm": 7.697400006279054E-05,
+  "max_height_mm": 4.675400000486718E-05,
+  "tolerance_mm": 0.001
+}

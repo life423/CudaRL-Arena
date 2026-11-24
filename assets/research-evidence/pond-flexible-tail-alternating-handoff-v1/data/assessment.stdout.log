@@ -1,0 +1,4 @@
+case=moving_a_left stage2_fork_control=756 stage3_fork_control=1472 attempted_substeps=63296 accepted_substeps=63296
+case=moving_a_right stage2_fork_control=760 stage3_fork_control=1476 attempted_substeps=63360 accepted_substeps=63360
+elapsed_s=0.807837
+

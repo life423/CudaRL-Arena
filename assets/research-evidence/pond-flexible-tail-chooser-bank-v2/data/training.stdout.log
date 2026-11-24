@@ -1,0 +1,7 @@
+frozen_motor_preflight_checks=512 maximum_difference_rad=0
+gpu=NVIDIA GeForce RTX 5070 worlds=96 decisions=4 max_updates=16
+completed_update=1 reward=-0.105871 exact_kl=0.00809435 attempted_substeps=1512397 elapsed_s=3.17029
+completed_update=2 reward=-0.198285 exact_kl=0.00774302 attempted_substeps=2950381 elapsed_s=6.8335
+completed_update=3 reward=-0.289533 exact_kl=0.0134196 attempted_substeps=4328588 elapsed_s=10.4471
+completed_update=4 reward=-0.268246 exact_kl=0.0223141 attempted_substeps=5735609 elapsed_s=14.05
+

@@ -50,7 +50,9 @@ function Check-Retention($Result,[int]$Update,[string]$Candidate,[string]$Receip
     }
     Assert-Condition (-not (Field $Result 'preflight_only') -and -not (Field $Result 'hard_failure')) 'Preflight or hard fault cannot admit training'
     Assert-Condition ((Field $Result 'update') -eq $Update -and (Field $Result 'baseline_only') -eq ($Update -eq 0)) 'Assessment checkpoint/type mismatch'
-    $historicalBaseline=$Update -eq 0 -and $script:Plan.protocol_id -in @('pond-motor-ppo-v5-half-second-2026-11-24','pond-motor-ppo-v6-signed-course-2026-11-24')
+    $historicalBaseline=$Update -eq 0 -and $script:Plan.protocol_id -in @(
+        'pond-motor-ppo-v5-half-second-2026-11-24','pond-motor-ppo-v6-signed-course-2026-11-24',
+        'pond-motor-336-direct-retrain-v1-2026-11-24','pond-motor-336-medium-turn-v1-2026-11-24')
     if($historicalBaseline){
         Assert-Condition ((Field $Result 'reused_archived_baseline') -eq $true -and (Field $Result 'attempted_controls') -eq 0 -and (Field $Result 'attempted_substeps') -eq 0) 'Baseline evidence reuse must execute zero physical controls'
     }
@@ -126,15 +128,24 @@ function Invoke-Stage([string]$Name,[string]$Executable,[string[]]$Arguments,[sc
     foreach($argument in $Arguments){$info.ArgumentList.Add($argument)}
     if($null -ne $script:Stub){$info.FileName=$env:ComSpec;$info.ArgumentList.Clear();foreach($argument in @('/d','/c','exit','0')){$info.ArgumentList.Add($argument)}}
     $watch=[Diagnostics.Stopwatch]::StartNew()
+    $direct=$script:Plan.protocol_id -in @('pond-motor-336-direct-retrain-v1-2026-11-24',
+        'pond-motor-336-course-context-v1-2026-11-24','pond-motor-336-medium-turn-v1-2026-11-24',
+        'pond-motor-fresh-v1-2026-11-24','pond-motor-fresh-correlated-v1-2026-11-24','pond-motor-propulsion-v1-2026-11-24')
+    $limit=if($direct){
+        [int][Math]::Min(4000,20000-$script:TrialClock.ElapsedMilliseconds)
+    }else{-1}
+    Assert-Condition (!$direct -or $limit -gt 0) 'Trial deadline reached before launch'
     $process=[Diagnostics.Process]::Start($info)
     $outTask=$process.StandardOutput.ReadToEndAsync();$errTask=$process.StandardError.ReadToEndAsync()
-    $process.WaitForExit();$exitCode=$process.ExitCode;$ended=[DateTime]::UtcNow;$watch.Stop()
+    $finished=$process.WaitForExit($limit)
+    if(!$finished){$process.Kill();$process.WaitForExit()}
+    $exitCode=$process.ExitCode;$ended=[DateTime]::UtcNow;$watch.Stop()
     $io=[Diagnostics.Stopwatch]::StartNew()
     [IO.File]::WriteAllText($stdout,$outTask.GetAwaiter().GetResult())
     [IO.File]::WriteAllText($stderr,$errTask.GetAwaiter().GetResult())
     if($null -ne $script:Stub){$exitCode=Write-StubStage $Name $Arguments $stdout}
     $io.Stop();$process.Dispose();$script:LastExit=$ended
-    $record=[ordered]@{stage=$Name;executable=$Executable;arguments=$Arguments;started_utc=$started.ToString('o');ended_utc=$ended.ToString('o');exit_code=$exitCode;process_wall_ms=$watch.Elapsed.TotalMilliseconds;runner_stream_io_ms=$io.Elapsed.TotalMilliseconds;validation_ms=0;handoff_gap_ms=$gap;synthetic=($null -ne $script:Stub);native_result=$null;native_result_read_error=$null;error=$null}
+    $record=[ordered]@{stage=$Name;executable=$Executable;arguments=$Arguments;started_utc=$started.ToString('o');ended_utc=$ended.ToString('o');exit_code=$exitCode;timed_out=(!$finished);process_wall_ms=$watch.Elapsed.TotalMilliseconds;runner_stream_io_ms=$io.Elapsed.TotalMilliseconds;validation_ms=0;handoff_gap_ms=$gap;synthetic=($null -ne $script:Stub);native_result=$null;native_result_read_error=$null;error=$null}
     $validation=[Diagnostics.Stopwatch]::StartNew()
     try {
         if($Name.StartsWith('train-')) {
@@ -144,6 +155,7 @@ function Invoke-Stage([string]$Name,[string]$Executable,[string[]]$Arguments,[sc
                 catch {$record.native_result_read_error=$_.Exception.Message}
             }
         }
+        Assert-Condition ($finished -and (!$direct -or $watch.Elapsed.TotalMilliseconds -lt $limit)) "Native stage $Name exceeded its deadline; see $stderr"
         Assert-Condition ($exitCode -eq 0) "Native stage $Name failed with exit $exitCode; see $stderr"
         return (& $Validate $stdout)
     } catch {$record.error=$_.Exception.Message;throw}
@@ -154,18 +166,38 @@ function Invoke-Stage([string]$Name,[string]$Executable,[string[]]$Arguments,[sc
     }
 }
 function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool]$Execute,[bool]$RecoverBaseline=$false) {
+    $script:TrialClock=[Diagnostics.Stopwatch]::StartNew()
     Assert-Condition ($ExpectedHash -match '^[a-fA-F0-9]{64}$' -and (File-Hash $PlanPath) -eq $ExpectedHash.ToLowerInvariant()) 'Exact reviewed protocol SHA256 required'
     $script:Plan=Read-Json $PlanPath;$plan=$script:Plan
     Assert-Condition ($plan.status -eq 'SEALED_BEFORE_CANDIDATE_INITIALIZATION') 'Protocol is not sealed for initialization'
     $signedCourse=$plan.protocol_id -eq 'pond-motor-ppo-v6-signed-course-2026-11-24'
-    Assert-Condition ($signedCourse -or $plan.protocol_id -in @('pond-motor-ppo-v2-2026-11-23','pond-motor-ppo-v3-curriculum-2026-11-23','pond-motor-ppo-v3-course-2026-11-23','pond-motor-ppo-v4-repeated-2026-11-24','pond-motor-ppo-v5-half-second-2026-11-24')) 'Unsupported study ID'
+    $courseContext=$plan.protocol_id -eq 'pond-motor-336-course-context-v1-2026-11-24'
+    $mediumTurn=$plan.protocol_id -eq 'pond-motor-336-medium-turn-v1-2026-11-24'
+    $continuation=$plan.protocol_id -eq 'pond-motor-fresh-correlated-v1-2026-11-24'
+    $propulsion=$plan.protocol_id -eq 'pond-motor-propulsion-v1-2026-11-24'
+    $fresh=$continuation -or $propulsion -or $plan.protocol_id -eq 'pond-motor-fresh-v1-2026-11-24'
+    $direct=$courseContext -or $mediumTurn -or $plan.protocol_id -eq 'pond-motor-336-direct-retrain-v1-2026-11-24'
+    $bounded=$direct -or $fresh
+    Assert-Condition ($bounded -or $signedCourse -or $plan.protocol_id -in @('pond-motor-ppo-v2-2026-11-23','pond-motor-ppo-v3-curriculum-2026-11-23','pond-motor-ppo-v3-course-2026-11-23','pond-motor-ppo-v4-repeated-2026-11-24','pond-motor-ppo-v5-half-second-2026-11-24')) 'Unsupported study ID'
     $halfSecond=$plan.protocol_id -eq 'pond-motor-ppo-v5-half-second-2026-11-24'
-    if($signedCourse){
-        Assert-Condition ($Target -eq 8 -and $plan.max_updates -eq 8 -and $plan.study_program -eq 'signed-half-second-v1') 'Wrong signed-course allocation'
+    if($signedCourse -or $bounded){
+        $program=if($propulsion){'propulsion-motor-v1'}elseif($continuation){'correlated-motor-v1'}elseif($fresh){'fresh-motor-v1'}elseif($mediumTurn){'medium-turn-v1'}elseif($courseContext){'course-context-v1'}elseif($direct){'direct-retrain-v1'}else{'signed-half-second-v1'}
+        $lastCheckpoint=if($continuation){16}else{8}
+        Assert-Condition ($Target -eq $lastCheckpoint -and $plan.max_updates -eq $lastCheckpoint -and $plan.study_program -eq $program) 'Wrong signed-course allocation'
         Assert-Condition ((File-Hash $script:RunnerPath) -eq $plan.runner_script_sha256) 'Signed-course runner differs from sealed protocol'
         Assert-Condition ((File-Hash $plan.mirror_result_path_absolute) -eq $plan.mirror_result_sha256) 'Mirrored-physics result changed'
         $mirror=Read-Json $plan.mirror_result_path_absolute
         Assert-Condition ($mirror.physical_symmetry_passed -is [bool] -and $mirror.physical_symmetry_passed) 'Mirrored physics must pass before PPO'
+    }
+    if($bounded){
+        Assert-Condition (!$RecoverBaseline -and $plan.max_process_wall_seconds -eq 4 -and $plan.max_trial_wall_seconds -eq 20) 'Wrong direct retraining deadline or restart mode'
+    }
+    if($continuation){
+        Assert-Condition ($plan.starting_update -eq 8 -and $plan.additional_updates -eq 8) 'Wrong continuation budget'
+        foreach($binding in @('previous_checkpoint','previous_protocol','previous_training_ledger','previous_assessment')){
+            $path=[string](Field $plan ($binding+'_path_absolute'))
+            Assert-Condition ([IO.Path]::IsPathRooted($path) -and (File-Hash $path) -eq [string](Field $plan ($binding+'_sha256'))) "Continuation input changed: $path"
+        }
     }
     if($halfSecond){
         Assert-Condition ($Target -eq 8 -and $plan.max_updates -eq 8 -and $plan.study_program -eq 'half-second-course-v1') 'Half-second exercise requires exactly one eight-update allocation'
@@ -205,7 +237,8 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
         $evaluator=Invoke-Stage 'describe-evaluator' $plan.evaluator_executable_path_absolute @('--describe','--protocol',$PlanPath) {param($path) Read-Json $path}
         Assert-Condition ([string]$evaluator.eval_source_identity_fnv1a64 -eq [string]$plan.retention_evaluator_source_fnv1a64 -and $evaluator.protocol_id -eq $plan.protocol_id) 'Evaluator/protocol binding mismatch'
         $common=@('--policy',$plan.parent_policy_path_absolute,'--protocol',$PlanPath,'--cpu-gate',$plan.cpu_gate_path_absolute,'--cuda-gate',$plan.cuda_gate_path_absolute,'--evaluator-source',[string]$plan.retention_evaluator_source_fnv1a64)+$modeArguments
-        if($RecoverBaseline){$candidate=$recovery.candidate;$receipt=$recovery.receipt}
+        if($continuation){$candidate=$plan.previous_checkpoint_path_absolute;$lastUpdate=8}
+        elseif($RecoverBaseline){$candidate=$recovery.candidate;$receipt=$recovery.receipt}
         else {
             $initial=Join-Path $root 'init'
             $candidate=Invoke-Stage 'initialize' $plan.trainer_executable_path_absolute (@('--initialize-only','--out',$initial,'--to-update','8')+$common) {
@@ -214,10 +247,13 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
         }
         foreach($update in @(0,8,16,24,32)) {
             if($update -gt $Target){break}
+            if($continuation -and $update -lt 16){continue}
             if($RecoverBaseline -and $update -eq 0){continue}
             if($update -gt 0) {
                 $chunk=Join-Path $root "updates-$($update-7)-$update"
-                $candidate=Invoke-Stage "train-$update" $plan.trainer_executable_path_absolute (@('--run','--out',$chunk,'--to-update',[string]$update,'--resume',$candidate,'--retention-receipt',$receipt)+$common) {
+                $trainArgs=@('--run','--out',$chunk,'--to-update',[string]$update,'--resume',$candidate)
+                if(!$fresh){$trainArgs+=@('--retention-receipt',$receipt)}
+                $candidate=Invoke-Stage "train-$update" $plan.trainer_executable_path_absolute ($trainArgs+$common) {
                     param($ignored) $value=Read-Json (Join-Path $chunk 'result.json')
                     Assert-Condition ($value.passed -and $value.physical_accounting_readback_complete -and $value.completed_updates -eq $update -and $value.attempted_controls -eq $update*32768 -and $value.attempted_substeps -eq $update*327680 -and $value.actor_Adam_calls -eq $update*32 -and $value.critic_Adam_calls -eq $update*32) 'Training chunk incomplete or accounting invalid'
                     Join-Path $chunk "candidate-$update.bin"
@@ -228,15 +264,30 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
             $evalArguments=@('--run','--parent',$plan.parent_policy_path_absolute,'--candidate',$candidate,'--protocol',$PlanPath,'--out',$evaluation,'--ledger',$plan.evaluation_ledger_path_absolute,'--long-reference',$plan.long_reference_path_absolute)
             if($update -eq 0){
                 $evalArguments+='--baseline'
-                if($halfSecond -or $signedCourse){$evalArguments+='--reuse-verified-baseline'}
+                if($halfSecond -or $signedCourse -or ($direct -and !$courseContext)){$evalArguments+='--reuse-verified-baseline'}
             }
             $receipt=Invoke-Stage $name $plan.evaluator_executable_path_absolute $evalArguments {
-                param($ignored) $path=Join-Path $evaluation $(if($update -eq 0){'baseline-receipt.bin'}else{'retention-receipt.bin'})
-                Check-Retention (Read-Json (Join-Path $evaluation 'result.json')) $update $candidate $path
+                param($ignored)
+                $result=Read-Json (Join-Path $evaluation 'result.json')
+                if($fresh){
+                    Assert-Condition ($result.fresh_motor -and $result.assessment_completed -and !$result.hard_failure -and
+                        !$result.reused_archived_baseline -and !$result.preflight_only -and
+                        $result.retention_cases_attempted -eq 20 -and $result.turn_cases_attempted -eq 16 -and
+                        $result.update -eq $update -and $result.baseline_only -eq ($update -eq 0) -and
+                        [string]$result.checkpoint_checksum -eq [string](Read-Checkpoint $candidate).Checksum -and
+                        [string]$result.eval_source_identity -eq [string]$plan.retention_evaluator_source_fnv1a64) 'Fresh motor assessment is incomplete or invalid'
+                    if($continuation){
+                        Assert-Condition ($result.inherited_PPO_updates -eq 8 -and $result.new_PPO_updates -eq 8) 'Continuation assessment counters differ'
+                    }
+                    return
+                }
+                $path=Join-Path $evaluation $(if($update -eq 0){'baseline-receipt.bin'}else{'retention-receipt.bin'})
+                Check-Retention $result $update $candidate $path
                 return $path
             }
             Assert-Condition ((File-Hash $PlanPath) -eq $ExpectedHash.ToLowerInvariant() -and (File-Hash $plan.parent_policy_path_absolute) -eq $plan.parent_policy_sha256) 'Immutable protocol/parent changed during run'
         }
+        Assert-Condition (!$bounded -or $script:TrialClock.Elapsed.TotalMilliseconds -lt 20000) 'Trial exceeded the 20-second deadline'
         $state=if($Target -eq $plan.max_updates){'COMPLETED_ALLOCATION'}else{'INTENTIONAL_CHECKPOINT_FINISH'}
     } catch {$failure=$_.Exception.Message;throw}
     finally {
@@ -244,6 +295,7 @@ function Run-Exercise([string]$PlanPath,[string]$ExpectedHash,[int]$Target,[bool
         $processTotal=0.;$ioTotal=0.;$validationTotal=0.;$gapTotal=0.
         foreach($record in $script:Records){$processTotal+=$record['process_wall_ms'];$ioTotal+=$record['runner_stream_io_ms'];$validationTotal+=$record['validation_ms'];$gapTotal+=$record['handoff_gap_ms']}
         $result=[ordered]@{status=$state;protocol_id=$plan.protocol_id;stop_after_update=$Target;last_passed_training_chunk_update=$lastUpdate;last_candidate=$candidate;last_receipt=$receipt;native_training_accounting=$script:LastTrainingResult;error=$failure;total_host_wall_ms=$clock.Elapsed.TotalMilliseconds;native_process_wall_ms=$processTotal;runner_stream_io_ms=$ioTotal;validation_ms=$validationTotal;interstage_gaps_ms=$gapTotal;timing_note='Handoff gaps include validation, runner I/O and bookkeeping; overlapping categories must not be added. Native wall includes launch/wait; stream drainage and log writes are runner I/O. These are not isolated GPU compute times.';synthetic=($null -ne $script:Stub);commands=$script:Records.ToArray()}
+        if($bounded){$result['trial_wall_ms']=$script:TrialClock.Elapsed.TotalMilliseconds}
         Write-Json (Join-Path $script:LogRoot 'result.json') $result
     }
     return $result

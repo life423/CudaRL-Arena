@@ -7,6 +7,19 @@ namespace pond_collection {
 namespace rt=residual_training;
 static_assert(sizeof(Trace)==192 && Rows==32768, "Frozen collection layout");
 std::string source(){return residual_source_hash;}
+void probe_module(void(*phase)(const char*)){
+    phase("cuda_context");
+    CUDA_CHECK_THROW(cudaSetDevice(0));
+    cudaFuncAttributes attributes{};
+    phase("observation_kernel_load");
+    CUDA_CHECK_THROW(cudaFuncGetAttributes(&attributes,observe_kernel));
+    phase("physics_kernel_load");
+    CUDA_CHECK_THROW(cudaFuncGetAttributes(&attributes,step_kernel));
+    phase("reset_kernel_load");
+    CUDA_CHECK_THROW(cudaFuncGetAttributes(&attributes,reset_terminal_kernel));
+    phase("initialize_kernel_load");
+    CUDA_CHECK_THROW(cudaFuncGetAttributes(&attributes,initialize_kernel));
+}
 struct Inference {
     nn::GpuMlp base,residual,critic;
     Inference(const Package& motor,const Inputs& input,cudaStream_t stream)

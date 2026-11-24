@@ -1,0 +1,8 @@
+{
+  "protocol": "build/flexible-tail/motor-pilot-v1/protocol.json",
+  "check": "gpu_feasibility_check",
+  "timeout": false,
+  "outer_wall_s": 0.2921926,
+  "exit_code": 0,
+  "ppo_updates": 0
+}

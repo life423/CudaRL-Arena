@@ -1,0 +1,297 @@
+{
+  "schema": 1,
+  "source_controls_sha256": "d3fcb06d627dfd56a65499a7eb9ada1352dc78f7ad5a6cba1740aefda4b11b09",
+  "source_controls_bytes": 44161807,
+  "accepted_control_rows": 36800,
+  "raw_controls_in_app": false,
+  "cases": [
+    {
+      "suite": "short",
+      "case": 0,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 2.4491906515322626E-05,
+      "maximum_depth_m": 1.12438201540499E-05,
+      "maximum_tilt_deg": 0.5546137094497681
+    },
+    {
+      "suite": "short",
+      "case": 1,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 1.4040799214853905E-05,
+      "maximum_depth_m": 1.1167526281496976E-05,
+      "maximum_tilt_deg": 0.5528469085693359
+    },
+    {
+      "suite": "short",
+      "case": 2,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 2.4492434022249654E-05,
+      "maximum_depth_m": 1.12438201540499E-05,
+      "maximum_tilt_deg": 0.5546137094497681
+    },
+    {
+      "suite": "short",
+      "case": 3,
+      "accepted_control_rows": 160,
+      "maximum_lane_m": 1.4038722838449758E-05,
+      "maximum_depth_m": 1.1167526281496976E-05,
+      "maximum_tilt_deg": 0.5528469085693359
+    },
+    {
+      "suite": "long",
+      "case": 0,
+      "accepted_control_rows": 1200,
+      "maximum_lane_m": 8.188948413589969E-05,
+      "maximum_depth_m": 1.4190673937264364E-05,
+      "maximum_tilt_deg": 0.5692390203475952
+    },
+    {
+      "suite": "long",
+      "case": 3,
+      "accepted_control_rows": 1200,
+      "maximum_lane_m": 1.502707618783461E-05,
+      "maximum_depth_m": 1.4572143300028984E-05,
+      "maximum_tilt_deg": 0.5688951015472412
+    },
+    {
+      "suite": "original_hold",
+      "case": 0,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 6.794026558054611E-05,
+      "maximum_depth_m": 1.4429092516365927E-05,
+      "maximum_tilt_deg": 0.6471006870269775
+    },
+    {
+      "suite": "original_hold",
+      "case": 1,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 1.4855024346616119E-05,
+      "maximum_depth_m": 1.4772414942854084E-05,
+      "maximum_tilt_deg": 0.6464955806732178
+    },
+    {
+      "suite": "original_hold",
+      "case": 2,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 6.654443131992593E-05,
+      "maximum_depth_m": 0.0005138778360560536,
+      "maximum_tilt_deg": 0.489389568567276
+    },
+    {
+      "suite": "original_hold",
+      "case": 3,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 1.6753205272834748E-05,
+      "maximum_depth_m": 0.0005142306908965111,
+      "maximum_tilt_deg": 0.489389568567276
+    },
+    {
+      "suite": "original_hold",
+      "case": 4,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 6.913483230164275E-05,
+      "maximum_depth_m": 0.0005000066594220698,
+      "maximum_tilt_deg": 0.800152599811554
+    },
+    {
+      "suite": "original_hold",
+      "case": 5,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 1.2947664799867198E-05,
+      "maximum_depth_m": 0.0005000066594220698,
+      "maximum_tilt_deg": 0.7991738319396973
+    },
+    {
+      "suite": "withheld_hold",
+      "case": 0,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 1.4857575479254592E-05,
+      "maximum_depth_m": 1.4772414942854084E-05,
+      "maximum_tilt_deg": 0.6464955806732178
+    },
+    {
+      "suite": "withheld_hold",
+      "case": 1,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 6.793726788600907E-05,
+      "maximum_depth_m": 1.4429092516365927E-05,
+      "maximum_tilt_deg": 0.6471006870269775
+    },
+    {
+      "suite": "withheld_hold",
+      "case": 2,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 1.5810128388693556E-05,
+      "maximum_depth_m": 0.0002645301865413785,
+      "maximum_tilt_deg": 0.568206787109375
+    },
+    {
+      "suite": "withheld_hold",
+      "case": 3,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 6.726640276610851E-05,
+      "maximum_depth_m": 0.0002641773025970906,
+      "maximum_tilt_deg": 0.5685510635375977
+    },
+    {
+      "suite": "withheld_hold",
+      "case": 4,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 1.3903103535994887E-05,
+      "maximum_depth_m": 0.00024999617016874254,
+      "maximum_tilt_deg": 0.7228050231933594
+    },
+    {
+      "suite": "withheld_hold",
+      "case": 5,
+      "accepted_control_rows": 1280,
+      "maximum_lane_m": 6.85507693560794E-05,
+      "maximum_depth_m": 0.00024999617016874254,
+      "maximum_tilt_deg": 0.7236167192459106
+    },
+    {
+      "suite": "endurance_hold",
+      "case": 0,
+      "accepted_control_rows": 6000,
+      "maximum_lane_m": 6.849927012808621E-05,
+      "maximum_depth_m": 1.4429092516365927E-05,
+      "maximum_tilt_deg": 0.6471006870269775
+    },
+    {
+      "suite": "endurance_hold",
+      "case": 3,
+      "accepted_control_rows": 6000,
+      "maximum_lane_m": 1.4855024346616119E-05,
+      "maximum_depth_m": 1.4772414942854084E-05,
+      "maximum_tilt_deg": 0.6464955806732178
+    },
+    {
+      "suite": "turn",
+      "case": 0,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 5.988757766317576E-05,
+      "maximum_depth_m": 1.4905929674569052E-05,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 1,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 5.731660348828882E-05,
+      "maximum_depth_m": 1.5211105164780747E-05,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 2,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 4.987588545191102E-05,
+      "maximum_depth_m": 1.5144348253670614E-05,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 3,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 2.600270636321511E-05,
+      "maximum_depth_m": 1.1949538929911796E-05,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 4,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 9.64694095273444E-07,
+      "maximum_depth_m": 5.9890744523727335E-06,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 5,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 6.0311442211968824E-05,
+      "maximum_depth_m": 1.3809203665005043E-05,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 6,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 5.869102096767165E-05,
+      "maximum_depth_m": 1.3036727978033014E-05,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 7,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 5.266229709377512E-05,
+      "maximum_depth_m": 9.94682250166079E-06,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 8,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 2.9171411370043643E-05,
+      "maximum_depth_m": 2.441406195430318E-06,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 9,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 2.035653096754686E-06,
+      "maximum_depth_m": 2.317428425158141E-06,
+      "maximum_tilt_deg": 0.5337586402893066
+    },
+    {
+      "suite": "turn",
+      "case": 10,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 1.3435465007205494E-05,
+      "maximum_depth_m": 1.2102126675017644E-05,
+      "maximum_tilt_deg": 0.7013713121414185
+    },
+    {
+      "suite": "turn",
+      "case": 11,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 1.061657712853048E-05,
+      "maximum_depth_m": 9.603500075172633E-06,
+      "maximum_tilt_deg": 0.5308178067207336
+    },
+    {
+      "suite": "turn",
+      "case": 12,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 1.061657712853048E-05,
+      "maximum_depth_m": 4.882812390860636E-06,
+      "maximum_tilt_deg": 0.5308178067207336
+    },
+    {
+      "suite": "turn",
+      "case": 13,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 1.061657712853048E-05,
+      "maximum_depth_m": 8.716582669876516E-06,
+      "maximum_tilt_deg": 0.8137321472167969
+    },
+    {
+      "suite": "turn",
+      "case": 14,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 1.061657712853048E-05,
+      "maximum_depth_m": 2.8324127470114036E-06,
+      "maximum_tilt_deg": 0.7066522836685181
+    },
+    {
+      "suite": "turn",
+      "case": 15,
+      "accepted_control_rows": 400,
+      "maximum_lane_m": 1.061657712853048E-05,
+      "maximum_depth_m": 2.9277800877025584E-06,
+      "maximum_tilt_deg": 0.5308178067207336
+    }
+  ]
+}

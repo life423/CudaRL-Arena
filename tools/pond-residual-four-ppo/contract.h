@@ -6,6 +6,8 @@ namespace cudarl::residual_four_ppo {
 namespace cp=checkpoint;
 namespace pp=rl::pond_ppo;
 inline constexpr char protocol_id[]="pond-motor-residual-four-ppo-v1-2026-11-24";
+inline constexpr char course_rate_protocol_id[]="pond-motor-residual-four-course-rate-v1-2026-11-24";
+inline constexpr char posture_protocol_id[]="pond-motor-residual-four-posture-v1-2026-11-24";
 inline constexpr uint32_t inputs=42, hidden=16, outputs=4;
 inline constexpr uint32_t parameters=inputs*hidden+hidden+hidden*outputs+outputs;
 inline constexpr uint32_t output_offset=(inputs+1)*hidden;

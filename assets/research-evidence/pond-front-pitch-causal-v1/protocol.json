@@ -1,0 +1,23 @@
+{
+  "request_cases": [
+    -5,
+    -60,
+    -90,
+    5,
+    60,
+    90
+  ],
+  "runtime_sha256": "9b87804e5bad278b911f1636e64eec03cf52d7570dd119ee30067c3f3bf13d2a",
+  "optimizer_steps": 0,
+  "protocol_id": "front-pitch-causal-replay-v1-2026-11-24",
+  "baseline_gate": "All archived body position/quaternion/joints/velocities/work/travel/filter/reference-rate/torques and selected COM metrics must match exactly before interventions",
+  "warmup_controls": 40,
+  "source_sha256": "fddfb5bc12d327c8fe4ed0e8c5fceccac8e796fff2d22ef83ee824860a35b935",
+  "intervention": "Only axis1 front pitch uses matching-sign five-degree archived stream; other three axes use original sharp stream",
+  "max_substeps": 1700,
+  "max_process_wall_seconds": 4,
+  "post_request_controls": 13,
+  "archive_sha256": "4a482bc118db7d7e414cb099d61885249923aa2785dca86c2ca28c62fed69ac2",
+  "executable_sha256": "ad33419ba17512f52a98a014316a23c27d86e061f0c7866021f5ebd90e20a36d",
+  "max_controls": 170
+}

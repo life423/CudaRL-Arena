@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://flexible_tail_preview.gd" id="1_preview"]
 
@@ -13,10 +13,31 @@ corner_radius_top_right = 12
 corner_radius_bottom_left = 12
 corner_radius_bottom_right = 12
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dock"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.976, 0.972, 0.941, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.87, 0.89, 0.83, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_left = 14
+corner_radius_bottom_right = 14
+shadow_color = Color(0.02, 0.13, 0.10, 0.32)
+shadow_size = 8
+shadow_offset = Vector2(0, 3)
+
 [sub_resource type="Theme" id="Theme_preview"]
 default_font_size = 15
 Label/colors/font_color = Color(0.099, 0.222, 0.194, 1)
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_modes"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_recordings"]
 
@@ -54,14 +75,18 @@ mouse_filter = 2
 theme_override_constants/separation = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/Overlay/Header/Text"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Flexible tail"
+text = "Tadpole Pond"
 
 [node name="Source" type="Label" parent="CanvasLayer/Overlay/Header/Text"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.255, 0.357, 0.315, 1)
 theme_override_font_sizes/font_size = 14
-text = "Recorded physics"
+text = "Live · Frozen policy"
+autowrap_mode = 2
 
 [node name="Metrics" type="Label" parent="CanvasLayer/Overlay/Header/Text"]
 unique_name_in_owner = true
@@ -70,17 +95,48 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 14
 autowrap_mode = 2
 
-[node name="Open" type="Button" parent="CanvasLayer/Overlay"]
+[node name="ViewControls" type="VBoxContainer" parent="CanvasLayer/Overlay"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -132.0
+offset_left = -150.0
 offset_top = 16.0
 offset_right = -16.0
-offset_bottom = 64.0
 grow_horizontal = 0
+theme_override_constants/separation = 8
+
+[node name="PondView" type="Button" parent="CanvasLayer/Overlay/ViewControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Pond view"
+
+[node name="ZoomControls" type="HBoxContainer" parent="CanvasLayer/Overlay/ViewControls"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ZoomOut" type="Button" parent="CanvasLayer/Overlay/ViewControls/ZoomControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Zoom −"
+tooltip_text = "Zoom out · Scroll down or press −"
+
+[node name="ZoomIn" type="Button" parent="CanvasLayer/Overlay/ViewControls/ZoomControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Zoom +"
+tooltip_text = "Zoom in on the tadpole · Scroll up, pinch or press +"
+
+[node name="Open" type="Button" parent="CanvasLayer/Overlay/ViewControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
 text = "Open trace"
 
 [node name="Message" type="PanelContainer" parent="CanvasLayer/Overlay"]
@@ -101,7 +157,7 @@ mouse_filter = 2
 [node name="Status" type="Label" parent="CanvasLayer/Overlay/Message"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Open a native physics trace to see the tail in motion."
+text = "Loading the pond…"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -119,16 +175,84 @@ offset_right = 152.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dock")
 
-[node name="Playback" type="VBoxContainer" parent="CanvasLayer/Overlay/Transport"]
+[node name="Dock" type="VBoxContainer" parent="CanvasLayer/Overlay/Transport"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Recordings" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Playback"]
+[node name="Modes" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Swim" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Recordings"]
+[node name="LiveMode" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/Modes"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_modes")
+button_pressed = true
+text = "Live pond"
+
+[node name="ReviewMode" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/Modes"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_modes")
+text = "Recordings"
+
+[node name="LiveControls" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LivePlay" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play"
+tooltip_text = "Play or pause the simulation (P)"
+
+[node name="Left" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left 15°"
+tooltip_text = "Request a 15° left turn (Q)"
+
+[node name="Right" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right 15°"
+tooltip_text = "Request a 15° right turn (E)"
+
+[node name="LiveStatus" type="Label" parent="CanvasLayer/Overlay/Transport/Dock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.255, 0.357, 0.315, 1)
+theme_override_font_sizes/font_size = 14
+text = "Paused"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Playback" type="VBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Recordings" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock/Playback"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swim" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/Playback/Recordings"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -137,7 +261,7 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_recordings")
 text = "Swim"
 
-[node name="Turn" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Recordings"]
+[node name="Turn" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/Playback/Recordings"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -146,7 +270,7 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_recordings")
 text = "Turn"
 
-[node name="Hold" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Recordings"]
+[node name="Hold" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/Playback/Recordings"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -156,17 +280,17 @@ button_group = SubResource("ButtonGroup_recordings")
 text = "Swim in place"
 tooltip_text = "Swim in place against a gentle current"
 
-[node name="Controls" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Playback"]
+[node name="Controls" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock/Playback"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Play" type="Button" parent="CanvasLayer/Overlay/Transport/Playback/Controls"]
+[node name="Play" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/Playback/Controls"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(76, 44)
 layout_mode = 2
 text = "Play"
 
-[node name="Timeline" type="HSlider" parent="CanvasLayer/Overlay/Transport/Playback/Controls"]
+[node name="Timeline" type="HSlider" parent="CanvasLayer/Overlay/Transport/Dock/Playback/Controls"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -174,7 +298,7 @@ size_flags_horizontal = 3
 tooltip_text = "Seek to a time in the recorded trace"
 step = 0.01
 
-[node name="Time" type="Label" parent="CanvasLayer/Overlay/Transport/Playback/Controls"]
+[node name="Time" type="Label" parent="CanvasLayer/Overlay/Transport/Dock/Playback/Controls"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0.0 / 0.0 s"

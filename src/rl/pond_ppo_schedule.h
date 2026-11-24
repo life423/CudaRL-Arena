@@ -60,13 +60,24 @@ CUDARL_HD inline void course(State& s,const Sample& m) {
     const float speed=sqrtf(m.vx*m.vx+m.vz*m.vz);
     if(p::finite_number(speed)&&speed>=.003f){s.last_course_x=m.vx/speed;s.last_course_z=m.vz/speed;s.valid_course=true;}
 }
+// Balance actual Turn pairs rather than all physical worlds, which also
+// contain rest and straight tasks. This runs only when a request is born.
+CUDARL_HD inline float medium_request_angle(uint32_t env,uint32_t episode,uint32_t serial,uint32_t seed){
+    uint32_t turn_pair_rank=0;
+    for(uint32_t pair=0;pair<env/2;++pair)
+        if(pt::sample_request(2*pair,episode,seed,pt::signed_half_second_v1).kind==pt::Turn)++turn_pair_rank;
+    const uint32_t rotation=cudarl::rng::bits(seed,0x29b1cc7du,episode);
+    const float degrees=15.f+5.f*float((turn_pair_rank+rotation+serial)%4u);
+    return ((env^serial)&1u?degrees:-degrees)*pt::obs::pi/180.f;
+}
 // Invoked before a control only. Thus a final episode tick cannot issue an
 // unexercised replacement, and a rollout/checkpoint edge has no timing effect.
-CUDARL_HD inline void before(State& s,pt::Task& task,uint32_t env,uint32_t seed,uint32_t program=pt::repeated_headings_v1) {
+CUDARL_HD inline void before(State& s,pt::Task& task,uint32_t env,uint32_t seed,uint32_t program=pt::repeated_headings_v1,bool medium_turn=false) {
     s.events=0;
     if(task.kind!=pt::Turn||s.active||task.episode_controls<pt::turn_control||task.episode_controls>=pt::episode_limit)return;
     const bool first=s.serial==0;
-    s.angle=first?task.turn_radians:(pt::half_second_program(program)?
+    if(medium_turn)s.angle=medium_request_angle(env,task.episode_index,s.serial,seed);
+    else s.angle=first?task.turn_radians:(pt::half_second_program(program)?
         pt::paired_turn_angle(env,task.episode_index,s.serial,seed):angle_draw(env,task.episode_index,s.serial,seed));
     p::V heading=task.request.request.heading;
     if(!first&&s.valid_course)heading={s.last_course_x,0,s.last_course_z};

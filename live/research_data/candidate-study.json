@@ -1,37 +1,37 @@
 {
   "schema": 2,
-  "study_id": "residual-yaw-2026-11-24",
-  "study_label": "Yaw steering · frozen swimmer",
+  "study_id": "propulsion-motor-2026-11-24",
+  "study_label": "New motor · Forward-swimming lesson",
   "status": "completed",
-  "completed_updates": 32,
-  "reason": "turning_unqualified",
+  "completed_updates": 8,
+  "reason": "fresh_motor_learning",
   "playing_package_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
   "lane_limit_m": 0.002,
   "candidate_adopted": false,
   "sources": {
     "checkpoint": {
-      "path": "res://research_data/studies/residual-yaw-2026-11-24/checkpoint-digest.json",
-      "sha256": "73326a9d47a90b4a7cb643d38ad37a308906eb9fb0a2d6d63b01befb07985db0"
+      "path": "res://research_data/studies/propulsion-motor-2026-11-24/checkpoint-digest.json",
+      "sha256": "135e8bd767ffb479089e79bd3b8c94f15a16bd49fc8ba722407cec52e68ed369"
     },
     "training": {
-      "path": "res://research_data/studies/residual-yaw-2026-11-24/training-result.json",
-      "sha256": "b3de23b08acd31ba24403bb4758f2baeebb41554e8f69a9095c8c65459361eb0"
+      "path": "res://research_data/studies/propulsion-motor-2026-11-24/training-result.json",
+      "sha256": "dba3477c8b3f160f315c4f63a75cacbadfb0db8e74a504cfe9a20c9c0b479d29"
     },
     "evaluation": {
-      "path": "res://research_data/studies/residual-yaw-2026-11-24/assessment-result.json",
-      "sha256": "6f1df855f7e34776fa636cea299752b7ff0ecbb861fc55bfa95c4d80971a176e"
+      "path": "res://research_data/studies/propulsion-motor-2026-11-24/assessment-result.json",
+      "sha256": "aea01e5e4231b1618cf4876685f545d8209f22af4e7233b87818d8a8a40981ce"
     },
     "movement": {
-      "path": "res://research_data/studies/residual-yaw-2026-11-24/movement-summary.json",
-      "sha256": "e223f2ada955c9b3014eaafe5532d5b3e593964b41de10741d55360a01bb1853"
+      "path": "res://research_data/studies/propulsion-motor-2026-11-24/movement-summary.json",
+      "sha256": "f465f25a889ada4dfb15f2d549c538b4ac7ddb6176b875db988fb04bd3d0b5f2"
     },
     "cases": {
-      "path": "res://research_data/studies/residual-yaw-2026-11-24/cases.csv",
-      "sha256": "3bcf051ae2cba7a92ffa2b56eb3d3bfe04d008edf638a26457fae10a930e4738"
+      "path": "res://research_data/studies/propulsion-motor-2026-11-24/cases.csv",
+      "sha256": "7c11ce74359a2a886ca647143089ceb7bcbde6a18d72dfa0c997911e2f6e984b"
     },
     "baseline": {
-      "path": "res://research_data/studies/residual-yaw-2026-11-24/baseline-assessment.json",
-      "sha256": "5284813d546215f83b3321e12903e48e604e535d22cb4f7b4c9b152faeb6ad08"
+      "path": "res://research_data/studies/propulsion-motor-2026-11-24/baseline-assessment.json",
+      "sha256": "62c2bc0cb1981679329c02485960eac8c235bf69bb9811a6457448e65285e0ae"
     }
   },
   "disclosure": "Recorded study result. Compact native outputs and checkpoint digests are portable; omitted raw controls/checkpoints remain preserved research evidence. No study is rerun by the app."

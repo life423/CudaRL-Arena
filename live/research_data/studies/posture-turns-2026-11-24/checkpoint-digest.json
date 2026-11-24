@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "controller": "frozen_motor_with_learned_residual",
+  "file_sha256": "d9cfdf2acd708c020679dadf90bc44222359ff440d54983a4540810e45b84b13",
+  "file_bytes": 3140,
+  "payload_checksum_fnv1a64": "5398925849025813932",
+  "parent_payload_checksum_fnv1a64": "4517507952728352494",
+  "protocol_checksum_fnv1a64": "1096920748321206850",
+  "actor_inputs": 42,
+  "hidden_neurons": 16,
+  "actor_outputs": 4,
+  "actor_parameters": 756,
+  "completed_updates": 8,
+  "training_controls": 262144,
+  "training_substeps": 2621440,
+  "actor_Adam_calls": 256,
+  "critic_Adam_calls": 256,
+  "original_motor_frozen": true,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "assets/research-evidence/pond-four-posture-v1/residual-8.bin",
+  "validation": "Native assessment verified and evaluated the frozen motor combined with this separate residual actor."
+}

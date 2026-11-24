@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "file_sha256": "072487ff5ba9213d25045b2bab56d8400709a5202a46ec426c07be571faeb063",
+  "file_bytes": 957464,
+  "payload_checksum_fnv1a64": "11613888464243782102",
+  "protocol_checksum_fnv1a64": "15519980947871441081",
+  "source_identity_fnv1a64": "16706572453739138588",
+  "runtime_version": 4,
+  "collision_envelope_version": 2,
+  "observation_schema": 6,
+  "completed_updates": 8,
+  "training_controls": 262144,
+  "training_substeps": 2621440,
+  "actor_Adam_calls": 256,
+  "critic_Adam_calls": 256,
+  "world_stride": 1384,
+  "task_stride": 368,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "assets/research-evidence/pond-336-course-context-v1/candidate-8.bin",
+  "validation": "Native evaluation parsed this checkpoint; this export records its envelope, header, counters and file digest. It performs no new policy evaluation."
+}

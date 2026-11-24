@@ -30,10 +30,10 @@ void require(bool yes,const std::string& why){if(!yes)throw std::runtime_error(w
 void cuda(cudaError_t v){if(v!=cudaSuccess)throw std::runtime_error(cudaGetErrorString(v));}
 struct Deadline{
     fs::path out;std::mutex mutex;std::condition_variable cv;bool done=false;std::thread watchdog;
-    Deadline(const fs::path& path,Clock::time_point start):out(path),watchdog([this,start]{
+    Deadline(const fs::path& path,Clock::time_point start,int seconds=30):out(path),watchdog([this,start,seconds]{
         std::unique_lock<std::mutex> lock(mutex);
-        if(!cv.wait_until(lock,start+std::chrono::seconds(30),[this]{return done;})){
-            std::ofstream(out/"timeout.json")<<"{\"passed\":false,\"reason\":\"30_second_wall_cap\"}\n";
+        if(!cv.wait_until(lock,start+std::chrono::seconds(seconds),[this]{return done;})){
+            std::ofstream(out/"timeout.json")<<"{\"passed\":false,\"reason\":\""<<seconds<<"_second_wall_cap\",\"optimizer_calls\":0}\n";
             std::_Exit(3);
         }
     }){}
@@ -130,11 +130,11 @@ struct Differences{
 
 struct Device{
     cudaStream_t stream{};cudaEvent_t begin{},end{};void* state=nullptr;void* scratch=nullptr;Request* r=nullptr;Output* out=nullptr;
-    Device(){
+    explicit Device(bool load_baseline=true){
         cuda(cudaSetDevice(0));cuda(cudaStreamCreateWithFlags(&stream,cudaStreamNonBlocking));cuda(cudaEventCreate(&begin));cuda(cudaEventCreate(&end));
         require(baseline::scratch()==candidate::scratch(),"Trace ABI drift");cuda(cudaMalloc(&scratch,worlds*baseline::scratch()));
         cuda(cudaMalloc(&state,worlds*world_bytes));cuda(cudaMalloc(&r,worlds*sizeof(Request)));cuda(cudaMalloc(&out,worlds*sizeof(Output)));
-        baseline::load();candidate::load();
+        if(load_baseline)baseline::load();candidate::load();
     }
     ~Device(){cudaFree(out);cudaFree(r);cudaFree(scratch);cudaFree(state);cudaEventDestroy(end);cudaEventDestroy(begin);cudaStreamDestroy(stream);}
     double run(Issue launch,const Group& g,std::vector<Output>& results,double& transfer){

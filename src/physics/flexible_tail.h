@@ -41,7 +41,9 @@ CUDARL_HD inline double elastic_energy(const p::BodyState& state) {
     return .5*double(bend_stiffness())*(double(state.angle[2])*state.angle[2]+double(state.angle[3])*state.angle[3]);
 }
 
-CUDARL_HD inline void shape(const p::BodyState& s, Geometry& geom) {
+// Keep the large device functions separate to avoid expanding all sections and
+// both solves inside every CUDA caller. CPU builds retain the inline definitions.
+CUDARL_HD CUDARL_DEVICE_NOINLINE void shape(const p::BodyState& s, Geometry& geom) {
     const p::V basis[3]={{1,0,0},{0,1,0},{0,0,1}};
     auto& head=geom.body[0];
     const auto g=p::body_geometry(0);
@@ -90,7 +92,7 @@ CUDARL_HD inline void shape(const p::BodyState& s, Geometry& geom) {
     }
 }
 
-CUDARL_HD inline Snapshot snapshot(const p::BodyState& state) {
+CUDARL_HD CUDARL_DEVICE_NOINLINE Snapshot snapshot(const p::BodyState& state) {
     Geometry geom{}; shape(state,geom); Snapshot out{}; float mass=0;
     for(int i=0;i<=stations;++i) {
         const auto& l=geom.body[i];
@@ -107,7 +109,7 @@ CUDARL_HD inline Snapshot snapshot(const p::BodyState& state) {
     out.depth_m=-out.com_m.y; return out;
 }
 
-CUDARL_HD inline double kinetic_energy(const p::BodyState& state) {
+CUDARL_HD CUDARL_DEVICE_NOINLINE double kinetic_energy(const p::BodyState& state) {
     Geometry geom{}; shape(state,geom); double energy=0;
     for (int i=0;i<=stations;++i) {
         const auto& l=geom.body[i]; const auto v=p::multiply(l.linear,state.velocity);
@@ -116,7 +118,7 @@ CUDARL_HD inline double kinetic_energy(const p::BodyState& state) {
     return energy;
 }
 
-CUDARL_HD inline void assemble(const p::BodyState& s,p::Parameters fluid,p::V water,p::System& sys) {
+CUDARL_HD CUDARL_DEVICE_NOINLINE void assemble(const p::BodyState& s,p::Parameters fluid,p::V water,p::System& sys) {
     Geometry geom{}; shape(s,geom);
     for(int i=0;i<=stations;++i) {
         const auto& l=geom.body[i];
@@ -158,7 +160,7 @@ CUDARL_HD inline void assemble(const p::BodyState& s,p::Parameters fluid,p::V wa
 
 // A null target disconnects both root motors. Only passive material response
 // and the external fluid remain. No downstream joint target is constructed.
-CUDARL_HD inline bool step(p::BodyState& body,const float* root_targets_rad,float h,StepInfo& info,
+CUDARL_HD CUDARL_DEVICE_NOINLINE bool step(p::BodyState& body,const float* root_targets_rad,float h,StepInfo& info,
                             p::Parameters fluid={},p::V current_m_s={}) {
     info={};
     if(!p::finite_body(body)||!(h>0&&h<=.005001f)||!p::finite_vector(current_m_s)

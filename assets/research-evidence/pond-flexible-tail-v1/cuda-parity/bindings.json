@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/physics/flexible_tail.h",
+    "sha256": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226"
+  },
+  {
+    "path": "src/physics/dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6"
+  },
+  {
+    "path": "src/core/hd.h",
+    "sha256": "CB1105C3CE5ED2D53C838344ED4FAE35F4BBDAA99AC0599E9B60948E7D4AF030"
+  },
+  {
+    "path": "src/nn/motor/movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5"
+  },
+  {
+    "path": "tools/pond-flexible-tail-check/cuda-parity.cu",
+    "sha256": "EF0F1465F0EB39076566448509CD68EE7451FA58732EDF02170B5D322A13147D"
+  },
+  {
+    "path": "build/flexible-tail/cuda-spot/repo-parity/spot.exe",
+    "sha256": "16614E465E07F74A8E78AB4712358084AA23EFDAD7952DB38DEB6EAC32393C6E"
+  }
+]

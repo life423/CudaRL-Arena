@@ -1,0 +1,1 @@
+{"exit":0,"limit_seconds":20,"timed_out":false,"elapsed_seconds":5.9803065,"flags":"-std=c++17 -O2 -arch=sm_120 --fmad=false -Xcompiler=/O2,/fp:precise"}

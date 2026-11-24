@@ -1,0 +1,81 @@
+{
+  "mode": "--repeated-habitat-turns",
+  "process_cap_s": 4,
+  "step_s": 0.00125,
+  "warmup_s": 6,
+  "leg_s": 12,
+  "scope": "finite diagnostic cues, no deployed navigation or training",
+  "metrics": "last 2 s projected COM speed >= 6 mm/s and course error <= 5 degrees; depth error <= 1 mm; tilt <= 10 degrees; conservative static whole-body clearance bound > 0 at each integration substep",
+  "starts": [
+    {
+      "turn_deg": [
+        30,
+        -30,
+        30,
+        -30
+      ],
+      "position_m": [
+        -0.32,
+        -0.08,
+        0.23
+      ],
+      "name": "alternating_interior"
+    },
+    {
+      "turn_deg": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "position_m": [
+        0.3,
+        -0.08,
+        0.17
+      ],
+      "name": "same_sign_early"
+    },
+    {
+      "turn_deg": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "position_m": [
+        0.45,
+        -0.08,
+        0.17
+      ],
+      "name": "same_sign_late"
+    }
+  ],
+  "sha256": [
+    {
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-check\\check.cpp",
+      "Hash": "172B9F87BFA8728BD2203260DB760EBDC25BD7C0A47DF965C02B9878C236D54B"
+    },
+    {
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\flexible_tail.h",
+      "Hash": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226"
+    },
+    {
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\environment\\flexible_tail_clearance.h",
+      "Hash": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1"
+    },
+    {
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\habitat.json",
+      "Hash": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+    },
+    {
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\native\\Release\\pond_flexible_tail_check.exe",
+      "Hash": "7E9C1BCE0B8D0FEB853B868ABBE733D820486D74D407BF0ED12D798CCB834BAF"
+    }
+  ]
+}

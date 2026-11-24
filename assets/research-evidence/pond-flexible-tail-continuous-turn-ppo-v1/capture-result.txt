@@ -1,0 +1,1 @@
+train_worlds=256 eval_worlds=4 capture_attempted_substeps=41856 capture_accepted_substeps=41856 capture_peak_tilt_deg=0 capture_peak_depth_mm=0 capture_min_gap_mm=67.999001

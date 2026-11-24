@@ -62,15 +62,46 @@ A separate Driver API probe created a cold CUDA context and four events in
 36,119,504-byte observation module. It launched zero kernels. The same module
 contains the physical step, reset, and initialization kernels, with 10.01 MB,
 8.98 MB, and 8.98 MB of native instructions respectively. Native `sm_120`
-code is present. The successful dynamics benchmark puts its optimized step
-in a separate 4.45 MB module. The next focused change is to keep the large
-geometry/physics routines out of the observation module and share the expensive
-device routines across step and reset. A module load time and the existing
-matched motion checks should qualify any replacement before collection.
+code is present. The successful dynamics benchmark's swept step sits in a
+13.09 MB module. Its 4.45 MB module belongs to the older baseline. Inspecting
+the replay image revealed three inlined copies of the per-link search, totaling
+25.67 MB. The shared implementation gives the sampler, per-link search, and
+whole-body inspection one device definition each. The qualified arithmetic
+flags and the exact search bodies are preserved.
 [Module probe](../assets/research-evidence/pond-collection-replay-v2/module-probe.json)
 
-The accelerated trainer remains gated. Full-rollout and PPO throughput are
-still unmeasured.
+## Shared device inspection qualification
+
+The linked CUDA image fell from 36.12 MB to 14.15 MB (61% smaller). The replay
+and residual trainer use the same separately compiled terrain sampler, link
+search, and whole-body inspection. The sampler retains its no-inline
+annotation. Each gate used a separate CUDA process, in the order below.
+The module probe ran first, so driver and filesystem caches may have been
+warmer for the later runs.
+
+| Gate | Process time | Result |
+| --- | ---: | --- |
+| Load the four trainer kernels | 2.101 s | Passed, zero kernel launches |
+| Matched CPU/CUDA dynamics | 2.492 s | Passed, 2,064 controls and 37 force-positive GPU bank substeps |
+| Full saved 512-world × 64-control rollout | 0.418 s | Passed, 32,768 controls and 327,680 substeps |
+
+The dynamics comparison found zero failed CPU/CUDA comparisons. The exact
+and accelerated GPU paths agreed on motion and contact force, including all
+37 bank-contact substeps. The late 512-world control took 152.22 ms with full
+clearance and 2.08 ms with the shared accelerated build.
+
+In the full replay, GPU physics and task work took 146.60 ms versus 12,354.26
+ms in the matching archived collection. The rollout phase delivered 148,175
+transitions/s. All compared observations, actions, probabilities, values,
+rewards, movement metrics and accounting matched the archived reference.
+All full-replay substeps were certified clear. The separate dynamics gate
+exercised real bank contact with the exact fallback. Neither test ran an
+optimizer. These results qualify this collector path without establishing
+complete PPO training throughput or turning performance.
+
+[Module load](../assets/research-evidence/pond-collection-replay-v3-module/result.json) ·
+[Physics parity](../assets/research-evidence/pond-broadphase-dynamics-v2/result.json) ·
+[Full replay](../assets/research-evidence/pond-collection-replay-v3/result.json)
 
 ## Build and integration checks
 

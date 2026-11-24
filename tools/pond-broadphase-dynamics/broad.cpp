@@ -51,22 +51,25 @@ struct CertificateTotals{
 int main(int argc,char** argv){
     const auto started=Clock::now();fs::path output;bool owns=false;
     try{
-        const std::string binding=std::string("{\"protocol\":\"pond-broadphase-dynamics-v1\",\"reference_library_sha256\":\"")+old_sha+"\",\"runtime_sha256\":\""+new_sha
-          +"\",\"exact_geometry_sha256\":\""+common_sha+"\",\"sweep_sha256\":\""+swept_sha+"\",\"maximum_gpu_controls\":2056,\"maximum_cpu_controls\":8,\"maximum_physical_substeps\":20640,\"wall_cap_seconds\":30,\"optimizer_calls\":0}";
+        const bool shared=inspect_sha[0]!='\0';
+        const std::string device_binding=shared?std::string(",\"device_inspect_sha256\":\"")+inspect_sha+"\",\"device_inspect_link_sha256\":\""+inspect_link_sha
+            +"\",\"terrain_source_sha256\":\""+terrain_sha+"\",\"math_profile_sha256\":\""+profile_sha+"\"":"";
+        const std::string binding=std::string("{\"protocol\":\"")+qualification_protocol+"\",\"reference_library_sha256\":\""+old_sha+"\",\"runtime_sha256\":\""+new_sha
+          +"\",\"exact_geometry_sha256\":\""+common_sha+"\",\"sweep_sha256\":\""+swept_sha+"\""+device_binding+",\"maximum_gpu_controls\":2056,\"maximum_cpu_controls\":8,\"maximum_physical_substeps\":20640,\"wall_cap_seconds\":"+std::to_string(wall_cap_seconds)+",\"optimizer_calls\":0}";
         if(argc==2&&std::string(argv[1])=="--describe"){std::cout<<binding<<'\n';return 0;}
         const bool preflight=argc==3&&std::string(argv[1])=="--preflight";
         require(preflight||(argc==5&&std::string(argv[1])=="--run"),"Use --describe, --preflight <root>, or --run <root> <sealed-file> <seal SHA256>");
-        const auto root=fs::canonical(argv[2]);output=root/"assets/research-evidence/pond-broadphase-dynamics-v1";
+        const auto root=fs::canonical(argv[2]);output=root/"assets/research-evidence"/qualification_protocol;
         std::unique_ptr<Deadline> deadline;
         if(!preflight){
             require(digest(argv[3])==argv[4]&&fs::file_size(argv[3])>80,"Invalid physics seal");
             require(!fs::exists(output)&&fs::create_directories(output),"This finite replay has already been attempted");owns=true;
-            deadline=std::make_unique<Deadline>(output,started);
+            deadline=std::make_unique<Deadline>(output,started,wall_cap_seconds);
         }
         std::vector<Group> groups;groups.push_back(rollout(root/"build/turn38-residual/updates-1-8/batch-8.bin",early_hash,8,{0,1}));
         groups.push_back(rollout(root/"build/turn38-residual/updates-9-16/batch-12.bin",late_hash,12,{55,315}));groups.push_back(contacts(root));
         if(preflight){std::cout<<"{\"verified_fixture_and_command_sets\":1028,\"physical_controls\":0}\n";return 0;}
-        const double inputs_ms=ms(started);const auto setup=Clock::now();Device d;swept::load();cuda(cudaFree(d.scratch));d.scratch=nullptr;
+        const double inputs_ms=ms(started);const auto setup=Clock::now();Device d(!shared);swept::load();cuda(cudaFree(d.scratch));d.scratch=nullptr;
         cuda(cudaMalloc(&d.scratch,worlds*std::max(candidate::scratch(),swept::scratch())));
         swept::Certificate* diagnostics=nullptr;cuda(cudaMalloc(&diagnostics,worlds*sizeof(swept::Certificate)));swept::attach(diagnostics);
         const double setup_ms=ms(setup);

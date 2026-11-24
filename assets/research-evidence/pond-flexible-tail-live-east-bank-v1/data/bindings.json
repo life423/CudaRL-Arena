@@ -1,0 +1,107 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6D300CEE3B44E1F9878994E5C8F86B6B7D7C4CEC72D36B2F129807393E957FC1",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-motor\\LIVE_EAST_BANK_PROTOCOL.md"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "810FA201CEEF8544BEABF65AC46E03BEF6CFEC4ACA171C20E4900E9E9BA67B13",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\live-east-bank-build\\Release\\pond_flexible_tail_motor_yaw_offset_fixture.exe"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "C456155101175E5B9A348F991F72DF36C7042A20CDFDE1D1EF84868BEDF8EF1E",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\run-live-east-bank-v1.ps1"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "75B28626267806E13888B2DD28091AF8BFC4F813B6E672ED8B9A4CCCE0650274",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-motor\\yaw-offset-fixture.cpp"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "24E45642BED4B8853F4E80A7F0BCA828C60E1F37891CC9BF5B2EF0CA86335BD1",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-motor\\bank-room-replay.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\environment\\flexible_tail_clearance.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "695A985B8C72C347925D5425882B795E8D7AD4B4BA5F47D7B35FABC21F613AF3",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\environment\\pond_geometry_v1.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "170004572CA4733D023313A0A9E6FFD5B7E405F08F78B704F6F3BC036DC4C922",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-alternating-handoff-v1\\data\\alternating-gates.csv"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "94B8288BE4B504EB9C08F275F98453627DD479C442D680BBCF559E75A1FC9FC7",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-alternating-handoff-v1\\data\\left_start\\forks.csv"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BB25650F88D861AEE37ADC44DFE3F06FF514C027490CC0FE74E246094415B629",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-alternating-handoff-v1\\data\\right_start\\forks.csv"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\training\\actor-8.bin"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-gait-v1\\passing-actor.bin"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "2C73A307E75FFC32DCE473E680DC4A16A43C9292513F6C2552C786433DFBBEAC",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-alternating-handoff-v1\\data\\left_start\\east-bank.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1EAF5E44E3A740953C0E117275B6B484169EA6F45777DC9B19FC60274F0E1630",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-alternating-handoff-v1\\data\\right_start\\east-bank.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\flexible_tail.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4902A5050A09101D8E7115EE43DDF99F3288B99EF539A525548A5D3FC727BF1E",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-turn-worlds.bin"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "E6F237A7F0BCA2FD57D29F1673A92582726F363B6B2E3EE1EA3471C7AF28FA14",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_gait.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6881591BF03E6DD55F68824697C202374C1C07989CE342D46EE3EEBCB5562B2C",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_yaw_offset.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "634A7A99C49F3E9E56AF6E848C00866DBF184988A183D0C093A4AC1AF8334074",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_navigation.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0B3FAD83A39FEFD98ED8C4D17961B9A0B05FE83A2DEAF58FF615ED6BD0DC279B",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_transition.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\habitat.json"
+  }
+]

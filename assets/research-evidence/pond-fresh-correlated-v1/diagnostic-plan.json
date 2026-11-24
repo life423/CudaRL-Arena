@@ -1,0 +1,18 @@
+{
+  "max_process_wall_seconds": 4,
+  "evaluator_source_sha256": "e4a3cf3a99451deb50c395f3229681ac67e1377630de1f63a723ad19a6760796",
+  "no_checkpoint_adoption": true,
+  "source_protocol_sha256": "9fe1575555d774063661294a7d409bb5c79e4a8de327cd1aeb35d3f432fe9cc1",
+  "max_substeps": 6400,
+  "no_training": true,
+  "later_training_accounting_resolved": false,
+  "inference": "Exact saved candidate15 deterministic actor mean, zero exploration noise, same four actuators/body/water",
+  "executable_sha256": "211cffe67e09b546f1b87512ebc20f40ba70a389cb9b0fba08b03d86272e6f43",
+  "candidate_sha256": "033b9ad3ec90127135cdf3d94084aad72d6806dfb7ef25523354da415bd879eb",
+  "completed_rows_sha256": "d6dcb5c59b583449c0ac74a1c49e02bb2dbe7285dcb482cb3eea1873546d49ff",
+  "max_controls": 640,
+  "diagnostic_id": "correlated-candidate15-forward-v1-2026-11-24",
+  "full_qualification": false,
+  "fixtures": "Original four160-control short swims",
+  "source_sha256": "0ebdd56b4e33de88bab2e8c8c50f5ec7c4acc85ec6803ad0579abbcb1cf348c9"
+}

@@ -1,4 +1,6 @@
 #include "environment/pond_geometry_v1.h"
+#include "environment/flexible_tail_clearance.h"
+#include "habitat_config.h"
 #include "physics/flexible_tail.h"
 
 #include <algorithm>
@@ -102,10 +104,17 @@ void record(Outcome& result, const BodyState& body, const tail::Snapshot& pose, 
 
 enum class Lesson { Forward, Turn, Coast };
 
+struct SteeringHistory {
+    std::array<V, 10> positions{};
+    std::size_t samples = 0;
+    float bias = 0;
+};
+
 Outcome simulate(BodyState body, const Stroke stroke, Lesson lesson, float target_course,
                  float duration, float timestep, double start_s, bool save_frames, float entry_course,
                  float steering_gain,
-                 Clock::time_point deadline) {
+                 Clock::time_point deadline, const geometry::Parameters* habitat = nullptr,
+                 SteeringHistory* continued_steering = nullptr) {
     Outcome result;
     result.state = body;
     auto pose = tail::snapshot(body);
@@ -116,9 +125,9 @@ Outcome simulate(BodyState body, const Stroke stroke, Lesson lesson, float targe
     const int samples_per_frame = static_cast<int>(std::lround(.05f / timestep));
     V final_window_start = entry_com;
     int final_window_tick = 0;
-    std::array<V, 10> steering_positions;
-    steering_positions.fill(entry_com);
-    float steering_bias = 0;
+    SteeringHistory local_steering;
+    auto& steering = continued_steering ? *continued_steering : local_steering;
+    if (steering.samples == 0) steering.positions.fill(entry_com);
     for (int tick = 0; tick < total; ++tick) {
         if ((tick & 63) == 0 && Clock::now() >= deadline) {
             result.stop = "time_budget";
@@ -129,8 +138,7 @@ Outcome simulate(BodyState body, const Stroke stroke, Lesson lesson, float targe
             final_window_tick = tick;
         }
         if (lesson == Lesson::Turn && tick % samples_per_frame == 0) {
-            const auto sample = static_cast<std::size_t>(tick / samples_per_frame);
-            auto& recent = steering_positions[sample % steering_positions.size()];
+            auto& recent = steering.positions[steering.samples++ % steering.positions.size()];
             const V displacement = pose.com_m - recent;
             recent = pose.com_m;
             const float measured_course = horizontal_speed(displacement) >= .0015f ?
@@ -139,13 +147,13 @@ Outcome simulate(BodyState body, const Stroke stroke, Lesson lesson, float targe
             const float alpha = std::min(1.f, .05f / .5f);
             // Diagnostic feedback on the root target exercises physical
             // steering authority. The learner and live app never call this.
-            steering_bias += alpha * (std::clamp(steering_gain * error, -.45f, .45f) - steering_bias);
+            steering.bias += alpha * (std::clamp(steering_gain * error, -.45f, .45f) - steering.bias);
         }
         const double time_s = start_s + tick * static_cast<double>(timestep);
         const float drive = lesson == Lesson::Coast ? 0.f :
             stroke.amplitude_rad * static_cast<float>(std::sin(2 * pi * stroke.frequency_hz * time_s));
         const float pitch = lesson == Lesson::Coast ? 0.f : stroke.pitch_rad;
-        const float targets[]{std::clamp(drive + steering_bias, -physics::limit, physics::limit), pitch};
+        const float targets[]{std::clamp(drive + steering.bias, -physics::limit, physics::limit), pitch};
         tail::StepInfo info;
         if (!tail::step(body, targets, timestep, info)) {
             result.stop = "invalid_dynamics";
@@ -160,9 +168,11 @@ Outcome simulate(BodyState body, const Stroke stroke, Lesson lesson, float targe
         result.work_j += info.root_work_J;
         result.max_tilt = std::max(result.max_tilt, pose.tilt_deg);
         result.max_depth_error = std::max(result.max_depth_error, std::abs(pose.depth_m - .08f));
-        result.clearance_m = std::min(result.clearance_m, clearance(body, pose));
+        const float gap = habitat ? static_cast<float>(tail::submerged_gap_m(*habitat, body, pose)) :
+            clearance(body, pose);
+        result.clearance_m = std::min(result.clearance_m, gap);
         if (!(result.clearance_m > 0)) {
-            result.stop = "left_clear_water_fixture";
+            result.stop = habitat ? "submergence_not_certified" : "left_clear_water_fixture";
             break;
         }
         if (save_frames && (tick + 1) % samples_per_frame == 0) {
@@ -197,6 +207,12 @@ void write_case(std::ostream& out, const char* mode, const Stroke stroke,
         << ',' << x.course_change_deg << ',' << x.max_tilt << ',' << x.max_depth_error * 1000
         << ',' << x.clearance_m * 1000 << ',' << x.distance_m * 1000
         << ',' << x.max_yaw_bend_rad << ',' << x.max_torque_nm * 1e6 << ',' << x.work_j << '\n';
+}
+
+void write_movement_columns(std::ostream& csv) {
+    csv << "mode,frequency_Hz,amplitude_rad,pitch_rad,relative_target_deg,steps,stop,pass,"
+        << "projected_speed_mm_s,course_error_deg,course_change_deg,peak_tilt_deg,max_depth_error_mm,"
+        << "min_clearance_mm,horizontal_displacement_mm,max_yaw_bend_rad,max_torque_uNm,root_work_J\n";
 }
 
 std::ostream& xyz(std::ostream& out, V v) {
@@ -606,6 +622,149 @@ int run_current_hold(const fs::path& folder, bool confirm) {
 
 enum class Fixture { Fastest, PondSpeed, Refined, Extended };
 
+int run_habitat(const fs::path& folder) {
+    const auto start = Clock::now();
+    const auto deadline = start + std::chrono::milliseconds(3500);
+    if (!fs::create_directory(folder)) throw std::runtime_error("Output folder must be new");
+    const auto test_gap = [](V position) {
+        BodyState body;
+        body.position = position / physics::scale;
+        return tail::submerged_gap_m(larger_pond, body, tail::snapshot(body));
+    };
+    const bool bounds_pass = test_gap({0, -.08f, 0}) > 0 &&
+        test_gap({.56f, -.08f, 0}) > 0 && test_gap({0, -.08f, .38f}) > 0 &&
+        test_gap({0, -.006f, 0}) <= 0 && test_gap({0, -.18f, 0}) <= 0 &&
+        test_gap({.88f, -.08f, 0}) <= 0;
+    std::cout << "clearance_controls=" << bounds_pass << '\n';
+    if (!bounds_pass) return 2;
+
+    const Stroke stroke{1, .55f, 0};
+    struct Start { const char* name; V position; float yaw, turn; };
+    const Start fixtures[]{
+        {"east_shoal", {.45f, -.08f, 0}, 0, 30},
+        {"west_shoal", {-.45f, -.08f, 0}, pi, -30},
+        {"north_shoal", {0, -.08f, -.24f}, pi/2, 30},
+        {"south_shoal", {0, -.08f, .24f}, -pi/2, -30}
+    };
+    std::ofstream csv(folder / "cases.csv");
+    csv.exceptions(std::ios::failbit | std::ios::badbit);
+    csv << std::setprecision(8);
+    write_movement_columns(csv);
+    int passes = 0;
+    for (const auto& fixture : fixtures) {
+        BodyState body;
+        body.position = fixture.position / physics::scale;
+        body.orientation = physics::axis_rotation({0, 1, 0}, fixture.yaw);
+        const auto swim = simulate(body, stroke, Lesson::Forward, fixture.yaw, drive_s, comparison_step_s,
+            0, true, fixture.yaw, 0, deadline, &larger_pond);
+        write_case(csv, fixture.name, stroke, 0, swim, movement_pass(swim));
+        if (!movement_pass(swim)) continue;
+        const float course_at_request = swim.measured_course_rad;
+        const auto turn = simulate(swim.state, stroke, Lesson::Turn, course_at_request + fixture.turn * rad,
+            12, comparison_step_s, drive_s, true, course_at_request, -4.2f, deadline, &larger_pond);
+        const auto& end = turn.frames.empty() ? swim.frames.back() : turn.frames.back();
+        const auto place = geometry::sample(larger_pond, end.pose.com_m.x, end.pose.com_m.z);
+        const auto old = geometry::sample(pond, end.pose.com_m.x, end.pose.com_m.z);
+        const bool pass = movement_pass(turn) && place.region == geometry::SubmergedSlope;
+        passes += pass;
+        write_case(csv, fixture.name, stroke, fixture.turn, turn, pass);
+        if (turn.frames.size() > 1) write_trace(folder / (std::string(fixture.name) + ".json"), swim.frames, turn.frames);
+        std::cout << fixture.name << " pass=" << pass << " shoal_at_end="
+            << (place.region == geometry::SubmergedSlope) << " outside_previous_water="
+            << (old.region == geometry::DryLand) << " minimum_gap_mm=" << turn.clearance_m * 1000 << '\n';
+    }
+    csv.close();
+    std::cout << "shoal_turns=" << passes << "/4 elapsed_s="
+        << std::chrono::duration<double>(Clock::now() - start).count() << '\n';
+    return passes == 4 ? 0 : 3;
+}
+
+int run_repeated_habitat_turns(const fs::path& folder) {
+    const auto start = Clock::now();
+    const auto deadline = start + std::chrono::milliseconds(3500);
+    if (!fs::create_directory(folder)) throw std::runtime_error("Output folder must be new");
+    constexpr Stroke stroke{1, .55f, 0};
+    constexpr float leg_s = 12;
+    struct Sequence {
+        const char* name;
+        V initial_position_m;
+        std::vector<float> turn_degrees;
+    };
+    // Early and late same-sign fixtures differ only in 150 mm of initial eastward progress.
+    const Sequence sequences[]{
+        {"alternating_interior", {-.32f, -.08f, .23f}, {30, -30, 30, -30}},
+        {"same_sign_early", {.30f, -.08f, .17f}, {30, 30, 30, 30, 30, 30, 30}},
+        {"same_sign_late", {.45f, -.08f, .17f}, {30, 30, 30, 30, 30, 30, 30}},
+    };
+    std::ofstream csv(folder / "cases.csv");
+    csv.exceptions(std::ios::failbit | std::ios::badbit);
+    csv << std::setprecision(9)
+        << "sequence,leg,start_s,entry_course_deg,target_world_course_deg,end_course_deg,"
+           "cumulative_course_change_deg,end_com_x_mm,end_com_z_mm,";
+    write_movement_columns(csv);
+    int total_attempted = 0, total_passed = 0, total_steps = 0;
+    for (const auto& sequence : sequences) {
+        BodyState initial;
+        initial.position = sequence.initial_position_m / physics::scale;
+        const auto warm = simulate(initial, stroke, Lesson::Forward, 0, drive_s, comparison_step_s,
+            0, true, 0, 0, deadline, &larger_pond);
+        total_steps += warm.steps;
+        const auto warm_pose = tail::snapshot(warm.state);
+        csv << sequence.name << ",0,0,0,0," << warm.measured_course_rad / rad
+            << ",0," << warm_pose.com_m.x * 1000 << ',' << warm_pose.com_m.z * 1000 << ',';
+        write_case(csv, "warmup", stroke, 0, warm, movement_pass(warm));
+        if (!movement_pass(warm)) {
+            std::cout << sequence.name << " warmup_failed " << warm.stop << '\n';
+            continue;
+        }
+
+        auto body = warm.state;
+        auto frames = warm.frames;
+        SteeringHistory steering;
+        float entry_course = warm.measured_course_rad;
+        float total_course_change_deg = 0;
+        float elapsed_s = drive_s;
+        float min_gap_m = warm.clearance_m;
+        int passed = 0, attempted = 0;
+        for (const float degrees : sequence.turn_degrees) {
+            ++attempted;
+            const float target_course = wrap(entry_course + degrees * rad);
+            auto turn = simulate(body, stroke, Lesson::Turn, target_course, leg_s, comparison_step_s,
+                elapsed_s, true, entry_course, -4.2f, deadline, &larger_pond, &steering);
+            total_steps += turn.steps;
+            min_gap_m = std::min(min_gap_m, turn.clearance_m);
+            for (std::size_t i = 1; i < turn.frames.size(); ++i) {
+                auto frame = turn.frames[i];
+                frame.time_s += elapsed_s;
+                frames.push_back(frame);
+            }
+            body = turn.state;
+            const auto end = tail::snapshot(body);
+            if (completed(turn)) total_course_change_deg += turn.course_change_deg;
+            const bool pass = movement_pass(turn);
+            passed += pass;
+            csv << sequence.name << ',' << attempted << ',' << elapsed_s << ','
+                << entry_course / rad << ',' << target_course / rad << ',' << turn.measured_course_rad / rad << ','
+                << total_course_change_deg << ',' << end.com_m.x * 1000 << ',' << end.com_m.z * 1000 << ',';
+            write_case(csv, "turn", stroke, degrees, turn, pass);
+            if (!completed(turn)) break;
+            entry_course = turn.measured_course_rad;
+            elapsed_s += leg_s;
+        }
+        if (frames.size() >= 2) write_trace(folder / (std::string(sequence.name) + ".json"), frames, {});
+        total_attempted += attempted;
+        total_passed += passed;
+        std::cout << sequence.name << " passed=" << passed << '/' << sequence.turn_degrees.size()
+            << " attempted=" << attempted << " accumulated_turn_deg=" << total_course_change_deg
+            << " minimum_wet_gap_mm=" << min_gap_m * 1000 << '\n';
+    }
+    csv.close();
+    std::cout << "repeated_turns=" << total_passed << '/' << total_attempted << " attempted; planned=18"
+        << " substeps=" << total_steps << " elapsed_s="
+        << std::chrono::duration<double>(Clock::now() - start).count() << '\n';
+    return total_passed == 18 ? 0 : 3;
+}
+
 int run(const fs::path& folder, Fixture fixture) {
     const auto start = Clock::now();
     // Reserve a small part of the four-second local budget for output.
@@ -649,10 +808,8 @@ int run(const fs::path& folder, Fixture fixture) {
 
     std::ofstream csv(folder / "cases.csv");
     csv.exceptions(std::ios::failbit | std::ios::badbit);
-    csv << std::setprecision(8)
-        << "mode,frequency_Hz,amplitude_rad,pitch_rad,relative_target_deg,steps,stop,pass,"
-        << "projected_speed_mm_s,course_error_deg,course_change_deg,peak_tilt_deg,max_depth_error_mm,"
-        << "min_clearance_mm,horizontal_displacement_mm,max_yaw_bend_rad,max_torque_uNm,root_work_J\n";
+    csv << std::setprecision(8);
+    write_movement_columns(csv);
     std::size_t best = strokes.size();
     int forward_passes = 0;
     for (std::size_t i = 0; i < strokes.size(); ++i) {
@@ -736,12 +893,16 @@ int main(int argc, char** argv) {
     const std::string mode = argc == 3 ? argv[2] : "";
     if (argc < 2 || argc > 3 ||
         (argc == 3 && mode != "--pond-speed" && mode != "--refined" && mode != "--extended" &&
-         mode != "--hold" && mode != "--current-hold" && mode != "--verify-current-hold")) {
+         mode != "--hold" && mode != "--current-hold" && mode != "--verify-current-hold" &&
+         mode != "--habitat" && mode != "--repeated-habitat-turns")) {
         std::cerr << "Usage: pond_flexible_tail_check <new-output-folder> "
-            "[--pond-speed|--refined|--extended|--hold|--current-hold|--verify-current-hold]\n";
+            "[--pond-speed|--refined|--extended|--hold|--current-hold|--verify-current-hold|"
+            "--habitat|--repeated-habitat-turns]\n";
         return 1;
     }
     try {
+        if (mode == "--repeated-habitat-turns") return run_repeated_habitat_turns(argv[1]);
+        if (mode == "--habitat") return run_habitat(argv[1]);
         if (mode == "--hold") return run_hold(argv[1]);
         if (mode == "--current-hold" || mode == "--verify-current-hold") {
             return run_current_hold(argv[1], mode == "--verify-current-hold");

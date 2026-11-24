@@ -1,0 +1,5 @@
+#pragma once
+inline constexpr char residual_source_hash[]="@identity@",residual_sweep_hash[]="@sweep_hash@",residual_runtime_hash[]="@runtime_hash@";
+inline constexpr char residual_geometry_hash[]="@geometry_hash@",
+    residual_terrain_hash[]="@terrain_hash@",residual_math_hash[]="@math_hash@",
+    residual_device_inspect_hash[]="@inspect_hash@",residual_device_inspect_link_hash[]="@inspect_link_hash@";

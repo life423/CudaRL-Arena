@@ -3,6 +3,17 @@
 #include "environment/pond_geometry_v1.h"
 #include "motor/movement_model.h"
 
+// In separately compiled CUDA trainers, only the owning device TU sees
+// each search body. CPU and header-only consumers retain the same functions.
+#if defined(CUDARL_POND_GEOMETRY_RDC) && defined(__CUDA_ARCH__)
+#if !defined(__CUDACC_RDC__)
+#error "Shared pond geometry requires relocatable CUDA device code"
+#endif
+#define CUDARL_POND_EXTERNAL_QUERY extern __device__
+#else
+#define CUDARL_POND_EXTERNAL_QUERY CUDARL_HD CUDARL_DEVICE_NOINLINE
+#endif
+
 // Pure queries of the EXISTING model6 collision envelopes. No force, pose,
 // actuator, integration or optimization operation is performed here.
 namespace cudarl::pond_body_geometry {
@@ -210,8 +221,12 @@ CUDARL_HD inline Patch root_patch(const Shape& s,int root) {
     if(root<8)return {0,(root+.5)*terrain::pi/4,s.a,terrain::pi/8,0};
     return {.5,((root-8)%8+.5)*terrain::pi/4,.5,terrain::pi/8,root<16?1:2};
 }
-CUDARL_HD CUDARL_DEVICE_NOINLINE bool inspect_link(const Shape& s,const terrain::Parameters& p,Bounds bounds,double tolerance,
-                                  uint32_t visit_limit,LinkInspection& out,Inspection& total) {
+CUDARL_POND_EXTERNAL_QUERY bool inspect_link(const Shape& s,const terrain::Parameters& p,Bounds bounds,double tolerance,
+                                  uint32_t visit_limit,LinkInspection& out,Inspection& total)
+#if defined(CUDARL_POND_GEOMETRY_RDC) && defined(__CUDA_ARCH__) && !defined(CUDARL_DEFINE_POND_INSPECT_LINK)
+;
+#else
+{
     if(flat_box(s,p)) {
         const auto point=support(s,{0,1,0});terrain::Query q;
         if(!sample(p,point,out,total,visit_limit,q))return false;
@@ -288,10 +303,15 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool inspect_link(const Shape& s,const terrain:
     if(!out.certified){total.failure_reason=InvalidQuery;return false;}
     return true;
 }
+#endif
 }
-CUDARL_HD CUDARL_DEVICE_NOINLINE Inspection inspect(const p::BodyState& body,
+CUDARL_POND_EXTERNAL_QUERY Inspection inspect(const p::BodyState& body,
         terrain::Parameters parameters=terrain::current_visual_parameters(),
-        double tolerance_m=1e-5,uint32_t visit_limit=32768) {
+        double tolerance_m=1e-5,uint32_t visit_limit=32768)
+#if defined(CUDARL_POND_GEOMETRY_RDC) && defined(__CUDA_ARCH__) && !defined(CUDARL_DEFINE_POND_INSPECT)
+;
+#else
+{
     Inspection result;
     if(!p::finite_body(body)||!terrain::valid_parameters(parameters)||!terrain::finite(tolerance_m)||tolerance_m<1e-7||tolerance_m>.001||visit_limit==0) {
         result.failure_reason=InvalidInput;return result;
@@ -322,5 +342,7 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE Inspection inspect(const p::BodyState& body,
     }
     result.certified=true;return result;
 }
+#endif
 }
+#undef CUDARL_POND_EXTERNAL_QUERY
 #endif
