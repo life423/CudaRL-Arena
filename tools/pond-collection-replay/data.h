@@ -10,6 +10,7 @@ struct Samples {
 };
 struct Gap {double bound;uint32_t precise,free_steps,exact_steps,full_queries;};
 struct Timing {double setup_ms=0,input_transfer_ms=0,physics_ms=0,inference_ms=0,collection_wall_ms=0,readback_ms=0;};
-void collect_once(const Inputs&,Samples&,std::vector<Gap>&,Timing&,void(*issued)(int),void(*complete)(int));
+void collect_once(const Inputs&,Samples&,std::vector<Gap>&,Timing&,
+                  void(*issued)(int),void(*complete)(int),void(*phase)(const char*));
 std::string source();
 }

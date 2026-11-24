@@ -14,9 +14,19 @@ to 2.0219 ms. Earlier-state and bank-contact timings differ. This 74.16×
 result describes that control workload. The one full-collector attempt hit
 its four-second cap before issuing any physics. It completed zero controls
 and zero optimizer calls. Full-rollout qualification remains pending, and the
-new training mode stays gated. The next focused task is measuring startup
-before the first issued control.
+new training mode stays gated. A follow-up completed data setup in 193 ms yet
+still timed out before issuing a control. A zero-kernel probe reproduced the
+stall in the 36 MB CUDA module load. The current performance target is reducing
+the generated module while keeping the physical calculations unchanged.
 [GPU results and evidence](GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Residual protocol](POND_RESIDUAL_PPO_PROTOCOL_2026-11-24.md) · [Motor input audit](MOTOR_336_INPUT_AUDIT_2026-11-24.md)
+
+The independent review of main `058fda5` proposes one future paired experiment
+on a frozen 336 plus four-output residual. Both arms practise balanced ±15°
+turns. The proposed reward adds immediate credit for matching a corrective
+horizontal COM course rate based on signed course error divided by two seconds.
+The rate target is capped at ±10°/s and the proposed error scale is 7.5°/s.
+Keep alignment, speed, depth and posture scoring and all fixed evaluation
+criteria. This proposal is separate from the CUDA work and remains unrun.
 
 ## Previous half-second feedback exercise
 

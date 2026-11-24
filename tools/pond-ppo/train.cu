@@ -123,26 +123,33 @@ void prerequisites(const Options& o,uint64_t parent_checksum) {
     ph::prerequisites(o.protocol,o.cpu_gate,o.cuda_gate,o.evaluator_source,parent_checksum,o.study_program);
 }
 using TransitionTrace=pond_collection::Trace;
+enum class BufferUse { Training, Collection };
 struct Buffer {
     device_ptr<pr::World> worlds{N};device_ptr<pt::Task> tasks{N};device_ptr<ps::State> schedules{N};
     device_ptr<ps::CourseHistory> histories{N};
     device_ptr<ps::HorizontalCourse> movement;
     device_ptr<float> actor_observation,mb_actor_observation;
-    explicit Buffer(bool signed_actor) {
+    explicit Buffer(bool signed_actor,BufferUse use=BufferUse::Training) {
         if(signed_actor) {
             movement.allocate(N);
             actor_observation.allocate(Rows*pp::signed_inputs);
-            mb_actor_observation.allocate(MB*pp::signed_inputs);
+        }
+        if(use==BufferUse::Training) {
+            if(signed_actor)mb_actor_observation.allocate(MB*pp::signed_inputs);
+            advantages.allocate(Rows);returns.allocate(Rows);adv_stats.allocate(2);kl.allocate(Rows);
+            mb_observation.allocate(MB*D);mb_latent.allocate(MB*A);mb_logp.allocate(MB);
+            mb_advantage.allocate(MB);mb_return.allocate(MB);dmean.allocate(MB*A);
+            dlog_std.allocate(MB*A);dvalue.allocate(MB);row_stats.allocate(MB*rl::kGaussianStats);
+            stats.allocate(rl::kGaussianStats);
         }
     }
     device_ptr<float> observation{Rows*D},latent{Rows*A},logp{Rows},value{Rows},reward{Rows},done{Rows},truncated{Rows};
     device_ptr<float> final_value{Rows},final_observation{N*D},last_observation{N*D},last_value{N};
-    device_ptr<float> advantages{Rows},returns{Rows},adv_stats{2},log_std{A};
-    device_ptr<float> kl{Rows};
+    device_ptr<float> advantages,returns,adv_stats,log_std{A},kl;
     device_ptr<uint64_t> attempted{Rows},substeps{Rows};device_ptr<int> reason{Rows},fault{1};
     device_ptr<TransitionTrace> trace{Rows};
-    device_ptr<float> mb_observation{MB*D},mb_latent{MB*A},mb_logp{MB},mb_advantage{MB},mb_return{MB};
-    device_ptr<float> dmean{MB*A},dlog_std{MB*A},dvalue{MB},row_stats{MB*rl::kGaussianStats},stats{rl::kGaussianStats};
+    device_ptr<float> mb_observation,mb_latent,mb_logp,mb_advantage,mb_return;
+    device_ptr<float> dmean,dlog_std,dvalue,row_stats,stats;
 };
 __device__ void fail(int* fault,int env){atomicMin(fault,env);}
 __global__ void initialize_kernel(pr::World* worlds,pt::Task* tasks,ps::State* schedules,ps::CourseHistory* histories,ps::HorizontalCourse* movement,uint32_t seed,uint32_t curriculum,int* fault) {

@@ -64,7 +64,8 @@ struct Study{
             require(scalar(physical,"passed")=="true"&&scalar(physics_binding,"protocol")=="pond-broadphase-dynamics-v1"&&
                     scalar(physics_binding,"runtime_sha256")==residual_runtime_hash&&scalar(physics_binding,"sweep_sha256")==residual_sweep_hash&&
                     scalar(physical,"gpu_controls")=="2056"&&scalar(physical,"cpu_controls")=="8","Classified dynamics receipt mismatch");
-            require(scalar(collection,"passed")=="true"&&scalar(collection_binding,"protocol")=="pond-collection-replay-v1"&&
+            require(scalar(collection,"passed")=="true"&&scalar(collection_binding,"protocol")=="pond-collection-replay-v2"&&
+                    scalar(collection_binding,"optimizer_calls")=="0"&&
                     scalar(collection_binding,"source_sha256")==residual_source_hash&&scalar(collection,"physical_controls")=="32768"&&
                     scalar(collection,"physical_substeps")=="327680"&&scalar(collection,"completed_updates")=="0","Classified collection receipt mismatch");
         }else require(scalar(text_file(prior),"qualified_physics_source_sha256")==ph::physics_source_sha256(),"Qualified physical source changed");
@@ -74,8 +75,13 @@ struct Study{
     }
 };
 struct Extra{
-    device_ptr<float> action{Rows*Y},mask{Rows},base{Rows*A},mb_action{MB*Y},mb_mask{MB},mb_kl{MB},pack{Rows};
-    device_ptr<int> eligible{Rows};
+    device_ptr<float> action{Rows*Y},mask{Rows},base{Rows*A},mb_action,mb_mask,mb_kl,pack;
+    device_ptr<int> eligible;
+    explicit Extra(BufferUse use=BufferUse::Training){
+        if(use==BufferUse::Training){
+            mb_action.allocate(MB*Y);mb_mask.allocate(MB);mb_kl.allocate(MB);pack.allocate(Rows);eligible.allocate(Rows);
+        }
+    }
 };
 __global__ void compose(const pt::Task* tasks,const float* base,float* actions,float* logp,float* mask,float* combined,float* base_history){
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;

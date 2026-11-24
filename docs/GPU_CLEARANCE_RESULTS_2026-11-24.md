@@ -44,16 +44,33 @@ control's speedup does not establish full PPO training throughput.
 
 ## Full collector
 
-The sole attempt to check the complete 512-world, 64-control collection path
+The first attempt to check the complete 512-world, 64-control collection path
 hit its four-second wall-clock cap before issuing its first physical control.
 The watchdog recorded zero issued controls, zero completed controls/substeps
 and zero optimizer calls. That allocation ended at the timeout.
 [Timeout record](../assets/research-evidence/pond-collection-replay-v1/timeout.json)
 
-The normal trainer's new classified-clearance mode remains gated and
-unqualified. The next focused task is measuring the cost before the first
-issued control. The single-control benchmark cannot establish full-rollout
-throughput or a complete PPO speedup.
+The follow-up reads the frozen archive once, loads saved weights directly into
+512-row inference networks, and skips 38 GPU allocations for training buffers.
+It finished startup and uploads in 192.539 ms. The single v2 replay still hit
+its four-second deadline inside first-control preparation, with zero controls
+issued and zero optimizer updates. The original and follow-up allocations are
+closed. [Timed replay](../assets/research-evidence/pond-collection-replay-v2/timeout.json)
+
+A separate Driver API probe created a cold CUDA context and four events in
+120.155 ms, then hit four seconds within `cuModuleLoad` for the exact extracted
+36,119,504-byte observation module. It launched zero kernels. The same module
+contains the physical step, reset, and initialization kernels, with 10.01 MB,
+8.98 MB, and 8.98 MB of native instructions respectively. Native `sm_120`
+code is present. The successful dynamics benchmark puts its optimized step
+in a separate 4.45 MB module. The next focused change is to keep the large
+geometry/physics routines out of the observation module and share the expensive
+device routines across step and reset. A module load time and the existing
+matched motion checks should qualify any replacement before collection.
+[Module probe](../assets/research-evidence/pond-collection-replay-v2/module-probe.json)
+
+The accelerated trainer remains gated. Full-rollout and PPO throughput are
+still unmeasured.
 
 ## Build and integration checks
 

@@ -1,0 +1,10 @@
+{
+  "finished": false,
+  "exit_code": -1,
+  "host_ms": 4051.6911,
+  "deadline_ms": 4000,
+  "physical_controls": 0,
+  "optimizer_updates": 0,
+  "cubin_sha256": "b1a5e6b29b06aed6cc2a05d70cda815d020ca52860ac53135c45506d40b02281",
+  "observation_symbol": "_ZN41_GLOBAL__N__67ff003c_9_replay_cu_5cb18ad114observe_kernelEPN6cudarl12pond_runtime5WorldEPNS0_2rl13pond_ppo_task4TaskEPNS4_17pond_ppo_schedule5StateEPfSB_PKNS8_16HorizontalCourseEPijjb"
+}

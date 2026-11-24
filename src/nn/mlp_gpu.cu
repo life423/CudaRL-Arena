@@ -76,15 +76,30 @@ int device_sm_count() {
 
 } // namespace
 
-GpuMlp::GpuMlp(MlpSpec spec, int max_batch, uint32_t seed, GemmKernel kernel)
-    : spec_(std::move(spec)), max_batch_(max_batch), kernel_(kernel), num_sms_(device_sm_count()) {
+GpuMlp::GpuMlp(MlpSpec spec, int max_batch, GemmKernel kernel)
+    : spec_(std::move(spec)), max_batch_(max_batch), kernel_(kernel) {
     if (max_batch <= 0) throw std::invalid_argument("GpuMlp: max_batch must be positive");
     const size_t batch  = static_cast<size_t>(max_batch);
-    const size_t widest = static_cast<size_t>(spec_.max_width());
-
     params_.allocate(spec_.num_params());
-    grads_.allocate(spec_.num_params());
     for (int l = 0; l < spec_.num_layers(); ++l) acts_.emplace_back(batch * spec_.out(l));
+}
+
+GpuMlp GpuMlp::for_inference(MlpSpec spec, int max_batch, const std::vector<float>& weights,
+                             cudaStream_t stream, GemmKernel kernel) {
+    if (weights.size() != static_cast<size_t>(spec.num_params()))
+        throw std::invalid_argument("GpuMlp::for_inference: saved parameter count");
+    GpuMlp network(std::move(spec), max_batch, kernel);
+    CUDA_CHECK_THROW(cudaMemcpyAsync(network.params_.get(), weights.data(), network.params_.size_bytes(),
+                                    cudaMemcpyHostToDevice, stream));
+    return network;
+}
+
+GpuMlp::GpuMlp(MlpSpec spec, int max_batch, uint32_t seed, GemmKernel kernel)
+    : GpuMlp(std::move(spec), max_batch, kernel) {
+    num_sms_ = device_sm_count();
+    const size_t batch  = static_cast<size_t>(max_batch);
+    const size_t widest = static_cast<size_t>(spec_.max_width());
+    grads_.allocate(spec_.num_params());
     dz_.allocate(batch * widest);
     dbuf_[0].allocate(batch * widest);
     dbuf_[1].allocate(batch * widest);
@@ -127,10 +142,12 @@ void GpuMlp::forward(const float* d_x, int batch, cudaStream_t stream) {
 }
 
 void GpuMlp::zero_grad(cudaStream_t stream) {
+    if (!grads_.get()) throw std::logic_error("GpuMlp::zero_grad requires a training network");
     CUDA_CHECK_THROW(cudaMemsetAsync(grads_.get(), 0, grads_.size_bytes(), stream));
 }
 
 void GpuMlp::backward(const float* d_dy, int batch, float* d_dx, cudaStream_t stream) {
+    if (!grads_.get()) throw std::logic_error("GpuMlp::backward requires a training network");
     if (batch != batch_ || input_ == nullptr) {
         throw std::logic_error("GpuMlp::backward: batch must match the preceding forward()");
     }
@@ -184,6 +201,7 @@ std::vector<float> GpuMlp::get_params() const {
 }
 
 std::vector<float> GpuMlp::get_grads() const {
+    if (!grads_.get()) throw std::logic_error("GpuMlp::get_grads requires a training network");
     std::vector<float> h(grads_.size());
     CUDA_CHECK_THROW(cudaDeviceSynchronize());
     grads_.copy_to_host(h.data(), h.size());
