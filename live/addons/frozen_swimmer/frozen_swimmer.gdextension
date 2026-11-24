@@ -2,4 +2,4 @@
 entry_symbol = "frozen_swimmer_init"
 compatibility_minimum = "4.4"
 [libraries]
-windows.x86_64 = "res://addons/frozen_swimmer/bin/frozen_swimmer.dll"
+windows.x86_64 = "res://addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll"

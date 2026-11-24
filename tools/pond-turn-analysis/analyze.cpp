@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
+#include <cstring>
+#include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
@@ -17,6 +20,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 #include <vector>
 namespace fs = std::filesystem;
 namespace {
@@ -299,7 +303,8 @@ Stage stage(const fs::path &root, const std::string &name) {
     s.result_text = text(directory / "result.json");
     const auto protocol_id = scalar(s.result_text, "protocol_id");
     require((protocol_id == "pond-motor-ppo-v2-2026-11-23" ||
-             protocol_id == "pond-motor-ppo-v3-course-2026-11-23") &&
+             protocol_id == "pond-motor-ppo-v3-course-2026-11-23" ||
+             protocol_id == "pond-motor-ppo-v4-repeated-2026-11-24") &&
                 scalar(s.result_text, "preflight_only") == "false",
             "Wrong recorded assessment protocol");
     s.update = std::stoi(scalar(s.result_text, "update"));
@@ -549,13 +554,554 @@ void write_outputs(const std::vector<Stage> &stages, const fs::path &input, cons
     require(bool(json), "Derived JSON write failed");
 }
 } // namespace
+namespace {
+uint64_t fnv(const uint8_t *data, size_t size) {
+    uint64_t h = 14695981039346656037ull;
+    for (size_t i = 0; i < size; ++i) {
+        h ^= data[i];
+        h *= 1099511628211ull;
+    }
+    return h;
+}
+struct Slice {
+    size_t offset = 0, count = 0;
+};
+struct RecordedBatch {
+    std::vector<uint8_t> bytes;
+    uint32_t update = 0, steps = 0, stride = 0, version = 0;
+    Slice tasks, done, truncated, attempted, substeps, reason, trace;
+    template <class T> T at(size_t offset) const {
+        require(offset <= bytes.size() && sizeof(T) <= bytes.size() - offset,
+                "Recorded batch truncated");
+        T value;
+        std::memcpy(&value, bytes.data() + offset, sizeof(T));
+        return value;
+    }
+};
+RecordedBatch recorded_batch(const fs::path &path) {
+    RecordedBatch b;
+    std::ifstream in(path, std::ios::binary | std::ios::ate);
+    require(bool(in), "Missing batch");
+    const auto length = in.tellg();
+    require(length >= 24, "Truncated batch wrapper");
+    b.bytes.resize(static_cast<size_t>(length));
+    in.seekg(0);
+    in.read(reinterpret_cast<char *>(b.bytes.data()), length);
+    require(bool(in) && b.at<uint64_t>(0) == 0x31504b434c524443ull &&
+                b.at<uint64_t>(8) == b.bytes.size() - 24 &&
+                b.at<uint64_t>(16) == fnv(b.bytes.data() + 24, b.bytes.size() - 24),
+            "Batch wrapper checksum/length mismatch");
+    size_t cursor = 24;
+    const auto u32 = [&]() {
+        const auto v = b.at<uint32_t>(cursor);
+        cursor += 4;
+        return v;
+    };
+    const auto array = [&](size_t width) {
+        const auto n = b.at<uint64_t>(cursor);
+        cursor += 8;
+        require(n <= (b.bytes.size() - cursor) / width, "Corrupt batch array");
+        const Slice result{cursor, static_cast<size_t>(n)};
+        cursor += static_cast<size_t>(n) * width;
+        return result;
+    };
+    require(u32() == 0x31425450, "Wrong recorded batch magic");
+    b.version = u32();
+    require(b.version == 1 || b.version == 2, "Unknown batch version");
+    b.update = u32();
+    b.steps = u32();
+    cursor += 16;
+    array(1);
+    b.tasks = array(1);
+    array(4);
+    array(4);
+    for (int i = 0; i < 9; ++i) {
+        const auto a = array(4);
+        if (i == 5)
+            b.done = a;
+        if (i == 6)
+            b.truncated = a;
+    }
+    b.attempted = array(8);
+    b.substeps = array(8);
+    b.reason = array(4);
+    b.stride = u32();
+    b.trace = array(1);
+    require(b.steps == 64 && b.attempted.count == 32768 && b.substeps.count == 32768 &&
+                b.reason.count == 32768 && b.done.count == 32768 && b.truncated.count == 32768 &&
+                b.trace.count == 32768 * b.stride && cursor == b.bytes.size(),
+            "Recorded batch dimensions changed");
+    require((b.version == 1 && b.stride == 104 && b.tasks.count == 512 * 184) ||
+                (b.version == 2 && b.stride == 192 && b.tasks.count == 512 * 272),
+            "Unknown recorded task/trace ABI");
+    return b;
+}
+uint32_t mix32(uint32_t x) {
+    x ^= x >> 16;
+    x *= 0x7feb352du;
+    x ^= x >> 15;
+    x *= 0x846ca68bu;
+    x ^= x >> 16;
+    return x;
+}
+uint32_t random_bits(uint32_t seed, uint32_t stream, uint32_t index) {
+    return mix32(seed ^ mix32(stream ^ mix32(index)));
+}
+int original_angle(uint32_t env, uint32_t episode) {
+    const auto draw = random_bits(0x504f4e44u, mix32(env ^ 0xe31f680bu), episode) % 10u;
+    constexpr int angle[5] = {5, 15, 30, 60, 90};
+    return (draw < 5 ? -1 : 1) * angle[draw % 5];
+}
+struct RecordedGoal {
+    float x = 0, z = 0;
+    bool known = false;
+};
+struct PracticeRequest {
+    uint32_t env = 0, episode = 0, serial = 0, onset_update = 0, last_age = 0, streak = 0,
+             first_success = 0, late_success = 0;
+    int angle = 0;
+    float hx = 0, hz = 0;
+    bool heading_known = false, native_complete = false, timeout = false, cap = false,
+         terminal = false, long_hold = false, long_end = false;
+    double start_course = 0, final_course = 0, final_error = 0, final_speed = 0,
+           final_projection = 0, success_error = 0, success_speed = 0;
+    bool start_course_known = false;
+    uint32_t eligible_ticks = 0, qualified_ticks = 0, max_streak = 0, course_fail = 0,
+             speed_fail = 0, depth_fail = 0, tilt_fail = 0, terminal_reason = 0;
+};
+uint32_t practice_streak(uint32_t age, bool qualified, uint32_t previous) {
+    return age > 100 && qualified ? previous + 1 : 0;
+}
+bool practice_qualified(float vx, float vz, float hx, float hz, float depth, float tilt) {
+    const float speed = std::sqrt(vx * vx + vz * vz), projected = vx * hx + vz * hz;
+    return std::isfinite(speed) && speed > 0 && projected / speed >= .9961946980917455f &&
+           projected >= .006f && depth <= .001f && tilt <= 10.f;
+}
+void training_pure_tests() {
+    uint32_t streak = 0;
+    for (uint32_t age = 1; age <= 119; ++age) {
+        streak = practice_streak(age, true, streak);
+        require(streak < 20, "Training completion before age120");
+    }
+    require(practice_streak(120, true, streak) == 20, "Earliest completion is not age120");
+    require(practice_streak(120, false, streak) == 0, "Failed training tick did not reset streak");
+    require(practice_qualified(.008f, 0, 1, 0, .001f, 10), "Inclusive training limits rejected");
+    require(!practice_qualified(.0059f, 0, 1, 0, 0, 0), "Slow training tick accepted");
+    require(!practice_qualified(.008f, .008f, 1, 0, 0, 0), "Wrong course training tick accepted");
+    require(!practice_qualified(.008f, 0, 1, 0, .00101f, 0), "Depth training limit ignored");
+    require(!practice_qualified(.008f, 0, 1, 0, 0, 10.01f), "Tilt training limit ignored");
+    std::cout << "Training streak/predicate pure checks passed; new physical "
+                 "controls=0 optimizer=0\n";
+}
+double utc_seconds(const std::string &value) {
+    std::tm time{};
+    std::istringstream input(value.substr(0, 19));
+    input >> std::get_time(&time, "%Y-%m-%dT%H:%M:%S");
+    require(!input.fail(), "Malformed runner UTC");
+    double fraction = 0;
+    if (value.size() > 19 && value[19] == '.') {
+        const auto end = value.find_first_not_of("0123456789", 20);
+        fraction = std::stod("0" + value.substr(19, end - 19));
+    }
+    return static_cast<double>(_mkgmtime(&time)) + fraction;
+}
+void training_analysis(const fs::path &root, const fs::path &output, int maximum_update) {
+    require(maximum_update > 0 && maximum_update <= 32, "Training analysis update cap");
+    const auto protocol = text(root / "protocol.json");
+    const auto id = scalar(protocol, "protocol_id");
+    const bool repeated = id == "pond-motor-ppo-v4-repeated-2026-11-24";
+    require(repeated || id == "pond-motor-ppo-v3-course-2026-11-23", "Unsupported training study");
+    std::vector<fs::path> paths;
+    std::vector<std::string> hashes;
+    std::map<std::pair<uint32_t, uint32_t>, RecordedGoal> goals;
+    for (int update = 1; update <= maximum_update; ++update) {
+        const int last = ((update - 1) / 8 + 1) * 8;
+        const auto directory = "updates-" + std::to_string(last - 7) + "-" + std::to_string(last);
+        const auto path = root / directory / ("batch-" + std::to_string(update) + ".bin");
+        const auto b = recorded_batch(path);
+        require(b.update == static_cast<uint32_t>(update) && repeated == (b.version == 2),
+                "Study/batch source version mismatch");
+        paths.push_back(path);
+        hashes.push_back(sha256(path));
+        if (!repeated)
+            for (uint32_t env = 0; env < 512; ++env) {
+                const size_t base = b.tasks.offset + env * 184;
+                if (b.at<int32_t>(base + 80) != 2)
+                    continue;
+                const auto episode = b.at<uint32_t>(base + 72), control = b.at<uint32_t>(base + 76);
+                if (control >= 40 && b.at<uint8_t>(base + 88) != 0)
+                    goals[{env, episode}] = {b.at<float>(base + 24), b.at<float>(base + 32), true};
+            }
+    }
+    using RequestKey = std::tuple<uint32_t, uint32_t, uint32_t>;
+    std::map<RequestKey, PracticeRequest> requests;
+    std::array<std::pair<float, float>, 512> previous{};
+    std::array<std::array<uint64_t, 6>, 512> counters{};
+    uint64_t accepted = 0, native_onsets = 0, native_successes = 0, native_timeouts = 0,
+             native_caps = 0, native_terminals = 0, rule_mismatches = 0;
+    for (size_t file_index = 0; file_index < paths.size(); ++file_index) {
+        const auto b = recorded_batch(paths[file_index]);
+        for (size_t row = 0; row < 32768; ++row) {
+            require(b.at<uint64_t>(b.attempted.offset + row * 8) == 1 &&
+                        b.at<uint64_t>(b.substeps.offset + row * 8) == 10,
+                    "Incomplete/rejected physical batch row");
+            ++accepted;
+            const uint32_t env = static_cast<uint32_t>(row % 512);
+            const size_t at = b.trace.offset + row * b.stride;
+            const float vx = b.at<float>(at + 8), vz = b.at<float>(at + 16),
+                        depth = b.at<float>(at + 20), tilt = b.at<float>(at + 24);
+            const auto episode = b.at<uint32_t>(at + 40), control = b.at<uint32_t>(at + 44),
+                       kind = b.at<uint32_t>(at + 48);
+            if (repeated) {
+                const auto events = b.at<uint32_t>(at + 128);
+                const uint32_t bits[6] = {1, 2, 4, 8, 16, 1};
+                for (int i = 0; i < 6; ++i) {
+                    const auto now = b.at<uint64_t>(at + 144 + i * 8);
+                    const uint64_t expected_increment =
+                        (events & bits[i]) && (i != 5 || b.at<uint32_t>(at + 140) != 0) ? 1 : 0;
+                    require(now == counters[env][i] + expected_increment,
+                            "Native cumulative counter/event discontinuity");
+                    counters[env][i] = now;
+                }
+            }
+            const auto prior = previous[env];
+            previous[env] = {vx, vz};
+            if (kind != 2 || control <= 40)
+                continue;
+            const uint32_t serial = repeated ? b.at<uint32_t>(at + 112) : 1,
+                           age = repeated ? b.at<uint32_t>(at + 120) : control - 40;
+            if (serial == 0 || age == 0)
+                continue;
+            const uint32_t events = repeated ? b.at<uint32_t>(at + 128) : 0;
+            const auto key = RequestKey{env, episode, serial};
+            auto found = requests.find(key);
+            if (found == requests.end()) {
+                require(age == 1, "Request start missing from analyzed complete prefix");
+                PracticeRequest r;
+                r.env = env;
+                r.episode = episode;
+                r.serial = serial;
+                r.onset_update = b.update;
+                if (repeated) {
+                    require(events & 1u, "First repeated request row lacks native onset");
+                    r.angle = static_cast<int>(
+                        std::lround(b.at<float>(at + 108) * 180 / 3.14159265358979323846f));
+                } else
+                    r.angle = original_angle(env, episode);
+                r.start_course_known = std::hypot(prior.first, prior.second) >= .003;
+                r.start_course = course(prior.first, prior.second);
+                found = requests.emplace(key, r).first;
+            }
+            auto &r = found->second;
+            require(age == r.last_age + 1, "Request age discontinuity/reset across rollout");
+            r.last_age = age;
+            if (repeated) {
+                r.hx = b.at<float>(at + 100);
+                r.hz = b.at<float>(at + 104);
+                r.heading_known = true;
+                r.long_hold = b.at<uint32_t>(at + 140) != 0;
+            } else {
+                const auto goal = goals.find({env, episode});
+                if (goal != goals.end()) {
+                    r.hx = goal->second.x;
+                    r.hz = goal->second.z;
+                    r.heading_known = true;
+                }
+            }
+            const float speed = std::sqrt(vx * vx + vz * vz), projection = vx * r.hx + vz * r.hz;
+            r.final_course = course(vx, vz);
+            r.final_speed = speed;
+            r.final_projection = projection;
+            if (r.heading_known)
+                r.final_error = wrap(r.final_course - course(r.hx, r.hz));
+            require(r.heading_known || age <= 100,
+                    "Eligible v3 request lacks exact saved post-onset world heading");
+            const bool qualified =
+                r.heading_known && practice_qualified(vx, vz, r.hx, r.hz, depth, tilt);
+            r.streak = practice_streak(age, qualified, r.streak);
+            if (age > 100 && age <= 400) {
+                ++r.eligible_ticks;
+                r.qualified_ticks += qualified ? 1 : 0;
+                r.max_streak = std::max(r.max_streak, r.streak);
+                r.course_fail += !(speed > 0 && projection / speed >= .9961946980917455f) ? 1 : 0;
+                r.speed_fail += !(projection >= .006f) ? 1 : 0;
+                r.depth_fail += !(depth <= .001f) ? 1 : 0;
+                r.tilt_fail += !(tilt <= 10.f) ? 1 : 0;
+            }
+            if (r.streak >= 20 && r.late_success == 0) {
+                r.late_success = age;
+                if (age <= 400) {
+                    r.first_success = age;
+                    r.success_error = r.final_error;
+                    r.success_speed = speed;
+                }
+            }
+            if (repeated) {
+                if (events & 1u) {
+                    require(age == 1, "Native onset after request age1");
+                    ++native_onsets;
+                }
+                if (events & 2u) {
+                    require(!r.native_complete && age >= 120 && age <= 400,
+                            "Duplicate/too-early/late native completion");
+                    r.native_complete = true;
+                    ++native_successes;
+                    if (r.first_success != age)
+                        ++rule_mismatches;
+                }
+                if (events & 4u) {
+                    require(age == 400 && !r.native_complete,
+                            "Native timeout violates400tick/one-count rule");
+                    r.timeout = true;
+                    ++native_timeouts;
+                }
+                if (events & 8u) {
+                    r.cap = true;
+                    ++native_caps;
+                }
+                if (events & 16u) {
+                    r.terminal = true;
+                    r.terminal_reason =
+                        static_cast<uint32_t>(b.at<int32_t>(b.reason.offset + row * 4));
+                    ++native_terminals;
+                }
+                if (events & 32u)
+                    r.long_end = true;
+            } else if (b.at<float>(b.done.offset + row * 4) == 1) {
+                if (b.at<float>(b.truncated.offset + row * 4) == 1)
+                    r.cap = true;
+                else
+                    r.terminal = true;
+                r.terminal_reason = static_cast<uint32_t>(b.at<int32_t>(b.reason.offset + row * 4));
+            }
+        }
+        require(sha256(paths[file_index]) == hashes[file_index],
+                "Training batch changed during read-only analysis");
+    }
+    uint64_t comparable = 0, cap = 0, terminal = 0, pending = 0, long_assigned = 0,
+             long_pending = 0, repeats = 0, late_only = 0, depth_terminals = 0, tilt_terminals = 0;
+    // Starts, completions, eligible, qualified, course/speed/depth/tilt failures,
+    // max streak.
+    std::map<int, std::array<uint64_t, 9>> angles;
+    for (const auto &entry : requests) {
+        const auto &r = entry.second;
+        ++angles[r.angle][0];
+        if (r.first_success) {
+            ++comparable;
+            ++angles[r.angle][1];
+        }
+        if (r.serial > 1)
+            ++repeats;
+        if (r.cap)
+            ++cap;
+        if (r.terminal)
+            ++terminal;
+        depth_terminals += r.terminal && r.terminal_reason == 1 ? 1 : 0;
+        tilt_terminals += r.terminal && r.terminal_reason == 2 ? 1 : 0;
+        auto &a = angles[r.angle];
+        a[2] += r.eligible_ticks;
+        a[3] += r.qualified_ticks;
+        a[4] += r.course_fail;
+        a[5] += r.speed_fail;
+        a[6] += r.depth_fail;
+        a[7] += r.tilt_fail;
+        a[8] = std::max(a[8], uint64_t(r.max_streak));
+        if (!r.native_complete && !r.timeout && !r.cap && !r.terminal)
+            ++pending;
+        if (r.long_hold) {
+            ++long_assigned;
+            if (r.native_complete && !r.long_end && !r.cap && !r.terminal)
+                ++long_pending;
+        }
+        if (r.late_success > 400)
+            ++late_only;
+    }
+    if (repeated) {
+        std::array<uint64_t, 6> final_counters{};
+        for (const auto &world : counters)
+            for (int i = 0; i < 6; ++i)
+                final_counters[i] += world[i];
+        require(final_counters[0] == native_onsets && final_counters[1] == native_successes &&
+                    final_counters[2] == native_timeouts && final_counters[3] == native_caps &&
+                    final_counters[4] == native_terminals && final_counters[5] == long_assigned,
+                "Final cumulative native counters differ from reconstructed event "
+                "totals");
+        require(native_onsets == requests.size() &&
+                    native_successes + native_timeouts + native_caps + native_terminals + pending ==
+                        requests.size(),
+                "Native request outcomes do not partition starts");
+        require(rule_mismatches == 0 && native_successes == comparable,
+                "Native/comparable completion-rule disagreement");
+    }
+    double training_seconds = 0, first_start = 1e30, last_end = 0;
+    for (const char *folder : {"runner", "runner-recovered-baseline"}) {
+        const auto directory = root / folder;
+        if (fs::exists(directory / "started.json"))
+            first_start = std::min(
+                first_start, utc_seconds(scalar(text(directory / "started.json"), "started_utc")));
+        for (int update = 8; update <= maximum_update; update += 8) {
+            const auto command = directory / ("train-" + std::to_string(update) + ".command.json");
+            if (fs::exists(command))
+                training_seconds += std::stod(scalar(text(command), "process_wall_ms")) / 1000;
+        }
+        const auto evaluation =
+            directory / ("eval" + std::to_string(maximum_update) + ".command.json");
+        if (fs::exists(evaluation))
+            last_end = std::max(last_end, utc_seconds(scalar(text(evaluation), "ended_utc")));
+        // Include final receipt validation/bookkeeping after the last child process.
+        if (fs::exists(directory / "result.json")) {
+            const auto result = text(directory / "result.json");
+            if (scalar(result, "last_passed_training_chunk_update") == std::to_string(maximum_update) &&
+                scalar(result, "status") == "COMPLETED_ALLOCATION") {
+                const auto start = utc_seconds(scalar(text(directory / "started.json"), "started_utc"));
+                last_end = std::max(last_end, start + std::stod(scalar(result, "total_host_wall_ms")) / 1000);
+            }
+        }
+    }
+    require(training_seconds > 0 && last_end > first_start,
+            "Checkpoint native timing evidence missing");
+    const double elapsed = last_end - first_start;
+    fs::create_directories(output);
+    const std::string prefix = repeated ? "v4" : "v3";
+    std::ofstream csv(output / (prefix + "-training-requests.csv"));
+    csv << std::setprecision(17);
+    csv << "environment,episode,request_serial,angle_deg,onset_update,last_age_"
+           "ticks,heading_exact,"
+           "comparable_success_by400,completion_age_ticks,completion_seconds,"
+           "completion_course_error_deg,"
+           "completion_COM_speed_m_s,native_success,native_timeout,episode_cap_"
+           "interruption,other_terminal_"
+           "interruption,end_pending,long_assigned,long_hold_finished,start_COM_"
+           "course_deg,final_COM_course_"
+           "deg,final_course_error_deg,final_COM_speed_m_s,final_projected_speed_"
+           "m_s,eligible_ticks,"
+           "qualified_ticks,max_qualifying_streak,course_fail_ticks,speed_fail_"
+           "ticks,depth_fail_ticks,"
+           "tilt_fail_ticks,terminal_reason\n";
+    for (const auto &entry : requests) {
+        const auto &r = entry.second;
+        const bool open = !r.native_complete && !r.timeout && !r.cap && !r.terminal;
+        csv << r.env << ',' << r.episode << ',' << r.serial << ',' << r.angle << ','
+            << r.onset_update << ',' << r.last_age << ',' << r.heading_known << ','
+            << (r.first_success != 0) << ',';
+        if (r.first_success)
+            csv << r.first_success;
+        csv << ',';
+        if (r.first_success)
+            csv << r.first_success * .05;
+        csv << ',';
+        if (r.first_success)
+            csv << std::setprecision(17) << r.success_error;
+        csv << ',';
+        if (r.first_success)
+            csv << r.success_speed;
+        csv << ',' << r.native_complete << ',' << r.timeout << ',' << r.cap << ',' << r.terminal
+            << ',' << open << ',' << r.long_hold << ',' << r.long_end << ',';
+        if (r.start_course_known)
+            csv << r.start_course;
+        csv << ',' << r.final_course << ',';
+        if (r.heading_known)
+            csv << r.final_error;
+        csv << ',' << r.final_speed << ',' << r.final_projection << ',' << r.eligible_ticks << ','
+            << r.qualified_ticks << ',' << r.max_streak << ',' << r.course_fail << ','
+            << r.speed_fail << ',' << r.depth_fail << ',' << r.tilt_fail << ',' << r.terminal_reason
+            << '\n';
+    }
+    csv.close();
+    require(bool(csv), "Training request CSV write failed");
+    std::ofstream out(output / (prefix + "-training-summary.json"));
+    out << std::setprecision(17) << "{\"schema\":1,\"protocol_id\":" << quote(id)
+        << ",\"through_update\":" << maximum_update << ",\"accepted_controls\":" << accepted
+        << ",\"training_definition\":\"After100 post-onset ticks, "
+           "require20consecutive per-control samples: "
+           "COMcourse<=5deg,projection>=6mm/s,depth<=1mm,tilt<=10deg. "
+           "Firstpossible120; comparable "
+           "completion must be by400. No4s window.\",\"v3_note\":\"V3 did not "
+           "issue replacements at400; its "
+           "comparable misses are not actual timeouts. Native v4 events are "
+           "separately counted.\",\"starts\":"
+        << requests.size() << ",\"comparable_stabilized_completions_by400\":" << comparable
+        << ",\"v3_first_stabilized_only_after400\":" << late_only
+        << ",\"native_completion_events\":" << native_successes
+        << ",\"actual_timeouts\":" << native_timeouts << ",\"episode_cap_interruptions\":" << cap
+        << ",\"other_terminal_interruptions\":" << terminal
+        << ",\"depth_limit_terminal_interruptions\":" << depth_terminals
+        << ",\"tilt_limit_terminal_interruptions\":" << tilt_terminals
+        << ",\"end_of_recording_pending\":" << pending
+        << ",\"actual_repeat_onsets_same_episode\":" << repeats
+        << ",\"assigned_long_holds\":" << long_assigned
+        << ",\"successful_long_holds_unfinished_at_end\":" << long_pending
+        << ",\"native_training_seconds\":" << training_seconds
+        << ",\"full_elapsed_seconds\":" << elapsed
+        << ",\"starts_per_native_training_minute\":" << requests.size() * 60 / training_seconds
+        << ",\"comparable_completions_per_native_training_minute\":"
+        << comparable * 60 / training_seconds
+        << ",\"starts_per_full_elapsed_minute\":" << requests.size() * 60 / elapsed
+        << ",\"comparable_completions_per_full_elapsed_minute\":" << comparable * 60 / elapsed
+        << ",\"timing_note\":\"Native training minute sums recorded train "
+           "child-process wall only. Full "
+           "elapsed runs from first recorded runner start through this "
+           "checkpoint evaluation, including any "
+           "parser-repair gap; compilation excluded.\",\"heading_note\":\"V3 "
+           "exact post-onset target "
+           "headings come from saved Task184 snapshots; nominal signed-angle "
+           "draws reproduce frozen counter "
+           "RNG. V4 headings/angles/events use recorded192byte "
+           "traces.\",\"analysis_source_sha256\":"
+        << quote(sha256(fs::path(__FILE__)))
+        << ",\"protocol_sha256\":" << quote(sha256(root / "protocol.json"))
+        << ",\"requests_csv_sha256\":"
+        << quote(sha256(output / (prefix + "-training-requests.csv")))
+        << ",\"predicate_note\":\"Training predicates use instantaneous "
+           "post-control COM velocity. "
+           "Failure counters overlap. They differ from deterministic held-out "
+           "four-second mean "
+           "criteria. Cumulative v4 native counters and every event increment "
+           "are checked.\",\"raw_batches\":[";
+    for (size_t i = 0; i < paths.size(); ++i) {
+        if (i)
+            out << ',';
+        out << "{\"path\":" << quote(fs::relative(paths[i], fs::current_path()).generic_string())
+            << ",\"sha256\":" << quote(hashes[i]) << '}';
+    }
+    out << "],\"by_angle\":[";
+    bool first = true;
+    for (const auto &entry : angles) {
+        if (!first)
+            out << ',';
+        first = false;
+        out << "{\"angle_deg\":" << entry.first << ",\"starts\":" << entry.second[0]
+            << ",\"comparable_completions\":" << entry.second[1]
+            << ",\"eligible_ticks\":" << entry.second[2]
+            << ",\"qualified_ticks\":" << entry.second[3]
+            << ",\"course_fail_ticks\":" << entry.second[4]
+            << ",\"speed_fail_ticks\":" << entry.second[5]
+            << ",\"depth_fail_ticks\":" << entry.second[6]
+            << ",\"tilt_fail_ticks\":" << entry.second[7]
+            << ",\"max_qualifying_streak_ticks\":" << entry.second[8] << '}';
+    }
+    out << "],\"new_physical_controls\":0,\"new_optimizer_updates\":0}\n";
+    require(bool(out), "Training summary write failed");
+    std::cout << prefix << " training recorded requests=" << requests.size()
+              << ", comparable_completions=" << comparable
+              << ", native_timeouts=" << native_timeouts << ", cap_interruptions=" << cap
+              << ", other_interruptions=" << terminal << ", pending=" << pending
+              << ", newphysics=0 optimizer=0\n";
+}
+} // namespace
 int main(int argc, char **argv) {
     try {
         if (argc == 2 && std::string(argv[1]) == "--self-test") {
             pure_tests();
+            training_pure_tests();
             return 0;
         }
-        require(argc == 3, "Use --self-test or INPUT_ROOT OUTPUT_DIRECTORY");
+        if (argc == 5 && std::string(argv[1]) == "--training") {
+            training_analysis(fs::absolute(argv[2]), fs::absolute(argv[3]), std::stoi(argv[4]));
+            return 0;
+        }
+        require(argc == 3, "Use --self-test, INPUT_ROOT OUTPUT_DIRECTORY, or --training INPUT_ROOT "
+                           "OUTPUT_DIRECTORY THROUGH_UPDATE");
         const auto input = fs::absolute(argv[1]), output = fs::absolute(argv[2]);
         std::vector<Stage> stages;
         for (const char *name : {"baseline0", "eval8", "eval16", "eval24", "eval32"})

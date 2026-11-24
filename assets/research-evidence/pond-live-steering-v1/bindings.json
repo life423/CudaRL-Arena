@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "native_DLL_sha256": "905ec8beee7b051b97452083edf0bf87d1a3548ebd59e9881b894947b1a97a15",
+  "original_motor_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "sealed_protocol_sha256": "38c4e5b46810978ae811055529898f89b24f447cf8d63ce61d78893a413d32bf",
+  "source_files": [
+    {
+      "path": "src/godot/hold_lab_preview.cpp",
+      "sha256": "5ddddbaf7507d1cb4032377a150204e625c0cee1a37fbf86ef3229128e5c01e3"
+    },
+    {
+      "path": "src/godot/hold_lab_preview.h",
+      "sha256": "5019559e4351af5afe000b2b0370b78831294e2d7ce25659623379372d557650"
+    },
+    {
+      "path": "src/nn/motor/heading_request_observation.h",
+      "sha256": "d07b38e74f61120cecf0f52e1280caa284dc5f046245a26628f9e1d5a24647c2"
+    },
+    {
+      "path": "tools/pond-steering-check/check.cpp",
+      "sha256": "4c2b8c1c394725811b7d17cdfc955992e2c05b6fcbd4dee98583f49c560d7d92"
+    },
+    {
+      "path": "tools/pond-steering-check/CMakeLists.txt",
+      "sha256": "733fe06dd14e876baa342125174a190c84c6d4e83f62cb02c36ab50ce76ebffe"
+    },
+    {
+      "path": "tests/godot/pond_live_steering_check.gd",
+      "sha256": "c61e0b81d9e2a94a7055ae78544a6c960b46f46065a820f7470ca1f2db20b4b5"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "4c2f19d7cdc379d6c49a19bd10058541ff139274f95e31223af9f377e95f8d62"
+    }
+  ],
+  "physics_changed": false,
+  "candidate_loaded": false,
+  "optimizer_calls": 0
+}

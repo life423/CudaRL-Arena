@@ -1,0 +1,12 @@
+{
+  "CPU_reference_tolerance": 0.000002,
+  "CUDA_kernels": 0,
+  "actual_bridge_controls": 3040,
+  "actual_bridge_substeps": 30400,
+  "candidate_loaded": false,
+  "failures": [],
+  "maximum_scalar_difference": 0.000000000000007105427357601,
+  "optimizer_calls": 0,
+  "original_motor": 336,
+  "passed": true
+}

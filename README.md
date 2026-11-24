@@ -5,7 +5,7 @@ interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
 Godot presents the creature in its own pond. The current food-free Swim and
-Rest modes run a saved neural motor in native water physics. Three food-free turning
+Rest modes run a saved neural motor in native water physics. Four food-free turning
 exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
 depths and speeds, and adaptation during player interaction are longer-term
 goals.
@@ -27,14 +27,15 @@ build; current-capable swimming is not yet qualified.
 ## Current state
 
 **The registered Godot project runs the corrected full shoreline and the
-original saved motor.** All eight CPU/CUDA trajectory comparisons passed.
-Restoring sideways feedback for straight requests recovered every one of
-the 28 required long-swim windows. The latest candidate kept those windows,
-four short swims and 14 rests at every check through 32 native GPU PPO
-updates. Even with a stronger reward for traveling in the requested direction,
-it passed the same three of 16 turns. Reliable turning and continuous
-exploration remain open.
-[Latest exercise and checkpoint](docs/POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md) · [Straight-swim feedback](docs/POND_TURNING_PPO_V2_RESULTS_2026-11-23.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
+original saved motor.** Select **Swim** and press **Play** to request left or
+right turns in 5° increments. The motor drives the joints as the simulation
+continues. It passed four small-turn trials across two starting poses.
+
+A separate candidate practised repeated heading changes for 32 GPU PPO updates.
+It preserved all 28 required long-swim windows, four short swims and 14 rests
+at every assessment. It passed the same three of 16 independent turns as the
+starting motor. Reliable larger turns and autonomous exploration remain open.
+[Repeated-request results and checkpoint](docs/POND_TURNING_REPEATED_REQUESTS_RESULTS_2026-11-24.md) · [Prior course-reward exercise](docs/POND_TURNING_PPO_COURSE_RESULTS_2026-11-24.md) · [Shoreline qualification](docs/SHORELINE_QUALIFICATION_RESULTS_2026-11-23.md)
 
 Swim mode has no fixed playback duration. The earlier
 [untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the
@@ -200,12 +201,13 @@ preserved as evidence and rejected by the new explicit schema. Training worlds a
 the GPU; frozen evaluation uses the same motor equations on the CPU.
 
 ```powershell
-./tools/view-live.ps1             # incremental native build; open the viewer
-./tools/view-live.ps1 -SkipBuild  # use the existing extension
+./tools/view-live.ps1  # verify the shipped Windows library and open the viewer
 ```
 
-CMake3.24+, Visual Studio2022 C++ tools, CUDA for learning and matching prebuilt
-Godot C++ bindings are required. Simulation, neural inference and learning are
+On Windows, import `live/project.godot` in Godot 4.4.1 Project Manager and click
+**Run**. The project includes the verified native Windows library and original
+motor. For native development, use CMake 3.24+, Visual Studio 2022 C++ tools,
+CUDA for learning and matching prebuilt Godot C++ bindings. Simulation, neural inference and learning are
 native. Offline Python utilities package evidence metadata; they are not part of
 the running creature or its learning system.
 

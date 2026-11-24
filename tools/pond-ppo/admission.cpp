@@ -85,11 +85,12 @@ void prerequisites(const std::filesystem::path& protocol_path,
                    uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum) {
     require(!protocol_path.empty()&&!cpu_gate.empty()&&!cuda_gate.empty(),"Sealed protocol and CPU/CUDA physics results required");
     const auto protocol=text_file(protocol_path);
-    require(turn_curriculum<=2,"Unknown training-only study program");
+    require(turn_curriculum<=3,"Unknown training-only study program");
     require(scalar(protocol,"protocol_id")==
-        (turn_curriculum==2?pond_ppo::course_study_protocol_id:(turn_curriculum==0?pond_ppo::default_study_protocol_id:pond_ppo::curriculum_study_protocol_id)),
+        (turn_curriculum==3?pond_ppo::repeated_study_protocol_id:(turn_curriculum==2?pond_ppo::course_study_protocol_id:(turn_curriculum==0?pond_ppo::default_study_protocol_id:pond_ppo::curriculum_study_protocol_id))),
         "Protocol and explicit curriculum differ; cross-study resume is prohibited");
     if(turn_curriculum==1)require(scalar(protocol,"turn_curriculum_program")=="paired-gentle-moderate-v1","Missing bound curriculum program");
+    if(turn_curriculum==3)require(scalar(protocol,"study_program")=="repeated-headings-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound repeated-request program/physical launch profile");
     if(turn_curriculum==2)require(scalar(protocol,"study_program")=="course-direction-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound course-reward program/physical launch profile");
     require(scalar(protocol,"source_identity_fnv1a64")==std::to_string(source_identity()),"Trainer source identity changed");
     require(scalar(protocol,"qualified_physics_source_sha256")==physics_source_sha256(),"Qualified physics source binding differs from compiled model");

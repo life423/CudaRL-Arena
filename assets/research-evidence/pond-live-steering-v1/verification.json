@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "passed": true,
+  "actual_installed_DLL_sha256": "905ec8beee7b051b97452083edf0bf87d1a3548ebd59e9881b894947b1a97a15",
+  "original_motor_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "original_motor": 336,
+  "candidate_loaded": false,
+  "CPU_reference_controls": 3040,
+  "actual_Godot_bridge_controls": 3040,
+  "total_physical_controls": 6080,
+  "total_physical_substeps": 60800,
+  "maximum_scalar_difference": 7.105427357601E-15,
+  "pure_observation_scalar_comparisons": 492,
+  "registered_entry_checks": 10,
+  "source_without_DLL_checks": 9,
+  "final_rendered_checks": 288.0,
+  "rendered_sizes": [
+    "1280x800",
+    "390x844",
+    "768x1024",
+    "844x390"
+  ],
+  "screenshots_saved": 40,
+  "final_screenshots_inspected": 6,
+  "preserved_failed_UI_attempts": 4,
+  "UI_correction": "Stopped status now takes precedence over earlier Restart or requested-heading captions. First four zero-step failures preserved; second four viewport runs pass.",
+  "UI_physical_controls": 0,
+  "UI_physical_substeps": 0,
+  "optimizer_calls": 0,
+  "CUDA_kernels": 0,
+  "latest_recorded_study": "turn34-v4-repeated-2026-11-24",
+  "statement": "Repeated turn practice · v4\nRecorded candidate completed 32 PPO updates; swimming and resting retained. Turns: 3 / 16 passed.",
+  "new_study_public_bytes": 24294,
+  "active_original_DLL_1b69_preserved": true,
+  "physical_sources_unchanged": true,
+  "bindings": [
+    {
+      "path": "live/main.gd",
+      "sha256": "e2a0469505bb995fa212dd1749cbacca41ec7d63420669233bcee8bd17b95246"
+    },
+    {
+      "path": "tests/godot/pond_native_geometry_view_smoke.gd",
+      "sha256": "20f6aa3b1fe63f52d955d80cb956d70f56bd8ad51139da1f3d83a1497cc26f48"
+    },
+    {
+      "path": "tests/godot/study_receipt_portability.gd",
+      "sha256": "7aac9e19b4d5dfcfacc0cdfb721293493158ff65c12216ce823ece9379bbe0cb"
+    },
+    {
+      "path": "tools/view-live.ps1",
+      "sha256": "2b09216c506b30a6973fcb224e1e28b615b1f1b1307821dff0f10f127846d51e"
+    },
+    {
+      "path": "live/addons/frozen_swimmer/frozen_swimmer.gdextension",
+      "sha256": "bb87aaac2bd865e7e607830099f10516194fd617d0d94c54316e802c6a2674be"
+    },
+    {
+      "path": "live/research_data/shoreline-runtime.json",
+      "sha256": "352c7aedb9ad4cd7e4d73e3892984bbae26169916c6c5ed1a32b66fff6a16280"
+    },
+    {
+      "path": "live/research_data/live-steering-check.json",
+      "sha256": "e33ec2ad3a9a29049eda2f4fefa50851d019bfd101c709c2e4a79306d46f448a"
+    },
+    {
+      "path": "live/research_data/candidate-study.json",
+      "sha256": "a57c6474b81745acd4b291964731a218b4d5118524048a41fffbe79e4ece1389"
+    }
+  ],
+  "limitations": [
+    "Four isolated requested turns; repeated turns, autonomous navigation and new learned improvement are unqualified.",
+    "Registered headless entry and private rendered checks by this agent. Root separately verified an actual Project Manager Run and live right5degree request.",
+    "Graphical checks waited until native GPU training finished."
+  ]
+}

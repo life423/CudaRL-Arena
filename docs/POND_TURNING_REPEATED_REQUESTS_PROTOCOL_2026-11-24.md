@@ -1,0 +1,23 @@
+# Repeated heading requests in a continuous swimming episode
+
+Study ID `pond-motor-ppo-v4-repeated-2026-11-24`. Run one separate food-free candidate against the completed course-reward exercise. Test whether giving a moving swimmer more opportunities to start and finish turns improves its performance on the existing 16 independent turn trials.
+
+## One learning change
+
+Only the timing of training requests changes. Start from saved motor 336 and the same holding gain, seed, fixtures, mode mix, course-sensitive reward and 8 mm/s target as exercise 3. Keep 60-second training episodes. The first turn in a Turn episode still starts after two seconds and uses the original signed-angle draw. Later requests draw from the same uniform set of ±5°, ±15°, ±30°, ±60° and ±90° using a separate deterministic request counter. Straight swimming and rest use the original program.
+
+Each later request starts from the recent measured horizontal center-of-mass course and preserves the original target depth. A request stays active while the network drives the physical joints. Changing the heading preserves the body, velocities, joint positions and rates, servo targets, filters, water and accumulated physical state.
+
+Hold each issued request for at least 100 control ticks (five simulated seconds). Starting at tick 101, require 20 consecutive ticks of actual horizontal COM course within 5° of the request, projected speed of at least 6 mm/s, depth error within 1 mm and tilt within 10°. A missed tick restarts the qualifying streak. The earliest success is tick 120 (six seconds). Count each successful request once. The independent evaluator keeps its original four-second window.
+
+Assign 10% of requests to longer holds using a deterministic draw independent of the signed-angle draw. A longer hold keeps its target for all 400 ticks, even after success. All unsuccessful requests time out at tick 400 (20 seconds). A success first confirmed on tick 400 counts as a success. Issue the next heading without resetting the body or setting an episode-terminal flag. Use recent measured horizontal course to anchor a replacement. If it is undefined, use the last valid course or the previous requested heading. The timeout remains active even if the swimmer slows down.
+
+At the 60-second episode cap, count an unfinished request as interrupted. Record early physical-task episode endings separately and retain pending requests at the end of the allocation. Count a completed long hold once, including when the episode ends during its remaining hold. A request that has already timed out or succeeded cannot also count as interrupted. Do not issue an unexercised request on the final tick. The next episode still begins with two seconds of settling. These clarified boundaries supersede the earlier schedule before any v4 physical control or optimizer update.
+
+## Run and evaluation
+
+Use the native C++/CUDA batched trainer with eight threads per world-step block, 512 worlds and 64 controls per world per update. Retain 10 physical substeps per control, four optimizer passes, minibatches of 4,096 and all exercise 3 optimizer settings. Use the same original checkpoint and qualified CPU/CUDA shoreline results. Bind the binaries, inputs, scheduler state and protocol before the first optimizer call. Checkpoint resumption must preserve the live request and the stabilization history.
+
+Run at most 32 updates (1,048,576 transitions, 10,485,760 substeps and 1,024 actor plus 1,024 critic Adam calls). Use the local stage runner. At updates 0, 8, 16, 24 and 32, measure all 16 original turns and require all 28 historical long-swim windows, four short swims and 14 rests to pass. Keep the 60-second drift tests, 5° course / 6 mm/s projected speed / depth / tilt thresholds and existing hard-failure rules. Incomplete turning remains a learning measurement. Stop on failed retention, invalid physics, nonfinite data, KL above 0.05 or exhausted budget. Existing aggregate caps remain 1,200 training seconds / 4 GiB and 184,000 evaluation controls / 900 seconds / 1 GiB.
+
+Compare actual starts, stabilized completions, timeouts, unfinished requests and their measured rates per minute of native training wall time. Also report total elapsed time and transitions. Apply the same training completion definition to recorded exercise 3 motion wherever available. The independent evaluation measures turn passes, turn completion times and whole-body course error at the scheduled checkpoints. A higher practice count alone does not qualify the motor. Preserve the original actor, previous checkpoint, GPU receipts and failed evidence. Godot must identify which motor runs live and which result is a frozen assessment.

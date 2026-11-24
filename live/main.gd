@@ -13,7 +13,7 @@ const SHORELINE_GPU_PATH := "res://research_data/shoreline-gpu-v4.json"
 const SHORELINE_UPDATE_PATH := "res://research_data/shoreline-update.json"
 const CANDIDATE_STUDY_PATH := "res://research_data/candidate-study.json"
 const STUDY_EVIDENCE_PREFIX := "res://research_data/studies/"
-const NATIVE_DLL_PATH := "res://addons/frozen_swimmer/bin/frozen_swimmer.dll"
+var NATIVE_DLL_PATH := "res://addons/frozen_swimmer/bin/frozen_swimmer.dll"
 var preview: RefCounted
 var snapshot: Dictionary = {}
 var metadata: Dictionary = {}
@@ -43,6 +43,9 @@ var rail: PanelContainer
 var play_button: Button
 var restart_button: Button
 var task: OptionButton
+var steering: HBoxContainer
+var turn_left: Button
+var turn_right: Button
 var measurements: HBoxContainer
 var speed: Label
 var displacement: Label
@@ -161,6 +164,13 @@ func _shoreline_validation_issue(binding: Dictionary, proof: Dictionary, dll_has
 	var declared_dll := str(binding.get("dll_sha256","")).to_lower()
 	if dll_hash.length()!=64 or declared_dll!=dll_hash.to_lower():
 		return "This native build has not been matched to the recorded shoreline verification."
+	if binding.get("dll_path","")=="res://addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll":
+		var source: Variant=binding.get("bridge_equivalence",{})
+		if not source is Dictionary or source.get("path","")!="res://research_data/live-steering-check.json" or source.get("sha256","")!=FileAccess.get_sha256(str(source.get("path",""))):
+			return "The live steering check is missing or has changed. Verification cannot be confirmed."
+		var steering_proof := _dictionary_file(str(source.path))
+		if steering_proof.get("passed",false)!=true or steering_proof.get("DLL_sha256","")!=dll_hash or steering_proof.get("original_physics_sources_unchanged",false)!=true or int(steering_proof.get("turn_cases_passed",0))!=4 or int(steering_proof.get("total_CPU_controls",0))!=6080 or int(steering_proof.get("optimizer_calls",-1))!=0 or steering_proof.get("candidate_loaded",true)!=false:
+			return "The live steering evidence does not match this original-motor build."
 	return _cpu_proof_validation_issue(binding,proof,cpu_hash)
 
 func _cpu_proof_validation_issue(binding: Dictionary, proof: Dictionary, cpu_hash: String) -> String:
@@ -284,6 +294,9 @@ func _read_shoreline_status() -> void:
 		return
 	var binding := _dictionary_file(SHORELINE_BINDING_PATH)
 	if binding.is_empty(): return
+	var declared_path := str(binding.get("dll_path",NATIVE_DLL_PATH))
+	if declared_path in ["res://addons/frozen_swimmer/bin/frozen_swimmer.dll","res://addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll"]:
+		NATIVE_DLL_PATH=declared_path
 	var proof := _dictionary_file(SHORELINE_CPU_PATH)
 	var dll_hash := FileAccess.get_sha256(NATIVE_DLL_PATH) if FileAccess.file_exists(NATIVE_DLL_PATH) else ""
 	var cpu_hash := FileAccess.get_sha256(SHORELINE_CPU_PATH) if FileAccess.file_exists(SHORELINE_CPU_PATH) else ""
@@ -391,9 +404,19 @@ func _build_interface() -> void:
 	choice_menu.add_theme_stylebox_override("hover",panel(Color("dce7d6"),8))
 	choice_menu.add_theme_color_override("font_color",TEXT)
 	choice_menu.add_theme_color_override("font_hover_color",TEXT)
-	task.tooltip_text = "Swim runs until paused or a bank/physical check stops it. Changing the request restarts the creature."
+	task.tooltip_text = "Selecting Rest or Swim restarts the creature. Swim continues until paused or a physical check stops it."
 	task.item_selected.connect(func(_index: int): _restart())
 	controls.add_child(task)
+	steering=HBoxContainer.new()
+	steering.add_theme_constant_override("separation",8)
+	steering.visible=false
+	column.add_child(steering)
+	turn_left=button("Turn left 5°",func(): _request_turn(1))
+	turn_right=button("Turn right 5°",func(): _request_turn(-1))
+	for control in [turn_left,turn_right]:
+		control.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		control.tooltip_text="Ask the saved neural motor for a new heading; the body and physics continue."
+		steering.add_child(control)
 	target_caption = label("Target",12,MINT)
 	target_caption.add_theme_stylebox_override("normal",panel(SURFACE,5))
 	canvas.add_child(target_caption)
@@ -462,7 +485,7 @@ func _layout() -> void:
 	view_button.position = Vector2(size.x-inset-112,12+identity_height+8) if size.x<600 else Vector2(size.x-inset-208,16)
 	view_button.size = Vector2(112,48)
 	measurements.visible = show_measurements
-	var rail_height := 108.0 if show_measurements else 72.0
+	var rail_height := (108.0 if show_measurements else 72.0)+(56.0 if steering.visible else 0.0)
 	var rail_width := minf(600,size.x-inset*2)
 	rail.position = Vector2((size.x-rail_width)/2,size.y-inset-rail_height)
 	rail.size = Vector2(rail_width,rail_height)
@@ -524,16 +547,28 @@ func _process(delta: float) -> void:
 		controls += 1
 	_refresh()
 
+func _request_turn(direction: int) -> void:
+	if not loaded or not preview.has_method("request_swim_turn") or bool(snapshot.get("holding",true)): return
+	if not bool(preview.call("request_swim_turn",direction)): return
+	snapshot=preview.call("get_state")
+	_refresh()
+
 func _refresh() -> void:
 	if play_button == null: return
 	play_button.disabled = not loaded or bool(snapshot.get("finished",false)) or not str(snapshot.get("error","")).is_empty()
 	restart_button.disabled = not loaded
 	task.disabled = not loaded
+	var steering_visible := loaded and preview.has_method("request_swim_turn") and not bool(snapshot.get("holding",true))
+	var steering_changed := steering.visible!=steering_visible
+	steering.visible=steering_visible
+	for control in [turn_left,turn_right]: control.disabled=not loaded or not str(snapshot.get("error","")).is_empty()
 	play_button.text = "Pause" if running else "Play"
 	if loaded:
 		var state := ("Resting" if bool(snapshot.get("holding",true)) else "Swimming") if running else ("Session complete" if bool(snapshot.get("finished",false)) else "Paused")
 		if not str(snapshot.get("error","")).is_empty(): state="Stopped"
-		status.text = (last_action+" · saved policy") if not running and not last_action.is_empty() else state+" · live, saved policy"
+		status.text = (last_action+" · saved policy") if state!="Stopped" and not running and not last_action.is_empty() else state+" · live, saved policy"
+		if state!="Stopped" and bool(snapshot.get("heading_only_request",false)):
+			status.text=("Live" if running else "Paused")+" · requested turn %+.0f°" % float(snapshot.get("requested_turn_degrees",0))
 		world.show_state(snapshot)
 		speed.text = "%.2f mm/s" % (float(snapshot.get("speed_m_s",0))*1000)
 		var holding := bool(snapshot.get("holding",true))
@@ -552,7 +587,7 @@ func _refresh() -> void:
 	var previous_notice_text := notice.text
 	notice.text = error
 	notice.visible = not error.is_empty()
-	if notice.visible!=previous_notice_visible or (notice.visible and notice.text!=previous_notice_text): _layout()
+	if steering_changed or notice.visible!=previous_notice_visible or (notice.visible and notice.text!=previous_notice_text): _layout()
 	_refresh_target()
 
 func _refresh_target() -> void:
@@ -574,7 +609,7 @@ func _open_details() -> void:
 	var terrain_contact := bool(descriptor.get("used_by_contact",false))
 	_append_shoreline_details(terrain_contact)
 	drawer_text.append_text("\n[b]The saved creature[/b]\nPlaying original motor 336.\n%s\nThis view does not train its saved weights.\n" % _candidate_study_status())
-	drawer_text.append_text("\n[b]Controls[/b]\nSwim has no session timer. Rest is a 64-second check. Pause preserves the world. Restart or changing the request creates a new starting state.\nScroll, pinch or use + / − to zoom. Side view changes the camera angle.\n")
+	drawer_text.append_text("\n[b]Controls[/b]\nSwim has no session timer; Rest is a 64-second check. Pause preserves the world. Restart or selecting Rest/Swim creates a new starting state. Swim's left/right buttons request 5° turns without restarting; the original neural motor chooses joint actions. This is live steering, not autonomous navigation or new training. Repeated turns remain unqualified.\nScroll, pinch or use + / − to zoom. Side view changes the camera angle.\n")
 	var result: Dictionary=metadata.get("result",{})
 	drawer_text.append_text("\n[b]Saved motor reference assessment[/b]\n")
 	if result.is_empty(): drawer_text.append_text(metadata_issue+"\n")
@@ -584,7 +619,7 @@ func _open_details() -> void:
 	drawer_scroll.scroll_vertical=0
 	scrim.visible=true
 	drawer.visible=true
-	for control in [play_button,restart_button,task,details_button,view_button]: control.focus_mode=Control.FOCUS_NONE
+	for control in [play_button,restart_button,task,turn_left,turn_right,details_button,view_button]: control.focus_mode=Control.FOCUS_NONE
 	close_button.grab_focus()
 
 func _append_shoreline_details(terrain_contact: bool) -> void:
@@ -625,7 +660,7 @@ func _current_physics_text(state: Dictionary) -> String:
 func _close_details() -> void:
 	scrim.visible = false
 	drawer.visible = false
-	for control in [play_button,restart_button,task,details_button,view_button]: control.focus_mode=Control.FOCUS_ALL
+	for control in [play_button,restart_button,task,turn_left,turn_right,details_button,view_button]: control.focus_mode=Control.FOCUS_ALL
 	details_button.grab_focus()
 
 func _unhandled_key_input(event: InputEvent) -> void:

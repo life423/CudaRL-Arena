@@ -14,6 +14,8 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
+      - name: Check the Windows Godot package before building
+        run: ./tools/test-live-package.ps1
       - name: Configure isolated physical foundation
         run: cmake -S . -B build -DCUDARL_ENABLE_CUDA=OFF -DCUDARL_BUILD_GODOT=OFF
       - name: Build

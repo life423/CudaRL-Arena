@@ -1,7 +1,7 @@
 {
   "schema": 2,
-  "study_id": "turn33-v3-course-2026-11-24",
-  "study_label": "Course learning · v3",
+  "study_id": "turn34-v4-repeated-2026-11-24",
+  "study_label": "Repeated turn practice · v4",
   "status": "completed",
   "completed_updates": 32,
   "reason": "turning_unqualified",
@@ -10,28 +10,28 @@
   "candidate_adopted": false,
   "sources": {
     "checkpoint": {
-      "path": "res://research_data/studies/turn33-v3-course-2026-11-24/checkpoint-digest.json",
-      "sha256": "fc6b939883d8ef8cc6cfa029fd635bbf4683f39a880deaad7df92e885158a9e4"
+      "path": "res://research_data/studies/turn34-v4-repeated-2026-11-24/checkpoint-digest.json",
+      "sha256": "0ec716203bfdee4c48ba6709dc612c05ef763522eaef15d3ab839eed901f39f6"
     },
     "training": {
-      "path": "res://research_data/studies/turn33-v3-course-2026-11-24/training-result.json",
-      "sha256": "2ea1d2c47801e78f81d854221f4255b4e17949f62c6f96bb5c389fd0ba0e36cf"
+      "path": "res://research_data/studies/turn34-v4-repeated-2026-11-24/training-result.json",
+      "sha256": "6ac71b5de8a40446be1e9f57ea4a82a0729cc60153266199ca36e2031c6d219a"
     },
     "evaluation": {
-      "path": "res://research_data/studies/turn33-v3-course-2026-11-24/assessment-result.json",
-      "sha256": "be0ad3d57f77877269d265786bda1e4bc612e051a5986914ec9e05d44f9b4dd1"
+      "path": "res://research_data/studies/turn34-v4-repeated-2026-11-24/assessment-result.json",
+      "sha256": "474a16bd5ba6ca2a109c1b694a99847fd6e6cec62b596a75484be216b742634b"
     },
     "movement": {
-      "path": "res://research_data/studies/turn33-v3-course-2026-11-24/movement-summary.json",
-      "sha256": "fbb45777549ffc0bdd682711dda6e3bd2036e7b3d82ba940d2873f3033fe31eb"
+      "path": "res://research_data/studies/turn34-v4-repeated-2026-11-24/movement-summary.json",
+      "sha256": "71ee30be8f17b38ba5629330e814ce2a37d01753380384f44acbfa83f6461b91"
     },
     "cases": {
-      "path": "res://research_data/studies/turn33-v3-course-2026-11-24/cases.csv",
-      "sha256": "f696b241284c8432aaf5f48aa8939b996a0bd187a3e4428220c99462a6948f25"
+      "path": "res://research_data/studies/turn34-v4-repeated-2026-11-24/cases.csv",
+      "sha256": "6d8c1695f7062f9e5c76283b731c6a16b3fbc7b63d6275b3658c6dd4b37fc2aa"
     },
     "baseline": {
-      "path": "res://research_data/studies/turn33-v3-course-2026-11-24/baseline-assessment.json",
-      "sha256": "39feeac5416cc2f057400189932a881899caacdf0b940fe8c88e065583949beb"
+      "path": "res://research_data/studies/turn34-v4-repeated-2026-11-24/baseline-assessment.json",
+      "sha256": "a91ae58fa0128af30a142e1f75afc32ddc809b46c299d71a46fc31c0241bea59"
     }
   },
   "disclosure": "Recorded study result. Compact native outputs and checkpoint digests are portable; omitted raw controls/checkpoints remain preserved research evidence. No study is rerun by the app."

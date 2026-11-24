@@ -1,6 +1,7 @@
 # Evidence manifests hash exact bytes. Never normalize immutable study archives.
 assets/** -text -diff
 live/research_data/*.bin -text
+live/addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll binary
 live/research_data/current-study.json -text
 live/research_data/current-study-result.json -text -diff
 live/research_data/current-study-verification.json -text -diff
@@ -13,7 +14,9 @@ live/research_data/interface-comparison-v2-launch*.json -text -diff
 live/research_data/shoreline-*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 live/research_data/candidate-*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 live/research_data/studies/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+live/research_data/live-steering*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/POND_TURNING_PPO*PROTOCOL*.md -text
+docs/POND_TURNING_REPEATED_REQUESTS_PROTOCOL_*.md -text
 # User review sources are retained byte-for-byte for their recorded SHA-256.
 docs/design-reviews/*.pdf -text -diff
 docs/design-reviews/*.txt -text

@@ -19,6 +19,7 @@ public:
     bool load_controller(const String& path);
     bool reset(int case_id, bool holding);
     bool reset_untimed_swim(int case_id);
+    bool request_swim_turn(int direction);
     bool start();
     void pause();
     bool step();
