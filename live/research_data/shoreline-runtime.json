@@ -3,7 +3,7 @@
   "runtime_version": 4,
   "query_arithmetic_version": 2,
   "collision_envelope_version": 2,
-  "dll_sha256": "1b69c205700b2ffbac913e5e088c93eb8f6c2e27467f244a22e4695ad3fbabb9",
+  "dll_sha256": "905ec8beee7b051b97452083edf0bf87d1a3548ebd59e9881b894947b1a97a15",
   "cpu_source": {
     "path": "res://research_data/shoreline-cpu-v4.json",
     "sha256": "3651799d383aa87cfd85e3f1aa254e214b0afcd567925c77ada7f8e585093920"
@@ -15,8 +15,14 @@
   },
   "motor": "preserved_original",
   "navigation_qualified": false,
+  "dll_path": "res://addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll",
+  "bridge_equivalence": {
+    "path": "res://research_data/live-steering-check.json",
+    "sha256": "e33ec2ad3a9a29049eda2f4fefa50851d019bfd101c709c2e4a79306d46f448a",
+    "physical_runtime_changed": false
+  },
   "candidate_source": {
     "path": "res://research_data/candidate-study.json",
-    "sha256": "07e1e416d96ff4669e92d86fb14d5ae4b7cbb7d8748bcde3329be448cd7639be"
+    "sha256": "a57c6474b81745acd4b291964731a218b4d5118524048a41fffbe79e4ece1389"
   }
 }

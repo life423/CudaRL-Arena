@@ -1,2 +1,4 @@
 .godot/
-addons/frozen_swimmer/bin/
+addons/frozen_swimmer/bin/*
+# The Windows Project Manager entry uses this exact, verified release.
+!addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll

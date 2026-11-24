@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.24)
+project(PondSteeringCheck LANGUAGES CXX)
+get_filename_component(worktree "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
+add_executable(pond_steering_check check.cpp "${worktree}/src/core/checkpoint.cpp")
+target_include_directories(pond_steering_check PRIVATE "${worktree}/src" "${worktree}/src/nn")
+target_compile_options(pond_steering_check PRIVATE /W4 /WX /permissive-)

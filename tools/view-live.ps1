@@ -17,10 +17,9 @@ $engineVersion=(& $GodotExe --version | Out-String).Trim()
 if ($LASTEXITCODE -ne 0 -or $engineVersion -notmatch '^4\.4\.1(\.|$)') {
     throw ('This native app requires Godot4.4.1; selected engine reports '+$engineVersion)
 }
-if (-not $SkipBuild) {
-    $timing=& (Join-Path $PSScriptRoot 'build-native.ps1') -Target frozen_swimmer
-    Write-Host ('Native build: configure {0:N3}s; build {1:N3}s; explicit configure={2}' -f $timing.configure_seconds,$timing.build_seconds,$timing.explicit_configure)
-}
-if (-not (Test-Path -LiteralPath (Join-Path $project 'addons/frozen_swimmer/bin/frozen_swimmer.dll'))) { throw 'Build frozen_swimmer first' }
+# The ordinary player launch uses the exact verified DLL shipped in Git.
+# -SkipBuild remains accepted for older shortcuts. Native development uses
+# build-native.ps1 explicitly, which stages output outside the live project.
+& (Join-Path $PSScriptRoot 'test-live-package.ps1') -ProjectPath $project
 # Interactive launch only: the scene starts paused; no verification or training runs.
 & $GodotExe --path $project

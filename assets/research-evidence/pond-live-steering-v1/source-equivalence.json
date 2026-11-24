@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "passed": true,
+  "protocol_id": "original336-live-steering-v1",
+  "runtime_version": 4,
+  "collision_envelope_version": 2,
+  "query_arithmetic_version": 2,
+  "DLL_sha256": "905ec8beee7b051b97452083edf0bf87d1a3548ebd59e9881b894947b1a97a15",
+  "original_motor_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "paired_cases": 6,
+  "turn_cases_passed": 4,
+  "turn_cases_total": 4,
+  "turn_degrees": [
+    -5,
+    5
+  ],
+  "starting_poses": [
+    0,
+    3
+  ],
+  "request_after_controls": 40,
+  "turn_controls": 400,
+  "default_rest_controls": 1280,
+  "default_swim_controls": 160,
+  "total_CPU_controls": 6080,
+  "total_CPU_substeps": 60800,
+  "CPU_reference_tolerance": 2E-06,
+  "maximum_scalar_difference": 7.105427357601E-15,
+  "original_physics_sources_unchanged": true,
+  "qualified_physics_source_sha256": "195a8b13b39fe8591f5d0ec49293e5ab46f5a5987f27b1d6b555166b80fecdfa",
+  "unchanged_source_bindings": [
+    {
+      "path": "src/cuda/pond_math_profile.h",
+      "sha256": "ea27aef0b92e0a8334f4c10a4a17a48ec3c059cdaf5cbfc21e6c82edb285c399"
+    },
+    {
+      "path": "src/environment/pond_geometry_v1.h",
+      "sha256": "74225c988cca696e579274810d2b4e8619a48b27345f33e0eedaff003628664a"
+    },
+    {
+      "path": "src/environment/pond_body_geometry.h",
+      "sha256": "c4ca21d8c9a080ba44072ea3e2015711601cc23f8f726f520711583391ed0767"
+    },
+    {
+      "path": "src/simulation/pond_runtime.h",
+      "sha256": "a962ea392cadccc15bade49a2071893556edb13ac733b04ba00d65daf3a23763"
+    },
+    {
+      "path": "src/nn/motor/movement_model.h",
+      "sha256": "5ab30eb92a609ac8cfd50944bef8898cf199be3989dbb6550b05bf44bc5449d5"
+    },
+    {
+      "path": "src/nn/motor/joint_motor.h",
+      "sha256": "dc53d22cff99352c5e378b6bcd919569c9a26455aa5df9f8ec1c36172171314f"
+    },
+    {
+      "path": "src/nn/motor/state.h",
+      "sha256": "be6444f54b748d58b36f75a36e6cebb880863c0950207615495298fb13d8da6f"
+    },
+    {
+      "path": "src/physics/dynamics.h",
+      "sha256": "29f79e704cdac48f7045734c50549afc4052cef8ed96715f8f57f49402f832a6"
+    },
+    {
+      "path": "src/physics/contact.h",
+      "sha256": "3e88a73390f08803eb5f55abc8ab1d93533884169817bf5165f7da698dc152a6"
+    },
+    {
+      "path": "src/simulation/world.h",
+      "sha256": "6fcab032bc114416ad5fc481da5f15483e7594201b8cbc343df888af7f1a4cd3"
+    },
+    {
+      "path": "src/core/hd.h",
+      "sha256": "cb1105c3ce5ed2d53c838344ed4fae35f4bbdaa99ac0599e9b60948e7d4af030"
+    }
+  ],
+  "new_bridge_sha256": "5ddddbaf7507d1cb4032377a150204e625c0cee1a37fbf86ef3229128e5c01e3",
+  "heading_adapter_sha256": "d07b38e74f61120cecf0f52e1280caa284dc5f046245a26628f9e1d5a24647c2",
+  "reference_result_sha256": "7a44cd25db3b4805a45b77abf3c810e97bbb8594c5077549e2b686a1e61ca48b",
+  "bridge_result_sha256": "b21313cbccc5f76f8fdbf6f695252b32f2468c51f917ddb7c4a220dfe65059e6",
+  "request_preserves_body_filters_servos_time": true,
+  "default_Rest_Swim_behavior_unchanged": true,
+  "candidate_loaded": false,
+  "optimizer_calls": 0,
+  "CUDA_kernels": 0,
+  "autonomous_navigation_qualified": false,
+  "repeated_turns_qualified": false,
+  "scope": "Original motor, explicit user heading requests. Four measured small turns after original-lane warmup; runtime physics sources unchanged. This does not establish autonomous bank choice, repeated turning or a newly learned skill."
+}

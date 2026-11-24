@@ -1,6 +1,7 @@
 #include "hold_lab_preview.h"
 #include "simulation/pond_runtime.h"
 #include "motor/pond_motor_observation.h"
+#include "motor/heading_request_observation.h"
 #include "motor/saved_motor_contract.h"
 #include "nn/mlp_cpu.h"
 #include "core/checkpoint.h"
@@ -54,6 +55,8 @@ struct HoldLabPreview::Impl {
     uint32_t lesson_updates=0;
     uint64_t protocol=0,controls=0;
     int case_id=0;
+    bool heading_only=false;
+    float requested_turn_degrees=0;
     bool loaded=false,paused=true,holding=true,untimed=false,qualified=false,failure_recorded=false;
     std::string error;
     uint64_t maximum_controls() const {return untimed?0u:holding?1280u:160u;}
@@ -65,6 +68,7 @@ void HoldLabPreview::_bind_methods() {
     ClassDB::bind_method(D_METHOD("load_controller","path"),&HoldLabPreview::load_controller);
     ClassDB::bind_method(D_METHOD("reset","case_id","holding"),&HoldLabPreview::reset,DEFVAL(0),DEFVAL(true));
     ClassDB::bind_method(D_METHOD("reset_untimed_swim","case_id"),&HoldLabPreview::reset_untimed_swim,DEFVAL(0));
+    ClassDB::bind_method(D_METHOD("request_swim_turn","direction"),&HoldLabPreview::request_swim_turn);
     ClassDB::bind_method(D_METHOD("start"),&HoldLabPreview::start);
     ClassDB::bind_method(D_METHOD("pause"),&HoldLabPreview::pause);
     ClassDB::bind_method(D_METHOD("step"),&HoldLabPreview::step);
@@ -132,10 +136,22 @@ bool HoldLabPreview::reset(int id,bool holding) {
     if(!runtime::prepare(next)){s.error="Native pond reset could not certify the starting body";return false;}
     physical.paused=true;
     s.world=next;s.request=request;s.case_id=id;s.holding=holding;s.untimed=false;
-    s.controls=0;s.failure_recorded=false;s.error.clear();return true;
+    s.controls=0;s.heading_only=false;s.requested_turn_degrees=0;s.failure_recorded=false;s.error.clear();return true;
 }
 bool HoldLabPreview::reset_untimed_swim(int id) {
     if(!reset(id,false))return false;impl_->untimed=true;return true;
+}
+bool HoldLabPreview::request_swim_turn(int direction) {
+    auto& s=*impl_;
+    if(!s.loaded||s.holding||!s.error.empty()||(direction!=1&&direction!=-1))return false;
+    const float degrees=5.f*static_cast<float>(direction);
+    const auto rotation=p::axis_rotation({0,1,0},degrees*obs::pi/180.f);
+    auto& request=s.request.request;
+    request.heading=rotation.rotate(request.heading);
+    request.terminal_velocity=rotation.rotate(request.terminal_velocity);
+    request.position=s.request.start_com_model+rotation.rotate(request.position-s.request.start_com_model);
+    s.heading_only=true;s.requested_turn_degrees+=degrees;
+    return true;
 }
 bool HoldLabPreview::start() {
     auto& s=*impl_;
@@ -148,8 +164,10 @@ bool HoldLabPreview::step() {
     if(s.controls==std::numeric_limits<uint64_t>::max()){s.error="Swimming paused at the session counter limit";pause();return false;}
     auto& physical=s.world.motor.physical;
     float observation[obs::observations]{};
-    if(!obs::observe(s.request,physical.body,physical.held_targets,s.world.motor.reference_rate,
-                     physical.last_actual_torques,observation)) {
+    const bool observed=s.heading_only?
+        cudarl::heading_request_observation::observe(s.request,physical.body,physical.held_targets,s.world.motor.reference_rate,physical.last_actual_torques,observation):
+        obs::observe(s.request,physical.body,physical.held_targets,s.world.motor.reference_rate,physical.last_actual_torques,observation);
+    if(!observed) {
         s.error="Invalid saved motor observation";pause();return false;
     }
     s.actor.forward(observation,1);
@@ -226,6 +244,8 @@ Dictionary HoldLabPreview::get_state() const {
     const auto& s=*impl_;const auto& physical=s.world.motor.physical;const auto& body=physical.body;
     const auto measured=obs::measure(s.request,body);const auto motion=obs::motion(body);Dictionary out;
     out["loaded"]=s.loaded;out["paused"]=s.paused;out["finished"]=s.finished();out["untimed_swim"]=s.loaded&&s.untimed;
+    out["heading_only_request"]=s.heading_only;out["requested_turn_degrees"]=s.requested_turn_degrees;
+    out["body"]=body_record(body);
     out["training"]=false;out["holding"]=s.holding;out["qualified_candidate"]=s.qualified;out["error"]=get_error();out["case"]=s.case_id;
     out["model"]=6;out["runtime_version"]=runtime::version;out["live_physics"]=true;out["stochastic_exploration"]=false;
     out["collision_envelope_version"]=cudarl::pond_body_geometry::collision_envelope_version;
