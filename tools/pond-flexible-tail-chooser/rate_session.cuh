@@ -5,41 +5,68 @@
 struct RateIdentity { uint64_t gait=0, motor=0, starts=0; tail::steering::Kind kind{};
     tail::steering::Config config{}; };
 
-void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id, const char* task_id=CUDARL_RATE_TASK_ID) {
-    out.value<uint32_t>(0x52435446); out.value<uint32_t>(1); // FTCR
+void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id, const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels) {
+    out.value<uint32_t>(0x52435446); out.value<uint32_t>(input_width==35?2:1); // FTCR
     const std::string task(task_id);
     out.array(std::vector<char>(task.begin(),task.end()));
-    for (int x : {worlds,decisions,channels,actions,batch_size,epochs,macro_controls,max_updates}) out.value(x);
+    for (int x : {worlds,decisions,input_width,actions,batch_size,epochs,macro_controls,max_updates}) out.value(x);
     out.value<uint32_t>(sizeof(Lane)); out.value<uint32_t>(sizeof(Counts));
     out.value(id.gait);out.value(id.motor);out.value(id.starts);out.value(id.kind);out.value(id.config);
     for(float x : {gamma,lambda,max_kl,loss.clip,loss.ent_coef,loss.vf_coef,.0003f,.001f})out.value(x);
     out.value(larger_pond);
 }
+void rate_save_adam(cudarl::checkpoint::Writer& out,const nn::GpuAdam& adam,int width){
+    if(width==channels){adam.save(out);return;}
+    cudarl::checkpoint::Writer raw;adam.save(raw);cudarl::checkpoint::Reader in{raw.data};
+    const auto config=in.value<nn::AdamConfig>();const auto steps=in.value<int>();
+    const auto m=in.array<float>(10000),v=in.array<float>(10000);in.finish();
+    out.value(config);out.value(steps);
+    out.array(chooser::resize_input_parameters(m,channels,width));out.array(chooser::resize_input_parameters(v,channels,width));
+}
+void rate_load_adam(cudarl::checkpoint::Reader& in,nn::GpuAdam& adam,int width,int count){
+    if(width==channels){adam.load(in);return;}
+    const auto config=in.value<nn::AdamConfig>();const auto steps=in.value<int>();
+    auto m=in.array<float>(count),v=in.array<float>(count);
+    if(m.size()!=size_t(count)||v.size()!=size_t(count))throw std::runtime_error("Parent Adam dimensions differ");
+    cudarl::checkpoint::Writer expanded;expanded.value(config);expanded.value(steps);
+    expanded.array(chooser::resize_input_parameters(m,width,channels));expanded.array(chooser::resize_input_parameters(v,width,channels));
+    cudarl::checkpoint::Reader migrated{expanded.data};adam.load(migrated);migrated.finish();
+}
 std::vector<uint8_t> rate_payload(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic,
     nn::GpuAdam& aa, nn::GpuAdam& ca, const Ledger& l, const RateIdentity& id, cudaStream_t stream,
-    const char* task_id=CUDARL_RATE_TASK_ID) {
+    const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels) {
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
-    cudarl::checkpoint::Writer out;rate_header(out,id,task_id);
+    cudarl::checkpoint::Writer out;rate_header(out,id,task_id,input_width);
     out.value(l.completed);out.value(l.actor_steps);out.value(l.critic_steps);
-    out.array(actor.get_params());out.array(critic.get_params());aa.save(out);ca.save(out);
+    out.array(chooser::resize_input_parameters(actor.get_params(),channels,input_width));
+    out.array(chooser::resize_input_parameters(critic.get_params(),channels,input_width));
+    rate_save_adam(out,aa,input_width);rate_save_adam(out,ca,input_width);
+    if(input_width==35){out.value(aa.fresh_steps());out.value(ca.fresh_steps());}
     std::vector<Lane> lanes(worlds);std::vector<Counts> counts(worlds);
     roll.lanes.copy_to_host(lanes.data(),lanes.size());roll.counts.copy_to_host(counts.data(),counts.size());
     out.array(lanes);out.array(counts);return std::move(out.data);
 }
 void rate_restore(const std::vector<uint8_t>& bytes, Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic,
     nn::GpuAdam& aa, nn::GpuAdam& ca, Ledger& l,const RateIdentity& id,cudaStream_t stream,
-    const char* task_id=CUDARL_RATE_TASK_ID) {
-    cudarl::checkpoint::Writer header;rate_header(header,id,task_id);
+    const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels) {
+    cudarl::checkpoint::Writer header;rate_header(header,id,task_id,input_width);
     if(bytes.size()<header.data.size() || !std::equal(header.data.begin(),header.data.end(),bytes.begin()))
         throw std::runtime_error("Rate chooser task/input/schema identity mismatch");
     cudarl::checkpoint::Reader in{bytes};in.position=header.data.size();
     const auto completed=in.value<int>(),as=in.value<int>(),cs=in.value<int>();
     if(completed<0||completed>max_updates||as<0||as!=cs)throw std::runtime_error("Invalid rate chooser ages");
     auto a=in.array<float>(actor.num_params()),c=in.array<float>(critic.num_params());
+    a=chooser::resize_input_parameters(a,input_width,channels);c=chooser::resize_input_parameters(c,input_width,channels);
     chooser::validate_weights(a);
     if(c.size()!=size_t(critic.num_params()) || !std::all_of(c.begin(),c.end(),cudarl::physics::finite_number))
         throw std::runtime_error("Invalid rate critic");
-    aa.load(in);ca.load(in);
+    rate_load_adam(in,aa,input_width,actor.num_params()-32*(channels-input_width));
+    rate_load_adam(in,ca,input_width,critic.num_params()-32*(channels-input_width));
+    if(channels==35){
+        const int actor_age=input_width==35?in.value<int>():0;
+        const int critic_age=input_width==35?in.value<int>():0;
+        aa.set_fresh_column(channels,32,actor_age,3);ca.set_fresh_column(channels,32,critic_age,3);
+    }
     if(aa.steps()!=as||ca.steps()!=cs||aa.config().lr!=.0003f||ca.config().lr!=.001f)
         throw std::runtime_error("Rate optimizer identity mismatch");
     auto lanes=in.array<Lane>(worlds);auto counts=in.array<Counts>(worlds);in.finish();
@@ -67,7 +94,7 @@ void rate_result(const fs::path& dir,const Ledger& l,bool verification) {
     const auto& c=l.counts;std::ofstream out(dir/"result.json");out.exceptions(std::ios::badbit|std::ios::failbit);
     uint64_t samples=0;for(auto x:c.samples)samples+=x;
     out<<std::setprecision(12)<<"{\"schema\":1,\"task\":\""<<CUDARL_RATE_TASK_ID
-       <<"\",\"worlds\":"<<worlds<<",\"updates_completed\":"<<l.completed
+       <<"\",\"worlds\":"<<worlds<<",\"inputs\":"<<channels<<",\"observation_mode\":"<<chooser::default_observation_mode<<",\"updates_completed\":"<<l.completed
        <<",\"samples\":"<<samples<<",\"executed_samples\":"<<l.executed_decisions
        <<",\"attempted_substeps\":"<<c.attempted+c.warmup_attempted
        <<",\"accepted_substeps\":"<<c.accepted+c.warmup_accepted
@@ -167,8 +194,8 @@ int rate_main(int argc,char** argv) {
                 if(parent_task.size()!=64||!std::all_of(parent_task.begin(),parent_task.end(),[](char c){return (c>='0'&&c<='9')||(c>='a'&&c<='f');}))
                     throw std::runtime_error("Invalid explicit parent task identity");
                 const auto parent=cudarl::checkpoint::read(argv[9]);
-                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str());
-                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str());
+                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),32);
+                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),32);
                 if(parent!=roundtrip) throw std::runtime_error("Parent import did not preserve full state exactly");
 #if defined(CUDARL_DISTANT_COVERAGE)
                 if(!tail::distant::geometry_matches(larger_pond))throw std::runtime_error("Distant map geometry differs");
@@ -186,11 +213,12 @@ int rate_main(int argc,char** argv) {
                 for(int lane=0;lane<worlds;++lane){
                     float expected[channels]{};
                     if(!probe[lane].needs_start){
-                        ++active_probes;chooser::observe(probe[lane].state,larger_pond,expected,true);
+                        ++active_probes;chooser::observe(probe[lane].state,larger_pond,expected,chooser::default_observation_mode);
                         float legacy[channels];chooser::observe(probe[lane].state,larger_pond,legacy,false);
                         for(int i=0;i<channels;++i){
                             maximum_legacy=std::max(maximum_legacy,std::abs(legacy[i]-legacy_device_observation[lane*channels+i]));
-                            if(i<21||i>23){
+                            const int first_new=channels==35?32:21;
+                            if(i<first_new||i>first_new+2){
                                 if(expected[i]!=legacy[i])throw std::runtime_error("Distant feedback changed another CPU input");
                                 if(device_observation[lane*channels+i]!=legacy_device_observation[lane*channels+i])gpu_unchanged=false;
                             }
@@ -198,7 +226,8 @@ int rate_main(int argc,char** argv) {
                     }
                     for(int i=0;i<channels;++i){const float delta=std::abs(expected[i]-device_observation[lane*channels+i]);
                         if(!std::isfinite(delta))throw std::runtime_error("Nonfinite distant observation");
-                        if(i>=21&&i<=23)maximum_new_field=std::max(maximum_new_field,delta);
+                        const int first_new=channels==35?32:21;
+                        if(i>=first_new&&i<=first_new+2)maximum_new_field=std::max(maximum_new_field,delta);
                         if(delta>max_difference){max_difference=delta;worst_index=lane*channels+i;worst_cpu=expected[i];worst_gpu=device_observation[lane*channels+i];}
                     }
                 }
@@ -209,6 +238,37 @@ int rate_main(int argc,char** argv) {
                     <<",\"legacy_maximum\":"<<maximum_legacy<<",\"other_GPU_inputs_unchanged\":"<<(gpu_unchanged?"true":"false")
                     <<",\"physics_steps\":0,\"optimizer_updates\":0}\n";}
                 if(maximum_new_field>1.e-6f||!gpu_unchanged||active_probes==0)throw std::runtime_error("New distant input disagreement or legacy GPU input change");
+#if defined(CUDARL_APPENDED_COVERAGE)
+                const auto actor_old=chooser::resize_input_parameters(actor.get_params(),channels,32);
+                const auto critic_old=chooser::resize_input_parameters(critic.get_params(),channels,32);
+                const nn::MlpSpec old_actor_spec{{32,32,actions},{nn::Activation::Tanh,nn::Activation::Identity}};
+                const nn::MlpSpec old_critic_spec{{32,32,1},{nn::Activation::Tanh,nn::Activation::Identity}};
+                nn::GpuMlp old_actor(old_actor_spec,worlds,seed),old_critic(old_critic_spec,worlds,seed+1);
+                old_actor.set_params(actor_old);old_critic.set_params(critic_old);
+                std::vector<float> old_input(worlds*32);
+                for(int lane=0;lane<worlds;++lane)for(int i=0;i<32;++i)old_input[lane*32+i]=device_observation[lane*channels+i];
+                device_ptr<float> legacy_input_gpu(old_input.size());legacy_input_gpu.copy_from_host(old_input.data(),old_input.size());
+                roll.obs.copy_from_host(device_observation.data(),device_observation.size());
+                old_actor.forward(legacy_input_gpu.get(),worlds,stream.value);old_critic.forward(legacy_input_gpu.get(),worlds,stream.value);
+                actor.forward(roll.obs.get(),worlds,stream.value);critic.forward(roll.obs.get(),worlds,stream.value);
+                CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));
+                std::vector<float> old_logits(worlds*actions),new_logits(worlds*actions),old_values(worlds),new_values(worlds);
+                CUDA_CHECK_THROW(cudaMemcpy(old_logits.data(),old_actor.output(),old_logits.size()*sizeof(float),cudaMemcpyDeviceToHost));
+                CUDA_CHECK_THROW(cudaMemcpy(new_logits.data(),actor.output(),new_logits.size()*sizeof(float),cudaMemcpyDeviceToHost));
+                CUDA_CHECK_THROW(cudaMemcpy(old_values.data(),old_critic.output(),old_values.size()*sizeof(float),cudaMemcpyDeviceToHost));
+                CUDA_CHECK_THROW(cudaMemcpy(new_values.data(),critic.output(),new_values.size()*sizeof(float),cudaMemcpyDeviceToHost));
+                float actor_difference=0,critic_difference=0;
+                for(size_t i=0;i<old_logits.size();++i)actor_difference=std::max(actor_difference,std::abs(old_logits[i]-new_logits[i]));
+                for(size_t i=0;i<old_values.size();++i)critic_difference=std::max(critic_difference,std::abs(old_values[i]-new_values[i]));
+                std::ofstream expansion(output/"input-expansion.json");expansion<<std::setprecision(10)
+                    <<"{\"pass\":"<<(actor_difference==0&&critic_difference==0?"true":"false")
+                    <<",\"inputs_before\":32,\"inputs_after\":35,\"worlds\":"<<worlds
+                    <<",\"GPU_actor_difference\":"<<actor_difference<<",\"GPU_critic_difference\":"<<critic_difference
+                    <<",\"legacy_checkpoint_roundtrip_exact\":true,\"new_actor_critic_weights_and_moments_zero\":true"
+                    <<",\"fresh_actor_Adam_age\":"<<aa.fresh_steps()<<",\"fresh_critic_Adam_age\":"<<ca.fresh_steps()
+                    <<",\"physics_steps\":0,\"optimizer_updates\":0}\n";
+                if(actor_difference!=0||critic_difference!=0)throw std::runtime_error("Zero-column expansion changed GPU inference");
+#endif
                 auto sensory=probe.front().state;
                 for(auto& word:sensory.visited)word=0;
                 for(auto& visit:sensory.recent)visit={};
@@ -230,7 +290,9 @@ int rate_main(int argc,char** argv) {
                     throw std::runtime_error("Distant field is not course-relative");
                 std::ofstream senses(output/"distant-senses.json");
                 senses<<"{\"pass\":true,\"active_worlds\":"<<active_probes<<",\"CPU_CUDA_values\":"<<worlds*channels
-                    <<",\"max_difference\":"<<maximum_new_field<<",\"inherited_legacy_max_difference\":"<<maximum_legacy<<",\"only_inputs_21_23_changed\":true,\"fresh_known_rotation_checks\":true,\"physics_steps\":0,\"optimizer_updates\":0}\n";
+                    <<",\"max_difference\":"<<maximum_new_field<<",\"inherited_legacy_max_difference\":"<<maximum_legacy
+                    <<",\"preserved_local_inputs\":"<<(channels==35?32:29)<<",\"first_distant_input\":"<<(channels==35?32:21)
+                    <<",\"fresh_known_rotation_checks\":true,\"physics_steps\":0,\"optimizer_updates\":0}\n";
 #endif
                 if(inspect)return 0;
                 std::ofstream imported(output/"parent-import.json");

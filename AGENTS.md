@@ -1,5 +1,23 @@
 # Workspace instructions
 
+## Appended distant feedback — November 25, 2026
+
+The authorized appended-input session is CLOSED at128 new PPO updates on1,024
+CUDA worlds,161.552s. All32 local inputs remain unchanged; three distant novelty
+inputs are appended with zero actor/critic columns and fresh Adam ages. Exact
+parent roundtrip, initial GPU actor/critic equivalence and three-update full
+resume pass. Read APPENDED_COVERAGE_PROTOCOL.md under the chooser tool and the
+pond-flexible-tail-appended-coverage-v3 research README. Selected16 passes12+4
+and all four30-minute starts without guards/resets, raising worst/mean individual
+coverage31.88/37.90% to42.61/43.91%. Default start slightly declines44.93→43.77%;
+no case reaches80%. Maximum slow interval improves11.1→8.14s. Final128 is unsafe
+in two long cases and is rejected. Godot now loads separately named appended16
+with unchanged motor88; old coverage80/chooser88 and motor files are preserved.
+Both old/new native300s replays match3,750 states exactly; package11 and rendered
+UI215 checks pass. Final desktop inspection was interrupted by user Escape;
+no further app input followed. No trainer remains; do not repeat this closed run
+or claim whole-pond mastery, other depths, currents or infinite survival.
+
 ## Distant visitation feedback — November 25, 2026
 
 User authorized better distant feedback, a separate GPU PPO chooser session,

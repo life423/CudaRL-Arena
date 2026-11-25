@@ -1,0 +1,59 @@
+{
+	"camera": [
+		{
+			"close_span": 50.1386138613861,
+			"pond_preset_span": 147.600006103516,
+			"size": [
+				390,
+				844
+			]
+		},
+		{
+			"close_span": 22.1007194244604,
+			"pond_preset_span": 147.600006103516,
+			"size": [
+				768,
+				1024
+			]
+		},
+		{
+			"close_span": 10.2702702702703,
+			"pond_preset_span": 128.036041259766,
+			"size": [
+				1100,
+				760
+			]
+		},
+		{
+			"close_span": 8.8,
+			"pond_preset_span": 92.3164520263672,
+			"size": [
+				844,
+				390
+			]
+		}
+	],
+	"checks": 215,
+	"failures": [],
+	"optimizer_updates": 0,
+	"pass": true,
+	"physics_steps": 0,
+	"rendered_sizes": [
+		[
+			390,
+			844
+		],
+		[
+			768,
+			1024
+		],
+		[
+			1100,
+			760
+		],
+		[
+			844,
+			390
+		]
+	]
+}

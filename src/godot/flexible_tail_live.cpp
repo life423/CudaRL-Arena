@@ -113,7 +113,7 @@ struct FlexibleTailLive::Impl {
     int fault = 0;
     bool loaded = false;
     bool autonomous = false;
-    bool distant_feedback = false;
+    int distant_feedback = 0;
     std::unique_ptr<nn::CpuMlp<float>> chooser;
     tail::rate_chooser::World pond{};
     tail::steering::Kind motor_kind = tail::steering::Kind::ProgramNonlinear;

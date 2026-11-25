@@ -262,7 +262,7 @@ func _update_live_controls() -> void:
 	turn_left.disabled = live_play.disabled or queued != 0
 	turn_right.disabled = turn_left.disabled
 	%ManualControls.visible = not autonomous and not reviewing
-	%Qualification.text = "Verified: 12 pond starts, 4 five-minute runs and 4 thirty-minute runs.\nIndividual coverage: 32–45%; whole pond not yet achieved.\nSaved policies; no training in this view." if autonomous else "Original saved motor. Q / E request 15° turns.\nSwitch modes to return to learned exploration."
+	%Qualification.text = "Verified: 12 pond starts, 4 five-minute runs and 4 thirty-minute runs.\nIndividual coverage: 43–46%; whole pond not yet achieved.\nSaved policies; no training in this view." if autonomous else "Original saved motor. Q / E request 15° turns.\nSwitch modes to return to learned exploration."
 	restart.disabled = not ready
 	live_play.text = "Pause" if live_playing else ("Explore pond" if autonomous else "Play")
 	live_status.text = "Paused"

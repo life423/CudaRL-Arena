@@ -1,4 +1,5 @@
-param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant)
+param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant,[switch]$Appended)
+if($Appended){$Distant=$true}
 $ErrorActionPreference='Stop'
 $repository=Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 Set-Location -LiteralPath $repository
@@ -40,6 +41,7 @@ try{
     $import=Get-Content (Join-Path $verify data/parent-import.json) -Raw|ConvertFrom-Json
     if(!$proof.pass -or $proof.physical_updates_executed -ne 3 -or !$import.full_state_exact_before_counter_rebase){throw 'Full-state continuation gate failed.'}
     if($Distant -and !(Get-Content (Join-Path $verify data/distant-senses.json) -Raw|ConvertFrom-Json).pass){throw 'Distant sensory gate failed.'}
+    if($Appended -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Initial controller equivalence failed.'}
     Assert-Frozen
     $job=Start-Native 'training' $rate @('fork',$gait,$motor,$starts,$training,'128','1200','0',$parent,$parentTask) $root 1800
     $pending=[Collections.Generic.Queue[int]]::new();$scheduled=[Collections.Generic.HashSet[int]]::new()

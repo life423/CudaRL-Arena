@@ -1,5 +1,23 @@
 # AI status — November 25, 2026
 
+**Appended distant feedback improves consistent coverage; selected16 is in Godot.**
+The separate native CUDA PPO session completes128 updates on1,024 worlds in
+161.552s. All32 local inputs stay intact, with three zero-initialized distant
+columns added to both actor and critic. Parent checkpoint roundtrip, initial
+GPU inference equivalence and three-actual-update resume pass exactly. Motor88,
+physics, actions and reward remain unchanged. Selected16 passes12 short+4
+five-minute gates and all four30-minute physical tests without guards/resets.
+Worst/mean individual coverage improves31.88/37.90%→42.61/43.91%; the default
+Godot start slightly declines44.93→43.77%. Longest slowdown falls11.1→8.14s.
+None reaches80%; final128 fails two long cases and is not adopted. The new DLL
+replays both old and selected policies exactly over3,750 states each. All11
+package hashes and215 rendered UI checks pass. The final manual inspection
+was interrupted by user Escape; automated replay/rendering remains verified.
+Old chooser80/88 and all motors remain preserved. No background learner runs.
+[Full results and evidence](../assets/research-evidence/pond-flexible-tail-appended-coverage-v3/README.md)
+
+Earlier results below are historical; appended16/motor88 is the active pair.
+
 **Distant-feedback study is closed without adoption.** Three global directional
 novelty inputs replace the three far point probes in a version4 experimental
 chooser. Native CUDA PPO completes128 new updates on1,024 worlds in157.555s,

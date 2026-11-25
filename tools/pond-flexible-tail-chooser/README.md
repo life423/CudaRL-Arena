@@ -1,5 +1,18 @@
 # Native PPO chooser workflow
 
+The latest `CUDARL_APPENDED_COVERAGE` session is closed with selected16 adopted
+in Godot. It retains all32 local inputs and appends three zero-weight distant
+inputs to actor and critic. Explicit migration preserves inherited weights,
+Adam moments/ages, world and visit state; new columns have their own saved age.
+The original32-input checkpoint compacts back exactly, and initial GPU actor
+and critic outputs are exactly equal across1,024 worlds. The session completes
+128 new updates; selected16 raises worst/mean individual30-minute coverage to
+42.61/43.91%, with4/4 safe long runs. Final128 is unsafe and rejected. Read
+[results](../../assets/research-evidence/pond-flexible-tail-appended-coverage-v3/README.md)
+and [protocol](APPENDED_COVERAGE_PROTOCOL.md). `-Appended` implies `-Distant` and
+requires the appended compiled target. Closed output directories remain
+non-restartable. Further training requires a new authorized session.
+
 The opt-in `CUDARL_DISTANT_COVERAGE` experiment is closed and unqualified.
 It replaced only the three far inputs and lost bank safety during128 updates;
 Godot stays on coverage80. Version4 observation decoding is explicit and keeps
@@ -8,8 +21,8 @@ and [protocol](DISTANT_COVERAGE_PROTOCOL.md). `-Distant` selects the explicit
 coverage80 full-state parent; its compiled target must enable both coverage
 options. `inspect-fork` performs zero-physics/zero-PPO input checks only.
 
-The latest coverage continuation is closed at 128 updates. Godot uses its
-selected chooser80 with frozen motor88; individual 30-minute coverage is
+The earlier coverage continuation is closed at 128 updates. Its preserved
+selected chooser80 uses frozen motor88; individual 30-minute coverage is
 32–45%, not full pond coverage. Read [results](../../assets/research-evidence/pond-flexible-tail-coverage-v1/README.md)
 and [the finite protocol](COVERAGE_PROTOCOL.md). `run-coverage-session.ps1`
 uses the compiled opt-in coverage/reliable targets, the recorded baseline and

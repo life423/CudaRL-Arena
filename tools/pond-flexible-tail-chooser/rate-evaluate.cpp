@@ -84,7 +84,7 @@ struct Models {
     tail::steering::Model motor;
     tail::steering::Config config;
     bool old_loader_rejected = false;
-    bool distant_feedback = false;
+    int distant_feedback = 0;
     std::vector<tail::NavigationWorld> starts;
 
 

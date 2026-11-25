@@ -1,0 +1,16 @@
+{
+  "name": "coverage",
+  "wall_s": 9.3979217,
+  "exit": 1,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\appended-coverage-v3\\native-build\\Release\\pond_flexible_tail_rate_evaluate.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-motor-88.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\appended-coverage-v3\\training\\actor-120.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\straight-evaluation-starts.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\appended-coverage-v3\\continuous\\update-120\\assessment",
+    "0",
+    "--continuous-coverage"
+  ]
+}

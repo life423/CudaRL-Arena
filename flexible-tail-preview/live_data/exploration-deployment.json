@@ -4,8 +4,8 @@
   "registered_project": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\project.godot",
   "motor_study": "rate-response-v1",
   "motor_update": 88,
-  "chooser_study": "coverage-v1",
-  "chooser_update": 80,
+  "chooser_study": "appended-coverage-v3",
+  "chooser_update": 16,
   "diagnostic_passes": 12,
   "endurance_passes": 4,
   "clearance_stops": 0,
@@ -40,11 +40,11 @@
     },
     {
       "path": "flexible-tail-preview/addons/flexible_tail_live/bin/flexible_tail_live.dll",
-      "sha256": "59771820B9F58CD5FD656B5A6BB07C95B1C1815A01804A753C40E75C8A58E3DC"
+      "sha256": "FB9FE791A6F93C397BDA9C3A5B0E57ABD2B91E77C09B0108429B35A3F2E31F88"
     },
     {
       "path": "flexible-tail-preview/flexible_tail_preview.gd",
-      "sha256": "B32094E118C7DC8A1430B36FC177117BA59C815233645F7C09F532EA47CC74D8"
+      "sha256": "7496FE23126C6E8208708E5654BCA64E974286B6C4FA92BCC1CF92AC27CE9B9C"
     },
     {
       "path": "flexible-tail-preview/flexible_tail_preview.tscn",
@@ -57,14 +57,20 @@
     {
       "path": "flexible-tail-preview/live_data/exploration-chooser-coverage-80.bin",
       "sha256": "DAC82FD96B2D37D984EFE13B02C6C31F8F0E3617EF6A79A2034936BE8466DE66"
+    },
+    {
+      "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323",
+      "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin"
     }
   ],
-  "active_chooser_file": "exploration-chooser-coverage-80.bin",
-  "mean_individual_coverage": 0.3789855072,
-  "maximum_slow_interval_s": 11.1,
+  "active_chooser_file": "exploration-chooser-appended-16.bin",
+  "mean_individual_coverage": 0.4391304348,
+  "maximum_slow_interval_s": 8.14,
   "continuous_coverage_cases": 4,
   "continuous_physical_passes": 4,
   "continuous_horizon_s": 1800,
-  "minimum_individual_coverage": 0.3188405797,
-  "continuous_faults": 0
+  "minimum_individual_coverage": 0.4260869565,
+  "continuous_faults": 0,
+  "chooser_inputs": 35,
+  "chooser_model_version": 5
 }

@@ -1,0 +1,26 @@
+{
+  "update": 16,
+  "results": {
+    "schema": 1,
+    "mode": "individual-continuous-coverage",
+    "pass": false,
+    "cases": 4,
+    "horizon_s": 1800,
+    "physical_passes": 4,
+    "coverage_80_percent_passes": 0,
+    "minimum_individual_coverage": 0.4260869565,
+    "mean_individual_coverage": 0.4391304348,
+    "union_cells": 190,
+    "reference_cells": 345,
+    "denominator_is_fixed_posture_estimate": true,
+    "faults": 0,
+    "resets": 0,
+    "attempted_substeps": 5760000,
+    "accepted_substeps": 5760000,
+    "substep_cap": 5760000,
+    "optimizer_updates": 0,
+    "wall_s": 9.3797544
+  },
+  "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\appended-coverage-v3\\continuous\\update-016",
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\appended-coverage-v3\\training\\actor-16.bin"
+}

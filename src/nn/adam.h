@@ -23,10 +23,10 @@ public:
     int steps() const { return t_; }
     // New input coordinates may have a younger Adam age than inherited weights.
     // The versioned owner stores these three fields separately from legacy save().
-    void set_fresh_column(int stride, int rows, int age) {
-        if (stride < 1 || rows < 1 || stride * rows > n_ || age < 0 || age > t_)
+    void set_fresh_column(int stride, int rows, int age, int width = 1) {
+        if (stride < 1 || rows < 1 || stride * rows > n_ || age < 0 || age > t_ || width < 1 || width > stride)
             throw std::invalid_argument("Invalid fresh Adam column");
-        fresh_stride_ = stride; fresh_rows_ = rows; fresh_t_ = age;
+        fresh_stride_ = stride; fresh_rows_ = rows; fresh_t_ = age; fresh_width_ = width;
     }
     int fresh_steps() const { return fresh_t_; }
     const AdamConfig& config() const { return cfg_; }
@@ -43,7 +43,7 @@ private:
     AdamConfig        cfg_;
     int               n_;
     int               t_ = 0;
-    int               fresh_stride_ = 0, fresh_rows_ = 0, fresh_t_ = 0;
+    int               fresh_stride_ = 0, fresh_rows_ = 0, fresh_t_ = 0, fresh_width_ = 1;
     device_ptr<float> m_, v_;
     device_ptr<float> norm_partial_;
     device_ptr<float> norm_;

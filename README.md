@@ -34,17 +34,19 @@ closely; **Follow tadpole** returns to the swimmer. Zoom buttons, the mouse whee
 pinch gestures and + / − move continuously between close and wide views.
 All controls sit in the scrollable left column; there is no bottom dock.
 
-The live project now loads coverage chooser80 and frozen rate-response
-motor88. This pair passes12/12 two-minute pond cases and4/4 five-minute endurance
-cases with zero clearance stops or resets. Godot's native extension reproduces
-all3750 sampled states of a qualified five-minute trace exactly. The original
-motor and offset remain unchanged and accessible in Details. Previous chooser88
-is also preserved. Four continuous thirty-minute cases now cover32–45% each,
-up from21–30%; full pond coverage remains unfinished. One case slows below6mm/s
-for11.1s without touching terrain. See the [individual coverage results](assets/research-evidence/pond-flexible-tail-coverage-v1/README.md).
+The live project now loads appended-feedback chooser16 and frozen rate-response
+motor88. It keeps all32 local inputs and adds three distant visitation inputs,
+initialized with zero weights before training. This pair passes12/12 two-minute
+pond cases,4/4 five-minute and4/4 thirty-minute physical tests without guard
+stops or resets. Worst/mean individual coverage rises31.88/37.90%→42.61/43.91%.
+The default start slightly declines44.93→43.77%; full pond coverage remains
+unfinished. The longest interval below6mm/s is8.14s, down from11.1s. Old choosers
+80/88 and all motor files remain preserved. Godot reproduces all3750 sampled
+states of the selected five-minute trace exactly, and the updated bundle passes
+215 rendered UI checks. See the [appended feedback results](assets/research-evidence/pond-flexible-tail-appended-coverage-v3/README.md).
 
 The latest chooser continuation used1,024 CUDA worlds and128 new PPO updates
-with novelty-weighted transport reward; it is complete and no background
+with the unchanged novelty-weighted transport reward; it is complete and no background
 learner runs in the viewer.
 These finite calm-pond results do not guarantee infinite survival, complete
 pond coverage, other depths or currents. See [qualification and adoption](assets/research-evidence/pond-flexible-tail-reliable-chooser-v1/README.md)

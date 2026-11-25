@@ -1,0 +1,1 @@
+{"pass":true,"inputs_before":32,"inputs_after":35,"worlds":1024,"GPU_actor_difference":0,"GPU_critic_difference":0,"legacy_checkpoint_roundtrip_exact":true,"new_actor_critic_weights_and_moments_zero":true,"fresh_actor_Adam_age":0,"fresh_critic_Adam_age":0,"physics_steps":0,"optimizer_updates":0}
