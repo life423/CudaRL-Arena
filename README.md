@@ -26,12 +26,13 @@ build; current-capable swimming is not yet qualified.
 ## Current state
 
 **Open Tadpole Pond | Flexible Tail in Godot Project Manager and click Run.**
-In **Live pond**, press **Explore pond**. The saved neural chooser selects its
+Press **Explore pond** in the left column. The saved neural chooser selects its
 own turn rate and speed, with the frozen motor producing physical swimming.
-**P** plays or pauses; **Restart** returns to the initial state. **Details**
-contains the preserved **Manual turns · Original motor** mode with Q / E turns.
-**Pond view**, **Zoom to tadpole** and the zoom controls adjust the camera.
-**Recordings** opens the saved swimming, turning and station-holding clips.
+**P** plays or pauses. **Details** contains Restart, recordings, and the preserved
+**Original motor** mode with Q / E turns. **Pond view** frames the pond more
+closely; **Follow tadpole** returns to the swimmer. Zoom buttons, the mouse wheel,
+pinch gestures and + / − move continuously between close and wide views.
+All controls sit in the scrollable left column; there is no bottom dock.
 
 The live project now loads reliable-turn chooser88 and frozen rate-response
 motor88. This pair passes12/12 two-minute pond cases and4/4 five-minute endurance

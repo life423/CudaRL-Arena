@@ -1,5 +1,14 @@
 # Workspace instructions
 
+## Godot camera and controls — November 25, 2026
+
+Keep controls in the scrollable left column. The user removed the white bottom
+dock and permanent mode tabs. Explore/Pause, zoom, Pond view/Follow and Details
+are primary; Restart, recordings and the preserved original motor live under
+Details. Keep continuous intermediate zoom and close portrait pond framing,
+with full-pond zoom still available. This presentation change preserves all
+policy/native/habitat hashes. See docs/POND_CAMERA_SIDEBAR_2026-11-25.md.
+
 ## Reliable-turn chooser authorization — November 25, 2026
 
 Latest user authorization is options1,2,7: five turn rates including±4deg/s,

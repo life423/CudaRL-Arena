@@ -12,8 +12,10 @@ const LIVE_CONTROL_S := 0.02
 const MAX_CONTROLS_PER_FRAME := 5
 const COURSE_OFFSET := Vector3(0, 0.7, 0)
 const ZOOM_STEP := 1.16
-const MIN_FOLLOW_SCALE := 0.65
-const MAX_FOLLOW_SCALE := 3.0
+const MIN_ZOOM_SPAN := 8.8
+const UI_SURFACE := Color("173e35")
+const UI_TEXT := Color("eff8ed")
+const UI_ACCENT := Color("b4e3cd")
 const MOVEMENT_PHASES := {
 	"swim": [{"time_s": 0, "label": "Swimming straight"}],
 	"turn": [{"time_s": 0, "label": "Swimming straight"}, {"time_s": 6, "label": "Turning · 30° request"}],
@@ -46,12 +48,13 @@ class TracePhase:
 @onready var live_options: VBoxContainer = %LiveOptions
 @onready var control_mode: OptionButton = %ControlMode
 @onready var restart: Button = %Restart
-@onready var live_controls: HBoxContainer = %LiveControls
+@onready var live_controls: VBoxContainer = %LiveControls
 @onready var playback_controls: VBoxContainer = %Playback
 @onready var open_trace: Button = %Open
 @onready var message: PanelContainer = %Message
 @onready var status: Label = %Status
-@onready var transport: PanelContainer = %Transport
+@onready var transport: VBoxContainer = %Transport
+@onready var sidebar: ScrollContainer = %Sidebar
 @onready var play: Button = %Play
 @onready var timeline: HSlider = %Timeline
 @onready var clock: Label = %Time
@@ -75,7 +78,13 @@ var live_accumulator := 0.0
 var live_step_s := LIVE_CONTROL_S
 var autonomous := true
 var showing_pond := false
-var follow_scale := 1.0
+var zoom_span := 14.0
+var close_span := 14.0
+var pond_span := 140.0
+var pond_preset_span := 120.0
+var last_pinch_frame := -1
+var last_pinch_factor := 0.0
+var last_pinch_position := Vector2.INF
 var follow_center := Vector3.ZERO
 var habitat := preload("res://pond_landscape.gd").new()
 var head := Node3D.new()
@@ -92,9 +101,14 @@ func _ready() -> void:
 	for button in [open_trace, pond_view, zoom_in, zoom_out, play, live_play, restart, live_details, control_mode]:
 		_style_button(button)
 	for button in [live_mode, review_mode, turn_left, turn_right, %Swim, %Turn, %Hold]:
-		_style_button(button, true)
-	_style_mode_tabs()
+		_style_button(button)
 	_style_timeline()
+	for readout in [live_status, %Qualification, clock]:
+		var surface := StyleBoxFlat.new()
+		surface.bg_color = UI_SURFACE
+		surface.set_corner_radius_all(9)
+		surface.set_content_margin_all(8)
+		readout.add_theme_stylebox_override("normal", surface)
 	open_trace.pressed.connect(func(): trace_dialog.popup_centered_clamped())
 	live_mode.pressed.connect(_show_live)
 	review_mode.pressed.connect(_show_recordings)
@@ -103,11 +117,10 @@ func _ready() -> void:
 	live_details.pressed.connect(func():
 		live_options.visible = not live_options.visible
 		live_details.set_pressed_no_signal(live_options.visible)
-		_fit_dock_height.call_deferred())
+		_fit_camera())
 	control_mode.item_selected.connect(_select_control_mode)
 	turn_left.pressed.connect(_request_live_turn.bind(1))
 	turn_right.pressed.connect(_request_live_turn.bind(-1))
-	transport.minimum_size_changed.connect(_fit_dock_height.call_deferred)
 	pond_view.pressed.connect(_toggle_pond_view)
 	zoom_in.pressed.connect(_zoom_by.bind(1.0 / ZOOM_STEP))
 	zoom_out.pressed.connect(_zoom_by.bind(ZOOM_STEP))
@@ -126,14 +139,17 @@ func _ready() -> void:
 
 func _set_reviewing(value: bool) -> void:
 	reviewing = value
-	live_mode.set_pressed_no_signal(not reviewing)
-	review_mode.set_pressed_no_signal(reviewing)
+	live_mode.visible = reviewing
+	review_mode.visible = not reviewing
 	live_controls.visible = not reviewing
 	live_status.visible = not reviewing
-	live_options.visible = not reviewing and live_details.button_pressed
+	live_options.visible = live_details.button_pressed
+	control_mode.visible = not reviewing
+	restart.visible = not reviewing
+	%Qualification.visible = not reviewing
 	playback_controls.visible = reviewing
 	open_trace.visible = reviewing
-	source.text = "Recorded physics" if reviewing else ("Live · Learned exploration" if autonomous else "Live · Original motor")
+	source.text = "Recorded physics" if reviewing else ("Live · Autonomous" if autonomous else "Live · Original motor")
 	_fit_camera()
 
 func _show_live() -> void:
@@ -206,7 +222,7 @@ func _select_control_mode(index: int) -> void:
 	autonomous = index == 0
 	live_motor = null
 	live_snapshot = {}
-	source.text = "Live · Learned exploration" if autonomous else "Live · Original motor"
+	source.text = "Live · Autonomous" if autonomous else "Live · Original motor"
 	_load_live_motor()
 	_render_live_snapshot()
 	_update_live_controls()
@@ -243,7 +259,7 @@ func _update_live_controls() -> void:
 	live_play.disabled = not ready or fault != 0
 	turn_left.disabled = live_play.disabled or queued != 0
 	turn_right.disabled = turn_left.disabled
-	%ManualControls.visible = not autonomous
+	%ManualControls.visible = not autonomous and not reviewing
 	%Qualification.text = "Verified: 12 pond starts + 4 five-minute runs.\nSaved policies; no training in this view." if autonomous else "Original saved motor. Q / E request 15° turns.\nSwitch modes to return to learned exploration."
 	restart.disabled = not ready
 	live_play.text = "Pause" if live_playing else ("Explore pond" if autonomous else "Play")
@@ -353,42 +369,30 @@ func _build_world() -> void:
 	get_viewport().size_changed.connect(_fit_camera)
 	_fit_camera()
 
-func _style_button(button: Button, secondary: bool = false) -> void:
+func _style_button(button: Button) -> void:
+	var primary := button == live_play or button == play
 	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var surface := StyleBoxFlat.new()
 		surface.set_corner_radius_all(9)
 		surface.content_margin_left = 10.0
 		surface.content_margin_right = 10.0
 		match state:
-			"normal": surface.bg_color = Color("e5ece2" if secondary else "285e50")
-			"hover": surface.bg_color = Color("d4e4da" if secondary else "326d5d")
-			"pressed": surface.bg_color = Color("214d42")
-			"disabled": surface.bg_color = Color("e8ebe2")
+			"normal": surface.bg_color = UI_ACCENT if primary else UI_SURFACE
+			"hover": surface.bg_color = Color("c9efdd") if primary else Color("285e50")
+			"pressed": surface.bg_color = Color("8dc7ac") if primary else Color("326d5d")
+			"disabled": surface.bg_color = Color("243f36")
 			"focus":
 				surface.draw_center = false
 				surface.set_border_width_all(2)
-				surface.border_color = Color("e0ffe9") if view_controls.is_ancestor_of(button) else Color("173d3d")
+				surface.border_color = UI_ACCENT
 				surface.set_expand_margin_all(2)
 		button.add_theme_stylebox_override(state, surface)
-	var text_color := Color("173d3d" if secondary else "f9fff9")
+	var text_color := Color("173e35") if primary else UI_TEXT
 	button.add_theme_color_override("font_color", text_color)
 	button.add_theme_color_override("font_hover_color", text_color)
-	button.add_theme_color_override("font_pressed_color", Color("f9fff9"))
-	button.add_theme_color_override("font_hover_pressed_color", Color("f9fff9"))
-	button.add_theme_color_override("font_disabled_color", Color("59685e"))
-
-func _style_mode_tabs() -> void:
-	var selected := StyleBoxFlat.new()
-	selected.set_corner_radius_all(9)
-	selected.content_margin_left = 10.0
-	selected.content_margin_right = 10.0
-	selected.bg_color = Color("d2e5d8")
-	selected.set_border_width_all(1)
-	selected.border_color = Color("7b9f8d")
-	for button in [live_mode, review_mode]:
-		button.add_theme_color_override("font_pressed_color", Color("173d3d"))
-		button.add_theme_color_override("font_hover_pressed_color", Color("173d3d"))
-		button.add_theme_stylebox_override("pressed", selected)
+	button.add_theme_color_override("font_pressed_color", text_color)
+	button.add_theme_color_override("font_hover_pressed_color", text_color)
+	button.add_theme_color_override("font_disabled_color", Color("9eb5a7"))
 
 func _style_timeline() -> void:
 	for part in ["slider", "grabber_area", "grabber_area_highlight"]:
@@ -414,7 +418,7 @@ func _style_timeline() -> void:
 	focus.set_corner_radius_all(5)
 	focus.draw_center = false
 	focus.set_border_width_all(2)
-	focus.border_color = Color("173d3d")
+	focus.border_color = UI_ACCENT
 	timeline.add_theme_stylebox_override("focus", focus)
 
 func _sphere(parent: Node3D, at: Vector3, dimensions: Vector3, color: Color) -> void:
@@ -660,29 +664,26 @@ func _render_metrics(time: float, first: TraceFrame, next: TraceFrame, weight: f
 	metrics.visible = not readout.is_empty()
 
 func _place_camera(center: Vector3) -> void:
-	if showing_pond:
-		center = Vector3.ZERO
-		var radius := habitat.water_radii_m.x / METRES_PER_UNIT
-		camera.position = center + Vector3(0.0, radius * 1.37, radius * 1.02) * 1.65
-	else:
-		camera.position = center + Vector3(0.85, 11.1, 7.1)
+	# Blend framing across one continuous orthographic zoom range.
+	var overview := smoothstep(close_span * 2.0, pond_preset_span * 0.9, zoom_span)
+	center = center.lerp(Vector3.ZERO, overview)
+	camera.position = center + Vector3(0.03, 1.4, 1.0).normalized() * maxf(30.0, zoom_span * 2.0)
 	camera.look_at(center)
+	camera.size = zoom_span
+	# Reserve the left column without changing the world's scale or creature size.
+	camera.h_offset = -sidebar.offset_right * 0.5 / maxf(get_viewport().get_visible_rect().size.y, 1.0) * zoom_span
+	showing_pond = overview > 0.5
+	pond_view.text = "Follow tadpole" if showing_pond else "Pond view"
+	creature_marker.visible = head.visible and showing_pond
 
 func _toggle_pond_view() -> void:
-	showing_pond = not showing_pond
-	pond_view.text = "Zoom to tadpole" if showing_pond else "Pond view"
-	creature_marker.visible = head.visible and showing_pond
-	_place_camera(follow_center)
+	zoom_span = close_span if showing_pond else pond_preset_span
 	_fit_camera()
 
 func _zoom_by(factor: float) -> void:
 	if not is_finite(factor) or factor <= 0.0:
 		return
-	if showing_pond:
-		if factor < 1.0:
-			_toggle_pond_view()
-		return
-	follow_scale = clampf(follow_scale * factor, MIN_FOLLOW_SCALE, MAX_FOLLOW_SCALE)
+	zoom_span = clampf(zoom_span * factor, close_span * 0.65, pond_span * 1.15)
 	_fit_camera()
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -714,39 +715,37 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			factor = ZOOM_STEP
 	elif event is InputEventMagnifyGesture and event.factor > 0.0:
+		# Godot 4.4's injected gesture path delivers an identical transformed copy.
+		# Coalesce identical packets within a frame without throttling other inputs.
+		var frame := Engine.get_process_frames()
+		if frame == last_pinch_frame and event.factor == last_pinch_factor and event.position == last_pinch_position:
+			return
+		last_pinch_frame = frame
+		last_pinch_factor = event.factor
+		last_pinch_position = event.position
 		factor = 1.0 / event.factor
 	if factor == 0.0:
 		return
-	for control in [view_controls, transport, header]:
-		if control.get_global_rect().has_point(event.position):
-			return
+	if sidebar.get_global_rect().has_point(event.position):
+		return
 	_zoom_by(factor)
 	get_viewport().set_input_as_handled()
 
 func _fit_camera() -> void:
 	var window := get_viewport().get_visible_rect().size
-	var aspect := maxf(window.x, 1.0) / maxf(window.y, 1.0)
-	# On short displays keep expanded controls clear of the header and zoom.
-	var compact_details := not reviewing and live_details.button_pressed and window.y < 500.0
-	header.visible = not compact_details
-	view_controls.visible = not compact_details
-	if showing_pond:
-		var radii := habitat.water_radii_m / METRES_PER_UNIT
-		camera.size = maxf(radii.x * 2.42 / aspect, (radii.y * .87 + 8.0) * 2.65)
-	else:
-		# Leave room for the full tail at the closest zoom on narrow windows.
-		camera.size = maxf(9.8, 11.8 / aspect) * follow_scale
-	zoom_in.disabled = not showing_pond and follow_scale <= MIN_FOLLOW_SCALE
-	zoom_out.disabled = showing_pond or follow_scale >= MAX_FOLLOW_SCALE
-	title.add_theme_font_size_override("font_size", 20 if window.x <= 420.0 else 22)
-	header.offset_right = minf(252.0, window.x - view_controls.get_combined_minimum_size().x - 24.0)
-	var dock_half_width := minf(280.0 if reviewing else 230.0, window.x / 2.0 - 16.0)
-	transport.offset_left = -dock_half_width
-	transport.offset_right = dock_half_width
-	_fit_dock_height.call_deferred()
-
-func _fit_dock_height() -> void:
-	transport.offset_top = transport.offset_bottom - transport.get_combined_minimum_size().y
+	sidebar.offset_right = 172.0 if window.x <= 480 else 196.0
+	var available_aspect := maxf(window.x - sidebar.offset_right - 16.0, 100.0) / maxf(window.y, 1.0)
+	close_span = maxf(MIN_ZOOM_SPAN, 12.0 / available_aspect)
+	var radii := habitat.water_radii_m / METRES_PER_UNIT
+	pond_span = maxf(radii.x * 2.0 / available_aspect, radii.y * 2.0 * 0.82)
+	# Portrait framing may crop the outer banks instead of shrinking the pond
+	# into the narrow space beside the controls. Full-pond zoom remains available.
+	pond_preset_span = minf(pond_span * 0.85, radii.y * 2.0 * 0.82 * 1.5)
+	zoom_span = clampf(zoom_span, close_span * 0.65, pond_span * 1.15)
+	zoom_in.disabled = zoom_span <= close_span * 0.65 + 0.001
+	zoom_out.disabled = zoom_span >= pond_span * 1.15 - 0.001
+	title.add_theme_font_size_override("font_size", 18 if window.x <= 480.0 else 20)
+	_place_camera(follow_center)
 
 func _draw_tail(spine: PackedVector3Array, rotation: Quaternion) -> void:
 	var centerline := PackedVector3Array()
