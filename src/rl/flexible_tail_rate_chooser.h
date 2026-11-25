@@ -147,7 +147,18 @@ CUDARL_HD inline Result advance(World& w, const float* gait, const float* packed
         w.min_speed_m_s = fminf(w.min_speed_m_s, speed);
         w.transport_m += physics::norm(chooser::horizontal(w.pose.com_m - before));
         const float seconds = step.controls * motor_control_s;
-        if (speed >= .006f) { w.stall_s = 0; out.reward += seconds * .04f; }
+        if (speed >= .006f) {
+            w.stall_s = 0;
+#if defined(CUDARL_COVERAGE_CHOOSER)
+            // Transport into new water keeps full value. Safe circles through
+            // recently credited cells retain only a small maintenance reward.
+            // This scores actual movement; it neither selects nor alters actions.
+            const float novelty = chooser::novelty_at(w, w.pose.com_m, motor.navigation.motion.controls);
+            out.reward += seconds * .04f * (.05f + .95f * novelty);
+#else
+            out.reward += seconds * .04f;
+#endif
+        }
         else { w.stall_s += seconds; out.reward -= seconds * .10f; }
         w.max_stall_s = fmaxf(w.max_stall_s, w.stall_s);
         out.reward += chooser::visit_reward_at(w, w.pose.com_m, motor.navigation.motion.controls, speed);

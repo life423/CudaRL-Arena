@@ -69,7 +69,11 @@ target_include_directories(pond_flexible_tail_chooser_session PRIVATE
 
 # Same batch/PPO implementation, explicitly versioned rate/speed request task.
 option(CUDARL_RELIABLE_CHOOSER "Fifteen-action chooser with demonstrated-competence bank curriculum" OFF)
-set(rate_identity "rate-chooser-v1;reliable_${CUDARL_RELIABLE_CHOOSER};sm_${CMAKE_CUDA_ARCHITECTURES};fmad=false")
+option(CUDARL_COVERAGE_CHOOSER "Novelty-weighted safe transport reward for coverage continuation" OFF)
+if(CUDARL_COVERAGE_CHOOSER AND NOT CUDARL_RELIABLE_CHOOSER)
+    message(FATAL_ERROR "Coverage continuation requires the fifteen-action chooser")
+endif()
+set(rate_identity "rate-chooser-v1;reliable_${CUDARL_RELIABLE_CHOOSER};coverage_${CUDARL_COVERAGE_CHOOSER};sm_${CMAKE_CUDA_ARCHITECTURES};fmad=false")
 foreach(path IN ITEMS train.cu rate_session.cuh bank_training_starts.h
     ../../src/rl/flexible_tail_rate_chooser.h ../../src/rl/flexible_tail_bank_observation.h
     ../../src/rl/flexible_tail_chooser.h ../../src/rl/flexible_tail_fast_steering.h
@@ -98,4 +102,7 @@ target_link_libraries(pond_flexible_tail_rate_evaluate PRIVATE Threads::Threads)
 if(CUDARL_RELIABLE_CHOOSER)
     target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_RELIABLE_CHOOSER=1)
     target_compile_definitions(pond_flexible_tail_rate_evaluate PRIVATE CUDARL_RELIABLE_CHOOSER=1)
+endif()
+if(CUDARL_COVERAGE_CHOOSER)
+    target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_COVERAGE_CHOOSER=1)
 endif()

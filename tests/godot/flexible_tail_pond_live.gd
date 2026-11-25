@@ -15,7 +15,9 @@ func _run() -> void:
 		quit(1)
 		return
 	var data := ProjectSettings.globalize_path("res://live_data/")
-	if not live.load_autonomous(data + "fitted-gait.bin", data + "exploration-motor-88.bin", data + "exploration-chooser-88.bin", data + "straight-evaluation-starts.bin"):
+	var deployment: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(data + "exploration-deployment.json"))
+	var chooser_file := String(deployment.get("active_chooser_file", "exploration-chooser-88.bin"))
+	if not live.load_autonomous(data + "fitted-gait.bin", data + "exploration-motor-88.bin", data + chooser_file, data + "straight-evaluation-starts.bin"):
 		push_error(live.get_error())
 		quit(1)
 		return

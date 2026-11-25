@@ -1,5 +1,20 @@
 # Workspace instructions
 
+## Individual coverage continuation — November 25, 2026
+
+The user authorized improving actual whole-pond exploration. Read
+tools/pond-flexible-tail-chooser/COVERAGE_PROTOCOL.md and
+assets/research-evidence/pond-flexible-tail-coverage-v1/README.md.
+The session is CLOSED at 128 new updates on 1,024 CUDA worlds, 141.535s.
+Its opt-in novelty-weighted transport reward leaves motor88 and physics frozen.
+Explicit full-state import from chooser88 and three-update exact resume pass.
+Selected80 passes 12+4 original gates and four uninterrupted 30-minute starts,
+raising worst/mean individual coverage 21.45/24.35%→31.88/37.90%. One run slows
+for11.1s below6mm/s while clear of terrain. No candidate reaches80% coverage.
+Godot adopts coverage80 through active_chooser_file in the manifest, preserving
+chooser88 and every motor. Native parity3,750 and UI215 pass. No background
+trainer remains; do not silently rerun or call this whole-pond mastery.
+
 ## Godot camera and controls — November 25, 2026
 
 Keep controls in the scrollable left column. The user removed the white bottom

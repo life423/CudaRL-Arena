@@ -1,5 +1,14 @@
 # Native PPO chooser workflow
 
+The latest coverage continuation is closed at 128 updates. Godot uses its
+selected chooser80 with frozen motor88; individual 30-minute coverage is
+32–45%, not full pond coverage. Read [results](../../assets/research-evidence/pond-flexible-tail-coverage-v1/README.md)
+and [the finite protocol](COVERAGE_PROTOCOL.md). `run-coverage-session.ps1`
+uses the compiled opt-in coverage/reliable targets, the recorded baseline and
+an explicit full-state parent import. It refuses an existing training output;
+it does not restart this closed study. Historical workflows below remain
+available with their original model/task contracts.
+
 Use `run-session.ps1` for sustained training with 1,024 CUDA worlds.
 The runner builds the native Release executables when their bound source
 changes, launches one continuing session, and evaluates saved candidates

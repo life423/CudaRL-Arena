@@ -1,5 +1,16 @@
 # AI status — November 25, 2026
 
+**Individual coverage improves; whole-pond exploration remains unfinished.**
+Coverage-v1 completed 128 native CUDA PPO chooser updates on 1,024 worlds in
+141.535s, preserving motor88. Selected80 raises worst/mean individual 30-minute
+coverage from 21.45/24.35% to 31.88/37.90%; the Godot start improves 23.48→44.93%.
+All 12 short, four five-minute and four thirty-minute cases pass physical gates,
+with zero guard stops/resets. One case slows below 6mm/s for 11.1s while clear
+of terrain. None reaches the new 80% coverage milestone. Candidate80 is adopted
+in Godot after exact 3,750-state replay and 215 UI checks. Chooser88, all motor
+weights and native physics remain preserved. The session is closed at its cap.
+[Results and limits](../assets/research-evidence/pond-flexible-tail-coverage-v1/README.md)
+
 **Godot camera and controls updated locally.** The white bottom dock is removed.
 The left column holds Explore/Pause, continuous zoom, closer Pond view and
 Details. Restart, recordings and the preserved original motor are under Details.

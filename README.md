@@ -34,14 +34,18 @@ closely; **Follow tadpole** returns to the swimmer. Zoom buttons, the mouse whee
 pinch gestures and + / − move continuously between close and wide views.
 All controls sit in the scrollable left column; there is no bottom dock.
 
-The live project now loads reliable-turn chooser88 and frozen rate-response
+The live project now loads coverage chooser80 and frozen rate-response
 motor88. This pair passes12/12 two-minute pond cases and4/4 five-minute endurance
 cases with zero clearance stops or resets. Godot's native extension reproduces
 all3750 sampled states of a qualified five-minute trace exactly. The original
-motor and offset remain unchanged and accessible in Details.
+motor and offset remain unchanged and accessible in Details. Previous chooser88
+is also preserved. Four continuous thirty-minute cases now cover32–45% each,
+up from21–30%; full pond coverage remains unfinished. One case slows below6mm/s
+for11.1s without touching terrain. See the [individual coverage results](assets/research-evidence/pond-flexible-tail-coverage-v1/README.md).
 
-Chooser training used1,024 CUDA worlds,128 PPO updates and a bank-approach
-curriculum; it is complete and no background learner runs in the viewer.
+The latest chooser continuation used1,024 CUDA worlds and128 new PPO updates
+with novelty-weighted transport reward; it is complete and no background
+learner runs in the viewer.
 These finite calm-pond results do not guarantee infinite survival, complete
 pond coverage, other depths or currents. See [qualification and adoption](assets/research-evidence/pond-flexible-tail-reliable-chooser-v1/README.md)
 and [current AI status](docs/AI_STATUS.md). Earlier programs and their failures

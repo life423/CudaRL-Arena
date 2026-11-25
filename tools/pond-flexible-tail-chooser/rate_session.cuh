@@ -5,9 +5,9 @@
 struct RateIdentity { uint64_t gait=0, motor=0, starts=0; tail::steering::Kind kind{};
     tail::steering::Config config{}; };
 
-void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id) {
+void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id, const char* task_id=CUDARL_RATE_TASK_ID) {
     out.value<uint32_t>(0x52435446); out.value<uint32_t>(1); // FTCR
-    const std::string task(CUDARL_RATE_TASK_ID);
+    const std::string task(task_id);
     out.array(std::vector<char>(task.begin(),task.end()));
     for (int x : {worlds,decisions,channels,actions,batch_size,epochs,macro_controls,max_updates}) out.value(x);
     out.value<uint32_t>(sizeof(Lane)); out.value<uint32_t>(sizeof(Counts));
@@ -16,9 +16,10 @@ void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id) {
     out.value(larger_pond);
 }
 std::vector<uint8_t> rate_payload(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic,
-    nn::GpuAdam& aa, nn::GpuAdam& ca, const Ledger& l, const RateIdentity& id, cudaStream_t stream) {
+    nn::GpuAdam& aa, nn::GpuAdam& ca, const Ledger& l, const RateIdentity& id, cudaStream_t stream,
+    const char* task_id=CUDARL_RATE_TASK_ID) {
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
-    cudarl::checkpoint::Writer out;rate_header(out,id);
+    cudarl::checkpoint::Writer out;rate_header(out,id,task_id);
     out.value(l.completed);out.value(l.actor_steps);out.value(l.critic_steps);
     out.array(actor.get_params());out.array(critic.get_params());aa.save(out);ca.save(out);
     std::vector<Lane> lanes(worlds);std::vector<Counts> counts(worlds);
@@ -26,8 +27,9 @@ std::vector<uint8_t> rate_payload(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& 
     out.array(lanes);out.array(counts);return std::move(out.data);
 }
 void rate_restore(const std::vector<uint8_t>& bytes, Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic,
-    nn::GpuAdam& aa, nn::GpuAdam& ca, Ledger& l,const RateIdentity& id,cudaStream_t stream) {
-    cudarl::checkpoint::Writer header;rate_header(header,id);
+    nn::GpuAdam& aa, nn::GpuAdam& ca, Ledger& l,const RateIdentity& id,cudaStream_t stream,
+    const char* task_id=CUDARL_RATE_TASK_ID) {
+    cudarl::checkpoint::Writer header;rate_header(header,id,task_id);
     if(bytes.size()<header.data.size() || !std::equal(header.data.begin(),header.data.end(),bytes.begin()))
         throw std::runtime_error("Rate chooser task/input/schema identity mismatch");
     cudarl::checkpoint::Reader in{bytes};in.position=header.data.size();
@@ -90,9 +92,10 @@ void rate_result(const fs::path& dir,const Ledger& l,bool verification) {
 int rate_main(int argc,char** argv) {
     fs::path output;
     try {
-        if(argc!=9)throw std::runtime_error("Usage: rate_chooser new|verify|resume GAIT MOTOR STARTS OUT UPDATES WALL MATERIAL(0|1)");
-        const std::string mode=argv[1];const bool verify=mode=="verify",resume=mode=="resume";
-        if(mode!="new"&&!verify&&!resume)throw std::runtime_error("Invalid rate session mode");
+        if(argc!=9&&argc!=11)throw std::runtime_error("Usage: rate_chooser new|verify|resume|fork|verify-fork GAIT MOTOR STARTS OUT UPDATES WALL MATERIAL [PARENT_CHECKPOINT PARENT_TASK_ID]");
+        const std::string mode=argv[1];const bool verify=mode=="verify"||mode=="verify-fork",resume=mode=="resume";
+        const bool fork=mode=="fork"||mode=="verify-fork";
+        if((mode!="new"&&!verify&&!resume&&!fork)||(fork!=(argc==11)))throw std::runtime_error("Invalid rate session mode/parent arguments");
         output=fs::u8path(argv[5]);const int target=std::stoi(argv[6]);const double wall=std::stod(argv[7]);
         const int material=std::stoi(argv[8]);
         if(target<1||target>max_updates||!std::isfinite(wall)||wall<=0||wall>1200||material<0||material>1)
@@ -157,7 +160,26 @@ int rate_main(int argc,char** argv) {
             prior_used=b.value<double>();b.finish();
             if(!std::isfinite(prior_used)||prior_used<0||prior_used>=wall)throw std::runtime_error("Rate wall budget spent");
             rate_restore(restored,roll,actor,critic,aa,ca,ledger,id,stream.value);
-        }else rate_publish(output,roll,actor,critic,aa,ca,ledger,id,stream.value);
+        }else {
+            if(fork){
+                const std::string parent_task=argv[10];
+                if(parent_task.size()!=64||!std::all_of(parent_task.begin(),parent_task.end(),[](char c){return (c>='0'&&c<='9')||(c>='a'&&c<='f');}))
+                    throw std::runtime_error("Invalid explicit parent task identity");
+                const auto parent=cudarl::checkpoint::read(argv[9]);
+                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str());
+                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str());
+                if(parent!=roundtrip) throw std::runtime_error("Parent import did not preserve full state exactly");
+                std::ofstream imported(output/"parent-import.json");
+                imported<<"{\"pass\":true,\"full_state_exact_before_counter_rebase\":true,\"parent_update\":"<<ledger.completed
+                    <<",\"parent_checksum\":"<<cudarl::checkpoint::checksum(parent)<<",\"parent_task\":\""<<parent_task
+                    <<"\",\"physics_steps\":0,\"optimizer_updates\":0}\n";
+                // New study budget and sampling counter; retain actor, critic,
+                // Adam ages/moments, physical worlds, episode/RNG and visit state.
+                ledger.completed=ledger.started=0; ledger.counts={};
+                zero(roll.counts.get(),roll.counts.size_bytes(),stream.value);
+            }
+            rate_publish(output,roll,actor,critic,aa,ca,ledger,id,stream.value);
+        }
         auto save_budget=[&](double used){
             cudarl::checkpoint::Writer b;b.value<uint32_t>(1);
             b.value(cudarl::checkpoint::checksum(cudarl::checkpoint::read((output/"latest.checkpoint").u8string())));
