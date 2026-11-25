@@ -1,0 +1,20 @@
+{
+  "original_baseline_cases_sha256": "ba773ff92a0f1c6fcb83a9799f5727e396f44ead7259df28be22c6781e590023",
+  "input_history": "Half-second whole-body COM history; unchanged signed target channel41",
+  "pass_criteria": "Unchanged fixed400control/800late-substep scoring, projected speed>=6mm/s, course error<=5deg, wholecase depth<=1mm and tilt<=10deg",
+  "executable_sha256": "7a6e6a7ea5a8d5b22a9d99dd0740f543ae31d7eae4b292148bae7c2d924a2413",
+  "parent_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "PPO_updates": 0,
+  "max_process_wall_seconds": 4,
+  "fixed_turn_cases": 16,
+  "optimizer_steps": 0,
+  "protocol_id": "motor336-dual-view-pitch-context-v1-2026-11-24",
+  "max_controls": 6400,
+  "context_baseline_cases_sha256": "d936f68f3d011297266ff65f6523336925f25da9a3f84c5093ab524f097a7581",
+  "diagnostic_sha256": "9c9094f946cb9730edfb2759fa053f6b5514a138d1b70bbf55063fee81bd83ab",
+  "scorer_copy_sha256": "078b7cc3c66b9718f0f7ffae3d523ece44420bc76a53c1f647c8c93a18b90059",
+  "context_helper_sha256": "63ea0707d2e148356da683257874624eba11917ee045e022cb6a9b07523344de",
+  "workers": 8,
+  "max_substeps": 64000,
+  "inference": "Both views use unchanged motor336 weights; true request latent indices0,2 and measured-course-context latent indices1,3 combined before unchanged tanh,servo,water physics"
+}

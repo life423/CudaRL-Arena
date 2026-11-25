@@ -1,0 +1,375 @@
+{
+  "worlds": 1024,
+  "decisions": 64,
+  "created_utc": "2026-11-24T19:46:13.5648101Z",
+  "feedback": "whole-beat",
+  "training_wall_budget_s": 1200,
+  "schema": 1,
+  "inputs": [
+    {
+      "path": "build/flexible-tail/yaw-beat-v1/capture/eval-turn-worlds.bin",
+      "sha256": "4902A5050A09101D8E7115EE43DDF99F3288B99EF539A525548A5D3FC727BF1E"
+    },
+    {
+      "path": "build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin",
+      "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+      "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+      "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/yaw-offset-update-8.bin",
+      "sha256": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354"
+    },
+    {
+      "path": "flexible-tail-preview/habitat.json",
+      "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+    },
+    {
+      "path": "src/physics/flexible_tail.h",
+      "sha256": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src/core/checkpoint.cpp",
+      "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770"
+    },
+    {
+      "path": "src/core/checkpoint.h",
+      "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D"
+    },
+    {
+      "path": "src/core/hd.h",
+      "sha256": "CB1105C3CE5ED2D53C838344ED4FAE35F4BBDAA99AC0599E9B60948E7D4AF030"
+    },
+    {
+      "path": "src/core/rng.h",
+      "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627"
+    },
+    {
+      "path": "src/cuda/block_reduce.h",
+      "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77"
+    },
+    {
+      "path": "src/cuda/cuda_memory.h",
+      "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00"
+    },
+    {
+      "path": "src/cuda/device.cu",
+      "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F"
+    },
+    {
+      "path": "src/cuda/device.h",
+      "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D"
+    },
+    {
+      "path": "src/cuda/pond_geometry_inspect_link.cu",
+      "sha256": "05841C89C925E76174F88E4EC6DAC000BF9197FA9648C96FE5AFC564A882062B"
+    },
+    {
+      "path": "src/cuda/pond_geometry_inspect.cu",
+      "sha256": "06630CDDC21A428DF9239563F8029FFE2573F708AE94580A3926FE24BA378143"
+    },
+    {
+      "path": "src/cuda/pond_math_profile.h",
+      "sha256": "9E7179A62B0BDD029C22F7C803B136B0A01F9D181FDB1CA436A75A8E696B7968"
+    },
+    {
+      "path": "src/environment/flexible_tail_clearance.h",
+      "sha256": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1"
+    },
+    {
+      "path": "src/environment/pond_body_geometry.h",
+      "sha256": "D01D3A4845F63F084E4F5456F7542067924823A7C78BA8EEAC8BCB2D91BF3008"
+    },
+    {
+      "path": "src/environment/pond_geometry_v1.h",
+      "sha256": "695A985B8C72C347925D5425882B795E8D7AD4B4BA5F47D7B35FABC21F613AF3"
+    },
+    {
+      "path": "src/environment/pond_swept_clearance.h",
+      "sha256": "BACD2B69F64020F9BC90F782DF60C0A0126098DE2FD3F17AE1630C965AB9C270"
+    },
+    {
+      "path": "src/godot/flexible_tail_live.cpp",
+      "sha256": "0C9F9BD33A0F185A3668F815ACA88FB3F6A210CDACCD6E1423F26F35ED78B7BC"
+    },
+    {
+      "path": "src/godot/flexible_tail_live.h",
+      "sha256": "93A714413988DF3408F72344AE785A4E7E5B7C6B4121DA3DFF864CCDAC86F259"
+    },
+    {
+      "path": "src/godot/hold_lab_preview.cpp",
+      "sha256": "5DDDDBAF7507D1CB4032377A150204E625C0CEE1A37FBF86EF3229128E5C01E3"
+    },
+    {
+      "path": "src/godot/hold_lab_preview.h",
+      "sha256": "5019559E4351AF5AFE000B2B0370B78831294E2D7CE25659623379372D557650"
+    },
+    {
+      "path": "src/godot/register_flexible_tail_live.cpp",
+      "sha256": "85FD9D3D6CBF078688DB6B38B91C89CDA6FC1CFCC37C4EC10512942ED601E5E4"
+    },
+    {
+      "path": "src/godot/register_live_types.cpp",
+      "sha256": "70B323CF74DC75AFEE1C5E4FEEB60DDFA49B6B9CAD5A97AC33FDFFA5145D9190"
+    },
+    {
+      "path": "src/nn/adam_config.h",
+      "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73"
+    },
+    {
+      "path": "src/nn/adam.cu",
+      "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3"
+    },
+    {
+      "path": "src/nn/adam.h",
+      "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9"
+    },
+    {
+      "path": "src/nn/gemm.cu",
+      "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4"
+    },
+    {
+      "path": "src/nn/gemm.h",
+      "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6"
+    },
+    {
+      "path": "src/nn/loss.cu",
+      "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572"
+    },
+    {
+      "path": "src/nn/loss.h",
+      "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA"
+    },
+    {
+      "path": "src/nn/mlp_cpu.h",
+      "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153"
+    },
+    {
+      "path": "src/nn/mlp_gpu.cu",
+      "sha256": "6052183959B9B692CA201701CA297CFE7A481F630B3342341142480FBF8CEBEE"
+    },
+    {
+      "path": "src/nn/mlp_gpu.h",
+      "sha256": "25DDC2BA76C9BF09099C8D18AB0CA4E1717D224B61FD8431E72AF16EA93A990C"
+    },
+    {
+      "path": "src/nn/mlp_spec.h",
+      "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF"
+    },
+    {
+      "path": "src/nn/motor/heading_request_observation.h",
+      "sha256": "D07B38E74F61120CECF0F52E1280CAA284DC5F046245A26628F9E1D5A24647C2"
+    },
+    {
+      "path": "src/nn/motor/hold_assessment.h",
+      "sha256": "CDDA2488E1AD54C902DFEC54FF1891E49E7638C50607ECF62D90DAFFBD8DC569"
+    },
+    {
+      "path": "src/nn/motor/joint_motor.h",
+      "sha256": "DC53D22CFF99352C5E378B6BCD919569C9A26455AA5DF9F8EC1C36172171314F"
+    },
+    {
+      "path": "src/nn/motor/movement_model.h",
+      "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5"
+    },
+    {
+      "path": "src/nn/motor/observation_contract.h",
+      "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332"
+    },
+    {
+      "path": "src/nn/motor/pond_motor_observation.h",
+      "sha256": "3CB25C6CC4538E6030A6BDE4DF49704BED6470A605B06E9D137A55AB1767103C"
+    },
+    {
+      "path": "src/nn/motor/saved_motor_contract.cpp",
+      "sha256": "98BA8BD500EDBFEF9C62B686E1B9C3946C3A6750DDEA94096ED29B7DD060F49A"
+    },
+    {
+      "path": "src/nn/motor/saved_motor_contract.h",
+      "sha256": "2CD731543CBD850897CEB1A4A32E34E364319CB273DCEBBD45B68FA99D7A0FDC"
+    },
+    {
+      "path": "src/nn/motor/state.h",
+      "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F"
+    },
+    {
+      "path": "src/nn/motor/straight_task.h",
+      "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22"
+    },
+    {
+      "path": "src/physics/contact.h",
+      "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6"
+    },
+    {
+      "path": "src/physics/dynamics.h",
+      "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6"
+    },
+    {
+      "path": "src/physics/flexible_tail.h",
+      "sha256": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226"
+    },
+    {
+      "path": "src/rl/append_hold_checkpoint.h",
+      "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B"
+    },
+    {
+      "path": "src/rl/ar_gaussian_math.h",
+      "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797"
+    },
+    {
+      "path": "src/rl/flexible_tail_beat_course.h",
+      "sha256": "9BF3867813B10E82471B30E42CFC3A99162D983D4E25A7B394EF3605D2B1D72A"
+    },
+    {
+      "path": "src/rl/flexible_tail_choices.h",
+      "sha256": "8DDFB8FAE4314C0C078A621F1202E44320C6F2D5805DF862488BE7022CA37ADB"
+    },
+    {
+      "path": "src/rl/flexible_tail_chooser_checkpoint.h",
+      "sha256": "33B1B4C1C7DD0667918CCA618902CC57EE945A062B304B350268C43B57231F30"
+    },
+    {
+      "path": "src/rl/flexible_tail_chooser.h",
+      "sha256": "5246E75FCDA7461BF1EC35F441E9B9F463CD982CE7BE51F613E97B8F2965E743"
+    },
+    {
+      "path": "src/rl/flexible_tail_fast_steering.h",
+      "sha256": "C0B05AB8ED845E97193D570A9B84F9C30481E04BDB09B126B45FD006EA6E13FA"
+    },
+    {
+      "path": "src/rl/flexible_tail_gait.h",
+      "sha256": "E6F237A7F0BCA2FD57D29F1673A92582726F363B6B2E3EE1EA3471C7AF28FA14"
+    },
+    {
+      "path": "src/rl/flexible_tail_launch.h",
+      "sha256": "8497873E40DC9E26F3546E23C36E7601E7911EE2AD01255FCFDA51202CBABDEE"
+    },
+    {
+      "path": "src/rl/flexible_tail_motor.h",
+      "sha256": "43B924DB0151C4DE6A202211E3AC97E3F9B3AC191ACBF788CC0DDFD0C0E2B998"
+    },
+    {
+      "path": "src/rl/flexible_tail_navigation.h",
+      "sha256": "634A7A99C49F3E9E56AF6E848C00866DBF184988A183D0C093A4AC1AF8334074"
+    },
+    {
+      "path": "src/rl/flexible_tail_transition.h",
+      "sha256": "0B3FAD83A39FEFD98ED8C4D17961B9A0B05FE83A2DEAF58FF615ED6BD0DC279B"
+    },
+    {
+      "path": "src/rl/flexible_tail_yaw_offset.h",
+      "sha256": "6881591BF03E6DD55F68824697C202374C1C07989CE342D46EE3EEBCB5562B2C"
+    },
+    {
+      "path": "src/rl/gaussian_kernels.cu",
+      "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7"
+    },
+    {
+      "path": "src/rl/gaussian_kernels.h",
+      "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D"
+    },
+    {
+      "path": "src/rl/gaussian_math.h",
+      "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700"
+    },
+    {
+      "path": "src/rl/learned_amplitude_math.h",
+      "sha256": "54D39FA6E7081ABCF9F8A534821FBE839ACB7B14B7725680472C9D14C78F3D28"
+    },
+    {
+      "path": "src/rl/pond_ppo_contract.h",
+      "sha256": "64A0D7FCAFED7F768E6C896BE9C52F309C210AE0FC6D721C65ADF67737892897"
+    },
+    {
+      "path": "src/rl/pond_ppo_schedule.h",
+      "sha256": "AED039790BBC007E8D3DBB268418F04C3BA7DA1E153E5CDD6251E53342B53468"
+    },
+    {
+      "path": "src/rl/pond_ppo_task.h",
+      "sha256": "805A49A88E0FBD2B28DB64616D363F447F1960538D9B77BA1847209241B3B53A"
+    },
+    {
+      "path": "src/rl/ppo_checkpoint.h",
+      "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2"
+    },
+    {
+      "path": "src/rl/ppo_diagnostics.h",
+      "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC"
+    },
+    {
+      "path": "src/rl/ppo_kernels.cu",
+      "sha256": "884AC4D2485E97D19D6049BE677CB218B5FB17B617A50F72545DF98B13D37E8C"
+    },
+    {
+      "path": "src/rl/ppo_kernels.h",
+      "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8"
+    },
+    {
+      "path": "src/rl/ppo_math.h",
+      "sha256": "68E726DC7A84778E6900BC6894BED50126EC4545A1370618DFF0953374D25E8D"
+    },
+    {
+      "path": "src/simulation/pond_runtime.h",
+      "sha256": "9B87804E5BAD278B911F1636E64EEC03CF52D7570DD119EE30067C3F3BF13D2A"
+    },
+    {
+      "path": "src/simulation/world_cuda.cu",
+      "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441"
+    },
+    {
+      "path": "src/simulation/world.cpp",
+      "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8"
+    },
+    {
+      "path": "src/simulation/world.h",
+      "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3"
+    },
+    {
+      "path": "tools/pond-flexible-tail-check/habitat_config.h.in",
+      "sha256": "1AC44084E5644362AD23984EF6358014D8A20E016762CB8FBFCDF9A443A6F4A6"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/BEAT_FEEDBACK_PROTOCOL.md",
+      "sha256": "42D598D966472BDC8E043A33569287FC9DF588475F17E801AF150140AACDC0D3"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/beat-feedback-check.cpp",
+      "sha256": "912A9CFB9D4231EC6B6D6ABCDF573C43CC9803B40BAA8FF95B9588B7F47675DD"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/CMakeLists.txt",
+      "sha256": "8448EE8B631F0DCE0A08CA2B5D3D7AED46E424AA7186DB2646C73F65A72E7DAD"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/evaluate.cpp",
+      "sha256": "6B76983FF94787E0232303437F343E647712DB18458358942B1C5D96A04397D0"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/PROTOCOL.md",
+      "sha256": "F1077055450C0244586902A83BD835DEF6360E25278DD3394B5AF68F103243D7"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/run-session.ps1",
+      "sha256": "3757E8740C7C0AF71FDF98FA063C17E51783CEF2EBDBC135C4511E53E96E1B4B"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/session.cuh",
+      "sha256": "474807C22B470836911D72CE2218FD8D5486825CEAE64AAF9EDA16481AEAB339"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/train.cu",
+      "sha256": "09805E9469D633278C8E3592798FD44BED8893DBDB69C3438040503E3F615879"
+    }
+  ],
+  "max_updates": 128,
+  "evaluation_interval": 8,
+  "source_fingerprint": "A7C50F1D7AA1EC4004C0E332E44669D83711A36891B47C119D1D5410BFA02776"
+}

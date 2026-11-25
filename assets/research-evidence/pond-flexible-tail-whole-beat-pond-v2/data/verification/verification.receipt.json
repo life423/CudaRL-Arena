@@ -1,0 +1,21 @@
+{
+  "phase": "verification",
+  "started_utc": "2026-11-24T19:53:23.5629069Z",
+  "wall_s": 25.2334598,
+  "limit_s": 600.0,
+  "exit": 0,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-build\\Release\\pond_flexible_tail_chooser_session.exe",
+  "arguments": [
+    "verify-resume",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-chooser-sustained-v3\\data\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-execution\\verification\\data",
+    "held-heading",
+    "whole-beat",
+    "long-horizon"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "update": 72,
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\training\\actor-72.bin",
+  "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\training\\checkpoints\\session-72.bin",
+  "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+  "study": "speed",
+  "material": "baseline",
+  "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-072\\assessment",
+  "physical": true,
+  "gentle": 8,
+  "main": 16,
+  "thirty": 8,
+  "sixty": 0,
+  "ninety": 0,
+  "legacy": 0,
+  "error": 4.952606256960048,
+  "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-072\\assessment\\result.json"
+}

@@ -1,0 +1,51 @@
+{
+  "study": "continuous-flexible-tail-turn-ppo-v1",
+  "purpose": "Learn continuous swim, signed moving turn, and outgoing swim from physically captured states.",
+  "wall_cap_s_per_process": 4,
+  "training": {
+    "worlds": 256,
+    "controls_per_world_per_update": 64,
+    "updates": 8,
+    "control_s": 0.02,
+    "substep_s": 0.00125,
+    "substeps_per_control": 16,
+    "transitions_max": 131072,
+    "substeps_max": 2097152,
+    "turn_request_degrees": [-15, 15],
+    "pre_turn_controls": 20,
+    "turn_controls": 400,
+    "post_turn_controls": 92,
+    "ppo_epochs": 2,
+    "ppo_minibatch": 4096,
+    "actor_lr": 0.0001,
+    "critic_lr": 0.0003,
+    "gamma": 0.998,
+    "lambda": 0.9797,
+    "log_std": -3.2,
+    "clip": 0.2,
+    "exact_kl_max": 0.05,
+    "cuda_physics_threads": 32,
+    "reward": "0.02 times [0.65 signed projected transport at target speed + up to 0.35 course alignment + up to 0.35 signed reduction of rolling course error during turns − squared tilt/10deg − 0.75 squared depth error/1mm]. Course terms require actual movement. Negative progress and overspeed have costs. Physical bounds stay unchanged."
+  },
+  "starts": {
+    "source": "Native accepted warm swimming, preserved body, active and passive joint momentum, previous action and 2s COM history.",
+    "training": "4 poses times 4 settled gait phases times both turn signs times 8 copies, 256 total, independent seeded sampling.",
+    "held_out": "4 different settled starts for +15, -15, +30, -30; paired frozen baseline vs final candidate; no resets."
+  },
+  "evaluation": {
+    "seconds_per_run": 14.4,
+    "warm_swim_s": 0.4,
+    "turn_s": 12,
+    "outgoing_swim_s": 2,
+    "minimum_projected_speed_m_s": 0.006,
+    "maximum_course_error_deg": 5,
+    "maximum_tilt_deg": 10,
+    "maximum_depth_error_m": 0.001,
+    "positive_whole_body_wet_clearance": true,
+    "scoring": "Final two seconds of the turn and the outgoing two seconds must each pass speed and course. Posture, depth and clearance throughout."
+  },
+  "stop": "One attempt per stage. Stop on physics, numerical, KL or wall limit. Preserve last accepted checkpoint and exact attempt counts where observable. No retries or criterion changes.",
+  "protected_actor": "build/flexible-tail/motor-pilot-v1/actor.bin",
+  "protected_actor_sha256": "AC87BD493710DAACA878AA52CAF3A0D701EC879596AC44417235AC2979E42EDF",
+  "scope": "Moving-turn motor study in open pond water. No chooser, hold retraining, bank contact, autonomous runtime deployment or checkpoint replacement."
+}

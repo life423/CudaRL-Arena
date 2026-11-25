@@ -1,0 +1,5 @@
+{
+  "reason": "Checker-only extra assertions arrived after immutable run manifest; preserved but unexecuted. Restored the exact tested/bound checker source. No training, observer, physics or criteria change.",
+  "physics_steps": 0,
+  "optimizer_calls": 0
+}

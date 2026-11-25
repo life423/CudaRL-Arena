@@ -21,5 +21,7 @@ void validate_gate_documents(const std::string& cpu,const std::string& gpu,
 void prerequisites(const std::filesystem::path& protocol,
                    const std::filesystem::path& cpu_gate,
                    const std::filesystem::path& cuda_gate,
-                   uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum=0);
+                   uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum=0,
+                   bool direct_retrain=false,bool course_context=false,bool medium_turn=false,bool align_turn_speed=false,
+                   bool fresh_motor=false,bool correlated_motor=false,bool propulsion_motor=false);
 }

@@ -73,7 +73,15 @@ CUDARL_HD inline bool set_surface(Query& q,double height,double dx,double dz,Reg
     return true;
 }
 }
-CUDARL_HD CUDARL_DEVICE_NOINLINE Query sample(const Parameters& p,double x_m,double z_m) {
+#if defined(CUDARL_POND_GEOMETRY_RDC) && defined(__CUDA_ARCH__)
+extern __device__ __noinline__ Query sample(const Parameters& p,double x_m,double z_m)
+#else
+CUDARL_HD CUDARL_DEVICE_NOINLINE Query sample(const Parameters& p,double x_m,double z_m)
+#endif
+#if defined(CUDARL_POND_GEOMETRY_RDC) && defined(__CUDA_ARCH__) && !defined(CUDARL_DEFINE_POND_SAMPLE)
+;
+#else
+{
     Query out;
     if(!valid_parameters(p)||!finite(x_m)||!finite(z_m))return out;
     const double a=x_m/p.water_radius_x_m,b=z_m/p.water_radius_z_m;
@@ -122,5 +130,6 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE Query sample(const Parameters& p,double x_m,dou
         dr*rz+scale*(uz*ripple.value+open.value*hills_z),DryLand);
     return out;
 }
+#endif
 }
 #endif

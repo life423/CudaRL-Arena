@@ -1,0 +1,17 @@
+{
+  "name": "verification",
+  "wall_s": 0.0704532,
+  "exit": 2,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\native-build\\Release\\pond_flexible_tail_rate_chooser.exe",
+  "arguments": [
+    "verify",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\stage-01-rate-response-baseline\\training\\actor-88.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\stage-06-bank\\verification\\data",
+    "2",
+    "590",
+    "0"
+  ]
+}

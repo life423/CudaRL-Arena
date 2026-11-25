@@ -1,0 +1,20 @@
+{
+  "phase": "evaluation",
+  "started_utc": "2026-11-24T19:57:06.4088557Z",
+  "wall_s": 0.8343251,
+  "limit_s": 20.0,
+  "exit": 1,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-build\\Release\\pond_flexible_tail_chooser_eval.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\straight-evaluation-starts.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-execution\\training\\actor-24.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-execution\\evaluations\\update-0024\\assessment",
+    "held-heading",
+    "whole-beat",
+    "long-horizon"
+  ]
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "label": "frozen_original_horizon",
+    "passes": 6,
+    "keep": 16.0,
+    "left": 232.0,
+    "right": 0.0,
+    "keep_fraction": 0.06451612903225806,
+    "left_fraction": 0.9354838709677419,
+    "right_fraction": 0.0,
+    "perimeter_s": 20.48,
+    "max_stall_s": 0.0,
+    "min_speed_mm_s": 10.7375181,
+    "max_speed_mm_s": 11.0362812
+  },
+  {
+    "label": "final64_long_horizon",
+    "passes": 8,
+    "keep": 93.0,
+    "left": 129.0,
+    "right": 55.0,
+    "keep_fraction": 0.33574007220216606,
+    "left_fraction": 0.4657039711191336,
+    "right_fraction": 0.19855595667870035,
+    "perimeter_s": 12.06,
+    "max_stall_s": 0.0,
+    "min_speed_mm_s": 10.5698132,
+    "max_speed_mm_s": 11.1564356
+  }
+]

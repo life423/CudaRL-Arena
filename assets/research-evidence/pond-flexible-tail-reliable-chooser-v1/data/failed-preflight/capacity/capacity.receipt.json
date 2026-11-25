@@ -1,0 +1,10 @@
+{
+  "name": "capacity",
+  "wall_s": 0.19389,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\capacity-build\\Release\\pond_ppo_capacity_check.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\capacity\\result.json"
+  ]
+}

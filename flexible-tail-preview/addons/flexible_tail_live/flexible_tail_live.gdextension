@@ -1,0 +1,6 @@
+[configuration]
+entry_symbol = "flexible_tail_live_init"
+compatibility_minimum = "4.4"
+
+[libraries]
+windows.x86_64 = "res://addons/flexible_tail_live/bin/flexible_tail_live.dll"

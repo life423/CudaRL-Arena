@@ -41,6 +41,10 @@ inline void validate_host_geometry() {
 }
 }
 #define cbrtf(argument) cudarl::pond_math_profile::radius(argument)
+#if defined(CUDARL_DEFINE_POND_INSPECT) || defined(CUDARL_DEFINE_POND_INSPECT_LINK)
+#include "environment/pond_body_geometry.h"
+#else
 #include "simulation/pond_runtime.h"
+#endif
 #undef cbrtf
 #endif

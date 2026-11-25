@@ -1,0 +1,13 @@
+{
+  "wall_s": 0.8451673,
+  "timeout": false,
+  "exit": 0,
+  "exe": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\alternating-handoff-build\\Release\\pond_flexible_tail_motor_yaw_offset_fixture.exe",
+  "args": [
+    "alternating-handoff",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-gait-v1\\passing-actor.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\training\\actor-8.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\alternating-handoff-v1\\assessment"
+  ]
+}

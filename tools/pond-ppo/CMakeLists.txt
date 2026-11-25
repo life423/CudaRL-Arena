@@ -29,13 +29,29 @@ target_include_directories(pond_ppo_gpu_core PUBLIC "${worktree}/src" "${worktre
 target_link_libraries(pond_ppo_gpu_core PUBLIC CUDA::cudart_static)
 pond_warnings(pond_ppo_gpu_core)
 
+add_library(pond_ppo_device_geometry STATIC
+    "${worktree}/src/cuda/pond_geometry_inspect.cu"
+    "${worktree}/src/cuda/pond_geometry_inspect_link.cu")
+target_include_directories(pond_ppo_device_geometry PRIVATE "${worktree}/src" "${worktree}/src/nn")
+target_compile_definitions(pond_ppo_device_geometry PRIVATE CUDARL_POND_GEOMETRY_RDC=1)
+target_compile_options(pond_ppo_device_geometry PRIVATE --fmad=false)
+set_target_properties(pond_ppo_device_geometry PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+pond_warnings(pond_ppo_device_geometry)
+
+function(pond_link_shared_inspection target)
+    target_compile_definitions(${target} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:CUDARL_POND_GEOMETRY_RDC=1>)
+    set_target_properties(${target} PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+    target_link_libraries(${target} PRIVATE pond_ppo_device_geometry)
+endfunction()
+
 set(identity "CUDA=${CMAKE_CUDA_COMPILER_VERSION};CXX=${CMAKE_CXX_COMPILER_VERSION};sm120;physics-fmad-false;physics-optimized;learning-default;CUDA_FLAGS=${CMAKE_CUDA_FLAGS};CUDA_RELEASE=${CMAKE_CUDA_FLAGS_RELEASE};CXX_FLAGS=${CMAKE_CXX_FLAGS};CXX_RELEASE=${CMAKE_CXX_FLAGS_RELEASE};")
-set(physics_identity "CUDA=${CMAKE_CUDA_COMPILER_VERSION};CXX=${CMAKE_CXX_COMPILER_VERSION};sm120;physics-fmad-false;physics-optimized;")
+set(physics_identity "CUDA=${CMAKE_CUDA_COMPILER_VERSION};CXX=${CMAKE_CXX_COMPILER_VERSION};sm120;physics-fmad-false;physics-optimized;shared-device-inspection;")
 set(source_manifest "")
 foreach(relative IN ITEMS
-        tools/pond-ppo/train.cu tools/pond-ppo/transition_trace.h tools/pond-ppo/CMakeLists.txt
+        tools/pond-ppo/train.cu tools/pond-ppo/correlated_exploration.h tools/pond-ppo/turn_course_observation.h
+        tools/pond-ppo/transition_trace.h tools/pond-ppo/CMakeLists.txt tools/pond-ppo/identity.h.in
         tools/pond-ppo/admission.h tools/pond-ppo/admission.cpp
-        src/cuda/pond_math_profile.h src/environment/pond_geometry_v1.h
+        src/cuda/pond_math_profile.h src/cuda/pond_geometry_inspect.cu src/cuda/pond_geometry_inspect_link.cu src/environment/pond_geometry_v1.h
         src/environment/pond_body_geometry.h src/environment/pond_swept_clearance.h src/simulation/pond_runtime.h
         src/nn/motor/pond_motor_observation.h src/nn/motor/saved_motor_contract.cpp
         src/nn/motor/saved_motor_contract.h src/nn/motor/movement_model.h
@@ -50,7 +66,7 @@ foreach(relative IN ITEMS
     file(SHA256 "${worktree}/${relative}" digest)
     string(APPEND identity "${relative}:${digest};")
     string(APPEND source_manifest "${relative} ${digest}\n")
-    if(relative MATCHES "^src/(physics/|environment/|simulation/|cuda/pond_math_profile|nn/motor/(movement_model|joint_motor|state)|core/hd)")
+    if(relative MATCHES "^src/(physics/|environment/|simulation/|cuda/pond_(math_profile|geometry_inspect)|nn/motor/(movement_model|joint_motor|state)|core/hd)")
         string(APPEND physics_identity "${relative}:${digest};")
     endif()
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${worktree}/${relative}")
@@ -58,14 +74,19 @@ endforeach()
 string(SHA256 source_identity "${identity}")
 string(SHA256 physics_source_identity "${physics_identity}")
 file(WRITE "${CMAKE_BINARY_DIR}/pond-ppo-source-manifest.txt" "${source_manifest}")
-file(WRITE "${CMAKE_BINARY_DIR}/pond_ppo_identity.h" "#pragma once\ninline constexpr char pond_ppo_source_sha256[]=\"${source_identity}\";\ninline constexpr char pond_ppo_physics_sha256[]=\"${physics_source_identity}\";\n")
+configure_file(identity.h.in "${CMAKE_BINARY_DIR}/pond_ppo_identity.h" @ONLY)
 
 add_executable(pond_ppo train.cu admission.cpp "${worktree}/src/core/checkpoint.cpp"
     "${worktree}/src/nn/motor/saved_motor_contract.cpp")
+option(POND_BUILD_COURSE_CONTEXT "Keep the earlier trial executable alongside the course-context build" OFF)
+if(POND_BUILD_COURSE_CONTEXT)
+    set_target_properties(pond_ppo PROPERTIES OUTPUT_NAME pond_ppo_course_context)
+endif()
 target_include_directories(pond_ppo PRIVATE "${CMAKE_BINARY_DIR}")
 target_link_libraries(pond_ppo PRIVATE pond_ppo_gpu_core bcrypt)
 set_source_files_properties(train.cu PROPERTIES COMPILE_DEFINITIONS "NOMINMAX;WIN32_LEAN_AND_MEAN")
 target_compile_options(pond_ppo PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--fmad=false>)
+pond_link_shared_inspection(pond_ppo)
 pond_warnings(pond_ppo)
 
 add_executable(pond_ppo_pure pure_check.cpp admission.cpp "${worktree}/src/core/checkpoint.cpp")

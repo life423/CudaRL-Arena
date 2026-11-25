@@ -1,5 +1,147 @@
 # Workspace instructions
 
+## Reliable-turn chooser authorization — November 25, 2026
+
+Latest user authorization is options1,2,7: five turn rates including±4deg/s,
+the frozen rate-response motor88, and competence-based bank-approach PPO.
+Read tools/pond-flexible-tail-chooser/RELIABLE_TURNS_PROTOCOL.md. One separate
+128-update chooser session with1,024 native CUDA worlds, complete checkpoints
+and fixed bank assessments every8. Motor weights and working Godot bundle stay
+protected; publish only after qualification. No food or scripted turns.
+The failed initial pure-geometry preflight spent zero physics/optimizer work;
+its single reserved correction adjusts only initial gentle training placement
+inland to satisfy the unchanged20mm warmup certificate. Corrected geometry3072
+placements,15-action CUDA math and3-update exact resume passed. Both original
+and corrected roots are preserved under build/flexible-tail/reliable-chooser-v1
+and reliable-chooser-v1-corrected. Do not discard failures or extend the budget.
+The session is now CLOSED at128 updates/1,048,576 macro transitions/173.815s.
+Chooser88 with frozen motor88 passes12/12 pond and4/4 five-minute endurance,
+zero guards/resets; final128 regresses7/12. Godot adopts the strongest88 pair.
+Its80ms shared runtime matches3750 states of the300s qualification exactly.
+Original motor files stay intact and are available through Details/manual mode;
+original DLL/scenes are backed up under the corrected run root. Final50 UI
+checks pass at four rendered sizes. No background trainer remains. Read
+assets/research-evidence/pond-flexible-tail-reliable-chooser-v1/README.md before
+further work. Finite tests do not prove indefinite survival or full coverage.
+
+## Rate-response authorization — November 25, 2026
+
+The user authorized a NEW separate GPU PPO candidate to improve slow uneven
+turning, preserve swimming from rest and update Godot only after reliable bank
+avoidance. This supersedes STOP for this one session, not the closed seven-stage
+budget. Read tools/pond-flexible-tail-steering/RATE_RESPONSE_PROTOCOL.md.
+Study6 is opt-in: half-second whole-beat COM-rate feedback and a signed Huber
+tracking score; legacy Study5 and all physical equations remain unchanged.
+One128-update session plus one3-update resume diagnostic,1,024 CUDA worlds,
+fixed checks every8, frozen chooser bank evaluation and no automatic retries.
+The session is CLOSED at128 updates/103.435s, selected88. Rate checks improve
+4/12→8/12; mean course lag15.12°→9.48°; all12 swims and8 from-rest starts pass.
+Fast±8°/s still fail. Preserved chooser with new motor scores7/12 pond cases,
+five clearance stops and zero endurance attempts. Godot remains protected.
+Read assets/research-evidence/pond-flexible-tail-rate-response-v1/README.md.
+Evidence root: build/flexible-tail/rate-response-v1. No automatic repeat or
+adoption. Preserve all working models and prior evidence.
+
+## Current PPO workflow direction — November 24, 2026
+
+LATEST explicit authorization: implement and evaluate ALL SEVEN listed options,
+then STOP. This program is now CLOSED; no further training follows implicitly.
+Read docs/SEVEN_OPTIONS_RESULTS_2026-11-24.md. Original corrected-root stages1–5
+completed 627 main updates; the bank-resume root adds 63 chooser and 128 material
+updates. Best actual 60° movement is8/8, but matched main-frequency criteria fail;
+90° remains unqualified. Selected motors retain12/12 swims and all gentle/30°
+main-stroke keys. Chooser checkpoint16 scores8/12 with four clearance guard
+stops and zero endurance attempts. The material variant drops pond score to4/12.
+Godot assets are unchanged. No owned trainers remain; honor STOP before new work.
+
+Preserve both failed diagnostics and the interrupted first chooser invocation.
+Its copied budget was tightened64→63; reserve unknown work up to one update,
+8192 transitions,32 Adam calls per optimizer and10,485,760 substeps. Charge
+1.0926767 wall seconds. Evaluator exit1 means a valid unqualified result only
+after complete case/native-fault/timeout validation. Shared categorical capacity
+8→16 passes focused3/8/9/16 checks and rejects17. No third diagnostic ran.
+
+The program roots are build/flexible-tail/seven-options-v6-corrected and
+build/flexible-tail/seven-options-v6-bank-resume. Read the frozen finite protocol
+and CHOOSER_CONTINUATION.md in tools/pond-flexible-tail-steering. One generalized
+motor trainer covers rhythm, joint amplitude/frequency, hidden16 policy, speed
+and continuous course rate; the existing chooser covers early bank information.
+All learning uses1,024 native CUDA worlds without food, scripted steering or
+artificial forces. Material qualification passes38,080 substeps. The failed first
+rhythm diagnostic spent3 updates before duplicate snapshot rounding amplified
+7.45nm COM difference into critic input19 difference1.01328e-6. The corrected
+program critic uses accepted cached COM measurements with unchanged equations
+and1e-6 tolerance; the reserved second diagnostic passed. Count both attempts.
+The original baseline was reused. Main-stroke prominence0.1rad rejects tiny
+ripples; the80% matched frequency/swing criteria are unchanged and legacy scores
+remain visible. Canonical state comparison excludes only C++ padding. Preserve
+all evidence, including negative raw stage3 study_actor_steps reporting and the
+independent checkpoint audit proving8192 actual new Adam calls. Do not restart
+or extend this closed program.
+
+The later authorized mixed15/30 continuation is CLOSED at128 NEW updates,
+8,388,608samples/104.741seconds. FTSSv5 explicitly forks phase-v4 checkpoint112
+with unchanged actor/critic/Adam/body/history/RNG and fresh study counters.
+Global Adam ages7168→15360; only existing features4–12 train. No reward, physics
+or evaluation change. Candidate120passes8/8 full30 but4/8 gentle;88passes7+7;
+56retainsall8gentle+5full30. All12 swimming/from-rest exact. Every15/30 motion
+passes; remaining complete failures are passivefrequency. No60/90 passes or
+combined8+8 qualification. All129checkpoint audits and fork/resume pass; new
+starts11008perangle/sign. Preserve all originals and v5 evidence. No automatic
+new training/chooser/Godot adoption. Next decision concerns rhythm consistency
+and interpreting the passive-frequency failures before sharper-angle progression.
+
+The user-authorized phase-aware v4 motor study is CLOSED at 128 updates,
+8,388,608 decisions and 99.663 seconds. Shared steering policy module owns
+CPU/CUDA features, trainable masks and FTYO2 validation; FTSSv4 binds full state.
+Four imported whole-beat56 coefficients remain frozen; nine zero-initialized
+phase/speed features trained. Initial commands match at all tested angles.
+Update112 has6/8 complete30 passes but3/8 complete15; final128 has5/8 complete30,
+4/8 complete15, all8/8 raw30 motion and12/12 straight/from-rest. No60/90 passes.
+No candidate retains all original gentle keys while qualifying30. Preserve
+the phase-aware-v4 evidence and all originals; no Godot adoption, chooser run,
+physics change or extra training is implicit. User now requests other options;
+mixed15/30 practice plus rhythm retention is a proposal, not a started run.
+
+The authorized full-angle input/PPO session v3 is CLOSED at128updates,
+8,388,608 decisions,99.578s. WholeBeat90 represents courseerror/90deg without
+the20deg cap. Protectedmotor56 was copied with coefficient0×18 toretain its
+small-angle function; that transfer increased large-angle steering strength
+and weakened propulsion beforePPO. No30/60/90case passed;24/72/80 retained
+all8gentle keys,all12swimming/from-rest cases stayedexact. All129fullstate
+audits/resume/featureparity pass. OriginalGodotbundle/56 preserved, noadoption.
+Readcourse-angle90-v3README. Noautomaticextraexperiment orbudgetextension;
+the remaining issue is useful propulsion understronger steering, notmissing
+90-degree input information. Mode-bound actors mustneverloadwitholdobserver.
+
+The whole-beat motor and conditional early-bank chooser are CLOSED. Read their
+v2 evidence READMEs. Motor128updates99.456s: feedback residual94.4%lower;
+checkpoint56 alone retains8/8gentle-turn+12/12swim/start cases. Frozen chooser
+with that motor6/12; conditional1024-world64updates522.101s reaches8/12, with
+four clearance failures and ZERO endurance attempts. Original Godot bundle is
+unchanged; no autonomous candidate admitted. Full-state audits/resume pass.
+The user requested a brainstorm on proper sharp-turn PPO after completion.
+Do not launch another sharp-turn study or extend these finite sessions before
+that discussion. Warmup-inclusive conditional budgets and the zero-physics
+wrapper preflight correction are preserved in the pond-stage protocol/evidence.
+
+The separate faster-steering session is CLOSED at 128 CUDA PPO updates and
+8,388,608 samples (97.963 seconds). Read the fast-steering-v1 evidence README.
+No 60° case passed; update eight passed two rightward 30° cases while losing
+some complete rhythm keys. All 12 swimming/from-rest cases stayed exact on
+inactive bypass. Original fitted gait/update-eight offset remain active in
+Godot. Do not extend or repeat this finite study implicitly. Its full resume,
+all 129 checkpoint identities and frozen-source audit passed. Next feedback/
+phase changes need a new controlled protocol; no autonomous motor was adopted.
+
+The user requires sustained, organized native C++/CUDA PPO with 1,024
+parallel worlds. The earlier brief chooser trials are closed research
+records. Use the versioned session workflow with complete actor, critic,
+Adam, sampling and simulation state saved together. Validate exact resume
+and the steering request interface before sustained learning. Keep frozen
+motor checkpoints and physical limits protected, record every attempted
+run, and admit a Godot candidate through the declared navigation gates.
+
 Read README.md for current usage, architecture and limitations. Check asset JSON
 provenance before changing a checkpoint or interpreting acceptance.
 
@@ -38,17 +180,20 @@ provenance before changing a checkpoint or interpreting acceptance.
 
 - November 24 current state: read docs/GPU_CLEARANCE_RESULTS_2026-11-24.md,
   docs/AI_STATUS.md and docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md first. The
-  user authorized committing/pushing/merging the current branch. Both frozen-
+  user authorized the prior turning/clearance merge in PR #21. Both frozen-
   motor residual arms are CLOSED at 32 updates each, 2/16 turns versus the
   baseline's 3/16. Neither candidate was adopted. Original motor 336 remains
   protected and active. The full 41-input numerical audit is complete.
-  Conservative swept contact rejection passed matched CPU/CUDA controls,
-  including real bank contact, but its single full-collector attempt timed out
-  at the user's new FOUR-SECOND process cap before issuing any physics.
-  The new accelerated training mode remains gated and unqualified. Preserve
-  that failed attempt. No automatic retry, budget reuse or new PPO follows
-  from the measured single-control speedup. Investigate pre-issue startup
-  separately from turning-learning changes. No Python, food, scripted steering,
+  After two timeouts before physics, shared device geometry passed new bounded
+  checks below the FOUR-SECOND process cap: 2.10 s module load, 2.49 s matched
+  physics including bank contact, 0.42 s full 512-world saved rollout. All
+  compared rollout fields matched. Preserve both failures and passing receipts.
+  A separate, now-closed course-rate comparison passed a 2.32 s matched
+  four-output replay, then ran 8 PPO updates per arm (1.82 s each).
+  Both scored 2/16 turns and 0/8 sharp turns. Early tilt crossed 10° in all
+  sharp cases. Keep protected motor 336, separate archives and fixed gates.
+  Do not repeat the failed reward unchanged or infer repeatable navigation.
+  No Python, food, scripted steering,
   force shortcuts or tolerance relaxation. The Godot app records the failed
   turning result and explicitly identifies reused archived retention evidence.
 

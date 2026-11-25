@@ -1,0 +1,8 @@
+{
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-mixed-v5\\training\\actor-88.bin",
+  "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-mixed-v5\\training\\checkpoints\\session-88.bin",
+  "task": "e77d7688e076201850f5aa9eb2c1960a1b10a70986bb1b934f57d4a88e6035fa",
+  "update": 88,
+  "study": "none",
+  "material": "baseline"
+}

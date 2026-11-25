@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "pass": true,
+  "physics_steps": 0,
+  "optimizer_updates": 0,
+  "source_training": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank\\training",
+  "destination_training": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\training",
+  "source_receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank\\training.receipt.json",
+  "source_receipt_sha256": "6D98B65896CE5F76F7BC47C65EAF4E00F424390396EEBBDCA518BF846D7AB1E2",
+  "exact_checkpoint0_preserved": true,
+  "exact_actor0_preserved": true,
+  "source_files_unchanged": true,
+  "old_target_updates": 64,
+  "new_target_updates": 63,
+  "original_used_wall_s": 0.0,
+  "charged_interrupted_wall_s": 1.0926767,
+  "copied_used_wall_s": 1.0926767,
+  "wall_limit_s": 1200.0,
+  "checkpoint_payload_checksum": "2475870322541316126",
+  "reserved_unobserved_updates": 1,
+  "remaining_completed_updates_maximum": 63,
+  "unobserved_actions_maximum": 8192,
+  "unobserved_optimizer_steps_maximum_each": 32,
+  "unobserved_physics_substeps_maximum": 10485760,
+  "changed_files": [
+    "budget.checkpoint"
+  ],
+  "copied_files": [
+    "latest.checkpoint",
+    "checkpoints/session-0.bin",
+    "actor-0.bin"
+  ],
+  "command": [
+    "resume",
+    "GAIT",
+    "MOTOR",
+    "STARTS",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\training",
+    "63",
+    "1200",
+    "0"
+  ]
+}

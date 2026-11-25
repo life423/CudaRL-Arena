@@ -112,6 +112,7 @@ foreach($pair in @(@('checkpoint','checkpoint-digest.json'),@('training','traini
 if(Test-Path -LiteralPath (Join-Path $output 'baseline-assessment.json')){$sources.baseline=[ordered]@{path=('res://research_data/studies/'+$StudyId+'/baseline-assessment.json');sha256=(Sha (Join-Path $output 'baseline-assessment.json'))}}
 $reason='retention_failed'
 if($assessment.hard_failure){$reason='physical_check_failed'}
+elseif($assessment.fresh_motor -and -not ($assessment.retention_passed -and $assessment.turning_qualified)){$reason='fresh_motor_learning'}
 elseif($assessment.retention_passed){$reason=if($assessment.turning_qualified){'requested_turns_qualified'}else{'turning_unqualified'}}
 elseif($assessment.reason -like '*hold*'){$reason='rest_retention_failed'}
 elseif($assessment.reason -like '*long*'){$reason=if(@($metrics.Values|Where-Object{$_.suite -eq 'long' -and $_.maximum_lane_m -gt .002}).Count -gt 0){'long_swim_lane_drift'}else{'long_swim_retention_failed'}}

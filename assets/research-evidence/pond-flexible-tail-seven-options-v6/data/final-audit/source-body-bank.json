@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "read_only": true,
+  "new_physics_steps": 0,
+  "new_optimizer_updates": 0,
+  "bound_files_checked": 127,
+  "bound_file_hash_mismatches": [],
+  "binding_pass": true,
+  "material_qualification_reused": true,
+  "material_qualification": {
+    "schema": 1,
+    "pass": true,
+    "failure": "",
+    "cpu_substeps": 23712,
+    "cuda_substeps": 14112,
+    "preserved_baseline_substeps": 256,
+    "total_substeps": 38080,
+    "maximum_substeps": 64000,
+    "optimizer_updates": 0,
+    "default_baseline_bit_exact": true,
+    "matched_CPU_CUDA_rows": 512,
+    "CPU_CUDA_pass": true,
+    "mirror_pass": true,
+    "maximum_COM_position_error_m": 0,
+    "maximum_COM_velocity_error_m_s": 3.49245965481E-10,
+    "maximum_joint_error_rad": 1.49011611938E-08,
+    "maximum_angular_rate_error_rad_s": 2.38418579102E-07,
+    "maximum_torque_error_Nm": 9.09494701773E-13,
+    "maximum_energy_tolerance_fraction": 0.00285071910336,
+    "timestep_COM_difference_m": 1.23512336359E-06,
+    "timestep_joint_difference_rad": 0.00184723734856,
+    "passive_maximum_energy_increase_fraction": 9.17725653923E-11,
+    "passive_final_energy_ratio": 1.08356156167E-08,
+    "passive_linear_momentum_max": 1.34372815097E-08,
+    "passive_angular_momentum_max": 2.56381582631E-11,
+    "bank_observation_checks": true,
+    "wall_s": 0.512754
+  },
+  "material_change": {
+    "kind": "YawHalfStiffness",
+    "yaw_stiffness_multiplier": 0.5,
+    "yaw_damping_multiplier": 0.5,
+    "pitch_stiffness_multiplier": 1,
+    "pitch_damping_multiplier": 1,
+    "relaxation_s": 0.02,
+    "geometry_changed": false,
+    "density_changed": false,
+    "actuator_count_changed": false,
+    "torque_limit_changed": false,
+    "servo_changed": false,
+    "integration_changed": false,
+    "default_body_bit_exact": true,
+    "elastic_energy_uses_same_material": true,
+    "dissipation_uses_same_material": true
+  },
+  "native_bank_observation": {
+    "selects_turns": false,
+    "modifies_body": false,
+    "features": 18,
+    "time_estimate_assumption": "constant present shape/orientation and straight translation",
+    "clearance_stop_is_contact_measurement": false
+  },
+  "runtime_request_interface": {
+    "chooser_actions": 9,
+    "speed_choices_mm_s": [
+      6,
+      8,
+      12
+    ],
+    "course_rate_choices_deg_s": [
+      -8,
+      0,
+      8
+    ],
+    "decision_simulated_s": 0.8,
+    "motor_action_simulated_s": 0.08,
+    "physical_substep_s": 0.00125,
+    "heading_integration_changes_body_pose": false,
+    "scripted_bank_turn_override_found": false,
+    "decisions_come_from": "native categorical PPO chooser",
+    "motor_weights_frozen_during_chooser": true
+  },
+  "reviewed_fixes": [
+    "motor material matches requested material",
+    "resume budget sidecar bound to latest checkpoint",
+    "rejected FTCR capture before failure unwind"
+  ]
+}

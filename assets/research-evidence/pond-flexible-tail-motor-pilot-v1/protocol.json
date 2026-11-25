@@ -1,0 +1,52 @@
+{
+  "study": "flexible-tail-motor-pilot-v1",
+  "purpose": "Fit one new two-output actor from verified native fixture actions and evaluate whether it can reproduce moving turns and rest in physical closed loop.",
+  "wall_limit_s_per_process": 4,
+  "simulated_limit_s_per_case": 20,
+  "motor_schema": 1,
+  "control_s": 0.02,
+  "substep_s": 0.00125,
+  "input_count": 28,
+  "output_count": 2,
+  "hidden_widths": [32, 32],
+  "collection": {
+    "worlds": 12,
+    "forward_cases": 2,
+    "turn_cases": 6,
+    "calm_hold_cases": 2,
+    "gentle_current_hold_cases": 2,
+    "use": "Offline native diagnostic targets only; separate held-out physical validation."
+  },
+  "fitting": {
+    "device": "CUDA",
+    "objective": "mean squared root-target error",
+    "seed": 20261124,
+    "candidate_count": 1,
+    "maximum_adam_steps": 384,
+    "minibatch_max_rows": 512,
+    "learning_rate": 0.001,
+    "ppo_updates": 0
+  },
+  "fixed_evaluation": {
+    "forward": 1,
+    "signed_15_or_30_degree_turns": 4,
+    "calm_hold": 1,
+    "gentle_current_hold": 1,
+    "projected_speed_min_m_s": 0.006,
+    "course_error_max_deg": 5,
+    "depth_error_max_m": 0.001,
+    "tilt_max_deg": 10,
+    "hold_anchor_error_max_m": 0.002,
+    "hold_3d_com_speed_max_m_s": 0.0005,
+    "require_positive_whole_body_clearance": true
+  },
+  "gpu_feasibility_check": {
+    "independent_of_fitting": true,
+    "worlds": 256,
+    "controls_per_world": 8,
+    "substeps_per_control": 16,
+    "optimizer_updates": 0
+  },
+  "stop": "A failed collection or nonfinite weights blocks their consumers. A failed evaluation prevents adoption. Timeouts are recorded. This pilot has one attempt per stage.",
+  "production": "Live adoption requires a qualified motor and a separately learned chooser. Recordings stay explicit. Motor 336 and protected assets are outside this study."
+}

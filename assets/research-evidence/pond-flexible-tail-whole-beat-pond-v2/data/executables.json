@@ -1,0 +1,10 @@
+[
+  {
+    "path": "build/flexible-tail/whole-beat-pond-v2-build/Release/pond_flexible_tail_chooser_eval.exe",
+    "sha256": "29E254050DBFC0AAFCC8AE87DB8525E32D72A089A6EF6998478833F9AF40E27D"
+  },
+  {
+    "path": "build/flexible-tail/whole-beat-pond-v2-build/Release/pond_flexible_tail_chooser_session.exe",
+    "sha256": "38D6C03C9ABBEA899EDFE5235E165D0805AEAFB7DDE4DF43F2E92E3E46D10E75"
+  }
+]

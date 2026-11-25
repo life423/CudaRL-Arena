@@ -21,7 +21,7 @@ namespace residual_training {
 namespace rp=cudarl::residual_ppo;
 constexpr int Y=2, W=42;
 constexpr uint32_t program=pt::signed_half_second_v1;
-constexpr char classified_id[]="pond-motor-residual-classified-v2-2026-11-24";
+constexpr char classified_id[]="pond-motor-residual-classified-v3-2026-11-24";
 constexpr float actor_lr=.0003f,critic_lr=.001f;
 using Clock=std::chrono::steady_clock;
 double elapsed(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
@@ -61,10 +61,18 @@ struct Study{
             const auto physical=text_file(bound("classified_dynamics_path_absolute","classified_dynamics_sha256"));
             const auto collection=text_file(bound("classified_collection_path_absolute","classified_collection_sha256"));
             const auto physics_binding=scalar(physical,"bindings"),collection_binding=scalar(collection,"bindings");
-            require(scalar(physical,"passed")=="true"&&scalar(physics_binding,"protocol")=="pond-broadphase-dynamics-v1"&&
+            require(scalar(physical,"passed")=="true"&&scalar(physics_binding,"protocol")=="pond-broadphase-dynamics-v2"&&
                     scalar(physics_binding,"runtime_sha256")==residual_runtime_hash&&scalar(physics_binding,"sweep_sha256")==residual_sweep_hash&&
+                    scalar(physics_binding,"exact_geometry_sha256")==residual_geometry_hash&&
+                    scalar(physics_binding,"terrain_source_sha256")==residual_terrain_hash&&
+                    scalar(physics_binding,"math_profile_sha256")==residual_math_hash&&
+                    scalar(physics_binding,"device_inspect_sha256")==residual_device_inspect_hash&&
+                    scalar(physics_binding,"device_inspect_link_sha256")==residual_device_inspect_link_hash&&
+                    std::stod(scalar(physical,"wall_ms"))<4000&&
                     scalar(physical,"gpu_controls")=="2056"&&scalar(physical,"cpu_controls")=="8","Classified dynamics receipt mismatch");
-            require(scalar(collection,"passed")=="true"&&scalar(collection_binding,"protocol")=="pond-collection-replay-v1"&&
+            require(scalar(collection,"passed")=="true"&&scalar(collection_binding,"protocol")=="pond-collection-replay-v3"&&
+                    scalar(collection_binding,"optimizer_calls")=="0"&&
+                    std::stod(scalar(collection,"wall_ms"))<4000&&
                     scalar(collection_binding,"source_sha256")==residual_source_hash&&scalar(collection,"physical_controls")=="32768"&&
                     scalar(collection,"physical_substeps")=="327680"&&scalar(collection,"completed_updates")=="0","Classified collection receipt mismatch");
         }else require(scalar(text_file(prior),"qualified_physics_source_sha256")==ph::physics_source_sha256(),"Qualified physical source changed");
@@ -74,8 +82,13 @@ struct Study{
     }
 };
 struct Extra{
-    device_ptr<float> action{Rows*Y},mask{Rows},base{Rows*A},mb_action{MB*Y},mb_mask{MB},mb_kl{MB},pack{Rows};
-    device_ptr<int> eligible{Rows};
+    device_ptr<float> action{Rows*Y},mask{Rows},base{Rows*A},mb_action,mb_mask,mb_kl,pack;
+    device_ptr<int> eligible;
+    explicit Extra(BufferUse use=BufferUse::Training){
+        if(use==BufferUse::Training){
+            mb_action.allocate(MB*Y);mb_mask.allocate(MB);mb_kl.allocate(MB);pack.allocate(Rows);eligible.allocate(Rows);
+        }
+    }
 };
 __global__ void compose(const pt::Task* tasks,const float* base,float* actions,float* logp,float* mask,float* combined,float* base_history){
     const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;

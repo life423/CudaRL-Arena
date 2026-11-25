@@ -23,6 +23,36 @@ closed; this plan does not reuse their budgets or results as a passing gate.
 
 ## Measuring speed, depth and exploration
 
+November 24 independent review at `058fda5`: a synthetic evaluator reported
+16/25 tiles and 0/9 interior tiles for repeated perimeter laps, versus 25/25
+and 9/9 for the interior sweep. Drift, stalls and border jitter earned no
+coverage. Its sampled static geometry found room for a 25 mm deep pose at
+X = 400 mm, where an 80 mm deep pose failed. These checks exercise the metric
+and static fit. The reachable denominator still needs connected swept-corridor
+evidence and validated tracking at each depth. The depth adapter must supply
+the held vertical reference used by `start_com_model.y`; changing only
+`Request::position.y` leaves that motor observation unchanged.
+
+The separate `codex/pond-exploration-evaluator` commit `a64bf10` reports
+75.9% for its synthetic interior-and-shoals path, 25.5% for seven perimeter
+laps and 0% for stalls and jitter. A long-absence revisit earned novelty
+without adding a unique cell. Its fixed-posture map excludes 5.9% and 14.8%
+of otherwise clear swim time in the first two traces. Keep that excluded time
+visible until the connected reachability map is qualified. The committed
+50 mm evaluator and the earlier 72 mm prototype are separate measurements.
+
+The isolated depth-adapter patch `64acca9` on `codex/motor-depth-request`
+reports eight focused observation passes and 280 unchanged legacy arrays.
+It is opt-in for lane-following Swim. Its proposed 78–82 mm transitions have
+yet to demonstrate sustained forward swimming and safe depth tracking.
+
+Keep unique area separate from revisitation reward. Treat proposed cell size,
+displacement, dwell, rearm time and reward scales as candidate settings.
+Check the transport rule on efficient coasting as well as passive drift.
+Start with the qualified depth and 8 mm/s request. Add depth and speed choices
+after those controls pass independent tracking checks. This review authorizes
+no chooser training or simulator changes.
+
 The first motor lesson tests 8 mm/s at the starting depth. Later lessons should
 interleave shallower and deeper depth requests, the original speed, faster
 speeds and explicit Rest. The same motor receives a persistent 3-D request.

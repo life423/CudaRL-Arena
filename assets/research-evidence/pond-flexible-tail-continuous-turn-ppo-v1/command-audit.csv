@@ -1,0 +1,5 @@
+controller,request_deg_each_way,gait_snapshots,negative_left_minus_right_yaw,mean_left_minus_right_yaw_rad,mean_magnitude_rad
+saved,15,16,16,-0.038974511,0.038974511
+ppo8,15,16,16,-0.039794464,0.039794464
+saved,30,16,16,-0.076752166,0.076752166
+ppo8,30,16,16,-0.078271915,0.078271915

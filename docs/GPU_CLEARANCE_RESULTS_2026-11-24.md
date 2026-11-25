@@ -44,16 +44,64 @@ control's speedup does not establish full PPO training throughput.
 
 ## Full collector
 
-The sole attempt to check the complete 512-world, 64-control collection path
+The first attempt to check the complete 512-world, 64-control collection path
 hit its four-second wall-clock cap before issuing its first physical control.
 The watchdog recorded zero issued controls, zero completed controls/substeps
 and zero optimizer calls. That allocation ended at the timeout.
 [Timeout record](../assets/research-evidence/pond-collection-replay-v1/timeout.json)
 
-The normal trainer's new classified-clearance mode remains gated and
-unqualified. The next focused task is measuring the cost before the first
-issued control. The single-control benchmark cannot establish full-rollout
-throughput or a complete PPO speedup.
+The follow-up reads the frozen archive once, loads saved weights directly into
+512-row inference networks, and skips 38 GPU allocations for training buffers.
+It finished startup and uploads in 192.539 ms. The single v2 replay still hit
+its four-second deadline inside first-control preparation, with zero controls
+issued and zero optimizer updates. The original and follow-up allocations are
+closed. [Timed replay](../assets/research-evidence/pond-collection-replay-v2/timeout.json)
+
+A separate Driver API probe created a cold CUDA context and four events in
+120.155 ms, then hit four seconds within `cuModuleLoad` for the exact extracted
+36,119,504-byte observation module. It launched zero kernels. The same module
+contains the physical step, reset, and initialization kernels, with 10.01 MB,
+8.98 MB, and 8.98 MB of native instructions respectively. Native `sm_120`
+code is present. The successful dynamics benchmark's swept step sits in a
+13.09 MB module. Its 4.45 MB module belongs to the older baseline. Inspecting
+the replay image revealed three inlined copies of the per-link search, totaling
+25.67 MB. The shared implementation gives the sampler, per-link search, and
+whole-body inspection one device definition each. The qualified arithmetic
+flags and the exact search bodies are preserved.
+[Module probe](../assets/research-evidence/pond-collection-replay-v2/module-probe.json)
+
+## Shared device inspection qualification
+
+The linked CUDA image fell from 36.12 MB to 14.15 MB (61% smaller). The replay
+and residual trainer use the same separately compiled terrain sampler, link
+search, and whole-body inspection. The sampler retains its no-inline
+annotation. Each gate used a separate CUDA process, in the order below.
+The module probe ran first, so driver and filesystem caches may have been
+warmer for the later runs.
+
+| Gate | Process time | Result |
+| --- | ---: | --- |
+| Load the four trainer kernels | 2.101 s | Passed, zero kernel launches |
+| Matched CPU/CUDA dynamics | 2.492 s | Passed, 2,064 controls and 37 force-positive GPU bank substeps |
+| Full saved 512-world × 64-control rollout | 0.418 s | Passed, 32,768 controls and 327,680 substeps |
+
+The dynamics comparison found zero failed CPU/CUDA comparisons. The exact
+and accelerated GPU paths agreed on motion and contact force, including all
+37 bank-contact substeps. The late 512-world control took 152.22 ms with full
+clearance and 2.08 ms with the shared accelerated build.
+
+In the full replay, GPU physics and task work took 146.60 ms versus 12,354.26
+ms in the matching archived collection. The rollout phase delivered 148,175
+transitions/s. All compared observations, actions, probabilities, values,
+rewards, movement metrics and accounting matched the archived reference.
+All full-replay substeps were certified clear. The separate dynamics gate
+exercised real bank contact with the exact fallback. Neither test ran an
+optimizer. These results qualify this collector path without establishing
+complete PPO training throughput or turning performance.
+
+[Module load](../assets/research-evidence/pond-collection-replay-v3-module/result.json) ·
+[Physics parity](../assets/research-evidence/pond-broadphase-dynamics-v2/result.json) ·
+[Full replay](../assets/research-evidence/pond-collection-replay-v3/result.json)
 
 ## Build and integration checks
 

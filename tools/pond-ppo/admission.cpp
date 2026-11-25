@@ -82,21 +82,68 @@ void validate_gate_documents(const std::string& cpu,const std::string& gpu,
 void prerequisites(const std::filesystem::path& protocol_path,
                    const std::filesystem::path& cpu_gate,
                    const std::filesystem::path& cuda_gate,
-                   uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum) {
+                   uint64_t evaluator_source,uint64_t parent_checksum,uint32_t turn_curriculum,
+                   bool direct_retrain,bool course_context,bool medium_turn,bool align_turn_speed,
+                   bool fresh_motor,bool correlated_motor,bool propulsion_motor) {
     require(!protocol_path.empty()&&!cpu_gate.empty()&&!cuda_gate.empty(),"Sealed protocol and CPU/CUDA physics results required");
     const auto protocol=text_file(protocol_path);
-    require(turn_curriculum<=5,"Unknown training-only study program");
-    require(scalar(protocol,"protocol_id")==
-        (turn_curriculum==5?pond_ppo::signed_course_study_protocol_id:turn_curriculum==4?pond_ppo::half_second_study_protocol_id:(turn_curriculum==3?pond_ppo::repeated_study_protocol_id:(turn_curriculum==2?pond_ppo::course_study_protocol_id:(turn_curriculum==0?pond_ppo::default_study_protocol_id:pond_ppo::curriculum_study_protocol_id)))),
-        "Protocol and explicit curriculum differ; cross-study resume is prohibited");
+    require(turn_curriculum<=5&&(!direct_retrain||turn_curriculum==5),"Unknown training-only study program");
+    require(!(course_context&&medium_turn)&&(!(course_context||medium_turn)||direct_retrain),"Conflicting direct study modes");
+    require(!align_turn_speed||medium_turn,"Aligned-speed reward requires the medium-turn study");
+    require(!fresh_motor||(turn_curriculum==5&&!direct_retrain),"Fresh motor requires the signed course program");
+    require(!correlated_motor||fresh_motor,"Correlated exploration requires the fresh motor contract");
+    require(!propulsion_motor||(fresh_motor&&!correlated_motor),"Propulsion requires its own fresh motor allocation");
+    constexpr std::array standard_protocols{pond_ppo::default_study_protocol_id,pond_ppo::curriculum_study_protocol_id,
+        pond_ppo::course_study_protocol_id,pond_ppo::repeated_study_protocol_id,
+        pond_ppo::half_second_study_protocol_id,pond_ppo::signed_course_study_protocol_id};
+    const char* protocol_id=standard_protocols[turn_curriculum];
+    if(direct_retrain)protocol_id=pond_ppo::direct_retrain_protocol_id;
+    if(course_context)protocol_id=pond_ppo::course_context_protocol_id;
+    if(medium_turn)protocol_id=pond_ppo::medium_turn_protocol_id;
+    if(fresh_motor)protocol_id=pond_ppo::fresh_motor_protocol_id;
+    if(correlated_motor)protocol_id=pond_ppo::correlated_motor_protocol_id;
+    if(propulsion_motor)protocol_id=pond_ppo::propulsion_motor_protocol_id;
+    require(scalar(protocol,"protocol_id")==protocol_id,"Protocol and explicit curriculum differ; cross-study resume is prohibited");
     if(turn_curriculum==1)require(scalar(protocol,"turn_curriculum_program")=="paired-gentle-moderate-v1","Missing bound curriculum program");
     if(turn_curriculum==3)require(scalar(protocol,"study_program")=="repeated-headings-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound repeated-request program/physical launch profile");
-    if(turn_curriculum==5)require(scalar(protocol,"study_program")=="signed-half-second-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound signed actor course program/physical launch profile");
+    if(turn_curriculum==5)require(scalar(protocol,"study_program")==
+        (propulsion_motor?"propulsion-motor-v1":correlated_motor?"correlated-motor-v1":fresh_motor?"fresh-motor-v1":medium_turn?"medium-turn-v1":course_context?"course-context-v1":direct_retrain?"direct-retrain-v1":"signed-half-second-v1")&&
+        scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound signed actor course program/physical launch profile");
+    if(direct_retrain) {
+        require(scalar(protocol,"max_process_wall_seconds")=="4"&&scalar(protocol,"max_trial_wall_seconds")=="20"&&
+                std::stof(scalar(protocol,"actor_learning_rate"))==pond_ppo::direct_retrain_actor_learning_rate&&
+                std::stof(scalar(protocol,"critic_learning_rate"))==pond_ppo::learning_rate,"Direct retraining parameters differ from sealed allocation");
+    }
+    if(medium_turn)require(scalar(protocol,"reward_arm")== (align_turn_speed?"aligned_speed":"reference"),
+        "Medium-turn reward arm differs from the sealed allocation");
+    if(fresh_motor) {
+        require(scalar(protocol,"max_process_wall_seconds")=="4"&&scalar(protocol,"max_trial_wall_seconds")=="20"&&
+                scalar(protocol,"initialization")==(correlated_motor?"exact_fresh_checkpoint_8":"seeded_fan_in_hidden_zero_output")&&
+                std::stof(scalar(protocol,"actor_learning_rate"))==pond_ppo::fresh_actor_learning_rate&&
+                std::stof(scalar(protocol,"critic_learning_rate"))==pond_ppo::fresh_critic_learning_rate&&
+                std::stof(scalar(protocol,"fixed_latent_sigma"))==pond_ppo::fresh_sigma&&
+                std::stof(scalar(protocol,"holding_gain"))==pond_ppo::fresh_holding_gain,
+                "Fresh motor configuration differs from sealed allocation");
+    }
+    if(correlated_motor) {
+        require(scalar(protocol,"additional_updates")=="8"&&scalar(protocol,"starting_update")=="8"&&
+                scalar(protocol,"noise_history")=="reset_on_episode_or_rollout"&&
+                std::stof(scalar(protocol,"exploration_rho"))==pond_ppo::correlated_rho,
+                "Correlated exploration differs from sealed allocation");
+    }
+    if(propulsion_motor) {
+        require(scalar(protocol,"training_tasks")=="straight_only"&&
+                scalar(protocol,"noise_history")=="reset_on_episode_or_rollout"&&
+                std::stof(scalar(protocol,"exploration_rho"))==pond_ppo::correlated_rho&&
+                std::stof(scalar(protocol,"forward_reward_scale_m_s"))==.001f,
+                "Propulsion lesson differs from sealed allocation");
+    }
     if(turn_curriculum==4)require(scalar(protocol,"study_program")=="half-second-course-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound half-second course program/physical launch profile");
     if(turn_curriculum==2)require(scalar(protocol,"study_program")=="course-direction-v1"&&scalar(protocol,"physical_kernel_block_threads")=="8","Missing bound course-reward program/physical launch profile");
     require(scalar(protocol,"source_identity_fnv1a64")==std::to_string(source_identity()),"Trainer source identity changed");
     require(scalar(protocol,"qualified_physics_source_sha256")==physics_source_sha256(),"Qualified physics source binding differs from compiled model");
-    require(scalar(protocol,"max_updates")==(turn_curriculum>=4?"8":"32")&&scalar(protocol,"worlds")=="512"&&scalar(protocol,"rollout_controls")=="64","Protocol work allocation changed");
+    require(scalar(protocol,"max_updates")==(correlated_motor?"16":turn_curriculum>=4?"8":"32")&&
+            scalar(protocol,"worlds")=="512"&&scalar(protocol,"rollout_controls")=="64","Protocol work allocation changed");
     require(scalar(protocol,"max_wall_seconds")=="1200"&&scalar(protocol,"max_evidence_bytes")=="4294967296","Protocol aggregate caps changed");
     require(evaluator_source!=0&&scalar(protocol,"retention_evaluator_source_fnv1a64")==std::to_string(evaluator_source),"Retention evaluator source differs from sealed protocol");
     for(const auto& entry:{std::make_pair(cpu_gate,"cpu_gate_sha256"),std::make_pair(cuda_gate,"cuda_gate_sha256")})

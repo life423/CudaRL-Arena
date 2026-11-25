@@ -1,0 +1,18 @@
+{
+  "phase": "compile",
+  "started_utc": "2026-11-24T20:33:06.7835570Z",
+  "wall_s": 0.7829086,
+  "limit_s": 600.0,
+  "exit": 0,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+  "arguments": [
+    "--build",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-aware-v4-build",
+    "--config",
+    "Release",
+    "--parallel",
+    "4"
+  ]
+}

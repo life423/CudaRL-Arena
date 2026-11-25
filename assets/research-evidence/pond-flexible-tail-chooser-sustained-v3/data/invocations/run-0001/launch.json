@@ -1,0 +1,28 @@
+{
+  "steering_mode": "held-heading",
+  "remaining_training_budget_s": 1800.0,
+  "arguments": [
+    "new",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\yaw-offset-update-8.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-chooser-bank-v2\\data\\training\\actor-final.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-sustained-v3\\training",
+    "64",
+    "1800",
+    "held-heading"
+  ],
+  "binaries": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "7CD9CA86D32F74C5EA17E43CE93B28A7A078F480F3D26A9E23A3A63C30EEB6AA",
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-session-build\\Release\\pond_flexible_tail_chooser_session.exe"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "2719FE06B896F2ED519D17204B9F1CCED9A301CFEAD119DDB91500A4CA0AAC53",
+      "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-session-build\\Release\\pond_flexible_tail_chooser_eval.exe"
+    }
+  ],
+  "resume": false
+}

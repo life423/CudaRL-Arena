@@ -16,6 +16,7 @@ if(CUDARL_RESIDUAL_FOUR_EVALUATOR)
 endif()
 foreach(relative IN ITEMS
         tools/pond-candidate-check/check.cpp tools/pond-candidate-check/CMakeLists.txt
+        tools/pond-ppo/turn_course_observation.h
         tools/pond-residual-ppo/evaluator.h ${residual_contract}
         src/rl/pond_ppo_contract.h src/rl/pond_ppo_task.h src/rl/pond_ppo_schedule.h src/simulation/pond_runtime.h
         src/environment/pond_geometry_v1.h src/environment/pond_body_geometry.h src/environment/pond_swept_clearance.h
@@ -42,5 +43,7 @@ if(CUDARL_RESIDUAL_EVALUATOR)
 endif()
 if(CUDARL_RESIDUAL_FOUR_EVALUATOR)
     target_compile_definitions(pond_candidate_check PRIVATE CUDARL_RESIDUAL_EVALUATOR CUDARL_RESIDUAL_FOUR_EVALUATOR)
+    add_executable(pond_course_rate_pure ../pond-residual-four-ppo/course_rate_reward_test.cpp)
+    target_include_directories(pond_course_rate_pure PRIVATE ../../src ../../src/nn)
 endif()
 target_link_libraries(pond_candidate_check PRIVATE bcrypt)

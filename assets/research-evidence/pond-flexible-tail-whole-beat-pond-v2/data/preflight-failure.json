@@ -1,0 +1,10 @@
+{
+  "reason": "PowerShell metadata path binding failed before manifest, compilation or native process launch",
+  "stage": "preflight",
+  "elapsed_s": 0.3821076,
+  "next_execution": "build/flexible-tail/whole-beat-pond-v2-execution",
+  "pass": false,
+  "physics_steps": 0,
+  "optimizer_calls": 0,
+  "corrected": "Read metadata with Get-Content -LiteralPath"
+}

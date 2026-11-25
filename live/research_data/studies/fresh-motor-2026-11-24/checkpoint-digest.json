@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "file_sha256": "01fc8babf94183d9a629af769f1a8c339713d02c15bdb20144f0325dc8e759fb",
+  "file_bytes": 957464,
+  "payload_checksum_fnv1a64": "8404228038812275451",
+  "protocol_checksum_fnv1a64": "15692166677889905924",
+  "source_identity_fnv1a64": "6737539132314389933",
+  "runtime_version": 4,
+  "collision_envelope_version": 2,
+  "observation_schema": 6,
+  "completed_updates": 8,
+  "training_controls": 262144,
+  "training_substeps": 2621440,
+  "actor_Adam_calls": 256,
+  "critic_Adam_calls": 256,
+  "world_stride": 1384,
+  "task_stride": 368,
+  "raw_checkpoint_in_app": false,
+  "repository_checkpoint": "assets/research-evidence/pond-fresh-motor-v1/candidate-8.bin",
+  "validation": "Native evaluation parsed this checkpoint; this export records its envelope, header, counters and file digest. It performs no new policy evaluation."
+}

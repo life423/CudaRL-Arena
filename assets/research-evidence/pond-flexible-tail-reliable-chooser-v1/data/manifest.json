@@ -1,0 +1,2912 @@
+[
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\bank-learning-curve.csv",
+    "archived": "bank-learning-curve.csv",
+    "sha256": "7B2ADF1BA64938B811EA24A5D418FBB30C00ADB151848F37291DD9D1E27704C6",
+    "bytes": 912
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\bindings.json",
+    "archived": "bindings.json",
+    "sha256": "7C15719EF7B6C8DCCC8D2F2F22BC11E913FC77A55F253DE9EDC43772514045A4",
+    "bytes": 15739
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\deployment.json",
+    "archived": "deployment.json",
+    "sha256": "BF9E66FE069A7D6D5E9A5482A522FFEEFEEA5AE148C6DEFF29AAC43F18C113A8",
+    "bytes": 2376
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-parity-before-start-fix.json",
+    "archived": "godot-parity-before-start-fix.json",
+    "sha256": "DF749FDB75C958C05805D40522A384689D3D3F14739891D613437D80C7A47000",
+    "bytes": 380
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-parity.json",
+    "archived": "godot-parity.json",
+    "sha256": "3120CEDDF0F6290E93D8B33D61F8E0DE2F1799A309A4A334ABAF2DA3C6A68045",
+    "bytes": 364
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui-before-label-fix.json",
+    "archived": "godot-ui-before-label-fix.json",
+    "sha256": "9B3D5595F68F766942D737F76D3EC4F8F199599AA0EAAB901E9AE41C977B284E",
+    "bytes": 217
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\previous-preflight.json",
+    "archived": "previous-preflight.json",
+    "sha256": "498C98E940A583B199A8FB7C0F16B0A85EC611095E78D6355BFF36BA6CA9DBCD",
+    "bytes": 355
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\result.json",
+    "archived": "result.json",
+    "sha256": "0F326949CC9326437D9A5751D2A1857137AFC3EBC95C433B3E28556DD78DB539",
+    "bytes": 1629
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\work-ledger.json",
+    "archived": "work-ledger.json",
+    "sha256": "3D3EAC3E5957F45AD37B7AA596218147EB8B3F0B0EA72D855915240152E6A87C",
+    "bytes": 466
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\capacity\\capacity.receipt.json",
+    "archived": "capacity/capacity.receipt.json",
+    "sha256": "5FDFEC8CA0D005921F76F9A7042776CDDFD873C73410B6D283F5985A2B995585",
+    "bytes": 495
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\capacity\\result.json",
+    "archived": "capacity/result.json",
+    "sha256": "394FC69BC6B27521220611AE60BB63EE5A6833DAB89B323B6EC8E02AC584A8F5",
+    "bytes": 2716
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\compilation\\compile-capacity.receipt.json",
+    "archived": "compilation/compile-capacity.receipt.json",
+    "sha256": "7AD7A7C0A11BA994A14B65D0D9A1D8A9E8737D0F2C3B1E896EBE624815F8F04A",
+    "bytes": 520
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\compilation\\compile.receipt.json",
+    "archived": "compilation/compile.receipt.json",
+    "sha256": "5BA36544DDA1EF9EEFC8C9E3B37EC352731379E5D542FDCC4FD7A0687F75E85B",
+    "bytes": 608
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\compilation\\configure-capacity.receipt.json",
+    "archived": "compilation/configure-capacity.receipt.json",
+    "sha256": "110B2084EFF0DDD4283D71365C57794131825FAF1E5A7C003F12D21EE71E7996",
+    "bytes": 568
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\compilation\\configure.receipt.json",
+    "archived": "compilation/configure.receipt.json",
+    "sha256": "5B3E2F2A2C92F12C11A2992D944F10299350B58CF615CFFC029BA616B00D2E3B",
+    "bytes": 686
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\1100x760-details.png",
+    "archived": "godot-ui/1100x760-details.png",
+    "sha256": "275E45D9E38B63B10223E691AE803C5803B2517EA94840A81533E18E4D5219FB",
+    "bytes": 384143
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\1100x760-main.png",
+    "archived": "godot-ui/1100x760-main.png",
+    "sha256": "E843F2D0824B3C95547CE15B20BC653A0FE66EE1314DB538B9320A4B1160014D",
+    "bytes": 393938
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\390x844-details.png",
+    "archived": "godot-ui/390x844-details.png",
+    "sha256": "DBA2D9F693C5B7D600D034DCF5FC18E9604AB4BB541C421475A2A86C50FF26A2",
+    "bytes": 195337
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\390x844-main.png",
+    "archived": "godot-ui/390x844-main.png",
+    "sha256": "A76F376195D2FFCB01C51C25EE7C49FE22DCB5CD64DF40A237DFC16B20520686",
+    "bytes": 209419
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\768x1024-details.png",
+    "archived": "godot-ui/768x1024-details.png",
+    "sha256": "96AAB9DFCEE6825A60F5B5B739012569D1CE7BBC4BC8F9E225064F5A78D50ED5",
+    "bytes": 389030
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\768x1024-main.png",
+    "archived": "godot-ui/768x1024-main.png",
+    "sha256": "7DAF0721562211FF2128EB5AD98E97C22384DD4872A51E8E4E3A2EFE6B9AB8C3",
+    "bytes": 398853
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\844x390-details.png",
+    "archived": "godot-ui/844x390-details.png",
+    "sha256": "865A50A357C7502DC2F25DF35DE9741F434ACDA6AE04E66D08CE72CF1DA674FB",
+    "bytes": 175775
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\844x390-main.png",
+    "archived": "godot-ui/844x390-main.png",
+    "sha256": "299350BBD28741937D7F7BC73ABA95B1411C2D746B1638702728517E946EBE2E",
+    "bytes": 185055
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\godot-ui\\ui-result.json",
+    "archived": "godot-ui/ui-result.json",
+    "sha256": "C8EF426B3C6FFA6A0AAA5AB854E5792CB0CADBCCBC9C7D1C32626EF562DA91CD",
+    "bytes": 217
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\protected-original-godot\\flexible_tail_preview.gd",
+    "archived": "protected-original-godot/flexible_tail_preview.gd",
+    "sha256": "E6C085592B087D26472192A8E0F327317363F46ECBC10DA4421997E78C0FD676",
+    "bytes": 27467
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\protected-original-godot\\flexible_tail_preview.tscn",
+    "archived": "protected-original-godot/flexible_tail_preview.tscn",
+    "sha256": "E321CCC704759C2E848F82FD1D014E7975BB27FAE18144FFD1DA8DD8D4F14A63",
+    "bytes": 9559
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\core\\checkpoint.cpp",
+    "archived": "source/src/core/checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770",
+    "bytes": 4620
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\core\\checkpoint.h",
+    "archived": "source/src/core/checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D",
+    "bytes": 2413
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\core\\hd.h",
+    "archived": "source/src/core/hd.h",
+    "sha256": "CB1105C3CE5ED2D53C838344ED4FAE35F4BBDAA99AC0599E9B60948E7D4AF030",
+    "bytes": 623
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\core\\rng.h",
+    "archived": "source/src/core/rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627",
+    "bytes": 1401
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\block_reduce.h",
+    "archived": "source/src/cuda/block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77",
+    "bytes": 752
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\cuda_memory.h",
+    "archived": "source/src/cuda/cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00",
+    "bytes": 4350
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\device.cu",
+    "archived": "source/src/cuda/device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F",
+    "bytes": 1532
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\device.h",
+    "archived": "source/src/cuda/device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D",
+    "bytes": 765
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\pond_geometry_inspect_link.cu",
+    "archived": "source/src/cuda/pond_geometry_inspect_link.cu",
+    "sha256": "05841C89C925E76174F88E4EC6DAC000BF9197FA9648C96FE5AFC564A882062B",
+    "bytes": 411
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\pond_geometry_inspect.cu",
+    "archived": "source/src/cuda/pond_geometry_inspect.cu",
+    "sha256": "06630CDDC21A428DF9239563F8029FFE2573F708AE94580A3926FE24BA378143",
+    "bytes": 368
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\cuda\\pond_math_profile.h",
+    "archived": "source/src/cuda/pond_math_profile.h",
+    "sha256": "9E7179A62B0BDD029C22F7C803B136B0A01F9D181FDB1CA436A75A8E696B7968",
+    "bytes": 2194
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\environment\\flexible_tail_clearance.h",
+    "archived": "source/src/environment/flexible_tail_clearance.h",
+    "sha256": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1",
+    "bytes": 2171
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\environment\\pond_body_geometry.h",
+    "archived": "source/src/environment/pond_body_geometry.h",
+    "sha256": "D01D3A4845F63F084E4F5456F7542067924823A7C78BA8EEAC8BCB2D91BF3008",
+    "bytes": 18766
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\environment\\pond_geometry_v1.h",
+    "archived": "source/src/environment/pond_geometry_v1.h",
+    "sha256": "695A985B8C72C347925D5425882B795E8D7AD4B4BA5F47D7B35FABC21F613AF3",
+    "bytes": 7282
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\environment\\pond_swept_clearance.h",
+    "archived": "source/src/environment/pond_swept_clearance.h",
+    "sha256": "BACD2B69F64020F9BC90F782DF60C0A0126098DE2FD3F17AE1630C965AB9C270",
+    "bytes": 4434
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\godot\\flexible_tail_live.cpp",
+    "archived": "source/src/godot/flexible_tail_live.cpp",
+    "sha256": "0C9F9BD33A0F185A3668F815ACA88FB3F6A210CDACCD6E1423F26F35ED78B7BC",
+    "bytes": 12414
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\godot\\flexible_tail_live.h",
+    "archived": "source/src/godot/flexible_tail_live.h",
+    "sha256": "93A714413988DF3408F72344AE785A4E7E5B7C6B4121DA3DFF864CCDAC86F259",
+    "bytes": 706
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\godot\\hold_lab_preview.cpp",
+    "archived": "source/src/godot/hold_lab_preview.cpp",
+    "sha256": "5DDDDBAF7507D1CB4032377A150204E625C0CEE1A37FBF86EF3229128E5C01E3",
+    "bytes": 21122
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\godot\\hold_lab_preview.h",
+    "archived": "source/src/godot/hold_lab_preview.h",
+    "sha256": "5019559E4351AF5AFE000B2B0370B78831294E2D7CE25659623379372D557650",
+    "bytes": 1178
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\godot\\register_flexible_tail_live.cpp",
+    "archived": "source/src/godot/register_flexible_tail_live.cpp",
+    "sha256": "85FD9D3D6CBF078688DB6B38B91C89CDA6FC1CFCC37C4EC10512942ED601E5E4",
+    "bytes": 885
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\godot\\register_live_types.cpp",
+    "archived": "source/src/godot/register_live_types.cpp",
+    "sha256": "70B323CF74DC75AFEE1C5E4FEEB60DDFA49B6B9CAD5A97AC33FDFFA5145D9190",
+    "bytes": 850
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\adam_config.h",
+    "archived": "source/src/nn/adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73",
+    "bytes": 585
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\adam.cu",
+    "archived": "source/src/nn/adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3",
+    "bytes": 5719
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\adam.h",
+    "archived": "source/src/nn/adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9",
+    "bytes": 2093
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\gemm.cu",
+    "archived": "source/src/nn/gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4",
+    "bytes": 9200
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\gemm.h",
+    "archived": "source/src/nn/gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6",
+    "bytes": 2434
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\loss.cu",
+    "archived": "source/src/nn/loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572",
+    "bytes": 910
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\loss.h",
+    "archived": "source/src/nn/loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA",
+    "bytes": 356
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\mlp_cpu.h",
+    "archived": "source/src/nn/mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153",
+    "bytes": 6814
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\mlp_gpu.cu",
+    "archived": "source/src/nn/mlp_gpu.cu",
+    "sha256": "6052183959B9B692CA201701CA297CFE7A481F630B3342341142480FBF8CEBEE",
+    "bytes": 9374
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\mlp_gpu.h",
+    "archived": "source/src/nn/mlp_gpu.h",
+    "sha256": "25DDC2BA76C9BF09099C8D18AB0CA4E1717D224B61FD8431E72AF16EA93A990C",
+    "bytes": 3061
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\mlp_spec.h",
+    "archived": "source/src/nn/mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF",
+    "bytes": 6090
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\heading_request_observation.h",
+    "archived": "source/src/nn/motor/heading_request_observation.h",
+    "sha256": "D07B38E74F61120CECF0F52E1280CAA284DC5F046245A26628F9E1D5A24647C2",
+    "bytes": 988
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\hold_assessment.h",
+    "archived": "source/src/nn/motor/hold_assessment.h",
+    "sha256": "CDDA2488E1AD54C902DFEC54FF1891E49E7638C50607ECF62D90DAFFBD8DC569",
+    "bytes": 4385
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\joint_motor.h",
+    "archived": "source/src/nn/motor/joint_motor.h",
+    "sha256": "DC53D22CFF99352C5E378B6BCD919569C9A26455AA5DF9F8EC1C36172171314F",
+    "bytes": 5836
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\movement_model.h",
+    "archived": "source/src/nn/motor/movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5",
+    "bytes": 10657
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\observation_contract.h",
+    "archived": "source/src/nn/motor/observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332",
+    "bytes": 617
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\pond_motor_observation.h",
+    "archived": "source/src/nn/motor/pond_motor_observation.h",
+    "sha256": "3CB25C6CC4538E6030A6BDE4DF49704BED6470A605B06E9D137A55AB1767103C",
+    "bytes": 7260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\saved_motor_contract.cpp",
+    "archived": "source/src/nn/motor/saved_motor_contract.cpp",
+    "sha256": "98BA8BD500EDBFEF9C62B686E1B9C3946C3A6750DDEA94096ED29B7DD060F49A",
+    "bytes": 1386
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\saved_motor_contract.h",
+    "archived": "source/src/nn/motor/saved_motor_contract.h",
+    "sha256": "2CD731543CBD850897CEB1A4A32E34E364319CB273DCEBBD45B68FA99D7A0FDC",
+    "bytes": 698
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\state.h",
+    "archived": "source/src/nn/motor/state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F",
+    "bytes": 2183
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\nn\\motor\\straight_task.h",
+    "archived": "source/src/nn/motor/straight_task.h",
+    "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22",
+    "bytes": 24241
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\physics\\contact.h",
+    "archived": "source/src/physics/contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6",
+    "bytes": 7503
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\physics\\dynamics.h",
+    "archived": "source/src/physics/dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6",
+    "bytes": 9192
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\physics\\flexible_tail.h",
+    "archived": "source/src/physics/flexible_tail.h",
+    "sha256": "4FC5CBD001A34E99AB7F5B7EC2EA060F18F807CC7DD39FB7A8EFB48B4D8B7041",
+    "bytes": 13291
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\append_hold_checkpoint.h",
+    "archived": "source/src/rl/append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B",
+    "bytes": 5009
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\ar_gaussian_math.h",
+    "archived": "source/src/rl/ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797",
+    "bytes": 2719
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_bank_observation.h",
+    "archived": "source/src/rl/flexible_tail_bank_observation.h",
+    "sha256": "4D6C56AA78F5A611DAD52DE3EB5EB34710097F5AECDD85FFE5943D3D8D893C9B",
+    "bytes": 4745
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_beat_course.h",
+    "archived": "source/src/rl/flexible_tail_beat_course.h",
+    "sha256": "9BF3867813B10E82471B30E42CFC3A99162D983D4E25A7B394EF3605D2B1D72A",
+    "bytes": 5854
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_choices.h",
+    "archived": "source/src/rl/flexible_tail_choices.h",
+    "sha256": "8DDFB8FAE4314C0C078A621F1202E44320C6F2D5805DF862488BE7022CA37ADB",
+    "bytes": 2967
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_chooser_checkpoint.h",
+    "archived": "source/src/rl/flexible_tail_chooser_checkpoint.h",
+    "sha256": "33B1B4C1C7DD0667918CCA618902CC57EE945A062B304B350268C43B57231F30",
+    "bytes": 1485
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_chooser.h",
+    "archived": "source/src/rl/flexible_tail_chooser.h",
+    "sha256": "3375127364EE430BA1C5C743EA25C727F7C5C656E79D2C3DB332BF7033DD93C4",
+    "bytes": 24897
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_fast_steering.h",
+    "archived": "source/src/rl/flexible_tail_fast_steering.h",
+    "sha256": "9EF71F41496917F7F9A6200F059076A45B1C073011E54A938549248A6596ED9A",
+    "bytes": 27403
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_gait.h",
+    "archived": "source/src/rl/flexible_tail_gait.h",
+    "sha256": "E6F237A7F0BCA2FD57D29F1673A92582726F363B6B2E3EE1EA3471C7AF28FA14",
+    "bytes": 839
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_launch.h",
+    "archived": "source/src/rl/flexible_tail_launch.h",
+    "sha256": "8497873E40DC9E26F3546E23C36E7601E7911EE2AD01255FCFDA51202CBABDEE",
+    "bytes": 3101
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_motor.h",
+    "archived": "source/src/rl/flexible_tail_motor.h",
+    "sha256": "43B924DB0151C4DE6A202211E3AC97E3F9B3AC191ACBF788CC0DDFD0C0E2B998",
+    "bytes": 3691
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_navigation.h",
+    "archived": "source/src/rl/flexible_tail_navigation.h",
+    "sha256": "634A7A99C49F3E9E56AF6E848C00866DBF184988A183D0C093A4AC1AF8334074",
+    "bytes": 10614
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_rate_chooser.h",
+    "archived": "source/src/rl/flexible_tail_rate_chooser.h",
+    "sha256": "81F14D3B9E496BC65929143FD4C075F0C89029D5F894DB8ECF5BE849180F71B0",
+    "bytes": 10117
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_steering_policy.h",
+    "archived": "source/src/rl/flexible_tail_steering_policy.h",
+    "sha256": "F20287B84CAFFF287E2347B660DA6976E89BD9D5578045D25604896AFB7A2C96",
+    "bytes": 18260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_stroke_metrics.h",
+    "archived": "source/src/rl/flexible_tail_stroke_metrics.h",
+    "sha256": "922EDCEDAD034CEC279E03A8A2C706E129D15B836C10C939BD3428C192F754BF",
+    "bytes": 3215
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_transition.h",
+    "archived": "source/src/rl/flexible_tail_transition.h",
+    "sha256": "30C6909272430706B3B74AC1804113FECE00EBEE4A1B3C82FE014558B06FBD5A",
+    "bytes": 8544
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\flexible_tail_yaw_offset.h",
+    "archived": "source/src/rl/flexible_tail_yaw_offset.h",
+    "sha256": "6881591BF03E6DD55F68824697C202374C1C07989CE342D46EE3EEBCB5562B2C",
+    "bytes": 4114
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\gaussian_kernels.cu",
+    "archived": "source/src/rl/gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7",
+    "bytes": 9242
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\gaussian_kernels.h",
+    "archived": "source/src/rl/gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D",
+    "bytes": 3307
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\gaussian_math.h",
+    "archived": "source/src/rl/gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700",
+    "bytes": 3304
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\learned_amplitude_math.h",
+    "archived": "source/src/rl/learned_amplitude_math.h",
+    "sha256": "54D39FA6E7081ABCF9F8A534821FBE839ACB7B14B7725680472C9D14C78F3D28",
+    "bytes": 1476
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\pond_ppo_contract.h",
+    "archived": "source/src/rl/pond_ppo_contract.h",
+    "sha256": "64A0D7FCAFED7F768E6C896BE9C52F309C210AE0FC6D721C65ADF67737892897",
+    "bytes": 21264
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\pond_ppo_schedule.h",
+    "archived": "source/src/rl/pond_ppo_schedule.h",
+    "sha256": "AED039790BBC007E8D3DBB268418F04C3BA7DA1E153E5CDD6251E53342B53468",
+    "bytes": 7015
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\pond_ppo_task.h",
+    "archived": "source/src/rl/pond_ppo_task.h",
+    "sha256": "805A49A88E0FBD2B28DB64616D363F447F1960538D9B77BA1847209241B3B53A",
+    "bytes": 14134
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\ppo_checkpoint.h",
+    "archived": "source/src/rl/ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2",
+    "bytes": 8055
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\ppo_diagnostics.h",
+    "archived": "source/src/rl/ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC",
+    "bytes": 3172
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\ppo_kernels.cu",
+    "archived": "source/src/rl/ppo_kernels.cu",
+    "sha256": "A36EFF8B4517E1D422012FBC761E5FC036B0FF62C2B2BC8AAD5080C2842A0DB0",
+    "bytes": 8927
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\ppo_kernels.h",
+    "archived": "source/src/rl/ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8",
+    "bytes": 2657
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\rl\\ppo_math.h",
+    "archived": "source/src/rl/ppo_math.h",
+    "sha256": "D923301361A71130D8B25A088B9CD21BDDFF596FD2267108817FABCA382FEF46",
+    "bytes": 6516
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\simulation\\pond_runtime.h",
+    "archived": "source/src/simulation/pond_runtime.h",
+    "sha256": "9B87804E5BAD278B911F1636E64EEC03CF52D7570DD119EE30067C3F3BF13D2A",
+    "bytes": 30113
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\simulation\\world_cuda.cu",
+    "archived": "source/src/simulation/world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441",
+    "bytes": 1945
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\simulation\\world.cpp",
+    "archived": "source/src/simulation/world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8",
+    "bytes": 8888
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\src\\simulation\\world.h",
+    "archived": "source/src/simulation/world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3",
+    "bytes": 6386
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\BANK_CURRICULUM_PROTOCOL.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/BANK_CURRICULUM_PROTOCOL.md",
+    "sha256": "AC023B915A64F689C6E9EF832CD36C76929183B69B354EA6852F6DA40B7D333A",
+    "bytes": 2796
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\bank_training_starts.h",
+    "archived": "source/tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "6493022B78134986A8ED8F993E47304807C903EC1B56E2D653162762067C0FE2",
+    "bytes": 5384
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\evaluate.cpp",
+    "archived": "source/tools/pond-flexible-tail-chooser/evaluate.cpp",
+    "sha256": "AC4003E97E4F240AEAC6528DD0513C7DE7D378F6C34C0534566E8716545A4164",
+    "bytes": 22377
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\POND_STAGE_PROTOCOL.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/POND_STAGE_PROTOCOL.md",
+    "sha256": "B465076553770B27B9D5682DACC2FB5AC2E4771033E55545EB90206423B21B1F",
+    "bytes": 4645
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\PROTOCOL.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/PROTOCOL.md",
+    "sha256": "C3D34CFD97031F6D903CE37C50DD4219428EA88D5F6CBE45EFE09C74DEAF385D",
+    "bytes": 4527
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\rate-evaluate.cpp",
+    "archived": "source/tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+    "sha256": "81CF96FD3FF076B7A95611D0E4D84446936CA3F68FF885BD5747C2AAAE8220F0",
+    "bytes": 26805
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\README.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/README.md",
+    "sha256": "264505FC4EC7FA325E054AA1517630D50728F0FAC7165DAC239B5BF70AF62157",
+    "bytes": 2179
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\RELIABLE_TURNS_PROTOCOL.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/RELIABLE_TURNS_PROTOCOL.md",
+    "sha256": "7453AFBE358F8D7B72A0EAEAF08C1ECC0F034E5801E39202AE2796827B37B84A",
+    "bytes": 4106
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\run-beat-session.ps1",
+    "archived": "source/tools/pond-flexible-tail-chooser/run-beat-session.ps1",
+    "sha256": "0798E5A3CABB115424385D018228F4617722BCE944A1DB634C07DCE611AF1B56",
+    "bytes": 19633
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\run-reliable-session.ps1",
+    "archived": "source/tools/pond-flexible-tail-chooser/run-reliable-session.ps1",
+    "sha256": "9AC4BE62024690E6EBE2EF6237655414C3E35B6A010421BCB4A949C29DF2E7A4",
+    "bytes": 3984
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\run-session.ps1",
+    "archived": "source/tools/pond-flexible-tail-chooser/run-session.ps1",
+    "sha256": "7B82B0FCA19E65A3D4141D7BB6AE1B8B17A5FC739A0D5D5575438224FDE67AA9",
+    "bytes": 19879
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\run-study.ps1",
+    "archived": "source/tools/pond-flexible-tail-chooser/run-study.ps1",
+    "sha256": "2391433A8DB508E9397FCE6C0C075E2D7D221EC9404AD1320A62FF21D9B1A7E2",
+    "bytes": 7737
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\SESSION_PROTOCOL.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/SESSION_PROTOCOL.md",
+    "sha256": "78367ABFD3557C35F99B62C7AB0544EFAF10DB45C288C794AA0C032013968743",
+    "bytes": 6839
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\STEERING_INTERFACE_PROTOCOL.md",
+    "archived": "source/tools/pond-flexible-tail-chooser/STEERING_INTERFACE_PROTOCOL.md",
+    "sha256": "2A595534DCCB49099D84DC242378F07AAF22CD6917BA334CBC48A458350D00E4",
+    "bytes": 1558
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\steering-check.cpp",
+    "archived": "source/tools/pond-flexible-tail-chooser/steering-check.cpp",
+    "sha256": "C89A4CDEF7FF5DB0FB97CCF275C6946753A3791C4EE80F454BF87696C347CB91",
+    "bytes": 14380
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-chooser\\train.cu",
+    "archived": "source/tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "9875FA3E03A0EF9659079781AB6399CAC597517448FDEB5D3860A95A6094F6DF",
+    "bytes": 41659
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\source\\tools\\pond-flexible-tail-steering\\run-seven-stages.ps1",
+    "archived": "source/tools/pond-flexible-tail-steering/run-seven-stages.ps1",
+    "sha256": "DEB3676E44BD70D781F77668B8DD1FA5CA7D1CA7969BE648C33C54F0D84CECD3",
+    "bytes": 27887
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\motor.json",
+    "archived": "stage-06-bank/motor.json",
+    "sha256": "26B3F169CD8C24F77C1886A828AA61744CC27ECF06BA4DFBB32844F600A5A07A",
+    "bytes": 1221
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\selection.json",
+    "archived": "stage-06-bank/selection.json",
+    "sha256": "455153BE7D7DA3B3E2C4E274777692E24A7513AC02C4131516C0F392FCEE08B8",
+    "bytes": 28814
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training.receipt.json",
+    "archived": "stage-06-bank/training.receipt.json",
+    "sha256": "22B22F78E1DC570C0C102F6F49F424F01BDF71DFE91255FF17E9016641A818DF",
+    "bytes": 1047
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-000\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-000/evaluation.receipt.json",
+    "sha256": "6952F4894974A2C6717E57D987CD7C8FB772ABD129078AB7AFA1A745B7C4A32D",
+    "bytes": 1228
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-000\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-000/assessment/cases.csv",
+    "sha256": "ED6EA92063FAE01D236C7EB9BB47CBFB1D692EFC04A875D95A3B509A058998D4",
+    "bytes": 2337
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-000\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-000/assessment/coverage.csv",
+    "sha256": "9157946BC960EB580757247DF41F99B074CCA5A1AB32CAAEA680908CCA019466",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-000\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-000/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-000\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-000/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-000\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-000/assessment/summary.json",
+    "sha256": "534BFB6ECE71DA5B30126E9AC0EACA3F1B28F540DCAADF91D6B21A1F81E31C0A",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-008\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-008/evaluation.receipt.json",
+    "sha256": "5C5ADBD5D50CD193CCE7B21343925468B1756D006435E9637D8F0B7CE6DB0FBB",
+    "bytes": 1228
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-008\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-008/assessment/cases.csv",
+    "sha256": "A90C5700C20C986E3364AF58A34707141286433E86EDC84FCBB7C4DE1D79648E",
+    "bytes": 2347
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-008\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-008/assessment/coverage.csv",
+    "sha256": "FB5349D54E5348EF6943D466618E96B1FC6C0E205639CB66C0E6668605D394D3",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-008\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-008/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-008\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-008/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-008\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-008/assessment/summary.json",
+    "sha256": "8A500F5B1517207B1E8AE7856A7A01971F8E3A2437BC6AFBC4774C74FC27B716",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-016\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-016/evaluation.receipt.json",
+    "sha256": "EB67938AB161CFBD6C4D25782BBE0BBD90226EA2EC3E715FD5194BDF854058E6",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-016\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-016/assessment/cases.csv",
+    "sha256": "88543A996D4E6A5217D09866D3C90967F8B022559F94E8A4867B4D919B29AE40",
+    "bytes": 2155
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-016\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-016/assessment/coverage.csv",
+    "sha256": "B00E7A5B15862F3B6E5B420F4380BA36284F642086A1C8FCEA8B0486FEADA5D1",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-016\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-016/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-016\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-016/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-016\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-016/assessment/summary.json",
+    "sha256": "5ECCE7BA18735C3AC965C3DAB83E4C2F0F18814AAE92EC8DA2F2228827FAF6C8",
+    "bytes": 958
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-024\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-024/evaluation.receipt.json",
+    "sha256": "84A8CE55E5605C2730020623F2CB79FE4A1BE2EDF724CCBFF82BF50A69709359",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-024\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-024/assessment/cases.csv",
+    "sha256": "AD39971D0B4C5D78B3946462F04B2395B683294F31EB564AD66997E1E592EA5E",
+    "bytes": 2339
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-024\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-024/assessment/coverage.csv",
+    "sha256": "4593FBDE125A822A1C6C9D04A4D0043443F7FE187D5F5F2111F0FAFA1A2213D8",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-024\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-024/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-024\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-024/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-024\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-024/assessment/summary.json",
+    "sha256": "4A5F51E74EF9DDC0318F25CA88709DF09656FE94B31D1EF1DC422CF72ECBBF3E",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-032\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-032/evaluation.receipt.json",
+    "sha256": "394A39941792B3BFF68CFF892215C79D62CFC7B58A1F3139FEAE2F4B5F9627D1",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-032\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-032/assessment/cases.csv",
+    "sha256": "91EB410F68FA2A7ECA56C2F7409977D6F7549AB409CD69B8727A73E42D3BBD9A",
+    "bytes": 2340
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-032\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-032/assessment/coverage.csv",
+    "sha256": "D1719616A946A75D4D231E0B01F1B53D99AB80D5CD8F1835D98134A08C0D9E6D",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-032\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-032/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-032\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-032/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-032\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-032/assessment/summary.json",
+    "sha256": "ED5AA9DFEFF6B2D23CAD56AEFDF5BC78EA33D74CBF7880E8054626CBB835F512",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-040\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-040/evaluation.receipt.json",
+    "sha256": "CD0BCF77A87526AD35E7B1DA22865364FF0AF7DFF7EA63D179C9EA3E5E5E21D2",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-040\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-040/assessment/cases.csv",
+    "sha256": "8C521C417533C7168E0D012B4FBDE774073D04F6DB3E440A169E5C804454DC34",
+    "bytes": 2369
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-040\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-040/assessment/coverage.csv",
+    "sha256": "CBB607A702F89E0BD8FC3F48682107C2672EDD9BD5980F90C00220218FE60A57",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-040\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-040/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-040\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-040/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-040\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-040/assessment/summary.json",
+    "sha256": "98336D8B551CF089E9457CD2BB81C8DCA34E171B4B6826E242BCA940AD863968",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-048\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-048/evaluation.receipt.json",
+    "sha256": "0CAD58119A262396BCBB8EBE1A33602B92A1C0DF60146E6EA83CD10087A5F6F9",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-048\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-048/assessment/cases.csv",
+    "sha256": "411ED708B41C82C31D98704A61A78E9BA9276194BCF1D83E537D0AFF7C91A552",
+    "bytes": 2380
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-048\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-048/assessment/coverage.csv",
+    "sha256": "3E2C2A4A8CE73EEBB3FE87C9D0098CEA47C43A9AB6349ACBC6A0F13F2318BCD5",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-048\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-048/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-048\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-048/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-048\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-048/assessment/summary.json",
+    "sha256": "BCD10063CEF844A8923E0DE16857F10AA8E302A04CCB1AFFA9DB18A40AF9D970",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-056\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-056/evaluation.receipt.json",
+    "sha256": "6297EC08F338B844A85191F580A6A8873A8BD73653FDCC46C50F1CC902745977",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-056\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-056/assessment/cases.csv",
+    "sha256": "C18E3D5C835FF0159E663225ACE408F53D496779B95E92907C7BB51956B74C84",
+    "bytes": 2376
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-056\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-056/assessment/coverage.csv",
+    "sha256": "3E2C2A4A8CE73EEBB3FE87C9D0098CEA47C43A9AB6349ACBC6A0F13F2318BCD5",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-056\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-056/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-056\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-056/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-056\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-056/assessment/summary.json",
+    "sha256": "6CEB10811FD5D81A1BD241E2B47C70AD0EB6278F7DAEF62ECAB29126A02A5AB6",
+    "bytes": 957
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-064\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-064/evaluation.receipt.json",
+    "sha256": "B3AC62B461A466F6C1484A250A997F58ED25C44A92485F1B947DC35E075B0DA2",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-064\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-064/assessment/cases.csv",
+    "sha256": "075F9DD70CB72C4BC93F288B0B9A6E7E8283D0B0677F194FCB611D6514B67A98",
+    "bytes": 2359
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-064\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-064/assessment/coverage.csv",
+    "sha256": "178BFBF8758690CB74EF83F38D363F97F419353D1CA3E53FFF9BB98B1D9DF51B",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-064\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-064/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-064\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-064/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-064\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-064/assessment/summary.json",
+    "sha256": "00400198F8E03BAC7ED5041B267CAC4DCE732C4836C56892CA8D67716C765784",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-072\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-072/evaluation.receipt.json",
+    "sha256": "E32454064AD2B39664063CC41AEFD725CC68475AB7FED7C17A9C214493238F39",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-072\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-072/assessment/cases.csv",
+    "sha256": "6CC9FA80D9EE011533CE3A7A4BEAC9297ED2637189441CCFE2C35C6782ECC2DA",
+    "bytes": 2368
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-072\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-072/assessment/coverage.csv",
+    "sha256": "F1DC1F23C2A428EF7520658D7D0607770F5E076EC454E05EE19F7DB144A86DB2",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-072\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-072/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-072\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-072/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-072\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-072/assessment/summary.json",
+    "sha256": "8A2D3CB81F85CB50BAFBDD0624B8BFE1ABED1711120989E3849FEC919F0580B5",
+    "bytes": 957
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-080\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-080/evaluation.receipt.json",
+    "sha256": "026C66B9F571809D016666E67CD86CC97BBE185C058CCBBE5749FC5BA2483E36",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-080\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-080/assessment/cases.csv",
+    "sha256": "B9D35E0C430868BDDEC8F059C10F3288EFB4AEB625246D8A04FCA92C204836DB",
+    "bytes": 2349
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-080\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-080/assessment/coverage.csv",
+    "sha256": "240B733E17966F29037B2D8CAC9C1664B564871BE04B9DA55A69C9766AB8011F",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-080\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-080/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-080\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-080/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-080\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-080/assessment/summary.json",
+    "sha256": "984AC415044BD1CABCB39E24D0208F7C92CEAF3DA83C05659A733EFFC6AD808C",
+    "bytes": 955
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-088/evaluation.receipt.json",
+    "sha256": "C95349A2AE1AC200B351D42F8E36F5E7A131CE8E7F7663DC8843905E374240B7",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-088/assessment/cases.csv",
+    "sha256": "C4DF8BC9B35C6E3694F872F3D4293A8EC3F7CEC4F09773B944E80DCE086D5EDF",
+    "bytes": 2663
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-088/assessment/coverage.csv",
+    "sha256": "13B0E39228A2E745145D346F3729234D00FB8CDD4F82F85CEEB37C449D51E963",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-088/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-088/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-088/assessment/summary.json",
+    "sha256": "33673AA803EBC27B0CCEE10C4231FBE9199FE4876FECAD35FC58BB0A6541D91E",
+    "bytes": 960
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-096\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-096/evaluation.receipt.json",
+    "sha256": "3C81A466CC7FBB20997B2568AE9D9C3EE917E6964693B26DCCAC809F356BC7FC",
+    "bytes": 1229
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-096\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-096/assessment/cases.csv",
+    "sha256": "46940898AEFDFBF6C1E4693FB5E664C91B361ACD330BD3DF3C038A32A6CB72F4",
+    "bytes": 2359
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-096\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-096/assessment/coverage.csv",
+    "sha256": "EED3569F2ABCF252EDF104BA235C4AB0CCCF2D9F0AF6CB67DE47B32AFBF10260",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-096\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-096/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-096\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-096/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-096\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-096/assessment/summary.json",
+    "sha256": "5789ECFFBA7CB5100B242208B06BBB07F5929F66B680F3A4F4BDF853CD952A05",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-104\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-104/evaluation.receipt.json",
+    "sha256": "2CF91FB9285662D3C51BFF610463B4E8B086F7572E5488C258A3D28AADB4B00A",
+    "bytes": 1230
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-104\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-104/assessment/cases.csv",
+    "sha256": "1CFA6A99D2A3BD360629DE8A4D80046929CEA6C47B9CB88C06B8CBA5B8B1651B",
+    "bytes": 2361
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-104\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-104/assessment/coverage.csv",
+    "sha256": "7E4ECFA9B013A5E3C81DC4FE38ED20B78159415FBBC8922398CFCF476D63968C",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-104\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-104/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-104\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-104/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-104\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-104/assessment/summary.json",
+    "sha256": "BF89CC0305D4642550600FE33E8D30A2506F3C36A3FE2A172FD5D4BF1519AFAF",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-112\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-112/evaluation.receipt.json",
+    "sha256": "6C168484489715A88DD0656EA8743938F01377C0EE39A129EC1E7497444C62F8",
+    "bytes": 1230
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-112\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-112/assessment/cases.csv",
+    "sha256": "D06CA7F170DB244E8806B7BAF2ED0A3905DF83539BFCDAC36DE7892385755AAA",
+    "bytes": 2345
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-112\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-112/assessment/coverage.csv",
+    "sha256": "421EC4007D413A7A811031E1C31987E08E4400A67C675A9EAC681234FE95A6A0",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-112\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-112/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-112\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-112/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-112\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-112/assessment/summary.json",
+    "sha256": "8C5A5039CE285421003FFF55B01CCF5FD6AEA6EB54B3E19B0CF802E83095C55A",
+    "bytes": 953
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-120\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-120/evaluation.receipt.json",
+    "sha256": "D082CE34CAE10BB773C41103FB5ED91A1256763CB19AF62F02403C3827D9002A",
+    "bytes": 1230
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-120\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-120/assessment/cases.csv",
+    "sha256": "66C2BF557420D2330024EBEDA33D6881910205C8FC40B5039908D70B77F19A05",
+    "bytes": 2340
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-120\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-120/assessment/coverage.csv",
+    "sha256": "A0E1020F1C6375ACDAB1AD3C67368DDCC7E1BA4FF60B903DECA1742D62803EF4",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-120\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-120/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-120\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-120/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-120\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-120/assessment/summary.json",
+    "sha256": "A25BF6401B233AE0EF4BBEAE019BF0DDB4985D70C883A23B9720C8FB8F72469F",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-128\\evaluation.receipt.json",
+    "archived": "stage-06-bank/evaluations/update-128/evaluation.receipt.json",
+    "sha256": "084398B6F661085DE64D2760689627813760F3D029942C973B5E7CC726361E14",
+    "bytes": 1230
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-128\\assessment\\cases.csv",
+    "archived": "stage-06-bank/evaluations/update-128/assessment/cases.csv",
+    "sha256": "191A4CF5E746AE3F4E5B18653D5DC443ACD384DFC9376D45A982B7FC6B616FDD",
+    "bytes": 2243
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-128\\assessment\\coverage.csv",
+    "archived": "stage-06-bank/evaluations/update-128/assessment/coverage.csv",
+    "sha256": "A4D41A08F43266BA4F49582341BB45A5683787C5C1218CC85C7D377220618018",
+    "bytes": 9373
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-128\\assessment\\metadata-check.json",
+    "archived": "stage-06-bank/evaluations/update-128/assessment/metadata-check.json",
+    "sha256": "96D21B227E783393943BBE3D4272AAFDD89E1B8599DF1FEB823CB6FEA182DEC4",
+    "bytes": 353
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-128\\assessment\\starts.csv",
+    "archived": "stage-06-bank/evaluations/update-128/assessment/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19",
+    "bytes": 1429
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-128\\assessment\\summary.json",
+    "archived": "stage-06-bank/evaluations/update-128/assessment/summary.json",
+    "sha256": "A210771FFDB7392453A830BE8713FD54A8BFF9BA3F55F94A31D9DCF11E0F2377",
+    "bytes": 956
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-0.bin",
+    "archived": "stage-06-bank/training/actor-0.bin",
+    "sha256": "ABC6C235AB390DA2AB9010788951B720A028E745762062DC3F2FDB87A6BE18AE",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-1.bin",
+    "archived": "stage-06-bank/training/actor-1.bin",
+    "sha256": "D69E90B92559EEFD2ABF977F7E1BFC44B2993524AB84B994532E6316CFFDA3E5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-10.bin",
+    "archived": "stage-06-bank/training/actor-10.bin",
+    "sha256": "0632BB6824270BBCEEFF2E7819AAF31942F7B04EE302BF8BD403BA4AA59A3801",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-100.bin",
+    "archived": "stage-06-bank/training/actor-100.bin",
+    "sha256": "279221E4ECE8799A30A8545EDBE372869C9F5B68A65693EAA6C18C8FA7E5152E",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-101.bin",
+    "archived": "stage-06-bank/training/actor-101.bin",
+    "sha256": "C85F268E6B0F610797CDD0E82EC5DF0B796DDF95505013E85E21045602E33B72",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-102.bin",
+    "archived": "stage-06-bank/training/actor-102.bin",
+    "sha256": "4CA2449E2F8E8725CDFB8F09C827904E8A06ED25CE615D9F2FAA4215785BBFED",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-103.bin",
+    "archived": "stage-06-bank/training/actor-103.bin",
+    "sha256": "CAD4B30A3B092E9C701EE776DB5D9FF2CC18DD445443DC55DF327D4548955A50",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-104.bin",
+    "archived": "stage-06-bank/training/actor-104.bin",
+    "sha256": "7D783C6D9BB886529CA3C3E091E6F619FA8AE99B42739ACCEA98DE38D666EA04",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-105.bin",
+    "archived": "stage-06-bank/training/actor-105.bin",
+    "sha256": "7E88BB18F4EC253B1B7E6BD810654720B270C76B649066B0A0C073C1DD379E0A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-106.bin",
+    "archived": "stage-06-bank/training/actor-106.bin",
+    "sha256": "8000E110D0FF4E5D892DAE4DF466B55D23587EA16540095459E77047E04C6682",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-107.bin",
+    "archived": "stage-06-bank/training/actor-107.bin",
+    "sha256": "986AC2DC1E727B1F1D5743B2FD83F1F917F3A1FAEFC6A614988046312DEC27C0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-108.bin",
+    "archived": "stage-06-bank/training/actor-108.bin",
+    "sha256": "884F065CE62814DBDD35F764258855EA4360861F2661D390A7B9EA430A43740E",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-109.bin",
+    "archived": "stage-06-bank/training/actor-109.bin",
+    "sha256": "FCCF775EE8BD6E8BBE50D1F7D3E0B86A105AD6E08106DE555FE4011C1A445237",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-11.bin",
+    "archived": "stage-06-bank/training/actor-11.bin",
+    "sha256": "E9019BF3BDB72F76A4B1D8C409AAA2013340F0555C1271B08129991097D89D9B",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-110.bin",
+    "archived": "stage-06-bank/training/actor-110.bin",
+    "sha256": "8F87D8017324D2CCA47C3FB35AA1E7596B2E714458D0F4CA1882A7128EA02FD5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-111.bin",
+    "archived": "stage-06-bank/training/actor-111.bin",
+    "sha256": "D84F4FB2CB2053C06481FB45BB362D2FA0A24EAE9C3E136E63E8A96E0A9BB3F5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-112.bin",
+    "archived": "stage-06-bank/training/actor-112.bin",
+    "sha256": "C411E965F4951F5DD4881C2D20FB057ED8AA2F386C11CF0B6079332D5E1D58C3",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-113.bin",
+    "archived": "stage-06-bank/training/actor-113.bin",
+    "sha256": "D025831AF86250E023A41F5BED6CD82F02B7326C5AFF3BEE3C6A4D54E1BA3E46",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-114.bin",
+    "archived": "stage-06-bank/training/actor-114.bin",
+    "sha256": "C53C3C412B3BFCC740C4DC1DF1B6CC08F263F6E18256279B31F293B245932CD2",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-115.bin",
+    "archived": "stage-06-bank/training/actor-115.bin",
+    "sha256": "42337EBC5D4C1030BE5A7095ABC2958AE6A7F8279A7E56B0857CF70DBEBBCAEE",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-116.bin",
+    "archived": "stage-06-bank/training/actor-116.bin",
+    "sha256": "1958322AC524ADAEEA4069EDC12E2BF16CBC5FE02F52BAD61D9BA2587F31F6E0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-117.bin",
+    "archived": "stage-06-bank/training/actor-117.bin",
+    "sha256": "7767D7F7069076E7559FE22E2D6C7CE0B2C054EB40B3B9D9ABF65E1B10CA8A9B",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-118.bin",
+    "archived": "stage-06-bank/training/actor-118.bin",
+    "sha256": "EC4E460BF15E30822FF96AF004B381117E3CFCD64B4C2ED2E7481A076FA22B20",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-119.bin",
+    "archived": "stage-06-bank/training/actor-119.bin",
+    "sha256": "38E2FB87E4E8D1EAFA5A76AAC6189CCE2528D4C27C970B78A673F2A422AEABDB",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-12.bin",
+    "archived": "stage-06-bank/training/actor-12.bin",
+    "sha256": "5C5CBD7A992FF3B46956AF9B304F85BE389FAB62E0C17CA0971BE624A0714B96",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-120.bin",
+    "archived": "stage-06-bank/training/actor-120.bin",
+    "sha256": "6E66700EBDE1BF5D5287F760A9983BF8645178BD6E0889FFD9D4C8E84C817137",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-121.bin",
+    "archived": "stage-06-bank/training/actor-121.bin",
+    "sha256": "EE621BC65E00BC3E3CF7096CA562C1B9CB6EBD5908EEE9B93EC797FFA95000D4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-122.bin",
+    "archived": "stage-06-bank/training/actor-122.bin",
+    "sha256": "B2A4E1F210613FBF560DDC42148748D0EE8693CDC711373467CCBE09058CEE29",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-123.bin",
+    "archived": "stage-06-bank/training/actor-123.bin",
+    "sha256": "CB2287CE9F45141C26C63A99E7092005006326CE853654FD999F57F158621D34",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-124.bin",
+    "archived": "stage-06-bank/training/actor-124.bin",
+    "sha256": "60CF285DC7E0E454E3BEE1C69362A2CDE2D4C1248202BC8D1B7DF22D6FD1CD05",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-125.bin",
+    "archived": "stage-06-bank/training/actor-125.bin",
+    "sha256": "B662CFE503DCECE1DF9789CBE2CFCE25B0D1062E082432B6098741D8D8FF1415",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-126.bin",
+    "archived": "stage-06-bank/training/actor-126.bin",
+    "sha256": "67479917F29F5AC39993D2A122EB0CE387C9A2C21FDB3D79A600023351CCC8C7",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-127.bin",
+    "archived": "stage-06-bank/training/actor-127.bin",
+    "sha256": "A3BEAC34CE04CFB1BF59D577D599804D74C860DBD7DEE3E54DA9DC3E61A5FF84",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-128.bin",
+    "archived": "stage-06-bank/training/actor-128.bin",
+    "sha256": "2CA157FF4E4359DD699FB6149A121451018A69EC7C3CDD298B78CB21E7395EF1",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-13.bin",
+    "archived": "stage-06-bank/training/actor-13.bin",
+    "sha256": "7025FB06A13BEC3F6B7FEA1A14EC5C9C7D427944DC5B7CB77F313400B517099F",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-14.bin",
+    "archived": "stage-06-bank/training/actor-14.bin",
+    "sha256": "9F924CABA376CFBF1979558F9781FD2ACE5E61422548DE36DE38E926AD7F3936",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-15.bin",
+    "archived": "stage-06-bank/training/actor-15.bin",
+    "sha256": "AF44697C2162852432049184E83A8EE0B7C7D967D26CC581E0C493F8ABBC8F30",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-16.bin",
+    "archived": "stage-06-bank/training/actor-16.bin",
+    "sha256": "913503E8CD1D3D49CB0EEADD3834A20A88F6FD7E285762CC9D9756942793E2FD",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-17.bin",
+    "archived": "stage-06-bank/training/actor-17.bin",
+    "sha256": "9EE27A7BF72832E4315C5B8379B8B70A816B122A25F94B134F9C29483062C726",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-18.bin",
+    "archived": "stage-06-bank/training/actor-18.bin",
+    "sha256": "9D5B080C0AECC6C069261FCEFA66F5C682AC46A72E1B60A13AF784E4C7D2F23F",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-19.bin",
+    "archived": "stage-06-bank/training/actor-19.bin",
+    "sha256": "31618F9A4E41CA3913426FE1C7873A575867AD0BF9A5F1449D1E00E8F824CE22",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-2.bin",
+    "archived": "stage-06-bank/training/actor-2.bin",
+    "sha256": "4AE9434C77009290BF236CCF422202FE732B9921B51870017359951C31A4337A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-20.bin",
+    "archived": "stage-06-bank/training/actor-20.bin",
+    "sha256": "D4A945E2C801E929DDA3B44E508563D0A6EC3EE6B2AA1B442962C82D66C28660",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-21.bin",
+    "archived": "stage-06-bank/training/actor-21.bin",
+    "sha256": "E0DC1E36EA56C034E315D08BC2FBEA63F96D700220F337B1CC4F48298FEB6B6A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-22.bin",
+    "archived": "stage-06-bank/training/actor-22.bin",
+    "sha256": "1908717183F778E389DCD7E294488CD0CB95CFF8B9D4B83F6A72F7BD2340CFF5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-23.bin",
+    "archived": "stage-06-bank/training/actor-23.bin",
+    "sha256": "BE7BD1FDC6448530FFF45D7A805E96BECB0B7B94CA8DCC275F54B2DEE40EA0C0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-24.bin",
+    "archived": "stage-06-bank/training/actor-24.bin",
+    "sha256": "3FD0FB3902ECE5974C56F977F43C7C870D665FD79101ADEA98824F7C59E0DDAC",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-25.bin",
+    "archived": "stage-06-bank/training/actor-25.bin",
+    "sha256": "BEACEADDC85B6D190BEE74D4C8C390BE9BB8631A0BFBDC517E8C0D813E6420F0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-26.bin",
+    "archived": "stage-06-bank/training/actor-26.bin",
+    "sha256": "8DDADB5845F41C421311195CD302C6292338D9ABBCBEB317C100DC6BFAC0C032",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-27.bin",
+    "archived": "stage-06-bank/training/actor-27.bin",
+    "sha256": "CE96074BB0F446137169DC3140BD10CFC23D12931D447B0D44F87DDFBB9E5ED0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-28.bin",
+    "archived": "stage-06-bank/training/actor-28.bin",
+    "sha256": "8F6C81681A410150156A57301F3B9EB9852B53C87482E81AF5BB596D337D6D3F",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-29.bin",
+    "archived": "stage-06-bank/training/actor-29.bin",
+    "sha256": "06F91D1CB73945210AB20AACCE35194569649CAC6AD54B319AEDE21132876C13",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-3.bin",
+    "archived": "stage-06-bank/training/actor-3.bin",
+    "sha256": "27560E6B2D676DE0435E438928CCD913558F64E4EB9D62CDCC9B0A2D558B04FD",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-30.bin",
+    "archived": "stage-06-bank/training/actor-30.bin",
+    "sha256": "23AE57CB704A85BF7815C3176724080644C024041C1F75ABD67F8A2773E8958F",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-31.bin",
+    "archived": "stage-06-bank/training/actor-31.bin",
+    "sha256": "ED20ACA76A499E652BDEFEE43E673EB3F802C97AEA1EDB327A2B2729837BFCC4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-32.bin",
+    "archived": "stage-06-bank/training/actor-32.bin",
+    "sha256": "48BF2588B166FC23919BB46CC0ABC43C4ED67047E53F50DBE88567C01D6F3BA5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-33.bin",
+    "archived": "stage-06-bank/training/actor-33.bin",
+    "sha256": "70DAFD3096366163E3303CA3A506F97CEAB3DEBCDE5D50FBDC0C82D7104B264E",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-34.bin",
+    "archived": "stage-06-bank/training/actor-34.bin",
+    "sha256": "C529CFF76DE4979F5B7513D70E20211ED876F1D05E02BC0BCCD85514ECD454A5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-35.bin",
+    "archived": "stage-06-bank/training/actor-35.bin",
+    "sha256": "4B4D29C73C10AFC8606E2B4BC2E10534CD0078BB4677EC59E320B40C1D5DA55A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-36.bin",
+    "archived": "stage-06-bank/training/actor-36.bin",
+    "sha256": "ED20AC3A05BDDF737CD9C106A425D9A60547770FB3C363D9871C41942F91C5B7",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-37.bin",
+    "archived": "stage-06-bank/training/actor-37.bin",
+    "sha256": "91E3938A2E04BCA3F211F265BA7668342C283DEA3C614415114874A9A7779783",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-38.bin",
+    "archived": "stage-06-bank/training/actor-38.bin",
+    "sha256": "6B4D7E89731568AD42D78C1024F347B002F6892431FB0D23D82ACCCC79388891",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-39.bin",
+    "archived": "stage-06-bank/training/actor-39.bin",
+    "sha256": "1376717EAA7D28EB38AB8583DDFF84F7C88E671CACEB96125D71C6D12BD7ADA4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-4.bin",
+    "archived": "stage-06-bank/training/actor-4.bin",
+    "sha256": "741710CD41D0399B3593F5E9FA0005B14CF64A03E52959AC39D94A2973A0A887",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-40.bin",
+    "archived": "stage-06-bank/training/actor-40.bin",
+    "sha256": "8DFB7778283B8D45F465A9D74F7FDD3DA259CB9C1B7E31345C6924965B706974",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-41.bin",
+    "archived": "stage-06-bank/training/actor-41.bin",
+    "sha256": "5E999057F08AF21D487625CF00F1A97F583B0A6EE83C755FBBDDC64A1E620CAC",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-42.bin",
+    "archived": "stage-06-bank/training/actor-42.bin",
+    "sha256": "14E1F3C028147FE95BC9A4847592E2534C1768262F6473E9C833C44BC9B738FE",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-43.bin",
+    "archived": "stage-06-bank/training/actor-43.bin",
+    "sha256": "7F84D44EF67B3B44877AC4AFFECFB3C26086D90BAADE96EF63A530EFE6ABC563",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-44.bin",
+    "archived": "stage-06-bank/training/actor-44.bin",
+    "sha256": "199D22A05EECE37871ED5D2B7485A68EA7EC934313F921968BFEC5AE5A700A12",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-45.bin",
+    "archived": "stage-06-bank/training/actor-45.bin",
+    "sha256": "AAE4E20F19E7464B6FE38B1A94A82CB4DE53BE7D7D667BA647B155E0D77F8C2B",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-46.bin",
+    "archived": "stage-06-bank/training/actor-46.bin",
+    "sha256": "BD13C8849D2F7534E42BED9344A100CF271B987EC221D2BD1C129B4ADDE59E2C",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-47.bin",
+    "archived": "stage-06-bank/training/actor-47.bin",
+    "sha256": "29166352AA2D3A14ACE83BC7D443E29782E438F8438E35C6961DDB494BA2E3AF",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-48.bin",
+    "archived": "stage-06-bank/training/actor-48.bin",
+    "sha256": "1141D7A08E426ADBC22768B9A2BEA6D9987730F8416EFA408F2300F8E2B33043",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-49.bin",
+    "archived": "stage-06-bank/training/actor-49.bin",
+    "sha256": "EDD372F32C98D80F4B07B55426031840CD31CF38C7E4BEED9EFF2AD5BE750EE9",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-5.bin",
+    "archived": "stage-06-bank/training/actor-5.bin",
+    "sha256": "949BDDC32D3B3D15636C4F4FC8043FD99C8964866430C026E866B4DDA155914B",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-50.bin",
+    "archived": "stage-06-bank/training/actor-50.bin",
+    "sha256": "210C2E3B498B05814BA9ACCAA5EB8BDE8131B86D20FA17DAF5C5B61FCFAE3D76",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-51.bin",
+    "archived": "stage-06-bank/training/actor-51.bin",
+    "sha256": "7D6203D251EA11C77BFFE11C540C4E01BE5C6554AEF09712AF235CD9F6F180D3",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-52.bin",
+    "archived": "stage-06-bank/training/actor-52.bin",
+    "sha256": "7428A89BCD12BB48CA8649429950C24356D755D236E95053E3C15250D4CFB827",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-53.bin",
+    "archived": "stage-06-bank/training/actor-53.bin",
+    "sha256": "DB8A769DBDFB3F54F8E29342054DC5EE194DD6B3A71057FE046443A45A0096F0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-54.bin",
+    "archived": "stage-06-bank/training/actor-54.bin",
+    "sha256": "D43CD9B1E7203576EFF9A153774B9562FF6F5624CF33B92EBF876E13E331F0E9",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-55.bin",
+    "archived": "stage-06-bank/training/actor-55.bin",
+    "sha256": "934347918580E27CAC6F146AC64A1AF6A9288A3AE7531EBF4F15B6CEC6467F68",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-56.bin",
+    "archived": "stage-06-bank/training/actor-56.bin",
+    "sha256": "1D874AEBC1B9BE12DACE66F581CB3CBFA3FD833315129764E6FA3E44DC396C63",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-57.bin",
+    "archived": "stage-06-bank/training/actor-57.bin",
+    "sha256": "082CD646083893A8EE794C021C31E4DC52E7E44A733F921096945EC9570F0A48",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-58.bin",
+    "archived": "stage-06-bank/training/actor-58.bin",
+    "sha256": "2D99F3092D6719BE06CC0C4692B269BF95641A4C8A47D2F0C32F5361D616ABDF",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-59.bin",
+    "archived": "stage-06-bank/training/actor-59.bin",
+    "sha256": "5079002DB4D8160A4C8724C50FF42B375FA1339C270B02737F5F7A45BA2DA09A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-6.bin",
+    "archived": "stage-06-bank/training/actor-6.bin",
+    "sha256": "8675BBAADE1F3D943B74821C28F3267377BA304AA57AB6E4519E8B14E35B55C6",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-60.bin",
+    "archived": "stage-06-bank/training/actor-60.bin",
+    "sha256": "994F8DA393F21EB01C354D1D692028CE34A0ED5070504566471D9D5E68DB98AE",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-61.bin",
+    "archived": "stage-06-bank/training/actor-61.bin",
+    "sha256": "32F9407D36E5FF2FEC5B9EC9885AE043E9620DD75412A5BB58B8DD32646C283D",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-62.bin",
+    "archived": "stage-06-bank/training/actor-62.bin",
+    "sha256": "D491180E9F791E424529DD0DE11C98FD093F5BC243F4BB4041DC274A9AC7B7A1",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-63.bin",
+    "archived": "stage-06-bank/training/actor-63.bin",
+    "sha256": "F4AEC29F3837E73892BE043F32EA40372B900A07E52C04869EACDC36400B7F2D",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-64.bin",
+    "archived": "stage-06-bank/training/actor-64.bin",
+    "sha256": "F3815782A65BC5C0C80E26AB634C3338FA2143FB2B32C2EF5FE65BF0F26E1A25",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-65.bin",
+    "archived": "stage-06-bank/training/actor-65.bin",
+    "sha256": "D86DDE3FAF3E0C2C74172C648710F7358AC32CE8A367057F60782271EB7DF0D9",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-66.bin",
+    "archived": "stage-06-bank/training/actor-66.bin",
+    "sha256": "3F8795A9C2F155D7161223D28676CADD2FFA03E1DAB189E72DD34EE219DE6371",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-67.bin",
+    "archived": "stage-06-bank/training/actor-67.bin",
+    "sha256": "03AF05780F5477412C06C2A6A0E8CB651154BF3160AEEEADAB18DD2924901949",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-68.bin",
+    "archived": "stage-06-bank/training/actor-68.bin",
+    "sha256": "BF73250836A9EF7C05259DD13E593ED63E08D3EDE35B12BD9C4427B0F80BD3CB",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-69.bin",
+    "archived": "stage-06-bank/training/actor-69.bin",
+    "sha256": "243D073B3CA4FF0F078C7D028B298D47A6F1EB1C08BC49BA0229B5D08BED2936",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-7.bin",
+    "archived": "stage-06-bank/training/actor-7.bin",
+    "sha256": "2A77CAEF3B02BE888395FC243A74BE7C97D17B0187CAD36AFC7449100969A055",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-70.bin",
+    "archived": "stage-06-bank/training/actor-70.bin",
+    "sha256": "32B9906D49F754818D08E4ACD266C858DB506D0F821E147B2FB1AC2AB419182C",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-71.bin",
+    "archived": "stage-06-bank/training/actor-71.bin",
+    "sha256": "F478034C6AD2ED825DA66A1DF1D1583D822EBE63C6E0BBED817F6EF4E58076A2",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-72.bin",
+    "archived": "stage-06-bank/training/actor-72.bin",
+    "sha256": "BDC40E8CDC4E133C609DF21A8F415D835E8A9E04AFF6D8F1F01300EF072E610D",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-73.bin",
+    "archived": "stage-06-bank/training/actor-73.bin",
+    "sha256": "9CE800AF40F22218B434180068C7E2F18233EA4B7188B60271CB07963587D68E",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-74.bin",
+    "archived": "stage-06-bank/training/actor-74.bin",
+    "sha256": "642DA2D48AB0569E6E64B8C78408F3D97D3B231989F3E9B2D2EAB7B617D7AFEA",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-75.bin",
+    "archived": "stage-06-bank/training/actor-75.bin",
+    "sha256": "EE4FA2E76D03EF96B9C42563F97F6441767A901157F81C6803105FC0A9E51A57",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-76.bin",
+    "archived": "stage-06-bank/training/actor-76.bin",
+    "sha256": "A75DB60A77153ED4B815E45E586BB8A800785361672CA918B5ED759C0DD7A4D4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-77.bin",
+    "archived": "stage-06-bank/training/actor-77.bin",
+    "sha256": "C0587610DF8E2B3DDEC3F68E88EE796B9B42754F9DB30BF927D0A53AD25CADF4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-78.bin",
+    "archived": "stage-06-bank/training/actor-78.bin",
+    "sha256": "2B97EAC5B1B77CD3172CF28CBD00242A47884A1B0C9CE41DB761A1DABD9A5327",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-79.bin",
+    "archived": "stage-06-bank/training/actor-79.bin",
+    "sha256": "033E67979C6EE05D92A2006EDF878B8D9BA910F3DAFBAF7032E889D86E60820A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-8.bin",
+    "archived": "stage-06-bank/training/actor-8.bin",
+    "sha256": "7D96799E0E433BDB4611F903BAA7C8778B1A1B8E12CE1E4D41599E08B1C9E22A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-80.bin",
+    "archived": "stage-06-bank/training/actor-80.bin",
+    "sha256": "D9920C62F3EC0F280CD6A31E5BE77189DCF3B9D8651A367FE8E219B551897FE0",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-81.bin",
+    "archived": "stage-06-bank/training/actor-81.bin",
+    "sha256": "54757B6A29FCDBDC49B644695D22B2177D9F0950FF64A7B78992DA678A73B947",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-82.bin",
+    "archived": "stage-06-bank/training/actor-82.bin",
+    "sha256": "8FDEBADF3E21C489DE742CB63FF8E5288D16B9D258BDD3F4D325EDB833F2C264",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-83.bin",
+    "archived": "stage-06-bank/training/actor-83.bin",
+    "sha256": "ED0A29D45B2DD4DEB47946374916EA896D05520952FCC2C362352063E0760C9E",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-84.bin",
+    "archived": "stage-06-bank/training/actor-84.bin",
+    "sha256": "90122980E0ABC8BA936EC3779F39908E553A57AAEB2B1289B0A91FD9605E672C",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-85.bin",
+    "archived": "stage-06-bank/training/actor-85.bin",
+    "sha256": "628F7CBF8A832B56A654FA9C49DD5A42A4988ECAE0AB754D4A9AB045804852D7",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-86.bin",
+    "archived": "stage-06-bank/training/actor-86.bin",
+    "sha256": "CCF1D6F23E668F0B30D181BE3A15225F57D133A4FD876DD5C81958858F3A8485",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-87.bin",
+    "archived": "stage-06-bank/training/actor-87.bin",
+    "sha256": "9803E57C303870DC6C6D9D7F869AC6170DF7C69A023C9A216199FEC3A2A7C7D4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-88.bin",
+    "archived": "stage-06-bank/training/actor-88.bin",
+    "sha256": "9CA99020979DB1AF2D4505499A142FFB552933321B73A7B8FE9EA60B03AF2C7C",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-89.bin",
+    "archived": "stage-06-bank/training/actor-89.bin",
+    "sha256": "3FBC39F0B559F26BD04BD2E08606A7B292DAE59CBA2662D25BBB10EDA76F9DF7",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-9.bin",
+    "archived": "stage-06-bank/training/actor-9.bin",
+    "sha256": "B64842B26B546D944A8CE8861E5ECB43AA640B1FCCF08208BC50AFDA1E9011F3",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-90.bin",
+    "archived": "stage-06-bank/training/actor-90.bin",
+    "sha256": "1D701AC2DB119571219652A8E341E248256A63D59A9C67B21C3BE87F51EDD3C4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-91.bin",
+    "archived": "stage-06-bank/training/actor-91.bin",
+    "sha256": "7D04606E83DE57150E5ED202843E7EBC245011BE43CA8146ED4D54BA22B545DD",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-92.bin",
+    "archived": "stage-06-bank/training/actor-92.bin",
+    "sha256": "9D275B70045E536C6FEAB7C5025C0583242E5B80A879FDD92147B97CFD02E878",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-93.bin",
+    "archived": "stage-06-bank/training/actor-93.bin",
+    "sha256": "5E11C4F5C7CDDAFB6CCDA083AA3AFCCF75F96E2429CFBFAB49E66DA4551DDFA4",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-94.bin",
+    "archived": "stage-06-bank/training/actor-94.bin",
+    "sha256": "855C404C970A81E8F91A7127460A5C76E7DC74FA4E2041AC021CFA1CB8A4650A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-95.bin",
+    "archived": "stage-06-bank/training/actor-95.bin",
+    "sha256": "A25C898A923CDC3984F53B47C8117221E594D9AC184C52F890F5364962473167",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-96.bin",
+    "archived": "stage-06-bank/training/actor-96.bin",
+    "sha256": "E810631D97E9E2570DE904DBC4DCA1F3B3C7305D0EB2C400EF5DBF7C4FF486C7",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-97.bin",
+    "archived": "stage-06-bank/training/actor-97.bin",
+    "sha256": "1657744914A891CC71A283B42CD6007713753F6C04303BE31020C6A2F5DC569B",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-98.bin",
+    "archived": "stage-06-bank/training/actor-98.bin",
+    "sha256": "AA73B0D0295E459D8CACF8DE20FE8F48A186205B8582DD24952AD8AE01834AAA",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\actor-99.bin",
+    "archived": "stage-06-bank/training/actor-99.bin",
+    "sha256": "6FA0FCB8C58B3DBA8D1E9711C72B39B203F3071B2AC3D07B960648B963D5AC86",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\curriculum-preflight.json",
+    "archived": "stage-06-bank/training/curriculum-preflight.json",
+    "sha256": "8923D26F6F89CEF92514B62F462E2895B3EA047677D72AA275003AAD37B9F2B8",
+    "bytes": 69
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\result.json",
+    "archived": "stage-06-bank/training/result.json",
+    "sha256": "A05AFB38183AA8024983817A95D76A8A0253A71D0738F3E4D1DBF2A851AC43E6",
+    "bytes": 867
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\updates.csv",
+    "archived": "stage-06-bank/training/updates.csv",
+    "sha256": "639B8CBBA8DA97A1C70B21A258146D1CFD7C0414B55FB677657F56705A07C776",
+    "bytes": 10532
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\checkpoints\\session-88.bin",
+    "archived": "stage-06-bank/training/checkpoints/session-88.bin",
+    "sha256": "42E75CA1C660B5F49631D1E7D298F334D98F09BF5888E3E556C84BF64F7A0970",
+    "bytes": 4390216
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\verification.receipt.json",
+    "archived": "stage-06-bank/verification/verification.receipt.json",
+    "sha256": "301E686C60CD1A444B10C4AE87A47087ADEAEE33D90DB2CF4D0D95F6376894D8",
+    "bytes": 1059
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\actor-0.bin",
+    "archived": "stage-06-bank/verification/data/actor-0.bin",
+    "sha256": "ABC6C235AB390DA2AB9010788951B720A028E745762062DC3F2FDB87A6BE18AE",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\actor-1.bin",
+    "archived": "stage-06-bank/verification/data/actor-1.bin",
+    "sha256": "D69E90B92559EEFD2ABF977F7E1BFC44B2993524AB84B994532E6316CFFDA3E5",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\actor-2.bin",
+    "archived": "stage-06-bank/verification/data/actor-2.bin",
+    "sha256": "4AE9434C77009290BF236CCF422202FE732B9921B51870017359951C31A4337A",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\curriculum-preflight.json",
+    "archived": "stage-06-bank/verification/data/curriculum-preflight.json",
+    "sha256": "8923D26F6F89CEF92514B62F462E2895B3EA047677D72AA275003AAD37B9F2B8",
+    "bytes": 69
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\result.json",
+    "archived": "stage-06-bank/verification/data/result.json",
+    "sha256": "97B6FAC932E67E41D850525BFF322F1D0EBCDD7CEBB74EC4A8C35FDC0EA78ED2",
+    "bytes": 818
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\updates.csv",
+    "archived": "stage-06-bank/verification/data/updates.csv",
+    "sha256": "9BBEF0F7D72F63A3FA499974273160A42C682D8D9E9EF2212E92D34BC25D8699",
+    "bytes": 241
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\verification\\data\\verification.json",
+    "archived": "stage-06-bank/verification/data/verification.json",
+    "sha256": "932B93ABA91BFA71ADB63A32F1CA77B9B08EF3AF906FC0708E15F9ACAE4B31A5",
+    "bytes": 177
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\godot\\flexible_tail_live.cpp",
+    "archived": "deployment-source/src/godot/flexible_tail_live.cpp",
+    "sha256": "B6216B30EE5D0D76792A8C07A85EE954129F1C7A529E922FDCCE76C2380699DF",
+    "bytes": 17535
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\godot\\flexible_tail_live.h",
+    "archived": "deployment-source/src/godot/flexible_tail_live.h",
+    "sha256": "2E3C6E0F4FEAFF15B4784F74BA3429963D3D230C79A5764FEECE50E31F4DFF26",
+    "bytes": 838
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-live\\CMakeLists.txt",
+    "archived": "deployment-source/tools/pond-flexible-tail-live/CMakeLists.txt",
+    "sha256": "C20DF4746B33066C04686B23C511CAC958B9E5766D059C27FA25384926BEDDEC",
+    "bytes": 2847
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\flexible_tail_preview.gd",
+    "archived": "deployment-source/flexible-tail-preview/flexible_tail_preview.gd",
+    "sha256": "ECDEE797315FF4D8F51F6372507940C7E8C8FC3A2083A49739BF2DE1305C09F3",
+    "bytes": 29817
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\flexible_tail_preview.tscn",
+    "archived": "deployment-source/flexible-tail-preview/flexible_tail_preview.tscn",
+    "sha256": "F3170648680896288215E19D2B8FACFF86CB9CB94C2CC6220E4A934D9BF3B3AE",
+    "bytes": 11116
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-motor-88.bin",
+    "archived": "deployment-source/flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E",
+    "bytes": 2724
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-chooser-88.bin",
+    "archived": "deployment-source/flexible-tail-preview/live_data/exploration-chooser-88.bin",
+    "sha256": "9CA99020979DB1AF2D4505499A142FFB552933321B73A7B8FE9EA60B03AF2C7C",
+    "bytes": 6260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tests\\godot\\flexible_tail_pond_live.gd",
+    "archived": "deployment-source/tests/godot/flexible_tail_pond_live.gd",
+    "sha256": "51A9750DA1CECB4FE48A98C6E941419742076A6B2111A60472669D528A53809F",
+    "bytes": 2553
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tests\\godot\\flexible_tail_exploration_ui.gd",
+    "archived": "deployment-source/tests/godot/flexible_tail_exploration_ui.gd",
+    "sha256": "5C1F1E1495AE8A70A752108FFF714AE97A20252E4C6AD9F28246ED2E79BE2D5D",
+    "bytes": 3350
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-chooser\\rate-evaluate.cpp",
+    "archived": "deployment-source/tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+    "sha256": "6AD3371A38D4F76E1450349A2C35DEE57CB1D995FBEFE322CCD43EAC9027620E",
+    "bytes": 26850
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\bindings.json",
+    "archived": "failed-preflight/bindings.json",
+    "sha256": "159BC821130BE86CE9180D8852C6D343E52678782DFE1086CA574AECE2484E93",
+    "bytes": 15719
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\capacity\\capacity.receipt.json",
+    "archived": "failed-preflight/capacity/capacity.receipt.json",
+    "sha256": "6A9A28A4806863A4782477E1E7DC0D77DCA7B2B0773831FA4F6FEF924BA2C636",
+    "bytes": 473
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\capacity\\result.json",
+    "archived": "failed-preflight/capacity/result.json",
+    "sha256": "9624BFC6DD0FE01A3180183C926CCE4D64E54025AEF824B3B2512C6A01D3E6C2",
+    "bytes": 2716
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\compilation\\compile-capacity.receipt.json",
+    "archived": "failed-preflight/compilation/compile-capacity.receipt.json",
+    "sha256": "04D12BD5E99439A76CA8B7C25C16C37A1E5A034D0568A64725F4BEB505A7C3C9",
+    "bytes": 509
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\compilation\\compile.receipt.json",
+    "archived": "failed-preflight/compilation/compile.receipt.json",
+    "sha256": "4BD5417FFD03C0E4DB3CEA570DB2C539CFC59BC91B8EE5054D453EB68632EA49",
+    "bytes": 598
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\compilation\\configure-capacity.receipt.json",
+    "archived": "failed-preflight/compilation/configure-capacity.receipt.json",
+    "sha256": "F25DCF197CAEEC08A44E7EBDDC89D45055F4170653704811648545FCB3B9723C",
+    "bytes": 558
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\compilation\\configure.receipt.json",
+    "archived": "failed-preflight/compilation/configure.receipt.json",
+    "sha256": "6E5E292809B4855620A8AF797126231DD57A04D62AC4F032655510D48195F97C",
+    "bytes": 676
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\core\\checkpoint.cpp",
+    "archived": "failed-preflight/source/src/core/checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770",
+    "bytes": 4620
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\core\\checkpoint.h",
+    "archived": "failed-preflight/source/src/core/checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D",
+    "bytes": 2413
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\core\\hd.h",
+    "archived": "failed-preflight/source/src/core/hd.h",
+    "sha256": "CB1105C3CE5ED2D53C838344ED4FAE35F4BBDAA99AC0599E9B60948E7D4AF030",
+    "bytes": 623
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\core\\rng.h",
+    "archived": "failed-preflight/source/src/core/rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627",
+    "bytes": 1401
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\block_reduce.h",
+    "archived": "failed-preflight/source/src/cuda/block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77",
+    "bytes": 752
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\cuda_memory.h",
+    "archived": "failed-preflight/source/src/cuda/cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00",
+    "bytes": 4350
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\device.cu",
+    "archived": "failed-preflight/source/src/cuda/device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F",
+    "bytes": 1532
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\device.h",
+    "archived": "failed-preflight/source/src/cuda/device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D",
+    "bytes": 765
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\pond_geometry_inspect_link.cu",
+    "archived": "failed-preflight/source/src/cuda/pond_geometry_inspect_link.cu",
+    "sha256": "05841C89C925E76174F88E4EC6DAC000BF9197FA9648C96FE5AFC564A882062B",
+    "bytes": 411
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\pond_geometry_inspect.cu",
+    "archived": "failed-preflight/source/src/cuda/pond_geometry_inspect.cu",
+    "sha256": "06630CDDC21A428DF9239563F8029FFE2573F708AE94580A3926FE24BA378143",
+    "bytes": 368
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\cuda\\pond_math_profile.h",
+    "archived": "failed-preflight/source/src/cuda/pond_math_profile.h",
+    "sha256": "9E7179A62B0BDD029C22F7C803B136B0A01F9D181FDB1CA436A75A8E696B7968",
+    "bytes": 2194
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\environment\\flexible_tail_clearance.h",
+    "archived": "failed-preflight/source/src/environment/flexible_tail_clearance.h",
+    "sha256": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1",
+    "bytes": 2171
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\environment\\pond_body_geometry.h",
+    "archived": "failed-preflight/source/src/environment/pond_body_geometry.h",
+    "sha256": "D01D3A4845F63F084E4F5456F7542067924823A7C78BA8EEAC8BCB2D91BF3008",
+    "bytes": 18766
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\environment\\pond_geometry_v1.h",
+    "archived": "failed-preflight/source/src/environment/pond_geometry_v1.h",
+    "sha256": "695A985B8C72C347925D5425882B795E8D7AD4B4BA5F47D7B35FABC21F613AF3",
+    "bytes": 7282
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\environment\\pond_swept_clearance.h",
+    "archived": "failed-preflight/source/src/environment/pond_swept_clearance.h",
+    "sha256": "BACD2B69F64020F9BC90F782DF60C0A0126098DE2FD3F17AE1630C965AB9C270",
+    "bytes": 4434
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\godot\\flexible_tail_live.cpp",
+    "archived": "failed-preflight/source/src/godot/flexible_tail_live.cpp",
+    "sha256": "0C9F9BD33A0F185A3668F815ACA88FB3F6A210CDACCD6E1423F26F35ED78B7BC",
+    "bytes": 12414
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\godot\\flexible_tail_live.h",
+    "archived": "failed-preflight/source/src/godot/flexible_tail_live.h",
+    "sha256": "93A714413988DF3408F72344AE785A4E7E5B7C6B4121DA3DFF864CCDAC86F259",
+    "bytes": 706
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\godot\\hold_lab_preview.cpp",
+    "archived": "failed-preflight/source/src/godot/hold_lab_preview.cpp",
+    "sha256": "5DDDDBAF7507D1CB4032377A150204E625C0CEE1A37FBF86EF3229128E5C01E3",
+    "bytes": 21122
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\godot\\hold_lab_preview.h",
+    "archived": "failed-preflight/source/src/godot/hold_lab_preview.h",
+    "sha256": "5019559E4351AF5AFE000B2B0370B78831294E2D7CE25659623379372D557650",
+    "bytes": 1178
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\godot\\register_flexible_tail_live.cpp",
+    "archived": "failed-preflight/source/src/godot/register_flexible_tail_live.cpp",
+    "sha256": "85FD9D3D6CBF078688DB6B38B91C89CDA6FC1CFCC37C4EC10512942ED601E5E4",
+    "bytes": 885
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\godot\\register_live_types.cpp",
+    "archived": "failed-preflight/source/src/godot/register_live_types.cpp",
+    "sha256": "70B323CF74DC75AFEE1C5E4FEEB60DDFA49B6B9CAD5A97AC33FDFFA5145D9190",
+    "bytes": 850
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\adam_config.h",
+    "archived": "failed-preflight/source/src/nn/adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73",
+    "bytes": 585
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\adam.cu",
+    "archived": "failed-preflight/source/src/nn/adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3",
+    "bytes": 5719
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\adam.h",
+    "archived": "failed-preflight/source/src/nn/adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9",
+    "bytes": 2093
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\gemm.cu",
+    "archived": "failed-preflight/source/src/nn/gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4",
+    "bytes": 9200
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\gemm.h",
+    "archived": "failed-preflight/source/src/nn/gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6",
+    "bytes": 2434
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\loss.cu",
+    "archived": "failed-preflight/source/src/nn/loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572",
+    "bytes": 910
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\loss.h",
+    "archived": "failed-preflight/source/src/nn/loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA",
+    "bytes": 356
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\mlp_cpu.h",
+    "archived": "failed-preflight/source/src/nn/mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153",
+    "bytes": 6814
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\mlp_gpu.cu",
+    "archived": "failed-preflight/source/src/nn/mlp_gpu.cu",
+    "sha256": "6052183959B9B692CA201701CA297CFE7A481F630B3342341142480FBF8CEBEE",
+    "bytes": 9374
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\mlp_gpu.h",
+    "archived": "failed-preflight/source/src/nn/mlp_gpu.h",
+    "sha256": "25DDC2BA76C9BF09099C8D18AB0CA4E1717D224B61FD8431E72AF16EA93A990C",
+    "bytes": 3061
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\mlp_spec.h",
+    "archived": "failed-preflight/source/src/nn/mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF",
+    "bytes": 6090
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\heading_request_observation.h",
+    "archived": "failed-preflight/source/src/nn/motor/heading_request_observation.h",
+    "sha256": "D07B38E74F61120CECF0F52E1280CAA284DC5F046245A26628F9E1D5A24647C2",
+    "bytes": 988
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\hold_assessment.h",
+    "archived": "failed-preflight/source/src/nn/motor/hold_assessment.h",
+    "sha256": "CDDA2488E1AD54C902DFEC54FF1891E49E7638C50607ECF62D90DAFFBD8DC569",
+    "bytes": 4385
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\joint_motor.h",
+    "archived": "failed-preflight/source/src/nn/motor/joint_motor.h",
+    "sha256": "DC53D22CFF99352C5E378B6BCD919569C9A26455AA5DF9F8EC1C36172171314F",
+    "bytes": 5836
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\movement_model.h",
+    "archived": "failed-preflight/source/src/nn/motor/movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5",
+    "bytes": 10657
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\observation_contract.h",
+    "archived": "failed-preflight/source/src/nn/motor/observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332",
+    "bytes": 617
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\pond_motor_observation.h",
+    "archived": "failed-preflight/source/src/nn/motor/pond_motor_observation.h",
+    "sha256": "3CB25C6CC4538E6030A6BDE4DF49704BED6470A605B06E9D137A55AB1767103C",
+    "bytes": 7260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\saved_motor_contract.cpp",
+    "archived": "failed-preflight/source/src/nn/motor/saved_motor_contract.cpp",
+    "sha256": "98BA8BD500EDBFEF9C62B686E1B9C3946C3A6750DDEA94096ED29B7DD060F49A",
+    "bytes": 1386
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\saved_motor_contract.h",
+    "archived": "failed-preflight/source/src/nn/motor/saved_motor_contract.h",
+    "sha256": "2CD731543CBD850897CEB1A4A32E34E364319CB273DCEBBD45B68FA99D7A0FDC",
+    "bytes": 698
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\state.h",
+    "archived": "failed-preflight/source/src/nn/motor/state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F",
+    "bytes": 2183
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\nn\\motor\\straight_task.h",
+    "archived": "failed-preflight/source/src/nn/motor/straight_task.h",
+    "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22",
+    "bytes": 24241
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\physics\\contact.h",
+    "archived": "failed-preflight/source/src/physics/contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6",
+    "bytes": 7503
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\physics\\dynamics.h",
+    "archived": "failed-preflight/source/src/physics/dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6",
+    "bytes": 9192
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\physics\\flexible_tail.h",
+    "archived": "failed-preflight/source/src/physics/flexible_tail.h",
+    "sha256": "4FC5CBD001A34E99AB7F5B7EC2EA060F18F807CC7DD39FB7A8EFB48B4D8B7041",
+    "bytes": 13291
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\append_hold_checkpoint.h",
+    "archived": "failed-preflight/source/src/rl/append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B",
+    "bytes": 5009
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\ar_gaussian_math.h",
+    "archived": "failed-preflight/source/src/rl/ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797",
+    "bytes": 2719
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_bank_observation.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_bank_observation.h",
+    "sha256": "4D6C56AA78F5A611DAD52DE3EB5EB34710097F5AECDD85FFE5943D3D8D893C9B",
+    "bytes": 4745
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_beat_course.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_beat_course.h",
+    "sha256": "9BF3867813B10E82471B30E42CFC3A99162D983D4E25A7B394EF3605D2B1D72A",
+    "bytes": 5854
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_choices.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_choices.h",
+    "sha256": "8DDFB8FAE4314C0C078A621F1202E44320C6F2D5805DF862488BE7022CA37ADB",
+    "bytes": 2967
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_chooser_checkpoint.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_chooser_checkpoint.h",
+    "sha256": "33B1B4C1C7DD0667918CCA618902CC57EE945A062B304B350268C43B57231F30",
+    "bytes": 1485
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_chooser.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_chooser.h",
+    "sha256": "3375127364EE430BA1C5C743EA25C727F7C5C656E79D2C3DB332BF7033DD93C4",
+    "bytes": 24897
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_fast_steering.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_fast_steering.h",
+    "sha256": "9EF71F41496917F7F9A6200F059076A45B1C073011E54A938549248A6596ED9A",
+    "bytes": 27403
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_gait.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_gait.h",
+    "sha256": "E6F237A7F0BCA2FD57D29F1673A92582726F363B6B2E3EE1EA3471C7AF28FA14",
+    "bytes": 839
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_launch.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_launch.h",
+    "sha256": "8497873E40DC9E26F3546E23C36E7601E7911EE2AD01255FCFDA51202CBABDEE",
+    "bytes": 3101
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_motor.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_motor.h",
+    "sha256": "43B924DB0151C4DE6A202211E3AC97E3F9B3AC191ACBF788CC0DDFD0C0E2B998",
+    "bytes": 3691
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_navigation.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_navigation.h",
+    "sha256": "634A7A99C49F3E9E56AF6E848C00866DBF184988A183D0C093A4AC1AF8334074",
+    "bytes": 10614
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_rate_chooser.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_rate_chooser.h",
+    "sha256": "81F14D3B9E496BC65929143FD4C075F0C89029D5F894DB8ECF5BE849180F71B0",
+    "bytes": 10117
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_steering_policy.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_steering_policy.h",
+    "sha256": "F20287B84CAFFF287E2347B660DA6976E89BD9D5578045D25604896AFB7A2C96",
+    "bytes": 18260
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_stroke_metrics.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_stroke_metrics.h",
+    "sha256": "922EDCEDAD034CEC279E03A8A2C706E129D15B836C10C939BD3428C192F754BF",
+    "bytes": 3215
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_transition.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_transition.h",
+    "sha256": "30C6909272430706B3B74AC1804113FECE00EBEE4A1B3C82FE014558B06FBD5A",
+    "bytes": 8544
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\flexible_tail_yaw_offset.h",
+    "archived": "failed-preflight/source/src/rl/flexible_tail_yaw_offset.h",
+    "sha256": "6881591BF03E6DD55F68824697C202374C1C07989CE342D46EE3EEBCB5562B2C",
+    "bytes": 4114
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\gaussian_kernels.cu",
+    "archived": "failed-preflight/source/src/rl/gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7",
+    "bytes": 9242
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\gaussian_kernels.h",
+    "archived": "failed-preflight/source/src/rl/gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D",
+    "bytes": 3307
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\gaussian_math.h",
+    "archived": "failed-preflight/source/src/rl/gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700",
+    "bytes": 3304
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\learned_amplitude_math.h",
+    "archived": "failed-preflight/source/src/rl/learned_amplitude_math.h",
+    "sha256": "54D39FA6E7081ABCF9F8A534821FBE839ACB7B14B7725680472C9D14C78F3D28",
+    "bytes": 1476
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\pond_ppo_contract.h",
+    "archived": "failed-preflight/source/src/rl/pond_ppo_contract.h",
+    "sha256": "64A0D7FCAFED7F768E6C896BE9C52F309C210AE0FC6D721C65ADF67737892897",
+    "bytes": 21264
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\pond_ppo_schedule.h",
+    "archived": "failed-preflight/source/src/rl/pond_ppo_schedule.h",
+    "sha256": "AED039790BBC007E8D3DBB268418F04C3BA7DA1E153E5CDD6251E53342B53468",
+    "bytes": 7015
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\pond_ppo_task.h",
+    "archived": "failed-preflight/source/src/rl/pond_ppo_task.h",
+    "sha256": "805A49A88E0FBD2B28DB64616D363F447F1960538D9B77BA1847209241B3B53A",
+    "bytes": 14134
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\ppo_checkpoint.h",
+    "archived": "failed-preflight/source/src/rl/ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2",
+    "bytes": 8055
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\ppo_diagnostics.h",
+    "archived": "failed-preflight/source/src/rl/ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC",
+    "bytes": 3172
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\ppo_kernels.cu",
+    "archived": "failed-preflight/source/src/rl/ppo_kernels.cu",
+    "sha256": "A36EFF8B4517E1D422012FBC761E5FC036B0FF62C2B2BC8AAD5080C2842A0DB0",
+    "bytes": 8927
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\ppo_kernels.h",
+    "archived": "failed-preflight/source/src/rl/ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8",
+    "bytes": 2657
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\rl\\ppo_math.h",
+    "archived": "failed-preflight/source/src/rl/ppo_math.h",
+    "sha256": "D923301361A71130D8B25A088B9CD21BDDFF596FD2267108817FABCA382FEF46",
+    "bytes": 6516
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\simulation\\pond_runtime.h",
+    "archived": "failed-preflight/source/src/simulation/pond_runtime.h",
+    "sha256": "9B87804E5BAD278B911F1636E64EEC03CF52D7570DD119EE30067C3F3BF13D2A",
+    "bytes": 30113
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\simulation\\world_cuda.cu",
+    "archived": "failed-preflight/source/src/simulation/world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441",
+    "bytes": 1945
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\simulation\\world.cpp",
+    "archived": "failed-preflight/source/src/simulation/world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8",
+    "bytes": 8888
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\src\\simulation\\world.h",
+    "archived": "failed-preflight/source/src/simulation/world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3",
+    "bytes": 6386
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\BANK_CURRICULUM_PROTOCOL.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/BANK_CURRICULUM_PROTOCOL.md",
+    "sha256": "AC023B915A64F689C6E9EF832CD36C76929183B69B354EA6852F6DA40B7D333A",
+    "bytes": 2796
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\bank_training_starts.h",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "34C365FD079E1C890DCBA595A2E266E74F3B5C6B8D256C896BE75D0F0C688C20",
+    "bytes": 4871
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\CMakeLists.txt",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/CMakeLists.txt",
+    "sha256": "FAC9CD7212ECE999EF8B38FFFC88465D354077BF2CBD4BF8140D32D826393FBE",
+    "bytes": 6563
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\evaluate.cpp",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/evaluate.cpp",
+    "sha256": "AC4003E97E4F240AEAC6528DD0513C7DE7D378F6C34C0534566E8716545A4164",
+    "bytes": 22377
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\POND_STAGE_PROTOCOL.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/POND_STAGE_PROTOCOL.md",
+    "sha256": "B465076553770B27B9D5682DACC2FB5AC2E4771033E55545EB90206423B21B1F",
+    "bytes": 4645
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\PROTOCOL.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/PROTOCOL.md",
+    "sha256": "C3D34CFD97031F6D903CE37C50DD4219428EA88D5F6CBE45EFE09C74DEAF385D",
+    "bytes": 4527
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\rate-evaluate.cpp",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+    "sha256": "81CF96FD3FF076B7A95611D0E4D84446936CA3F68FF885BD5747C2AAAE8220F0",
+    "bytes": 26805
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\README.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/README.md",
+    "sha256": "264505FC4EC7FA325E054AA1517630D50728F0FAC7165DAC239B5BF70AF62157",
+    "bytes": 2179
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\RELIABLE_TURNS_PROTOCOL.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/RELIABLE_TURNS_PROTOCOL.md",
+    "sha256": "113B1A90952FAD79D9416D117FD616DC106882691DEA97D4A652545360E35070",
+    "bytes": 3626
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\run-beat-session.ps1",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-beat-session.ps1",
+    "sha256": "0798E5A3CABB115424385D018228F4617722BCE944A1DB634C07DCE611AF1B56",
+    "bytes": 19633
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\run-reliable-session.ps1",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-reliable-session.ps1",
+    "sha256": "66C053EEE3B658265F41623F975DACEB19379A31D924DD55004035D4B7ED9B7B",
+    "bytes": 3530
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\run-session.ps1",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-session.ps1",
+    "sha256": "7B82B0FCA19E65A3D4141D7BB6AE1B8B17A5FC739A0D5D5575438224FDE67AA9",
+    "bytes": 19879
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\run-study.ps1",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-study.ps1",
+    "sha256": "2391433A8DB508E9397FCE6C0C075E2D7D221EC9404AD1320A62FF21D9B1A7E2",
+    "bytes": 7737
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\SESSION_PROTOCOL.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/SESSION_PROTOCOL.md",
+    "sha256": "78367ABFD3557C35F99B62C7AB0544EFAF10DB45C288C794AA0C032013968743",
+    "bytes": 6839
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\STEERING_INTERFACE_PROTOCOL.md",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/STEERING_INTERFACE_PROTOCOL.md",
+    "sha256": "2A595534DCCB49099D84DC242378F07AAF22CD6917BA334CBC48A458350D00E4",
+    "bytes": 1558
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\steering-check.cpp",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/steering-check.cpp",
+    "sha256": "C89A4CDEF7FF5DB0FB97CCF275C6946753A3791C4EE80F454BF87696C347CB91",
+    "bytes": 14380
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-chooser\\train.cu",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "9875FA3E03A0EF9659079781AB6399CAC597517448FDEB5D3860A95A6094F6DF",
+    "bytes": 41659
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\source\\tools\\pond-flexible-tail-steering\\run-seven-stages.ps1",
+    "archived": "failed-preflight/source/tools/pond-flexible-tail-steering/run-seven-stages.ps1",
+    "sha256": "DEB3676E44BD70D781F77668B8DD1FA5CA7D1CA7969BE648C33C54F0D84CECD3",
+    "bytes": 27887
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\stage-06-bank\\motor.json",
+    "archived": "failed-preflight/stage-06-bank/motor.json",
+    "sha256": "26B3F169CD8C24F77C1886A828AA61744CC27ECF06BA4DFBB32844F600A5A07A",
+    "bytes": 1221
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\stage-06-bank\\verification\\verification.receipt.json",
+    "archived": "failed-preflight/stage-06-bank/verification/verification.receipt.json",
+    "sha256": "1E2910D61EB0086F110C1233EB42C3EFFCEB7655E2CDBF17A7781EDE3D74ED16",
+    "bytes": 1039
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1\\stage-06-bank\\verification\\data\\failure.txt",
+    "archived": "failed-preflight/stage-06-bank/verification/data/failure.txt",
+    "sha256": "2199E8DCC0DE76D75C885242A1BAF4D3EF3DBE334A55A6B1EC2C958ED2642B06",
+    "bytes": 75
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\evaluations\\update-088\\assessment\\traces\\endurance_godot_rest.csv",
+    "archived": "qualification-traces/endurance_godot_rest.csv",
+    "sha256": "5E5553DF199312A266E4B8FF38664CB3890C806D622B18D72E795650BC70489E",
+    "bytes": 699841
+  },
+  {
+    "source": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "archived": "inputs/train-worlds.bin",
+    "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025",
+    "bytes": 387116
+  }
+]

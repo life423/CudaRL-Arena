@@ -52,8 +52,9 @@ int main(int argc,char** argv) {
             std::cout<<"{\"residual_checks_passed\":true,\"deterministic_input_probes\":64,\"physical_controls\":0,\"optimizer_steps\":0}\n";return 0;
         }
         if(o.describe){
-            if(!o.protocol.empty()){const auto bytes=file(o.protocol);require(validated_study_id({bytes.begin(),bytes.end()})==residual::protocol_id,"Wrong residual evaluation protocol");}
-            std::cout<<"{\"protocol_id\":\""<<residual::protocol_id<<"\",\"eval_source_identity_fnv1a64\":\""<<eval_source()
+            std::string study=residual::protocol_id;
+            if(!o.protocol.empty()){const auto bytes=file(o.protocol);study=validated_study_id({bytes.begin(),bytes.end()});require(residual_study(study),"Wrong residual evaluation protocol");}
+            std::cout<<"{\"protocol_id\":\""<<study<<"\",\"eval_source_identity_fnv1a64\":\""<<eval_source()
                 <<"\",\"eval_source_sha256\":\""<<pond_candidate_source_sha256<<"\",\"runtime_version\":4,\"query_arithmetic_version\":2"
                 <<",\"task_stride\":"<<sizeof(ps::SignedCourseTask)<<",\"actor_inputs\":42,\"actor_parameters\":"<<residual::parameters<<",\"base_actor_inputs\":41"
                 <<",\"retention_cases\":20,\"turn_cases\":16,\"max_controls_per_checkpoint\":36800,\"max_assessments\":5,\"optimizer_steps\":0}\n";return 0;
@@ -61,11 +62,12 @@ int main(int argc,char** argv) {
         require(!o.final_partial&&o.distilled_actor.empty(),"Residual assessment has its own checkpoint schedule");
         const auto parent=load_parent(o.parent);parent_checksum=parent.checksum;
         const auto plan=file(o.protocol);protocol_checksum=cp::checksum(plan);const std::string text(plan.begin(),plan.end());
-        o.study_id=validated_study_id(text);require(o.study_id==residual::protocol_id,"Residual protocol required");
+        o.study_id=validated_study_id(text);require(residual_study(o.study_id),"Residual protocol required");
         require(std::stoull(scalar(text,"retention_evaluator_source_fnv1a64"))==eval_source(),"Residual evaluator source differs from sealed protocol");
         require(sha256(file(o.reference))==scalar(text,"long_reference_sha256"),"Long-swim reference differs");
         const auto payload=cp::read(o.candidate.string());checkpoint=cp::checksum(payload);
         const auto learned=residual::read_actor(payload,parent.checksum,protocol_checksum);
+        if(eight_update_residual_study(o.study_id))require(learned.update<=8,"Checkpoint exceeds its eight-update allocation");
         candidate.actor_inputs=41;candidate.actor=parent.actor;candidate.frozen_gain=parent.gain;
         candidate.counters.completed_updates=learned.update;candidate.counters.attempted_controls=learned.training_controls;
         candidate.counters.attempted_substeps=learned.training_substeps;candidate.counters.actor_adam_calls=learned.actor_adam_calls;
@@ -82,7 +84,7 @@ int main(int argc,char** argv) {
         lease=std::make_unique<cp::Lease>(o.ledger.string()+".assessment");ledger=load_ledger(o.ledger,parent.checksum,protocol_checksum);budget.prior=ledger;
         const int slot=assessment_slot(learned.update,o.baseline,false,ledger.mask);
         require(ledger.controls+evaluation_controls<=aggregate_controls&&ledger.substeps+evaluation_substeps<=aggregate_substeps,"Aggregate evaluation reservation exceeded");
-        ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=learned.update==32;save_ledger(o.ledger,ledger);ledger_started=true;
+        ledger.mask|=uint64_t{1}<<slot;ledger.active=true;ledger.closed=learned.update==(eight_update_residual_study(o.study_id)?8u:32u);save_ledger(o.ledger,ledger);ledger_started=true;
         if(o.reuse_baseline){
             auto receipt=verified_prior_baseline(text,o,candidate,parent.checksum,summary);
             receipt.protocol_checksum=protocol_checksum;receipt.checkpoint_checksum=checkpoint;receipt.eval_source_identity=eval_source();

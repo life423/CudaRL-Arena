@@ -1,0 +1,3 @@
+segment,complete,signed_course_change_deg,course_error_deg,projected_speed_mm_s,root_swing_rad,passive_swing_rad,root_reversals,passive_reversals,motion_pass,window_start_s,window_end_s
+late_comparison,1,-11.58323383,3.416768074,9.452983856,1.014001727,0.5471121669,3,25,1,25.11999944,27.11999939
+onward,1,-11.26379585,3.736205816,9.434545517,1.013452053,0.5492318869,4,20,1,27.11999939,29.11999935

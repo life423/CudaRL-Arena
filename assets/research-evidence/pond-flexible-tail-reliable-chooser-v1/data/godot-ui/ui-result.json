@@ -1,0 +1,25 @@
+{
+	"checks": 50,
+	"failures": [],
+	"optimizer_updates": 0,
+	"pass": true,
+	"physics_steps": 0,
+	"rendered_sizes": [
+		[
+			390,
+			844
+		],
+		[
+			768,
+			1024
+		],
+		[
+			1100,
+			760
+		],
+		[
+			844,
+			390
+		]
+	]
+}

@@ -1,0 +1,23 @@
+{
+  "phase": "training",
+  "started_utc": "2026-11-24T21:16:28.0690597Z",
+  "wall_s": 104.8380253,
+  "limit_s": 1800.0,
+  "exit": 0,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-mixed-v5-build\\Release\\pond_flexible_tail_steering_ppo.exe",
+  "arguments": [
+    "--fork",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-mixed-v5\\training",
+    "128",
+    "1200",
+    "phase-aware",
+    "mixed-15-30",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-aware-v4\\training\\checkpoints\\session-112.bin",
+    "0e71bac8a6e09daac2a284d7935eafc93fd99a296bc5f754c6f32e3d07375c95"
+  ]
+}

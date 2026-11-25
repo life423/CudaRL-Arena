@@ -1,0 +1,8 @@
+{
+  "sha256": "CB2C95DD86BD50B9E9B0B9262A3807F611D2451ECBDAA8B537EEE420590F8319",
+  "horizon": "long-horizon",
+  "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-execution\\training\\actor-16.bin",
+  "feedback": "whole-beat",
+  "steering": "held-heading",
+  "update": 16
+}

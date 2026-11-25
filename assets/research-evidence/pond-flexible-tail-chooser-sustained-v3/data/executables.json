@@ -1,0 +1,10 @@
+[
+  {
+    "path": "build/flexible-tail/chooser-session-build/Release/pond_flexible_tail_chooser_eval.exe",
+    "sha256": "2719FE06B896F2ED519D17204B9F1CCED9A301CFEAD119DDB91500A4CA0AAC53"
+  },
+  {
+    "path": "build/flexible-tail/chooser-session-build/Release/pond_flexible_tail_chooser_session.exe",
+    "sha256": "7CD9CA86D32F74C5EA17E43CE93B28A7A078F480F3D26A9E23A3A63C30EEB6AA"
+  }
+]

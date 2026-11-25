@@ -1,0 +1,8 @@
+{
+  "diagnostic_substeps": 12582912,
+  "main_updates_previously": 0,
+  "diagnostic_samples": 196608,
+  "second_reserved_attempt": true,
+  "diagnostic_actor_steps": 192,
+  "root": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6"
+}

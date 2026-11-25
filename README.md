@@ -4,15 +4,14 @@
 interact with, drawing on what it has learned and learning from new experiences
 to adapt and thrive.**
 
-Godot presents the creature in its own pond. The current food-free Swim and
-Rest modes run a saved neural motor in native water physics. Separate food-free turning
-exercises tested separate candidates at 8 mm/s. Learned exploration, swimming at different
-depths and speeds, and adaptation during player interaction are longer-term
-goals.
+Godot presents the flexible-tail creature in its own pond. Its saved motor
+starts swimming from rest and executes gentle left and right turn requests
+in native water physics. Learned whole-pond exploration is still under study.
 
 Native C++/CUDA reinforcement learning with PPO and one Godot viewer. Physical
-motion comes from torque-limited internal joints and water forces; Godot supplies
-presentation only. The motor supplies four independent joint-angle targets through bounded servos.
+motion comes from torque-limited internal joints and water forces. Godot supplies
+presentation and user controls. The flexible tail has an active root joint with
+yaw and pitch targets, and passive tail bending.
 
 Dependable movement is a foundation for that experience. Core aquatic abilities
 include swimming and steering in still water and currents, braking, holding a
@@ -26,25 +25,54 @@ build; current-capable swimming is not yet qualified.
 
 ## Current state
 
-**The registered Godot project runs the corrected full shoreline and the
-original saved motor.** Select **Swim** and press **Play** to watch. To try the
-saved motor's heading response, open **Details** while in Swim mode. The drawer
-pauses the pond and offers left and right 5° requests. Close it and press Play
-to see the response.
+**Open Tadpole Pond | Flexible Tail in Godot Project Manager and click Run.**
+In **Live pond**, press **Explore pond**. The saved neural chooser selects its
+own turn rate and speed, with the frozen motor producing physical swimming.
+**P** plays or pauses; **Restart** returns to the initial state. **Details**
+contains the preserved **Manual turns · Original motor** mode with Q / E turns.
+**Pond view**, **Zoom to tadpole** and the zoom controls adjust the camera.
+**Recordings** opens the saved swimming, turning and station-holding clips.
 
-Two separate residual PPO candidates completed 32 updates each while the
+The live project now loads reliable-turn chooser88 and frozen rate-response
+motor88. This pair passes12/12 two-minute pond cases and4/4 five-minute endurance
+cases with zero clearance stops or resets. Godot's native extension reproduces
+all3750 sampled states of a qualified five-minute trace exactly. The original
+motor and offset remain unchanged and accessible in Details.
+
+Chooser training used1,024 CUDA worlds,128 PPO updates and a bank-approach
+curriculum; it is complete and no background learner runs in the viewer.
+These finite calm-pond results do not guarantee infinite survival, complete
+pond coverage, other depths or currents. See [qualification and adoption](assets/research-evidence/pond-flexible-tail-reliable-chooser-v1/README.md)
+and [current AI status](docs/AI_STATUS.md). Earlier programs and their failures
+remain preserved in the research archive.
+
+Use the [native PPO session workflow](tools/pond-flexible-tail-chooser/README.md)
+for training and full-state resume. The earlier short study launchers retain
+their closed experiment protocols.
+
+The native extension builds and stages with the
+[flexible-tail build target](tools/pond-flexible-tail-live/README.md).
+The older **CudaRL Frozen Live Demo** entry retains the previous body and
+its saved motor for comparison.
+
+Earlier four-axis experiments used two residual PPO candidates that completed
+32 updates each while the
 original motor stayed frozen. Both finished at 2/16 independent turns against
 the baseline's 3/16. Their straight-swim and resting branches use the original
 motor exactly. The checks reused archived retention evidence after verifying
 that equivalence. Full swimming/resting suites were reserved for meaningful
 turn improvement, which neither candidate reached. The candidates remain
-research checkpoints. Autonomous exploration remains open.
+research checkpoints. The next four-output comparison ran eight updates per
+arm in about 1.82 seconds each. Both rewards passed 2/16 turns and 0/8 sharp
+60°/90° turns. Autonomous exploration remains open. [Latest results](docs/AI_STATUS.md)
 
 A conservative contact-rejection path preserves physical collisions and
-reports clearance bounds explicitly. Its measured late-state GPU speedup
-was 74.16× for one control across 512 worlds. The full collector then hit its
-four-second cap before issuing any physics. Its faster training mode remains
-gated. [GPU measurements and current limits](docs/GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Motor input audit](docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md) · [Earlier gentle-turn exercise](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
+reports clearance bounds explicitly. Shared device queries fixed a CUDA
+module-load timeout. The full saved 512-world rollout matched its reference
+in 0.42 seconds after two separate startup and physics gates. The four-output
+path also matched its saved rollout in 2.32 seconds and completed both
+eight-update training blocks under the four-second cap.
+[GPU measurements and current limits](docs/GPU_CLEARANCE_RESULTS_2026-11-24.md) · [Motor input audit](docs/MOTOR_336_INPUT_AUDIT_2026-11-24.md) · [Earlier gentle-turn exercise](docs/POND_TURNING_HALF_SECOND_RESULTS_2026-11-24.md)
 
 Swim mode has no fixed playback duration. The earlier
 [untimed playback check](docs/UNTIMED_SWIM_RESULTS_2026-11-23.md) used the

@@ -1,0 +1,6 @@
+"stage","scheduled_requests","completed_requests","motion_pass_requests","faulted_cases","attempted_substeps","accepted_substeps","wall_s"
+"stage-01-rhythm-baseline","26","23","9","3","363568","363565","2.30544"
+"stage-02-joint-baseline","26","22","8","3","343152","343149","2.16419"
+"stage-03-nonlinear-baseline","26","21","9","3","334985","334982","2.12874"
+"stage-04-speed-baseline","26","23","13","3","358477","358474","2.24509"
+"stage-05-rate-baseline","26","23","13","3","358477","358474","2.23659"

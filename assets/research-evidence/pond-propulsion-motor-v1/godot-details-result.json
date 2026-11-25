@@ -1,0 +1,24 @@
+{
+  "active_motor_336_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d",
+  "actual_Godot_project": "C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/live/",
+  "assessment_updates": 8.0,
+  "checks": {
+    "body_held": true,
+    "expected_study": true,
+    "heading_confirmed": true,
+    "heading_test_only_in_Swim_Details": true,
+    "matched_assessment": true,
+    "original_motor": true,
+    "real_project_loaded": true,
+    "research_candidate_separate": true
+  },
+  "details_text": "New motor · Forward-swimming lesson\nRecorded candidate trained from fresh weights. 8 PPO updates.\nSwim 0 / 6 · Rest 14 / 14 · Turns 0 / 16.",
+  "long_retained": 0.0,
+  "optimizer_calls": 0,
+  "passed": true,
+  "physical_controls": 0,
+  "recorded_study_id": "propulsion-motor-2026-11-24",
+  "rests": 14.0,
+  "short_swims": 0.0,
+  "turns_passed": 0.0
+}

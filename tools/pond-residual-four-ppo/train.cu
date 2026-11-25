@@ -4,6 +4,8 @@
 // The physics math profile must precede all runtime and observation headers.
 #include "cuda/pond_math_profile.h"
 #include "../pond-residual-ppo/staged_schedule.h"
+#include "turn_range_schedule.h"
+#include "course_rate_reward.h"
 // Select the residual request adapter only for the shared rollout TU below.
 #define pond_ppo_schedule residual_turn_schedule
 #define main archived_full_motor_ppo_entry
@@ -12,33 +14,56 @@
 #undef pond_ppo_schedule
 #include "contract.h"
 #include "residual_identity.h"
+#include <atomic>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
 
 namespace residual_training {
 namespace rp=cudarl::residual_four_ppo;
 constexpr int Y=4, W=42;
+#ifdef POND_POSTURE_LESSON
+constexpr auto classified_id=rp::posture_protocol_id;
+constexpr char classified_replay_id[]="pond-residual-four-posture-replay-v1";
+constexpr char classified_rewards_json[]=",\"reward_arms\":[\"posture\"]";
+#else
+constexpr auto classified_id=rp::course_rate_protocol_id;
+constexpr char classified_replay_id[]="pond-residual-four-collection-replay-v1";
+constexpr char classified_rewards_json[]=",\"reward_arms\":[\"reference\",\"course_rate\"]";
+#endif
 constexpr uint32_t pitch_noise_salt=0x6d2b79f5u;
 constexpr uint32_t program=pt::signed_half_second_v1;
 constexpr float actor_lr=.0003f,critic_lr=.001f;
+// Readable at a hard deadline even if CUDA never returns. Each range includes
+// submitted work and the last device-confirmed completion independently.
+struct Progress{
+    std::atomic<uint32_t> controls_issued{0},controls_confirmed{0},updates_completed{0};
+    std::atomic<uint32_t> actor_adam_issued{0},critic_adam_issued{0},pairs_adam_confirmed{0};
+};
+Progress progress;
 using Clock=std::chrono::steady_clock;
 double elapsed(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
-struct Args{bool init=false;fs::path plan,out,resume,receipt;};
+struct Args{bool init=false,classified=false;fs::path plan,out,resume,receipt;};
 Args args(int argc,char** argv){
     Args a;require(argc>=2,"Expected --initialize-only or --run");
     a.init=std::string(argv[1])=="--initialize-only";
     require(a.init||std::string(argv[1])=="--run","Unknown residual operation");
-    for(int i=2;i<argc;++i){const std::string k=argv[i];require(++i<argc,"Missing option value");const fs::path v=argv[i];
+    for(int i=2;i<argc;++i){const std::string k=argv[i];
+        if(k=="--classified-clearance"){require(!a.classified,"Duplicate clearance mode");a.classified=true;continue;}
+        require(++i<argc,"Missing option value");const fs::path v=argv[i];
         if(k=="--protocol")a.plan=v;else if(k=="--out")a.out=v;else if(k=="--resume")a.resume=v;else if(k=="--retention-receipt")a.receipt=v;
         else throw std::runtime_error("Unknown option "+k);}
     require(!a.plan.empty()&&!a.out.empty()&&a.init==a.resume.empty()&&a.init==a.receipt.empty(),"Invalid stage inputs");
     return a;
 }
 struct Study{
+    bool course_rate=false;
     std::string doc;uint64_t plan=0,evaluator=0;fs::path ledger,parent;Package motor;std::vector<float> critic;
     explicit Study(const Args& a){
         auto bytes=whole_file(a.plan);plan=cp::checksum(bytes);doc={bytes.begin(),bytes.end()};
         auto field=[&](const char* k){return scalar(doc,k);};
         auto bound=[&](const char* pk,const char* hk){const fs::path f=field(pk);require(f.is_absolute()&&sha256(whole_file(f))==field(hk),"Binding changed: "+std::string(pk));return f;};
-        require(field("protocol_id")==rp::protocol_id&&field("source_sha256")==residual_source_hash&&field("max_updates")=="32"&&
+        require(field("protocol_id")==(a.classified?classified_id:rp::protocol_id)&&field("source_sha256")==residual_source_hash&&field("max_updates")==(a.classified?"8":"32")&&
                 field("worlds")=="512"&&field("rollout_controls")=="64"&&std::stod(field("actor_learning_rate"))==.0003&&
                 std::stod(field("critic_learning_rate"))==.001,"Residual protocol differs");
         evaluator=std::stoull(field("retention_evaluator_source_fnv1a64"));ledger=field("ledger_path_absolute");
@@ -50,15 +75,44 @@ struct Study{
         const auto checkpoint=bound("critic_source_candidate_path_absolute","critic_source_candidate_sha256");
         require(field("critic_source_candidate_sha256")=="9b68920b345b4be6699f8b979729e07d9f9d7a451664e4ca99f34487f2ca4ded"&&
                 field("critic_source_protocol_sha256")=="ee7d102f0f13222f1128aa603bcd7bfa36d5082293556f81f57fb788ed2c7eae","Require verified v6 critic");
-        require(scalar(text_file(prior),"qualified_physics_source_sha256")==ph::physics_source_sha256(),"Qualified physical source changed");
+        if(a.classified){
+            const auto arm=field("reward_arm");
+#ifdef POND_POSTURE_LESSON
+            require(arm=="posture","Posture build requires its sealed reward arm");
+#else
+            require(arm=="reference"||arm=="course_rate","Unknown classified reward arm");
+            course_rate=arm=="course_rate";
+#endif
+            require(field("max_process_wall_seconds")=="4"&&field("classified_physics_source_sha256")==ph::physics_source_sha256(),"Classified source or wall cap mismatch");
+            const auto physical=text_file(bound("classified_dynamics_path_absolute","classified_dynamics_sha256"));
+            const auto collection=text_file(bound("classified_collection_path_absolute","classified_collection_sha256"));
+            const auto physics_binding=scalar(physical,"bindings"),collection_binding=scalar(collection,"bindings");
+            require(scalar(physical,"passed")=="true"&&scalar(physics_binding,"protocol")=="pond-broadphase-dynamics-v2"&&
+                    scalar(physics_binding,"runtime_sha256")==residual_runtime_hash&&scalar(physics_binding,"sweep_sha256")==residual_sweep_hash&&
+                    scalar(physics_binding,"exact_geometry_sha256")==residual_geometry_hash&&
+                    scalar(physics_binding,"terrain_source_sha256")==residual_terrain_hash&&
+                    scalar(physics_binding,"math_profile_sha256")==residual_math_hash&&
+                    scalar(physics_binding,"device_inspect_sha256")==residual_device_inspect_hash&&
+                    scalar(physics_binding,"device_inspect_link_sha256")==residual_device_inspect_link_hash&&
+                    std::stod(scalar(physical,"wall_ms"))<4000&&
+                    scalar(physical,"gpu_controls")=="2056"&&scalar(physical,"cpu_controls")=="8","Classified dynamics receipt mismatch");
+            require(scalar(collection,"passed")=="true"&&scalar(collection_binding,"protocol")==classified_replay_id&&
+                    scalar(collection_binding,"optimizer_calls")=="0"&&scalar(collection,"failed_comparisons")=="0"&&
+                    std::stod(scalar(collection,"wall_ms"))<4000&&
+                    scalar(collection_binding,"source_sha256")==residual_source_hash&&scalar(collection,"physical_controls")=="32768"&&
+                    scalar(collection,"physical_substeps")=="327680"&&scalar(collection,"completed_updates")=="0","Classified collection receipt mismatch");
+        }else require(scalar(text_file(prior),"qualified_physics_source_sha256")==ph::physics_source_sha256(),"Qualified physical source changed");
         const auto imported=pp::read_candidate(cp::read(checkpoint.string()),motor.checksum,cp::checksum(whole_file(prior)),
             std::stoull(scalar(text_file(prior),"source_identity_fnv1a64")),sizeof(pr::World),sizeof(ps::SignedCourseTask),W);
         require(imported.counters.completed_updates==8,"Wrong auxiliary critic");critic=imported.critic;
     }
 };
 struct Extra{
-    device_ptr<float> action{Rows*Y},mask{Rows},base{Rows*A},mb_action{MB*Y},mb_mask{MB},mb_kl{MB},pack{Rows};
-    device_ptr<int> eligible{Rows};
+    device_ptr<float> action{Rows*Y},mask{Rows},base{Rows*A},mb_action,mb_mask,mb_kl,pack;
+    device_ptr<int> eligible;
+    explicit Extra(BufferUse use=BufferUse::Training){
+        if(use==BufferUse::Training){mb_action.allocate(MB*Y);mb_mask.allocate(MB);mb_kl.allocate(MB);pack.allocate(Rows);eligible.allocate(Rows);}
+    }
     // Keep the original two-dimensional GPU sampler's yaw draws in both arms.
     // Pitch gets an independent deterministic stream indexed by the same tick.
     device_ptr<float> yaw_mean{2*N},pitch_mean{2*N},yaw_sample{2*N},pitch_sample{2*N},pair_logp{N};
@@ -160,12 +214,65 @@ void clear_batch(Buffer& b,Extra& e,cudaStream_t stream){
     CUDA_CHECK_THROW(cudaMemsetAsync(b.trace.get(),0,b.trace.size_bytes(),stream));clear_fault(b,stream);
 }
 void check_good(Buffer& b,cudaStream_t s,const char* error){check_cuda();require(fault(b,s)==INT_MAX,error);}
-float collect(Buffer& b,Extra& e,Networks& net,const Study& study,StageAccounting& a,cudaStream_t s,const TimeBudget& budget){
+// Capture the target and the immediately preceding measured COM course before
+// the physics step can advance the schedule or replace its endpoint velocity.
+struct RateInput{float x,z,heading_x,heading_z;bool valid;};
+__global__ void capture_rate(const pt::Task* tasks,const ps::State* schedules,const ps::CourseHistory* histories,
+                             const ps::HorizontalCourse* movement,RateInput* prior){
+    const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N)return;
+    const auto& task=tasks[i];const auto h=task.request.request.heading;
+    prior[i]={movement[i].x,movement[i].z,h.x,h.z,
+        task.kind==pt::Turn&&schedules[i].active&&task.request_changed&&
+        histories[i].count==ps::CourseHistory::intervals&&task.episode_controls>=ps::CourseHistory::intervals};
+}
+__global__ void apply_rate(const RateInput* prior,const ps::HorizontalCourse* post,float* rewards){
+    const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N||!prior[i].valid||rewards[i]<=0)return;
+    const auto a=prior[i];rewards[i]*=rp::course_rate_quality(a.x,a.z,post[i].x,post[i].z,a.heading_x,a.heading_z);
+}
+#ifdef POND_POSTURE_LESSON
+__global__ void apply_posture(const float* turn_mask,const TransitionTrace* trace,const float* done,
+                              const int* reason,const uint64_t* substeps,float* rewards,int* fault){
+    const int i=blockIdx.x*blockDim.x+threadIdx.x;
+    if(i>=N||turn_mask[i]==0||done[i]!=0||reason[i]!=0||substeps[i]!=10)return;
+    const float tilt_deg=trace[i].tilt;
+    if(trace[i].kind!=pt::Turn||!p::finite_number(tilt_deg)){fail(fault,i);return;}
+    const float excess=fmaxf(0.f,tilt_deg-5.f)/5.f;
+    rewards[i]-=pt::control_seconds*.5f*(1.f-expf(-excess*excess));
+}
+#endif
+__global__ void range_observe(pr::World* worlds,pt::Task* tasks,ps::State* schedules,float* output,float* actor_output,
+                              const ps::HorizontalCourse* movement,int* fault,bool collecting,const float* done=nullptr){
+    const int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=N||(done&&done[i]!=0))return;
+    auto task=tasks[i];auto schedule=schedules[i];
+    cudarl::rl::residual_turn_range::before(schedule,task,static_cast<uint32_t>(i),default_seed,program);
+    if(collecting){tasks[i]=task;schedules[i]=schedule;}
+    if(!pr::valid_state(worlds[i])||!pt::observe(task,worlds[i],output+i*D,false))fail(fault,i);
+    if(actor_output){
+        float* row=actor_output+i*W;for(int j=0;j<D;++j)row[j]=output[i*D+j];
+        row[D]=ps::signed_course_input(task,movement[i]);if(!p::finite_number(row[D]))fail(fault,i);
+    }
+}
+struct CollectionTiming {
+    double inference_ms=0;
+    // A bounded replay may publish each issued tick before the GPU is submitted.
+    void (*on_issue)(int)=nullptr;
+    void (*on_complete)(int)=nullptr;
+};
+template<class Models,class Admission>
+float collect(Buffer& b,Extra& e,Models& net,const Admission& study,StageAccounting& a,cudaStream_t s,const TimeBudget& budget,
+        pr::ControlClearance* classes=nullptr,CollectionTiming* timings=nullptr,bool range_practice=false,bool rate_reward=false){
+    device_ptr<RateInput> prior;if(rate_reward)prior.allocate(N);
     float physics_ms=0;Timer physics;
+    std::unique_ptr<Timer> inference;
+    if(timings)inference=std::make_unique<Timer>();
+    auto mark_inference_end=[&](){if(inference)CUDA_CHECK_THROW(cudaEventRecord(inference->last,s));};
+    auto account_inference=[&](){if(inference){float ms=0;CUDA_CHECK_THROW(cudaEventElapsedTime(&ms,inference->first,inference->last));timings->inference_ms+=ms;}};
     for(int t=0;t<T;++t){
         budget.guard();const int row=t*N;float* normal=b.observation.get()+row*D;float* extended=b.actor_observation.get()+row*W;
-        observe_kernel<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),normal,extended,b.movement.get(),b.fault.get(),program,default_seed,true);
+        if(range_practice)range_observe<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),normal,extended,b.movement.get(),b.fault.get(),true);
+        else observe_kernel<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),normal,extended,b.movement.get(),b.fault.get(),program,default_seed,true);
         check_good(b,s,"Invalid pre-control state/observation");
+        if(inference)inference->start(s);
         net.base.forward(normal,N,s);net.residual.forward(extended,N,s);net.critic.forward(normal,N,s);
         CUDA_CHECK_THROW(cudaMemcpyAsync(b.value.get()+row,net.critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,s));
         const uint32_t serial=(a.update-1)*T+t;
@@ -174,33 +281,60 @@ float collect(Buffer& b,Extra& e,Networks& net,const Study& study,StageAccountin
         rl::sample_gaussian(e.pitch_mean.get(),b.log_std.get(),N,2,default_seed^pitch_noise_salt,serial,e.pitch_sample.get(),e.pair_logp.get(),s);
         assemble_samples<<<(N+31)/32,32,0,s>>>(net.residual.output(),b.log_std.get(),e.yaw_sample.get(),e.pitch_sample.get(),e.action.get()+row*Y,b.logp.get()+row);
         compose<<<(N+31)/32,32,0,s>>>(b.tasks.get(),net.base.output(),e.action.get()+row*Y,b.logp.get()+row,e.mask.get()+row,b.latent.get()+row*A,e.base.get()+row*A);
+        if(rate_reward)capture_rate<<<(N+31)/32,32,0,s>>>(b.tasks.get(),b.schedules.get(),b.histories.get(),b.movement.get(),prior.get());
+        mark_inference_end();
+        if(timings&&timings->on_issue)timings->on_issue(t+1);
         physics.start(s);a.ticks=t+1;
+        if(range_practice)progress.controls_issued.store(((a.update-1)*T+t+1)*N,std::memory_order_relaxed);
         step_kernel<<<N/8,8,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.movement.get(),b.latent.get()+row*A,study.motor.gain,
             b.reward.get()+row,b.done.get()+row,b.truncated.get()+row,b.final_observation.get(),b.attempted.get()+row,b.substeps.get()+row,b.reason.get()+row,
-            b.trace.get()+row,b.fault.get(),program,default_seed);
+            b.trace.get()+row,b.fault.get(),program,default_seed,classes?classes+row:nullptr);
+        if(rate_reward)apply_rate<<<(N+31)/32,32,0,s>>>(prior.get(),b.movement.get(),b.reward.get()+row);
+#ifdef POND_POSTURE_LESSON
+        // The archived replay takes the original schedule and reward path.
+        if(range_practice)apply_posture<<<(N+31)/32,32,0,s>>>(e.mask.get()+row,b.trace.get()+row,b.done.get()+row,
+            b.reason.get()+row,b.substeps.get()+row,b.reward.get()+row,b.fault.get());
+#endif
+        if(range_practice)range_observe<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.final_observation.get(),nullptr,b.movement.get(),b.fault.get(),false,b.done.get()+row);
         physics_ms+=physics.stop(s);check_good(b,s,"Physical collection failed before GAE or Adam");
+        if(range_practice)progress.controls_confirmed.store(((a.update-1)*T+t+1)*N,std::memory_order_relaxed);
+        account_inference();
+        if(timings&&timings->on_complete)timings->on_complete(t+1);
+        if(inference)inference->start(s);
         net.critic.forward(b.final_observation.get(),N,s);
         CUDA_CHECK_THROW(cudaMemcpyAsync(b.final_value.get()+row,net.critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,s));
+        mark_inference_end();
         reset_terminal_kernel<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.histories.get(),b.movement.get(),b.done.get()+row,default_seed,program,b.fault.get());
         check_good(b,s,"Invalid episode reset/certificate");
+        account_inference();
     }
-    observe_kernel<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.last_observation.get(),nullptr,nullptr,b.fault.get(),program,default_seed,false);
+    if(range_practice)range_observe<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.last_observation.get(),nullptr,b.movement.get(),b.fault.get(),false);
+    else observe_kernel<<<(N+31)/32,32,0,s>>>(b.worlds.get(),b.tasks.get(),b.schedules.get(),b.last_observation.get(),nullptr,nullptr,b.fault.get(),program,default_seed,false);
+    if(inference)inference->start(s);
     net.critic.forward(b.last_observation.get(),N,s);
     CUDA_CHECK_THROW(cudaMemcpyAsync(b.last_value.get(),net.critic.output(),N*sizeof(float),cudaMemcpyDeviceToDevice,s));
+    mark_inference_end();
     audit_kernel<<<(Rows+255)/256,256,0,s>>>(b.observation.get(),b.latent.get(),b.logp.get(),b.value.get(),b.reward.get(),b.done.get(),b.truncated.get(),b.final_value.get(),b.fault.get());
-    finite_kernel<<<(N+255)/256,256,0,s>>>(b.last_value.get(),N,b.fault.get());check_good(b,s,"Invalid collection data");return physics_ms;
+    finite_kernel<<<(N+255)/256,256,0,s>>>(b.last_value.get(),N,b.fault.get());check_good(b,s,"Invalid collection data");account_inference();return physics_ms;
 }
 struct Source{std::vector<uint8_t> worlds,tasks;std::vector<float> actor,critic;};
-std::vector<int> save_rollout(const fs::path& out,const Source& origin,Buffer& b,Extra& e,StageAccounting& a,cudaStream_t s,bool success){
+std::vector<int> save_rollout(const fs::path& out,const Source& origin,Buffer& b,Extra& e,StageAccounting& a,cudaStream_t s,bool success,
+                               const device_ptr<pr::ControlClearance>* classes=nullptr){
     const auto h=batch(b,s,a.ticks);const size_t count=h.trace.size();
     const auto residual=download(e.action,count*Y,s),mask=download(e.mask,count,s),base=download(e.base,count*A,s);
     a.controls=0;a.substeps=0;for(size_t i=0;i<count;++i){a.controls+=h.attempted[i];a.substeps+=h.substeps[i];}
     a.accounted=true;
-    cp::Writer w;w.value(uint32_t{0x31425252});w.value(uint32_t{2});w.value(a.update);w.value(a.ticks);
+    cp::Writer w;w.value(uint32_t{0x31425252});w.value(uint32_t(classes?3:2));w.value(a.update);w.value(a.ticks);
     w.array(origin.worlds);w.array(origin.tasks);w.array(origin.actor);w.array(origin.critic);
     w.array(h.observation);w.array(residual);w.array(mask);w.array(base);w.array(h.latent);w.array(h.logp);
     w.array(h.value);w.array(h.reward);w.array(h.done);w.array(h.truncated);w.array(h.final_value);w.array(h.last_value);
     w.array(h.attempted);w.array(h.substeps);w.array(h.reason);w.value(uint32_t(sizeof(TransitionTrace)));w.array(raw_bytes(h.trace));
+    if(classes){
+        // The classified format appends an explicit bound/precision record for every row.
+        // The legacy trace minimum is NaN wherever a numerical minimum was unmeasured.
+        const auto records=download(*classes,count,s);w.value(uint32_t{1});w.value(uint64_t(records.size()));
+        for(const auto& c:records){w.value(uint32_t(c.precise));w.value(c.lower_m);w.value(c.rejected_contacts);w.value(c.exact_steps);w.value(c.exact_queries);}
+    }
     cp::write_atomic((out/((success?"batch-":"partial-batch-")+std::to_string(a.update)+".bin")).string(),w.data);
     std::vector<int> indices;if(!success)return indices;
     uint32_t starts[4][2]{},ticks[4][2]{};
@@ -237,7 +371,7 @@ void audit_policy(Buffer& b,Extra& e,Networks& net,bool old,cudaStream_t s){
     check_good(b,s,"Masked residual log probability replay failed");
 }
 void finite(const float* ptr,int n,Buffer& b,cudaStream_t s){finite_kernel<<<(n+255)/256,256,0,s>>>(ptr,n,b.fault.get());}
-float optimize(Buffer& b,Extra& e,Networks& net,int update,const std::vector<int>& indices,cudaStream_t s,const TimeBudget& budget){
+float optimize(Buffer& b,Extra& e,Networks& net,int update,const std::vector<int>& indices,cudaStream_t s,const TimeBudget& budget,bool track=false){
     audit_policy(b,e,net,true,s);
     rl::compute_gae(T,N,b.reward.get(),b.value.get(),b.done.get(),b.truncated.get(),b.final_value.get(),b.last_value.get(),pp::gamma,pp::lambda,b.advantages.get(),b.returns.get(),s);
     finite(b.advantages.get(),Rows,b,s);finite(b.returns.get(),Rows,b,s);check_good(b,s,"Invalid returns/advantages before Adam");
@@ -261,8 +395,12 @@ float optimize(Buffer& b,Extra& e,Networks& net,int update,const std::vector<int
             const auto stats=download(b.stats,4,s);require(stats[2]>0&&std::isfinite(stats[0])&&stats[0]/stats[2]<=maximum_approx_kl,"Predeclared eligible-row minibatch KL stop");
             net.residual.zero_grad(s);net.critic.zero_grad(s);net.residual.backward(b.dmean.get(),MB,nullptr,s);net.critic.backward(b.dvalue.get(),MB,nullptr,s);
             finite(net.residual.grads(),rp::parameters,b,s);finite(net.critic.grads(),pp::critic_weights,b,s);check_good(b,s,"Nonfinite gradient before Adam");
-            net.actor_adam.step(net.residual.params(),net.residual.grads(),s);net.critic_adam.step(net.critic.params(),net.critic.grads(),s);
+            if(track)progress.actor_adam_issued.store(net.actor_adam.steps()+1,std::memory_order_relaxed);
+            net.actor_adam.step(net.residual.params(),net.residual.grads(),s);
+            if(track)progress.critic_adam_issued.store(net.critic_adam.steps()+1,std::memory_order_relaxed);
+            net.critic_adam.step(net.critic.params(),net.critic.grads(),s);
             finite(net.residual.params(),rp::parameters,b,s);finite(net.critic.params(),pp::critic_weights,b,s);check_good(b,s,"Nonfinite updated weights");
+            if(track)progress.pairs_adam_confirmed.store(net.critic_adam.steps(),std::memory_order_relaxed);
         }
     }
     audit_policy(b,e,net,false,s);pack<<<(active+255)/256,256,0,s>>>(b.kl.get(),e.eligible.get(),active,e.pack.get());
@@ -279,6 +417,7 @@ struct Ledger{
     }
 };
 void run(const Args& args){
+    const uint32_t max_updates=args.classified?8u:32u;
     TimeBudget budget;Study study(args);cudarl::pond_math_profile::validate_host_geometry();
     cp::Lease lease(study.ledger.string()+".study");
     Ledger ledger;ledger.protocol=study.plan;
@@ -286,12 +425,13 @@ void run(const Args& args){
     if(args.init)require(!fs::exists(study.ledger),"Residual allocation was already initialized");
     else{
         ledger=Ledger::read(study.ledger);resumed=cp::read(args.resume.string());
-        require(ledger.protocol==study.plan&&ledger.status==2&&ledger.state==cp::checksum(resumed)&&ledger.update<32,"Resume must be the last complete unspent eight-update stage");
+        require(ledger.protocol==study.plan&&ledger.status==2&&ledger.state==cp::checksum(resumed)&&ledger.update<max_updates,"Resume must be the last complete unspent eight-update stage");
         budget.prior=ledger.wall;
     }
     budget.guard();require(!fs::exists(args.out)&&fs::create_directories(args.out),"Expected a fresh stage output");
     ledger.status=1;cp::write_atomic(study.ledger.string(),ledger.bytes());
     CUDA_CHECK_THROW(cudaSetDevice(0));Stream stream;Buffer b(true);Extra e;Networks net(study);
+    device_ptr<pr::ControlClearance> classified_rows;if(args.classified)classified_rows.allocate(Rows);
     const auto s=stream.value;clear_fault(b,s);
     std::vector<float> logs(A,pp::fixed_log_std());b.log_std.copy_from_host(logs.data(),logs.size());
     rp::Actor a;a.parent=study.motor.checksum;a.protocol=study.plan;
@@ -312,14 +452,15 @@ void run(const Args& args){
             for(int update=int(a.update)+1;update<=end;++update){
                 budget.guard();clear_batch(b,e,s);attempt={};attempt.update=update;
                 origin={raw_bytes(download(b.worlds,N,s)),saved_tasks(b,program,s),net.residual.get_params(),net.critic.get_params()};
-                started=true;const double physics_ms=collect(b,e,net,study,attempt,s,budget);physics_total+=physics_ms;
-                const auto save_start=Clock::now();const auto indices=save_rollout(args.out,origin,b,e,attempt,s,true);
+                if(args.classified)CUDA_CHECK_THROW(cudaMemsetAsync(classified_rows.get(),0,classified_rows.size_bytes(),s));
+                started=true;const double physics_ms=collect(b,e,net,study,attempt,s,budget,classified_rows.get(),nullptr,args.classified,study.course_rate);physics_total+=physics_ms;
+                const auto save_start=Clock::now();const auto indices=save_rollout(args.out,origin,b,e,attempt,s,true,args.classified?&classified_rows:nullptr);
                 const double evidence_ms=1000*elapsed(save_start);evidence_total+=evidence_ms;
                 physical+=attempt.controls;substeps+=attempt.substeps;started=false;
-                const auto opt_start=Clock::now();const float kl=optimize(b,e,net,update,indices,s,budget);
+                const auto opt_start=Clock::now();const float kl=optimize(b,e,net,update,indices,s,budget,args.classified);
                 const double opt_ms=1000*elapsed(opt_start);opt_total+=opt_ms;
                 require(net.base.get_params()==study.motor.weights,"Frozen motor changed during optimization");
-                completed=uint32_t(update);a.update=completed;a.training_controls=physical;a.training_substeps=substeps;
+                completed=uint32_t(update);if(args.classified)progress.updates_completed.store(completed,std::memory_order_relaxed);a.update=completed;a.training_controls=physical;a.training_substeps=substeps;
                 a.actor_adam_calls=net.actor_adam.steps();a.critic_adam_calls=net.critic_adam.steps();
                 a.weights=net.residual.get_params();
                 metrics<<completed<<','<<physical<<','<<substeps<<','<<a.actor_adam_calls<<','<<a.critic_adam_calls<<','<<indices.size()<<','
@@ -330,12 +471,12 @@ void run(const Args& args){
         require(sha256(whole_file(study.parent))==pp::parent_package_sha256&&net.base.get_params()==study.motor.weights,"Protected base changed");
         write_state(args.out,a,net,b,s);
         ledger.state=cp::checksum(cp::read((args.out/("state-"+std::to_string(a.update)+".bin")).string()));
-        ledger.update=a.update;ledger.status=a.update==32?3:2;ok=true;
+        ledger.update=a.update;ledger.status=a.update==max_updates?3:2;ok=true;
         reason=args.init?"zero_residual_initialized":"chunk_complete_retention_required";
     }catch(const std::exception& ex){
         reason=ex.what();ledger.status=4;
         if(started){
-            try{if(!attempt.accounted)save_rollout(args.out,origin,b,e,attempt,s,false);physical+=attempt.controls;substeps+=attempt.substeps;}
+            try{if(!attempt.accounted)save_rollout(args.out,origin,b,e,attempt,s,false,args.classified?&classified_rows:nullptr);physical+=attempt.controls;substeps+=attempt.substeps;}
             catch(const std::exception& recovery){reason+="; incomplete batch recovery: "+std::string(recovery.what());}
         }
         try{
@@ -347,7 +488,7 @@ void run(const Args& args){
     }
     ledger.wall=budget.prior+elapsed(budget.start);cp::write_atomic(study.ledger.string(),ledger.bytes());
     std::ofstream result(args.out/"result.json");result<<std::setprecision(17)<<"{\"passed\":"<<(ok?"true":"false")<<",\"initialized\":"<<(args.init&&ok?"true":"false")
-        <<",\"reason\":\""<<json_escape(reason)<<"\",\"protocol_id\":\""<<rp::protocol_id<<"\",\"completed_updates\":"<<completed
+        <<",\"reason\":\""<<json_escape(reason)<<"\",\"protocol_id\":\""<<(args.classified?classified_id:rp::protocol_id)<<"\",\"completed_updates\":"<<completed
         <<",\"attempted_controls\":"<<physical<<",\"attempted_substeps\":"<<substeps<<",\"actor_Adam_calls\":"<<net.actor_adam.steps()
         <<",\"critic_Adam_calls\":"<<net.critic_adam.steps()<<",\"base_Adam_calls\":0,\"physics_ms\":"<<physics_total<<",\"optimization_ms\":"<<opt_total
         <<",\"batch_evidence_ms\":"<<evidence_total<<",\"stage_wall_seconds\":"<<elapsed(budget.start)<<",\"aggregate_wall_seconds\":"<<ledger.wall
@@ -355,15 +496,36 @@ void run(const Args& args){
     require(ok,reason);
 }
 } // namespace residual_training
+#ifndef POND_RESIDUAL_COLLECTOR_ONLY
+namespace {
+struct ClassifiedProcessDeadline{
+    std::mutex mutex;std::condition_variable wake;bool done=false;std::thread watchdog;
+    explicit ClassifiedProcessDeadline(std::chrono::steady_clock::time_point start):watchdog([this,start]{
+        std::unique_lock<std::mutex> lock(mutex);
+        if(!wake.wait_until(lock,start+std::chrono::seconds(4),[this]{return done;})){
+            auto& p=residual_training::progress;
+            std::fprintf(stderr,"{\"timeout\":true,\"wall_limit_seconds\":4,\"controls_issued\":%u,\"controls_confirmed\":%u,\"updates_completed\":%u,\"actor_Adam_issued\":%u,\"critic_Adam_issued\":%u,\"Adam_pairs_confirmed\":%u}\n",
+                p.controls_issued.load(),p.controls_confirmed.load(),p.updates_completed.load(),p.actor_adam_issued.load(),p.critic_adam_issued.load(),p.pairs_adam_confirmed.load());
+            std::fflush(stderr);std::_Exit(3);
+        }
+    }){}
+    ~ClassifiedProcessDeadline(){{std::lock_guard<std::mutex> lock(mutex);done=true;}wake.notify_one();watchdog.join();}
+};
+}
 int main(int argc,char** argv){
+    const auto start=std::chrono::steady_clock::now();
     try{
         namespace res=residual_training;namespace spec=cudarl::residual_four_ppo;
-        if(argc==2&&std::string(argv[1])=="--describe"){
+        if((argc==2||argc==3)&&std::string(argv[1])=="--describe"){
+            const bool classified=argc==3;require(!classified||std::string(argv[2])=="--classified-clearance","Invalid descriptor options");
             const std::string source=residual_source_hash;
-            std::cout<<"{\"protocol_id\":\""<<spec::protocol_id<<"\",\"source_sha256\":\""<<source
+            std::cout<<"{\"protocol_id\":\""<<(classified?res::classified_id:spec::protocol_id)<<"\",\"rollout_version\":"<<(classified?3:2)<<(classified?res::classified_rewards_json:"")<<",\"source_sha256\":\""<<source
                 <<"\",\"source_identity_fnv1a64\":\""<<cp::checksum({source.begin(),source.end()})<<"\",\"qualified_physics_source_sha256\":\""<<ph::physics_source_sha256()
                 <<"\",\"actor_inputs\":42,\"critic_inputs\":41,\"residual_parameters\":756,\"residual_outputs\":4,\"paired_yaw_noise\":true,\"pitch_noise_xor\":1831565813,\"base_parameters\":2532,\"world_stride\":"<<sizeof(pr::World)
-                <<",\"task_stride\":"<<sizeof(ps::SignedCourseTask)<<",\"trace_stride\":"<<sizeof(TransitionTrace)<<",\"turn_practice_degrees\":[15,30,60,90],\"curriculum_ordinal\":\"lifetime_per_world_issued_requests\",\"max_updates\":32,\"worlds\":512,\"rollout_controls\":64,\"minibatch\":4096,\"epochs\":4,\"actor_learning_rate\":0.0003,\"critic_learning_rate\":0.001,\"base_Adam_calls\":0,\"physical_controls\":0,\"optimizer_calls\":0}\n";return 0;}
-        res::run(res::args(argc,argv));return 0;
+                <<",\"task_stride\":"<<sizeof(ps::SignedCourseTask)<<",\"trace_stride\":"<<sizeof(TransitionTrace)<<",\"turn_practice_degrees\":[15,30,60,90],\"curriculum_ordinal\":\""<<(classified?"balanced_range_per_request":"lifetime_per_world_issued_requests")<<"\",\"max_updates\":"<<(classified?8:32)<<",\"worlds\":512,\"rollout_controls\":64,\"minibatch\":4096,\"epochs\":4,\"actor_learning_rate\":0.0003,\"critic_learning_rate\":0.001,\"base_Adam_calls\":0,\"physical_controls\":0,\"optimizer_calls\":0}\n";return 0;}
+        const auto options=res::args(argc,argv);std::unique_ptr<ClassifiedProcessDeadline> limit;
+        if(options.classified)limit=std::make_unique<ClassifiedProcessDeadline>(start);
+        res::run(options);return 0;
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 2;}
 }
+#endif

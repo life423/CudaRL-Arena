@@ -1,0 +1,13 @@
+suite,case,outcome,fault,horizon_s,simulated_s,attempted_substeps,accepted_substeps,min_clearance_mm,peak_tilt_deg,peak_depth_error_mm,mean_post_launch_speed_mm_s,measured_path_mm,unique_cells,qualifying_revisits,outside_reference_cells,perimeter_time_s,max_stall_s,decisions,keep,left,right,pass
+diagnostic,godot_rest,native_stop,2,120,51.73625,41390,41389,-0.00506450124,0,0,10.051766,457.355355,13,0,0,1.86,0,12,0,0,12,0
+diagnostic,center_west,native_stop,2,120,52.50875,42008,42007,-0.0110662677,0,0,10.1901624,473.84255,13,0,0,1.98,0,13,0,0,13,0
+diagnostic,center_north,native_stop,2,120,58.8425,47075,47074,-0.0256409803,0,0,10.0677266,528.555647,14,0,0,4.82,0,14,0,14,0,0
+diagnostic,center_south,native_stop,2,120,62.24,49793,49792,-0.0229157649,0,0,10.1979781,571.086775,14,0,0,4.98,0,15,0,0,15,0
+diagnostic,east_shelf_tangent,native_stop,2,120,29.4325,23547,23546,-0.00507527784,0,0,10.1443525,233.320108,6,0,1,2.16,0,7,0,0,7,0
+diagnostic,west_shelf_tangent,native_stop,2,120,32.48875,25992,25991,-0.00801857732,0,0,10.1828347,264.753702,8,0,1,2.18,0,8,0,0,8,0
+diagnostic,north_shelf_tangent,native_stop,2,120,37.16875,29736,29735,-0.0232020393,0,0,9.73318693,301.728795,10,0,0,4.68,0,9,0,7,2,0
+diagnostic,south_shelf_tangent,native_stop,2,120,53.62375,42900,42899,-0.000846075864,0,0,9.9242101,471.39998,11,0,1,14.86,0,13,0,11,2,0
+diagnostic,northeast_to_center,native_stop,2,120,75.8825,60707,60706,-0.0119167653,0,0,10.1146383,702.967364,18,0,0,1.76,0,18,0,0,18,0
+diagnostic,southwest_to_center,native_stop,2,120,77.105,61685,61684,-0.0149348143,0,0,10.1177659,718.361375,17,0,0,1.72,0,19,0,0,19,0
+diagnostic,northwest_diagonal,native_stop,2,120,24.415,19533,19532,-0.00789552632,0,0,10.11188,182.01384,6,0,0,1.8,0,6,0,0,6,0
+diagnostic,southeast_diagonal,native_stop,2,120,24.1,19281,19280,-0.00775012813,0,0,10.1163401,182.094122,5,0,0,1.78,0,6,0,0,6,0

@@ -1,0 +1,35 @@
+{
+  "stages": [
+    {
+      "watchdog_executed": false,
+      "stage": "init",
+      "ms": 2071.8922,
+      "arm": "posture",
+      "exit_code": 0
+    },
+    {
+      "watchdog_executed": false,
+      "stage": "baseline",
+      "ms": 46.6232,
+      "arm": "posture",
+      "exit_code": 0
+    },
+    {
+      "watchdog_executed": false,
+      "stage": "train",
+      "ms": 1767.9868,
+      "arm": "posture",
+      "exit_code": 0
+    },
+    {
+      "watchdog_executed": false,
+      "stage": "fixed-turns",
+      "ms": 1430.9007,
+      "arm": "posture",
+      "exit_code": 0
+    }
+  ],
+  "allocation": "one eight-update arm against the archived original-reward reference",
+  "wall_ms": 5526.2791,
+  "original_motor_sha256": "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d"
+}

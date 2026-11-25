@@ -1,0 +1,3 @@
+# Propulsion-first new motor PPO block
+
+Use 512 CUDA worlds, 64 controls per world per update, four passes of 4096-transition minibatches, eight updates, 262144 transitions. Measure all 36 unchanged cases at zero and eight updates. Stop on a physical or numerical fault or the four-second per-process and 20-second trial limits. Task-level behavioral misses count as results. Protect motor 336 as the comparison reference. First lesson uses only straight-swim requests, AR(1) at rho .8 and signed forward progress with a 1 mm/s reward scale. Existing full assessments still measure turn and rest. No deployment.

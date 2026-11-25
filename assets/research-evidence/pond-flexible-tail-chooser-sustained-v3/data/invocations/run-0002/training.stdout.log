@@ -1,0 +1,1 @@
+device=NVIDIA GeForce RTX 5070 worlds=1024 decisions_per_world=8 restored_update=64 target_updates=64

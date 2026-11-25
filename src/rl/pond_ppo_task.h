@@ -89,14 +89,20 @@ CUDARL_HD inline RequestSample sample_request(uint32_t env,uint32_t episode,uint
 }
 
 CUDARL_HD inline bool initialize(runtime::World& world, Task& task, uint32_t env,
-                                 uint32_t episode, uint32_t seed,uint32_t curriculum=curriculum_off) {
+                                 uint32_t episode, uint32_t seed,uint32_t curriculum=curriculum_off,
+                                 bool propulsion_lesson=false) {
     const uint64_t failures = task.task_failures, truncations = task.truncations;
     const uint64_t completed = task.completed_episodes;
     task = Task{};
     task.task_failures = failures; task.truncations = truncations; task.completed_episodes = completed;
     task.episode_index = episode;
-    const auto sample=sample_request(env,episode,seed,curriculum);
+    auto sample=sample_request(env,episode,seed,curriculum);
     if(sample.kind<Hold||sample.kind>Turn)return false;
+    if(propulsion_lesson){
+        sample.kind=Straight;
+        sample.start=rng::bits(seed,rng::hash_u32(env^0xa4175b39u),episode)%4u;
+        sample.turn_radians=0.f;
+    }
     task.kind=sample.kind;
     const bool holding = task.kind == Hold;
     task.turn_radians=sample.turn_radians;
@@ -150,18 +156,21 @@ CUDARL_HD inline float direction_factor(p::V horizontal_velocity,p::V requested_
     return 1.f/(1.f+(1.f-cosine)/one_minus_cos15);
 }
 CUDARL_HD inline float moving_reward_terms(float speed_quality,float positive_requested_progress,
-        p::V horizontal_velocity,p::V requested_heading,int kind,bool request_changed,uint32_t program) {
-    float rewarded_progress=positive_requested_progress;
+        p::V horizontal_velocity,p::V requested_heading,int kind,bool request_changed,uint32_t program,
+        bool align_speed=false) {
+    float alignment=1.f;
     if((program==course_direction_v1||repeating_program(program))&&kind==Turn&&request_changed)
-        rewarded_progress*=direction_factor(horizontal_velocity,requested_heading);
-    return .35f*speed_quality+.65f*rewarded_progress;
+        alignment=direction_factor(horizontal_velocity,requested_heading);
+    if(align_speed)return (.35f*speed_quality+.65f*positive_requested_progress)*alignment;
+    return .35f*speed_quality+.65f*(positive_requested_progress*alignment);
 }
 
 // Called ONLY after one complete successful runtime control. A physical stop is
 // rejected by the collector before this call, not relabeled as an episode end.
 // A 64-control rollout segment is not a task episode boundary.
 CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t program=curriculum_off,
-                                   const p::V* measured_course_velocity=nullptr,const runtime::ControlClearance* clearance=nullptr) {
+                                   const p::V* measured_course_velocity=nullptr,const runtime::ControlClearance* clearance=nullptr,
+                                   bool align_turn_speed=false,bool propulsion_lesson=false) {
     Transition transition;
     if (world.failure != 0 || world.motor.physical.invalid || world.motor.physical.unsafe) return transition;
     ++task.episode_controls; ++task.request.controls;
@@ -197,6 +206,15 @@ CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t pr
         const float anchor_error = p::norm(metrics.hold_error_m);
         const float speed = p::norm(current.velocity_m_s);
         transition.reward = control_seconds * expf(-squared(anchor_error / .001f) - squared(speed / .001f)) * tilt_quality;
+    } else if (propulsion_lesson) {
+        const float forward_m_s = p::dot(current.velocity_m_s, task.request.request.heading);
+        const float propulsion = tanhf(forward_m_s / .001f);
+        const float depth_quality = expf(-squared(metrics.depth_m / .003f));
+        const float effort_quality = 1.f - .1f * p::clamp(physical.mean_squared_torque, 0, 1);
+        // Good posture and depth preserve forward credit. Backward travel
+        // incurs its full cost even when posture or depth is poor.
+        transition.reward = control_seconds *
+            (propulsion > 0.f ? propulsion * depth_quality * tilt_quality * effort_quality : propulsion);
     } else {
         const float horizontal_speed = p::norm({current.velocity_m_s.x, 0, current.velocity_m_s.z});
         const float speed_quality = expf(-squared((horizontal_speed - target_speed_m_s) / .006f));
@@ -209,7 +227,7 @@ CUDARL_HD inline Transition record(Task& task, runtime::World& world,uint32_t pr
         const float depth_quality = expf(-squared(metrics.depth_m / .003f));
         const float effort_quality = 1.f - .1f * p::clamp(physical.mean_squared_torque, 0, 1);
         transition.reward = control_seconds * motion_gate * moving_reward_terms(speed_quality,positive_requested_progress,
-            course_velocity,task.request.request.heading,task.kind,task.request_changed,program) *
+            course_velocity,task.request.request.heading,task.kind,task.request_changed,program,align_turn_speed) *
             depth_quality * tilt_quality * effort_quality;
     }
     // All clamping above bounds reward factors only, never physical state.

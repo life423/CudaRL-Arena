@@ -1,0 +1,11 @@
+{
+  "name": "flexible-tail-pitch-ablation-v1",
+  "purpose": "Isolate whether learned pitch leakage explains closed-loop loss of posture on the fixed held-out fixtures.",
+  "uses_saved_weights": true,
+  "modified_command": "Only the diagnostic pitch target is set to zero after inference. Learned yaw remains unchanged. This is an intervention in a scratch executable.",
+  "matched_cases": 7,
+  "max_substeps": 89600,
+  "process_cap_s": 4,
+  "optimizer_updates": 0,
+  "adoption_eligible": false
+}

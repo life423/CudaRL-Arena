@@ -1,0 +1,2 @@
+device=NVIDIA GeForce RTX 5070 rows=9400 initial_mse=0.239426213
+optimizer_steps=384 final_mse=0.00105918922 optimizer_cuda_ms=85.8864975 wall_s=0.2205454

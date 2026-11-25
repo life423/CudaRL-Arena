@@ -1,0 +1,3 @@
+update,policy_samples,reward_mean,exact_kl,policy_loss,value_loss,entropy,clip_fraction,explained_variance,adam_minibatches,attempted_substeps,accepted_substeps,clearance_stops,cue_timeouts,posture_stops,keep,left,right,gpu_physics_motor_ms,gpu_chooser_ms,gpu_optimization_ms,synchronization_readback_ms,evidence_cumulative_before_commit_ms,invocation_wall_s
+1,8192,0.649123013,0.002031906974,-0.002262971364,2.11380887,0.3556788266,0.01733398438,0.2188637257,32,29697230,29697048,182,0,0,611,4230,3351,7567.731557,2.447039947,12.18358421,6993.1174,29.25,8.0785783
+2,16384,0.6333686113,0.003550692229,-0.001251169713,1.916633725,0.5237197876,0.01220703125,0.3702722192,32,56182735,56182390,345,0,0,1846,8202,6336,8438.359344,1.030272022,10.841856,8480.9814,59.3841,25.1263346

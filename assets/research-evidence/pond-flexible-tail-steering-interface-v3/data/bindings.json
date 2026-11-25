@@ -1,0 +1,52 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\physics\\flexible_tail.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4902A5050A09101D8E7115EE43DDF99F3288B99EF539A525548A5D3FC727BF1E",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-turn-worlds.bin"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\yaw-offset-update-8.bin"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6F67188CCFE2BA6A9128FC4244207D9184B9ECA49812D423218DFBE8BCC727D4",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-steering-v3-build\\Release\\pond_flexible_tail_steering_check.exe"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "C89A4CDEF7FF5DB0FB97CCF275C6946753A3791C4EE80F454BF87696C347CB91",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-chooser\\steering-check.cpp"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "2A595534DCCB49099D84DC242378F07AAF22CD6917BA334CBC48A458350D00E4",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-chooser\\STEERING_INTERFACE_PROTOCOL.md"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "5246E75FCDA7461BF1EC35F441E9B9F463CD982CE7BE51F613E97B8F2965E743",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_chooser.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\environment\\flexible_tail_clearance.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\habitat.json"
+  }
+]

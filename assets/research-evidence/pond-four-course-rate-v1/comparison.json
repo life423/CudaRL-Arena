@@ -1,0 +1,234 @@
+[
+  {
+    "arm": "reference",
+    "completed_updates": 8,
+    "transitions": 262144,
+    "training_ms": 1820.0368,
+    "transitions_per_second": 144032.25253467401,
+    "all_pass": 2,
+    "large_pass": 0,
+    "mean_all_course_error_deg": 22.848789482387573,
+    "mean_large_course_error_deg": 37.19449453643484,
+    "weight_deltas": {
+      "changed": 724,
+      "maximum_abs_delta": 0.02419564127922058,
+      "l2": 0.2098052607512991
+    },
+    "practice_by_angle": [
+      {
+        "degrees": -15,
+        "starts": 53.0,
+        "active_controls": 15227.0
+      },
+      {
+        "degrees": -30,
+        "starts": 63.0,
+        "active_controls": 14376.0
+      },
+      {
+        "degrees": -60,
+        "starts": 59.0,
+        "active_controls": 13760.0
+      },
+      {
+        "degrees": -90,
+        "starts": 64.0,
+        "active_controls": 16088.0
+      },
+      {
+        "degrees": 15,
+        "starts": 68.0,
+        "active_controls": 15720.0
+      },
+      {
+        "degrees": 30,
+        "starts": 63.0,
+        "active_controls": 14376.0
+      },
+      {
+        "degrees": 60,
+        "starts": 59.0,
+        "active_controls": 13760.0
+      },
+      {
+        "degrees": 90,
+        "starts": 64.0,
+        "active_controls": 13716.0
+      }
+    ],
+    "large_case_breaches": [
+      {
+        "pose": 0,
+        "turn_degrees": -60,
+        "first_depth_failure_s": "7.75",
+        "first_tilt_failure_s": "2.2000000000000002",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 0,
+        "turn_degrees": -90,
+        "first_depth_failure_s": "6.0500000000000007",
+        "first_tilt_failure_s": "2.1499999999999999",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 0,
+        "turn_degrees": 60,
+        "first_depth_failure_s": "7.8500000000000005",
+        "first_tilt_failure_s": "2.6000000000000001",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 0,
+        "turn_degrees": 90,
+        "first_depth_failure_s": "7.2000000000000002",
+        "first_tilt_failure_s": "2.6000000000000001",
+        "reason": "depth_task_terminal"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": -60,
+        "first_depth_failure_s": "7.7000000000000002",
+        "first_tilt_failure_s": "2.2000000000000002",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": -90,
+        "first_depth_failure_s": "6.0500000000000007",
+        "first_tilt_failure_s": "2.1499999999999999",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": 60,
+        "first_depth_failure_s": "7.9000000000000004",
+        "first_tilt_failure_s": "2.6500000000000004",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": 90,
+        "first_depth_failure_s": "7.25",
+        "first_tilt_failure_s": "2.6000000000000001",
+        "reason": "depth_task_terminal"
+      }
+    ]
+  },
+  {
+    "arm": "course_rate",
+    "completed_updates": 8,
+    "transitions": 262144,
+    "training_ms": 1814.0322,
+    "transitions_per_second": 144509.01147179195,
+    "all_pass": 2,
+    "large_pass": 0,
+    "mean_all_course_error_deg": 22.972152660677494,
+    "mean_large_course_error_deg": 37.394519169319096,
+    "weight_deltas": {
+      "changed": 724,
+      "maximum_abs_delta": 0.021374836564064026,
+      "l2": 0.18604642087816048
+    },
+    "practice_by_angle": [
+      {
+        "degrees": -15,
+        "starts": 53.0,
+        "active_controls": 15222.0
+      },
+      {
+        "degrees": -30,
+        "starts": 63.0,
+        "active_controls": 14376.0
+      },
+      {
+        "degrees": -60,
+        "starts": 59.0,
+        "active_controls": 13760.0
+      },
+      {
+        "degrees": -90,
+        "starts": 64.0,
+        "active_controls": 16088.0
+      },
+      {
+        "degrees": 15,
+        "starts": 68.0,
+        "active_controls": 15720.0
+      },
+      {
+        "degrees": 30,
+        "starts": 63.0,
+        "active_controls": 14376.0
+      },
+      {
+        "degrees": 60,
+        "starts": 59.0,
+        "active_controls": 13760.0
+      },
+      {
+        "degrees": 90,
+        "starts": 64.0,
+        "active_controls": 13774.0
+      }
+    ],
+    "large_case_breaches": [
+      {
+        "pose": 0,
+        "turn_degrees": -60,
+        "first_depth_failure_s": "7.75",
+        "first_tilt_failure_s": "2.2000000000000002",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 0,
+        "turn_degrees": -90,
+        "first_depth_failure_s": "6.1000000000000005",
+        "first_tilt_failure_s": "2.1499999999999999",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 0,
+        "turn_degrees": 60,
+        "first_depth_failure_s": "7.8500000000000005",
+        "first_tilt_failure_s": "2.6000000000000001",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 0,
+        "turn_degrees": 90,
+        "first_depth_failure_s": "7.2000000000000002",
+        "first_tilt_failure_s": "2.6000000000000001",
+        "reason": "depth_task_terminal"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": -60,
+        "first_depth_failure_s": "7.7000000000000002",
+        "first_tilt_failure_s": "2.2000000000000002",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": -90,
+        "first_depth_failure_s": "6.0500000000000007",
+        "first_tilt_failure_s": "2.1499999999999999",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": 60,
+        "first_depth_failure_s": "7.9500000000000002",
+        "first_tilt_failure_s": "2.6500000000000004",
+        "reason": "movement_qualification_failed"
+      },
+      {
+        "pose": 3,
+        "turn_degrees": 90,
+        "first_depth_failure_s": "7.3000000000000007",
+        "first_tilt_failure_s": "2.6000000000000001",
+        "reason": "depth_task_terminal"
+      }
+    ]
+  }
+]

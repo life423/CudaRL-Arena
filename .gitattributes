@@ -1,5 +1,7 @@
 # Evidence manifests hash exact bytes. Never normalize immutable study archives.
 assets/** -text -diff
+# The published flexible-tail deployment hashes the exact Godot bundle bytes.
+flexible-tail-preview/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 live/research_data/*.bin -text
 live/addons/frozen_swimmer/bin/frozen_swimmer-steering-v1.dll binary
 live/research_data/current-study.json -text

@@ -1,0 +1,2196 @@
+{
+  "schema": 1,
+  "physics_steps_added_by_audit": 0,
+  "optimizer_updates_added_by_audit": 0,
+  "motor_stages": [
+    {
+      "stage": "stage-01-rhythm-baseline",
+      "pass": true,
+      "status": "complete",
+      "updates": 128,
+      "checkpoints_verified": 129,
+      "model_kind": 3,
+      "parameters": 32,
+      "frozen_skip_parameters": 0,
+      "study": 1,
+      "material": 0,
+      "parent_task": "e77d7688e076201850f5aa9eb2c1960a1b10a70986bb1b934f57d4a88e6035fa",
+      "parent_update": 88,
+      "parent_payload_checksum": 17707156033516230933,
+      "native_import_bit_exact": true,
+      "common_critic_and_optimizer_bit_exact": true,
+      "actor_coordinate_transfer_exact": true,
+      "frozen_base_and_skip_exact": true,
+      "mask_and_unused_moments_valid": true,
+      "all_export_payload_checksums_valid": true,
+      "exact_resume_pass": true,
+      "diagnostic_updates": 3,
+      "diagnostic_samples": 196608,
+      "diagnostic_attempted_substeps": 12582912,
+      "diagnostic_accepted_substeps": 12582912,
+      "diagnostic_actor_steps": 192,
+      "diagnostic_critic_steps": 192,
+      "samples": 8388608,
+      "attempted_substeps": 535461888,
+      "accepted_substeps": 535461888,
+      "imported_actor_age": 12800,
+      "imported_critic_age": 12800,
+      "new_actor_steps": 8192,
+      "new_critic_steps": 8192,
+      "final_actor_age": 20992,
+      "final_critic_age": 20992,
+      "sampling_origin": 200,
+      "next_sampling_index": 20992,
+      "reporting_warning": null
+    },
+    {
+      "stage": "stage-02-joint-baseline",
+      "pass": true,
+      "status": "complete",
+      "updates": 128,
+      "checkpoints_verified": 129,
+      "model_kind": 4,
+      "parameters": 96,
+      "frozen_skip_parameters": 0,
+      "study": 2,
+      "material": 0,
+      "parent_task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "parent_update": 128,
+      "parent_payload_checksum": 5421309114456373137,
+      "native_import_bit_exact": true,
+      "common_critic_and_optimizer_bit_exact": true,
+      "actor_coordinate_transfer_exact": true,
+      "frozen_base_and_skip_exact": true,
+      "mask_and_unused_moments_valid": true,
+      "all_export_payload_checksums_valid": true,
+      "exact_resume_pass": true,
+      "diagnostic_updates": 3,
+      "diagnostic_samples": 196608,
+      "diagnostic_attempted_substeps": 12550144,
+      "diagnostic_accepted_substeps": 12550144,
+      "diagnostic_actor_steps": 192,
+      "diagnostic_critic_steps": 192,
+      "samples": 8388608,
+      "attempted_substeps": 535429120,
+      "accepted_substeps": 535429120,
+      "imported_actor_age": 20992,
+      "imported_critic_age": 20992,
+      "new_actor_steps": 8192,
+      "new_critic_steps": 8192,
+      "final_actor_age": 29184,
+      "final_critic_age": 29184,
+      "sampling_origin": 328,
+      "next_sampling_index": 29184,
+      "reporting_warning": null
+    },
+    {
+      "stage": "stage-03-nonlinear-baseline",
+      "pass": true,
+      "status": "complete",
+      "updates": 128,
+      "checkpoints_verified": 129,
+      "model_kind": 5,
+      "parameters": 563,
+      "frozen_skip_parameters": 96,
+      "study": 3,
+      "material": 0,
+      "parent_task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "parent_update": 56,
+      "parent_payload_checksum": 17560450474538088473,
+      "native_import_bit_exact": true,
+      "common_critic_and_optimizer_bit_exact": true,
+      "actor_coordinate_transfer_exact": true,
+      "frozen_base_and_skip_exact": true,
+      "mask_and_unused_moments_valid": true,
+      "all_export_payload_checksums_valid": true,
+      "exact_resume_pass": true,
+      "diagnostic_updates": 3,
+      "diagnostic_samples": 196608,
+      "diagnostic_attempted_substeps": 12550144,
+      "diagnostic_accepted_substeps": 12550144,
+      "diagnostic_actor_steps": 192,
+      "diagnostic_critic_steps": 192,
+      "samples": 8388608,
+      "attempted_substeps": 535429120,
+      "accepted_substeps": 535429120,
+      "imported_actor_age": 0,
+      "imported_critic_age": 24576,
+      "new_actor_steps": 8192,
+      "new_critic_steps": 8192,
+      "final_actor_age": 8192,
+      "final_critic_age": 32768,
+      "sampling_origin": 384,
+      "next_sampling_index": 32768,
+      "reporting_warning": "Raw study_actor_steps subtracts the source age even when nonlinear transfer resets the actor optimizer; true steps use session0 age and invocation counters."
+    },
+    {
+      "stage": "stage-04-speed-baseline",
+      "pass": true,
+      "status": "checkpointed-stop",
+      "updates": 115,
+      "checkpoints_verified": 116,
+      "model_kind": 5,
+      "parameters": 563,
+      "frozen_skip_parameters": 96,
+      "study": 4,
+      "material": 0,
+      "parent_task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "parent_update": 128,
+      "parent_payload_checksum": 17336116083195821890,
+      "native_import_bit_exact": true,
+      "common_critic_and_optimizer_bit_exact": true,
+      "actor_coordinate_transfer_exact": true,
+      "frozen_base_and_skip_exact": true,
+      "mask_and_unused_moments_valid": true,
+      "all_export_payload_checksums_valid": true,
+      "exact_resume_pass": true,
+      "diagnostic_updates": 3,
+      "diagnostic_samples": 196608,
+      "diagnostic_attempted_substeps": 12582912,
+      "diagnostic_accepted_substeps": 12582912,
+      "diagnostic_actor_steps": 192,
+      "diagnostic_critic_steps": 192,
+      "samples": 7536640,
+      "attempted_substeps": 481067008,
+      "accepted_substeps": 481067008,
+      "imported_actor_age": 8192,
+      "imported_critic_age": 32768,
+      "new_actor_steps": 7360,
+      "new_critic_steps": 7360,
+      "final_actor_age": 15552,
+      "final_critic_age": 40128,
+      "sampling_origin": 512,
+      "next_sampling_index": 40128,
+      "reporting_warning": null
+    },
+    {
+      "stage": "stage-05-rate-baseline",
+      "pass": true,
+      "status": "complete",
+      "updates": 128,
+      "checkpoints_verified": 129,
+      "model_kind": 5,
+      "parameters": 563,
+      "frozen_skip_parameters": 96,
+      "study": 5,
+      "material": 0,
+      "parent_task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "parent_update": 72,
+      "parent_payload_checksum": 6635354610139256694,
+      "native_import_bit_exact": true,
+      "common_critic_and_optimizer_bit_exact": true,
+      "actor_coordinate_transfer_exact": true,
+      "frozen_base_and_skip_exact": true,
+      "mask_and_unused_moments_valid": true,
+      "all_export_payload_checksums_valid": true,
+      "exact_resume_pass": true,
+      "diagnostic_updates": 3,
+      "diagnostic_samples": 196608,
+      "diagnostic_attempted_substeps": 12550144,
+      "diagnostic_accepted_substeps": 12550144,
+      "diagnostic_actor_steps": 192,
+      "diagnostic_critic_steps": 192,
+      "samples": 8388608,
+      "attempted_substeps": 535429120,
+      "accepted_substeps": 535429120,
+      "imported_actor_age": 12800,
+      "imported_critic_age": 37376,
+      "new_actor_steps": 8192,
+      "new_critic_steps": 8192,
+      "final_actor_age": 20992,
+      "final_critic_age": 45568,
+      "sampling_origin": 584,
+      "next_sampling_index": 45568,
+      "reporting_warning": null
+    },
+    {
+      "stage": "stage-07-rate-half-yaw",
+      "pass": true,
+      "status": "complete",
+      "updates": 128,
+      "checkpoints_verified": 129,
+      "model_kind": 5,
+      "parameters": 563,
+      "frozen_skip_parameters": 96,
+      "study": 5,
+      "material": 1,
+      "parent_task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "parent_update": 0,
+      "parent_payload_checksum": 17545823260381164786,
+      "native_import_bit_exact": true,
+      "common_critic_and_optimizer_bit_exact": true,
+      "actor_coordinate_transfer_exact": true,
+      "frozen_base_and_skip_exact": true,
+      "mask_and_unused_moments_valid": true,
+      "all_export_payload_checksums_valid": true,
+      "exact_resume_pass": true,
+      "diagnostic_updates": 3,
+      "diagnostic_samples": 196608,
+      "diagnostic_attempted_substeps": 12550144,
+      "diagnostic_accepted_substeps": 12550144,
+      "diagnostic_actor_steps": 192,
+      "diagnostic_critic_steps": 192,
+      "samples": 8388608,
+      "attempted_substeps": 535429120,
+      "accepted_substeps": 535429120,
+      "imported_actor_age": 12800,
+      "imported_critic_age": 37376,
+      "new_actor_steps": 8192,
+      "new_critic_steps": 8192,
+      "final_actor_age": 20992,
+      "final_critic_age": 45568,
+      "sampling_origin": 584,
+      "next_sampling_index": 45568,
+      "reporting_warning": null
+    }
+  ],
+  "motor_main": {
+    "ppo_updates": 755,
+    "actuator_decisions": 49479680,
+    "attempted_substeps": 3158245376,
+    "accepted_substeps": 3158245376,
+    "actor_adam_calls": 48320,
+    "critic_adam_calls": 48320
+  },
+  "motor_diagnostics_including_failed_first_attempt": {
+    "ppo_updates": 21,
+    "actuator_decisions": 1376256,
+    "attempted_substeps": 87949312,
+    "accepted_substeps": 87949312,
+    "actor_adam_calls": 1344,
+    "critic_adam_calls": 1344
+  },
+  "chooser": {
+    "completed_main_updates": 63,
+    "completed_main_decisions": 516096,
+    "completed_main_attempted_substeps": 331632281,
+    "completed_main_accepted_substeps": 331630211,
+    "completed_main_actor_adam_calls": 2016,
+    "completed_main_critic_adam_calls": 2016,
+    "diagnostic_updates": 3,
+    "diagnostic_decisions": 24576,
+    "diagnostic_attempted_substeps": 16383744,
+    "diagnostic_accepted_substeps": 16383656,
+    "diagnostic_actor_adam_calls": 96,
+    "diagnostic_critic_adam_calls": 96,
+    "failed_action_guard_updates": 0,
+    "failed_action_guard_attempted_substeps": 655360,
+    "failed_action_guard_accepted_substeps": 655360,
+    "killed_invocation_update_reservation": 1,
+    "killed_invocation_completed_updates_known": 0,
+    "killed_invocation_decisions_lower": 0,
+    "killed_invocation_decisions_upper": 8192,
+    "killed_invocation_substeps_lower": 0,
+    "killed_invocation_substeps_upper": 10485760,
+    "killed_invocation_adam_calls_each_lower": 0,
+    "killed_invocation_adam_calls_each_upper": 32
+  },
+  "cpu_assessments": [
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\stage-01-rhythm-baseline\\baseline\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4824042,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5972578,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5512081,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.551744,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5493503,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5523346,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4460637,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5524347,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5487729,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5542189,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5476396,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5531476,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5500068,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4366431,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5346313,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5480515,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5408807,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\final\\evaluation.receipt.json",
+      "attempted_substeps": 1464368,
+      "accepted_substeps": 1464365,
+      "wall_s": 3.814949,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\baseline\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4544622,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5490279,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5528461,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.552648,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5538641,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5452983,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5526332,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.550808,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5495845,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5488554,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5533087,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5444181,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5457264,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5477555,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5530993,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5590485,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.550705,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\final\\evaluation.receipt.json",
+      "attempted_substeps": 1443952,
+      "accepted_substeps": 1443949,
+      "wall_s": 3.6627451,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\baseline\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4345615,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5419605,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5508127,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5424281,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5480955,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5454294,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5513662,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5570237,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5531738,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5468709,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5452315,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.55062,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5461719,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5485229,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5532766,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5465834,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5535545,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\final\\evaluation.receipt.json",
+      "attempted_substeps": 1435785,
+      "accepted_substeps": 1435782,
+      "wall_s": 3.6549148,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\baseline\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4820205,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5571093,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.554315,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5507553,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5532725,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5539221,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5512927,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5550937,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5463893,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5582046,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.549555,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5522304,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.553994,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5532434,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5584913,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\final\\evaluation.receipt.json",
+      "attempted_substeps": 1459277,
+      "accepted_substeps": 1459274,
+      "wall_s": 3.7336415,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\baseline\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4995206,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5492503,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5473399,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5539193,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5519768,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5463513,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5535052,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5470409,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5545464,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5502087,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5475764,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5535992,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5494162,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.555156,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5538019,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5484214,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5454799,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\final\\evaluation.receipt.json",
+      "attempted_substeps": 1459277,
+      "accepted_substeps": 1459274,
+      "wall_s": 3.744401,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank\\evaluations\\update-000\\evaluation.receipt.json",
+      "attempted_substeps": 813096,
+      "accepted_substeps": 813090,
+      "wall_s": 0.8205893,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\final-body-pond\\evaluation.receipt.json",
+      "attempted_substeps": 756586,
+      "accepted_substeps": 756578,
+      "wall_s": 0.7150655,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 807272,
+      "accepted_substeps": 807266,
+      "wall_s": 0.7873144,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 984079,
+      "accepted_substeps": 984075,
+      "wall_s": 0.7753786,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 951359,
+      "accepted_substeps": 951352,
+      "wall_s": 0.8753657,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 888303,
+      "accepted_substeps": 888295,
+      "wall_s": 0.7737788,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 892695,
+      "accepted_substeps": 892688,
+      "wall_s": 0.8840351,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 900086,
+      "accepted_substeps": 900079,
+      "wall_s": 0.7777386,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 898143,
+      "accepted_substeps": 898136,
+      "wall_s": 0.7725004,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-063\\evaluation.receipt.json",
+      "attempted_substeps": 885364,
+      "accepted_substeps": 885356,
+      "wall_s": 0.7701005,
+      "exit": 1
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\baseline\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.4924216,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-008\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5486639,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-016\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5473764,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-024\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.550101,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-032\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5469449,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-040\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5618375,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-048\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5470336,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-056\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.545616,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-064\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5499539,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-072\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5481225,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-080\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5513038,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-088\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5518979,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-096\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5510199,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-104\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5502299,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-112\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5507609,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-120\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5518372,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-128\\evaluation.receipt.json",
+      "attempted_substeps": 1100800,
+      "accepted_substeps": 1100800,
+      "wall_s": 1.5499051,
+      "exit": 0
+    },
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\final\\evaluation.receipt.json",
+      "attempted_substeps": 1437159,
+      "accepted_substeps": 1437156,
+      "wall_s": 3.6293497,
+      "exit": 0
+    }
+  ],
+  "material_qualification": [
+    {
+      "receipt": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\material-qualification\\qualification.receipt.json",
+      "substeps": 38080,
+      "wall_s": 0.5953644
+    }
+  ],
+  "known_attempted_substeps": 3722460954,
+  "known_accepted_substeps": 3722458710,
+  "attempted_substeps_conservative_upper": 3732946714,
+  "accepted_substeps_conservative_upper": 3732944470,
+  "original_protocol_substep_ceiling": 4241983616,
+  "conservative_upper_within_protocol": true,
+  "process_wall_totals": [
+    {
+      "category": "compilation",
+      "processes": 8,
+      "wall_s": 6.5983999
+    },
+    {
+      "category": "cpu_evaluation",
+      "processes": 116,
+      "wall_s": 184.6004556000001
+    },
+    {
+      "category": "qualification",
+      "processes": 1,
+      "wall_s": 0.5953644
+    },
+    {
+      "category": "training",
+      "processes": 8,
+      "wall_s": 685.8332524
+    },
+    {
+      "category": "verification",
+      "processes": 9,
+      "wall_s": 23.2788476
+    },
+    {
+      "category": "zero-step",
+      "processes": 7,
+      "wall_s": 1.0988106
+    }
+  ],
+  "process_wall_is_not_end_to_end_because_CPU_and_GPU_overlap": true,
+  "interrupted_wall_charged_once_externally": 1.0926767,
+  "wall_scope": "Unique saved process receipts from the four versioned program roots; copied validation/reuse receipts deduplicated by exact SHA. Initial out-of-root compilation and interactive engineering time are excluded.",
+  "processes": [
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\material-qualification\\qualification.receipt.json",
+      "category": "qualification",
+      "wall_s": 0.5953644,
+      "exit": 0,
+      "receipt_sha256": "548EA86EB494D2CE65C9E12CCE3147FDA1EE92437D3991017D50C51EDD5584B1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\stage-01-rhythm-baseline\\baseline\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4824042,
+      "exit": 0,
+      "receipt_sha256": "18F8B29161873D2CCFE961DD0C016CE0DEDBB3C58DA3C88FE7AF6592B06E970B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\stage-01-rhythm-baseline\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.790544,
+      "exit": 2,
+      "receipt_sha256": "696DA62F6FF8E0DD2C9FD27B223BC749AC27C596770BEFC4437DAD31003012A2"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\stage-01-rhythm-baseline\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.1756924,
+      "exit": 0,
+      "receipt_sha256": "E424E93971B802B28A370FF5C6A64B6E590C02F8D3EE60F72433129149DBCD9A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\training.receipt.json",
+      "category": "training",
+      "wall_s": 100.7096456,
+      "exit": 0,
+      "receipt_sha256": "0E3FA46DFD2F638814798E5155D50DE1447ECAF1F43758DFF36788E4C0988346"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5972578,
+      "exit": 0,
+      "receipt_sha256": "EF21AFA34D6800B79314051E790E6AA6889E766A7599E98519C963E4FB43FB51"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5512081,
+      "exit": 0,
+      "receipt_sha256": "59419BC5A902504027A4C0872880FEF1F57A4576F544061B3C3D15678453A317"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.551744,
+      "exit": 0,
+      "receipt_sha256": "8FFB192123F6EDBA060384BB2BC27166F7E42B806F82D60BF1A988058C6D3118"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5493503,
+      "exit": 0,
+      "receipt_sha256": "9370BF11E82B85B2D355FE935A9FAB3F9151AE071FBEB8B595B5E48FEC9C327E"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5523346,
+      "exit": 0,
+      "receipt_sha256": "9F4D711E0EDA00CB64DBD895040EB46D43A2FAC2CAA21C668384AFB79DEC37C8"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4460637,
+      "exit": 0,
+      "receipt_sha256": "AA80EAAF2D2858135C9936EC1243B4AD48C3EFBDC3E044B46FF6EAD60BC074BC"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5524347,
+      "exit": 0,
+      "receipt_sha256": "D2A4A9938BEF67C5B667A5E750D54C50FFE43E703A039F3BFB6AEA5F60326A26"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5487729,
+      "exit": 0,
+      "receipt_sha256": "01F7C4C2674615646BCE05A22F696253384D09B9394821E66A78A92C95E63DB3"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5542189,
+      "exit": 0,
+      "receipt_sha256": "9E918FC050B1F2F16A9D81BCC8D0A40816A62D35FA4014B8F9DC76493906F04A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5476396,
+      "exit": 0,
+      "receipt_sha256": "A4E19FBAD71D6F2A8749721921C694DE383264ADD8C2E4BA41B005FAE494AAA6"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5531476,
+      "exit": 0,
+      "receipt_sha256": "627A65830EC7E8F9F4298F50A8FA32761ABA3BD1D8A0484B4F28F66F3AB2817D"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5500068,
+      "exit": 0,
+      "receipt_sha256": "AE1DD73A068876B0B07C3656C1BCA01ECD9614A1BD938536C28E830FEB85BB2C"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4366431,
+      "exit": 0,
+      "receipt_sha256": "227BBDC26CCC7326181EB297BE6B4D91AB8D465C120D6312D9C3257609B43F68"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5346313,
+      "exit": 0,
+      "receipt_sha256": "F2E789C4312020387D26E59318DF28F72691C6739EABFE0B1375D6A35C4401EA"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5480515,
+      "exit": 0,
+      "receipt_sha256": "028D3C78A8481AFF2E462BCE54F88DF516DA017A8F5A248A966B76C89E11ABE2"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5408807,
+      "exit": 0,
+      "receipt_sha256": "F04BE999F9BE32A3FE0BAAD0D2DE2C23DD6AC815325AB7CF7C3E3A390A80F6D3"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\final\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 3.814949,
+      "exit": 0,
+      "receipt_sha256": "B906AD4144B0E1A893A174BA2F2AC9EFBA6E949C6D4074F5B800A2A444FFC069"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.67188,
+      "exit": 0,
+      "receipt_sha256": "4900176EBD86F7D47DB28BCC39AF926595EA0C3AB1EA4BD71A644550671F6BB3"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.1797611,
+      "exit": 0,
+      "receipt_sha256": "6CB15A8A0F2D4F568C0FCDF6250EFA024C0470BCF398A0B8A6F3EC0B27DD27C4"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training.receipt.json",
+      "category": "training",
+      "wall_s": 100.5002717,
+      "exit": 0,
+      "receipt_sha256": "56096549D8325554209E91D6C26C0E5C8AEB0F2C079F35F6ACD2E2F4A04B2E44"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\baseline\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4544622,
+      "exit": 0,
+      "receipt_sha256": "AA543B3E0E2F34447BF6BB6543BA62939318D6D6643C61DA48DF22E2298C46FF"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5490279,
+      "exit": 0,
+      "receipt_sha256": "B49D1344005B71B8D076E7B886E21C0B38D71F3E73251287B50B06DED3CA5739"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5528461,
+      "exit": 0,
+      "receipt_sha256": "F866E8B984F173D82D7C03C0B50F781768C0802B2BA03CC526B5D6C596D76E5B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.552648,
+      "exit": 0,
+      "receipt_sha256": "0F339A6AFACF017266D012FF88CF7A6876192D96DC2E520E9D21AE5BD44D7E90"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5538641,
+      "exit": 0,
+      "receipt_sha256": "313957C93762A912E475C18B6E01760B21101405D756A62421322DB4E6FCDD93"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5452983,
+      "exit": 0,
+      "receipt_sha256": "9F8A059A886A54A4E65ADA8BB63839C8ECAF684ADAFCB7A3887177AB4C0D072C"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5526332,
+      "exit": 0,
+      "receipt_sha256": "CB52BE051DD40747E6009C9956541793E3E3F8AE9ACED3F08FB4B5BBD73A93EE"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.550808,
+      "exit": 0,
+      "receipt_sha256": "574A3DB0D26FF9B65A317DD2478E1BDA36937A9CE77265A2B127DD35EAAFC67A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5495845,
+      "exit": 0,
+      "receipt_sha256": "7E0BF50A22C618F2885C62ECBF95E20D89033EBF8D5A42D83B01BCAB8C109B6B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5488554,
+      "exit": 0,
+      "receipt_sha256": "0C299CE4CCC976DC9E97612AC1A8B0A81DEC0FEA8C89A01E8FED7288EAB07EF0"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5533087,
+      "exit": 0,
+      "receipt_sha256": "A66BC0AB7D616745B7E8E8C387EC61C0B65702A3A92908611B45E8F3F9992EEF"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5444181,
+      "exit": 0,
+      "receipt_sha256": "9367767982E19C7B8F1AFFCC9282BCF4F745F795887E6D9EC2F252851B1A369C"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5457264,
+      "exit": 0,
+      "receipt_sha256": "5A6D91B56A25DEB8DC314ED022F171A5A0F2AA454837DBC22EC5BDF30E4CF1A0"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5477555,
+      "exit": 0,
+      "receipt_sha256": "160598A7F3991102068F7EDD1D596C96D0C38403D9DF1822813254CE85441D27"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5530993,
+      "exit": 0,
+      "receipt_sha256": "94BBCBFD4EA51EDBECA05188604F6BA3C9C267762E16ACF79AE8EB7B255ABCF1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5590485,
+      "exit": 0,
+      "receipt_sha256": "BFE2D85234BA004A3BCC69C721AC5D98BB52DD934D693652D0FC1C48409159DC"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.550705,
+      "exit": 0,
+      "receipt_sha256": "0A88EFFCFF9D1CCB7D4BC4935DD2D450C4F0ABBCC5BC885B1A78313AFFC9B785"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\final\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 3.6627451,
+      "exit": 0,
+      "receipt_sha256": "9D14E65CEA412E49AE52DFCF5EB02BD6C64704FA9E4732113BE120AC29C53CBD"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.6256523,
+      "exit": 0,
+      "receipt_sha256": "6A0FC918E45A655F14EC14F2174AA864732595D2A3636A22EDD78CD21461CC90"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.1394533,
+      "exit": 0,
+      "receipt_sha256": "451C00B0CB6264097B0E0DBB0B381924C9332CE20E529BB66D581B92EA6982EA"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\training.receipt.json",
+      "category": "training",
+      "wall_s": 100.6546157,
+      "exit": 0,
+      "receipt_sha256": "DD48A1E1118C86936DBA9B327ABC9D052B93D19A5C07566814FA59DA89935690"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\baseline\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4345615,
+      "exit": 0,
+      "receipt_sha256": "9DC64F361190A0BB9439ED5B172E2A162CFE29955B4F88FD3C6C0CC44D597F9E"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5419605,
+      "exit": 0,
+      "receipt_sha256": "A1196E84FCEBB87C042B45D51F3D83AB60B542EFB26B7172556B089804BF435E"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5508127,
+      "exit": 0,
+      "receipt_sha256": "C06DA067AD9556630E09510DEEFB99EA1063DE099BD0B0EB3F6E29125DB2C48C"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5424281,
+      "exit": 0,
+      "receipt_sha256": "EAE6520F6730E2EAA31E5CBCB572AD43618F5C8EC0B3662F4F73AA8A730DAD20"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5480955,
+      "exit": 0,
+      "receipt_sha256": "4145B93330D9865352DCE619F821B4E6E7AF9F26BBD1E6A4DCB9AE0E2818EDA8"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5454294,
+      "exit": 0,
+      "receipt_sha256": "7BA5F980A0ADBC38BFA787B4489D232447FC28D02CCF634F7E9A0D1604F5705B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5513662,
+      "exit": 0,
+      "receipt_sha256": "BD19099243A96D35DBAEE885BDC9E01C29158DED2A7130950434D5B27FD8821F"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5570237,
+      "exit": 0,
+      "receipt_sha256": "8D4B24BF7C8A0552C7658745C12C9E1E4432FDC4ACD643E723580E62C61BCBC9"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5531738,
+      "exit": 0,
+      "receipt_sha256": "CC4B8CA4490D4F0A59EC73B6D095B4682A650898ED4635D9C1AC755DCC527196"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5468709,
+      "exit": 0,
+      "receipt_sha256": "93BDC702D72DCB9E240A23C5EFF308CA8202AA69AACEB141217DCA6C54677EFD"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5452315,
+      "exit": 0,
+      "receipt_sha256": "8A00C98441A08D07319CC72A5DD75D06CDED6EA1F29D38C3037DB1EB6F41C307"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.55062,
+      "exit": 0,
+      "receipt_sha256": "A0C4A7D8E97F38128F4637DC4E4922CE4DE877428517B9388438AB5CFBE78461"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5461719,
+      "exit": 0,
+      "receipt_sha256": "450CFCC2461F15496ACE669716EAC2C35C413975B9E00DB4FE213F1EC765190D"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5485229,
+      "exit": 0,
+      "receipt_sha256": "CF958C3662BE0CC6C3D0A6773A5A2725BF2C739FCDEE62ECA5D97CD5EF359E13"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5532766,
+      "exit": 0,
+      "receipt_sha256": "B10988A530EE3218BB668D4751CA4D9E87B9196F953FD8245C1038079BF9C37F"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5465834,
+      "exit": 0,
+      "receipt_sha256": "D0D5BC6A8F493B499BAA26B97B124753305C5F548420A59511BE5EA215BE1430"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5535545,
+      "exit": 0,
+      "receipt_sha256": "3D8AAE6A8A9F076A1D6C29504A999BD86E5CE0EE2E5BAE1D3D81C50F8A40EB79"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\final\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 3.6549148,
+      "exit": 0,
+      "receipt_sha256": "C08F6A0C1F23E1F952F336AE56AECD2CAAC5D87F03F353CE4DD1ED9248D0C130"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.6579812,
+      "exit": 0,
+      "receipt_sha256": "3BE8E14145F90112CA2B30737E258A9FF05306F501459A6CCA3715920573A747"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.1504561,
+      "exit": 0,
+      "receipt_sha256": "2FE10E1E75715BE164A83B35653B6331496733FB335B588BDA478D9EE5583FB2"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\training.receipt.json",
+      "category": "training",
+      "wall_s": 90.4057563,
+      "exit": 0,
+      "receipt_sha256": "39845EACCB5CDCA3EC71672F7E1BCE376014799924E9E6C03F9CD2C3E47F3D4A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\baseline\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4820205,
+      "exit": 0,
+      "receipt_sha256": "A68E46701E8024F2D2494D86F1F87536E7460AAD7224554CC3ACFC19F0FF5103"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5571093,
+      "exit": 0,
+      "receipt_sha256": "62BB8955548F71915C2CC7F75A9FED8C504FBEFBA1C2893D6A69F4EDDCAFB33A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.554315,
+      "exit": 0,
+      "receipt_sha256": "A86253BFE10C69B9CC52297AED34A4FAC6F41BA2AD1B203B584477C2647BA192"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5507553,
+      "exit": 0,
+      "receipt_sha256": "62C9A3F66D0024F46BA3A42693BC92D71122061079850E015D90C480573CA566"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5532725,
+      "exit": 0,
+      "receipt_sha256": "5AB61A68675D07BD8ED654098E754DEC503BBC590AF0E26BDCDB44F043CD88D6"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5539221,
+      "exit": 0,
+      "receipt_sha256": "E020FE98AF49993A1036EA22F81821DCA105AEFA4AA736FD43A06C1E32F9DE78"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5512927,
+      "exit": 0,
+      "receipt_sha256": "5FF51837263F4E650A4BA564619BF05F949DF11F59094AB6957831F3A00C0BD1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5550937,
+      "exit": 0,
+      "receipt_sha256": "9B6023C9613D331F5C1B2EB9A8AEEFA1B208D7B649489371D16BDF80BDF25145"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5463893,
+      "exit": 0,
+      "receipt_sha256": "4AADB07CD041B7E119CB349862F78AAB5D76E52FE744E47EC96640335D8F1C4B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5582046,
+      "exit": 0,
+      "receipt_sha256": "3FF38EB8B4E4D22A13087D4AA5E896D46A17C7EA9A46DBAD139D292113891E92"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.549555,
+      "exit": 0,
+      "receipt_sha256": "9A267B4A004CDB516F90D70A08B3D48A116D30339AD830200D9CDA240D53E680"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5522304,
+      "exit": 0,
+      "receipt_sha256": "CAB7B08679382317AFAFD79B145FA400139FB33DFE79FF6E24DA86D6E5972705"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.553994,
+      "exit": 0,
+      "receipt_sha256": "FFA51E7C0B1E9CB003B3DC9F95C5F4AD716A71B5D10C17423548B1F6E082CF3C"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5532434,
+      "exit": 0,
+      "receipt_sha256": "5A618551301E111C23122149DCC7D76F8982B3E0ACB4C981761C5917FD79B2A3"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5584913,
+      "exit": 0,
+      "receipt_sha256": "1225DFC99A750B543EEA6F082A3E53F35F26BF2F20F2FF1492B220DE33219C07"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\final\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 3.7336415,
+      "exit": 0,
+      "receipt_sha256": "3CBDD45960D888CD5E820D628DEEE3831FA4C9C2222725DE99E3E6A105FAC788"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.6255613,
+      "exit": 0,
+      "receipt_sha256": "A11580F92D08094C72B7399A3D63701C318FD7A14FC81A7E6B60C01EF3676E5B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.142035,
+      "exit": 0,
+      "receipt_sha256": "ABB8F2983E98EDA03F35DD9CF32DE97AC9A9BF391F2C506854D70561F18D3FE7"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\training.receipt.json",
+      "category": "training",
+      "wall_s": 100.7134983,
+      "exit": 0,
+      "receipt_sha256": "F621554B40BAFFD1436A1C1E198B47728DD60ABC2FC919CD809C27C02BD252AE"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\baseline\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4995206,
+      "exit": 0,
+      "receipt_sha256": "E29987C489B11F54C78332A55CD56CBEC96CFA20F6E4356998F1B35EBB8C8C89"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5492503,
+      "exit": 0,
+      "receipt_sha256": "BC31FD590724E5C6B9DFC04D17128A4D1EBC1F94746D56D8A580864B6E5B6628"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5473399,
+      "exit": 0,
+      "receipt_sha256": "9CC969DE101382951131178BEF44D131BC9E0DA8AABE191CAC3039AE478A48A9"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5539193,
+      "exit": 0,
+      "receipt_sha256": "10A4BF5F8D8394BA37CE7917F2663BFB7DFD0510288CE0BD43493F64EA4B87E4"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5519768,
+      "exit": 0,
+      "receipt_sha256": "636C7BD9B28BCC94FAEBCDC399C16713185FC08E4AE576705D46B35F8C2B10E9"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5463513,
+      "exit": 0,
+      "receipt_sha256": "11C1B652BF417CD083D20C5F44D4C357C171923777AF587A1D5DA67DC570E2A0"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5535052,
+      "exit": 0,
+      "receipt_sha256": "E1F685E3891AC3D8C2122F339311909E97D8F016BF1BBCD840653852E7370BB2"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5470409,
+      "exit": 0,
+      "receipt_sha256": "50D5933BF0FCF3EE6AD59F38FF64F487E4E6C909BF63C84AEDBEFD313D6540D7"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-064\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5545464,
+      "exit": 0,
+      "receipt_sha256": "41FF2A6CD2B3C924709D2A7F985388AB1F8DE3FBD6EDE26D76487F98AF9C18D1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-072\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5502087,
+      "exit": 0,
+      "receipt_sha256": "F0A198C7F1AFB2FB600F623F60A02EBB7D45AB4BA0B1ADC93E321D869F8BDAD4"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-080\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5475764,
+      "exit": 0,
+      "receipt_sha256": "327B08758CFC9C02921266BB236AF039731A9D7B55D4F818C78CE48AFC9090C4"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-088\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5535992,
+      "exit": 0,
+      "receipt_sha256": "527AED0B9A9F352E38CB300B3B74EFD9B63758FA6617AF70C8CD362FFB991BCE"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-096\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5494162,
+      "exit": 0,
+      "receipt_sha256": "CA5E37EB4EB0620D4B5832F1C544CCB1A414C516AACAE69B1CC831C59DCC07D5"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-104\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.555156,
+      "exit": 0,
+      "receipt_sha256": "1FCD20A32701A95D88F3062C6C029AB7364725BE7D79A401567CC2D2B6F9F360"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-112\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5538019,
+      "exit": 0,
+      "receipt_sha256": "A149B3AA85C7B925E452C1583BF0BB48ADEA1CC1EA8EB161DFD639A39F99DDB1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-120\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5484214,
+      "exit": 0,
+      "receipt_sha256": "DF0903CD47A1F5957DC7011C0BB051236188EABDC89DAF7F5559AA8A3416B05E"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\evaluations\\update-128\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5454799,
+      "exit": 0,
+      "receipt_sha256": "B40A21D22987F5C91F8D10E491EB3550274D97807B33D7AFF49237BC3DA3D914"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\final\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 3.744401,
+      "exit": 0,
+      "receipt_sha256": "F9E77CB7711FD6CF7155DAAAD5BD882F1CCD1997974869618F2C7C15174D5C76"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.6145851,
+      "exit": 0,
+      "receipt_sha256": "62DDC57DAB6EF94C7060652B621EB99CD558DE96DD287A56F115F05962695C20"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.1357934,
+      "exit": 0,
+      "receipt_sha256": "872AC41773F0B354A350BA391F5406FDBA900D59B7ABCB85C7C31177521FBE7F"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-06-bank\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 0.7698784,
+      "exit": 2,
+      "receipt_sha256": "168B1CE2C2BFE322C2E2EC1AB5516D35CC15C28522ADAAB710105C4F90888F00"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\compilation\\compile-chooser.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.9570247,
+      "exit": 0,
+      "receipt_sha256": "B555ED5D8D6D14D69513FAB1F9C75420AF0D96A19C7E4EA77D49C30EB26D979A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\compilation\\compile-motor.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.7354498,
+      "exit": 0,
+      "receipt_sha256": "474D58DA44B791C5661F86E13F93BFB2FC101343A89197EB351C5217D47AD618"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\compilation\\configure-chooser.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.9001905,
+      "exit": 0,
+      "receipt_sha256": "C0921A7FAC36950928BA10F29A6203FA225006F98E0C66138248CA9378361044"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\compilation\\configure-motor.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.9067481,
+      "exit": 0,
+      "receipt_sha256": "45ED817A5DD323BE407DEC667A7E9DA4C175B328CA88D5C77B827828BB162C44"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank\\training.receipt.json",
+      "category": "training",
+      "wall_s": 1.0926767,
+      "exit": -1,
+      "receipt_sha256": "6D98B65896CE5F76F7BC47C65EAF4E00F424390396EEBBDCA518BF846D7AB1E2"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank\\evaluations\\update-000\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.8205893,
+      "exit": 1,
+      "receipt_sha256": "F1F2B9F07519B1204ABB2C48F025850D0A7B4ECFF16E37B6709774B01DA6E179"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 3.8502233,
+      "exit": 0,
+      "receipt_sha256": "7A395511D8D1577E1B79D3EFF071E7AC7D676894DB7B62BF1A0D98F9616E5B05"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\compilation\\compile-chooser.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.7539539,
+      "exit": 0,
+      "receipt_sha256": "5C1201149D55892C602D0BB236D587F0D7EBC384C660484DB2BE5E20DA6D2272"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\compilation\\compile-motor.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.443373,
+      "exit": 0,
+      "receipt_sha256": "08DE4DDC45F120F8ACF134CDD37F19CFB43E3A7E137D31709A2FBE569AA58A7E"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\compilation\\configure-chooser.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.9802837,
+      "exit": 0,
+      "receipt_sha256": "1D5C8F56C6D22C5F2D0A3C73F53AA8DD8B57D891CB059BA5BD5EAE8518E96A0B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\compilation\\configure-motor.receipt.json",
+      "category": "compilation",
+      "wall_s": 0.9213762,
+      "exit": 0,
+      "receipt_sha256": "97D65C85757A99E5A65461AE0DDF5553748EC33C2F97815F14B4BE274EEE7F10"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\final-body-pond\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7150655,
+      "exit": 1,
+      "receipt_sha256": "63016640129B60B04CB3895B8195A260E02D36134E7B4A81A098D094F16F205A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\training.receipt.json",
+      "category": "training",
+      "wall_s": 90.4806306,
+      "exit": 0,
+      "receipt_sha256": "F8D4FEFEF9407C4C9F859805852E0189547DC9B352AB9DB2075583A7ED9CF4FD"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7873144,
+      "exit": 1,
+      "receipt_sha256": "1E7FC8BD3E0645FB7FCF96A990EA6343F526BD2DFB904873DF0668FF1426E431"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7753786,
+      "exit": 1,
+      "receipt_sha256": "ABA40B9CEF8FA8D25AA8CAF0BE02B71BFA1C6EFE10103F6BDC1527FD5AAACA32"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.8753657,
+      "exit": 1,
+      "receipt_sha256": "CEF1FE476EAA9C621CBD5B24AE9B066728752AACA298D33CA5CEDE6A1C0B2A9C"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7737788,
+      "exit": 1,
+      "receipt_sha256": "7C1641001C6F58A21F38DB5FCCC2A00B1B45E763B13A1B4F6B0224871595EAD3"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.8840351,
+      "exit": 1,
+      "receipt_sha256": "3ECF6AA60C28F30D08D06F399EDCBDFD94ACBFA6E759361A80A8BECFB8B04330"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7777386,
+      "exit": 1,
+      "receipt_sha256": "126B1937033CE00D299CC228751CCC62E5E5DF1D49F2B1C33B26D48EEA0A28E1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7725004,
+      "exit": 1,
+      "receipt_sha256": "49A3DD4700319CA8434887D8C8E032BE44F3658C40080E76EC8FFE968269BD69"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-063\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 0.7701005,
+      "exit": 1,
+      "receipt_sha256": "625D446FC1F32D7F8E477A8F40EE860C48DFA4948CC0BC3FA8AE1173FDDAF5FC"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\training.receipt.json",
+      "category": "training",
+      "wall_s": 101.2761575,
+      "exit": 0,
+      "receipt_sha256": "FD85DFFA33B73A9EA3CCF3EEBBA3B9477E93BA2AD1F3C66FC4B77EF397A1F9ED"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\baseline\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.4924216,
+      "exit": 0,
+      "receipt_sha256": "C1B6CFCCA9D74B9026A4144175746D5E07E93F3E64D71C8B3508ED95D806C9D1"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-008\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5486639,
+      "exit": 0,
+      "receipt_sha256": "90F86F1D5EED6088B20BE71BAC5F8AF000BF151C8AF400E646CC39992C37319A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-016\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5473764,
+      "exit": 0,
+      "receipt_sha256": "E0AE72283CE4314D849FB60606A7FE42034B117D6B12E97DE46450D1FF65C0A6"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-024\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.550101,
+      "exit": 0,
+      "receipt_sha256": "01B30DF9A7E6E54C0F376613DBA9763A07F3B0B4EEEBF6DE23008BA3205B6D3A"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-032\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5469449,
+      "exit": 0,
+      "receipt_sha256": "04DEC0995FCE7CD08C80F3319B71FE1228159D5AD3F3CD1E5977A5698BE030AF"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-040\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5618375,
+      "exit": 0,
+      "receipt_sha256": "1E49F89E2A5DF85BC4CA12B0C52FEC7D4799E9D5133D6CA5E4CD67841D3F2307"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-048\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5470336,
+      "exit": 0,
+      "receipt_sha256": "7A1089AB56557053D4D2EE4572EFF45939B24B022CD2912CA87CC9FC5F85ABB5"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-056\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.545616,
+      "exit": 0,
+      "receipt_sha256": "00750D7FED0ED1EC8750FB1FC2314D1F4B27ABD423A5793D76F934BC0D85EC20"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-064\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5499539,
+      "exit": 0,
+      "receipt_sha256": "476EC9879FBF765917ECB79DE5196C23533C4E0B1E8156D70CC8EF8AD1C62E2F"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-072\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5481225,
+      "exit": 0,
+      "receipt_sha256": "BCAAE246E1372A71E035577DA4F540E78A8E1CFC7ABD967E48F007CB10FB0875"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-080\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5513038,
+      "exit": 0,
+      "receipt_sha256": "2DAEE1F84EF27DBA55A7EE19805F197507E9CC8C57051BBC21C6A848DC5563CD"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-088\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5518979,
+      "exit": 0,
+      "receipt_sha256": "82DCAE00FAEA12FC7FB1E8EA58070F25EC956164B6B40EF668B7DFDD1BF6ACAA"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-096\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5510199,
+      "exit": 0,
+      "receipt_sha256": "260628D08810AE69E298078F1D687D5E4B57A2CEC6A5BFAAE2F3178B5F39A461"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-104\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5502299,
+      "exit": 0,
+      "receipt_sha256": "399DEF12E440187538F9188E099D782B419440413D9AB4DC5C7FE7B92086FD19"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-112\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5507609,
+      "exit": 0,
+      "receipt_sha256": "2253849D9F3C4B7872BC63D342E1AE86413FE8B8A34680D913523E5F0C499E90"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-120\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5518372,
+      "exit": 0,
+      "receipt_sha256": "46ECF507B2F857B46DD5288D4912D6D3EFA1DE1268A63CA3AE1F2113A3F43010"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\evaluations\\update-128\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 1.5499051,
+      "exit": 0,
+      "receipt_sha256": "6C77D2937116741123AD3006612A2F3BA85834F71E04E33ABC69CF8B1291EB30"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\final\\evaluation.receipt.json",
+      "category": "cpu_evaluation",
+      "wall_s": 3.6293497,
+      "exit": 0,
+      "receipt_sha256": "36FA3EC616A64AB5897931A31F9F5F68940AB4A6D8C10595B31DAE0763773951"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\verification\\verification.receipt.json",
+      "category": "verification",
+      "wall_s": 2.672542,
+      "exit": 0,
+      "receipt_sha256": "61A68A94F6B9577563319FB941430D98667497D6E89B05453F57E8BCB153117B"
+    },
+    {
+      "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-07-rate-half-yaw\\zero-step\\zero-step.receipt.json",
+      "category": "zero-step",
+      "wall_s": 0.1756193,
+      "exit": 0,
+      "receipt_sha256": "A17A87E04B0D44B03C65735E8FD746C4B3C0B25C646D56D44CEEFB99803E1848"
+    }
+  ],
+  "uncertainty": "Killed first chooser main has no completed update checkpoint or flushed work counters. Reserve its entire first8192-decision/10485760-substep/32-Adam-call update without claiming exact physical or optimizer spend."
+}

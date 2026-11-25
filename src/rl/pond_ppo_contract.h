@@ -20,6 +20,12 @@ inline constexpr char curriculum_study_protocol_id[]="pond-motor-ppo-v3-curricul
 inline constexpr char repeated_study_protocol_id[]="pond-motor-ppo-v4-repeated-2026-11-24";
 inline constexpr char half_second_study_protocol_id[]="pond-motor-ppo-v5-half-second-2026-11-24";
 inline constexpr char signed_course_study_protocol_id[]="pond-motor-ppo-v6-signed-course-2026-11-24";
+inline constexpr char direct_retrain_protocol_id[]="pond-motor-336-direct-retrain-v1-2026-11-24";
+inline constexpr char course_context_protocol_id[]="pond-motor-336-course-context-v1-2026-11-24";
+inline constexpr char medium_turn_protocol_id[]="pond-motor-336-medium-turn-v1-2026-11-24";
+inline constexpr char fresh_motor_protocol_id[]="pond-motor-fresh-v1-2026-11-24";
+inline constexpr char correlated_motor_protocol_id[]="pond-motor-fresh-correlated-v1-2026-11-24";
+inline constexpr char propulsion_motor_protocol_id[]="pond-motor-propulsion-v1-2026-11-24";
 inline constexpr char course_study_protocol_id[]="pond-motor-ppo-v3-course-2026-11-23";
 
 inline constexpr uint32_t candidate_magic = 0x31505044u;
@@ -47,6 +53,10 @@ inline constexpr uint64_t substeps_per_control = 10;
 static_assert(controls_per_update % minibatch == 0 && adam_calls_per_update == 32 && total_adam_calls == 2048);
 
 inline constexpr float learning_rate = 1e-5f, clip = .1f, gamma = .995f, lambda = .95f;
+inline constexpr float direct_retrain_actor_learning_rate = 3e-5f;
+inline constexpr float fresh_actor_learning_rate = .00025f, fresh_critic_learning_rate = .001f;
+inline constexpr float fresh_sigma = .30f, fresh_holding_gain = 1.f;
+inline constexpr float correlated_rho = .8f;
 inline constexpr float sigma = .10f, gradient_clip = 1.f;
 inline constexpr float frozen_holding_gain = .26211655139923096f;
 inline constexpr double maximum_wall_seconds = 1200;
@@ -59,6 +69,7 @@ inline constexpr std::string_view parent_package_sha256 =
     "4b6400c4db65873bd346c3e0c4fed384e3a77f9e5174d0dcea5d74073b94616d";
 
 inline float fixed_log_std() { return std::log(sigma); }
+inline float fresh_sampling_log_std() { return std::log(fresh_sigma); }
 
 struct Counters {
     uint64_t completed_updates = 0;
@@ -109,13 +120,14 @@ inline void validate_counters(const Counters& counters) {
 
 // GpuAdam::save's existing byte layout is checked without GpuAdam construction
 // or restore. Fresh candidate moments have their own age, never the parent's.
-inline void validate_adam(const std::vector<uint8_t>& bytes, size_t weights, uint64_t expected_steps) {
+inline void validate_adam(const std::vector<uint8_t>& bytes, size_t weights, uint64_t expected_steps,
+                          float expected_learning_rate = learning_rate) {
     static_assert(sizeof(nn::AdamConfig) == 20 && sizeof(int) == 4, "Pond Adam ABI changed");
     require(bytes.size() <= maximum_adam_bytes, "Pond Adam state exceeds size limit");
     checkpoint::Reader in{bytes};
     const auto config = in.value<nn::AdamConfig>();
     const int steps = in.value<int>();
-    require(config.lr == learning_rate && config.beta1 == .9f && config.beta2 == .999f &&
+    require(config.lr == expected_learning_rate && config.beta1 == .9f && config.beta2 == .999f &&
                 config.eps == 1e-8f && config.max_grad_norm == gradient_clip,
             "Wrong pond PPO Adam configuration");
     require(steps >= 0 && static_cast<uint64_t>(steps) == expected_steps, "Pond Adam age disagrees with counters");
@@ -129,7 +141,7 @@ inline void validate_adam(const std::vector<uint8_t>& bytes, size_t weights, uin
     in.finish();
 }
 
-inline void validate_state(const CandidateState& state) {
+inline void validate_state(const CandidateState& state, float actor_learning_rate = learning_rate, bool fresh_motor = false) {
     require(state.parent_package_checksum != 0 && state.protocol_checksum != 0 && state.source_identity_checksum != 0,
             "Missing pond PPO source identity");
     require(std::isfinite(state.wall_seconds_used) && state.wall_seconds_used >= 0 &&
@@ -144,8 +156,10 @@ inline void validate_state(const CandidateState& state) {
             "Wrong pond PPO network topology");
     for (const auto* values : {&state.actor, &state.critic})
         for (float value : *values) require(std::isfinite(value), "Nonfinite pond PPO network parameter");
-    for (float value : state.log_std) require(value == fixed_log_std(), "Pond PPO requires fixed unscaled Gaussian sigma");
-    require(state.frozen_gain == frozen_holding_gain, "Immutable learned holding amplitude changed");
+    const float expected_log_std = fresh_motor ? fresh_sampling_log_std() : fixed_log_std();
+    for (float value : state.log_std) require(value == expected_log_std, "Pond PPO sampling scale changed");
+    require(state.frozen_gain == (fresh_motor ? fresh_holding_gain : frozen_holding_gain), "Holding amplitude differs from the study");
+    require(!fresh_motor || actor_learning_rate == fresh_actor_learning_rate, "Fresh motor requires its sealed actor rate");
     require(state.world_stride != 0 && state.task_stride != 0 &&
                 uint64_t{state.world_stride} * worlds <= maximum_state_bytes &&
                 uint64_t{state.task_stride} * worlds <= maximum_state_bytes,
@@ -153,8 +167,9 @@ inline void validate_state(const CandidateState& state) {
     require(state.world_state.size() == uint64_t{state.world_stride} * worlds &&
                 state.task_state.size() == uint64_t{state.task_stride} * worlds,
             "Wrong pond PPO carried-state array size");
-    validate_adam(state.actor_adam, actor_parameter_count(state.actor_inputs), state.counters.actor_adam_calls);
-    validate_adam(state.critic_adam, critic_weights, state.counters.critic_adam_calls);
+    validate_adam(state.actor_adam, actor_parameter_count(state.actor_inputs), state.counters.actor_adam_calls, actor_learning_rate);
+    validate_adam(state.critic_adam, critic_weights, state.counters.critic_adam_calls,
+                  fresh_motor ? fresh_critic_learning_rate : learning_rate);
 }
 
 inline std::vector<uint8_t> identity_bytes(std::string_view value) {
@@ -172,8 +187,8 @@ inline std::vector<uint8_t> checked_body(const std::vector<uint8_t>& bytes, uint
     return body;
 }
 
-inline std::vector<uint8_t> write_candidate(const CandidateState& state) {
-    validate_state(state);
+inline std::vector<uint8_t> write_candidate(const CandidateState& state, float actor_learning_rate = learning_rate, bool fresh_motor = false) {
+    validate_state(state, actor_learning_rate, fresh_motor);
     checkpoint::Writer out;
     for (uint32_t value : {candidate_magic, candidate_schema, runtime_version, envelope_version,
                           actor_schema(state.actor_inputs), action_mapping, parent_package_version,
@@ -198,7 +213,9 @@ inline std::vector<uint8_t> write_candidate(const CandidateState& state) {
 inline CandidateState read_candidate(const std::vector<uint8_t>& bytes, uint64_t expected_parent,
                                      uint64_t expected_protocol, uint64_t expected_source,
                                      uint32_t expected_world_stride, uint32_t expected_task_stride,
-                                     uint32_t expected_inputs = observations) {
+                                     uint32_t expected_inputs = observations,
+                                     float expected_actor_learning_rate = learning_rate,
+                                     bool fresh_motor = false) {
     require(expected_inputs == observations || expected_inputs == signed_inputs, "Unknown expected candidate actor shape");
     const auto body = checked_body(bytes, 2 * maximum_state_bytes + 2 * maximum_adam_bytes + 65536);
     checkpoint::Reader in{body};
@@ -229,7 +246,7 @@ inline CandidateState read_candidate(const std::vector<uint8_t>& bytes, uint64_t
     state.world_state = in.array<uint8_t>(static_cast<size_t>(maximum_state_bytes));
     state.task_state = in.array<uint8_t>(static_cast<size_t>(maximum_state_bytes));
     in.finish();
-    validate_state(state);
+    validate_state(state, expected_actor_learning_rate, fresh_motor);
     return state;
 }
 

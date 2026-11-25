@@ -1,0 +1,2 @@
+#pragma once
+inline constexpr char collection_replay_source_sha256[] = "@replay_identity@";

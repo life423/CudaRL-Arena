@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "physics_steps": 0,
+  "optimizer_updates": 0,
+  "method": "Decode existing terminal Counts arrays; original V4 per-lane starts equal imported episode index; apply unchanged mixed index/episode parity",
+  "parent_sha256": "07D5841E9EA028F4BC087574ED2F78802A5D75E4CFAC7A37976C7B164D2001AB",
+  "child_sha256": "2468DD66E6913D5DA937756C53300F6D27FAF7BF64641E30EBF41D4670E7F558",
+  "starts": {
+    "left30": 11008,
+    "left15": 11008,
+    "right15": 11008,
+    "right30": 11008
+  },
+  "total_new_starts": 44032.0,
+  "imported_parent_starts": 39936.0,
+  "initial_inherited_30_episodes_excluded_from_new_starts": true
+}

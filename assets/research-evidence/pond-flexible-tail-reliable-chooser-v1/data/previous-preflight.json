@@ -1,0 +1,8 @@
+{
+  "optimizer_updates": 0,
+  "failure": "Reliable curriculum fixture failed whole-body clearance at level 0 lane 4\r\n",
+  "reserved_geometry_correction_used": true,
+  "root": "build/flexible-tail/reliable-chooser-v1",
+  "physics_steps": 0,
+  "correction": "initial placement moves inland only until unchanged static warmup certificate passes"
+}

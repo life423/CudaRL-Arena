@@ -1,0 +1,20 @@
+{
+  "main_updates": 128,
+  "main_transitions": 1048576,
+  "main_substeps": 672374533,
+  "diagnostic_substeps": 16389900,
+  "evaluation_substeps": 14716110.0,
+  "core_total": 703480543,
+  "main_native_s": 173.8146455,
+  "gpu_physics_ms": 165396.864457,
+  "gpu_inference_ms": 217.347294182,
+  "gpu_ppo_ms": 1579.8824892,
+  "evidence_ms": 4130.6654,
+  "curriculum_starts": [
+    2676,
+    154,
+    160
+  ],
+  "promotions": 2088,
+  "demotions": 53
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "build/flexible-tail/course-angle90-v3-build/Release/pond_flexible_tail_beat_feedback_check.exe",
+    "sha256": "8C3F304E789E1566AD5191D9D62B81C0E5C530B530DE8673F8175618550559F5"
+  },
+  {
+    "path": "build/flexible-tail/course-angle90-v3-build/Release/pond_flexible_tail_steering_evaluate.exe",
+    "sha256": "0A7F6B3C8EB8E0D52E0B65D4C42870EEC22E67368484E75A5BE886E0B330AD06"
+  },
+  {
+    "path": "build/flexible-tail/course-angle90-v3-build/Release/pond_flexible_tail_steering_ppo.exe",
+    "sha256": "9EDE12E69F03D0DAB01F5A764488D5303ABC7CFA9EA1850277CB466A70188686"
+  }
+]

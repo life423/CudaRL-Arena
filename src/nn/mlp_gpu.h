@@ -13,12 +13,17 @@
 namespace cudarl::nn {
 
 // MLP whose parameters, gradients, and activations all live on the GPU.
-// Construction completes initialization. Compute calls are asynchronous on the
+// Training construction completes initialization. Compute calls are asynchronous on the
 // given stream; explicit host copies synchronize as needed. Results are
 // bit-identical run to run: no atomics anywhere in forward or backward.
 class GpuMlp {
 public:
     GpuMlp(MlpSpec spec, int max_batch, uint32_t seed, GemmKernel kernel = GemmKernel::Tiled);
+    // Allocate only the parameters and forward activations. Keep the saved host
+    // weights alive through initialization on stream; forward on the same
+    // stream is ordered after the upload.
+    static GpuMlp for_inference(MlpSpec spec, int max_batch, const std::vector<float>& weights,
+                                cudaStream_t stream, GemmKernel kernel = GemmKernel::Tiled);
 
     const MlpSpec& spec() const { return spec_; }
     int max_batch() const { return max_batch_; }
@@ -43,12 +48,13 @@ public:
     std::vector<float> get_grads() const;
 
 private:
+    GpuMlp(MlpSpec spec, int max_batch, GemmKernel kernel);
     void check_batch(int batch) const;
 
     MlpSpec    spec_;
     int        max_batch_;
     GemmKernel kernel_;
-    int        num_sms_;
+    int        num_sms_ = 0;
 
     device_ptr<float>              params_;
     device_ptr<float>              grads_;

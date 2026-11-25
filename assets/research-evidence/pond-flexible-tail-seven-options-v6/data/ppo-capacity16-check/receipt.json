@@ -1,0 +1,7 @@
+{
+  "exit": 0,
+  "wall_s": 0.246824,
+  "limit_s": 10,
+  "physics_steps": 0,
+  "optimizer_updates": 0
+}

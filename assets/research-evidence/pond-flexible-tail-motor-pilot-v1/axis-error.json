@@ -1,0 +1,1 @@
+{"rows":9400,"rms_yaw_error_rad":0.0455682126,"rms_pitch_error_rad":0.00647430216,"peak_yaw_error_rad":0.219919801,"peak_pitch_error_rad":0.0265748166,"peak_teacher_yaw_rad":0.998911321,"peak_teacher_pitch_rad":0,"physics_substeps":0,"optimizer_updates":0}

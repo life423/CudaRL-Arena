@@ -1,0 +1,32 @@
+{
+  "method": "offline native whole-body clearance envelope",
+  "dynamics_steps": 0,
+  "samples": 12801,
+  "status": "qualified_geometry",
+  "turn_degrees": 15,
+  "shore_point_m": [0.9052354693,0,0],
+  "outward_normal": [0.9816509485,0,-0.1906866878],
+  "incoming_course": [-0.0609241724,0,-0.9981424212],
+  "requested_onward_course": [-0.3171865344,0,-0.9483631849],
+  "cue_com_depth_mm": 80.00001311,
+  "onward_inward_com_mm": 1.753079006,
+  "search_upper_mm": 827,
+  "search_upper_gap_mm": 67.99899821,
+  "edge_gap_mm": null,
+  "qualifying_setback_mm": 316,
+  "clearance_bracket": {
+    "failing_setback_mm": 315,
+    "failing_min_gap_mm": -0.6902867645,
+    "certified_setback_mm": 316,
+    "minimum_certified_gap_mm": 0.07245883376
+  },
+  "limiting_pose": {
+    "sample": 12534,
+    "seconds_from_cue": 0.4675,
+    "root_yaw_rad": 0.4520312548,
+    "passive_yaw_rad": 0.0689574033,
+    "com_m": [0.5941138268,-0.08000001311,0.05591705441],
+    "head_m": [0.5939924121,-0.07999999821,0.05395953357],
+    "spine_m": [[0.5917096734,-0.07999999821,0.06369550526],[0.5936642289,-0.07999999821,0.07213890553],[0.595715642,-0.07999999821,0.08055929095],[0.5978636742,-0.07999999821,0.08895553648],[0.6001080871,-0.07999999821,0.09732653946],[0.602448523,-0.07999999821,0.1056712046],[0.6048847437,-0.07999999821,0.1139884144]]
+  }
+}

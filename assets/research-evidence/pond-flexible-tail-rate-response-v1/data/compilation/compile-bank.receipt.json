@@ -1,0 +1,17 @@
+{
+  "name": "compile-bank",
+  "wall_s": 2.7829108,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+  "arguments": [
+    "--build",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\bank-eval-build",
+    "--config",
+    "Release",
+    "--target",
+    "pond_flexible_tail_rate_evaluate",
+    "--parallel",
+    "4"
+  ]
+}

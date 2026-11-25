@@ -1,0 +1,12 @@
+{
+  "stage": "training-complete",
+  "training_ran": true,
+  "horizon": "long-horizon",
+  "workflow_wall_s": 551.4386909,
+  "qualified": false,
+  "qualifying_candidates": [],
+  "motor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+  "feedback": "whole-beat",
+  "godot_published": false,
+  "steering": "held-heading"
+}

@@ -1,0 +1,13 @@
+{
+  "study": "flexible-tail-motor-pilot-v1",
+  "stage": "collection-repair",
+  "original_attempt": "The first collection accepted all native substeps but withheld the data when 2 of 12 teacher cases missed the turn-course gate.",
+  "cause_found": "The turn request was latched relative to a half-second course sample instead of the verified two-second warmup course.",
+  "change": "Use the two-second course to issue the turn. Preserve half-second feedback, starting states, actions, durations, physical tolerances and separate held-out evaluation.",
+  "extra_collection_attempts": 1,
+  "maximum_extra_substeps": 150400,
+  "wall_limit_s": 4,
+  "fit_attempts_authorized": 1,
+  "maximum_adam_steps": 384,
+  "maximum_ppo_updates": 0
+}

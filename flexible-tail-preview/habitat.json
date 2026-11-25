@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "water_radius_x_m": 0.88,
+  "water_radius_z_m": 0.60,
+  "flat_radius_x_m": 0.46,
+  "flat_radius_z_m": 0.31,
+  "floor_y_m": -0.18,
+  "reference_scale_m": 0.04
+}

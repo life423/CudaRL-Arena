@@ -255,6 +255,10 @@ func _candidate_study_status(status_binding: Dictionary = {}) -> String:
 	if int(assessment.get("update",-1))!=updates or int(training.get("completed_updates",-1))!=updates or assessment.get("preflight_only",true)!=false: return unavailable
 	var prefix := "Recorded candidate stopped after %d PPO updates" % updates
 	match str(receipt.get("reason","")):
+		"fresh_motor_learning":
+			if assessment.get("fresh_motor",false)!=true or training.get("fresh_actor_and_critic",false)!=true or assessment.get("assessment_completed",false)!=true: return unavailable
+			var swim_passes := int(assessment.get("short_swim_cases_passed",0))+int(assessment.get("long_swim_cases_passed",0))
+			return study_prefix+"Recorded candidate trained from fresh weights. %d PPO updates.\nSwim %d / 6 · Rest %d / 14 · Turns %d / 16." % [updates,swim_passes,int(assessment.get("rest_cases_passed",0)),int(assessment.get("turn_cases_passed",0))]
 		"long_swim_lane_drift":
 			var movement := _dictionary_file(str(references.movement.path))
 			var drifted := false

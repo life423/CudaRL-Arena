@@ -1,0 +1,4 @@
+preflight=1 rest_travel_mm=0 passive_bend_rad=4.00768e-12 passive_energy_ratio=1.841575e-08 max_linear_momentum=4.487862e-08 max_angular_momentum=8.613199e-11
+swims=10/36
+best=3 forward_mm_s=8.542202 endpoint_delta_2p5ms_mm=0.600187
+turns=0/4 coast_pass=0 coast_end_mm_s=4.227436 elapsed_s=0.0943788

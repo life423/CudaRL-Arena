@@ -1,0 +1,9 @@
+tests/test_ppo.cpp:27:    const int invalid[][2] = {{0, 2}, {-1, 2}, {1, 0}, {1, -1}, {1, kMaxActions + 1},
+tests/test_ppo.cpp:28:                              {std::numeric_limits<int>::max(), kMaxActions}};
+tests/test_ppo.cpp:199:    double dl[kMaxActions], dv;
+src/rl\ppo_kernels.cu:21:    if (n <= 0 || k <= 0 || k > kMaxActions)
+src/rl\ppo_kernels.cu:23:            std::to_string(kMaxActions) + " actions required");
+src/rl\ppo_kernels.cu:33:    float logp[kMaxActions];
+src/rl\ppo_kernels.h:15:// Requires n > 0, 1 <= k <= kMaxActions and int-representable row indexing.
+src/rl\ppo_math.h:13:constexpr int kMaxActions = 16;
+src/rl\ppo_math.h:134:    T logp[kMaxActions];
