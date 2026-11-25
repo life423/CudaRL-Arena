@@ -10,7 +10,7 @@
   "endurance_passes": 4,
   "clearance_stops": 0,
   "resets": 0,
-  "UI_checks": 50,
+  "UI_checks": 215,
   "native_Godot_parity_states": 3750,
   "max_COM_difference_m": 0,
   "original_motor_available": true,
@@ -44,11 +44,11 @@
     },
     {
       "path": "flexible-tail-preview/flexible_tail_preview.gd",
-      "sha256": "ECDEE797315FF4D8F51F6372507940C7E8C8FC3A2083A49739BF2DE1305C09F3"
+      "sha256": "A0E9D090AC2C71A82EEA3B8CEFEE8B5990DC524073A8F834143A018CCE5C379D"
     },
     {
       "path": "flexible-tail-preview/flexible_tail_preview.tscn",
-      "sha256": "F3170648680896288215E19D2B8FACFF86CB9CB94C2CC6220E4A934D9BF3B3AE"
+      "sha256": "1A3F96B3A0373F44A7FCA099DD78B63EC64F0739909C7FF8C0DF2E397FC2FC69"
     },
     {
       "path": "flexible-tail-preview/habitat.json",

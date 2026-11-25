@@ -15,7 +15,8 @@ another dependency location.
 
 The stage target copies the built DLL into the project's extension directory.
 Godot Project Manager can then run **Tadpole Pond | Flexible Tail**. The pond
-opens paused with **Explore pond**, Restart, Details, zoom and saved recordings.
+opens paused with **Explore pond**, continuous zoom and Details in a left column.
+Restart, the original motor and saved recordings are under Details.
 The default native path uses the qualified15-action chooser88 and frozen
 motor88 in live_data. Motor actions are held80ms and chooser decisions0.8s,
 matching the evaluator independently of rendering. The viewer performs saved

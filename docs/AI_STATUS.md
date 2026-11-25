@@ -1,5 +1,14 @@
 # AI status — November 25, 2026
 
+**Godot camera and controls updated locally.** The white bottom dock is removed.
+The left column holds Explore/Pause, continuous zoom, closer Pond view and
+Details. Restart, recordings and the preserved original motor are under Details.
+The camera follows the swimmer until smoothly blending toward pond framing as
+zoom widens. The UI suite passes215 checks at four rendered sizes, including
+keyboard/wheel/injected-pinch zoom, limits and scroll reachability. It runs zero
+physics or optimizer steps. Selected policies, DLL and habitat are unchanged.
+[UI verification](POND_CAMERA_SIDEBAR_2026-11-25.md)
+
 **Reliable-turn chooser88 passes the pond suite and is adopted in Godot.**
 The separately trained15-action chooser uses frozen rate-response motor88 and
 competence-based bank starts. It completed128 CUDA PPO updates/1,048,576 macro
