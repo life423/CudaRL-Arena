@@ -1,0 +1,20 @@
+{
+  "update": 88,
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\stage-01-rate-response-baseline\\training\\actor-88.bin",
+  "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\stage-01-rate-response-baseline\\training\\checkpoints\\session-88.bin",
+  "task": "71170f01eb901f04ce513d29b3770008eb3d2a8af467b471908c7c1ef01147f7",
+  "study": "rate-response",
+  "material": "baseline",
+  "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\stage-01-rate-response-baseline\\evaluations\\update-088\\assessment",
+  "rate_passes": 8,
+  "rate_error": 9.476467117616666,
+  "physical": true,
+  "gentle": 8,
+  "main": 16,
+  "thirty": 8,
+  "sixty": 0,
+  "ninety": 0,
+  "legacy": 2,
+  "error": 8.497889394556248,
+  "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\stage-01-rate-response-baseline\\evaluations\\update-088\\assessment\\result.json"
+}

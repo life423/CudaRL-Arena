@@ -1,0 +1,19 @@
+{
+  "name": "evaluation",
+  "wall_s": 1.5526332,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-stage-build\\Release\\pond_flexible_tail_steering_evaluate.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\actor-48.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-turn-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\straight-evaluation-starts.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-048\\assessment",
+    "phase-aware",
+    "joint",
+    "fixed",
+    "baseline"
+  ]
+}

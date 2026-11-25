@@ -1,0 +1,20 @@
+{
+  "phase": "configure",
+  "started_utc": "2026-11-24T20:15:25.2540002Z",
+  "wall_s": 0.8783383,
+  "limit_s": 600.0,
+  "exit": 0,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+  "arguments": [
+    "-S",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-steering",
+    "-B",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\course-angle90-v3-build",
+    "-G",
+    "Visual Studio 17 2022",
+    "-A",
+    "x64"
+  ]
+}

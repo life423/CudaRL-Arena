@@ -1,0 +1,19 @@
+{
+  "phase": "evaluation",
+  "started_utc": "2026-11-24T20:34:14.3582000Z",
+  "wall_s": 1.4510819,
+  "limit_s": 30.0,
+  "exit": 0,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-aware-v4-build\\Release\\pond_flexible_tail_steering_evaluate.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-aware-v4\\training\\actor-80.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-turn-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\straight-evaluation-starts.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\phase-aware-v4\\evaluations\\update-080\\assessment",
+    "phase-aware"
+  ]
+}

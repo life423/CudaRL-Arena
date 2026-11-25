@@ -79,6 +79,9 @@ static_assert(substep_cap == 2112000);
 struct Models {
     std::vector<float> gait, offset, policy;
     std::vector<tail::NavigationWorld> starts;
+    chooser::SteeringMode steering_mode = chooser::SteeringMode::MeasuredCourse;
+    chooser::MotorFeedbackMode motor_feedback_mode = chooser::MotorFeedbackMode::HalfSecond;
+    chooser::HorizonMode horizon_mode = chooser::HorizonMode::Original;
 };
 
 struct Case {
@@ -183,7 +186,8 @@ Case run_case(Start start, int horizon_s, int cell_floor, const Models& models,
     actor.params() = models.policy;
     const auto& archived = models.starts.at(start.archived_row);
     chooser::World world{};
-    chooser::initialize(world, archived, horizontal_place(start, archived), yaw_offset(start, archived));
+    chooser::initialize(world, archived, horizontal_place(start, archived), yaw_offset(start, archived),
+        models.steering_mode, models.motor_feedback_mode, models.horizon_mode);
     const float depth_y = archived.legs[archived.active_leg].goal_m.y;
     const auto speed = [&]() {
         return physics::norm(tail::turn_course(world.navigation.motion, world.pose.com_m,
@@ -385,6 +389,13 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
 
     summary << "{\n"
             << "  \"pass\": " << (passed ? "true" : "false") << ",\n"
+            << "  \"steering_mode\": \"" << (models.steering_mode == chooser::SteeringMode::PersistentHeading
+                ? "held-heading" : "measured-course") << "\",\n"
+            << "  \"steering_request_schema\": " << chooser::steering_request_schema << ",\n"
+            << "  \"motor_feedback_mode\": \"" << (models.motor_feedback_mode == chooser::MotorFeedbackMode::WholeBeat
+                ? "whole-beat" : "half-second") << "\",\n"
+            << "  \"horizon_mode\": \"" << (models.horizon_mode == chooser::HorizonMode::Long
+                ? "long-horizon" : "original-horizon") << "\",\n"
             << "  \"diagnostic_passes\": " << diagnostic_passes << ",\n"
             << "  \"diagnostic_cases\": " << diagnostic.size() << ",\n"
             << "  \"endurance_passes\": " << endurance_passes << ",\n"
@@ -413,11 +424,30 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
 int main(int argc, char** argv) {
     try {
         const auto begin = Clock::now();
-        if (argc != 6) throw std::runtime_error(
-            "Usage: chooser_eval FITTED_GAIT UPDATE8_OFFSET EVAL_STRAIGHT_WORLDS CHOOSER_ACTOR NEW_OUTPUT_DIR");
+        if (argc < 6 || argc > 9) throw std::runtime_error(
+            "Usage: chooser_eval FITTED_GAIT UPDATE8_OFFSET EVAL_STRAIGHT_WORLDS CHOOSER_ACTOR NEW_OUTPUT_DIR "
+            "[held-heading|measured-course] [whole-beat|half-second] [long-horizon|original-horizon]");
+        chooser::SteeringMode mode = chooser::SteeringMode::MeasuredCourse;
+        chooser::MotorFeedbackMode feedback = chooser::MotorFeedbackMode::HalfSecond;
+        chooser::HorizonMode horizon = chooser::HorizonMode::Original;
+        if (argc >= 7) {
+            const std::string option = argv[6];
+            if (option == "held-heading") mode = chooser::SteeringMode::PersistentHeading;
+            else if (option != "measured-course") throw std::runtime_error("Unknown steering interface");
+        }
+        if (argc >= 8) {
+            const std::string option = argv[7];
+            if (option == "whole-beat") feedback = chooser::MotorFeedbackMode::WholeBeat;
+            else if (option != "half-second") throw std::runtime_error("Unknown motor feedback mode");
+        }
+        if (argc >= 9) {
+            const std::string option = argv[8];
+            if (option == "long-horizon") horizon = chooser::HorizonMode::Long;
+            else if (option != "original-horizon") throw std::runtime_error("Unknown horizon mode");
+        }
         const Models models{tail::read_navigation_weights(argv[1], tail::NavigationMode::Gait),
             tail::read_yaw_offset_weights(argv[2]), chooser::read_weights(argv[4]),
-            tail::read_navigation_worlds(argv[3])};
+            tail::read_navigation_worlds(argv[3]), mode, feedback, horizon};
         chooser::validate_frozen_layout(models.gait, models.offset);
         return evaluate(models, argv[5], begin);
     } catch (const std::exception& error) {

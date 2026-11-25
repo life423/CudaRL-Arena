@@ -1,0 +1,34 @@
+[
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_fast_steering.h",
+    "sha256": "CA6F5E086588FCE2D134BF133FEE66D53091129ADCCD481FD6638649D3218EB3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\yaw-offset-update-8.bin",
+    "sha256": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-straight-worlds.bin",
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-turn-worlds.bin",
+    "sha256": "4902A5050A09101D8E7115EE43DDF99F3288B99EF539A525548A5D3FC727BF1E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\fast-task-diagnostic\\check.cpp",
+    "sha256": "9075ED1C18F04AEFDDA679D01027293952D39BB86B511D31FDC111D8634303A9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\fast-task-diagnostic\\out\\Release\\fast_task_diagnostic.exe",
+    "sha256": "4358C9D594672EA22D5588844E0E137D1A2F57F6994942955F1D8E06EA9A3494"
+  }
+]

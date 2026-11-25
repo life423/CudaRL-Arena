@@ -1,0 +1,6 @@
+{
+  "steering_mode": "held-heading",
+  "sha256": "63A3716F01CA70D6A27FBA251133F9D5156295CD8B4F7CC31EF04F1EB15782B0",
+  "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-sustained-v3\\training\\actor-48.bin",
+  "update": 48
+}

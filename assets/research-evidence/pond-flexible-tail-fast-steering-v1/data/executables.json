@@ -1,0 +1,10 @@
+[
+  {
+    "path": "build/flexible-tail/fast-steering-v1-build/Release/pond_flexible_tail_steering_evaluate.exe",
+    "sha256": "DCA83FC4EBD21CF1E1836A09DA7F1C98C86B22939D2546A729210AE55A189DE9"
+  },
+  {
+    "path": "build/flexible-tail/fast-steering-v1-build/Release/pond_flexible_tail_steering_ppo.exe",
+    "sha256": "AEBA2DD60E55D268E3E13AF44A76B7B2FF47928AB62DF17D55807D1568E0E002"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "name": "configure-bank",
+  "wall_s": 9.0686392,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+  "arguments": [
+    "-S",
+    "tools/pond-flexible-tail-chooser",
+    "-B",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\rate-response-v1\\bank-eval-build",
+    "-G",
+    "Visual Studio 17 2022",
+    "-A",
+    "x64"
+  ]
+}

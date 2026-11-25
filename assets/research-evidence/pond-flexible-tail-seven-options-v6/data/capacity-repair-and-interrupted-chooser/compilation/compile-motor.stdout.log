@@ -1,0 +1,10 @@
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-flexible-tail-steering/CMakeLists.txt
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-flexible-tail-steering/CMakeLists.txt
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-flexible-tail-steering/CMakeLists.txt
+  pond_flexible_tail_steering_evaluate.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\seven-stage-cap16-build\Release\pond_flexible_tail_steering_evaluate.exe
+  pond_flexible_tail_beat_feedback_check.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\seven-stage-cap16-build\Release\pond_flexible_tail_beat_feedback_check.exe
+  pond_flexible_tail_steering_ppo.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\seven-stage-cap16-build\Release\pond_flexible_tail_steering_ppo.exe
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-flexible-tail-steering/CMakeLists.txt

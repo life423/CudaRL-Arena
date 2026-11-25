@@ -1,0 +1,18 @@
+{
+  "update": 56,
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\actor-56.bin",
+  "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\checkpoints\\session-56.bin",
+  "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+  "study": "joint",
+  "material": "baseline",
+  "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-056\\assessment",
+  "physical": true,
+  "gentle": 8,
+  "main": 16,
+  "thirty": 8,
+  "sixty": 0,
+  "ninety": 0,
+  "legacy": 6,
+  "error": 15.464471429604064,
+  "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-056\\assessment\\result.json"
+}

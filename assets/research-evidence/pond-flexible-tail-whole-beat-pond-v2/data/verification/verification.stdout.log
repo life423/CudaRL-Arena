@@ -1,0 +1,3 @@
+device=NVIDIA GeForce RTX 5070 worlds=1024 decisions_per_world=8 motor_feedback=whole-beat horizon=long-horizon restored_update=0 target_updates=2
+update=1 samples=8192 reward=0.649123 exact_kl=0.00203191 stops=182 physics_ms=7567.73 wall_s=8.10949
+update=2 samples=16384 reward=0.633369 exact_kl=0.00355069 stops=345 physics_ms=8438.36 wall_s=25.1577

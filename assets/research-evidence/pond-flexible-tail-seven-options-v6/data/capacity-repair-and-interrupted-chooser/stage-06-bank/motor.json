@@ -1,0 +1,18 @@
+{
+  "update": 0,
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\training\\actor-0.bin",
+  "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\training\\checkpoints\\session-0.bin",
+  "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+  "study": "rate",
+  "material": "baseline",
+  "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\baseline\\assessment",
+  "physical": true,
+  "gentle": 8,
+  "main": 16,
+  "thirty": 8,
+  "sixty": 0,
+  "ninety": 0,
+  "legacy": 0,
+  "error": 4.952606256960048,
+  "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\baseline\\assessment\\result.json"
+}

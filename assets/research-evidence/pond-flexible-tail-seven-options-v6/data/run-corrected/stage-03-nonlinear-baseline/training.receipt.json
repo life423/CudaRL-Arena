@@ -1,0 +1,20 @@
+{
+  "name": "training",
+  "wall_s": 100.6546157,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-stage-build\\Release\\pond_flexible_tail_steering_ppo.exe",
+  "arguments": [
+    "program",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\training",
+    "128",
+    "1200",
+    "nonlinear",
+    "baseline",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\checkpoints\\session-56.bin",
+    "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038"
+  ]
+}

@@ -1,0 +1,1 @@
+{"trajectories":32,"attempted_substeps":1175072,"accepted_substeps":1175056,"substep_cap":1228800,"measured_actual_60":0,"held_actual_60":16,"faulted_trajectories":16,"incomplete_trajectories":16,"first_cue_state_pairs_matched":16,"optimizer_updates":0,"runtime_s":0.6157431}

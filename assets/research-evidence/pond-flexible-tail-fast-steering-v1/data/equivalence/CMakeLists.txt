@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.24)
+project(fast_task_diagnostic LANGUAGES CXX)
+add_executable(fast_task_diagnostic check.cpp ../../src/core/checkpoint.cpp)
+target_compile_features(fast_task_diagnostic PRIVATE cxx_std_17)
+target_include_directories(fast_task_diagnostic PRIVATE ../../src ../../src/nn)
+if(MSVC)
+  target_compile_options(fast_task_diagnostic PRIVATE /O2 /fp:strict /W4)
+endif()

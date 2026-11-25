@@ -1,0 +1,21 @@
+{
+  "pass": false,
+  "steering_mode": "held-heading",
+  "steering_request_schema": 1,
+  "diagnostic_passes": 1,
+  "diagnostic_cases": 12,
+  "endurance_passes": 0,
+  "endurance_attempts": 0,
+  "clearance_stops": 11,
+  "other_native_faults": 0,
+  "reachable_50mm_cells_estimate": 345,
+  "diagnostic_visited_cells": 132,
+  "diagnostic_coverage_fraction": 0.382608696,
+  "endurance_visited_cells": 0,
+  "attempted_substeps": 580483,
+  "accepted_substeps": 580472,
+  "substep_cap": 2112000,
+  "resets": 0,
+  "optimizer_updates": 0,
+  "internal_elapsed_s": 0.6795465
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "build/flexible-tail/whole-beat-steering-v2-build/Release/pond_flexible_tail_beat_feedback_check.exe",
+    "sha256": "621513F2BEF6B67CAE162F1E1DB635F7A133A5DB7F97B986E5248D079AA020A2"
+  },
+  {
+    "path": "build/flexible-tail/whole-beat-steering-v2-build/Release/pond_flexible_tail_steering_evaluate.exe",
+    "sha256": "1CA0CDEEE928FB6E8619AE9E8502799E678757222DAD0A827B6416B1EB03E505"
+  },
+  {
+    "path": "build/flexible-tail/whole-beat-steering-v2-build/Release/pond_flexible_tail_steering_ppo.exe",
+    "sha256": "16A82FB5D9BB63B7C6883F9206E06A242DAD6C657AC5E091EF9E83B7A4169A13"
+  }
+]

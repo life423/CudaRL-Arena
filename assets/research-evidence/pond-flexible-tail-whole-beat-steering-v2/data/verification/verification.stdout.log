@@ -1,0 +1,3 @@
+device=NVIDIA GeForce RTX 5070 worlds=1024 steps=64 actor_inputs=31 active_actor_inputs=4 critic_inputs=36 feedback=whole-beat resumed_update=0 target=2
+update=1 samples=65536 reward=0.0477499 kl=0.00408399 course_weight=-0.0958244 wall_s=1.10197
+update=2 samples=131072 reward=0.0640061 kl=0.00185365 course_weight=-0.10156 wall_s=2.6767

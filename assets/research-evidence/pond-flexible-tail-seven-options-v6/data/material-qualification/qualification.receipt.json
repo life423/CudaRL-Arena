@@ -1,0 +1,11 @@
+{
+  "name": "qualification",
+  "wall_s": 0.5953644,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\material-bank-v5-build\\Release\\pond_flexible_tail_material_check.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6\\material-qualification\\result.json",
+    "20"
+  ]
+}

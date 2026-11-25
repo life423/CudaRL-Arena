@@ -1,0 +1,42 @@
+[
+  {
+    "sha256": "62E7AD6145F8D8B4BC26DF323C5108208F800AADDDF13A3B298DA6D5C00CF705",
+    "path": "src/rl/flexible_tail_chooser.h"
+  },
+  {
+    "sha256": "9BF3867813B10E82471B30E42CFC3A99162D983D4E25A7B394EF3605D2B1D72A",
+    "path": "src/rl/flexible_tail_beat_course.h"
+  },
+  {
+    "sha256": "C0B05AB8ED845E97193D570A9B84F9C30481E04BDB09B126B45FD006EA6E13FA",
+    "path": "src/rl/flexible_tail_fast_steering.h"
+  },
+  {
+    "sha256": "AC4003E97E4F240AEAC6528DD0513C7DE7D378F6C34C0534566E8716545A4164",
+    "path": "tools/pond-flexible-tail-chooser/evaluate.cpp"
+  },
+  {
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6",
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin"
+  },
+  {
+    "sha256": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354",
+    "path": "flexible-tail-preview/live_data/yaw-offset-update-8.bin"
+  },
+  {
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39",
+    "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin"
+  },
+  {
+    "sha256": "8D8D1C5FDCC6D3CEE40C7048FCFF04E11C4A120063160ADA829E376D271F0385",
+    "path": "build/flexible-tail/whole-beat-chooser-static-v2/check.cpp"
+  },
+  {
+    "sha256": "4DF2775AD5EC94ADF69773EDE36334264E0101F4DD220168F6F0356BB7A8C0A8",
+    "path": "build/flexible-tail/whole-beat-chooser-static-v2/legacy.h"
+  },
+  {
+    "sha256": "4A4A4BA2A687FECF6D019FABFD6FFAE572FF6F3A055DCC2D1ECC4C7D5434A6BB",
+    "path": "build/flexible-tail/whole-beat-chooser-static-v2/out/Release/whole_beat_chooser_static.exe"
+  }
+]

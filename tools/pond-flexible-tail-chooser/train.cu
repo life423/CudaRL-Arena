@@ -1,4 +1,8 @@
+#if defined(CUDARL_RATE_CHOOSER)
+#include "rl/flexible_tail_rate_chooser.h"
+#else
 #include "rl/flexible_tail_chooser_checkpoint.h"
+#endif
 #include "bank_training_starts.h"
 #include "core/rng.h"
 #include "habitat_config.h"
@@ -16,12 +20,24 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <cstring>
 #include <stdexcept>
 #include <string>
 #include <vector>
+#if defined(_WIN32) && defined(CUDARL_SUSTAINED_CHOOSER)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
 namespace {
+#if defined(CUDARL_RATE_CHOOSER)
+namespace chooser = cudarl::flexible_tail::rate_chooser;
+#else
 namespace chooser = cudarl::flexible_tail::chooser;
+#endif
 namespace bank_training = cudarl::flexible_tail::bank_training;
 namespace tail = cudarl::flexible_tail;
 namespace geometry = cudarl::pond_geometry_v1;
@@ -30,18 +46,37 @@ namespace rl = cudarl::rl;
 namespace fs = std::filesystem;
 using Clock = std::chrono::steady_clock;
 
+#if defined(CUDARL_SUSTAINED_CHOOSER)
+constexpr int worlds = 1024, decisions = 8, rows = worlds * decisions;
+constexpr int batch_size = 1024, epochs = 4;
+#if defined(CUDARL_RELIABLE_CHOOSER)
+constexpr int max_updates = 128;
+#else
+constexpr int max_updates = 64;
+#endif
+#if defined(CUDARL_RATE_CHOOSER)
+constexpr int macro_controls = 40;
+#else
+constexpr int macro_controls = 300;
+#endif
+#else
 constexpr int worlds = 96, decisions = 4, rows = worlds * decisions;
 constexpr int batch_size = 128, epochs = 4, max_updates = 16, macro_controls = 300;
+#endif
 constexpr int channels = chooser::inputs, actions = chooser::actions;
 constexpr int lane_threads = 8, math_threads = 64;
 constexpr uint64_t max_substeps = uint64_t(worlds) * 2 * max_updates * decisions *
     macro_controls * tail::turn_substeps_per_control;
 constexpr uint32_t seed = 20261124;
 constexpr double deadline_s = 17.5;
+#if defined(CUDARL_RATE_CHOOSER)
+constexpr float gamma = .994f, lambda = .98f, max_kl = .05f;
+#else
 constexpr float gamma = .97f, lambda = .90f, max_kl = .05f;
+#endif
 constexpr rl::PpoCoefficients loss{.20f, .01f, .50f};
 static_assert(rows % batch_size == 0);
-static_assert(actions == 3);
+static_assert(actions == 3 || actions == 9 || actions == 15);
 
 struct Stream {
     cudaStream_t value = nullptr;
@@ -53,6 +88,7 @@ struct Stream {
 
 struct Events {
     cudaEvent_t start = nullptr, end = nullptr;
+    cudaEvent_t after_start = nullptr, after_network = nullptr;
     Events() {
         CUDA_CHECK_THROW(cudaEventCreate(&start));
         const auto status = cudaEventCreate(&end);
@@ -60,8 +96,10 @@ struct Events {
             cudaEventDestroy(start);
             CUDA_CHECK_THROW(status);
         }
+        CUDA_CHECK_THROW(cudaEventCreate(&after_start));
+        CUDA_CHECK_THROW(cudaEventCreate(&after_network));
     }
-    ~Events() { cudaEventDestroy(end); cudaEventDestroy(start); }
+    ~Events() { cudaEventDestroy(after_network); cudaEventDestroy(after_start); cudaEventDestroy(end); cudaEventDestroy(start); }
     Events(const Events&) = delete;
     Events& operator=(const Events&) = delete;
 };
@@ -70,12 +108,34 @@ struct Lane {
     chooser::World state;
     uint32_t episode = 0;
     bool needs_start = true;
+#if defined(CUDARL_RELIABLE_CHOOSER)
+    int curriculum_level = 0, curriculum_failures = 0;
+    int curriculum_mark_control = 0, curriculum_mark_visits = 0;
+    float curriculum_mark_transport = 0;
+#endif
 };
+
+#if defined(CUDARL_RATE_CHOOSER)
+__device__ tail::steering::Kind session_motor_kind;
+__device__ tail::steering::Config session_motor_config;
+#elif defined(CUDARL_SUSTAINED_CHOOSER)
+// Configured once before collection. The value is embedded in every session
+// checkpoint and must match before a restored world can advance.
+__device__ chooser::SteeringMode session_steering_mode;
+chooser::SteeringMode host_steering_mode = chooser::SteeringMode::MeasuredCourse;
+__device__ chooser::MotorFeedbackMode session_motor_feedback_mode;
+__device__ chooser::HorizonMode session_horizon_mode;
+chooser::MotorFeedbackMode host_motor_feedback_mode = chooser::MotorFeedbackMode::HalfSecond;
+chooser::HorizonMode host_horizon_mode = chooser::HorizonMode::Original;
+#endif
 
 struct Counts {
     uint64_t attempted = 0, accepted = 0, warmup_attempted = 0, warmup_accepted = 0;
     uint32_t samples[actions]{}, stops = 0, cue_timeouts = 0, posture_stops = 0, starts = 0;
     uint32_t bank_left_starts = 0, bank_right_starts = 0;
+#if defined(CUDARL_RELIABLE_CHOOSER)
+    uint32_t curriculum_starts[3]{}, promotions = 0, demotions = 0;
+#endif
 };
 
 struct Ledger {
@@ -87,6 +147,15 @@ struct Ledger {
     float preflight_max_difference_rad = 0;
     int preflight_checks = 0;
     const char* stage = "setup";
+    double gpu_physics_ms = 0, gpu_inference_ms = 0, gpu_optimization_ms = 0;
+    double transfers_ms = 0, evidence_ms = 0;
+    float policy_loss = 0, value_loss = 0, entropy = 0, clip_fraction = 0, explained_variance = 0;
+    int minibatches = 0;
+    // Physical work from repeated resume-verification updates remains distinct
+    // from the resumable logical counters.
+    uint64_t executed_attempted = 0, executed_accepted = 0, executed_decisions = 0;
+    int executed_actor_steps = 0, executed_critic_steps = 0;
+    uint64_t execution_physical_limit = max_substeps;
 };
 
 struct Rollout {
@@ -98,6 +167,7 @@ struct Rollout {
     device_ptr<float> logits{rows * actions}, old_logp{rows}, value{rows}, reward{rows}, done{rows};
     device_ptr<float> zero{rows}, final_value{worlds}, advantage{rows}, target_return{rows};
     device_ptr<float> summary{2}, advantage_stats{2}, kl{rows};
+    device_ptr<float> residual{rows};
 };
 
 struct Batch {
@@ -158,8 +228,16 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
     cudarl::physics::V com;
     float yaw;
     bank_training::ApproachEvidence approach{};
-    if (bank_curriculum) {
-        if (!bank_training::approach_start(uint32_t(lane_index), lane.episode, starts[row], pond, com, yaw, &approach)) {
+    bool bank_start = bank_curriculum;
+#if defined(CUDARL_SUSTAINED_CHOOSER)
+    bank_start = ((uint32_t(lane_index / 2) + lane.episode) % 2) == 0;
+#endif
+    if (bank_start) {
+        int difficulty = 2;
+#if defined(CUDARL_RELIABLE_CHOOSER)
+        difficulty = lane.curriculum_level;
+#endif
+        if (!bank_training::approach_start(uint32_t(lane_index), lane.episode, starts[row], pond, com, yaw, &approach, difficulty)) {
             fail(lane_index, 41, first_fault, fault_code);
             return;
         }
@@ -170,7 +248,14 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
         com = {float(pond.water_radius_x_m) * radius * cosf(angle), 0.f,
             float(pond.water_radius_z_m) * radius * sinf(angle)};
     }
+#if defined(CUDARL_RATE_CHOOSER)
+    chooser::initialize(lane.state, starts[row], com, yaw, session_motor_kind, session_motor_config);
+#elif defined(CUDARL_SUSTAINED_CHOOSER)
+    chooser::initialize(lane.state, starts[row], com, yaw, session_steering_mode,
+        session_motor_feedback_mode, session_horizon_mode);
+#else
     chooser::initialize(lane.state, starts[row], com, yaw);
+#endif
     const auto result = chooser::advance(lane.state, gait, offset, pond, macro_controls);
     auto& counter = counts[lane_index];
     counter.warmup_attempted += result.attempted_substeps;
@@ -180,7 +265,13 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
         return;
     }
     ++counter.starts;
-    if (bank_curriculum) {
+#if defined(CUDARL_RELIABLE_CHOOSER)
+    ++counter.curriculum_starts[lane.curriculum_level];
+    lane.curriculum_mark_control = lane.state.motor.navigation.motion.controls;
+    lane.curriculum_mark_visits = lane.state.visits;
+    lane.curriculum_mark_transport = lane.state.transport_m;
+#endif
+    if (bank_start) {
         if (approach.inward_side > 0) ++counter.bank_left_starts;
         else ++counter.bank_right_starts;
     }
@@ -237,6 +328,19 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
     switch (result.fault) {
     case 0:
         if (!chooser::ready(lane.state)) fail(lane_index, 34, first_fault, fault_code);
+#if defined(CUDARL_RELIABLE_CHOOSER)
+        // Promotion records demonstrated safe transport. It changes only a
+        // later training spawn, never the live body, command or episode signal.
+        if (lane.curriculum_level < 2 &&
+            lane.state.motor.navigation.motion.controls - lane.curriculum_mark_control >= 3000 &&
+            lane.state.visits - lane.curriculum_mark_visits >= 8 &&
+            lane.state.transport_m - lane.curriculum_mark_transport >= .30f && lane.state.max_stall_s <= 2.f) {
+            ++lane.curriculum_level; ++counter.promotions; lane.curriculum_failures = 0;
+            lane.curriculum_mark_control = lane.state.motor.navigation.motion.controls;
+            lane.curriculum_mark_visits = lane.state.visits;
+            lane.curriculum_mark_transport = lane.state.transport_m;
+        }
+#endif
         done[lane_index] = 0.f;
         return;
     case 2: ++counter.stops; break;
@@ -249,6 +353,11 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
     // Training respawns only after a scored terminal. Rollout boundaries
     // otherwise carry the complete body, course history, trim and visit map.
     lane.needs_start = true;
+#if defined(CUDARL_RELIABLE_CHOOSER)
+    if (++lane.curriculum_failures >= 2 && lane.curriculum_level > 0) {
+        --lane.curriculum_level; ++counter.demotions; lane.curriculum_failures = 0;
+    }
+#endif
 }
 
 __global__ void audit_values(const float* values, int count, int* first_fault) {
@@ -265,6 +374,11 @@ __global__ void exact_kl(const float* old_logits, const float* new_logits, float
     float div = 0.f;
     for (int j = 0; j < actions; ++j) div += expf(old_logp[j]) * (old_logp[j] - new_logp[j]);
     kl[i] = div;
+}
+
+__global__ void value_residual(const float* predicted, const float* target, float* residual, int count) {
+    const int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < count) residual[i] = target[i] - predicted[i];
 }
 
 void audit(const float* values, int count, Rollout& roll, cudaStream_t stream) {
@@ -303,6 +417,10 @@ void count_work(Rollout& roll, Ledger& ledger, cudaStream_t stream) {
         ledger.counts.starts += item.starts;
         ledger.counts.bank_left_starts += item.bank_left_starts;
         ledger.counts.bank_right_starts += item.bank_right_starts;
+#if defined(CUDARL_RELIABLE_CHOOSER)
+        for (int i = 0; i < 3; ++i) ledger.counts.curriculum_starts[i] += item.curriculum_starts[i];
+        ledger.counts.promotions += item.promotions; ledger.counts.demotions += item.demotions;
+#endif
         for (int i = 0; i < actions; ++i) ledger.counts.samples[i] += item.samples[i];
     }
     if (ledger.counts.attempted + ledger.counts.warmup_attempted > max_substeps)
@@ -325,10 +443,13 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
     ledger.started = update;
     constexpr int blocks = (worlds + lane_threads - 1) / lane_threads;
     for (int t = 0; t < decisions; ++t) {
+        const auto counters_before = ledger.counts;
+#if !defined(CUDARL_SUSTAINED_CHOOSER)
         if (elapsed(launch) + ledger.max_wave_s >= deadline_s) {
             ledger.stage = "deadline";
             return false;
         }
+#endif
         const auto wave_start = Clock::now();
         const int first = t * worlds;
         auto* observation = roll.obs.get() + first * channels;
@@ -340,6 +461,7 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
             int(starts.size()), gait.get(), offset.get(), larger_pond, ledger.bank_curriculum,
             roll.first_fault.get(), roll.fault_code.get());
         check_launch();
+        CUDA_CHECK_THROW(cudaEventRecord(events.after_start, stream));
         observe_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), larger_pond, observation,
             roll.first_fault.get(), roll.fault_code.get());
         check_launch();
@@ -349,16 +471,33 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
         copy_device(value, critic.output(), worlds, stream);
         const uint32_t draw = uint32_t((update - 1) * decisions + t);
         rl::sample_actions(actor.output(), worlds, actions, seed, draw, false, stored_action, old_logp, stream);
+        CUDA_CHECK_THROW(cudaEventRecord(events.after_network, stream));
         move_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), roll.counts.get(), stored_action, old_logp,
             value, gait.get(), offset.get(), larger_pond, roll.reward.get() + first, roll.done.get() + first,
             roll.first_fault.get(), roll.fault_code.get());
         check_launch();
         CUDA_CHECK_THROW(cudaEventRecord(events.end, stream));
+        const auto transfer_start = Clock::now();
         count_work(roll, ledger, stream);
+        ledger.executed_attempted += ledger.counts.attempted + ledger.counts.warmup_attempted
+            - counters_before.attempted - counters_before.warmup_attempted;
+        ledger.executed_accepted += ledger.counts.accepted + ledger.counts.warmup_accepted
+            - counters_before.accepted - counters_before.warmup_accepted;
+        for (int i = 0; i < actions; ++i)
+            ledger.executed_decisions += ledger.counts.samples[i] - counters_before.samples[i];
+        if (ledger.executed_attempted > ledger.execution_physical_limit)
+            throw std::runtime_error("Chooser invocation exceeded its physical execution allocation");
         require_clear(roll, ledger, stream, true);
+        ledger.transfers_ms += elapsed(transfer_start) * 1000.;
         float ms = 0.f;
         CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, events.start, events.end));
         ledger.gpu_dynamics_ms += ms;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, events.start, events.after_start));
+        ledger.gpu_physics_ms += ms;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, events.after_network, events.end));
+        ledger.gpu_physics_ms += ms;
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, events.after_start, events.after_network));
+        ledger.gpu_inference_ms += ms;
         ledger.max_wave_s = std::max(ledger.max_wave_s, elapsed(wave_start));
     }
     observe_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), larger_pond, roll.final_obs.get(),
@@ -380,7 +519,10 @@ float optimize(Rollout& roll, Batch& batch, nn::GpuMlp& actor, nn::GpuMlp& criti
     audit(roll.target_return.get(), rows, roll, stream);
     require_clear(roll, ledger, stream, false);
     rl::mean_std(roll.advantage.get(), rows, roll.advantage_stats.get(), stream);
-    for (int epoch = 0; epoch < epochs; ++epoch) {
+    ledger.policy_loss = ledger.value_loss = ledger.entropy = ledger.clip_fraction = 0.f;
+    ledger.minibatches = 0;
+    bool target_kl_reached = false;
+    for (int epoch = 0; epoch < epochs && !target_kl_reached; ++epoch) {
         const auto perm = rl::make_permutation(rows, cudarl::rng::bits(seed, uint32_t(update), uint32_t(epoch)));
         for (int first = 0; first < rows; first += batch_size) {
             rl::gather_minibatch(perm, first, batch_size, channels, roll.obs.get(), roll.action.get(),
@@ -392,6 +534,22 @@ float optimize(Rollout& roll, Batch& batch, nn::GpuMlp& actor, nn::GpuMlp& criti
             rl::ppo_loss_grad(actor.output(), critic.output(), batch_size, actions, batch.action.get(),
                 batch.old_logp.get(), batch.advantage.get(), batch.target_return.get(), roll.advantage_stats.get(),
                 loss, batch.logit_grad.get(), batch.value_grad.get(), batch.row_stats.get(), batch.stats.get(), stream);
+#if defined(CUDARL_SUSTAINED_CHOOSER)
+            std::array<float, rl::kPpoStats> statistics{};
+            download(statistics, batch.stats.get(), stream);
+            CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
+            for (const float statistic : statistics) {
+                if (!std::isfinite(statistic)) throw std::runtime_error("Nonfinite PPO minibatch diagnostic");
+            }
+            if (statistics[3] / batch_size > .015f) {
+                target_kl_reached = true;
+                break;
+            }
+            ledger.policy_loss += statistics[0] / batch_size;
+            ledger.value_loss += statistics[1] / batch_size;
+            ledger.entropy += statistics[2] / batch_size;
+            ledger.clip_fraction += statistics[4] / batch_size;
+#endif
             actor.zero_grad(stream);
             critic.zero_grad(stream);
             actor.backward(batch.logit_grad.get(), batch_size, nullptr, stream);
@@ -402,19 +560,44 @@ float optimize(Rollout& roll, Batch& batch, nn::GpuMlp& actor, nn::GpuMlp& criti
             require_clear(roll, ledger, stream, false);
             actor_adam.step(actor.params(), actor.grads(), stream);
             ++ledger.actor_steps;
+            ++ledger.executed_actor_steps;
             critic_adam.step(critic.params(), critic.grads(), stream);
             ++ledger.critic_steps;
+            ++ledger.executed_critic_steps;
+            ++ledger.minibatches;
             audit(actor.params(), actor.num_params(), roll, stream);
             audit(critic.params(), critic.num_params(), roll, stream);
             require_clear(roll, ledger, stream, false);
         }
+    }
+    if (ledger.minibatches > 0) {
+        ledger.policy_loss /= ledger.minibatches;
+        ledger.value_loss /= ledger.minibatches;
+        ledger.entropy /= ledger.minibatches;
+        ledger.clip_fraction /= ledger.minibatches;
     }
     for (int first = 0; first < rows; first += batch_size) {
         actor.forward(roll.obs.get() + first * channels, batch_size, stream);
         exact_kl<<<(batch_size + math_threads - 1) / math_threads, math_threads, 0, stream>>>(
             roll.logits.get() + first * actions, actor.output(), roll.kl.get() + first, batch_size);
         check_launch();
+        critic.forward(roll.obs.get() + first * channels, batch_size, stream);
+        value_residual<<<(batch_size + math_threads - 1) / math_threads, math_threads, 0, stream>>>(
+            critic.output(), roll.target_return.get() + first, roll.residual.get() + first, batch_size);
+        check_launch();
     }
+#if defined(CUDARL_SUSTAINED_CHOOSER)
+    std::array<float, 2> return_statistics{}, residual_statistics{};
+    rl::mean_std(roll.target_return.get(), rows, roll.summary.get(), stream);
+    download(return_statistics, roll.summary.get(), stream);
+    CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
+    rl::mean_std(roll.residual.get(), rows, roll.summary.get(), stream);
+    download(residual_statistics, roll.summary.get(), stream);
+    CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
+    const float return_variance = return_statistics[1] * return_statistics[1];
+    ledger.explained_variance = return_variance > 1e-12f
+        ? 1.f - residual_statistics[1] * residual_statistics[1] / return_variance : 0.f;
+#endif
     const float kl = finite_mean(roll, roll.kl.get(), rows, stream);
     if (kl > max_kl) throw std::runtime_error("Chooser whole-rollout KL cap exceeded");
     return kl;
@@ -446,6 +629,7 @@ void write_result(const fs::path& output, const Ledger& l) {
            << "\",\"wall_s\":" << l.wall_s << "}\n";
 }
 
+#if !defined(CUDARL_RATE_CHOOSER)
 void verify_frozen_motor(const std::vector<tail::NavigationWorld>& starts, const std::vector<float>& gait_weights,
                          const std::vector<float>& offset_weights, Ledger& ledger) {
     auto gait_spec = tail::navigation_motor_spec();
@@ -609,9 +793,20 @@ void train(const std::string& gait_path, const std::string& offset_path, const s
         throw;
     }
 }
+#endif
+#if defined(CUDARL_RATE_CHOOSER)
+#include "rate_session.cuh"
+#elif defined(CUDARL_SUSTAINED_CHOOSER)
+#include "sustained_session.cuh"
+#endif
 } // namespace
 
 int main(int argc, char** argv) {
+#if defined(CUDARL_RATE_CHOOSER)
+    return rate_main(argc, argv);
+#elif defined(CUDARL_SUSTAINED_CHOOSER)
+    return sustained_main(argc, argv);
+#else
     const bool bank_curriculum = argc > 1 && std::string(argv[1]) == "bank-curriculum";
     if (argc != (bank_curriculum ? 7 : 5)) {
         std::cerr << "Usage: pond_flexible_tail_chooser_ppo FITTED_GAIT OFFSET TRAIN_WORLDS NEW_OUTPUT\n"
@@ -640,5 +835,6 @@ int main(int argc, char** argv) {
         std::cerr << error.what() << '\n';
         return 2;
     }
+#endif
 }
 

@@ -1,0 +1,14 @@
+{
+  "training_wall_already_spent": 494.07646430000005,
+  "failed_chooser_warmup_substeps": 655360,
+  "root": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected",
+  "failed_chooser_optimizer_steps": 0,
+  "preserved_stages": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "second_reserved_chooser_diagnostic": true
+}

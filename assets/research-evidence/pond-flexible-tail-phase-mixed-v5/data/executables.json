@@ -1,0 +1,14 @@
+[
+  {
+    "path": "build/flexible-tail/phase-mixed-v5-build/Release/pond_flexible_tail_beat_feedback_check.exe",
+    "sha256": "2D1E7028BE783E8356F005A0F6629933A325651FD9541A6F09FA3FCC695F1DBD"
+  },
+  {
+    "path": "build/flexible-tail/phase-mixed-v5-build/Release/pond_flexible_tail_steering_evaluate.exe",
+    "sha256": "94CE98EF6F3A4BD27B8EF1298723FF3B77D08B1659830B98F6B0E4513FD71EE0"
+  },
+  {
+    "path": "build/flexible-tail/phase-mixed-v5-build/Release/pond_flexible_tail_steering_ppo.exe",
+    "sha256": "C6ED5B8B6923128C5DBB72D3EB67C72BC12F1C5EAF3AA1E863F4D093EA1ABA80"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "completed_utc": "2026-11-24T19:13:00.6923614Z",
+  "godot_published": false,
+  "evaluated_updates": [
+    8,
+    16,
+    24,
+    32,
+    40,
+    48,
+    56,
+    64
+  ],
+  "training": [
+    {},
+    {},
+    {
+      "phase": "training",
+      "started_utc": "2026-11-24T19:13:00.3408743Z",
+      "wall_s": 0.3047448,
+      "limit_s": 1837.0,
+      "exit": 0,
+      "timeout": false,
+      "interrupted": false,
+      "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-session-build\\Release\\pond_flexible_tail_chooser_session.exe",
+      "arguments": [
+        "resume",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\yaw-offset-update-8.bin",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+        "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-sustained-v3\\training",
+        "64",
+        "1237",
+        "held-heading"
+      ]
+    }
+  ]
+}

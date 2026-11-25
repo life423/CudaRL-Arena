@@ -1,0 +1,19 @@
+{
+  "phase": "evaluation",
+  "started_utc": "2026-11-24T20:16:27.1694684Z",
+  "wall_s": 1.2093517,
+  "limit_s": 30.0,
+  "exit": 0,
+  "timeout": false,
+  "interrupted": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\course-angle90-v3-build\\Release\\pond_flexible_tail_steering_evaluate.exe",
+  "arguments": [
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-steering-v2\\training\\actor-56.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\course-angle90-v3\\training\\actor-72.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\eval-turn-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\straight-evaluation-starts.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\course-angle90-v3\\evaluations\\update-072\\assessment",
+    "whole-beat-90"
+  ]
+}

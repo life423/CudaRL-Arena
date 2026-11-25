@@ -214,10 +214,54 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(76, 44)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Play"
-tooltip_text = "Play or pause the simulation (P)"
+text = "Explore pond"
+tooltip_text = "Start or pause learned pond exploration (P)"
 
-[node name="Left" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+[node name="Restart" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 44)
+layout_mode = 2
+text = "Restart"
+tooltip_text = "Restart at the original pond position"
+
+[node name="LiveDetails" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 44)
+layout_mode = 2
+toggle_mode = true
+text = "Details"
+
+[node name="LiveOptions" type="VBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ControlMode" type="OptionButton" parent="CanvasLayer/Overlay/Transport/Dock/LiveOptions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+item_count = 2
+popup/item_0/text = "Learned exploration"
+popup/item_0/id = 0
+popup/item_1/text = "Manual turns · Original motor"
+popup/item_1/id = 1
+selected = 0
+
+[node name="Qualification" type="Label" parent="CanvasLayer/Overlay/Transport/Dock/LiveOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Verified: 12 pond starts + 4 five-minute runs.\nSaved policies; no training in this view."
+autowrap_mode = 2
+
+[node name="ManualControls" type="HBoxContainer" parent="CanvasLayer/Overlay/Transport/Dock/LiveOptions"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Left" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveOptions/ManualControls"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -225,7 +269,7 @@ size_flags_horizontal = 3
 text = "Left 15°"
 tooltip_text = "Request a 15° left turn (Q)"
 
-[node name="Right" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveControls"]
+[node name="Right" type="Button" parent="CanvasLayer/Overlay/Transport/Dock/LiveOptions/ManualControls"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2

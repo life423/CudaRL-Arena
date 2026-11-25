@@ -1,0 +1,1 @@
+{"pass":true,"feedback":"phase-aware","absolute_tolerance":0.000001,"physics_steps":0,"optimizer_updates":0,"worlds":1024,"actor_max_difference":5.96046447754e-08,"critic_max_difference":0,"nonfinite_values":0,"actor_lane":32,"actor_feature":8,"actor_cpu":0.454106628895,"actor_cuda":0.454106688499,"critic_lane":-1,"critic_feature":-1,"critic_cpu":0,"critic_cuda":0}

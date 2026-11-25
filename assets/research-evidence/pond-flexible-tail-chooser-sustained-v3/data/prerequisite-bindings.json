@@ -1,0 +1,18 @@
+[
+  {
+    "path": "build/flexible-tail/chooser-session-resume-check/receipt.json",
+    "sha256": "046E2B9B1287B8229CD8F03EACF36D04788531E254BAEEC7C3FFBA7C44477361"
+  },
+  {
+    "path": "build/flexible-tail/chooser-session-resume-check/verification.json",
+    "sha256": "E7EBBA48E2265846B91F071E15CD697AAFD6F705C0D2791AFD612DAE3F95648B"
+  },
+  {
+    "path": "build/flexible-tail/steering-interface-v3/assessment/summary.json",
+    "sha256": "B3DFF8248BFC7D80FF44A4C5B471EC0791E1E14C860E2698C99052C2E6DB6D19"
+  },
+  {
+    "path": "build/flexible-tail/steering-interface-v3/bindings.json",
+    "sha256": "B9FCEEBC7B7C448B1A243F91F106452603CB20D377B936EA861A4757D7A626C4"
+  }
+]

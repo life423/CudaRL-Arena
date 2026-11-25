@@ -1,0 +1,19 @@
+{
+  "completed_updates": 64,
+  "training_worlds": 1024,
+  "genuine_navigation_decisions": 524288,
+  "training_wall_s": 562.3086604,
+  "navigation_decisions_per_wall_second": 932.384714877139,
+  "physics_substeps_per_wall_second": 3059411.4570034104,
+  "training_accepted_substeps": 1720333558,
+  "training_attempted_substeps": 1720358001,
+  "resume_verification_accepted_substeps": 84784155.0,
+  "evaluations": 8,
+  "evaluation_accepted_substeps": 4640517.0,
+  "evaluation_attempted_substeps": 4640605.0,
+  "final_passes": 2,
+  "best_passes": 3.0,
+  "independent_resume_pass": true,
+  "last_real_process_resume_exit": 0,
+  "timing_note": "Host synchronization/readback overlaps GPU work and is not an additive transfer-only cost."
+}

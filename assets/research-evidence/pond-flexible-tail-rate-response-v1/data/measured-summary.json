@@ -1,0 +1,19 @@
+{
+  "completed_updates": 128,
+  "training_wall_s": 103.4347594,
+  "sampled_transitions": 8388608,
+  "diagnostic_actual_updates": 3,
+  "selected_checkpoint": 88,
+  "before_rate_passes": 4,
+  "after_rate_passes": 8,
+  "before_mean_lag_deg": 15.12455756511667,
+  "after_mean_lag_deg": 9.476467117616666,
+  "from_rest_passes": 8,
+  "swimming_passes": 12,
+  "bank_passes": 7,
+  "bank_guard_stops": 5,
+  "endurance_attempts": 0,
+  "total_attempted_substeps": 573608204,
+  "godot_updated": false,
+  "physics_changed": false
+}

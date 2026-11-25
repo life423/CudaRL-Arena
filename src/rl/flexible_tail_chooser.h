@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rl/flexible_tail_yaw_offset.h"
+#include "rl/flexible_tail_beat_course.h"
 
 #include <cfloat>
 #include <climits>
@@ -19,6 +20,11 @@ inline constexpr int recent_cells = 32;
 inline constexpr float minimum_speed_m_s = .006f;
 inline constexpr float envelope_tilt_deg = 10.f;
 inline constexpr float envelope_depth_error_m = .001f;
+
+enum class SteeringMode : uint32_t { MeasuredCourse = 0, PersistentHeading = 1 };
+enum class MotorFeedbackMode : uint32_t { HalfSecond = 0, WholeBeat = 1 };
+enum class HorizonMode : uint32_t { Original = 0, Long = 1 };
+inline constexpr uint32_t steering_request_schema = 1;
 
 enum Fault {
     Healthy = 0, NativePhysics = 1, Clearance = 2, Nonfinite = 3,
@@ -81,9 +87,14 @@ struct RecentVisit {
 };
 
 struct World {
+    SteeringMode steering_mode = SteeringMode::MeasuredCourse;
+    MotorFeedbackMode motor_feedback_mode = MotorFeedbackMode::HalfSecond;
+    HorizonMode horizon_mode = HorizonMode::Original;
+    uint32_t steering_schema = steering_request_schema;
     NavigationWorld navigation{};
     Snapshot pose{};
     BeatCourse beats{};
+    BeatCourseFeedback motor_course{};
     float applied_offset = 0.f;
     float targets[motor_outputs]{};
     uint64_t visited[cells_x * cells_z / 64]{};
@@ -118,11 +129,13 @@ CUDARL_HD inline int cell_index(physics::V position) {
     return x >= 0 && x < cells_x && z >= 0 && z < cells_z ? z * cells_x + x : -1;
 }
 
-CUDARL_HD inline bool seen(const World& world, int cell) {
+template<class Memory>
+CUDARL_HD inline bool seen(const Memory& world, int cell) {
     return cell >= 0 && (world.visited[cell / 64] & (uint64_t{1} << (cell % 64))) != 0;
 }
 
-CUDARL_HD inline float revisit_fraction(const World& world, int cell, int control) {
+template<class Memory>
+CUDARL_HD inline float revisit_fraction(const Memory& world, int cell, int control) {
     // The most recent entries are searched first. Long absences beyond the
     // bounded history earn a revisit value, never another first-visit credit.
     for (int i = 0; i < recent_cells; ++i) {
@@ -140,26 +153,27 @@ CUDARL_HD inline float revisit_fraction(const World& world, int cell, int contro
     return physics::clamp((seconds - 90.f) / 210.f, 0.f, 1.f);
 }
 
-CUDARL_HD inline float novelty(const World& world, physics::V position) {
+template<class Memory>
+CUDARL_HD inline float novelty_at(const Memory& world, physics::V position, int control) {
     const int cell = cell_index(position);
     if (cell < 0) return 0.f;
     return seen(world, cell)
-        ? .25f * revisit_fraction(world, cell, world.navigation.motion.controls) : 1.f;
+        ? .25f * revisit_fraction(world, cell, control) : 1.f;
 }
 
-CUDARL_HD inline float visit_reward(World& world, float speed_m_s) {
-    const int control = world.navigation.motion.controls;
-    const int cell = cell_index(world.pose.com_m);
+template<class Memory>
+CUDARL_HD inline float visit_reward_at(Memory& world, physics::V position, int control, float speed_m_s) {
+    const int cell = cell_index(position);
     if (cell < 0 || world.entry_cell != cell) {
         world.entry_cell = cell;
         world.entry_control = control;
-        world.entry_position = world.pose.com_m;
+        world.entry_position = position;
         world.entry_credited = false;
         return 0.f;
     }
     if (world.entry_credited || (control - world.entry_control) * motor_control_s < 1.f ||
         speed_m_s < minimum_speed_m_s ||
-        physics::norm(horizontal(world.pose.com_m - world.entry_position)) < .006f) return 0.f;
+        physics::norm(horizontal(position - world.entry_position)) < .006f) return 0.f;
     const bool known = seen(world, cell);
     const float reward = known ? .15f * revisit_fraction(world, cell, control) : .6f;
     if (!known) {
@@ -172,13 +186,29 @@ CUDARL_HD inline float visit_reward(World& world, float speed_m_s) {
     return reward;
 }
 
+CUDARL_HD inline float novelty(const World& world, physics::V position) {
+    return novelty_at(world, position, world.navigation.motion.controls);
+}
+CUDARL_HD inline float visit_reward(World& world, float speed_m_s) {
+    return visit_reward_at(world, world.pose.com_m, world.navigation.motion.controls, speed_m_s);
+}
+
 CUDARL_HD inline void initialize(World& world, const NavigationWorld& source,
-                                 physics::V com_horizontal_m, float yaw_rad) {
+                                 physics::V com_horizontal_m, float yaw_rad,
+                                 SteeringMode mode = SteeringMode::MeasuredCourse,
+                                 MotorFeedbackMode feedback = MotorFeedbackMode::HalfSecond,
+                                 HorizonMode horizon = HorizonMode::Original) {
     world = {};
+    world.steering_mode = mode;
+    world.motor_feedback_mode = feedback;
+    world.horizon_mode = horizon;
     auto& motion = world.navigation.motion;
     motion = source.motion;
     if (motion.controls != 0 || source.leg_count < 1 || !physics::finite_body(motion.body) ||
-        !physics::finite_vector(com_horizontal_m) || !physics::finite_number(yaw_rad)) {
+        !physics::finite_vector(com_horizontal_m) || !physics::finite_number(yaw_rad) ||
+        (mode != SteeringMode::MeasuredCourse && mode != SteeringMode::PersistentHeading) ||
+        (feedback != MotorFeedbackMode::HalfSecond && feedback != MotorFeedbackMode::WholeBeat) ||
+        (horizon != HorizonMode::Original && horizon != HorizonMode::Long)) {
         world.fault = InvalidUse;
         return;
     }
@@ -213,6 +243,7 @@ CUDARL_HD inline void initialize(World& world, const NavigationWorld& source,
     prepare_navigation(world.navigation);
     world.pose = transformed ? snapshot(motion.body) : prior_pose;
     world.beats.add(motion.body.velocity[6], 0, world.pose.com_m);
+    world.motor_course.initialize(motion);
     world.entry_cell = cell_index(world.pose.com_m);
     world.entry_position = world.pose.com_m;
 }
@@ -234,8 +265,20 @@ CUDARL_HD inline physics::V action_direction(physics::V course, int action) {
     return physics::axis_rotation({0, 1, 0}, angle).rotate(course);
 }
 
+CUDARL_HD inline physics::V candidate_heading(const World& world, physics::V course, int action) {
+    const auto reference = world.steering_mode == SteeringMode::PersistentHeading
+        ? world.navigation.motion.request.heading : course;
+    return action_direction(reference, action);
+}
+
 CUDARL_HD inline bool accept(World& world, int action) {
-    if (action < 0 || action >= actions || !ready(world)) return false;
+    if (action < 0 || action >= actions || !ready(world) ||
+        world.steering_schema != steering_request_schema ||
+        (world.steering_mode != SteeringMode::MeasuredCourse &&
+         world.steering_mode != SteeringMode::PersistentHeading) ||
+        (world.motor_feedback_mode != MotorFeedbackMode::HalfSecond &&
+         world.motor_feedback_mode != MotorFeedbackMode::WholeBeat) ||
+        (world.horizon_mode != HorizonMode::Original && world.horizon_mode != HorizonMode::Long)) return false;
     const auto course = decision_course(world);
     auto& navigation = world.navigation;
     const auto current = navigation.legs[navigation.active_leg];
@@ -246,7 +289,7 @@ CUDARL_HD inline bool accept(World& world, int action) {
     // held Swim request before the next decision to preserve the offset.
     prepare_navigation(navigation);
     if (action != 0) {
-        const auto heading = action_direction(course, action);
+        const auto heading = candidate_heading(world, course, action);
         const auto choice = action == 1 ? Choice::TurnLeft : Choice::TurnRight;
         const physics::V goal{world.pose.com_m.x, current.goal_m.y, world.pose.com_m.z};
         navigation.legs[0] = {goal, heading, world.decision_control + decision_controls, choice};
@@ -277,9 +320,10 @@ CUDARL_HD inline void observe(const World& world, const pond_geometry_v1::Parame
     const auto& pose = world.pose;
     const auto course = decision_course(world);
     if (physics::norm(course) < .5f) return;
-    constexpr float ranges[] = {.04f, .085f, .13f};
+    const bool longer_horizon = world.horizon_mode == HorizonMode::Long;
+    const float ranges[]{.04f, longer_horizon ? .20f : .085f, longer_horizon ? .40f : .13f};
     for (int action = 0; action < actions; ++action) {
-        const auto direction = action_direction(course, action);
+        const auto direction = candidate_heading(world, course, action);
         for (int range = 0; range < 3; ++range) {
             features[3 * action + range] = lookahead_gap(world, pond, direction * ranges[range]);
         }
@@ -290,8 +334,8 @@ CUDARL_HD inline void observe(const World& world, const pond_geometry_v1::Parame
     for (int side = 0; side < 2; ++side) {
         const float angle = side == 0 ? pi / 4.f : -pi / 4.f;
         const auto ray = physics::axis_rotation({0, 1, 0}, angle).rotate(course);
-        features[9 + 2 * side] = lookahead_gap(world, pond, ray * .055f);
-        features[10 + 2 * side] = lookahead_gap(world, pond, ray * .115f);
+        features[9 + 2 * side] = lookahead_gap(world, pond, ray * (longer_horizon ? .15f : .055f));
+        features[10 + 2 * side] = lookahead_gap(world, pond, ray * (longer_horizon ? .35f : .115f));
     }
     features[13] = physics::clamp(world.gap_m / .05f, 0.f, 1.f);
     features[14] = pose.com_m.x / static_cast<float>(pond.water_radius_x_m);
@@ -375,8 +419,14 @@ CUDARL_HD inline bool frozen_targets(World& world, const float* gait_weights, co
         const auto course = turn_course(motion, world.pose.com_m, steering_history_controls);
         const auto facing = body.orientation.rotate({1.f, 0.f, 0.f});
         const auto measured = physics::norm(course) >= .0015f ? course : facing;
+        float course_error = physics::clamp(yaw_offset_error(measured, heading) / yaw_offset_error_scale, -4.f, 4.f);
+        if (world.motor_feedback_mode == MotorFeedbackMode::WholeBeat) {
+            const auto sample = world.motor_course.sample();
+            course_error = sample.reliable ? physics::clamp(yaw_offset_error(sample.velocity_m_s,
+                heading) / yaw_offset_error_scale, -4.f, 4.f) : 0.f;
+        }
         const float features[]{
-            physics::clamp(yaw_offset_error(measured, heading) / yaw_offset_error_scale, -4.f, 4.f),
+            course_error,
             physics::clamp(yaw_offset_error(facing, heading) / yaw_offset_error_scale, -4.f, 4.f),
             world.applied_offset / yaw_offset_limit,
             physics::clamp(body.velocity[4] / .5f, -3.f, 3.f)
@@ -394,7 +444,9 @@ struct TrackControl {
 
     CUDARL_HD void operator()(const Snapshot& pose) {
         world.pose = pose;
-        world.beats.add(world.navigation.motion.body.velocity[6], sample++, pose.com_m);
+        const float rate = world.navigation.motion.body.velocity[6];
+        world.beats.add(rate, sample, pose.com_m);
+        world.motor_course.add_substep(rate, sample++, pose.com_m);
     }
 };
 
@@ -446,6 +498,7 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE Result advance(World& world, const float* gait_
         }
 
         ++result.controls;
+        world.motor_course.add_control(world.pose.com_m);
         const auto movement = horizontal(world.pose.com_m - start);
         const float speed = physics::norm(turn_course(motion, world.pose.com_m,
             steering_history_controls)) / launch_course_window_s;

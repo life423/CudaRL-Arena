@@ -85,7 +85,7 @@ struct IgnoreTurnSubstep {
 template <class ObserveSubstep = IgnoreTurnSubstep>
 CUDARL_HD CUDARL_DEVICE_NOINLINE TurnStep step_turn_control(
     TurnWorld& world, const float (&targets)[motor_outputs], const pond_geometry_v1::Parameters& pond,
-    ObserveSubstep observe_substep = {}) {
+    ObserveSubstep observe_substep = {}, Material material = Material::Baseline) {
     TurnStep result;
     auto pose = snapshot(world.body);
     observe_substep(pose);
@@ -96,7 +96,7 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE TurnStep step_turn_control(
     for (int i = 0; i < turn_substeps_per_control; ++i) {
         ++result.attempted_substeps;
         StepInfo info;
-        if (!step(world.body, targets, motor_substep_s, info)) {
+        if (!step(world.body, targets, motor_substep_s, info, {}, {}, material)) {
             result.fault = 1;
             return result;
         }

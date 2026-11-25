@@ -26,17 +26,29 @@ build; current-capable swimming is not yet qualified.
 ## Current state
 
 **Open Tadpole Pond | Flexible Tail in Godot Project Manager and click Run.**
-In **Live pond**, press **Play**, then use **Left 15°** and **Right 15°** to
-request a turn. The motor measures two complete tail beats before issuing a
-queued request. **P** plays or pauses and **Q / E** request left or right.
+In **Live pond**, press **Explore pond**. The saved neural chooser selects its
+own turn rate and speed, with the frozen motor producing physical swimming.
+**P** plays or pauses; **Restart** returns to the initial state. **Details**
+contains the preserved **Manual turns · Original motor** mode with Q / E turns.
 **Pond view**, **Zoom to tadpole** and the zoom controls adjust the camera.
 **Recordings** opens the saved swimming, turning and station-holding clips.
 
-The live project loads the frozen fitted gait and update-eight yaw offset.
-Both directions passed continuous three-turn sequences and local bank-turn
-checks. The latest chooser completed four further CUDA PPO updates, then
-failed all 12 bank-clearance tests. Autonomous navigation remains unfinished.
-[Latest results](docs/AI_STATUS.md)
+The live project now loads reliable-turn chooser88 and frozen rate-response
+motor88. This pair passes12/12 two-minute pond cases and4/4 five-minute endurance
+cases with zero clearance stops or resets. Godot's native extension reproduces
+all3750 sampled states of a qualified five-minute trace exactly. The original
+motor and offset remain unchanged and accessible in Details.
+
+Chooser training used1,024 CUDA worlds,128 PPO updates and a bank-approach
+curriculum; it is complete and no background learner runs in the viewer.
+These finite calm-pond results do not guarantee infinite survival, complete
+pond coverage, other depths or currents. See [qualification and adoption](assets/research-evidence/pond-flexible-tail-reliable-chooser-v1/README.md)
+and [current AI status](docs/AI_STATUS.md). Earlier programs and their failures
+remain preserved in the research archive.
+
+Use the [native PPO session workflow](tools/pond-flexible-tail-chooser/README.md)
+for training and full-state resume. The earlier short study launchers retain
+their closed experiment protocols.
 
 The native extension builds and stages with the
 [flexible-tail build target](tools/pond-flexible-tail-live/README.md).

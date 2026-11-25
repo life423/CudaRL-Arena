@@ -11,6 +11,16 @@ constexpr float length_m = .052f, ds = length_m / stations;
 constexpr float pi = 3.14159265358979323846f;
 constexpr float body_density = 1000.f, young_modulus_Pa = 70000.f, relaxation_s = .02f;
 
+// Explicit experimental material variant. Shape, density, actuator authority
+// and integration are unchanged. The default preserves the original material.
+enum class Material : uint32_t { Baseline = 0, YawHalfStiffness = 1 };
+CUDARL_HD constexpr bool valid_material(Material material) {
+    return material == Material::Baseline || material == Material::YawHalfStiffness;
+}
+CUDARL_HD constexpr double yaw_stiffness_multiplier(Material material) {
+    return material == Material::YawHalfStiffness ? .5 : 1.;
+}
+
 struct Geometry {
     p::Link body[1 + stations];
     p::V spine[1 + stations];
@@ -37,8 +47,11 @@ CUDARL_HD constexpr float bend_stiffness() {
     }
     return young_modulus_Pa*sum/(stations*length_m);
 }
-CUDARL_HD inline double elastic_energy(const p::BodyState& state) {
-    return .5*double(bend_stiffness())*(double(state.angle[2])*state.angle[2]+double(state.angle[3])*state.angle[3]);
+CUDARL_HD inline double elastic_energy(const p::BodyState& state, Material material = Material::Baseline) {
+    if (material == Material::Baseline)
+        return .5*double(bend_stiffness())*(double(state.angle[2])*state.angle[2]+double(state.angle[3])*state.angle[3]);
+    return .5*double(bend_stiffness())*(yaw_stiffness_multiplier(material)*double(state.angle[2])*state.angle[2]
+        +double(state.angle[3])*state.angle[3]);
 }
 
 // Keep the large device functions separate to avoid expanding all sections and
@@ -161,11 +174,11 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE void assemble(const p::BodyState& s,p::Paramete
 // A null target disconnects both root motors. Only passive material response
 // and the external fluid remain. No downstream joint target is constructed.
 CUDARL_HD CUDARL_DEVICE_NOINLINE bool step(p::BodyState& body,const float* root_targets_rad,float h,StepInfo& info,
-                            p::Parameters fluid={},p::V current_m_s={}) {
+                            p::Parameters fluid={},p::V current_m_s={},Material material=Material::Baseline) {
     info={};
     if(!p::finite_body(body)||!(h>0&&h<=.005001f)||!p::finite_vector(current_m_s)
        ||!p::finite_number(fluid.density)||!p::finite_number(fluid.viscosity)||!p::finite_number(fluid.gravity)
-       ||fluid.density<0||fluid.viscosity<0||fluid.gravity<0) return false;
+       ||fluid.density<0||fluid.viscosity<0||fluid.gravity<0||!valid_material(material)) return false;
     for(int j=0;j<2;++j) {
         if(fabsf(body.angle[j])>p::limit) return false;
         if(root_targets_rad&&(!p::finite_number(root_targets_rad[j])||fabsf(root_targets_rad[j])>p::limit))return false;
@@ -175,7 +188,9 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool step(p::BodyState& body,const float* root_
     movement_model::discrete_system(sys,body,h,A,rhs);
     constexpr double stiffness=bend_stiffness(), damping=stiffness*relaxation_s;
     for(int j=0;j<2;++j) {
-        const int k=8+j; A[k][k]+=h*(damping+h*stiffness); rhs[k]-=h*stiffness*body.angle[2+j];
+        const double material_scale=j==0?yaw_stiffness_multiplier(material):1.;
+        const double axis_stiffness=stiffness*material_scale, axis_damping=damping*material_scale;
+        const int k=8+j; A[k][k]+=h*(axis_damping+h*axis_stiffness); rhs[k]-=h*axis_stiffness*body.angle[2+j];
     }
     if(root_targets_rad) {
         constexpr double freq=2*pi*3,zeta=.9;
@@ -222,10 +237,11 @@ CUDARL_HD CUDARL_DEVICE_NOINLINE bool step(p::BodyState& body,const float* root_
         if(fabsf(candidate.angle[j])>p::limit)return false;
         const double work=h*info.torque_Nm[j]*next[6+j];
         info.root_work_J+=work; candidate.work+=float(fmax(0.,work));
-        info.bend_loss_J+=h*damping*next[8+j]*next[8+j];
+        const double material_scale=j==0?yaw_stiffness_multiplier(material):1.;
+        info.bend_loss_J+=h*(damping*material_scale)*next[8+j]*next[8+j];
     }
     if(!p::finite_body(candidate))return false;
-    info.elastic_energy_J=elastic_energy(candidate); info.kinetic_energy_J=kinetic_energy(candidate);
+    info.elastic_energy_J=elastic_energy(candidate,material); info.kinetic_energy_J=kinetic_energy(candidate);
     if(!::isfinite(info.elastic_energy_J)||!::isfinite(info.kinetic_energy_J))return false;
     body=candidate; return true;
 }

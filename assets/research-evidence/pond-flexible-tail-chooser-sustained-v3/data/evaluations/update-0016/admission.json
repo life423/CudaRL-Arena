@@ -1,0 +1,31 @@
+{
+  "summary": {
+    "pass": false,
+    "steering_mode": "held-heading",
+    "steering_request_schema": 1,
+    "diagnostic_passes": 1,
+    "diagnostic_cases": 12,
+    "endurance_passes": 0,
+    "endurance_attempts": 0,
+    "clearance_stops": 11,
+    "other_native_faults": 0,
+    "reachable_50mm_cells_estimate": 345,
+    "diagnostic_visited_cells": 148,
+    "diagnostic_coverage_fraction": 0.428985507,
+    "endurance_visited_cells": 0,
+    "attempted_substeps": 653245,
+    "accepted_substeps": 653234,
+    "substep_cap": 2112000,
+    "resets": 0,
+    "optimizer_updates": 0,
+    "internal_elapsed_s": 0.6485324
+  },
+  "godot_published": false,
+  "actor": {
+    "steering_mode": "held-heading",
+    "sha256": "A1B26D3ACFF7194A79C5DAE54B6025C5E90C334D40C669661C7C08EAA2D67650",
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-sustained-v3\\training\\actor-16.bin",
+    "update": 16
+  },
+  "qualified": false
+}

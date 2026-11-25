@@ -3,6 +3,7 @@
 #include "habitat_config.h"
 #include "nn/mlp_cpu.h"
 #include "rl/flexible_tail_yaw_offset.h"
+#include "rl/flexible_tail_rate_chooser.h"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
@@ -111,6 +112,11 @@ struct FlexibleTailLive::Impl {
     int turn_count = 0;
     int fault = 0;
     bool loaded = false;
+    bool autonomous = false;
+    std::unique_ptr<nn::CpuMlp<float>> chooser;
+    tail::rate_chooser::World pond{};
+    tail::steering::Kind motor_kind = tail::steering::Kind::ProgramNonlinear;
+    std::vector<float> fitted, packed_motor;
     std::string error;
 
     void observe(const tail::Snapshot& accepted_pose, int sample) {
@@ -151,6 +157,7 @@ FlexibleTailLive::~FlexibleTailLive() = default;
 
 void FlexibleTailLive::_bind_methods() {
     ClassDB::bind_method(D_METHOD("load_motor", "gait_path", "offset_path", "starts_path"), &FlexibleTailLive::load_motor);
+    ClassDB::bind_method(D_METHOD("load_autonomous", "gait_path", "motor_path", "chooser_path", "starts_path"), &FlexibleTailLive::load_autonomous);
     ClassDB::bind_method(D_METHOD("snapshot"), &FlexibleTailLive::snapshot);
     ClassDB::bind_method(D_METHOD("step_control"), &FlexibleTailLive::step_control);
     ClassDB::bind_method(D_METHOD("request_turn", "direction"), &FlexibleTailLive::request_turn);
@@ -161,6 +168,7 @@ void FlexibleTailLive::_bind_methods() {
 bool FlexibleTailLive::load_motor(const String& gait_path, const String& offset_path, const String& starts_path) {
     auto& state = *impl_;
     state.loaded = false;
+    state.autonomous = false;
     try {
         auto gait = tail::read_navigation_weights(gait_path.utf8().get_data(), tail::NavigationMode::Gait);
         auto offset = tail::read_yaw_offset_weights(offset_path.utf8().get_data());
@@ -183,9 +191,42 @@ bool FlexibleTailLive::load_motor(const String& gait_path, const String& offset_
     }
 }
 
+bool FlexibleTailLive::load_autonomous(const String& gait_path, const String& motor_path,
+    const String& chooser_path, const String& starts_path) {
+    auto& state = *impl_; state.loaded = false;
+    try {
+        auto fitted = tail::read_navigation_weights(gait_path.utf8().get_data(), tail::NavigationMode::Gait);
+        auto motor = tail::steering::read_model(motor_path.utf8().get_data());
+        auto policy = tail::rate_chooser::read_weights(chooser_path.utf8().get_data());
+        const auto starts = tail::read_navigation_worlds(starts_path.utf8().get_data());
+        tail::fast::validate_frozen_gait(fitted); tail::steering::validate_model(motor);
+        if (starts.size() != 12 || motor.material != tail::Material::Baseline)
+            throw std::runtime_error("Qualified pond model/start binding differs.");
+        state.chooser = std::make_unique<nn::CpuMlp<float>>(tail::rate_chooser::actor_spec());
+        state.chooser->params() = std::move(policy);
+        state.fitted = std::move(fitted); state.packed_motor = motor.weights;
+        state.packed_motor.insert(state.packed_motor.end(), motor.frozen_skip.begin(), motor.frozen_skip.end());
+        state.motor_kind = motor.kind; state.start = starts.front();
+        state.autonomous = true; state.loaded = true;
+        return reset();
+    } catch (const std::exception& error) { state.error = error.what(); return false; }
+}
+
 bool FlexibleTailLive::reset() {
     auto& state = *impl_;
     if (!state.loaded) return false;
+    if (state.autonomous) {
+        tail::steering::Config config{}; config.study = tail::steering::Study::Rate;
+        const auto original_com = tail::snapshot(state.start.motion.body).com_m;
+        tail::rate_chooser::initialize(state.pond, state.start, {original_com.x, 0.f, original_com.z}, 0.f, state.motor_kind, config);
+        state.pose = state.pond.pose;
+        const auto& body = state.pond.motor.navigation.motion.body;
+        state.render_position = body.position * physics::scale; state.render_orientation = body.orientation;
+        state.accepted_substeps = 0; state.fault = state.pond.fault;
+        state.clearance_m = float(tail::submerged_gap_m(larger_pond, body, state.pose));
+        state.rolling_speed_mm_s = 0; state.queued_direction = 0; state.error.clear();
+        return state.fault == 0;
+    }
     state.world = state.start;
     state.world.legs[0].end_control = std::numeric_limits<int>::max();
     tail::prepare_navigation(state.world);
@@ -209,7 +250,7 @@ bool FlexibleTailLive::reset() {
 
 bool FlexibleTailLive::request_turn(int direction) {
     auto& state = *impl_;
-    if (!state.loaded || state.fault || state.queued_direction || (direction != 1 && direction != -1)) return false;
+    if (!state.loaded || state.autonomous || state.fault || state.queued_direction || (direction != 1 && direction != -1)) return false;
     state.queued_direction = direction;
     return true;
 }
@@ -217,6 +258,31 @@ bool FlexibleTailLive::request_turn(int direction) {
 bool FlexibleTailLive::step_control() {
     auto& state = *impl_;
     if (!state.loaded || state.fault) return false;
+    if (state.autonomous) {
+        if (tail::rate_chooser::ready(state.pond)) {
+            float obs[tail::rate_chooser::inputs];
+            tail::rate_chooser::observe(state.pond, larger_pond, obs);
+            state.chooser->forward(obs, 1);
+            const auto* logits = state.chooser->output();
+            int choice = 0;
+            for (int i = 0; i < tail::rate_chooser::actions; ++i) {
+                if (!physics::finite_number(logits[i])) {state.fault = 3; state.error = "Saved chooser returned invalid output."; return false;}
+                if (logits[i] > logits[choice]) choice = i;
+            }
+            if (!tail::rate_chooser::accept(state.pond, choice)) {state.fault = 6; state.error = "Native chooser rejected a request."; return false;}
+        }
+        // Exactly the evaluator's80ms held motor-action cadence. Changing the
+        // renderer's frame rate must never resample the motor at20ms instead.
+        const auto step = tail::rate_chooser::advance(state.pond, state.fitted.data(), state.packed_motor.data(), larger_pond, 4);
+        state.accepted_substeps += step.accepted_substeps; state.fault = step.fault;
+        state.pose = state.pond.pose;
+        const auto& body = state.pond.motor.navigation.motion.body;
+        state.render_position = body.position * physics::scale; state.render_orientation = body.orientation;
+        state.clearance_m = state.pond.min_gap_m;
+        state.rolling_speed_mm_s = 1000.f * physics::norm(tail::fast::feedback_sample(state.pond.motor).velocity_m_s);
+        if (state.fault) {state.error = "The native whole-body clearance or physics guard stopped the swimmer."; return false;}
+        return true;
+    }
     auto& world = state.world;
     const int controls = world.motion.controls;
     if (state.accepted_substeps >= std::numeric_limits<int>::max() - tail::turn_substeps_per_control) {
@@ -280,13 +346,21 @@ Dictionary FlexibleTailLive::snapshot() const {
     snapshot["com_velocity_m_s"] = point(pose.com_velocity_m_s);
     snapshot["rolling_speed_mm_s"] = state.rolling_speed_mm_s;
     snapshot["tilt_deg"] = pose.tilt_deg;
-    snapshot["depth_error_mm"] = 1000.f * std::fabs(state.world.motion.request.origin_m.y - pose.com_m.y);
+    const auto& motion = state.autonomous ? state.pond.motor.navigation.motion : state.world.motion;
+    snapshot["depth_error_mm"] = 1000.f * std::fabs(motion.request.origin_m.y - pose.com_m.y);
     snapshot["clearance_mm"] = state.clearance_m > -.99f ? Variant(1000.f * state.clearance_m) : Variant{};
-    snapshot["heading"] = point(state.world.motion.request.heading);
-    snapshot["motion"] = motion_label(state.world.motion.request.choice);
+    snapshot["heading"] = point(motion.request.heading);
+    const float rate = state.autonomous ? state.pond.config.desired_course_rate_rad_s : 0.f;
+    snapshot["motion"] = state.autonomous ? (rate > 0 ? "turn_left" : rate < 0 ? "turn_right" : "swim") : motion_label(motion.request.choice);
+    snapshot["autonomous"] = state.autonomous;
+    snapshot["control_s"] = state.autonomous ? .08 : .02;
+    snapshot["requested_rate_deg_s"] = rate * 180.f / tail::pi;
+    snapshot["requested_speed_mm_s"] = state.autonomous ? state.pond.config.target_speed_m_s * 1000.f : 8.f;
+    snapshot["visited_cells"] = state.autonomous ? state.pond.visits : 0;
+    snapshot["chooser_decisions"] = state.autonomous ? state.pond.decision_count : 0;
     snapshot["queued_direction"] = state.queued_direction;
     snapshot["fault"] = state.fault;
-    snapshot["turn_count"] = state.turn_count;
+    snapshot["turn_count"] = state.autonomous ? state.pond.turns : state.turn_count;
     return snapshot;
 }
 

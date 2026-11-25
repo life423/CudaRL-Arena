@@ -1,0 +1,27 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "7CD9CA86D32F74C5EA17E43CE93B28A7A078F480F3D26A9E23A3A63C30EEB6AA",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\chooser-session-build\\Release\\pond_flexible_tail_chooser_session.exe"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "792B4F3B28E349C277C2B78454C00B316EEB793E6F0AACF0046CF3AF83690F86",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-chooser\\train.cu"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0B03C9E4EDE902EC3A0DF024D3D88DA9A5D9710A771BD8FCB60951C9F42A75ED",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-chooser\\sustained_session.cuh"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "5246E75FCDA7461BF1EC35F441E9B9F463CD982CE7BE51F613E97B8F2965E743",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\src\\rl\\flexible_tail_chooser.h"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "78367ABFD3557C35F99B62C7AB0544EFAF10DB45C288C794AA0C032013968743",
+    "Path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tools\\pond-flexible-tail-chooser\\SESSION_PROTOCOL.md"
+  }
+]

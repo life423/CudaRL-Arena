@@ -1,4 +1,110 @@
-# AI status — November 24, 2026
+# AI status — November 25, 2026
+
+**Reliable-turn chooser88 passes the pond suite and is adopted in Godot.**
+The separately trained15-action chooser uses frozen rate-response motor88 and
+competence-based bank starts. It completed128 CUDA PPO updates/1,048,576 macro
+transitions on1,024 worlds in173.815s. Selected88 passes12/12 two-minute pond
+cases and4/4 five-minute endurance cases, zero guard stops/resets. Final128
+regresses7/12 and is not adopted. Godot now offers Explore pond with this exact
+pair; its five-minute native replay matches3750 sampled COM/request states
+exactly. All50 rendered UI checks pass across phone/tablet/desktop/landscape.
+The original motor remains accessible in Details and its weights stay unchanged.
+No trainer remains active. This finite result does not guarantee infinity,
+whole-pond coverage, currents or other depths.
+[Results and deployment evidence](../assets/research-evidence/pond-flexible-tail-reliable-chooser-v1/README.md)
+
+Earlier results below are historical; this adoption is current.
+
+**The separate rate-response session is closed; bank avoidance is not fixed.**
+Native CUDA PPO completed128 updates on1,024 worlds in103.435s. Selected88
+improves rate checks4/12→8/12 and mean course lag15.12°→9.48°, retaining12/12
+swims including8 starts from rest and all gentle/30° main-stroke keys. Actual
+rates at requested±8°/s improve−2.95/+5.18→−3.94/+6.90°/s, but all fast probes
+still fail. The unchanged chooser scores7/12 pond cases with five clearance
+guard stops, versus the protected motor's archived8/12. No endurance ran.
+Godot stays on its working motor; no new chooser training or adoption occurred.
+[Rate-response results](../assets/research-evidence/pond-flexible-tail-rate-response-v1/README.md)
+
+**The authorized seven-option program is complete and stopped. Bank avoidance remains unqualified.**
+The hidden16 motor completes8/8 actual60° movement cases (1.08° mean course
+error,13.82mm/s), while the matched passive-frequency gate still fails. Selected
+motors retain12/12 straight/from-rest cases and all8 gentle+8 30° main-stroke
+keys. No selected motor qualifies90°. The1,024-world bank chooser completed63
+new updates; its strongest checkpoint16 passes8/12 two-minute pond cases with
+four clearance guard stops. No endurance cases ran. Half yaw stiffness passes
+physics but reduces frozen-chooser performance to4/12. Godot's original live
+bundle stays protected; station holding was not physically retested. Full
+checkpoint/state audits, failed diagnostics and the interrupted chooser's
+conservative budget charge are preserved. No extra experiment or background
+trainer remains. [Seven-option results](SEVEN_OPTIONS_RESULTS_2026-11-24.md) ·
+[Finite protocol](../tools/pond-flexible-tail-steering/SEVEN_STAGE_PROTOCOL.md)
+
+The entries below preserve earlier studies; the result above is current.
+
+**Mixed-angle PPO reaches eight complete 30-degree turns, with retention unfinished.**
+The full-state continuation completed128 new updates with1,024 CUDA worlds in
+104.741seconds. Checkpoint120 passes all8 left/right30-degree cases at12.85–13.28
+mm/s, but only4/8 gentle rhythm keys. Checkpoint88 passes7/8 gentle and7/8 at30;
+checkpoint56 retains8/8 gentle with5/8 at30. All12 straight/from-rest cases pass.
+Every15/30 motion/posture case passes; remaining complete-key misses concern
+passive-tail frequency only. No checkpoint meets the combined8+8 gate and no
+60/90 case passes. Full actor/critic/Adam/body/history/RNG state was imported
+exactly from phase-v4 update112, with only fresh study counters rebased. All129
+saved-state audits pass and each sign/angle received11,008 fresh starts.
+No candidate is adopted in Godot and no further training has started.
+[Mixed-angle results and evidence](../assets/research-evidence/pond-flexible-tail-phase-mixed-v5/README.md)
+
+**Phase-aware steering improves 30-degree movement but is not yet qualified.**
+The separate candidate completed 128 native CUDA PPO updates with 1,024 worlds
+in 99.663 seconds. At update 112, six of eight 30-degree cases passed the full
+gate; at update 128, all eight met movement/posture requirements but only five
+passed the full rhythm gate. All 12 straight/from-rest cases stayed exact.
+No checkpoint combined all eight 30-degree and all eight gentle-turn passes;
+no 60/90-degree case passed. The nine new phase/speed weights learned while the
+four original steering coefficients, fitted gait and physics stayed frozen.
+The shared policy module binds CPU/CUDA observation, parameter masks and the
+explicit new checkpoint schema. Initial all-angle commands and full-state resume
+passed equivalence checks. The working Godot motor remains active. Next proposed
+work is mixed 15/30-degree practice with rhythm retention, not another run yet.
+[Phase-aware results and evidence](../assets/research-evidence/pond-flexible-tail-phase-aware-v4/README.md)
+
+**The course-error input now distinguishes signed turns through90 degrees.**
+Its separate full-angle candidate completed128 GPU PPO updates with1,024
+worlds in99.578 seconds. All12 swimming/from-rest cases remained intact;
+checkpoints24/72/80 retained all eight gentle-turn complete keys. No checkpoint
+passed a30,60 or90-degree case. The copied weight-scale transfer increased
+large-angle steering before PPO and weakened propulsion; learning partially
+recovered it but did not beat protected motor56. The original live bundle and
+motor56 remain unchanged; no candidate was adopted.
+[Full-angle correction, measured results and preserved evidence](../assets/research-evidence/pond-flexible-tail-course-angle90-v3/README.md)
+
+**Whole-beat feedback and the conditional bank session are complete.**
+Measured feedback residual fell 3.898°→0.220° (94.4%). The 128-update motor
+session took 99.456 seconds; checkpoint 56 retained all eight gentle-turn and
+12 swimming/from-rest cases. The subsequent 1,024-world chooser completed
+64 updates in 522.101 seconds. Pond cases improved from 6/12 with the preserved
+chooser/new motor to 8/12 after longer sensing and learning. Four clearance
+failures remain; zero endurance cases ran. No autonomous candidate qualified
+and Godot's original live bundle is unchanged. Further sharp-turn training is
+deferred for the user's requested brainstorm.
+[Motor/feedback results](../assets/research-evidence/pond-flexible-tail-whole-beat-steering-v2/README.md) · [Pond-stage results](../assets/research-evidence/pond-flexible-tail-whole-beat-pond-v2/README.md)
+
+**The faster-steering session completed 128 CUDA PPO updates in 97.963 seconds.**
+It used 1,024 worlds and 8,388,608 sampled actuator decisions, with exact full
+resume and all 12 swimming/from-rest checks retained. The final candidate's
+60° requests produced 30.90° mean COM course change versus the original's
+24.28° over the same final turn window, but no 60° case passed. Update eight
+passed two rightward 30° cases; no candidate preserved all complete movement
+and rhythm pass keys. The original live motor remains active in Godot.
+[Results, stroke/feedback limitations and full accounting](../assets/research-evidence/pond-flexible-tail-fast-steering-v1/README.md)
+
+**The sustained PPO workflow completed its first 1,024-world session.**
+All 64 CUDA updates completed in 562.309 seconds, collecting 524,288
+navigation decisions. Full actor, critic, Adam, world and sampling state
+was saved after every update. Exact resume verification and a separate
+process restore passed. The final policy passed 2/12 navigation cases,
+with 3/12 at update 56. No autonomous candidate qualified for Godot.
+[Session results and remaining control limits](../assets/research-evidence/pond-flexible-tail-chooser-sustained-v3/README.md)
 
 **The flexible-tail Godot entry is ready for live swimming and manual turns.**
 Project Manager's **Tadpole Pond | Flexible Tail** opens the saved

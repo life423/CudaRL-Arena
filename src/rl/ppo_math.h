@@ -10,7 +10,7 @@
 // The per-element math of PPO, shared by the CUDA kernels and the tests.
 namespace cudarl::rl {
 
-constexpr int kMaxActions = 8;
+constexpr int kMaxActions = 16;
 
 // --- Categorical policy -------------------------------------------------------
 

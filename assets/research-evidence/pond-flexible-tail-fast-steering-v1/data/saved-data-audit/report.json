@@ -1,0 +1,1281 @@
+{
+  "schema": 1,
+  "read_only_saved_data_audit": true,
+  "new_physics_steps": 0,
+  "new_optimizer_updates": 0,
+  "pass": true,
+  "checkpoints_checked": 129,
+  "actor_exports_checked": 129,
+  "full_checksum_verified": true,
+  "worlds_per_checkpoint": 1024,
+  "actor_inputs": 31,
+  "active_actor_inputs": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "actor_parameters": 32,
+  "critic_inputs": 36,
+  "critic_parameters": 1217,
+  "initial_actor_exact_original": true,
+  "inactive_actor_weights_and_moments_exact_zero": true,
+  "latest_exact_final_checkpoint": true,
+  "resume_full_bytes_equal": true,
+  "resume_receipt": {
+    "pass": true,
+    "worlds": 1024,
+    "logical_updates": 2,
+    "physical_updates_executed": 3,
+    "sampled_actions_executed": 196608,
+    "actual_attempted_substeps": 12582912,
+    "actual_accepted_substeps": 12582912,
+    "actual_actor_steps": 192,
+    "actual_critic_steps": 192,
+    "compared": [
+      "actor",
+      "critic",
+      "actor_adam",
+      "critic_adam",
+      "native_worlds",
+      "servo_and_trim_state",
+      "course_history",
+      "episode_rng_positions",
+      "counters"
+    ],
+    "uninterrupted_checksum": 16815806109882751311,
+    "resumed_checksum": 16815806109882751311,
+    "wall_s": 2.61536
+  },
+  "metrics_match_saved_counters": true,
+  "final_updates": 128,
+  "logical_samples": 8388608,
+  "expected_samples": 8388608,
+  "final_actor_adam_steps": 8192,
+  "final_critic_adam_steps": 8192,
+  "attempted_substeps": 535461888,
+  "accepted_substeps": 535461888,
+  "independently_derived_substeps": 535461888,
+  "episode_starts": 45056,
+  "episode_horizons": 44032,
+  "left_starts": 22528,
+  "right_starts": 22528,
+  "clearance_stops": 0,
+  "posture_stops": 0,
+  "initial_coefficients": [
+    -0.08764146,
+    0.008203539,
+    0.043857753,
+    0.030495565
+  ],
+  "final_coefficients": [
+    -0.08417093,
+    -0.097033985,
+    0.00013110516,
+    -0.036190894
+  ],
+  "execution_wall_s": 97.9634597,
+  "training_samples_per_s": 85629.96882397775,
+  "source_hash_mismatches": [],
+  "protected_inputs": [
+    {
+      "path": "build/flexible-tail/yaw-beat-v1/capture/eval-turn-worlds.bin",
+      "unchanged": true,
+      "sha256": "4902A5050A09101D8E7115EE43DDF99F3288B99EF539A525548A5D3FC727BF1E"
+    },
+    {
+      "path": "build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin",
+      "unchanged": true,
+      "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+      "unchanged": true,
+      "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+      "unchanged": true,
+      "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/yaw-offset-update-8.bin",
+      "unchanged": true,
+      "sha256": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354"
+    },
+    {
+      "path": "flexible-tail-preview/habitat.json",
+      "unchanged": true,
+      "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+    },
+    {
+      "path": "src/physics/flexible_tail.h",
+      "unchanged": true,
+      "sha256": "B6878791EC1A3CC68112866DE8C105390A43AC143A8EDCBA9EA2BF2430CCB226"
+    }
+  ],
+  "errors": [],
+  "checkpoint_checks": [
+    {
+      "update": 0,
+      "checksum": "12953677225279556185",
+      "actor_adam_steps": 0,
+      "critic_adam_steps": 0,
+      "actions": 0,
+      "attempted": 0,
+      "accepted": 0
+    },
+    {
+      "update": 1,
+      "checksum": "15520530929699535069",
+      "actor_adam_steps": 64,
+      "critic_adam_steps": 64,
+      "actions": 65536,
+      "attempted": 4194304,
+      "accepted": 4194304
+    },
+    {
+      "update": 2,
+      "checksum": "16815806109882751311",
+      "actor_adam_steps": 128,
+      "critic_adam_steps": 128,
+      "actions": 131072,
+      "attempted": 8388608,
+      "accepted": 8388608
+    },
+    {
+      "update": 3,
+      "checksum": "266929411667445824",
+      "actor_adam_steps": 192,
+      "critic_adam_steps": 192,
+      "actions": 196608,
+      "attempted": 12550144,
+      "accepted": 12550144
+    },
+    {
+      "update": 4,
+      "checksum": "740158981874330417",
+      "actor_adam_steps": 256,
+      "critic_adam_steps": 256,
+      "actions": 262144,
+      "attempted": 16744448,
+      "accepted": 16744448
+    },
+    {
+      "update": 5,
+      "checksum": "7838263474833573910",
+      "actor_adam_steps": 320,
+      "critic_adam_steps": 320,
+      "actions": 327680,
+      "attempted": 20938752,
+      "accepted": 20938752
+    },
+    {
+      "update": 6,
+      "checksum": "6304453955125429821",
+      "actor_adam_steps": 384,
+      "critic_adam_steps": 384,
+      "actions": 393216,
+      "attempted": 25100288,
+      "accepted": 25100288
+    },
+    {
+      "update": 7,
+      "checksum": "10515533115537381033",
+      "actor_adam_steps": 448,
+      "critic_adam_steps": 448,
+      "actions": 458752,
+      "attempted": 29294592,
+      "accepted": 29294592
+    },
+    {
+      "update": 8,
+      "checksum": "2266532481372243446",
+      "actor_adam_steps": 512,
+      "critic_adam_steps": 512,
+      "actions": 524288,
+      "attempted": 33488896,
+      "accepted": 33488896
+    },
+    {
+      "update": 9,
+      "checksum": "1165694005723017209",
+      "actor_adam_steps": 576,
+      "critic_adam_steps": 576,
+      "actions": 589824,
+      "attempted": 37650432,
+      "accepted": 37650432
+    },
+    {
+      "update": 10,
+      "checksum": "15493727579750857347",
+      "actor_adam_steps": 640,
+      "critic_adam_steps": 640,
+      "actions": 655360,
+      "attempted": 41844736,
+      "accepted": 41844736
+    },
+    {
+      "update": 11,
+      "checksum": "10127996087637868354",
+      "actor_adam_steps": 704,
+      "critic_adam_steps": 704,
+      "actions": 720896,
+      "attempted": 46039040,
+      "accepted": 46039040
+    },
+    {
+      "update": 12,
+      "checksum": "16855388871761298159",
+      "actor_adam_steps": 768,
+      "critic_adam_steps": 768,
+      "actions": 786432,
+      "attempted": 50200576,
+      "accepted": 50200576
+    },
+    {
+      "update": 13,
+      "checksum": "10636056417882170008",
+      "actor_adam_steps": 832,
+      "critic_adam_steps": 832,
+      "actions": 851968,
+      "attempted": 54394880,
+      "accepted": 54394880
+    },
+    {
+      "update": 14,
+      "checksum": "7778522356122112890",
+      "actor_adam_steps": 896,
+      "critic_adam_steps": 896,
+      "actions": 917504,
+      "attempted": 58589184,
+      "accepted": 58589184
+    },
+    {
+      "update": 15,
+      "checksum": "10065870673321333224",
+      "actor_adam_steps": 960,
+      "critic_adam_steps": 960,
+      "actions": 983040,
+      "attempted": 62750720,
+      "accepted": 62750720
+    },
+    {
+      "update": 16,
+      "checksum": "2978100898309844385",
+      "actor_adam_steps": 1024,
+      "critic_adam_steps": 1024,
+      "actions": 1048576,
+      "attempted": 66945024,
+      "accepted": 66945024
+    },
+    {
+      "update": 17,
+      "checksum": "12657669945081264315",
+      "actor_adam_steps": 1088,
+      "critic_adam_steps": 1088,
+      "actions": 1114112,
+      "attempted": 71139328,
+      "accepted": 71139328
+    },
+    {
+      "update": 18,
+      "checksum": "11377194853857868428",
+      "actor_adam_steps": 1152,
+      "critic_adam_steps": 1152,
+      "actions": 1179648,
+      "attempted": 75300864,
+      "accepted": 75300864
+    },
+    {
+      "update": 19,
+      "checksum": "6197593542535138944",
+      "actor_adam_steps": 1216,
+      "critic_adam_steps": 1216,
+      "actions": 1245184,
+      "attempted": 79495168,
+      "accepted": 79495168
+    },
+    {
+      "update": 20,
+      "checksum": "15509386873271161170",
+      "actor_adam_steps": 1280,
+      "critic_adam_steps": 1280,
+      "actions": 1310720,
+      "attempted": 83689472,
+      "accepted": 83689472
+    },
+    {
+      "update": 21,
+      "checksum": "14609718644466163352",
+      "actor_adam_steps": 1344,
+      "critic_adam_steps": 1344,
+      "actions": 1376256,
+      "attempted": 87851008,
+      "accepted": 87851008
+    },
+    {
+      "update": 22,
+      "checksum": "3152467453012763941",
+      "actor_adam_steps": 1408,
+      "critic_adam_steps": 1408,
+      "actions": 1441792,
+      "attempted": 92045312,
+      "accepted": 92045312
+    },
+    {
+      "update": 23,
+      "checksum": "10837503910753538144",
+      "actor_adam_steps": 1472,
+      "critic_adam_steps": 1472,
+      "actions": 1507328,
+      "attempted": 96239616,
+      "accepted": 96239616
+    },
+    {
+      "update": 24,
+      "checksum": "6770809702872047639",
+      "actor_adam_steps": 1536,
+      "critic_adam_steps": 1536,
+      "actions": 1572864,
+      "attempted": 100401152,
+      "accepted": 100401152
+    },
+    {
+      "update": 25,
+      "checksum": "571850869514110084",
+      "actor_adam_steps": 1600,
+      "critic_adam_steps": 1600,
+      "actions": 1638400,
+      "attempted": 104595456,
+      "accepted": 104595456
+    },
+    {
+      "update": 26,
+      "checksum": "6368177231434715167",
+      "actor_adam_steps": 1664,
+      "critic_adam_steps": 1664,
+      "actions": 1703936,
+      "attempted": 108789760,
+      "accepted": 108789760
+    },
+    {
+      "update": 27,
+      "checksum": "2780402701899378209",
+      "actor_adam_steps": 1728,
+      "critic_adam_steps": 1728,
+      "actions": 1769472,
+      "attempted": 112951296,
+      "accepted": 112951296
+    },
+    {
+      "update": 28,
+      "checksum": "13504420678633608932",
+      "actor_adam_steps": 1792,
+      "critic_adam_steps": 1792,
+      "actions": 1835008,
+      "attempted": 117145600,
+      "accepted": 117145600
+    },
+    {
+      "update": 29,
+      "checksum": "8807837938729438582",
+      "actor_adam_steps": 1856,
+      "critic_adam_steps": 1856,
+      "actions": 1900544,
+      "attempted": 121339904,
+      "accepted": 121339904
+    },
+    {
+      "update": 30,
+      "checksum": "17002724583920631151",
+      "actor_adam_steps": 1920,
+      "critic_adam_steps": 1920,
+      "actions": 1966080,
+      "attempted": 125501440,
+      "accepted": 125501440
+    },
+    {
+      "update": 31,
+      "checksum": "13663856637631179878",
+      "actor_adam_steps": 1984,
+      "critic_adam_steps": 1984,
+      "actions": 2031616,
+      "attempted": 129695744,
+      "accepted": 129695744
+    },
+    {
+      "update": 32,
+      "checksum": "8272927196786101836",
+      "actor_adam_steps": 2048,
+      "critic_adam_steps": 2048,
+      "actions": 2097152,
+      "attempted": 133890048,
+      "accepted": 133890048
+    },
+    {
+      "update": 33,
+      "checksum": "5117218020398670626",
+      "actor_adam_steps": 2112,
+      "critic_adam_steps": 2112,
+      "actions": 2162688,
+      "attempted": 138051584,
+      "accepted": 138051584
+    },
+    {
+      "update": 34,
+      "checksum": "11384297257200620428",
+      "actor_adam_steps": 2176,
+      "critic_adam_steps": 2176,
+      "actions": 2228224,
+      "attempted": 142245888,
+      "accepted": 142245888
+    },
+    {
+      "update": 35,
+      "checksum": "7598865249305113425",
+      "actor_adam_steps": 2240,
+      "critic_adam_steps": 2240,
+      "actions": 2293760,
+      "attempted": 146440192,
+      "accepted": 146440192
+    },
+    {
+      "update": 36,
+      "checksum": "1243350866114850591",
+      "actor_adam_steps": 2304,
+      "critic_adam_steps": 2304,
+      "actions": 2359296,
+      "attempted": 150601728,
+      "accepted": 150601728
+    },
+    {
+      "update": 37,
+      "checksum": "10767817556645401630",
+      "actor_adam_steps": 2368,
+      "critic_adam_steps": 2368,
+      "actions": 2424832,
+      "attempted": 154796032,
+      "accepted": 154796032
+    },
+    {
+      "update": 38,
+      "checksum": "152313584730957050",
+      "actor_adam_steps": 2432,
+      "critic_adam_steps": 2432,
+      "actions": 2490368,
+      "attempted": 158990336,
+      "accepted": 158990336
+    },
+    {
+      "update": 39,
+      "checksum": "9600124387366796733",
+      "actor_adam_steps": 2496,
+      "critic_adam_steps": 2496,
+      "actions": 2555904,
+      "attempted": 163151872,
+      "accepted": 163151872
+    },
+    {
+      "update": 40,
+      "checksum": "13689448414646288230",
+      "actor_adam_steps": 2560,
+      "critic_adam_steps": 2560,
+      "actions": 2621440,
+      "attempted": 167346176,
+      "accepted": 167346176
+    },
+    {
+      "update": 41,
+      "checksum": "5261624772416269797",
+      "actor_adam_steps": 2624,
+      "critic_adam_steps": 2624,
+      "actions": 2686976,
+      "attempted": 171540480,
+      "accepted": 171540480
+    },
+    {
+      "update": 42,
+      "checksum": "835807156729513319",
+      "actor_adam_steps": 2688,
+      "critic_adam_steps": 2688,
+      "actions": 2752512,
+      "attempted": 175702016,
+      "accepted": 175702016
+    },
+    {
+      "update": 43,
+      "checksum": "6768471862377509207",
+      "actor_adam_steps": 2752,
+      "critic_adam_steps": 2752,
+      "actions": 2818048,
+      "attempted": 179896320,
+      "accepted": 179896320
+    },
+    {
+      "update": 44,
+      "checksum": "13328017964478745885",
+      "actor_adam_steps": 2816,
+      "critic_adam_steps": 2816,
+      "actions": 2883584,
+      "attempted": 184090624,
+      "accepted": 184090624
+    },
+    {
+      "update": 45,
+      "checksum": "6276059830349819578",
+      "actor_adam_steps": 2880,
+      "critic_adam_steps": 2880,
+      "actions": 2949120,
+      "attempted": 188252160,
+      "accepted": 188252160
+    },
+    {
+      "update": 46,
+      "checksum": "11570837240662705962",
+      "actor_adam_steps": 2944,
+      "critic_adam_steps": 2944,
+      "actions": 3014656,
+      "attempted": 192446464,
+      "accepted": 192446464
+    },
+    {
+      "update": 47,
+      "checksum": "11485442434310880889",
+      "actor_adam_steps": 3008,
+      "critic_adam_steps": 3008,
+      "actions": 3080192,
+      "attempted": 196608000,
+      "accepted": 196608000
+    },
+    {
+      "update": 48,
+      "checksum": "10159279511738737900",
+      "actor_adam_steps": 3072,
+      "critic_adam_steps": 3072,
+      "actions": 3145728,
+      "attempted": 200802304,
+      "accepted": 200802304
+    },
+    {
+      "update": 49,
+      "checksum": "5664430697375717722",
+      "actor_adam_steps": 3136,
+      "critic_adam_steps": 3136,
+      "actions": 3211264,
+      "attempted": 204996608,
+      "accepted": 204996608
+    },
+    {
+      "update": 50,
+      "checksum": "10374775052527103331",
+      "actor_adam_steps": 3200,
+      "critic_adam_steps": 3200,
+      "actions": 3276800,
+      "attempted": 209158144,
+      "accepted": 209158144
+    },
+    {
+      "update": 51,
+      "checksum": "11548696089452469922",
+      "actor_adam_steps": 3264,
+      "critic_adam_steps": 3264,
+      "actions": 3342336,
+      "attempted": 213352448,
+      "accepted": 213352448
+    },
+    {
+      "update": 52,
+      "checksum": "14668683445219497168",
+      "actor_adam_steps": 3328,
+      "critic_adam_steps": 3328,
+      "actions": 3407872,
+      "attempted": 217546752,
+      "accepted": 217546752
+    },
+    {
+      "update": 53,
+      "checksum": "5004370049965906314",
+      "actor_adam_steps": 3392,
+      "critic_adam_steps": 3392,
+      "actions": 3473408,
+      "attempted": 221708288,
+      "accepted": 221708288
+    },
+    {
+      "update": 54,
+      "checksum": "6136701836767571882",
+      "actor_adam_steps": 3456,
+      "critic_adam_steps": 3456,
+      "actions": 3538944,
+      "attempted": 225902592,
+      "accepted": 225902592
+    },
+    {
+      "update": 55,
+      "checksum": "10196080626792713172",
+      "actor_adam_steps": 3520,
+      "critic_adam_steps": 3520,
+      "actions": 3604480,
+      "attempted": 230096896,
+      "accepted": 230096896
+    },
+    {
+      "update": 56,
+      "checksum": "1113759989975386918",
+      "actor_adam_steps": 3584,
+      "critic_adam_steps": 3584,
+      "actions": 3670016,
+      "attempted": 234258432,
+      "accepted": 234258432
+    },
+    {
+      "update": 57,
+      "checksum": "5930976461632709305",
+      "actor_adam_steps": 3648,
+      "critic_adam_steps": 3648,
+      "actions": 3735552,
+      "attempted": 238452736,
+      "accepted": 238452736
+    },
+    {
+      "update": 58,
+      "checksum": "15457817811008877996",
+      "actor_adam_steps": 3712,
+      "critic_adam_steps": 3712,
+      "actions": 3801088,
+      "attempted": 242647040,
+      "accepted": 242647040
+    },
+    {
+      "update": 59,
+      "checksum": "13708172196867137908",
+      "actor_adam_steps": 3776,
+      "critic_adam_steps": 3776,
+      "actions": 3866624,
+      "attempted": 246808576,
+      "accepted": 246808576
+    },
+    {
+      "update": 60,
+      "checksum": "10371573567449016058",
+      "actor_adam_steps": 3840,
+      "critic_adam_steps": 3840,
+      "actions": 3932160,
+      "attempted": 251002880,
+      "accepted": 251002880
+    },
+    {
+      "update": 61,
+      "checksum": "13126611644884246441",
+      "actor_adam_steps": 3904,
+      "critic_adam_steps": 3904,
+      "actions": 3997696,
+      "attempted": 255197184,
+      "accepted": 255197184
+    },
+    {
+      "update": 62,
+      "checksum": "399137273371021845",
+      "actor_adam_steps": 3968,
+      "critic_adam_steps": 3968,
+      "actions": 4063232,
+      "attempted": 259358720,
+      "accepted": 259358720
+    },
+    {
+      "update": 63,
+      "checksum": "6823296283765186997",
+      "actor_adam_steps": 4032,
+      "critic_adam_steps": 4032,
+      "actions": 4128768,
+      "attempted": 263553024,
+      "accepted": 263553024
+    },
+    {
+      "update": 64,
+      "checksum": "7233201702213855132",
+      "actor_adam_steps": 4096,
+      "critic_adam_steps": 4096,
+      "actions": 4194304,
+      "attempted": 267747328,
+      "accepted": 267747328
+    },
+    {
+      "update": 65,
+      "checksum": "16000916916259662785",
+      "actor_adam_steps": 4160,
+      "critic_adam_steps": 4160,
+      "actions": 4259840,
+      "attempted": 271908864,
+      "accepted": 271908864
+    },
+    {
+      "update": 66,
+      "checksum": "3246451905730726655",
+      "actor_adam_steps": 4224,
+      "critic_adam_steps": 4224,
+      "actions": 4325376,
+      "attempted": 276103168,
+      "accepted": 276103168
+    },
+    {
+      "update": 67,
+      "checksum": "13953821742728880579",
+      "actor_adam_steps": 4288,
+      "critic_adam_steps": 4288,
+      "actions": 4390912,
+      "attempted": 280297472,
+      "accepted": 280297472
+    },
+    {
+      "update": 68,
+      "checksum": "14856075814016831837",
+      "actor_adam_steps": 4352,
+      "critic_adam_steps": 4352,
+      "actions": 4456448,
+      "attempted": 284459008,
+      "accepted": 284459008
+    },
+    {
+      "update": 69,
+      "checksum": "2174504026639294989",
+      "actor_adam_steps": 4416,
+      "critic_adam_steps": 4416,
+      "actions": 4521984,
+      "attempted": 288653312,
+      "accepted": 288653312
+    },
+    {
+      "update": 70,
+      "checksum": "14761551184033732355",
+      "actor_adam_steps": 4480,
+      "critic_adam_steps": 4480,
+      "actions": 4587520,
+      "attempted": 292847616,
+      "accepted": 292847616
+    },
+    {
+      "update": 71,
+      "checksum": "2041923424550548960",
+      "actor_adam_steps": 4544,
+      "critic_adam_steps": 4544,
+      "actions": 4653056,
+      "attempted": 297009152,
+      "accepted": 297009152
+    },
+    {
+      "update": 72,
+      "checksum": "2341073135069649351",
+      "actor_adam_steps": 4608,
+      "critic_adam_steps": 4608,
+      "actions": 4718592,
+      "attempted": 301203456,
+      "accepted": 301203456
+    },
+    {
+      "update": 73,
+      "checksum": "9696274483752012472",
+      "actor_adam_steps": 4672,
+      "critic_adam_steps": 4672,
+      "actions": 4784128,
+      "attempted": 305397760,
+      "accepted": 305397760
+    },
+    {
+      "update": 74,
+      "checksum": "16174395005257611023",
+      "actor_adam_steps": 4736,
+      "critic_adam_steps": 4736,
+      "actions": 4849664,
+      "attempted": 309559296,
+      "accepted": 309559296
+    },
+    {
+      "update": 75,
+      "checksum": "15007513342908686078",
+      "actor_adam_steps": 4800,
+      "critic_adam_steps": 4800,
+      "actions": 4915200,
+      "attempted": 313753600,
+      "accepted": 313753600
+    },
+    {
+      "update": 76,
+      "checksum": "7448723395873250530",
+      "actor_adam_steps": 4864,
+      "critic_adam_steps": 4864,
+      "actions": 4980736,
+      "attempted": 317947904,
+      "accepted": 317947904
+    },
+    {
+      "update": 77,
+      "checksum": "10630890497668067775",
+      "actor_adam_steps": 4928,
+      "critic_adam_steps": 4928,
+      "actions": 5046272,
+      "attempted": 322109440,
+      "accepted": 322109440
+    },
+    {
+      "update": 78,
+      "checksum": "16658316360966083210",
+      "actor_adam_steps": 4992,
+      "critic_adam_steps": 4992,
+      "actions": 5111808,
+      "attempted": 326303744,
+      "accepted": 326303744
+    },
+    {
+      "update": 79,
+      "checksum": "10509110320591674696",
+      "actor_adam_steps": 5056,
+      "critic_adam_steps": 5056,
+      "actions": 5177344,
+      "attempted": 330498048,
+      "accepted": 330498048
+    },
+    {
+      "update": 80,
+      "checksum": "1993825183928859607",
+      "actor_adam_steps": 5120,
+      "critic_adam_steps": 5120,
+      "actions": 5242880,
+      "attempted": 334659584,
+      "accepted": 334659584
+    },
+    {
+      "update": 81,
+      "checksum": "5310455075977395337",
+      "actor_adam_steps": 5184,
+      "critic_adam_steps": 5184,
+      "actions": 5308416,
+      "attempted": 338853888,
+      "accepted": 338853888
+    },
+    {
+      "update": 82,
+      "checksum": "5101708583480125725",
+      "actor_adam_steps": 5248,
+      "critic_adam_steps": 5248,
+      "actions": 5373952,
+      "attempted": 343048192,
+      "accepted": 343048192
+    },
+    {
+      "update": 83,
+      "checksum": "8259176227645748462",
+      "actor_adam_steps": 5312,
+      "critic_adam_steps": 5312,
+      "actions": 5439488,
+      "attempted": 347209728,
+      "accepted": 347209728
+    },
+    {
+      "update": 84,
+      "checksum": "10124349754355060448",
+      "actor_adam_steps": 5376,
+      "critic_adam_steps": 5376,
+      "actions": 5505024,
+      "attempted": 351404032,
+      "accepted": 351404032
+    },
+    {
+      "update": 85,
+      "checksum": "983421650112297281",
+      "actor_adam_steps": 5440,
+      "critic_adam_steps": 5440,
+      "actions": 5570560,
+      "attempted": 355598336,
+      "accepted": 355598336
+    },
+    {
+      "update": 86,
+      "checksum": "13922285999169259555",
+      "actor_adam_steps": 5504,
+      "critic_adam_steps": 5504,
+      "actions": 5636096,
+      "attempted": 359759872,
+      "accepted": 359759872
+    },
+    {
+      "update": 87,
+      "checksum": "14675766149747442597",
+      "actor_adam_steps": 5568,
+      "critic_adam_steps": 5568,
+      "actions": 5701632,
+      "attempted": 363954176,
+      "accepted": 363954176
+    },
+    {
+      "update": 88,
+      "checksum": "1636219141673409742",
+      "actor_adam_steps": 5632,
+      "critic_adam_steps": 5632,
+      "actions": 5767168,
+      "attempted": 368148480,
+      "accepted": 368148480
+    },
+    {
+      "update": 89,
+      "checksum": "7182437871531495685",
+      "actor_adam_steps": 5696,
+      "critic_adam_steps": 5696,
+      "actions": 5832704,
+      "attempted": 372310016,
+      "accepted": 372310016
+    },
+    {
+      "update": 90,
+      "checksum": "7537260581858575592",
+      "actor_adam_steps": 5760,
+      "critic_adam_steps": 5760,
+      "actions": 5898240,
+      "attempted": 376504320,
+      "accepted": 376504320
+    },
+    {
+      "update": 91,
+      "checksum": "9314000706801184102",
+      "actor_adam_steps": 5824,
+      "critic_adam_steps": 5824,
+      "actions": 5963776,
+      "attempted": 380698624,
+      "accepted": 380698624
+    },
+    {
+      "update": 92,
+      "checksum": "7442033619794541839",
+      "actor_adam_steps": 5888,
+      "critic_adam_steps": 5888,
+      "actions": 6029312,
+      "attempted": 384860160,
+      "accepted": 384860160
+    },
+    {
+      "update": 93,
+      "checksum": "16089211134436890002",
+      "actor_adam_steps": 5952,
+      "critic_adam_steps": 5952,
+      "actions": 6094848,
+      "attempted": 389054464,
+      "accepted": 389054464
+    },
+    {
+      "update": 94,
+      "checksum": "16855351361771493678",
+      "actor_adam_steps": 6016,
+      "critic_adam_steps": 6016,
+      "actions": 6160384,
+      "attempted": 393216000,
+      "accepted": 393216000
+    },
+    {
+      "update": 95,
+      "checksum": "17362603261768397103",
+      "actor_adam_steps": 6080,
+      "critic_adam_steps": 6080,
+      "actions": 6225920,
+      "attempted": 397410304,
+      "accepted": 397410304
+    },
+    {
+      "update": 96,
+      "checksum": "1553395530870102134",
+      "actor_adam_steps": 6144,
+      "critic_adam_steps": 6144,
+      "actions": 6291456,
+      "attempted": 401604608,
+      "accepted": 401604608
+    },
+    {
+      "update": 97,
+      "checksum": "2052828453081728143",
+      "actor_adam_steps": 6208,
+      "critic_adam_steps": 6208,
+      "actions": 6356992,
+      "attempted": 405766144,
+      "accepted": 405766144
+    },
+    {
+      "update": 98,
+      "checksum": "188531000025379088",
+      "actor_adam_steps": 6272,
+      "critic_adam_steps": 6272,
+      "actions": 6422528,
+      "attempted": 409960448,
+      "accepted": 409960448
+    },
+    {
+      "update": 99,
+      "checksum": "2435292282739049092",
+      "actor_adam_steps": 6336,
+      "critic_adam_steps": 6336,
+      "actions": 6488064,
+      "attempted": 414154752,
+      "accepted": 414154752
+    },
+    {
+      "update": 100,
+      "checksum": "1673638133742047761",
+      "actor_adam_steps": 6400,
+      "critic_adam_steps": 6400,
+      "actions": 6553600,
+      "attempted": 418316288,
+      "accepted": 418316288
+    },
+    {
+      "update": 101,
+      "checksum": "1543460650420827836",
+      "actor_adam_steps": 6464,
+      "critic_adam_steps": 6464,
+      "actions": 6619136,
+      "attempted": 422510592,
+      "accepted": 422510592
+    },
+    {
+      "update": 102,
+      "checksum": "388572157184772250",
+      "actor_adam_steps": 6528,
+      "critic_adam_steps": 6528,
+      "actions": 6684672,
+      "attempted": 426704896,
+      "accepted": 426704896
+    },
+    {
+      "update": 103,
+      "checksum": "933497112709226195",
+      "actor_adam_steps": 6592,
+      "critic_adam_steps": 6592,
+      "actions": 6750208,
+      "attempted": 430866432,
+      "accepted": 430866432
+    },
+    {
+      "update": 104,
+      "checksum": "17853268804053858258",
+      "actor_adam_steps": 6656,
+      "critic_adam_steps": 6656,
+      "actions": 6815744,
+      "attempted": 435060736,
+      "accepted": 435060736
+    },
+    {
+      "update": 105,
+      "checksum": "4945816494993110898",
+      "actor_adam_steps": 6720,
+      "critic_adam_steps": 6720,
+      "actions": 6881280,
+      "attempted": 439255040,
+      "accepted": 439255040
+    },
+    {
+      "update": 106,
+      "checksum": "7545396056377591602",
+      "actor_adam_steps": 6784,
+      "critic_adam_steps": 6784,
+      "actions": 6946816,
+      "attempted": 443416576,
+      "accepted": 443416576
+    },
+    {
+      "update": 107,
+      "checksum": "16899977935803691506",
+      "actor_adam_steps": 6848,
+      "critic_adam_steps": 6848,
+      "actions": 7012352,
+      "attempted": 447610880,
+      "accepted": 447610880
+    },
+    {
+      "update": 108,
+      "checksum": "17055174104352308435",
+      "actor_adam_steps": 6912,
+      "critic_adam_steps": 6912,
+      "actions": 7077888,
+      "attempted": 451805184,
+      "accepted": 451805184
+    },
+    {
+      "update": 109,
+      "checksum": "15095310395514289660",
+      "actor_adam_steps": 6976,
+      "critic_adam_steps": 6976,
+      "actions": 7143424,
+      "attempted": 455966720,
+      "accepted": 455966720
+    },
+    {
+      "update": 110,
+      "checksum": "516831955082014984",
+      "actor_adam_steps": 7040,
+      "critic_adam_steps": 7040,
+      "actions": 7208960,
+      "attempted": 460161024,
+      "accepted": 460161024
+    },
+    {
+      "update": 111,
+      "checksum": "1856306885133349361",
+      "actor_adam_steps": 7104,
+      "critic_adam_steps": 7104,
+      "actions": 7274496,
+      "attempted": 464355328,
+      "accepted": 464355328
+    },
+    {
+      "update": 112,
+      "checksum": "6633125621706065721",
+      "actor_adam_steps": 7168,
+      "critic_adam_steps": 7168,
+      "actions": 7340032,
+      "attempted": 468516864,
+      "accepted": 468516864
+    },
+    {
+      "update": 113,
+      "checksum": "5682833628132851451",
+      "actor_adam_steps": 7232,
+      "critic_adam_steps": 7232,
+      "actions": 7405568,
+      "attempted": 472711168,
+      "accepted": 472711168
+    },
+    {
+      "update": 114,
+      "checksum": "17550034013325039347",
+      "actor_adam_steps": 7296,
+      "critic_adam_steps": 7296,
+      "actions": 7471104,
+      "attempted": 476905472,
+      "accepted": 476905472
+    },
+    {
+      "update": 115,
+      "checksum": "1792609485537022315",
+      "actor_adam_steps": 7360,
+      "critic_adam_steps": 7360,
+      "actions": 7536640,
+      "attempted": 481067008,
+      "accepted": 481067008
+    },
+    {
+      "update": 116,
+      "checksum": "15325122760180993681",
+      "actor_adam_steps": 7424,
+      "critic_adam_steps": 7424,
+      "actions": 7602176,
+      "attempted": 485261312,
+      "accepted": 485261312
+    },
+    {
+      "update": 117,
+      "checksum": "10850053874456112507",
+      "actor_adam_steps": 7488,
+      "critic_adam_steps": 7488,
+      "actions": 7667712,
+      "attempted": 489455616,
+      "accepted": 489455616
+    },
+    {
+      "update": 118,
+      "checksum": "8259178543014471144",
+      "actor_adam_steps": 7552,
+      "critic_adam_steps": 7552,
+      "actions": 7733248,
+      "attempted": 493617152,
+      "accepted": 493617152
+    },
+    {
+      "update": 119,
+      "checksum": "2260806785434891857",
+      "actor_adam_steps": 7616,
+      "critic_adam_steps": 7616,
+      "actions": 7798784,
+      "attempted": 497811456,
+      "accepted": 497811456
+    },
+    {
+      "update": 120,
+      "checksum": "5816274370914329453",
+      "actor_adam_steps": 7680,
+      "critic_adam_steps": 7680,
+      "actions": 7864320,
+      "attempted": 502005760,
+      "accepted": 502005760
+    },
+    {
+      "update": 121,
+      "checksum": "13995120914784577154",
+      "actor_adam_steps": 7744,
+      "critic_adam_steps": 7744,
+      "actions": 7929856,
+      "attempted": 506167296,
+      "accepted": 506167296
+    },
+    {
+      "update": 122,
+      "checksum": "5001651310994936809",
+      "actor_adam_steps": 7808,
+      "critic_adam_steps": 7808,
+      "actions": 7995392,
+      "attempted": 510361600,
+      "accepted": 510361600
+    },
+    {
+      "update": 123,
+      "checksum": "8172287194789885214",
+      "actor_adam_steps": 7872,
+      "critic_adam_steps": 7872,
+      "actions": 8060928,
+      "attempted": 514555904,
+      "accepted": 514555904
+    },
+    {
+      "update": 124,
+      "checksum": "319721337807373912",
+      "actor_adam_steps": 7936,
+      "critic_adam_steps": 7936,
+      "actions": 8126464,
+      "attempted": 518717440,
+      "accepted": 518717440
+    },
+    {
+      "update": 125,
+      "checksum": "16870639999866694327",
+      "actor_adam_steps": 8000,
+      "critic_adam_steps": 8000,
+      "actions": 8192000,
+      "attempted": 522911744,
+      "accepted": 522911744
+    },
+    {
+      "update": 126,
+      "checksum": "10970789188835142568",
+      "actor_adam_steps": 8064,
+      "critic_adam_steps": 8064,
+      "actions": 8257536,
+      "attempted": 527106048,
+      "accepted": 527106048
+    },
+    {
+      "update": 127,
+      "checksum": "14553771695161302359",
+      "actor_adam_steps": 8128,
+      "critic_adam_steps": 8128,
+      "actions": 8323072,
+      "attempted": 531267584,
+      "accepted": 531267584
+    },
+    {
+      "update": 128,
+      "checksum": "18346149620471961375",
+      "actor_adam_steps": 8192,
+      "critic_adam_steps": 8192,
+      "actions": 8388608,
+      "attempted": 535461888,
+      "accepted": 535461888
+    }
+  ]
+}

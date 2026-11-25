@@ -1,0 +1,12 @@
+{
+  "new_diagnostics": 0,
+  "reserved_unknown_substeps_maximum": 10485760,
+  "reserved_unknown_adam_calls_per_optimizer_maximum": 32,
+  "previous": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-cap16\\stage-06-bank",
+  "reserved_unknown_updates": 1,
+  "reserved_unknown_transitions_maximum": 8192,
+  "reused_baseline": true,
+  "new_complete_update_cap": 63,
+  "reason": "valid evaluator exit1 was misclassified by runner",
+  "prior_wall_s": 1.0926767
+}

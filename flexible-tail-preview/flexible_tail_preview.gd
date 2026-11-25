@@ -42,6 +42,10 @@ class TracePhase:
 @onready var turn_left: Button = %Left
 @onready var turn_right: Button = %Right
 @onready var live_status: Label = %LiveStatus
+@onready var live_details: Button = %LiveDetails
+@onready var live_options: VBoxContainer = %LiveOptions
+@onready var control_mode: OptionButton = %ControlMode
+@onready var restart: Button = %Restart
 @onready var live_controls: HBoxContainer = %LiveControls
 @onready var playback_controls: VBoxContainer = %Playback
 @onready var open_trace: Button = %Open
@@ -68,6 +72,8 @@ var live_motor: Object
 var live_snapshot: Dictionary = {}
 var live_playing := false
 var live_accumulator := 0.0
+var live_step_s := LIVE_CONTROL_S
+var autonomous := true
 var showing_pond := false
 var follow_scale := 1.0
 var follow_center := Vector3.ZERO
@@ -83,7 +89,7 @@ func _ready() -> void:
 	get_window().title = "Tadpole Pond | Flexible Tail"
 	get_viewport().msaa_3d = Viewport.MSAA_4X
 	_build_world()
-	for button in [open_trace, pond_view, zoom_in, zoom_out, play, live_play]:
+	for button in [open_trace, pond_view, zoom_in, zoom_out, play, live_play, restart, live_details, control_mode]:
 		_style_button(button)
 	for button in [live_mode, review_mode, turn_left, turn_right, %Swim, %Turn, %Hold]:
 		_style_button(button, true)
@@ -93,6 +99,12 @@ func _ready() -> void:
 	live_mode.pressed.connect(_show_live)
 	review_mode.pressed.connect(_show_recordings)
 	live_play.pressed.connect(_toggle_live_play)
+	restart.pressed.connect(_restart_live)
+	live_details.pressed.connect(func():
+		live_options.visible = not live_options.visible
+		live_details.set_pressed_no_signal(live_options.visible)
+		_fit_dock_height.call_deferred())
+	control_mode.item_selected.connect(_select_control_mode)
 	turn_left.pressed.connect(_request_live_turn.bind(1))
 	turn_right.pressed.connect(_request_live_turn.bind(-1))
 	transport.minimum_size_changed.connect(_fit_dock_height.call_deferred)
@@ -118,9 +130,10 @@ func _set_reviewing(value: bool) -> void:
 	review_mode.set_pressed_no_signal(reviewing)
 	live_controls.visible = not reviewing
 	live_status.visible = not reviewing
+	live_options.visible = not reviewing and live_details.button_pressed
 	playback_controls.visible = reviewing
 	open_trace.visible = reviewing
-	source.text = "Recorded physics" if reviewing else "Live · Frozen policy"
+	source.text = "Recorded physics" if reviewing else ("Live · Learned exploration" if autonomous else "Live · Original motor")
 	_fit_camera()
 
 func _show_live() -> void:
@@ -156,10 +169,18 @@ func _load_live_motor() -> bool:
 	if live_motor == null:
 		_show_live_problem("The live simulator could not start.")
 		return false
-	var loaded := bool(live_motor.call("load_motor",
-		ProjectSettings.globalize_path(LIVE_DATA + "fitted-gait.bin"),
-		ProjectSettings.globalize_path(LIVE_DATA + "yaw-offset-update-8.bin"),
-		ProjectSettings.globalize_path(LIVE_DATA + "straight-evaluation-starts.bin")))
+	var loaded: bool
+	if autonomous:
+		loaded = bool(live_motor.call("load_autonomous",
+			ProjectSettings.globalize_path(LIVE_DATA + "fitted-gait.bin"),
+			ProjectSettings.globalize_path(LIVE_DATA + "exploration-motor-88.bin"),
+			ProjectSettings.globalize_path(LIVE_DATA + "exploration-chooser-88.bin"),
+			ProjectSettings.globalize_path(LIVE_DATA + "straight-evaluation-starts.bin")))
+	else:
+		loaded = bool(live_motor.call("load_motor",
+			ProjectSettings.globalize_path(LIVE_DATA + "fitted-gait.bin"),
+			ProjectSettings.globalize_path(LIVE_DATA + "yaw-offset-update-8.bin"),
+			ProjectSettings.globalize_path(LIVE_DATA + "straight-evaluation-starts.bin")))
 	if not loaded:
 		var detail := String(live_motor.call("get_error"))
 		live_motor = null
@@ -167,7 +188,28 @@ func _load_live_motor() -> bool:
 		_show_live_problem("The saved live policy could not load. You can still watch the recordings.")
 		return false
 	live_snapshot = live_motor.call("snapshot")
+	live_step_s = float(live_snapshot.get("control_s", LIVE_CONTROL_S))
 	return true
+
+func _restart_live() -> void:
+	if live_motor == null:
+		return
+	_set_live_playing(false)
+	if bool(live_motor.call("reset")):
+		live_snapshot = live_motor.call("snapshot")
+		message.hide()
+		_render_live_snapshot()
+	_update_live_controls()
+
+func _select_control_mode(index: int) -> void:
+	_set_live_playing(false)
+	autonomous = index == 0
+	live_motor = null
+	live_snapshot = {}
+	source.text = "Live · Learned exploration" if autonomous else "Live · Original motor"
+	_load_live_motor()
+	_render_live_snapshot()
+	_update_live_controls()
 
 func _show_live_problem(text: String) -> void:
 	metrics.hide()
@@ -188,7 +230,7 @@ func _set_live_playing(value: bool) -> void:
 
 func _request_live_turn(direction: int) -> void:
 	var button := turn_left if direction > 0 else turn_right
-	if reviewing or button.disabled:
+	if reviewing or autonomous or button.disabled:
 		return
 	if bool(live_motor.call("request_turn", direction)):
 		live_snapshot = live_motor.call("snapshot")
@@ -201,7 +243,10 @@ func _update_live_controls() -> void:
 	live_play.disabled = not ready or fault != 0
 	turn_left.disabled = live_play.disabled or queued != 0
 	turn_right.disabled = turn_left.disabled
-	live_play.text = "Pause" if live_playing else "Play"
+	%ManualControls.visible = not autonomous
+	%Qualification.text = "Verified: 12 pond starts + 4 five-minute runs.\nSaved policies; no training in this view." if autonomous else "Original saved motor. Q / E request 15° turns.\nSwitch modes to return to learned exploration."
+	restart.disabled = not ready
+	live_play.text = "Pause" if live_playing else ("Explore pond" if autonomous else "Play")
 	live_status.text = "Paused"
 	if live_playing:
 		match String(live_snapshot.get("motion", "swim")):
@@ -218,11 +263,11 @@ func _update_live_controls() -> void:
 		live_status.text = cue if live_playing else cue + " · Paused"
 
 func _advance_live(delta: float) -> void:
-	live_accumulator = minf(live_accumulator + delta, LIVE_CONTROL_S * MAX_CONTROLS_PER_FRAME)
-	if live_accumulator < LIVE_CONTROL_S:
+	live_accumulator = minf(live_accumulator + delta, live_step_s * MAX_CONTROLS_PER_FRAME)
+	if live_accumulator < live_step_s:
 		return
-	while live_accumulator >= LIVE_CONTROL_S:
-		live_accumulator -= LIVE_CONTROL_S
+	while live_accumulator >= live_step_s:
+		live_accumulator -= live_step_s
 		if not bool(live_motor.call("step_control")):
 			_set_live_playing(false)
 			break
@@ -653,6 +698,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		_request_live_turn(1)
 	elif not reviewing and event.keycode == KEY_E:
 		_request_live_turn(-1)
+	elif not reviewing and event.keycode == KEY_R:
+		_restart_live()
 	else:
 		return
 	get_viewport().set_input_as_handled()
@@ -679,6 +726,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _fit_camera() -> void:
 	var window := get_viewport().get_visible_rect().size
 	var aspect := maxf(window.x, 1.0) / maxf(window.y, 1.0)
+	# On short displays keep expanded controls clear of the header and zoom.
+	var compact_details := not reviewing and live_details.button_pressed and window.y < 500.0
+	header.visible = not compact_details
+	view_controls.visible = not compact_details
 	if showing_pond:
 		var radii := habitat.water_radii_m / METRES_PER_UNIT
 		camera.size = maxf(radii.x * 2.42 / aspect, (radii.y * .87 + 8.0) * 2.65)

@@ -1,0 +1,18 @@
+{
+  "update": 128,
+  "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\training\\actor-128.bin",
+  "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\training\\checkpoints\\session-128.bin",
+  "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+  "study": "nonlinear",
+  "material": "baseline",
+  "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-128\\assessment",
+  "physical": true,
+  "gentle": 8,
+  "main": 16,
+  "thirty": 8,
+  "sixty": 0,
+  "ninety": 0,
+  "legacy": 20,
+  "error": 5.833768659147656,
+  "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-128\\assessment\\result.json"
+}

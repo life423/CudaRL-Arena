@@ -1,0 +1,144 @@
+[
+  {
+    "stage": 1,
+    "selected": {
+      "update": 128,
+      "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\training\\actor-128.bin",
+      "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\training\\checkpoints\\session-128.bin",
+      "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "study": "rhythm",
+      "material": "baseline",
+      "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-128\\assessment",
+      "physical": true,
+      "gentle": 8,
+      "main": 16,
+      "thirty": 8,
+      "sixty": 0,
+      "ninety": 0,
+      "legacy": 12,
+      "error": 21.557531390321717,
+      "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-01-rhythm-baseline\\evaluations\\update-128\\assessment\\result.json"
+    }
+  },
+  {
+    "stage": 2,
+    "selected": {
+      "update": 56,
+      "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\actor-56.bin",
+      "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\training\\checkpoints\\session-56.bin",
+      "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "study": "joint",
+      "material": "baseline",
+      "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-056\\assessment",
+      "physical": true,
+      "gentle": 8,
+      "main": 16,
+      "thirty": 8,
+      "sixty": 0,
+      "ninety": 0,
+      "legacy": 6,
+      "error": 15.464471429604064,
+      "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-02-joint-baseline\\evaluations\\update-056\\assessment\\result.json"
+    }
+  },
+  {
+    "stage": 3,
+    "selected": {
+      "update": 128,
+      "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\training\\actor-128.bin",
+      "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\training\\checkpoints\\session-128.bin",
+      "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "study": "nonlinear",
+      "material": "baseline",
+      "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-128\\assessment",
+      "physical": true,
+      "gentle": 8,
+      "main": 16,
+      "thirty": 8,
+      "sixty": 0,
+      "ninety": 0,
+      "legacy": 20,
+      "error": 5.833768659147656,
+      "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-03-nonlinear-baseline\\evaluations\\update-128\\assessment\\result.json"
+    }
+  },
+  {
+    "stage": 4,
+    "selected": {
+      "update": 72,
+      "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\training\\actor-72.bin",
+      "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\training\\checkpoints\\session-72.bin",
+      "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "study": "speed",
+      "material": "baseline",
+      "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-072\\assessment",
+      "physical": true,
+      "gentle": 8,
+      "main": 16,
+      "thirty": 8,
+      "sixty": 0,
+      "ninety": 0,
+      "legacy": 0,
+      "error": 4.952606256960048,
+      "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-04-speed-baseline\\evaluations\\update-072\\assessment\\result.json"
+    }
+  },
+  {
+    "stage": 5,
+    "selected": {
+      "update": 0,
+      "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\training\\actor-0.bin",
+      "checkpoint": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\training\\checkpoints\\session-0.bin",
+      "task": "11ea4631a72adf21bc122c74c9caa895336badf021e9f23a3ae648b079f88038",
+      "study": "rate",
+      "material": "baseline",
+      "assessment": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\baseline\\assessment",
+      "physical": true,
+      "gentle": 8,
+      "main": 16,
+      "thirty": 8,
+      "sixty": 0,
+      "ninety": 0,
+      "legacy": 0,
+      "error": 4.952606256960048,
+      "result": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-corrected\\stage-05-rate-baseline\\baseline\\assessment\\result.json"
+    }
+  },
+  {
+    "selected": {
+      "results": {
+        "pass": false,
+        "steering_mode": "learned-nine-action-speed-course-rate",
+        "steering_request_schema": 1,
+        "motor_feedback_mode": "whole-beat-program",
+        "motor_kind": 5,
+        "material": 0,
+        "diagnostic_passes": 8,
+        "diagnostic_cases": 12,
+        "endurance_passes": 0,
+        "endurance_attempts": 0,
+        "clearance_stops": 4,
+        "clearance_stops_are_guard_stops_not_contacts": true,
+        "other_native_faults": 0,
+        "reachable_50mm_cells_estimate": 345,
+        "diagnostic_visited_cells": 201,
+        "diagnostic_coverage_fraction": 0.582608696,
+        "endurance_visited_cells": 0,
+        "attempted_substeps": 984079,
+        "accepted_substeps": 984075,
+        "substep_cap": 2112000,
+        "resets": 0,
+        "CPU_parallel_workers_maximum": 12,
+        "motor_action_controls": 4,
+        "exact_original_20ms_coverage_and_halfsecond_motion_endpoints": true,
+        "coverage_denominator_is_fixed_posture_estimate": true,
+        "optimizer_updates": 0,
+        "internal_elapsed_s": 0.7398945
+      },
+      "update": 16,
+      "actor": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\training\\actor-16.bin",
+      "summary": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\seven-options-v6-bank-resume\\stage-06-bank\\evaluations\\update-016\\assessment\\summary.json"
+    },
+    "stage": 6
+  }
+]

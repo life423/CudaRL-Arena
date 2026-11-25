@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <limits>
 #include <stdexcept>
+#include <string>
 
 #include "cuda/block_reduce.h"
 #include "cuda/cuda_memory.h"
@@ -18,7 +19,8 @@ int blocks_for(int n) { return std::max(1, n / kThreads + (n % kThreads != 0)); 
 
 void validate_categorical_shape(int n, int k, bool with_stats) {
     if (n <= 0 || k <= 0 || k > kMaxActions)
-        throw std::invalid_argument("Categorical PPO: positive rows and 1..8 actions required");
+        throw std::invalid_argument("Categorical PPO: positive rows and 1.." +
+            std::to_string(kMaxActions) + " actions required");
     const int stride = with_stats ? std::max(k, kPpoStats) : k;
     if (n > std::numeric_limits<int>::max() / stride)
         throw std::invalid_argument("Categorical PPO: row indexing exceeds int range");

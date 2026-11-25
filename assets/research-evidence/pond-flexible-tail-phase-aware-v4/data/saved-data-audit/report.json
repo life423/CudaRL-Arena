@@ -1,0 +1,1068 @@
+{
+  "schema": 1,
+  "pass": true,
+  "physics_steps": 0,
+  "optimizer_updates": 0,
+  "checkpoint_pairs_verified": 129,
+  "phase_model_schema": 2,
+  "session_schema": 4,
+  "all_wrapped_checksums_valid": true,
+  "frozen_first_four_weights_bit_exact": true,
+  "frozen_moments_zero": true,
+  "unused_parameters_and_moments_zero": true,
+  "changed_final_indices": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "initial_weights_bit_exact": true,
+  "latest_matches_final": true,
+  "all_bound_inputs_and_sources_unchanged": true,
+  "protected_live_library_unchanged": true,
+  "exact_resume_pass": true,
+  "main_updates": 128,
+  "main_samples": 8388608,
+  "main_substeps": 535461888,
+  "main_actor_steps": 8192,
+  "main_critic_steps": 8192,
+  "records": [
+    {
+      "update": 0,
+      "actor_steps": 0,
+      "critic_steps": 0,
+      "samples": 0,
+      "substeps": 0,
+      "checksum": 9104751748498542985
+    },
+    {
+      "update": 1,
+      "actor_steps": 64,
+      "critic_steps": 64,
+      "samples": 65536,
+      "substeps": 4194304,
+      "checksum": 2161549164735473914
+    },
+    {
+      "update": 2,
+      "actor_steps": 128,
+      "critic_steps": 128,
+      "samples": 131072,
+      "substeps": 8388608,
+      "checksum": 4798728136018554304
+    },
+    {
+      "update": 3,
+      "actor_steps": 192,
+      "critic_steps": 192,
+      "samples": 196608,
+      "substeps": 12550144,
+      "checksum": 9295014482470929036
+    },
+    {
+      "update": 4,
+      "actor_steps": 256,
+      "critic_steps": 256,
+      "samples": 262144,
+      "substeps": 16744448,
+      "checksum": 10161146326584377330
+    },
+    {
+      "update": 5,
+      "actor_steps": 320,
+      "critic_steps": 320,
+      "samples": 327680,
+      "substeps": 20938752,
+      "checksum": 15093783104963443946
+    },
+    {
+      "update": 6,
+      "actor_steps": 384,
+      "critic_steps": 384,
+      "samples": 393216,
+      "substeps": 25100288,
+      "checksum": 12127339183979210066
+    },
+    {
+      "update": 7,
+      "actor_steps": 448,
+      "critic_steps": 448,
+      "samples": 458752,
+      "substeps": 29294592,
+      "checksum": 394960143917365410
+    },
+    {
+      "update": 8,
+      "actor_steps": 512,
+      "critic_steps": 512,
+      "samples": 524288,
+      "substeps": 33488896,
+      "checksum": 18408145716725970329
+    },
+    {
+      "update": 9,
+      "actor_steps": 576,
+      "critic_steps": 576,
+      "samples": 589824,
+      "substeps": 37650432,
+      "checksum": 11246090309911332822
+    },
+    {
+      "update": 10,
+      "actor_steps": 640,
+      "critic_steps": 640,
+      "samples": 655360,
+      "substeps": 41844736,
+      "checksum": 5666950251348208646
+    },
+    {
+      "update": 11,
+      "actor_steps": 704,
+      "critic_steps": 704,
+      "samples": 720896,
+      "substeps": 46039040,
+      "checksum": 14886117418561090089
+    },
+    {
+      "update": 12,
+      "actor_steps": 768,
+      "critic_steps": 768,
+      "samples": 786432,
+      "substeps": 50200576,
+      "checksum": 6543616431713348783
+    },
+    {
+      "update": 13,
+      "actor_steps": 832,
+      "critic_steps": 832,
+      "samples": 851968,
+      "substeps": 54394880,
+      "checksum": 1813205568340969937
+    },
+    {
+      "update": 14,
+      "actor_steps": 896,
+      "critic_steps": 896,
+      "samples": 917504,
+      "substeps": 58589184,
+      "checksum": 4751907768889406079
+    },
+    {
+      "update": 15,
+      "actor_steps": 960,
+      "critic_steps": 960,
+      "samples": 983040,
+      "substeps": 62750720,
+      "checksum": 9307643842922571672
+    },
+    {
+      "update": 16,
+      "actor_steps": 1024,
+      "critic_steps": 1024,
+      "samples": 1048576,
+      "substeps": 66945024,
+      "checksum": 15543117178518309996
+    },
+    {
+      "update": 17,
+      "actor_steps": 1088,
+      "critic_steps": 1088,
+      "samples": 1114112,
+      "substeps": 71139328,
+      "checksum": 17623832018939153535
+    },
+    {
+      "update": 18,
+      "actor_steps": 1152,
+      "critic_steps": 1152,
+      "samples": 1179648,
+      "substeps": 75300864,
+      "checksum": 145364536492974794
+    },
+    {
+      "update": 19,
+      "actor_steps": 1216,
+      "critic_steps": 1216,
+      "samples": 1245184,
+      "substeps": 79495168,
+      "checksum": 3855322048785642482
+    },
+    {
+      "update": 20,
+      "actor_steps": 1280,
+      "critic_steps": 1280,
+      "samples": 1310720,
+      "substeps": 83689472,
+      "checksum": 9662539336944515784
+    },
+    {
+      "update": 21,
+      "actor_steps": 1344,
+      "critic_steps": 1344,
+      "samples": 1376256,
+      "substeps": 87851008,
+      "checksum": 2100854782028030483
+    },
+    {
+      "update": 22,
+      "actor_steps": 1408,
+      "critic_steps": 1408,
+      "samples": 1441792,
+      "substeps": 92045312,
+      "checksum": 10916659963917600357
+    },
+    {
+      "update": 23,
+      "actor_steps": 1472,
+      "critic_steps": 1472,
+      "samples": 1507328,
+      "substeps": 96239616,
+      "checksum": 17307739623932494665
+    },
+    {
+      "update": 24,
+      "actor_steps": 1536,
+      "critic_steps": 1536,
+      "samples": 1572864,
+      "substeps": 100401152,
+      "checksum": 1554072999764196428
+    },
+    {
+      "update": 25,
+      "actor_steps": 1600,
+      "critic_steps": 1600,
+      "samples": 1638400,
+      "substeps": 104595456,
+      "checksum": 11206701749521788071
+    },
+    {
+      "update": 26,
+      "actor_steps": 1664,
+      "critic_steps": 1664,
+      "samples": 1703936,
+      "substeps": 108789760,
+      "checksum": 8085370253510639973
+    },
+    {
+      "update": 27,
+      "actor_steps": 1728,
+      "critic_steps": 1728,
+      "samples": 1769472,
+      "substeps": 112951296,
+      "checksum": 8578652752583717126
+    },
+    {
+      "update": 28,
+      "actor_steps": 1792,
+      "critic_steps": 1792,
+      "samples": 1835008,
+      "substeps": 117145600,
+      "checksum": 242422544112901011
+    },
+    {
+      "update": 29,
+      "actor_steps": 1856,
+      "critic_steps": 1856,
+      "samples": 1900544,
+      "substeps": 121339904,
+      "checksum": 98319269532889747
+    },
+    {
+      "update": 30,
+      "actor_steps": 1920,
+      "critic_steps": 1920,
+      "samples": 1966080,
+      "substeps": 125501440,
+      "checksum": 320588530698198115
+    },
+    {
+      "update": 31,
+      "actor_steps": 1984,
+      "critic_steps": 1984,
+      "samples": 2031616,
+      "substeps": 129695744,
+      "checksum": 7933032839326468864
+    },
+    {
+      "update": 32,
+      "actor_steps": 2048,
+      "critic_steps": 2048,
+      "samples": 2097152,
+      "substeps": 133890048,
+      "checksum": 7541806625158586741
+    },
+    {
+      "update": 33,
+      "actor_steps": 2112,
+      "critic_steps": 2112,
+      "samples": 2162688,
+      "substeps": 138051584,
+      "checksum": 7418651234158253134
+    },
+    {
+      "update": 34,
+      "actor_steps": 2176,
+      "critic_steps": 2176,
+      "samples": 2228224,
+      "substeps": 142245888,
+      "checksum": 5456087738609779099
+    },
+    {
+      "update": 35,
+      "actor_steps": 2240,
+      "critic_steps": 2240,
+      "samples": 2293760,
+      "substeps": 146440192,
+      "checksum": 1977887612327665985
+    },
+    {
+      "update": 36,
+      "actor_steps": 2304,
+      "critic_steps": 2304,
+      "samples": 2359296,
+      "substeps": 150601728,
+      "checksum": 8540451855111824891
+    },
+    {
+      "update": 37,
+      "actor_steps": 2368,
+      "critic_steps": 2368,
+      "samples": 2424832,
+      "substeps": 154796032,
+      "checksum": 15816445577211895317
+    },
+    {
+      "update": 38,
+      "actor_steps": 2432,
+      "critic_steps": 2432,
+      "samples": 2490368,
+      "substeps": 158990336,
+      "checksum": 441622514049499870
+    },
+    {
+      "update": 39,
+      "actor_steps": 2496,
+      "critic_steps": 2496,
+      "samples": 2555904,
+      "substeps": 163151872,
+      "checksum": 10593514903888450896
+    },
+    {
+      "update": 40,
+      "actor_steps": 2560,
+      "critic_steps": 2560,
+      "samples": 2621440,
+      "substeps": 167346176,
+      "checksum": 10325263235607242237
+    },
+    {
+      "update": 41,
+      "actor_steps": 2624,
+      "critic_steps": 2624,
+      "samples": 2686976,
+      "substeps": 171540480,
+      "checksum": 2580459303899188393
+    },
+    {
+      "update": 42,
+      "actor_steps": 2688,
+      "critic_steps": 2688,
+      "samples": 2752512,
+      "substeps": 175702016,
+      "checksum": 4509273201630779294
+    },
+    {
+      "update": 43,
+      "actor_steps": 2752,
+      "critic_steps": 2752,
+      "samples": 2818048,
+      "substeps": 179896320,
+      "checksum": 17654671525506402100
+    },
+    {
+      "update": 44,
+      "actor_steps": 2816,
+      "critic_steps": 2816,
+      "samples": 2883584,
+      "substeps": 184090624,
+      "checksum": 15954531562919448908
+    },
+    {
+      "update": 45,
+      "actor_steps": 2880,
+      "critic_steps": 2880,
+      "samples": 2949120,
+      "substeps": 188252160,
+      "checksum": 10289473519753448096
+    },
+    {
+      "update": 46,
+      "actor_steps": 2944,
+      "critic_steps": 2944,
+      "samples": 3014656,
+      "substeps": 192446464,
+      "checksum": 9085407446392378634
+    },
+    {
+      "update": 47,
+      "actor_steps": 3008,
+      "critic_steps": 3008,
+      "samples": 3080192,
+      "substeps": 196608000,
+      "checksum": 15432900413999031009
+    },
+    {
+      "update": 48,
+      "actor_steps": 3072,
+      "critic_steps": 3072,
+      "samples": 3145728,
+      "substeps": 200802304,
+      "checksum": 18256432791454723788
+    },
+    {
+      "update": 49,
+      "actor_steps": 3136,
+      "critic_steps": 3136,
+      "samples": 3211264,
+      "substeps": 204996608,
+      "checksum": 9176733074830433066
+    },
+    {
+      "update": 50,
+      "actor_steps": 3200,
+      "critic_steps": 3200,
+      "samples": 3276800,
+      "substeps": 209158144,
+      "checksum": 6780598572673704131
+    },
+    {
+      "update": 51,
+      "actor_steps": 3264,
+      "critic_steps": 3264,
+      "samples": 3342336,
+      "substeps": 213352448,
+      "checksum": 17831139431312156446
+    },
+    {
+      "update": 52,
+      "actor_steps": 3328,
+      "critic_steps": 3328,
+      "samples": 3407872,
+      "substeps": 217546752,
+      "checksum": 9102192497272059840
+    },
+    {
+      "update": 53,
+      "actor_steps": 3392,
+      "critic_steps": 3392,
+      "samples": 3473408,
+      "substeps": 221708288,
+      "checksum": 9111558100435145988
+    },
+    {
+      "update": 54,
+      "actor_steps": 3456,
+      "critic_steps": 3456,
+      "samples": 3538944,
+      "substeps": 225902592,
+      "checksum": 15694387525148716990
+    },
+    {
+      "update": 55,
+      "actor_steps": 3520,
+      "critic_steps": 3520,
+      "samples": 3604480,
+      "substeps": 230096896,
+      "checksum": 7109681437839893829
+    },
+    {
+      "update": 56,
+      "actor_steps": 3584,
+      "critic_steps": 3584,
+      "samples": 3670016,
+      "substeps": 234258432,
+      "checksum": 8534979675147018182
+    },
+    {
+      "update": 57,
+      "actor_steps": 3648,
+      "critic_steps": 3648,
+      "samples": 3735552,
+      "substeps": 238452736,
+      "checksum": 16660688127745954176
+    },
+    {
+      "update": 58,
+      "actor_steps": 3712,
+      "critic_steps": 3712,
+      "samples": 3801088,
+      "substeps": 242647040,
+      "checksum": 15382326720609243892
+    },
+    {
+      "update": 59,
+      "actor_steps": 3776,
+      "critic_steps": 3776,
+      "samples": 3866624,
+      "substeps": 246808576,
+      "checksum": 15324132236053384405
+    },
+    {
+      "update": 60,
+      "actor_steps": 3840,
+      "critic_steps": 3840,
+      "samples": 3932160,
+      "substeps": 251002880,
+      "checksum": 9608214891086899137
+    },
+    {
+      "update": 61,
+      "actor_steps": 3904,
+      "critic_steps": 3904,
+      "samples": 3997696,
+      "substeps": 255197184,
+      "checksum": 14250737756088282649
+    },
+    {
+      "update": 62,
+      "actor_steps": 3968,
+      "critic_steps": 3968,
+      "samples": 4063232,
+      "substeps": 259358720,
+      "checksum": 13262539647605919479
+    },
+    {
+      "update": 63,
+      "actor_steps": 4032,
+      "critic_steps": 4032,
+      "samples": 4128768,
+      "substeps": 263553024,
+      "checksum": 4503445330454465255
+    },
+    {
+      "update": 64,
+      "actor_steps": 4096,
+      "critic_steps": 4096,
+      "samples": 4194304,
+      "substeps": 267747328,
+      "checksum": 17634574360347886239
+    },
+    {
+      "update": 65,
+      "actor_steps": 4160,
+      "critic_steps": 4160,
+      "samples": 4259840,
+      "substeps": 271908864,
+      "checksum": 2984554509527269205
+    },
+    {
+      "update": 66,
+      "actor_steps": 4224,
+      "critic_steps": 4224,
+      "samples": 4325376,
+      "substeps": 276103168,
+      "checksum": 13588550519069422012
+    },
+    {
+      "update": 67,
+      "actor_steps": 4288,
+      "critic_steps": 4288,
+      "samples": 4390912,
+      "substeps": 280297472,
+      "checksum": 11061150381026920959
+    },
+    {
+      "update": 68,
+      "actor_steps": 4352,
+      "critic_steps": 4352,
+      "samples": 4456448,
+      "substeps": 284459008,
+      "checksum": 3195594915567548178
+    },
+    {
+      "update": 69,
+      "actor_steps": 4416,
+      "critic_steps": 4416,
+      "samples": 4521984,
+      "substeps": 288653312,
+      "checksum": 3280983636525458152
+    },
+    {
+      "update": 70,
+      "actor_steps": 4480,
+      "critic_steps": 4480,
+      "samples": 4587520,
+      "substeps": 292847616,
+      "checksum": 12236794618171901037
+    },
+    {
+      "update": 71,
+      "actor_steps": 4544,
+      "critic_steps": 4544,
+      "samples": 4653056,
+      "substeps": 297009152,
+      "checksum": 2334943974675646641
+    },
+    {
+      "update": 72,
+      "actor_steps": 4608,
+      "critic_steps": 4608,
+      "samples": 4718592,
+      "substeps": 301203456,
+      "checksum": 14326401398785149969
+    },
+    {
+      "update": 73,
+      "actor_steps": 4672,
+      "critic_steps": 4672,
+      "samples": 4784128,
+      "substeps": 305397760,
+      "checksum": 8425990273182641177
+    },
+    {
+      "update": 74,
+      "actor_steps": 4736,
+      "critic_steps": 4736,
+      "samples": 4849664,
+      "substeps": 309559296,
+      "checksum": 4339371931982479723
+    },
+    {
+      "update": 75,
+      "actor_steps": 4800,
+      "critic_steps": 4800,
+      "samples": 4915200,
+      "substeps": 313753600,
+      "checksum": 746649055276221677
+    },
+    {
+      "update": 76,
+      "actor_steps": 4864,
+      "critic_steps": 4864,
+      "samples": 4980736,
+      "substeps": 317947904,
+      "checksum": 14661523359248104481
+    },
+    {
+      "update": 77,
+      "actor_steps": 4928,
+      "critic_steps": 4928,
+      "samples": 5046272,
+      "substeps": 322109440,
+      "checksum": 10662629740346315085
+    },
+    {
+      "update": 78,
+      "actor_steps": 4992,
+      "critic_steps": 4992,
+      "samples": 5111808,
+      "substeps": 326303744,
+      "checksum": 941986529591300018
+    },
+    {
+      "update": 79,
+      "actor_steps": 5056,
+      "critic_steps": 5056,
+      "samples": 5177344,
+      "substeps": 330498048,
+      "checksum": 11492353089387472352
+    },
+    {
+      "update": 80,
+      "actor_steps": 5120,
+      "critic_steps": 5120,
+      "samples": 5242880,
+      "substeps": 334659584,
+      "checksum": 5272910989048889974
+    },
+    {
+      "update": 81,
+      "actor_steps": 5184,
+      "critic_steps": 5184,
+      "samples": 5308416,
+      "substeps": 338853888,
+      "checksum": 17330124504101293219
+    },
+    {
+      "update": 82,
+      "actor_steps": 5248,
+      "critic_steps": 5248,
+      "samples": 5373952,
+      "substeps": 343048192,
+      "checksum": 8960001235744238437
+    },
+    {
+      "update": 83,
+      "actor_steps": 5312,
+      "critic_steps": 5312,
+      "samples": 5439488,
+      "substeps": 347209728,
+      "checksum": 13325628570984463345
+    },
+    {
+      "update": 84,
+      "actor_steps": 5376,
+      "critic_steps": 5376,
+      "samples": 5505024,
+      "substeps": 351404032,
+      "checksum": 11086141826280678493
+    },
+    {
+      "update": 85,
+      "actor_steps": 5440,
+      "critic_steps": 5440,
+      "samples": 5570560,
+      "substeps": 355598336,
+      "checksum": 2408155435342083683
+    },
+    {
+      "update": 86,
+      "actor_steps": 5504,
+      "critic_steps": 5504,
+      "samples": 5636096,
+      "substeps": 359759872,
+      "checksum": 1219744732518223351
+    },
+    {
+      "update": 87,
+      "actor_steps": 5568,
+      "critic_steps": 5568,
+      "samples": 5701632,
+      "substeps": 363954176,
+      "checksum": 17639233237120964423
+    },
+    {
+      "update": 88,
+      "actor_steps": 5632,
+      "critic_steps": 5632,
+      "samples": 5767168,
+      "substeps": 368148480,
+      "checksum": 11009638831084937567
+    },
+    {
+      "update": 89,
+      "actor_steps": 5696,
+      "critic_steps": 5696,
+      "samples": 5832704,
+      "substeps": 372310016,
+      "checksum": 9368900617759650271
+    },
+    {
+      "update": 90,
+      "actor_steps": 5760,
+      "critic_steps": 5760,
+      "samples": 5898240,
+      "substeps": 376504320,
+      "checksum": 15522779692936882677
+    },
+    {
+      "update": 91,
+      "actor_steps": 5824,
+      "critic_steps": 5824,
+      "samples": 5963776,
+      "substeps": 380698624,
+      "checksum": 9576176273005444767
+    },
+    {
+      "update": 92,
+      "actor_steps": 5888,
+      "critic_steps": 5888,
+      "samples": 6029312,
+      "substeps": 384860160,
+      "checksum": 58035820640018970
+    },
+    {
+      "update": 93,
+      "actor_steps": 5952,
+      "critic_steps": 5952,
+      "samples": 6094848,
+      "substeps": 389054464,
+      "checksum": 6580392960664896292
+    },
+    {
+      "update": 94,
+      "actor_steps": 6016,
+      "critic_steps": 6016,
+      "samples": 6160384,
+      "substeps": 393216000,
+      "checksum": 8197958620243759166
+    },
+    {
+      "update": 95,
+      "actor_steps": 6080,
+      "critic_steps": 6080,
+      "samples": 6225920,
+      "substeps": 397410304,
+      "checksum": 17704346354774131566
+    },
+    {
+      "update": 96,
+      "actor_steps": 6144,
+      "critic_steps": 6144,
+      "samples": 6291456,
+      "substeps": 401604608,
+      "checksum": 6399110852997353505
+    },
+    {
+      "update": 97,
+      "actor_steps": 6208,
+      "critic_steps": 6208,
+      "samples": 6356992,
+      "substeps": 405766144,
+      "checksum": 12156059326054448987
+    },
+    {
+      "update": 98,
+      "actor_steps": 6272,
+      "critic_steps": 6272,
+      "samples": 6422528,
+      "substeps": 409960448,
+      "checksum": 10207586293798577064
+    },
+    {
+      "update": 99,
+      "actor_steps": 6336,
+      "critic_steps": 6336,
+      "samples": 6488064,
+      "substeps": 414154752,
+      "checksum": 8052258507369150415
+    },
+    {
+      "update": 100,
+      "actor_steps": 6400,
+      "critic_steps": 6400,
+      "samples": 6553600,
+      "substeps": 418316288,
+      "checksum": 10114020116000704615
+    },
+    {
+      "update": 101,
+      "actor_steps": 6464,
+      "critic_steps": 6464,
+      "samples": 6619136,
+      "substeps": 422510592,
+      "checksum": 11793436059425089830
+    },
+    {
+      "update": 102,
+      "actor_steps": 6528,
+      "critic_steps": 6528,
+      "samples": 6684672,
+      "substeps": 426704896,
+      "checksum": 3994644389799609066
+    },
+    {
+      "update": 103,
+      "actor_steps": 6592,
+      "critic_steps": 6592,
+      "samples": 6750208,
+      "substeps": 430866432,
+      "checksum": 6937846728703619453
+    },
+    {
+      "update": 104,
+      "actor_steps": 6656,
+      "critic_steps": 6656,
+      "samples": 6815744,
+      "substeps": 435060736,
+      "checksum": 7667516392320786807
+    },
+    {
+      "update": 105,
+      "actor_steps": 6720,
+      "critic_steps": 6720,
+      "samples": 6881280,
+      "substeps": 439255040,
+      "checksum": 369526384753412696
+    },
+    {
+      "update": 106,
+      "actor_steps": 6784,
+      "critic_steps": 6784,
+      "samples": 6946816,
+      "substeps": 443416576,
+      "checksum": 13641558592638498859
+    },
+    {
+      "update": 107,
+      "actor_steps": 6848,
+      "critic_steps": 6848,
+      "samples": 7012352,
+      "substeps": 447610880,
+      "checksum": 4938746663732401828
+    },
+    {
+      "update": 108,
+      "actor_steps": 6912,
+      "critic_steps": 6912,
+      "samples": 7077888,
+      "substeps": 451805184,
+      "checksum": 15232590123416844257
+    },
+    {
+      "update": 109,
+      "actor_steps": 6976,
+      "critic_steps": 6976,
+      "samples": 7143424,
+      "substeps": 455966720,
+      "checksum": 16112712883092188238
+    },
+    {
+      "update": 110,
+      "actor_steps": 7040,
+      "critic_steps": 7040,
+      "samples": 7208960,
+      "substeps": 460161024,
+      "checksum": 1022833027441442557
+    },
+    {
+      "update": 111,
+      "actor_steps": 7104,
+      "critic_steps": 7104,
+      "samples": 7274496,
+      "substeps": 464355328,
+      "checksum": 4061465893028974558
+    },
+    {
+      "update": 112,
+      "actor_steps": 7168,
+      "critic_steps": 7168,
+      "samples": 7340032,
+      "substeps": 468516864,
+      "checksum": 3558891358245591451
+    },
+    {
+      "update": 113,
+      "actor_steps": 7232,
+      "critic_steps": 7232,
+      "samples": 7405568,
+      "substeps": 472711168,
+      "checksum": 8416270865839049242
+    },
+    {
+      "update": 114,
+      "actor_steps": 7296,
+      "critic_steps": 7296,
+      "samples": 7471104,
+      "substeps": 476905472,
+      "checksum": 2356028264967938767
+    },
+    {
+      "update": 115,
+      "actor_steps": 7360,
+      "critic_steps": 7360,
+      "samples": 7536640,
+      "substeps": 481067008,
+      "checksum": 9920941608558507062
+    },
+    {
+      "update": 116,
+      "actor_steps": 7424,
+      "critic_steps": 7424,
+      "samples": 7602176,
+      "substeps": 485261312,
+      "checksum": 5932252918280857300
+    },
+    {
+      "update": 117,
+      "actor_steps": 7488,
+      "critic_steps": 7488,
+      "samples": 7667712,
+      "substeps": 489455616,
+      "checksum": 8656118384183059421
+    },
+    {
+      "update": 118,
+      "actor_steps": 7552,
+      "critic_steps": 7552,
+      "samples": 7733248,
+      "substeps": 493617152,
+      "checksum": 3991846211714452217
+    },
+    {
+      "update": 119,
+      "actor_steps": 7616,
+      "critic_steps": 7616,
+      "samples": 7798784,
+      "substeps": 497811456,
+      "checksum": 13203234030013338256
+    },
+    {
+      "update": 120,
+      "actor_steps": 7680,
+      "critic_steps": 7680,
+      "samples": 7864320,
+      "substeps": 502005760,
+      "checksum": 9588119978830502128
+    },
+    {
+      "update": 121,
+      "actor_steps": 7744,
+      "critic_steps": 7744,
+      "samples": 7929856,
+      "substeps": 506167296,
+      "checksum": 10579787460865688827
+    },
+    {
+      "update": 122,
+      "actor_steps": 7808,
+      "critic_steps": 7808,
+      "samples": 7995392,
+      "substeps": 510361600,
+      "checksum": 6167324303552911560
+    },
+    {
+      "update": 123,
+      "actor_steps": 7872,
+      "critic_steps": 7872,
+      "samples": 8060928,
+      "substeps": 514555904,
+      "checksum": 2854865152185159239
+    },
+    {
+      "update": 124,
+      "actor_steps": 7936,
+      "critic_steps": 7936,
+      "samples": 8126464,
+      "substeps": 518717440,
+      "checksum": 8732178459781093385
+    },
+    {
+      "update": 125,
+      "actor_steps": 8000,
+      "critic_steps": 8000,
+      "samples": 8192000,
+      "substeps": 522911744,
+      "checksum": 8806968483492676659
+    },
+    {
+      "update": 126,
+      "actor_steps": 8064,
+      "critic_steps": 8064,
+      "samples": 8257536,
+      "substeps": 527106048,
+      "checksum": 10093512947824473878
+    },
+    {
+      "update": 127,
+      "actor_steps": 8128,
+      "critic_steps": 8128,
+      "samples": 8323072,
+      "substeps": 531267584,
+      "checksum": 3293133792699172101
+    },
+    {
+      "update": 128,
+      "actor_steps": 8192,
+      "critic_steps": 8192,
+      "samples": 8388608,
+      "substeps": 535461888,
+      "checksum": 15292825613656433806
+    }
+  ]
+}

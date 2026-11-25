@@ -1,0 +1,7 @@
+#pragma once
+
+#include "environment/pond_geometry_v1.h"
+
+inline constexpr cudarl::pond_geometry_v1::Parameters larger_pond{
+    @water_radius_x_m@, @water_radius_z_m@,
+    @flat_radius_x_m@, @flat_radius_z_m@, @floor_y_m@, @reference_scale_m@};

@@ -1,0 +1,17 @@
+{
+	"chooser_decisions": 374,
+	"compared_states": 3750,
+	"final_state": {
+		"fault": 0,
+		"speed_mm_s": 11.7114896774292,
+		"time_s": 299.999993294477,
+		"visited_cells": 62
+	},
+	"max_COM_error_m": 0.0627414807677269,
+	"max_requested_speed_error_mm_s": 4.0,
+	"optimizer_updates": 0,
+	"pass": false,
+	"physics_controls": 15000,
+	"physics_substeps": 240000,
+	"resets_during_run": 0
+}

@@ -24,15 +24,19 @@ struct ApproachEvidence {
 // neither advances the body nor prescribes any chooser action.
 CUDARL_HD inline bool approach_start(uint32_t lane, uint32_t episode, const NavigationWorld& source,
                                     const pond_geometry_v1::Parameters& pond, physics::V& position_m,
-                                    float& relative_yaw_rad, ApproachEvidence* evidence = nullptr) {
+                                    float& relative_yaw_rad, ApproachEvidence* evidence = nullptr, int level = 2) {
     if (!pond_geometry_v1::valid_parameters(pond) || !physics::finite_body(source.motion.body) ||
         source.leg_count < 1) return false;
 
     const uint32_t pair_seed = rng::hash_u32(lane / 2) ^ rng::hash_u32(episode + 1);
     const float azimuth = 2.f * pi * rng::uniform(placement_seed, pair_seed, 0);
-    const float slant_deg = min_slant_deg + (max_slant_deg - min_slant_deg) *
+    const float lower_slant = level == 0 ? 25.f : level == 1 ? 30.f : min_slant_deg;
+    const float upper_slant = level == 0 ? 30.f : level == 1 ? 36.f : max_slant_deg;
+    const float lower_runway = level == 0 ? .24f : level == 1 ? .205f : min_straight_runway_m;
+    const float upper_runway = level == 0 ? .27f : level == 1 ? .24f : max_straight_runway_m;
+    const float slant_deg = lower_slant + (upper_slant - lower_slant) *
         rng::uniform(placement_seed, pair_seed, 1);
-    const float runway = min_straight_runway_m + (max_straight_runway_m - min_straight_runway_m) *
+    const float runway = lower_runway + (upper_runway - lower_runway) *
         rng::uniform(placement_seed, pair_seed, 2);
     const int inward_side = (lane % 2) == 0 ? 1 : -1;
     const float ax = static_cast<float>(pond.water_radius_x_m);
@@ -81,8 +85,16 @@ CUDARL_HD inline bool approach_start(uint32_t lane, uint32_t episode, const Navi
     // A translated pose has the same depth at both endpoints. Convex
     // radii bound the static clearance along the entire warm-up segment.
     // The actual warm-up is still integrated and checked by the trainer.
-    const float warmup_gap = static_cast<float>(fmin(fixed_pose_gap(position_m),
+    float warmup_gap = static_cast<float>(fmin(fixed_pose_gap(position_m),
         fixed_pose_gap(position_m + course * warmup_travel_m)));
+    // A long tangential runway may leave a curved bank's clear region. Move
+    // only the INITIAL training placement inward until both warmup endpoints
+    // satisfy the unchanged certificate. No live world or request is modified.
+    if (level < 2) for (int i = 0; i < 200 && warmup_gap <= min_warmup_gap_m; ++i) {
+        position_m = position_m - outward * .001f;
+        warmup_gap = static_cast<float>(fmin(fixed_pose_gap(position_m),
+            fixed_pose_gap(position_m + course * warmup_travel_m)));
+    }
     if (evidence) *evidence = {slant_deg, runway, warmup_gap, inward_side};
     return warmup_gap > min_warmup_gap_m;
 }

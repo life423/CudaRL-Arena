@@ -1,0 +1,3 @@
+device=NVIDIA GeForce RTX 5070 worlds=1024 steps=64 actor_inputs=31 trainable_actor_parameters=563 critic_inputs=36 feedback=phase-aware resumed_update=0 target=2
+update=1 samples=65536 reward=0.129938 kl=0.0027816 course_weight=-0.261095 wall_s=1.02032
+update=2 samples=131072 reward=0.106594 kl=0.00316674 course_weight=-0.266664 wall_s=2.5964

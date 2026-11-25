@@ -1,0 +1,35 @@
+{
+  "qualified": false,
+  "godot_published": false,
+  "summary": {
+    "pass": false,
+    "steering_mode": "held-heading",
+    "steering_request_schema": 1,
+    "motor_feedback_mode": "whole-beat",
+    "horizon_mode": "long-horizon",
+    "diagnostic_passes": 7,
+    "diagnostic_cases": 12,
+    "endurance_passes": 0,
+    "endurance_attempts": 0,
+    "clearance_stops": 5,
+    "other_native_faults": 0,
+    "reachable_50mm_cells_estimate": 345,
+    "diagnostic_visited_cells": 187,
+    "diagnostic_coverage_fraction": 0.542028986,
+    "endurance_visited_cells": 0,
+    "attempted_substeps": 876378,
+    "accepted_substeps": 876373,
+    "substep_cap": 2112000,
+    "resets": 0,
+    "optimizer_updates": 0,
+    "internal_elapsed_s": 0.7286285
+  },
+  "actor": {
+    "sha256": "751B965F33705D4E661CFEE23C6C6C6C58B56CAC4207D2F085371F93F64CB223",
+    "horizon": "long-horizon",
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\whole-beat-pond-v2-execution\\training\\actor-24.bin",
+    "feedback": "whole-beat",
+    "steering": "held-heading",
+    "update": 24
+  }
+}
