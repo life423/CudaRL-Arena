@@ -1,0 +1,15 @@
+{
+  "total_attempted_substeps": 705648015.0,
+  "main_substeps": 671175637,
+  "long_coverage_cases_run": 0,
+  "failed_preflight_physics_steps": 0,
+  "fixed_assessment_substeps": 18263640.0,
+  "Godot_experimental_parity_substeps": 240000,
+  "main_transitions": 1048576,
+  "diagnostic_transitions": 24576,
+  "diagnostic_substeps": 15728738,
+  "main_updates": 128,
+  "diagnostic_updates": 3,
+  "Godot_legacy_parity_substeps": 240000,
+  "failed_preflight_optimizer_updates": 0
+}

@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "date": "2026-11-25",
+  "registered_project": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\project.godot",
+  "motor_study": "rate-response-v1",
+  "motor_update": 88,
+  "chooser_study": "appended-coverage-v3",
+  "chooser_update": 16,
+  "diagnostic_passes": 12,
+  "endurance_passes": 4,
+  "clearance_stops": 0,
+  "resets": 0,
+  "UI_checks": 215,
+  "native_Godot_parity_states": 3750,
+  "max_COM_difference_m": 0,
+  "original_motor_available": true,
+  "original_native_backup": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\protected-original-godot",
+  "training_active": false,
+  "finite_test_only": true,
+  "files": [
+    {
+      "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+      "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/yaw-offset-update-8.bin",
+      "sha256": "52BA55F110DD1227CBFEB1E47E6199E50DE74687E82E9DD651114CDA86FEC354"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+      "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/exploration-chooser-88.bin",
+      "sha256": "9CA99020979DB1AF2D4505499A142FFB552933321B73A7B8FE9EA60B03AF2C7C"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+      "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+    },
+    {
+      "path": "flexible-tail-preview/addons/flexible_tail_live/bin/flexible_tail_live.dll",
+      "sha256": "FB9FE791A6F93C397BDA9C3A5B0E57ABD2B91E77C09B0108429B35A3F2E31F88"
+    },
+    {
+      "path": "flexible-tail-preview/flexible_tail_preview.gd",
+      "sha256": "7496FE23126C6E8208708E5654BCA64E974286B6C4FA92BCC1CF92AC27CE9B9C"
+    },
+    {
+      "path": "flexible-tail-preview/flexible_tail_preview.tscn",
+      "sha256": "1A3F96B3A0373F44A7FCA099DD78B63EC64F0739909C7FF8C0DF2E397FC2FC69"
+    },
+    {
+      "path": "flexible-tail-preview/habitat.json",
+      "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/exploration-chooser-coverage-80.bin",
+      "sha256": "DAC82FD96B2D37D984EFE13B02C6C31F8F0E3617EF6A79A2034936BE8466DE66"
+    },
+    {
+      "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323",
+      "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin"
+    }
+  ],
+  "active_chooser_file": "exploration-chooser-appended-16.bin",
+  "mean_individual_coverage": 0.4391304348,
+  "maximum_slow_interval_s": 8.14,
+  "continuous_coverage_cases": 4,
+  "continuous_physical_passes": 4,
+  "continuous_horizon_s": 1800,
+  "minimum_individual_coverage": 0.4260869565,
+  "continuous_faults": 0,
+  "chooser_inputs": 35,
+  "chooser_model_version": 5
+}

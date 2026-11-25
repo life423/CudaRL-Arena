@@ -1,0 +1,1618 @@
+[
+  {
+    "path": "bindings.json",
+    "sha256": "EDF1CADF80C5E1F43D43B1CF36886C6577FDE75559FE043D54273050593DF1B3"
+  },
+  {
+    "path": "experimental-godot-parity.json",
+    "sha256": "32DD388386BFB59FA2D36B40560ADAB13354F2DD48389B11114355C6E55F94AF"
+  },
+  {
+    "path": "legacy-godot-parity.json",
+    "sha256": "CEBDB1E6FE7326B02FF31DE7C43395FE9FDF715CC80BAC6AA00BD84C11B536C1"
+  },
+  {
+    "path": "map-generation.json",
+    "sha256": "EAA14255C5417580358C0620DB7249D7FA8140FD11F0E395B01AA2865713545F"
+  },
+  {
+    "path": "preflight-correction.json",
+    "sha256": "FCCB2CF4C7B9B92D536ABE182807FEA26A825CBE9CC9E91574A4B6142362AF90"
+  },
+  {
+    "path": "progress.json",
+    "sha256": "FCD0F71BCA5A56092BFA23CCADB46D98C57D36D18647AE54C691B11D3C87C396"
+  },
+  {
+    "path": "result.json",
+    "sha256": "7CEBA13728A6DEC504AC5D367DB3BC4B370414F8C5CAB1FA15C48C479119BD11"
+  },
+  {
+    "path": "training.receipt.json",
+    "sha256": "E0921856AED103426283FCA3ADAD60F8500BE7B65B49889386F20160709226C9"
+  },
+  {
+    "path": "work-ledger.json",
+    "sha256": "DFBBA3E17B38E390651C8455D5F79D3525BFE27B5E7456B29C32FA7E3B2032E2"
+  },
+  {
+    "path": "working-bundle-unchanged.json",
+    "sha256": "B4579FEE235D15FFDFD36B05099EB2C343647E4F0EB920BAC74491DE61DEB14F"
+  },
+  {
+    "path": "compatibility/experimental-parity.receipt.json",
+    "sha256": "781A16221BF0E8F57901B399DE9F43A7B0C23E4832504F7EF54E09ACF417F40F"
+  },
+  {
+    "path": "compatibility/experimental-parity.stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "compatibility/experimental-parity.stdout.log",
+    "sha256": "090F6ABC70383777B387DCAE2A17EA38D28370A1EC9F8AD1B4121B77AEA26619"
+  },
+  {
+    "path": "compatibility/import.log",
+    "sha256": "618BFFDD95CEB4B7A1BBE10B99D5E84DBEFD39B9398BEF2FA41D8827D8C45B1B"
+  },
+  {
+    "path": "compatibility/legacy-parity-imported.receipt.json",
+    "sha256": "893F2FDD4A5CADECB7727C5A5B0D071F8A9432E2900F6049E483B696E2218813"
+  },
+  {
+    "path": "compatibility/legacy-parity-imported.stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "compatibility/legacy-parity-imported.stdout.log",
+    "sha256": "9AE34C8EA1638DE5CF9A9258D0A69223BC97A215D2646DCEAD3FD78228411D90"
+  },
+  {
+    "path": "compatibility/legacy-parity.receipt.json",
+    "sha256": "E222844F948A949817A9315A902DA70C09AE83CE707736E9D10FB0457558DF8C"
+  },
+  {
+    "path": "compatibility/legacy-parity.stderr.log",
+    "sha256": "BFDE08E8E57500FBB39D8DE3F2AC458E34732B93E6DEC65EF1CEB7B8901CBF52"
+  },
+  {
+    "path": "compatibility/legacy-parity.stdout.log",
+    "sha256": "88F4366A464890AE77869D105C69E6C70EB469597695096EA544DC097C5C2C81"
+  },
+  {
+    "path": "failed-preflight/bindings.json",
+    "sha256": "3B23446E065439D8F2343973E32F1653CE57C2F419A64A1C0555F4E12FE322CA"
+  },
+  {
+    "path": "failed-preflight/map-generation.json",
+    "sha256": "EAA14255C5417580358C0620DB7249D7FA8140FD11F0E395B01AA2865713545F"
+  },
+  {
+    "path": "failed-preflight/native-executable-hashes.json",
+    "sha256": "92ADC1E57413E8D5B73650DF5B522FFB5F6616330F53903F6CE85ADF9CB6994A"
+  },
+  {
+    "path": "failed-preflight/observation-diagnostic/inspection.receipt.json",
+    "sha256": "D0E27BDC981E96C948F372F67FD703AF809F4DF5763337F19416F025F0C7A208"
+  },
+  {
+    "path": "failed-preflight/observation-diagnostic/inspection.stderr.log",
+    "sha256": "97EED48A51A8814C0F75C05077697C49B2F2ADE681E72F229113CED72762440F"
+  },
+  {
+    "path": "failed-preflight/observation-diagnostic/inspection.stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "failed-preflight/observation-diagnostic/data/curriculum-preflight.json",
+    "sha256": "8923D26F6F89CEF92514B62F462E2895B3EA047677D72AA275003AAD37B9F2B8"
+  },
+  {
+    "path": "failed-preflight/observation-diagnostic/data/distant-parity.json",
+    "sha256": "D66120D6768C07DF0DF665DEC9E7038D1FE621FB9BAA719DEF262D79AD9873BF"
+  },
+  {
+    "path": "failed-preflight/observation-diagnostic/data/failure.txt",
+    "sha256": "97EED48A51A8814C0F75C05077697C49B2F2ADE681E72F229113CED72762440F"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/inspection.receipt.json",
+    "sha256": "E4133B8FDA99187331FFEBC007B56316E24FC4FC079CCDBAF97CF4E454B07C08"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/inspection.stderr.log",
+    "sha256": "97EED48A51A8814C0F75C05077697C49B2F2ADE681E72F229113CED72762440F"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/inspection.stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/data/curriculum-preflight.json",
+    "sha256": "8923D26F6F89CEF92514B62F462E2895B3EA047677D72AA275003AAD37B9F2B8"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/data/distant-parity.json",
+    "sha256": "DFFFC9A8F95161C1D63E4B9ED29D03EC0B9BD9BF7C99A86CFA74681D13005057"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/data/failure.txt",
+    "sha256": "97EED48A51A8814C0F75C05077697C49B2F2ADE681E72F229113CED72762440F"
+  },
+  {
+    "path": "failed-preflight/observation-isolation/source/train.cu",
+    "sha256": "DF97035C33AEA74A37EB60729F3D90DD10EB4A68725808BA4F69D013E5CC386C"
+  },
+  {
+    "path": "failed-preflight/source/src/core/checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770"
+  },
+  {
+    "path": "failed-preflight/source/src/core/checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D"
+  },
+  {
+    "path": "failed-preflight/source/src/core/hd.h",
+    "sha256": "CB1105C3CE5ED2D53C838344ED4FAE35F4BBDAA99AC0599E9B60948E7D4AF030"
+  },
+  {
+    "path": "failed-preflight/source/src/core/rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/pond_geometry_inspect_link.cu",
+    "sha256": "05841C89C925E76174F88E4EC6DAC000BF9197FA9648C96FE5AFC564A882062B"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/pond_geometry_inspect.cu",
+    "sha256": "06630CDDC21A428DF9239563F8029FFE2573F708AE94580A3926FE24BA378143"
+  },
+  {
+    "path": "failed-preflight/source/src/cuda/pond_math_profile.h",
+    "sha256": "9E7179A62B0BDD029C22F7C803B136B0A01F9D181FDB1CA436A75A8E696B7968"
+  },
+  {
+    "path": "failed-preflight/source/src/environment/flexible_tail_clearance.h",
+    "sha256": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1"
+  },
+  {
+    "path": "failed-preflight/source/src/environment/pond_body_geometry.h",
+    "sha256": "D01D3A4845F63F084E4F5456F7542067924823A7C78BA8EEAC8BCB2D91BF3008"
+  },
+  {
+    "path": "failed-preflight/source/src/environment/pond_geometry_v1.h",
+    "sha256": "695A985B8C72C347925D5425882B795E8D7AD4B4BA5F47D7B35FABC21F613AF3"
+  },
+  {
+    "path": "failed-preflight/source/src/environment/pond_swept_clearance.h",
+    "sha256": "BACD2B69F64020F9BC90F782DF60C0A0126098DE2FD3F17AE1630C965AB9C270"
+  },
+  {
+    "path": "failed-preflight/source/src/godot/flexible_tail_live.cpp",
+    "sha256": "45BA866AB05EB70B1766C024D9E8FD33C9B0B4737BC9255E40951C5E52C5FD95"
+  },
+  {
+    "path": "failed-preflight/source/src/godot/flexible_tail_live.h",
+    "sha256": "2E3C6E0F4FEAFF15B4784F74BA3429963D3D230C79A5764FEECE50E31F4DFF26"
+  },
+  {
+    "path": "failed-preflight/source/src/godot/hold_lab_preview.cpp",
+    "sha256": "5DDDDBAF7507D1CB4032377A150204E625C0CEE1A37FBF86EF3229128E5C01E3"
+  },
+  {
+    "path": "failed-preflight/source/src/godot/hold_lab_preview.h",
+    "sha256": "5019559E4351AF5AFE000B2B0370B78831294E2D7CE25659623379372D557650"
+  },
+  {
+    "path": "failed-preflight/source/src/godot/register_flexible_tail_live.cpp",
+    "sha256": "85FD9D3D6CBF078688DB6B38B91C89CDA6FC1CFCC37C4EC10512942ED601E5E4"
+  },
+  {
+    "path": "failed-preflight/source/src/godot/register_live_types.cpp",
+    "sha256": "70B323CF74DC75AFEE1C5E4FEEB60DDFA49B6B9CAD5A97AC33FDFFA5145D9190"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/mlp_gpu.cu",
+    "sha256": "6052183959B9B692CA201701CA297CFE7A481F630B3342341142480FBF8CEBEE"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/mlp_gpu.h",
+    "sha256": "25DDC2BA76C9BF09099C8D18AB0CA4E1717D224B61FD8431E72AF16EA93A990C"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/heading_request_observation.h",
+    "sha256": "D07B38E74F61120CECF0F52E1280CAA284DC5F046245A26628F9E1D5A24647C2"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/hold_assessment.h",
+    "sha256": "CDDA2488E1AD54C902DFEC54FF1891E49E7638C50607ECF62D90DAFFBD8DC569"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/joint_motor.h",
+    "sha256": "DC53D22CFF99352C5E378B6BCD919569C9A26455AA5DF9F8EC1C36172171314F"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/pond_motor_observation.h",
+    "sha256": "3CB25C6CC4538E6030A6BDE4DF49704BED6470A605B06E9D137A55AB1767103C"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/saved_motor_contract.cpp",
+    "sha256": "98BA8BD500EDBFEF9C62B686E1B9C3946C3A6750DDEA94096ED29B7DD060F49A"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/saved_motor_contract.h",
+    "sha256": "2CD731543CBD850897CEB1A4A32E34E364319CB273DCEBBD45B68FA99D7A0FDC"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F"
+  },
+  {
+    "path": "failed-preflight/source/src/nn/motor/straight_task.h",
+    "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22"
+  },
+  {
+    "path": "failed-preflight/source/src/physics/contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6"
+  },
+  {
+    "path": "failed-preflight/source/src/physics/dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6"
+  },
+  {
+    "path": "failed-preflight/source/src/physics/flexible_tail.h",
+    "sha256": "4FC5CBD001A34E99AB7F5B7EC2EA060F18F807CC7DD39FB7A8EFB48B4D8B7041"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_bank_observation.h",
+    "sha256": "4D6C56AA78F5A611DAD52DE3EB5EB34710097F5AECDD85FFE5943D3D8D893C9B"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_beat_course.h",
+    "sha256": "9BF3867813B10E82471B30E42CFC3A99162D983D4E25A7B394EF3605D2B1D72A"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_choices.h",
+    "sha256": "8DDFB8FAE4314C0C078A621F1202E44320C6F2D5805DF862488BE7022CA37ADB"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_chooser_checkpoint.h",
+    "sha256": "33B1B4C1C7DD0667918CCA618902CC57EE945A062B304B350268C43B57231F30"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_chooser.h",
+    "sha256": "3375127364EE430BA1C5C743EA25C727F7C5C656E79D2C3DB332BF7033DD93C4"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_distant_coverage.h",
+    "sha256": "30372629AB81440029D78B96758406CE2506C612467A2C402B42798307CC6AAC"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_distant_map.h",
+    "sha256": "1D287F27CFEAD6CFD8D8A1D2920CD1D39DBD5A4AD74EBDA6427F6D07DFFDB051"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_fast_steering.h",
+    "sha256": "9EF71F41496917F7F9A6200F059076A45B1C073011E54A938549248A6596ED9A"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_gait.h",
+    "sha256": "E6F237A7F0BCA2FD57D29F1673A92582726F363B6B2E3EE1EA3471C7AF28FA14"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_launch.h",
+    "sha256": "8497873E40DC9E26F3546E23C36E7601E7911EE2AD01255FCFDA51202CBABDEE"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_motor.h",
+    "sha256": "43B924DB0151C4DE6A202211E3AC97E3F9B3AC191ACBF788CC0DDFD0C0E2B998"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_navigation.h",
+    "sha256": "634A7A99C49F3E9E56AF6E848C00866DBF184988A183D0C093A4AC1AF8334074"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_rate_chooser.h",
+    "sha256": "365C73FE82475E08C0D913F297CEE227E98F7B05681D0CE51466EAF76E77D4A9"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_steering_policy.h",
+    "sha256": "C2FB3FE93612FB20444DC7133E28BF749898D0106F46D721E9FCC822D1DEE617"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_stroke_metrics.h",
+    "sha256": "922EDCEDAD034CEC279E03A8A2C706E129D15B836C10C939BD3428C192F754BF"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_transition.h",
+    "sha256": "30C6909272430706B3B74AC1804113FECE00EBEE4A1B3C82FE014558B06FBD5A"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/flexible_tail_yaw_offset.h",
+    "sha256": "6881591BF03E6DD55F68824697C202374C1C07989CE342D46EE3EEBCB5562B2C"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/learned_amplitude_math.h",
+    "sha256": "54D39FA6E7081ABCF9F8A534821FBE839ACB7B14B7725680472C9D14C78F3D28"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/pond_ppo_contract.h",
+    "sha256": "64A0D7FCAFED7F768E6C896BE9C52F309C210AE0FC6D721C65ADF67737892897"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/pond_ppo_schedule.h",
+    "sha256": "AED039790BBC007E8D3DBB268418F04C3BA7DA1E153E5CDD6251E53342B53468"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/pond_ppo_task.h",
+    "sha256": "805A49A88E0FBD2B28DB64616D363F447F1960538D9B77BA1847209241B3B53A"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/ppo_kernels.cu",
+    "sha256": "A36EFF8B4517E1D422012FBC761E5FC036B0FF62C2B2BC8AAD5080C2842A0DB0"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8"
+  },
+  {
+    "path": "failed-preflight/source/src/rl/ppo_math.h",
+    "sha256": "D923301361A71130D8B25A088B9CD21BDDFF596FD2267108817FABCA382FEF46"
+  },
+  {
+    "path": "failed-preflight/source/src/simulation/pond_runtime.h",
+    "sha256": "9B87804E5BAD278B911F1636E64EEC03CF52D7570DD119EE30067C3F3BF13D2A"
+  },
+  {
+    "path": "failed-preflight/source/src/simulation/world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441"
+  },
+  {
+    "path": "failed-preflight/source/src/simulation/world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8"
+  },
+  {
+    "path": "failed-preflight/source/src/simulation/world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/BANK_CURRICULUM_PROTOCOL.md",
+    "sha256": "AC023B915A64F689C6E9EF832CD36C76929183B69B354EA6852F6DA40B7D333A"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "6493022B78134986A8ED8F993E47304807C903EC1B56E2D653162762067C0FE2"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/CMakeLists.txt",
+    "sha256": "4CDF783B90ED6B0D4714BAEFEDACAB2A0883728C385BC8A22F4631CCAFBD3E11"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/COVERAGE_PROTOCOL.md",
+    "sha256": "BB24B6AB220D190101D01FC50FC7150504C0EA82B38856B1A65BBC406D00973D"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/DISTANT_COVERAGE_PROTOCOL.md",
+    "sha256": "C81EBD25B9E5446B420184C48670F6FDADE7255363AAE22E36C2914E7F04D88B"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/evaluate.cpp",
+    "sha256": "AC4003E97E4F240AEAC6528DD0513C7DE7D378F6C34C0534566E8716545A4164"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/generate-coverage-map.cpp",
+    "sha256": "FBEBA6F9C702798AC7D9B6940E48629418E594AD3C788A0335D8C3C1E32E86F1"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/POND_STAGE_PROTOCOL.md",
+    "sha256": "B465076553770B27B9D5682DACC2FB5AC2E4771033E55545EB90206423B21B1F"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/PROTOCOL.md",
+    "sha256": "C3D34CFD97031F6D903CE37C50DD4219428EA88D5F6CBE45EFE09C74DEAF385D"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/rate_session.cuh",
+    "sha256": "94986D46489997AA338797654033E192B732BCC4B04C740ECC0F1246A2F4955C"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+    "sha256": "1EF596188F4CE5D88FF2C4DCA92C55DFDD364C865AD5BBBEC8517B6B08BBFE65"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/README.md",
+    "sha256": "926BDB274090E976D9D025B3F77517EB398EA7F74EF073CD250BACB5ED1A6FE4"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/RELIABLE_TURNS_PROTOCOL.md",
+    "sha256": "7453AFBE358F8D7B72A0EAEAF08C1ECC0F034E5801E39202AE2796827B37B84A"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-beat-session.ps1",
+    "sha256": "0798E5A3CABB115424385D018228F4617722BCE944A1DB634C07DCE611AF1B56"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-coverage-session.ps1",
+    "sha256": "6CFADDA1F5AB3BCDC5D4AB8177DEA4966407461E8A5C745C27F038D485C298D1"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-reliable-session.ps1",
+    "sha256": "9AC4BE62024690E6EBE2EF6237655414C3E35B6A010421BCB4A949C29DF2E7A4"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-session.ps1",
+    "sha256": "7B82B0FCA19E65A3D4141D7BB6AE1B8B17A5FC739A0D5D5575438224FDE67AA9"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/run-study.ps1",
+    "sha256": "2391433A8DB508E9397FCE6C0C075E2D7D221EC9404AD1320A62FF21D9B1A7E2"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/SESSION_PROTOCOL.md",
+    "sha256": "78367ABFD3557C35F99B62C7AB0544EFAF10DB45C288C794AA0C032013968743"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/STEERING_INTERFACE_PROTOCOL.md",
+    "sha256": "9ED00AD7A020D754C561E09080C8E5FABF800F4470656C73B0B5482DF10D39D7"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/steering-check.cpp",
+    "sha256": "C89A4CDEF7FF5DB0FB97CCF275C6946753A3791C4EE80F454BF87696C347CB91"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/sustained_session.cuh",
+    "sha256": "BB6D9D5933C96CEBB3B8919010BD0CD0B66843B30C519679B230B198C2D87F34"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "9875FA3E03A0EF9659079781AB6399CAC597517448FDEB5D3860A95A6094F6DF"
+  },
+  {
+    "path": "failed-preflight/source/tools/pond-flexible-tail-steering/run-seven-stages.ps1",
+    "sha256": "438110810290F2EC2B1D6146674D574F216C84D6BC49181866C7F8C73BC8FA93"
+  },
+  {
+    "path": "failed-preflight/verification/verification.receipt.json",
+    "sha256": "AA2EE2273398C6D075E8DFB5420A9D39FFA1AFC9D209B7FE8B7B387DE78ED73B"
+  },
+  {
+    "path": "failed-preflight/verification/verification.stderr.log",
+    "sha256": "97EED48A51A8814C0F75C05077697C49B2F2ADE681E72F229113CED72762440F"
+  },
+  {
+    "path": "failed-preflight/verification/verification.stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "failed-preflight/verification/data/curriculum-preflight.json",
+    "sha256": "8923D26F6F89CEF92514B62F462E2895B3EA047677D72AA275003AAD37B9F2B8"
+  },
+  {
+    "path": "failed-preflight/verification/data/failure.txt",
+    "sha256": "97EED48A51A8814C0F75C05077697C49B2F2ADE681E72F229113CED72762440F"
+  },
+  {
+    "path": "fixed-evaluations/update-000/cases.csv",
+    "sha256": "E6DFE6E18720B443F8CC0B910543B2BF95BB84112003E67C7F3B1524909C319A"
+  },
+  {
+    "path": "fixed-evaluations/update-000/coverage.csv",
+    "sha256": "62E2DFCD43ADA8FA1FFEB2790DFDEDC6EA69AE162DAC8AB02933F670CF38C24B"
+  },
+  {
+    "path": "fixed-evaluations/update-000/evaluation.receipt.json",
+    "sha256": "59E720671E99A465BF2821F3CB6002BCD715781A405B4061A1E47251260E3929"
+  },
+  {
+    "path": "fixed-evaluations/update-000/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-000/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-000/summary.json",
+    "sha256": "339371B06E27B229BB990F4FA7B4C0426484FC498C5C941C73C99E4C55925FDA"
+  },
+  {
+    "path": "fixed-evaluations/update-008/cases.csv",
+    "sha256": "87996B36052E9956D155961E89A1BE65F68C62B6EF4CDBCE147448D88ACACD18"
+  },
+  {
+    "path": "fixed-evaluations/update-008/coverage.csv",
+    "sha256": "362974083CA07C15A35C58EB8FE8E16D6B007E92C4BA7F63851A54AAF2003CD3"
+  },
+  {
+    "path": "fixed-evaluations/update-008/evaluation.receipt.json",
+    "sha256": "D7D62533DCA4F436EABC6EC68C7F212E6ADF935C2A3E8EC5D931B6F8C86F046D"
+  },
+  {
+    "path": "fixed-evaluations/update-008/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-008/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-008/summary.json",
+    "sha256": "3493659452EA20D882F8C133DB6E0DEA241199446C2785275262971A7A1B4521"
+  },
+  {
+    "path": "fixed-evaluations/update-016/cases.csv",
+    "sha256": "6C4873B8A9D2D08CD327B89A4B1F67194F729FE361D5578DE4A47FA6C24412BA"
+  },
+  {
+    "path": "fixed-evaluations/update-016/coverage.csv",
+    "sha256": "AF68F4F3DA0795A6D5D381A3905D0C48910BDC64993EE93FBC5F69D8166F7EAF"
+  },
+  {
+    "path": "fixed-evaluations/update-016/evaluation.receipt.json",
+    "sha256": "76ACB2D8B8FA3AC4B53A7B59F7B2AF7332CA68DF9CCB121DCEBCA8CDCC93A3BF"
+  },
+  {
+    "path": "fixed-evaluations/update-016/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-016/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-016/summary.json",
+    "sha256": "3248DB7319D07BF148DD6C82F9139A5767EF3693E54D25D22EC0A89A73CCB281"
+  },
+  {
+    "path": "fixed-evaluations/update-024/cases.csv",
+    "sha256": "B07CA0ABB7A1CFEB03B033220CA9D6E15277E202F871882D0C48754AD6E1885F"
+  },
+  {
+    "path": "fixed-evaluations/update-024/coverage.csv",
+    "sha256": "631D1776902D948987D16B928BBEA9FD403E569369A778FA9E35BBF6C0A9F409"
+  },
+  {
+    "path": "fixed-evaluations/update-024/evaluation.receipt.json",
+    "sha256": "8B27541AB1CDC0581B987B6EA06BC049661D096545B8B4C11031A5392B95674D"
+  },
+  {
+    "path": "fixed-evaluations/update-024/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-024/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-024/summary.json",
+    "sha256": "7717F84F4088B78390DA069DB34FCCFA6F54A297339326BB543B32B93A1B340C"
+  },
+  {
+    "path": "fixed-evaluations/update-032/cases.csv",
+    "sha256": "D09C97E7C3812EAEC0F94323EEE9ABCB9A1CF7CC0F60996F83E5FFA20A864686"
+  },
+  {
+    "path": "fixed-evaluations/update-032/coverage.csv",
+    "sha256": "9B3CAD3EC4BF21F4A408C41037506C3707BE3EAD694B336A7606FF2EBBA29BBE"
+  },
+  {
+    "path": "fixed-evaluations/update-032/evaluation.receipt.json",
+    "sha256": "8962606D2AE4F4BE2EB254E55F268BBFF5D9EB01C5B96C9DC68239E44FC86061"
+  },
+  {
+    "path": "fixed-evaluations/update-032/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-032/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-032/summary.json",
+    "sha256": "6804795D5FE161F2674736D8881BC0DD57000289AE3A18203B1B2C41AE3124E2"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/center_north.csv",
+    "sha256": "446DA03E90B16776668AD5C0DA1333E0B83F6D6F9C10581AEABEC13B6A34DFBA"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/center_south.csv",
+    "sha256": "E1B4ACFB6DF11CA013F5F59A3BCD9894F20FBC2202F71808C28622EF0D0095D7"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/center_west.csv",
+    "sha256": "B21CA5A8A8E1C90AD847EF4C3A20BCA69432F7EA46014A5F12B75048FFCA6F93"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/east_shelf_tangent.csv",
+    "sha256": "6DEEA57F30E336B84F7FF6C80D5E06A316D7EDFD9294E22E5D9F5F063B2F5F0C"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/endurance_godot_rest.csv",
+    "sha256": "859D218BCE311C82F6F458C7602DAB4D8C167D532AFD48EC277701F641BD3D7D"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/endurance_northeast.csv",
+    "sha256": "6E601FA3DB9C554A54431317D7F018FEFB077F795AEB05132771D71C8E77F6E6"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/endurance_southwest.csv",
+    "sha256": "75C769057EF4CCCE8E4C1DCCB9194C602F5AADE254E9A3AE4A2F7C4B6D78F71F"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/endurance_west.csv",
+    "sha256": "A23536FA1DB21932B01D1DB69D8E5FF24B9AD778A1F606A8F553863F021D564C"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/godot_rest.csv",
+    "sha256": "A62264D6E4DE1E815E65E0EDDDE1F9005705B179A090EFA1207B8ED2AEF22625"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/north_shelf_tangent.csv",
+    "sha256": "32C71F8357964CC1F669009FA58E7958C5483B9831FAA3432FAC233F759E7C2F"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/northeast_to_center.csv",
+    "sha256": "FC1D3D29F7AB49C59E68A41715BF7EC4711B1D8E9FACBEDE2F6046620804B532"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/northwest_diagonal.csv",
+    "sha256": "A67EB8BCA222E7E5D920CAB74BF685A8CD13535350447301EF0F2078A4F3940A"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/south_shelf_tangent.csv",
+    "sha256": "F777DDCFC2A0FF45CAA407C3AC6B9B26E15C123AF5E1A51C244AA3A16A6120BB"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/southeast_diagonal.csv",
+    "sha256": "CEA9A86AF4A778B14DCEC6880A5EDDF9817366A8D118414FD315708CBD1D70CC"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/southwest_to_center.csv",
+    "sha256": "4460B59E80B2F37EF81B1BE8D35F6162662C2865C95EC484D0DC73B7097E37DA"
+  },
+  {
+    "path": "fixed-evaluations/update-032/traces/west_shelf_tangent.csv",
+    "sha256": "919084D205D02B591AB1A0ECC498BF6E40F32F6D64FE76A085E11E7DD6FA1DAB"
+  },
+  {
+    "path": "fixed-evaluations/update-040/cases.csv",
+    "sha256": "5933187827477A19F3A0C5A2307869F4E4819FE7DA4E3E6FEAD1AD2385FF9B2F"
+  },
+  {
+    "path": "fixed-evaluations/update-040/coverage.csv",
+    "sha256": "3448C87EDD4F69F42C6DF2D0AA9A9FB774732008CEC0622E921AEAD7B5F5B116"
+  },
+  {
+    "path": "fixed-evaluations/update-040/evaluation.receipt.json",
+    "sha256": "D3F427FA8882B2D9D699544E688588FFC8012C1456BA997DB8EA8F6842C2E6ED"
+  },
+  {
+    "path": "fixed-evaluations/update-040/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-040/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-040/summary.json",
+    "sha256": "383C50DC62C2848DB4AE3A9DCA9BA3978D5CC39191381356321C324BC73AE9A8"
+  },
+  {
+    "path": "fixed-evaluations/update-048/cases.csv",
+    "sha256": "A90E4596DAC89B045018663B4FE4E0F709A07DFB09E6FAE47F4B3A0BB0FBA7FD"
+  },
+  {
+    "path": "fixed-evaluations/update-048/coverage.csv",
+    "sha256": "4401DE965220F69B6B25293A087B3512C14C752C47C20F9DFEE73DB8E4DDB082"
+  },
+  {
+    "path": "fixed-evaluations/update-048/evaluation.receipt.json",
+    "sha256": "81F97D1BFC869E93C385708E51D31C98907B079138369063103AE5CC9E40EAB9"
+  },
+  {
+    "path": "fixed-evaluations/update-048/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-048/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-048/summary.json",
+    "sha256": "C38D3A5C746A753691344F8084D3666C1387D628E9B8B52A52F784FF655F07E0"
+  },
+  {
+    "path": "fixed-evaluations/update-056/cases.csv",
+    "sha256": "0EC7025C75ED88958F47BF8DF2027DEA298D0741F3B763DAC84A32D4156353EF"
+  },
+  {
+    "path": "fixed-evaluations/update-056/coverage.csv",
+    "sha256": "4F376B4CCD597746A8BFCF07F8F542052AA695179AF2F7C3CDFB0AED7239894D"
+  },
+  {
+    "path": "fixed-evaluations/update-056/evaluation.receipt.json",
+    "sha256": "79564922BE6C0B167F69FCD9BB6EDC25CCD46AA43FE9B1A6938014625103734C"
+  },
+  {
+    "path": "fixed-evaluations/update-056/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-056/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-056/summary.json",
+    "sha256": "3C83BBDB1824DF61E9CEE93811C5F40356006CDE427D0484BB09E2CB0A677959"
+  },
+  {
+    "path": "fixed-evaluations/update-064/cases.csv",
+    "sha256": "C00F35CD45D1CA8248B9B807D65A288C32257B876A6F7B427FDA8566A03CE565"
+  },
+  {
+    "path": "fixed-evaluations/update-064/coverage.csv",
+    "sha256": "BA94FCF44739FEA70D28C3B10FA564311103544B5361DB15D58980746B57D36A"
+  },
+  {
+    "path": "fixed-evaluations/update-064/evaluation.receipt.json",
+    "sha256": "E98046739D1C3A8B42A7D3F5C6AD95DFC4446522FAD50A10DD869238CE5F3D70"
+  },
+  {
+    "path": "fixed-evaluations/update-064/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-064/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-064/summary.json",
+    "sha256": "ED18A2EB6F278C2C94E613A26ED626AC8D8CF2507335F22C97C40D2E48327DF1"
+  },
+  {
+    "path": "fixed-evaluations/update-072/cases.csv",
+    "sha256": "C53DFC66516C6768CD243954773B01C31FC14E3D9EA24D7963FFEA43CA6FBCC3"
+  },
+  {
+    "path": "fixed-evaluations/update-072/coverage.csv",
+    "sha256": "531B5B50FFE4063C990D5A16FB276E5C9962829F71CA445449C16A3E2BAA96DD"
+  },
+  {
+    "path": "fixed-evaluations/update-072/evaluation.receipt.json",
+    "sha256": "7FF71609D9E03B18AB5856235F379485BAB982C6A0EA4886124BE25E085F88FA"
+  },
+  {
+    "path": "fixed-evaluations/update-072/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-072/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-072/summary.json",
+    "sha256": "AEB33D277AB3F37984948BD3AC188490BB23884C2C7FBD876C3019925DDA6A1B"
+  },
+  {
+    "path": "fixed-evaluations/update-080/cases.csv",
+    "sha256": "3E53B0BC2A7C25682898C5A9CD9374EE85617BA6E9420299983946291D08D9D4"
+  },
+  {
+    "path": "fixed-evaluations/update-080/coverage.csv",
+    "sha256": "3E90AA8FFA1CC12214596FC557E60DE0234E4658451A214220840DF9BA28A5D7"
+  },
+  {
+    "path": "fixed-evaluations/update-080/evaluation.receipt.json",
+    "sha256": "8C7342BA36922535EDB233A9BDDAC22597225453A4F5327875F50C2EA57752E9"
+  },
+  {
+    "path": "fixed-evaluations/update-080/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-080/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-080/summary.json",
+    "sha256": "088215D0BDDC0B5C06F2F05766F0F46A7FE8F15251832802D1A38F80F97E4BC7"
+  },
+  {
+    "path": "fixed-evaluations/update-088/cases.csv",
+    "sha256": "4EC0EDAAA8B1B44FC9D9C50D3C5218F258A252C5338F5A4C07F64A8A9BFF863A"
+  },
+  {
+    "path": "fixed-evaluations/update-088/coverage.csv",
+    "sha256": "D3F5682D4E6BFEC023491E4B06CC52B0753EBFED8DD88AAF416594D10F799BC7"
+  },
+  {
+    "path": "fixed-evaluations/update-088/evaluation.receipt.json",
+    "sha256": "79E6A57FA7CE98EC537536022E20B38C341966B434A05C5B6EAEB34C7BB1ABD5"
+  },
+  {
+    "path": "fixed-evaluations/update-088/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-088/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-088/summary.json",
+    "sha256": "EA162F24E6C4847071335B9B7F59EBE64A06E4DAFBE0A40DBA33920B1291A52B"
+  },
+  {
+    "path": "fixed-evaluations/update-096/cases.csv",
+    "sha256": "EBFD7802AE4F07F15164BB9B6410DB2D391F5C41E7829E82F03EE7903C9B33E4"
+  },
+  {
+    "path": "fixed-evaluations/update-096/coverage.csv",
+    "sha256": "8983FCE61132378569A891F52DF809B9B706B6622EB92A7FAC57DDFB1E30EFA9"
+  },
+  {
+    "path": "fixed-evaluations/update-096/evaluation.receipt.json",
+    "sha256": "7B0D76C9DC32BC14CCE30D72CCA1553BA4B294B1F0C471F3FEB94A903D726012"
+  },
+  {
+    "path": "fixed-evaluations/update-096/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-096/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-096/summary.json",
+    "sha256": "4FA8C5B867775B15ADBCA2C7F8728F9CAA82F9D09CAAFB7A64C97B09157FF1E5"
+  },
+  {
+    "path": "fixed-evaluations/update-104/cases.csv",
+    "sha256": "21A30796B23AE4EEDE18D4082BF6E4CC26BB080A1A977C7F5897953D9BD1FFC7"
+  },
+  {
+    "path": "fixed-evaluations/update-104/coverage.csv",
+    "sha256": "BC44BA44562E6877E468A664F983C67DF03730377EB9F27E5543CBAF1EBCF0A3"
+  },
+  {
+    "path": "fixed-evaluations/update-104/evaluation.receipt.json",
+    "sha256": "EE26236233896C43D6217EBEC8CBC4B3A73CE978C354A0A9DFF65260239E5651"
+  },
+  {
+    "path": "fixed-evaluations/update-104/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-104/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-104/summary.json",
+    "sha256": "6DB45CEC084A92A07D1D6F0CC676BB8AD8BCA42A32C469B51595C5E79B82CE44"
+  },
+  {
+    "path": "fixed-evaluations/update-112/cases.csv",
+    "sha256": "2D9CB269D5E2F9309CA438B83E512546BDC588E0F8391584D03943B6BF3812A5"
+  },
+  {
+    "path": "fixed-evaluations/update-112/coverage.csv",
+    "sha256": "A31BA040577ACC51EDB7DCFA06A784651683846E10ADAC5B4352DFEC547DDD65"
+  },
+  {
+    "path": "fixed-evaluations/update-112/evaluation.receipt.json",
+    "sha256": "56A2FC0DB49482E4245C1C1DE8B37A8D927B56A2101ADB6BB3C202C62EA9F4C5"
+  },
+  {
+    "path": "fixed-evaluations/update-112/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-112/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-112/summary.json",
+    "sha256": "FEC109B8F92FC2EDC1A7A9C0E58117E86C6B17659590D1A21E23E92FB9FB9E69"
+  },
+  {
+    "path": "fixed-evaluations/update-120/cases.csv",
+    "sha256": "546E081C6D270702FB9951AFC2DB32B8CC85328A48BA6CFD9CDD2ACF5FEB8733"
+  },
+  {
+    "path": "fixed-evaluations/update-120/coverage.csv",
+    "sha256": "854DB6DBE3B4E6A8C1D64E7E4603CC06D620A0CFE8E369C43AB5DFCCEF657553"
+  },
+  {
+    "path": "fixed-evaluations/update-120/evaluation.receipt.json",
+    "sha256": "A073CF503821A010D3785D6E0BA569F4BA965CE11E1FA7D7348B06E69AD28BB8"
+  },
+  {
+    "path": "fixed-evaluations/update-120/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-120/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-120/summary.json",
+    "sha256": "1BE325071CE3B47024D2BC7C28EF0B27EA9EF525A0F6AF48C2E5416FBC445E67"
+  },
+  {
+    "path": "fixed-evaluations/update-128/cases.csv",
+    "sha256": "42DA4DE7ADD5CE7E039A7F491BF712A3F3D4CCD02F723DCFB05173CDF2A41924"
+  },
+  {
+    "path": "fixed-evaluations/update-128/coverage.csv",
+    "sha256": "9A8FB5A37EA4EDACDDD484D86159F505901B9CBC6DBC37DBFC723C1073161D62"
+  },
+  {
+    "path": "fixed-evaluations/update-128/evaluation.receipt.json",
+    "sha256": "EF1A73C16F4D6E6639ADD5A7B86585F8DBB7BBCA877982AE5823E4518568CDC1"
+  },
+  {
+    "path": "fixed-evaluations/update-128/metadata-check.json",
+    "sha256": "EA77A1BC7A32D435A630B30E519818F7249B58CB7872BB7CDC55B93BFCB2AD43"
+  },
+  {
+    "path": "fixed-evaluations/update-128/starts.csv",
+    "sha256": "AA2CD41B21013DF76033CAEC5709FB54527B87B9DECDD9BD5B4B9258EC2E2A19"
+  },
+  {
+    "path": "fixed-evaluations/update-128/summary.json",
+    "sha256": "73024DB2FB0CCBC86ED92E3F02AB5C126AC55BE77C41F3D15F3ED61A0004AD1D"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/center_north.csv",
+    "sha256": "A33007595C11194D3E9A1FEA302807F273C553D2EDEF1307940A8AE9BC09C722"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/center_south.csv",
+    "sha256": "E0AE44D75F09B94F99A7463706E087B1E0FC6634A9AD79324D2DDA8FA3B29072"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/center_west.csv",
+    "sha256": "9C3A19844FE49A01C6A825A6E3A577846C0104DD3657DC050065126CEFE29AA7"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/east_shelf_tangent.csv",
+    "sha256": "79F10F7588670EC0CC5767C2B46BB12DD06975AE56558E79839AACC3FD00FEF2"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/godot_rest.csv",
+    "sha256": "7B12198A096B75EA039BBCD53FD8571D025A0C0E3EA76B4D77C701760231715A"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/north_shelf_tangent.csv",
+    "sha256": "87826C92E6D5DD13DD05CE5C1CDC289A0FE1D86C43D0BCC106D941BE058ED48D"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/northeast_to_center.csv",
+    "sha256": "03C7E8218F5496D94E6C243A3417D2CC0CC1FE43B306C2E1AE8F34512ECBD942"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/northwest_diagonal.csv",
+    "sha256": "1931F01FBB6769CFB55377FC9AE6C7D4D97D332930A32D5E642715DE7DB2DB12"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/south_shelf_tangent.csv",
+    "sha256": "AF9E357E4D0804E796D08B1AA25CE3E2A60698F2DFCFAA9A9A9C32A2E3A3CE6F"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/southeast_diagonal.csv",
+    "sha256": "E9D01EF83B4F6F525679B3A20ADD7A98F95116456A33E7FE008685ADD763722B"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/southwest_to_center.csv",
+    "sha256": "D2A9B98C1E217EF66CAF20EA5A285FA8E136226139BE19B9CEDF8F11C3BCB329"
+  },
+  {
+    "path": "fixed-evaluations/update-128/traces/west_shelf_tangent.csv",
+    "sha256": "84F7698679324D0D5ECDDA39BE7F624608683584CB4B5BD3F5882F85E3BC9CAE"
+  },
+  {
+    "path": "source/src/core/checkpoint.cpp",
+    "sha256": "17915CD45C2C381C8FCF15884891BADB4D7EA408305C5FB0864E9C9065BFC770"
+  },
+  {
+    "path": "source/src/core/checkpoint.h",
+    "sha256": "2F544F600FA3C1281F17629C4AD7FAF08CBDB54B38376E1D7489A1921074F93D"
+  },
+  {
+    "path": "source/src/core/hd.h",
+    "sha256": "CB1105C3CE5ED2D53C838344ED4FAE35F4BBDAA99AC0599E9B60948E7D4AF030"
+  },
+  {
+    "path": "source/src/core/rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627"
+  },
+  {
+    "path": "source/src/cuda/block_reduce.h",
+    "sha256": "45EEF82BA03FFDE295C9446F0A39FF0241D5D25118E51C30E9A335335AD8CE77"
+  },
+  {
+    "path": "source/src/cuda/cuda_memory.h",
+    "sha256": "9ABE88D058D17EF7B89155DFD756F8DCEE5B24A8E4515856CE06F3F93672AB00"
+  },
+  {
+    "path": "source/src/cuda/device.cu",
+    "sha256": "81BEFA7245A44A048870BF11C87B52892FD9AD3CBD46F8613CAE1C6E9303A98F"
+  },
+  {
+    "path": "source/src/cuda/device.h",
+    "sha256": "EE5443A0805C41CB472A7B2ED6DF9D4DE34B3ED24C7E86D97F389DB7D96AE44D"
+  },
+  {
+    "path": "source/src/cuda/pond_geometry_inspect_link.cu",
+    "sha256": "05841C89C925E76174F88E4EC6DAC000BF9197FA9648C96FE5AFC564A882062B"
+  },
+  {
+    "path": "source/src/cuda/pond_geometry_inspect.cu",
+    "sha256": "06630CDDC21A428DF9239563F8029FFE2573F708AE94580A3926FE24BA378143"
+  },
+  {
+    "path": "source/src/cuda/pond_math_profile.h",
+    "sha256": "9E7179A62B0BDD029C22F7C803B136B0A01F9D181FDB1CA436A75A8E696B7968"
+  },
+  {
+    "path": "source/src/environment/flexible_tail_clearance.h",
+    "sha256": "866D853354071055D1A6D750E96DFBA9E0152BAE33F64B93330FA495AA6BACE1"
+  },
+  {
+    "path": "source/src/environment/pond_body_geometry.h",
+    "sha256": "D01D3A4845F63F084E4F5456F7542067924823A7C78BA8EEAC8BCB2D91BF3008"
+  },
+  {
+    "path": "source/src/environment/pond_geometry_v1.h",
+    "sha256": "695A985B8C72C347925D5425882B795E8D7AD4B4BA5F47D7B35FABC21F613AF3"
+  },
+  {
+    "path": "source/src/environment/pond_swept_clearance.h",
+    "sha256": "BACD2B69F64020F9BC90F782DF60C0A0126098DE2FD3F17AE1630C965AB9C270"
+  },
+  {
+    "path": "source/src/godot/flexible_tail_live.cpp",
+    "sha256": "45BA866AB05EB70B1766C024D9E8FD33C9B0B4737BC9255E40951C5E52C5FD95"
+  },
+  {
+    "path": "source/src/godot/flexible_tail_live.h",
+    "sha256": "2E3C6E0F4FEAFF15B4784F74BA3429963D3D230C79A5764FEECE50E31F4DFF26"
+  },
+  {
+    "path": "source/src/godot/hold_lab_preview.cpp",
+    "sha256": "5DDDDBAF7507D1CB4032377A150204E625C0CEE1A37FBF86EF3229128E5C01E3"
+  },
+  {
+    "path": "source/src/godot/hold_lab_preview.h",
+    "sha256": "5019559E4351AF5AFE000B2B0370B78831294E2D7CE25659623379372D557650"
+  },
+  {
+    "path": "source/src/godot/register_flexible_tail_live.cpp",
+    "sha256": "85FD9D3D6CBF078688DB6B38B91C89CDA6FC1CFCC37C4EC10512942ED601E5E4"
+  },
+  {
+    "path": "source/src/godot/register_live_types.cpp",
+    "sha256": "70B323CF74DC75AFEE1C5E4FEEB60DDFA49B6B9CAD5A97AC33FDFFA5145D9190"
+  },
+  {
+    "path": "source/src/nn/adam_config.h",
+    "sha256": "E2AD8FCC7336749B736F74A579CFBD644CF55D758F7F8EE4B3FE31ACAEC19B73"
+  },
+  {
+    "path": "source/src/nn/adam.cu",
+    "sha256": "00CFE5DDCFED6C6CE05EC378BF1DA31BE7C288978C7FAD6BAD3481A05B13D6F3"
+  },
+  {
+    "path": "source/src/nn/adam.h",
+    "sha256": "1069EE7A5D8C1098C2305781BF2F87ADD6A9A3EBAC3BDAFA8792B6FC1BA2D7B9"
+  },
+  {
+    "path": "source/src/nn/gemm.cu",
+    "sha256": "F7B71B2B55AE9513E0292525412CC4686808894E07EE95B143F885EE99B5EBF4"
+  },
+  {
+    "path": "source/src/nn/gemm.h",
+    "sha256": "F52A4C233D1BE5E3EEC2ECCADAD6675A3E5CC31ECF951B7E8B63BA7C568E4BD6"
+  },
+  {
+    "path": "source/src/nn/loss.cu",
+    "sha256": "A88B55906EFD9B811377D8AA78C0634B084C93BA855027BC4BA3035BFC050572"
+  },
+  {
+    "path": "source/src/nn/loss.h",
+    "sha256": "49B613B80FC3112081181CCFC428E128755635B4BBBD4EEE67E847C401777FAA"
+  },
+  {
+    "path": "source/src/nn/mlp_cpu.h",
+    "sha256": "5566A16CD2D2D84BD2E5BEB61DDDD2642DF452F43E3C47EF1B60DF9264302153"
+  },
+  {
+    "path": "source/src/nn/mlp_gpu.cu",
+    "sha256": "6052183959B9B692CA201701CA297CFE7A481F630B3342341142480FBF8CEBEE"
+  },
+  {
+    "path": "source/src/nn/mlp_gpu.h",
+    "sha256": "25DDC2BA76C9BF09099C8D18AB0CA4E1717D224B61FD8431E72AF16EA93A990C"
+  },
+  {
+    "path": "source/src/nn/mlp_spec.h",
+    "sha256": "762C60A18477C66085A8276DE7AB46AAD767B665826E01FFC923FB368646F9EF"
+  },
+  {
+    "path": "source/src/nn/motor/heading_request_observation.h",
+    "sha256": "D07B38E74F61120CECF0F52E1280CAA284DC5F046245A26628F9E1D5A24647C2"
+  },
+  {
+    "path": "source/src/nn/motor/hold_assessment.h",
+    "sha256": "CDDA2488E1AD54C902DFEC54FF1891E49E7638C50607ECF62D90DAFFBD8DC569"
+  },
+  {
+    "path": "source/src/nn/motor/joint_motor.h",
+    "sha256": "DC53D22CFF99352C5E378B6BCD919569C9A26455AA5DF9F8EC1C36172171314F"
+  },
+  {
+    "path": "source/src/nn/motor/movement_model.h",
+    "sha256": "5AB30EB92A609AC8CFD50944BEF8898CF199BE3989DBB6550B05BF44BC5449D5"
+  },
+  {
+    "path": "source/src/nn/motor/observation_contract.h",
+    "sha256": "6D46B600194CE1C830FCE11C01860143BBE3AF9452996DC6BFF07043F6C10332"
+  },
+  {
+    "path": "source/src/nn/motor/pond_motor_observation.h",
+    "sha256": "3CB25C6CC4538E6030A6BDE4DF49704BED6470A605B06E9D137A55AB1767103C"
+  },
+  {
+    "path": "source/src/nn/motor/saved_motor_contract.cpp",
+    "sha256": "98BA8BD500EDBFEF9C62B686E1B9C3946C3A6750DDEA94096ED29B7DD060F49A"
+  },
+  {
+    "path": "source/src/nn/motor/saved_motor_contract.h",
+    "sha256": "2CD731543CBD850897CEB1A4A32E34E364319CB273DCEBBD45B68FA99D7A0FDC"
+  },
+  {
+    "path": "source/src/nn/motor/state.h",
+    "sha256": "BE6444F54B748D58B36F75A36E6CEBB880863C0950207615495298FB13D8DA6F"
+  },
+  {
+    "path": "source/src/nn/motor/straight_task.h",
+    "sha256": "994F7719F497E237AD4428C74FEAC2D73CE57E2EA6EA8E12AB8085882E28DF22"
+  },
+  {
+    "path": "source/src/physics/contact.h",
+    "sha256": "3E88A73390F08803EB5F55ABC8AB1D93533884169817BF5165F7DA698DC152A6"
+  },
+  {
+    "path": "source/src/physics/dynamics.h",
+    "sha256": "29F79E704CDAC48F7045734C50549AFC4052CEF8ED96715F8F57F49402F832A6"
+  },
+  {
+    "path": "source/src/physics/flexible_tail.h",
+    "sha256": "4FC5CBD001A34E99AB7F5B7EC2EA060F18F807CC7DD39FB7A8EFB48B4D8B7041"
+  },
+  {
+    "path": "source/src/rl/append_hold_checkpoint.h",
+    "sha256": "0242C141C790BC9FE98CA95962C5DA335CE38916236E735626CF01562F56966B"
+  },
+  {
+    "path": "source/src/rl/ar_gaussian_math.h",
+    "sha256": "43C1D5402D4F86C26D69CA15D8030E8E42271CEC4C411763211C6C5440D5F797"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_bank_observation.h",
+    "sha256": "4D6C56AA78F5A611DAD52DE3EB5EB34710097F5AECDD85FFE5943D3D8D893C9B"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_beat_course.h",
+    "sha256": "9BF3867813B10E82471B30E42CFC3A99162D983D4E25A7B394EF3605D2B1D72A"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_choices.h",
+    "sha256": "8DDFB8FAE4314C0C078A621F1202E44320C6F2D5805DF862488BE7022CA37ADB"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_chooser_checkpoint.h",
+    "sha256": "33B1B4C1C7DD0667918CCA618902CC57EE945A062B304B350268C43B57231F30"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_chooser.h",
+    "sha256": "3375127364EE430BA1C5C743EA25C727F7C5C656E79D2C3DB332BF7033DD93C4"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_distant_coverage.h",
+    "sha256": "30372629AB81440029D78B96758406CE2506C612467A2C402B42798307CC6AAC"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_distant_map.h",
+    "sha256": "1D287F27CFEAD6CFD8D8A1D2920CD1D39DBD5A4AD74EBDA6427F6D07DFFDB051"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_fast_steering.h",
+    "sha256": "9EF71F41496917F7F9A6200F059076A45B1C073011E54A938549248A6596ED9A"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_gait.h",
+    "sha256": "E6F237A7F0BCA2FD57D29F1673A92582726F363B6B2E3EE1EA3471C7AF28FA14"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_launch.h",
+    "sha256": "8497873E40DC9E26F3546E23C36E7601E7911EE2AD01255FCFDA51202CBABDEE"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_motor.h",
+    "sha256": "43B924DB0151C4DE6A202211E3AC97E3F9B3AC191ACBF788CC0DDFD0C0E2B998"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_navigation.h",
+    "sha256": "634A7A99C49F3E9E56AF6E848C00866DBF184988A183D0C093A4AC1AF8334074"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_rate_chooser.h",
+    "sha256": "365C73FE82475E08C0D913F297CEE227E98F7B05681D0CE51466EAF76E77D4A9"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_steering_policy.h",
+    "sha256": "C2FB3FE93612FB20444DC7133E28BF749898D0106F46D721E9FCC822D1DEE617"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_stroke_metrics.h",
+    "sha256": "922EDCEDAD034CEC279E03A8A2C706E129D15B836C10C939BD3428C192F754BF"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_transition.h",
+    "sha256": "30C6909272430706B3B74AC1804113FECE00EBEE4A1B3C82FE014558B06FBD5A"
+  },
+  {
+    "path": "source/src/rl/flexible_tail_yaw_offset.h",
+    "sha256": "6881591BF03E6DD55F68824697C202374C1C07989CE342D46EE3EEBCB5562B2C"
+  },
+  {
+    "path": "source/src/rl/gaussian_kernels.cu",
+    "sha256": "CD45C1ADA693CE171D3C7545D05F3DEBD15984430F5BBF528F3DE7A33E9D16B7"
+  },
+  {
+    "path": "source/src/rl/gaussian_kernels.h",
+    "sha256": "52CE5311A2F89AC0FB14E253F221BA5DA63172FABD04753FA398D97B803E267D"
+  },
+  {
+    "path": "source/src/rl/gaussian_math.h",
+    "sha256": "2CAEC7F5F720D1C9562E5A25D0380BF766FCA05EEAB048E9CF859B683EFE8700"
+  },
+  {
+    "path": "source/src/rl/learned_amplitude_math.h",
+    "sha256": "54D39FA6E7081ABCF9F8A534821FBE839ACB7B14B7725680472C9D14C78F3D28"
+  },
+  {
+    "path": "source/src/rl/pond_ppo_contract.h",
+    "sha256": "64A0D7FCAFED7F768E6C896BE9C52F309C210AE0FC6D721C65ADF67737892897"
+  },
+  {
+    "path": "source/src/rl/pond_ppo_schedule.h",
+    "sha256": "AED039790BBC007E8D3DBB268418F04C3BA7DA1E153E5CDD6251E53342B53468"
+  },
+  {
+    "path": "source/src/rl/pond_ppo_task.h",
+    "sha256": "805A49A88E0FBD2B28DB64616D363F447F1960538D9B77BA1847209241B3B53A"
+  },
+  {
+    "path": "source/src/rl/ppo_checkpoint.h",
+    "sha256": "7DFA4807DC65D36D62BFA35D05E9C71604B7CCB84E37ED4DE1D00B59072783C2"
+  },
+  {
+    "path": "source/src/rl/ppo_diagnostics.h",
+    "sha256": "6D3BCDEC41A53FDE8A44FD70E740F78944AA6F36E271AE5CDF90F1340CE4FEEC"
+  },
+  {
+    "path": "source/src/rl/ppo_kernels.cu",
+    "sha256": "A36EFF8B4517E1D422012FBC761E5FC036B0FF62C2B2BC8AAD5080C2842A0DB0"
+  },
+  {
+    "path": "source/src/rl/ppo_kernels.h",
+    "sha256": "54EDD3D7CDFA0ABE6AC65AB24DE08240F4B00D5BCB984ECEB931CDD1984952C8"
+  },
+  {
+    "path": "source/src/rl/ppo_math.h",
+    "sha256": "D923301361A71130D8B25A088B9CD21BDDFF596FD2267108817FABCA382FEF46"
+  },
+  {
+    "path": "source/src/simulation/pond_runtime.h",
+    "sha256": "9B87804E5BAD278B911F1636E64EEC03CF52D7570DD119EE30067C3F3BF13D2A"
+  },
+  {
+    "path": "source/src/simulation/world_cuda.cu",
+    "sha256": "3EFD6521852738AE8FAFAFA8F920368E1091643C6F60E43A64EDFF69DA388441"
+  },
+  {
+    "path": "source/src/simulation/world.cpp",
+    "sha256": "3FB892DF82FDF739AAA58EE706E56D895229CD00FCC9A6C48C9D5F59708348E8"
+  },
+  {
+    "path": "source/src/simulation/world.h",
+    "sha256": "6FCAB032BC114416AD5FC481DA5F15483E7594201B8CBC343DF888AF7F1A4CD3"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/BANK_CURRICULUM_PROTOCOL.md",
+    "sha256": "AC023B915A64F689C6E9EF832CD36C76929183B69B354EA6852F6DA40B7D333A"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "6493022B78134986A8ED8F993E47304807C903EC1B56E2D653162762067C0FE2"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/CMakeLists.txt",
+    "sha256": "4CDF783B90ED6B0D4714BAEFEDACAB2A0883728C385BC8A22F4631CCAFBD3E11"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/COVERAGE_PROTOCOL.md",
+    "sha256": "BB24B6AB220D190101D01FC50FC7150504C0EA82B38856B1A65BBC406D00973D"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/DISTANT_COVERAGE_PROTOCOL.md",
+    "sha256": "6A8A233DF5CDAE8DFCE3DB1053883185CDCD1BFD98A7963C4425F5F0266D6983"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/evaluate.cpp",
+    "sha256": "AC4003E97E4F240AEAC6528DD0513C7DE7D378F6C34C0534566E8716545A4164"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/generate-coverage-map.cpp",
+    "sha256": "FBEBA6F9C702798AC7D9B6940E48629418E594AD3C788A0335D8C3C1E32E86F1"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/POND_STAGE_PROTOCOL.md",
+    "sha256": "B465076553770B27B9D5682DACC2FB5AC2E4771033E55545EB90206423B21B1F"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/PROTOCOL.md",
+    "sha256": "C3D34CFD97031F6D903CE37C50DD4219428EA88D5F6CBE45EFE09C74DEAF385D"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/rate_session.cuh",
+    "sha256": "0BB054DCA91CD2CA14525050927A225B3AFC4720A28733B10FA612BEC10F6103"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+    "sha256": "1EF596188F4CE5D88FF2C4DCA92C55DFDD364C865AD5BBBEC8517B6B08BBFE65"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/README.md",
+    "sha256": "926BDB274090E976D9D025B3F77517EB398EA7F74EF073CD250BACB5ED1A6FE4"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/RELIABLE_TURNS_PROTOCOL.md",
+    "sha256": "7453AFBE358F8D7B72A0EAEAF08C1ECC0F034E5801E39202AE2796827B37B84A"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/run-beat-session.ps1",
+    "sha256": "0798E5A3CABB115424385D018228F4617722BCE944A1DB634C07DCE611AF1B56"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/run-coverage-session.ps1",
+    "sha256": "6CFADDA1F5AB3BCDC5D4AB8177DEA4966407461E8A5C745C27F038D485C298D1"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/run-reliable-session.ps1",
+    "sha256": "9AC4BE62024690E6EBE2EF6237655414C3E35B6A010421BCB4A949C29DF2E7A4"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/run-session.ps1",
+    "sha256": "7B82B0FCA19E65A3D4141D7BB6AE1B8B17A5FC739A0D5D5575438224FDE67AA9"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/run-study.ps1",
+    "sha256": "2391433A8DB508E9397FCE6C0C075E2D7D221EC9404AD1320A62FF21D9B1A7E2"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/SESSION_PROTOCOL.md",
+    "sha256": "78367ABFD3557C35F99B62C7AB0544EFAF10DB45C288C794AA0C032013968743"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/STEERING_INTERFACE_PROTOCOL.md",
+    "sha256": "9ED00AD7A020D754C561E09080C8E5FABF800F4470656C73B0B5482DF10D39D7"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/steering-check.cpp",
+    "sha256": "C89A4CDEF7FF5DB0FB97CCF275C6946753A3791C4EE80F454BF87696C347CB91"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/sustained_session.cuh",
+    "sha256": "BB6D9D5933C96CEBB3B8919010BD0CD0B66843B30C519679B230B198C2D87F34"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "DF97035C33AEA74A37EB60729F3D90DD10EB4A68725808BA4F69D013E5CC386C"
+  },
+  {
+    "path": "source/tools/pond-flexible-tail-steering/run-seven-stages.ps1",
+    "sha256": "438110810290F2EC2B1D6146674D574F216C84D6BC49181866C7F8C73BC8FA93"
+  },
+  {
+    "path": "training/actor-0.bin",
+    "sha256": "0C6FE6904FC69B7149261FEFE0FA011A70FE0F8F6E9CC0090742EF0B906801A5"
+  },
+  {
+    "path": "training/actor-128.bin",
+    "sha256": "15B626E4D5272D24258F8617F7093B62B02B79EBFB7149FFB628DC9E1614470C"
+  },
+  {
+    "path": "training/actor-32.bin",
+    "sha256": "9360DF19A27C11748BAA1DC1299193B442D8B0FB928E9B080D02C329731CCC53"
+  },
+  {
+    "path": "training/parent-import.json",
+    "sha256": "542B5504B4302A2C8E961CEC67E52A7E200AFE5B12152181AC5EF1905CB01555"
+  },
+  {
+    "path": "training/result.json",
+    "sha256": "CB77A0D59FEEB6F8CECE52EEF320D2EF4718767E1072C7D20FDA5599E380EA49"
+  },
+  {
+    "path": "training/session-128.bin",
+    "sha256": "D91C596C79BEA7108FA47A0FB111A2C81D2DAD8C2BE48D84419C5CF1853A2129"
+  },
+  {
+    "path": "training/updates.csv",
+    "sha256": "956BEAFF32E09D1B6097B6328EDFBC69E2A5C5E5C592ED6AC5970EB840F07EB6"
+  },
+  {
+    "path": "verification/verification.receipt.json",
+    "sha256": "2C6BD0948615BB4C9363AF3EC3AA5582FA7AB424A7C2331D657FF717EDA72C06"
+  },
+  {
+    "path": "verification/verification.stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "verification/verification.stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "verification/data/actor-0.bin",
+    "sha256": "0C6FE6904FC69B7149261FEFE0FA011A70FE0F8F6E9CC0090742EF0B906801A5"
+  },
+  {
+    "path": "verification/data/actor-1.bin",
+    "sha256": "ABE7A63B2F06281703C52AF18C2BDFC5E8995291709E9628555481CB81F6FAFF"
+  },
+  {
+    "path": "verification/data/actor-2.bin",
+    "sha256": "4C4DE106C4DC729DDC22EA69C57CD5334B9902B4F35286E612D8C696122BEBA6"
+  },
+  {
+    "path": "verification/data/budget.checkpoint",
+    "sha256": "2A3B2E897B268246DBA610F107D8102AD5A67BA682A5401568AA29F13891D9A1"
+  },
+  {
+    "path": "verification/data/curriculum-preflight.json",
+    "sha256": "8923D26F6F89CEF92514B62F462E2895B3EA047677D72AA275003AAD37B9F2B8"
+  },
+  {
+    "path": "verification/data/distant-parity.json",
+    "sha256": "0D579238F5C16B149C970C7B6DA789C0DF7E214BE190ECED1A0D8A4B2F0BDEB8"
+  },
+  {
+    "path": "verification/data/distant-senses.json",
+    "sha256": "2A38D8AA84FB2E07A1123ADD0F272A75FDB7CAC158AEC7317D9EEBC91C4D66C6"
+  },
+  {
+    "path": "verification/data/latest.checkpoint",
+    "sha256": "99520DB4205E22A2FB89B36B4E8BCCEF92BDC89015A9D98F3BDF6F17145F4560"
+  },
+  {
+    "path": "verification/data/parent-import.json",
+    "sha256": "542B5504B4302A2C8E961CEC67E52A7E200AFE5B12152181AC5EF1905CB01555"
+  },
+  {
+    "path": "verification/data/result.json",
+    "sha256": "959A97A5A75E73223B45BCE8B2A6A14FBC400FB38AD639CF1C371BA8AD861858"
+  },
+  {
+    "path": "verification/data/updates.csv",
+    "sha256": "953712E57A917D61F5803FEC5F5C2AC80D1873B19C59F3ABAEBE4D8CE38F1D57"
+  },
+  {
+    "path": "verification/data/verification.json",
+    "sha256": "8A984C3B187FAE8A4BBB82CE37D59C6FF2A2FAEA42AB075FA46B4627A6A2C09D"
+  },
+  {
+    "path": "verification/data/checkpoints/session-0.bin",
+    "sha256": "A1605E2A4C3D4D959C401631C74F68C7309C4EAE4734F7D7CCE0280F9872AC83"
+  },
+  {
+    "path": "verification/data/checkpoints/session-1.bin",
+    "sha256": "E374464BF44E1F365EB6CD3B8CA930F251E7B9E5846956C180C84B7A7119681B"
+  },
+  {
+    "path": "verification/data/checkpoints/session-2.bin",
+    "sha256": "99520DB4205E22A2FB89B36B4E8BCCEF92BDC89015A9D98F3BDF6F17145F4560"
+  }
+]

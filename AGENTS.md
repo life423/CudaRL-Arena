@@ -1,5 +1,72 @@
 # Workspace instructions
 
+## User stopping point and frontier reward — November 25, 2026
+
+STOP after the completed frontier-progress-v4 session. User explicitly forbids
+mouse/keyboard takeover until permission is given; no desktop automation ran.
+Read FRONTIER_PROGRESS_PROTOCOL.md and the pond-flexible-tail-frontier-progress-v4
+research README. The1024-world native CUDA run completed128 updates/1048576
+transitions in160.735s. Motor88 and all35 inputs stayed frozen/unchanged; only
+discount-consistent unvisited-water progress reward changed. Full35-input parent
+roundtrip, GPU/CPU reward checks and three-update exact resume pass. Best trained8
+scores11/12, final128 scores2/12. All17 evaluations are saved; zero new30-minute
+or Godot parity runs because no trained candidate passes12+4. Godot remains
+appended16/motor88, all11 bundle hashes intact. No trainer remains active.
+Do not repeat or extend this closed session. Next proposed read-only decision:
+reward/novelty reset economics and measured speed/turning-room safety horizon.
+Further training and any mouse/keyboard control require the user's next direction.
+
+## Appended distant feedback — November 25, 2026
+
+The authorized appended-input session is CLOSED at128 new PPO updates on1,024
+CUDA worlds,161.552s. All32 local inputs remain unchanged; three distant novelty
+inputs are appended with zero actor/critic columns and fresh Adam ages. Exact
+parent roundtrip, initial GPU actor/critic equivalence and three-update full
+resume pass. Read APPENDED_COVERAGE_PROTOCOL.md under the chooser tool and the
+pond-flexible-tail-appended-coverage-v3 research README. Selected16 passes12+4
+and all four30-minute starts without guards/resets, raising worst/mean individual
+coverage31.88/37.90% to42.61/43.91%. Default start slightly declines44.93→43.77%;
+no case reaches80%. Maximum slow interval improves11.1→8.14s. Final128 is unsafe
+in two long cases and is rejected. Godot now loads separately named appended16
+with unchanged motor88; old coverage80/chooser88 and motor files are preserved.
+Both old/new native300s replays match3,750 states exactly; package11 and rendered
+UI215 checks pass. Final desktop inspection was interrupted by user Escape;
+no further app input followed. No trainer remains; do not repeat this closed run
+or claim whole-pond mastery, other depths, currents or infinite survival.
+
+## Distant visitation feedback — November 25, 2026
+
+User authorized better distant feedback, a separate GPU PPO chooser session,
+conditional Godot adoption and commits. Read DISTANT_COVERAGE_PROTOCOL.md under
+tools/pond-flexible-tail-chooser and the pond-flexible-tail-distant-coverage-v2
+research README. The corrected session is CLOSED at128 updates/1,024 worlds,
+157.555s. Only inputs21–23 change to a338-cell course-relative novelty field;
+version4 models explicitly bind the geometric cache. Full-state import from
+coverage-v1 selected80 and three-update exact resume pass. Initial12+4 is safe,
+but best trained32 scores12+2 and final128 scores3/12. Zero long coverage cases
+ran. No candidate is adopted: Godot stays coverage80, all active10 hashes intact.
+Original preflight/inspections spent zero physics/PPO and are preserved; new
+three inputs agree CPU/CUDA exactly, while unchanged bank input9 differs by
+2.235e−6 as it already does under legacy. Physical tolerances stay unchanged.
+Isolated native old/new model-format replays each match3,750 states. Preserve
+the complete local-observation interface in a proposed next appended-feature
+comparison; do not silently repeat or extend this closed study.
+
+## Individual coverage continuation — November 25, 2026
+
+The user authorized improving actual whole-pond exploration. Read
+tools/pond-flexible-tail-chooser/COVERAGE_PROTOCOL.md and
+assets/research-evidence/pond-flexible-tail-coverage-v1/README.md.
+The session is CLOSED at 128 new updates on 1,024 CUDA worlds, 141.535s.
+Its opt-in novelty-weighted transport reward leaves motor88 and physics frozen.
+Explicit full-state import from chooser88 and three-update exact resume pass.
+Selected80 passes 12+4 original gates and four uninterrupted 30-minute starts,
+raising worst/mean individual coverage 21.45/24.35%→31.88/37.90%. One run slows
+for11.1s below6mm/s while clear of terrain. No candidate reaches80% coverage.
+Godot adopts coverage80 through active_chooser_file in the manifest, preserving
+chooser88 and every motor. Native parity3,750 and UI215 pass. No background
+trainer remains; do not silently rerun or call this whole-pond mastery.
+
 ## Godot camera and controls — November 25, 2026
 
 Keep controls in the scrollable left column. The user removed the white bottom

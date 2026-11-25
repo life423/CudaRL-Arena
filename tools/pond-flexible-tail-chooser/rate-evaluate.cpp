@@ -84,6 +84,7 @@ struct Models {
     tail::steering::Model motor;
     tail::steering::Config config;
     bool old_loader_rejected = false;
+    int distant_feedback = 0;
     std::vector<tail::NavigationWorld> starts;
 
 
@@ -255,7 +256,7 @@ Case run_case(Start start, int horizon_s, int cell_floor, const Models& models,
         }
         if (chooser::ready(world)) {
             float input[chooser::inputs];
-            chooser::observe(world, larger_pond, input);
+            chooser::observe(world, larger_pond, input, models.distant_feedback);
             actor.forward(input, 1);
             const float* logits = actor.output();
             if (!std::all_of(logits, logits + chooser::actions, physics::finite_number)) {
@@ -373,7 +374,7 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
         chooser::World sensory{};const auto& archived=models.starts.front();
         chooser::initialize(sensory,archived,horizontal_place(diagnostic.front(),archived),0.f,models.motor.kind,models.config);
         const auto before=sensory.motor.navigation.motion.body;
-        float observation[chooser::inputs];chooser::observe(sensory,larger_pond,observation);
+        float observation[chooser::inputs];chooser::observe(sensory,larger_pond,observation,models.distant_feedback);
         if(std::memcmp(&before,&sensory.motor.navigation.motion.body,sizeof(before)))throw std::runtime_error("Sensory query changed native body");
         for(float value:observation)if(!physics::finite_number(value))throw std::runtime_error("Nonfinite chooser sensory input");
         cudarl::nn::CpuMlp<float> actor(chooser::actor_spec());actor.params()=models.policy;actor.forward(observation,1);
@@ -381,7 +382,7 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
         std::ofstream metadata(output/"metadata-check.json");
         metadata<<"{\"pass\":true,\"physics_steps\":0,\"optimizer_updates\":0,\"sensory_did_not_change_body\":true,\"old_chooser_loader_rejected\":"
             <<(models.old_loader_rejected?"true":"false")<<",\"chooser_schema\":"<<chooser::schema<<",\"chooser_inputs\":"<<chooser::inputs
-            <<",\"chooser_actions\":"<<chooser::actions<<",\"decision_controls\":"<<chooser::decision_controls
+            <<",\"chooser_actions\":"<<chooser::actions<<",\"distant_feedback\":"<<(models.distant_feedback?"true":"false")<<",\"decision_controls\":"<<chooser::decision_controls
             <<",\"motor_kind\":"<<static_cast<uint32_t>(models.motor.kind)<<",\"motor_feature_schema\":"<<tail::steering::feature_schema(models.motor.kind)
             <<",\"motor_material\":"<<static_cast<uint32_t>(models.motor.material)<<",\"material\":"<<static_cast<uint32_t>(models.config.material)
             <<",\"bank_feature_schema\":"<<tail::bank::schema<<",\"transport_time_is_constant_shape_estimate\":true}\n";
@@ -485,16 +486,50 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
               << " accepted_substeps=" << accepted << " attempted_substeps=" << attempted << '\n';
     return passed ? 0 : 1;
 }
+// Separate continuous-coverage assessment. Original qualification above is
+// unchanged, including its fixtures, horizons and pass thresholds.
+int evaluate_coverage(const Models& models, const fs::path& output, Clock::time_point begin) {
+    constexpr int horizon = 1800;
+    constexpr int work_limit = int(endurance.size()) * horizon * samples_per_second;
+    const auto deadline = begin + std::chrono::seconds(60);
+    if (models.starts.size() != 12 || !fs::create_directory(output))
+        throw std::runtime_error("Coverage review needs 12 starts and a new directory");
+    fs::create_directory(output / "traces");
+    const auto cells = reachable_cells(models.starts.front());
+    const auto cases = run_parallel(endurance, horizon, 0, models, cells, output, deadline);
+    std::ofstream table(output / "cases.csv"), map(output / "coverage.csv"), summary(output / "summary.json");
+    for (auto* file : {&table,&map,&summary}) {file->exceptions(std::ios::failbit|std::ios::badbit); *file<<std::setprecision(10);}
+    table<<"case,simulated_s,physical_pass,fault,unique_cells,coverage_fraction,outside_reference_cells,min_clearance_mm,max_stall_s,mean_speed_mm_s,tilt_deg,depth_error_mm,keep,left,right,attempted_substeps,accepted_substeps\n";
+    map<<"x_m,z_m"; for(const auto& row:cases) map<<','<<row.start.name; map<<'\n';
+    int passes=0, coverage_passes=0, attempted=0, accepted=0, faults=0;
+    double minimum=1, mean=0; std::set<Cell> all;
+    for(const auto& row:cases){
+        const double fraction=double(row.visited.size())/cells.size();
+        minimum=std::min(minimum,fraction);mean+=fraction; all.insert(row.visited.begin(),row.visited.end());
+        passes+=row.pass;coverage_passes+=row.pass&&fraction>=.8;faults+=row.fault!=0;
+        attempted+=row.attempted;accepted+=row.accepted;
+        const double moving_seconds=double(row.measured_windows)*motion_window_controls/controls_per_second;
+        table<<row.start.name<<','<<double(row.accepted)/samples_per_second<<','<<row.pass<<','<<row.fault<<','<<row.visited.size()<<','<<fraction<<','<<row.outside_reference.size()<<','<<1000.*row.min_gap_m<<','<<double(row.max_stall_controls)/controls_per_second<<','<<(moving_seconds>0?1000.*row.path_m/moving_seconds:0)<<','<<row.max_tilt_deg<<','<<1000.*row.max_depth_error_m<<','<<row.keep<<','<<row.left<<','<<row.right<<','<<row.attempted<<','<<row.accepted<<'\n';
+    }
+    for(const auto& cell:cells){map<<cell.first*cell_size_m<<','<<cell.second*cell_size_m;for(const auto& row:cases) map<<','<<row.visited.count(cell);map<<'\n';}
+    if(attempted>work_limit) throw std::runtime_error("Continuous coverage work cap exceeded");
+    const bool pass=passes==int(cases.size())&&coverage_passes==int(cases.size());
+    summary<<"{\"schema\":1,\"mode\":\"individual-continuous-coverage\",\"pass\":"<<(pass?"true":"false")<<",\"cases\":"<<cases.size()<<",\"horizon_s\":"<<horizon<<",\"physical_passes\":"<<passes<<",\"coverage_80_percent_passes\":"<<coverage_passes<<",\"minimum_individual_coverage\":"<<minimum<<",\"mean_individual_coverage\":"<<mean/cases.size()<<",\"union_cells\":"<<all.size()<<",\"reference_cells\":"<<cells.size()<<",\"denominator_is_fixed_posture_estimate\":true,\"faults\":"<<faults<<",\"resets\":0,\"attempted_substeps\":"<<attempted<<",\"accepted_substeps\":"<<accepted<<",\"substep_cap\":"<<work_limit<<",\"optimizer_updates\":0,\"wall_s\":"<<std::chrono::duration<double>(Clock::now()-begin).count()<<"}\n";
+    std::cout<<"individual coverage min="<<minimum<<" mean="<<mean/cases.size()<<" physical="<<passes<<"/4 coverage80="<<coverage_passes<<"/4\n";
+    return pass?0:1;
+}
 } // namespace
 
 int main(int argc, char** argv) {
     try {
         const auto begin = Clock::now();
-        if (argc != 7) throw std::runtime_error("Usage: rate_chooser_eval GAIT MOTOR CHOOSER STARTS NEW_OUT MATERIAL");
+        const bool coverage=argc==8&&std::string(argv[7])=="--continuous-coverage";
+        if (argc != 7&&!coverage) throw std::runtime_error("Usage: rate_chooser_eval GAIT MOTOR CHOOSER STARTS NEW_OUT MATERIAL [--continuous-coverage]");
         Models models;
         models.gait=tail::read_navigation_weights(argv[1],tail::NavigationMode::Gait);
         models.motor=tail::steering::read_model(argv[2]);
-        models.policy=chooser::read_weights(argv[3]);
+        models.policy=chooser::read_weights(argv[3],&models.distant_feedback);
+        if(models.distant_feedback&&!tail::distant::geometry_matches(larger_pond))throw std::runtime_error("Coverage map geometry differs");
         models.starts=tail::read_navigation_worlds(argv[4]);
         models.config.study=tail::steering::Study::Rate;
         models.config.material=tail::steering::read_material(argv[6]);
@@ -505,7 +540,7 @@ int main(int argc, char** argv) {
         tail::fast::validate_frozen_gait(models.gait);
         try { legacy::read_weights(argv[3]); } catch(const std::exception&) { models.old_loader_rejected=true; }
         if(!models.old_loader_rejected)throw std::runtime_error("Old chooser loader accepted incompatible rate model");
-        return evaluate(models, argv[5], begin);
+        return coverage?evaluate_coverage(models,argv[5],begin):evaluate(models, argv[5], begin);
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 2;

@@ -1,5 +1,57 @@
 # AI status — November 25, 2026
 
+**Stopping point: frontier reward did not qualify; working Godot stays unchanged.**
+The separate1024-world CUDA PPO chooser run completes128 updates/1048576 main
+transitions in160.735s. It adds discounted progress toward unvisited water while
+preserving all35 inputs,motor88 and physics. Full parent import, reward parity
+and exact resume pass. Best trained8 scores11/12; final128 scores2/12, so zero
+new30-minute or Godot parity cases run. All17 fixed checks and failures are saved.
+All11 active Godot bundle hashes remain intact: appended16/motor88 stays loaded.
+User requested a stopping point; no trainer or further experiment remains active.
+Do not take over the user's mouse/keyboard without explicit permission.
+[Results and resume note](../assets/research-evidence/pond-flexible-tail-frontier-progress-v4/README.md)
+
+**Appended distant feedback improves consistent coverage; selected16 is in Godot.**
+The separate native CUDA PPO session completes128 updates on1,024 worlds in
+161.552s. All32 local inputs stay intact, with three zero-initialized distant
+columns added to both actor and critic. Parent checkpoint roundtrip, initial
+GPU inference equivalence and three-actual-update resume pass exactly. Motor88,
+physics, actions and reward remain unchanged. Selected16 passes12 short+4
+five-minute gates and all four30-minute physical tests without guards/resets.
+Worst/mean individual coverage improves31.88/37.90%→42.61/43.91%; the default
+Godot start slightly declines44.93→43.77%. Longest slowdown falls11.1→8.14s.
+None reaches80%; final128 fails two long cases and is not adopted. The new DLL
+replays both old and selected policies exactly over3,750 states each. All11
+package hashes and215 rendered UI checks pass. The final manual inspection
+was interrupted by user Escape; automated replay/rendering remains verified.
+Old chooser80/88 and all motors remain preserved. No background learner runs.
+[Full results and evidence](../assets/research-evidence/pond-flexible-tail-appended-coverage-v3/README.md)
+
+Earlier results below are historical; appended16/motor88 is the active pair.
+
+**Distant-feedback study is closed without adoption.** Three global directional
+novelty inputs replace the three far point probes in a version4 experimental
+chooser. Native CUDA PPO completes128 new updates on1,024 worlds in157.555s,
+with motor88 frozen. Initial observer scores12/12+4/4; best trained checkpoint32
+scores12/12+2/4; final128 scores3/12 with nine guard stops. No trained checkpoint
+qualifies, so zero new30-minute coverage cases run. The working Godot pair stays
+coverage80/motor88 with its10 hashes unchanged. Old/new-format isolated native
+replays each match3,750 states exactly. New sensory CPU/CUDA values agree exactly;
+the failed preflight exposed an inherited bank-input rounding difference, kept
+separately with all zero-physics inspection evidence. No extra run is active.
+[Distant-feedback result and next question](../assets/research-evidence/pond-flexible-tail-distant-coverage-v2/README.md)
+
+**Individual coverage improves; whole-pond exploration remains unfinished.**
+Coverage-v1 completed 128 native CUDA PPO chooser updates on 1,024 worlds in
+141.535s, preserving motor88. Selected80 raises worst/mean individual 30-minute
+coverage from 21.45/24.35% to 31.88/37.90%; the Godot start improves 23.48→44.93%.
+All 12 short, four five-minute and four thirty-minute cases pass physical gates,
+with zero guard stops/resets. One case slows below 6mm/s for 11.1s while clear
+of terrain. None reaches the new 80% coverage milestone. Candidate80 is adopted
+in Godot after exact 3,750-state replay and 215 UI checks. Chooser88, all motor
+weights and native physics remain preserved. The session is closed at its cap.
+[Results and limits](../assets/research-evidence/pond-flexible-tail-coverage-v1/README.md)
+
 **Godot camera and controls updated locally.** The white bottom dock is removed.
 The left column holds Explore/Pause, continuous zoom, closer Pond view and
 Details. Restart, recordings and the preserved original motor are under Details.

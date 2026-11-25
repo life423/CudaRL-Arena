@@ -30,6 +30,21 @@ function Finish-Native($Job){
     $receipt=[pscustomobject]@{name=$Job.name;wall_s=$Job.watch.Elapsed.TotalSeconds;exit=$Job.process.ExitCode;timeout=$timeout;executable=$Job.exe;arguments=$Job.arguments}
     Json (Join-Path $Job.directory "$($Job.name).receipt.json") $receipt
     Write-Host ('{0}: {1:F3}s exit{2}' -f $Job.name,$receipt.wall_s,$receipt.exit)
+    if(!$timeout -and $Job.exe -eq $script:rateEval -and $Job.arguments[-1] -eq '--continuous-coverage' -and $receipt.exit -in @(0,1)){
+        $r=Get-Content -LiteralPath (Join-Path $Job.directory 'assessment/summary.json') -Raw|ConvertFrom-Json
+        $rows=@(Import-Csv -LiteralPath (Join-Path $Job.directory 'assessment/cases.csv'))
+        if($r.mode -ne 'individual-continuous-coverage' -or $r.cases -ne 4 -or $rows.Count -ne 4 -or
+            $r.horizon_s -ne 1800 -or $r.resets -ne 0 -or $r.optimizer_updates -ne 0 -or
+            $r.attempted_substeps -gt 5760000 -or $r.accepted_substeps -gt $r.attempted_substeps -or
+            $r.pass -ne ($receipt.exit -eq 0)){throw 'Incomplete continuous coverage assessment.'}
+        foreach($row in $rows){
+            if(($row.fault -eq '0' -and [double]$row.simulated_s -ne 1800) -or
+                $row.fault -notin @('0','2')){throw 'Continuous coverage timeout or native fault.'}
+        }
+        if(($rows|Measure-Object attempted_substeps -Sum).Sum -ne $r.attempted_substeps -or
+            ($rows|Measure-Object accepted_substeps -Sum).Sum -ne $r.accepted_substeps){throw 'Coverage work accounting differs.'}
+        return
+    }
     if(!$timeout -and $Job.exe -eq $script:rateEval -and $receipt.exit -in @(0,1)){
         $path=Join-Path $Job.directory 'assessment/summary.json'
         $r=Get-Content -LiteralPath $path -Raw|ConvertFrom-Json

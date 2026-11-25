@@ -1,0 +1,16 @@
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-flexible-tail-live/CMakeLists.txt
+  flexible_tail_live.cpp
+C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\src\rl\flexible_tail_rate_chooser.h(226,23): error C2220: the following warning is treated as an error [C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\appended-coverage-v3\godot-build\flexible_tail_live.vcxproj]
+  (compiling source file '../../../../src/godot/flexible_tail_live.cpp')
+  
+C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\src\rl\flexible_tail_rate_chooser.h(226,23): warning C4127: conditional expression is constant [C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\appended-coverage-v3\godot-build\flexible_tail_live.vcxproj]
+  (compiling source file '../../../../src/godot/flexible_tail_live.cpp')
+      C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\src\rl\flexible_tail_rate_chooser.h(226,23):
+      consider using 'if constexpr' statement instead
+  
+  register_flexible_tail_live.cpp
+  checkpoint.cpp
+  Generating Code...

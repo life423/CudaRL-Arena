@@ -1,0 +1,19 @@
+{
+  "name": "training",
+  "wall_s": 141.743885,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\coverage-v1\\native-build\\Release\\pond_flexible_tail_rate_chooser.exe",
+  "arguments": [
+    "fork",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-motor-88.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\coverage-v1\\training",
+    "128",
+    "1200",
+    "0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\reliable-chooser-v1-corrected\\stage-06-bank\\training\\checkpoints\\session-88.bin",
+    "f1e149d3e7c6a672b787d1d516c78fa6c8223125d74e55e72f4751cbc8fddb20"
+  ]
+}

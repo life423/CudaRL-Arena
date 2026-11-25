@@ -1,0 +1,4 @@
+ERROR: Cannot get class 'FlexibleTailLive'.
+   at: _instantiate_internal (core/object/class_db.cpp:549)
+ERROR: Native live extension unavailable
+   at: push_error (core/variant/variant_utility.cpp:1098)

@@ -1,0 +1,11 @@
+{
+  "fixed_evaluation_substeps": 28977561.0,
+  "optimizer_updates_diagnostic": 3,
+  "godot_parity_substeps": 240000,
+  "optimizer_updates_main": 128,
+  "baseline_substeps": 5760000,
+  "training_substeps": 671146481,
+  "resume_diagnostic_substeps": 15730105,
+  "total_attempted_substeps": 744894147.0,
+  "continuous_candidate_substeps": 23040000.0
+}

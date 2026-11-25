@@ -3,12 +3,28 @@
 #include "rl/flexible_tail_fast_steering.h"
 #include "rl/flexible_tail_chooser.h"
 #include "rl/flexible_tail_bank_observation.h"
+#include "rl/flexible_tail_distant_coverage.h"
 #include "core/checkpoint.h"
 #include <climits>
 
 namespace cudarl::flexible_tail::rate_chooser {
 
-inline constexpr int inputs = 32, decision_controls = 40, cue_limit_controls = 40;
+inline constexpr int local_inputs=32, decision_controls = 40, cue_limit_controls = 40;
+#if defined(CUDARL_APPENDED_COVERAGE)
+inline constexpr int inputs=35, default_observation_mode=2;
+#else
+inline constexpr int inputs=32;
+#if defined(CUDARL_DISTANT_COVERAGE)
+inline constexpr int default_observation_mode=1;
+#else
+inline constexpr int default_observation_mode=0;
+#endif
+#endif
+#if defined(CUDARL_DISTANT_COVERAGE)
+inline constexpr bool default_distant = true;
+#else
+inline constexpr bool default_distant = false;
+#endif
 #if defined(CUDARL_RELIABLE_CHOOSER)
 inline constexpr int rate_count = 5, actions = 15;
 inline constexpr uint32_t schema = 2, model_version = 3;
@@ -90,7 +106,7 @@ CUDARL_HD inline bool accept(World& w, int action) {
 }
 
 CUDARL_HD inline void observe(const World& w, const pond_geometry_v1::Parameters& pond,
-    float (&out)[inputs]) {
+    float (&out)[inputs], int observation_mode=default_observation_mode) {
     for (auto& v : out) v = 0;
     const auto sample = fast::feedback_sample(w.motor);
     float bank_features[bank::inputs];
@@ -106,6 +122,11 @@ CUDARL_HD inline void observe(const World& w, const pond_geometry_v1::Parameters
         const auto direction = physics::axis_rotation({0,1,0}, (side - 1) * pi / 4.f).rotate(course);
         out[18 + side] = chooser::novelty_at(w, w.pose.com_m + direction * .08f, nav.motion.controls);
         out[21 + side] = chooser::novelty_at(w, w.pose.com_m + direction * .24f, nav.motion.controls);
+    }
+    if(observation_mode==1||(observation_mode==2&&inputs==35)){
+        float field[3];distant::observe(w,w.pose.com_m,course,nav.motion.request.origin_m.y,nav.motion.controls,field);
+        if(observation_mode==1){for(int side=0;side<3;++side)out[21+side]=field[side];}
+        if constexpr(inputs==35){if(observation_mode==2){for(int side=0;side<3;++side)out[32+side]=field[side];}}
     }
     out[24] = w.pose.com_m.x / float(pond.water_radius_x_m);
     out[25] = w.pose.com_m.z / float(pond.water_radius_z_m);
@@ -147,11 +168,23 @@ CUDARL_HD inline Result advance(World& w, const float* gait, const float* packed
         w.min_speed_m_s = fminf(w.min_speed_m_s, speed);
         w.transport_m += physics::norm(chooser::horizontal(w.pose.com_m - before));
         const float seconds = step.controls * motor_control_s;
-        if (speed >= .006f) { w.stall_s = 0; out.reward += seconds * .04f; }
+        if (speed >= .006f) {
+            w.stall_s = 0;
+#if defined(CUDARL_COVERAGE_CHOOSER)
+            // Transport into new water keeps full value. Safe circles through
+            // recently credited cells retain only a small maintenance reward.
+            // This scores actual movement; it neither selects nor alters actions.
+            const float novelty = chooser::novelty_at(w, w.pose.com_m, motor.navigation.motion.controls);
+            out.reward += seconds * .04f * (.05f + .95f * novelty);
+#else
+            out.reward += seconds * .04f;
+#endif
+        }
         else { w.stall_s += seconds; out.reward -= seconds * .10f; }
         w.max_stall_s = fmaxf(w.max_stall_s, w.stall_s);
         out.reward += chooser::visit_reward_at(w, w.pose.com_m, motor.navigation.motion.controls, speed);
-        float senses[inputs]; observe(w, pond, senses);
+        float senses[bank::inputs];
+        bank::observe(motor.navigation.motion.body,w.pose,pond,sample.velocity_m_s,sample.reliable,senses);
         // Penalize an approaching loss of clearance, not proximity alone.
         if (senses[bank::TransportTimeValid] > 0.f) {
             const float remaining_s = senses[bank::ConstantTransportTime] * bank::time_scale_s;
@@ -167,21 +200,49 @@ CUDARL_HD inline Result advance(World& w, const float* gait, const float* packed
 }
 
 inline nn::MlpSpec actor_spec() { return {{inputs,32,actions},{nn::Activation::Tanh,nn::Activation::Identity}}; }
+// First-layer matrices are output-major. Biases and all later layers keep
+// their exact bits; newly appended columns (including Adam moments) are zero.
+inline std::vector<float> resize_input_parameters(const std::vector<float>& p,int from,int to){
+    if(from==to)return p;
+    if((from!=32&&from!=35)||(to!=32&&to!=35)||p.size()<size_t(from*32))
+        throw std::runtime_error("Unsupported chooser input migration");
+    std::vector<float> result(size_t(int64_t(p.size())+32*(to-from)),0.f);
+    for(int row=0;row<32;++row){
+        for(int column=0;column<std::min(from,to);++column)result[row*to+column]=p[row*from+column];
+        for(int column=to;column<from;++column)if(p[row*from+column]!=0.f)
+            throw std::runtime_error("Cannot discard a learned appended column");
+    }
+    std::copy(p.begin()+32*from,p.end(),result.begin()+32*to);
+    return result;
+}
 inline void validate_weights(const std::vector<float>& weights) {
     if (weights.size() != size_t(actor_spec().num_params())) throw std::runtime_error("Invalid rate chooser model");
     for (float x : weights) if (!physics::finite_number(x)) throw std::runtime_error("Nonfinite rate chooser model");
 }
 inline void write_weights(const std::string& path, const std::vector<float>& weights) {
     validate_weights(weights); checkpoint::Writer out;
-    out.value<uint32_t>(0x48435446); out.value(model_version); out.value(schema);
-    out.value(inputs); out.value(actions); out.value(decision_controls); out.array(weights);
+    out.value<uint32_t>(0x48435446); out.value(inputs==35?uint32_t(5):(default_distant?uint32_t(4):model_version)); out.value(inputs==35?uint32_t(4):(default_distant?uint32_t(3):schema));
+    out.value(inputs); out.value(actions); out.value(decision_controls);
+    if constexpr(default_distant||inputs==35)out.value(distant_map::identity);
+    out.array(weights);
     checkpoint::write_atomic(path,out.data);
 }
-inline std::vector<float> read_weights(const std::string& path) {
+inline std::vector<float> read_weights(const std::string& path, int* observation_mode=nullptr) {
     auto bytes=checkpoint::read(path); checkpoint::Reader in{bytes};
-    if(in.value<uint32_t>()!=0x48435446 || in.value<uint32_t>()!=model_version || in.value<uint32_t>()!=schema ||
-        in.value<int>()!=inputs || in.value<int>()!=actions || in.value<int>()!=decision_controls)
+    if(in.value<uint32_t>()!=0x48435446)throw std::runtime_error("Rate chooser magic mismatch");
+    const auto version=in.value<uint32_t>(),request_schema=in.value<uint32_t>();
+    const bool is_distant=version==4&&request_schema==3&&actions==15;
+    const bool is_appended=version==5&&request_schema==4&&actions==15;
+    const int saved_inputs=in.value<int>();
+    if((!is_distant&&!is_appended&&(version!=model_version||request_schema!=schema)) ||
+        saved_inputs!=(is_appended?35:32) || saved_inputs>inputs || in.value<int>()!=actions || in.value<int>()!=decision_controls)
         throw std::runtime_error("Rate chooser schema mismatch");
-    auto weights=in.array<float>(actor_spec().num_params()); in.finish(); validate_weights(weights); return weights;
+    if((is_distant||is_appended)&&in.value<uint64_t>()!=distant_map::identity)throw std::runtime_error("Distant coverage map binding mismatch");
+    if((is_distant||is_appended)&&!observation_mode&&!default_distant)throw std::runtime_error("Distant chooser needs an observation-mode consumer");
+    if(observation_mode)*observation_mode=is_appended?2:(is_distant?1:0);
+    auto weights=in.array<float>(actor_spec().num_params()); in.finish();
+    const nn::MlpSpec saved_spec{{saved_inputs,32,actions},{nn::Activation::Tanh,nn::Activation::Identity}};
+    if(weights.size()!=size_t(saved_spec.num_params()))throw std::runtime_error("Saved chooser parameter count differs");
+    weights=resize_input_parameters(weights,saved_inputs,inputs);validate_weights(weights);return weights;
 }
 } // namespace cudarl::flexible_tail::rate_chooser

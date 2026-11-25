@@ -33,7 +33,7 @@ add_library(flexible_tail_live SHARED
     "${repo}/src/godot/register_flexible_tail_live.cpp"
     "${repo}/src/core/checkpoint.cpp")
 target_compile_features(flexible_tail_live PRIVATE cxx_std_17)
-target_compile_definitions(flexible_tail_live PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED CUDARL_RELIABLE_CHOOSER=1)
+target_compile_definitions(flexible_tail_live PRIVATE TYPED_METHOD_BIND WINDOWS_ENABLED CUDARL_RELIABLE_CHOOSER=1 CUDARL_APPENDED_COVERAGE=1)
 target_include_directories(flexible_tail_live PRIVATE "${repo}/src" "${repo}/src/nn" "${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(flexible_tail_live SYSTEM PRIVATE "${godot_cpp_root}/include"
     "${godot_cpp_root}/gen/include" "${godot_cpp_root}/gdextension")

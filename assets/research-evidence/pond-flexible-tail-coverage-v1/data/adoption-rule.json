@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-11-25T18:48:28.7624425Z",
+  "fixed_diagnostic_passes": 12,
+  "resets": 0,
+  "baseline_minimum_individual_coverage": 0.2144927536,
+  "fixed_endurance_passes": 4,
+  "required_mean_gain": 0.05,
+  "milestone_80_percent_is_not_full_coverage": true,
+  "whole_pond_success_threshold_remains_unmet_unless_all_cells_are_covered": true,
+  "long_physical_passes": 4,
+  "long_faults": 0,
+  "required_minimum_gain": 0.05,
+  "baseline_mean_individual_coverage": 0.2434782609
+}

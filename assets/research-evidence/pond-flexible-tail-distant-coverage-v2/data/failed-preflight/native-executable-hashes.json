@@ -1,0 +1,14 @@
+[
+  {
+    "local_file": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\distant-coverage-v2\\failed-sensory-binary\\inspection-original.exe",
+    "sha256": "FFCABB1B396B97D67FB2D91698B13053D34583A46735801F0DF20D9739D067E0"
+  },
+  {
+    "local_file": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\distant-coverage-v2\\failed-sensory-binary\\isolation.exe",
+    "sha256": "FB60E52E6287ABFDB6BDA88659D55C06F3964FF428B2CFB0A8D76D47EE473148"
+  },
+  {
+    "local_file": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\distant-coverage-v2\\failed-sensory-binary\\pond_flexible_tail_rate_chooser.exe",
+    "sha256": "E6E17030CFEB75946DBB4E124001420A3CF1AD373E2426D0FB99EC20CE8DA3D7"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "name": "legacy-parity",
+  "wall_s": 0.1893065,
+  "exit": 1,
+  "timeout": false,
+  "executable": "C:/Users/aiand/Godot/Godot_console.exe",
+  "arguments": [
+    "--headless",
+    "--path",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\distant-coverage-v2-corrected\\compatibility-project",
+    "--script",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\tests\\godot\\flexible_tail_pond_live.gd",
+    "--",
+    "--trace=C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation/build/flexible-tail/coverage-v1/evaluations/update-080/assessment/traces/endurance_godot_rest.csv",
+    "--report=C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\distant-coverage-v2-corrected/legacy-godot-parity.json"
+  ]
+}

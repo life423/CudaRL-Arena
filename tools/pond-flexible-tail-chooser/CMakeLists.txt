@@ -21,6 +21,10 @@ foreach(dimension IN ITEMS water_radius_x_m water_radius_z_m flat_radius_x_m
 endforeach()
 configure_file("../pond-flexible-tail-check/habitat_config.h.in" habitat_config.h @ONLY)
 
+add_executable(pond_generate_coverage_map generate-coverage-map.cpp "${source_root}/core/checkpoint.cpp")
+target_compile_features(pond_generate_coverage_map PRIVATE cxx_std_17)
+target_include_directories(pond_generate_coverage_map PRIVATE "${source_root}" "${source_root}/nn" "${CMAKE_CURRENT_BINARY_DIR}")
+
 add_executable(pond_flexible_tail_chooser_ppo train.cu
     "${source_root}/nn/mlp_gpu.cu"
     "${source_root}/nn/gemm.cu"
@@ -69,8 +73,25 @@ target_include_directories(pond_flexible_tail_chooser_session PRIVATE
 
 # Same batch/PPO implementation, explicitly versioned rate/speed request task.
 option(CUDARL_RELIABLE_CHOOSER "Fifteen-action chooser with demonstrated-competence bank curriculum" OFF)
-set(rate_identity "rate-chooser-v1;reliable_${CUDARL_RELIABLE_CHOOSER};sm_${CMAKE_CUDA_ARCHITECTURES};fmad=false")
+option(CUDARL_COVERAGE_CHOOSER "Novelty-weighted safe transport reward for coverage continuation" OFF)
+option(CUDARL_DISTANT_COVERAGE "Full-circle distant visitation sensory field" OFF)
+option(CUDARL_APPENDED_COVERAGE "Append distant sensing after all 32 legacy inputs" OFF)
+option(CUDARL_FRONTIER_REWARD "Discount-consistent potential for progress to unvisited water" OFF)
+if(CUDARL_FRONTIER_REWARD AND NOT CUDARL_APPENDED_COVERAGE)
+    message(FATAL_ERROR "Frontier reward requires the preserved 35-input observer")
+endif()
+if(CUDARL_APPENDED_COVERAGE AND NOT CUDARL_DISTANT_COVERAGE)
+    message(FATAL_ERROR "Appended sensing requires the distant sensory cache")
+endif()
+if(CUDARL_DISTANT_COVERAGE AND NOT CUDARL_COVERAGE_CHOOSER)
+    message(FATAL_ERROR "Distant feedback uses the established coverage reward")
+endif()
+if(CUDARL_COVERAGE_CHOOSER AND NOT CUDARL_RELIABLE_CHOOSER)
+    message(FATAL_ERROR "Coverage continuation requires the fifteen-action chooser")
+endif()
+set(rate_identity "rate-chooser-v1;reliable_${CUDARL_RELIABLE_CHOOSER};coverage_${CUDARL_COVERAGE_CHOOSER};distant_${CUDARL_DISTANT_COVERAGE};appended_${CUDARL_APPENDED_COVERAGE};frontier_${CUDARL_FRONTIER_REWARD};sm_${CMAKE_CUDA_ARCHITECTURES};fmad=false")
 foreach(path IN ITEMS train.cu rate_session.cuh bank_training_starts.h
+    ../../src/rl/flexible_tail_distant_coverage.h ../../src/rl/flexible_tail_distant_map.h ../../src/rl/flexible_tail_frontier_reward.h
     ../../src/rl/flexible_tail_rate_chooser.h ../../src/rl/flexible_tail_bank_observation.h
     ../../src/rl/flexible_tail_chooser.h ../../src/rl/flexible_tail_fast_steering.h
     ../../src/rl/flexible_tail_steering_policy.h ../../src/rl/flexible_tail_stroke_metrics.h
@@ -98,4 +119,17 @@ target_link_libraries(pond_flexible_tail_rate_evaluate PRIVATE Threads::Threads)
 if(CUDARL_RELIABLE_CHOOSER)
     target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_RELIABLE_CHOOSER=1)
     target_compile_definitions(pond_flexible_tail_rate_evaluate PRIVATE CUDARL_RELIABLE_CHOOSER=1)
+endif()
+if(CUDARL_APPENDED_COVERAGE)
+    target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_APPENDED_COVERAGE=1)
+    target_compile_definitions(pond_flexible_tail_rate_evaluate PRIVATE CUDARL_APPENDED_COVERAGE=1)
+endif()
+if(CUDARL_COVERAGE_CHOOSER)
+    target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_COVERAGE_CHOOSER=1)
+endif()
+if(CUDARL_FRONTIER_REWARD)
+    target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_FRONTIER_REWARD=1)
+endif()
+if(CUDARL_DISTANT_COVERAGE)
+    target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_DISTANT_COVERAGE=1)
 endif()

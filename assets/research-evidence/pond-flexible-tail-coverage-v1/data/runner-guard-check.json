@@ -1,0 +1,18 @@
+[
+  {
+    "physical_passes": 0,
+    "rejected": true
+  },
+  {
+    "physical_passes": 3,
+    "rejected": true
+  },
+  {
+    "physical_passes": 4,
+    "rejected": false
+  },
+  {
+    "physical_passes": 5,
+    "rejected": true
+  }
+]
