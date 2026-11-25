@@ -1,0 +1,11 @@
+{
+  "Godot_updated": false,
+  "no_training_active": true,
+  "chooser_update": 16,
+  "bundle_hashes_verified": 11,
+  "pass": true,
+  "mouse_keyboard_automation_calls": 0,
+  "new_long_coverage_cases": 0,
+  "motor_update": 88,
+  "chooser": "appended-coverage-v3"
+}

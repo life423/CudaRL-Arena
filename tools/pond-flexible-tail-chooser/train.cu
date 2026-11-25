@@ -10,6 +10,9 @@
 #include "nn/mlp_cpu.h"
 #include "nn/mlp_gpu.h"
 #include "rl/ppo_kernels.h"
+#if defined(CUDARL_FRONTIER_REWARD)
+#include "rl/flexible_tail_frontier_reward.h"
+#endif
 
 #include <algorithm>
 #include <array>
@@ -326,6 +329,10 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
         return;
     }
 
+#if defined(CUDARL_FRONTIER_REWARD)
+    const float potential_before=tail::frontier::potential(lane.state,lane.state.pose.com_m,
+        lane.state.motor.navigation.motion.request.origin_m.y);
+#endif
     const auto result = chooser::advance(lane.state, gait, offset, pond, macro_controls);
     auto& counter = counts[lane_index];
     counter.attempted += result.attempted_substeps;
@@ -336,6 +343,12 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
         return;
     }
     reward[lane_index] = result.reward;
+#if defined(CUDARL_FRONTIER_REWARD)
+    const float potential_after=tail::frontier::potential(lane.state,lane.state.pose.com_m,
+        lane.state.motor.navigation.motion.request.origin_m.y);
+    reward[lane_index]+=tail::frontier::shaping(potential_before,potential_after,result.fault!=0,gamma);
+    if(!isfinite(reward[lane_index])){fail(lane_index,33,first_fault,fault_code);return;}
+#endif
     switch (result.fault) {
     case 0:
         if (!chooser::ready(lane.state)) fail(lane_index, 34, first_fault, fault_code);
@@ -371,6 +384,13 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
 #endif
 }
 
+#if defined(CUDARL_FRONTIER_REWARD)
+__global__ void frontier_probe(const Lane* lanes,float* values) {
+    const int i=blockIdx.x*blockDim.x+threadIdx.x;
+    if(i<worlds)values[i]=lanes[i].needs_start?0.f:tail::frontier::potential(lanes[i].state,
+        lanes[i].state.pose.com_m,lanes[i].state.motor.navigation.motion.request.origin_m.y);
+}
+#endif
 __global__ void audit_values(const float* values, int count, int* first_fault) {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < count && !isfinite(values[i])) atomicMin(first_fault, i);

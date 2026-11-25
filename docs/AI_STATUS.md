@@ -1,5 +1,16 @@
 # AI status — November 25, 2026
 
+**Stopping point: frontier reward did not qualify; working Godot stays unchanged.**
+The separate1024-world CUDA PPO chooser run completes128 updates/1048576 main
+transitions in160.735s. It adds discounted progress toward unvisited water while
+preserving all35 inputs,motor88 and physics. Full parent import, reward parity
+and exact resume pass. Best trained8 scores11/12; final128 scores2/12, so zero
+new30-minute or Godot parity cases run. All17 fixed checks and failures are saved.
+All11 active Godot bundle hashes remain intact: appended16/motor88 stays loaded.
+User requested a stopping point; no trainer or further experiment remains active.
+Do not take over the user's mouse/keyboard without explicit permission.
+[Results and resume note](../assets/research-evidence/pond-flexible-tail-frontier-progress-v4/README.md)
+
 **Appended distant feedback improves consistent coverage; selected16 is in Godot.**
 The separate native CUDA PPO session completes128 updates on1,024 worlds in
 161.552s. All32 local inputs stay intact, with three zero-initialized distant

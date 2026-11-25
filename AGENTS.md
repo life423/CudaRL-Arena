@@ -1,5 +1,21 @@
 # Workspace instructions
 
+## User stopping point and frontier reward — November 25, 2026
+
+STOP after the completed frontier-progress-v4 session. User explicitly forbids
+mouse/keyboard takeover until permission is given; no desktop automation ran.
+Read FRONTIER_PROGRESS_PROTOCOL.md and the pond-flexible-tail-frontier-progress-v4
+research README. The1024-world native CUDA run completed128 updates/1048576
+transitions in160.735s. Motor88 and all35 inputs stayed frozen/unchanged; only
+discount-consistent unvisited-water progress reward changed. Full35-input parent
+roundtrip, GPU/CPU reward checks and three-update exact resume pass. Best trained8
+scores11/12, final128 scores2/12. All17 evaluations are saved; zero new30-minute
+or Godot parity runs because no trained candidate passes12+4. Godot remains
+appended16/motor88, all11 bundle hashes intact. No trainer remains active.
+Do not repeat or extend this closed session. Next proposed read-only decision:
+reward/novelty reset economics and measured speed/turning-room safety horizon.
+Further training and any mouse/keyboard control require the user's next direction.
+
 ## Appended distant feedback — November 25, 2026
 
 The authorized appended-input session is CLOSED at128 new PPO updates on1,024

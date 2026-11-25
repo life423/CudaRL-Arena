@@ -1,4 +1,6 @@
-param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant,[switch]$Appended)
+param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant,[switch]$Appended,
+    [string]$ParentTraining='', [ValidateSet(32,35)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier)
+if($Frontier){$Appended=$true;if(!$ParentTraining -or $ParentInputs -ne 35 -or $ParentUpdate -lt 0){throw 'Frontier requires explicit 35-input parent and checkpoint.'}}
 if($Appended){$Distant=$true}
 $ErrorActionPreference='Stop'
 $repository=Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
@@ -18,6 +20,7 @@ $starts=(Resolve-Path build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin).
 $straight=(Resolve-Path flexible-tail-preview/live_data/straight-evaluation-starts.bin).Path
 $prior=if($Distant){(Resolve-Path build/flexible-tail/coverage-v1/training).Path}else{(Resolve-Path build/flexible-tail/reliable-chooser-v1-corrected/stage-06-bank/training).Path}
 $parent=Join-Path $prior $(if($Distant){'checkpoints/session-80.bin'}else{'checkpoints/session-88.bin'})
+if($ParentTraining){$prior=(Resolve-Path -LiteralPath $ParentTraining).Path;if($ParentUpdate -lt 0){throw 'Explicit parent update required'};$parent=Join-Path $prior "checkpoints/session-$ParentUpdate.bin"}
 $parentTask=(Get-Content (Join-Path $prior result.json) -Raw|ConvertFrom-Json).task
 $training=Join-Path $root training
 if(Test-Path -LiteralPath $training){throw 'Coverage training is immutable; no automatic repeat.'}
@@ -36,14 +39,15 @@ foreach($binding in $bindings|Where-Object {$_.path -like 'src/*' -or $_.path -l
 $all=@();$coverage=@();$evalJob=$null;$job=$null
 try{
     $verify=Join-Path $root verification
-    Wait-Native (Start-Native 'verification' $rate @('verify-fork',$gait,$motor,$starts,(Join-Path $verify data),'2','590','0',$parent,$parentTask) $verify 600)
+    Wait-Native (Start-Native 'verification' $rate @('verify-fork',$gait,$motor,$starts,(Join-Path $verify data),'2','590','0',$parent,$parentTask,"$ParentInputs") $verify 600)
     $proof=Get-Content (Join-Path $verify data/verification.json) -Raw|ConvertFrom-Json
     $import=Get-Content (Join-Path $verify data/parent-import.json) -Raw|ConvertFrom-Json
     if(!$proof.pass -or $proof.physical_updates_executed -ne 3 -or !$import.full_state_exact_before_counter_rebase){throw 'Full-state continuation gate failed.'}
     if($Distant -and !(Get-Content (Join-Path $verify data/distant-senses.json) -Raw|ConvertFrom-Json).pass){throw 'Distant sensory gate failed.'}
-    if($Appended -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Initial controller equivalence failed.'}
+    if($Appended -and $ParentInputs -eq 32 -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Initial controller equivalence failed.'}
+    if($Frontier -and !(Get-Content (Join-Path $verify data/frontier-check.json) -Raw|ConvertFrom-Json).pass){throw 'Frontier shaping check failed.'}
     Assert-Frozen
-    $job=Start-Native 'training' $rate @('fork',$gait,$motor,$starts,$training,'128','1200','0',$parent,$parentTask) $root 1800
+    $job=Start-Native 'training' $rate @('fork',$gait,$motor,$starts,$training,'128','1200','0',$parent,$parentTask,"$ParentInputs") $root 1800
     $pending=[Collections.Generic.Queue[int]]::new();$scheduled=[Collections.Generic.HashSet[int]]::new()
     while(!$job.finished -or $evalJob -or $pending.Count){
         for($u=0;$u -le 128;$u+=8){if((Test-Path (Join-Path $training "actor-$u.bin")) -and $scheduled.Add($u)){$pending.Enqueue($u)}}

@@ -1,0 +1,1 @@
+{"pass":true,"worlds":1024,"CPU_CUDA_max_difference":1.192092896e-07,"toward_reward":0.2869967222,"away_reward":-0.3048652411,"discounted_cycle":-0.01603934169,"discount":0.9940000176,"terminal_potential_zero":true,"physics_steps":0,"optimizer_updates":0}

@@ -1,5 +1,14 @@
 # Native PPO chooser workflow
 
+The opt-in `CUDARL_FRONTIER_REWARD` continuation is CLOSED without adoption.
+It imports a full35-input parent using explicit `ParentTraining`, `ParentUpdate`
+and `ParentInputs=35`, retaining all optimizer ages and world/visit history.
+Discount-consistent unvisited-water progress does not retain bank safety in the
+128-update experiment. Godot remains appended16/motor88. Read
+[results](../../assets/research-evidence/pond-flexible-tail-frontier-progress-v4/README.md)
+and [protocol](FRONTIER_PROGRESS_PROTOCOL.md). The user requested a stopping
+point; do not automatically launch another session or desktop inspection.
+
 The latest `CUDARL_APPENDED_COVERAGE` session is closed with selected16 adopted
 in Godot. It retains all32 local inputs and appends three zero-weight distant
 inputs to actor and critic. Explicit migration preserves inherited weights,

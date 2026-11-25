@@ -119,11 +119,13 @@ void rate_result(const fs::path& dir,const Ledger& l,bool verification) {
 int rate_main(int argc,char** argv) {
     fs::path output;
     try {
-        if(argc!=9&&argc!=11)throw std::runtime_error("Usage: rate_chooser new|verify|resume|fork|verify-fork GAIT MOTOR STARTS OUT UPDATES WALL MATERIAL [PARENT_CHECKPOINT PARENT_TASK_ID]");
+        if(argc!=9&&argc!=11&&argc!=12)throw std::runtime_error("Usage: rate_chooser new|verify|resume|fork|verify-fork GAIT MOTOR STARTS OUT UPDATES WALL MATERIAL [PARENT_CHECKPOINT PARENT_TASK_ID [PARENT_INPUTS]]");
         const std::string mode=argv[1];const bool verify=mode=="verify"||mode=="verify-fork",resume=mode=="resume";
         const bool inspect=mode=="inspect-fork";
         const bool fork=mode=="fork"||mode=="verify-fork"||inspect;
-        if((mode!="new"&&!verify&&!resume&&!fork)||(fork!=(argc==11)))throw std::runtime_error("Invalid rate session mode/parent arguments");
+        if((mode!="new"&&!verify&&!resume&&!fork)||(fork!=(argc>=11)))throw std::runtime_error("Invalid rate session mode/parent arguments");
+        const int parent_inputs=argc==12?std::stoi(argv[11]):32;
+        if((parent_inputs!=32&&parent_inputs!=35)||parent_inputs>channels)throw std::runtime_error("Unsupported explicit parent input width");
         output=fs::u8path(argv[5]);const int target=std::stoi(argv[6]);const double wall=std::stod(argv[7]);
         const int material=std::stoi(argv[8]);
         if(target<1||target>max_updates||!std::isfinite(wall)||wall<=0||wall>1200||material<0||material>1)
@@ -194,9 +196,49 @@ int rate_main(int argc,char** argv) {
                 if(parent_task.size()!=64||!std::all_of(parent_task.begin(),parent_task.end(),[](char c){return (c>='0'&&c<='9')||(c>='a'&&c<='f');}))
                     throw std::runtime_error("Invalid explicit parent task identity");
                 const auto parent=cudarl::checkpoint::read(argv[9]);
-                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),32);
-                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),32);
+                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),parent_inputs);
+                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),parent_inputs);
                 if(parent!=roundtrip) throw std::runtime_error("Parent import did not preserve full state exactly");
+#if defined(CUDARL_FRONTIER_REWARD)
+                {
+                if(parent_inputs!=35)throw std::runtime_error("Frontier continuation requires the qualified appended parent");
+                std::vector<Lane> frontier_lanes(worlds);roll.lanes.copy_to_host(frontier_lanes.data(),frontier_lanes.size());
+                frontier_probe<<<(worlds+63)/64,64,0,stream.value>>>(roll.lanes.get(),roll.final_value.get());check_launch();
+                CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));
+                std::vector<float> frontier_gpu(worlds);roll.final_value.copy_to_host(frontier_gpu.data(),frontier_gpu.size());
+                float frontier_difference=0;
+                for(int lane=0;lane<worlds;++lane){const auto& saved=frontier_lanes[lane];
+                    const float cpu=saved.needs_start?0.f:tail::frontier::potential(saved.state,saved.state.pose.com_m,
+                        saved.state.motor.navigation.motion.request.origin_m.y);
+                    frontier_difference=std::max(frontier_difference,std::abs(cpu-frontier_gpu[lane]));
+                    if(!std::isfinite(frontier_gpu[lane])||frontier_gpu[lane]<0||frontier_gpu[lane]>2)
+                        throw std::runtime_error("Invalid frontier potential");
+                }
+                chooser::World synthetic{};for(auto& word:synthetic.visited)word=~uint64_t{0};
+                int unknown=-1;
+                for(int cell=0;cell<tail::chooser::cells_x*tail::chooser::cells_z;++cell)
+                    if(tail::distant_map::word_at(0,cell/64)&(uint64_t{1}<<(cell%64))){unknown=cell;break;}
+                if(unknown<0)throw std::runtime_error("Empty frontier map");
+                synthetic.visited[unknown/64]&=~(uint64_t{1}<<(unknown%64));
+                cudarl::physics::V p{(unknown%tail::chooser::cells_x-tail::chooser::cells_x/2+.5f)*tail::chooser::cell_size_m,0,
+                    (unknown/tail::chooser::cells_x-tail::chooser::cells_z/2+.5f)*tail::chooser::cell_size_m};
+                const float depth=tail::distant_map::depth_at(0);
+                const float farther_potential=tail::frontier::potential(synthetic,p+cudarl::physics::V{.10f,0,0},depth);
+                const float closer_potential=tail::frontier::potential(synthetic,p+cudarl::physics::V{.05f,0,0},depth);
+                const float forward=tail::frontier::shaping(farther_potential,closer_potential,false,gamma),back=tail::frontier::shaping(closer_potential,farther_potential,false,gamma);
+                const float cycle=forward+gamma*back;
+                if(frontier_difference>1.e-6f||!(forward>0&&back<0&&cycle<=0)||
+                    tail::frontier::shaping(closer_potential,closer_potential,false,gamma)>=0||tail::frontier::shaping(closer_potential,2,true,gamma)!=-closer_potential||
+                    tail::frontier::potential(synthetic,p,0)!=0)
+                    throw std::runtime_error("Frontier shaping algebra/parity failed");
+                synthetic.visited[unknown/64]|=uint64_t{1}<<(unknown%64);
+                if(tail::frontier::potential(synthetic,p,depth)!=2)throw std::runtime_error("Complete coverage potential differs");
+                std::ofstream frontier_check(output/"frontier-check.json");frontier_check<<std::setprecision(10)
+                    <<"{\"pass\":true,\"worlds\":"<<worlds<<",\"CPU_CUDA_max_difference\":"<<frontier_difference
+                    <<",\"toward_reward\":"<<forward<<",\"away_reward\":"<<back<<",\"discounted_cycle\":"<<cycle
+                    <<",\"discount\":"<<gamma<<",\"terminal_potential_zero\":true,\"physics_steps\":0,\"optimizer_updates\":0}\n";
+                }
+#endif
 #if defined(CUDARL_DISTANT_COVERAGE)
                 if(!tail::distant::geometry_matches(larger_pond))throw std::runtime_error("Distant map geometry differs");
                 std::vector<Lane> probe(worlds);roll.lanes.copy_to_host(probe.data(),probe.size());
@@ -239,6 +281,7 @@ int rate_main(int argc,char** argv) {
                     <<",\"physics_steps\":0,\"optimizer_updates\":0}\n";}
                 if(maximum_new_field>1.e-6f||!gpu_unchanged||active_probes==0)throw std::runtime_error("New distant input disagreement or legacy GPU input change");
 #if defined(CUDARL_APPENDED_COVERAGE)
+                if(parent_inputs==32){
                 const auto actor_old=chooser::resize_input_parameters(actor.get_params(),channels,32);
                 const auto critic_old=chooser::resize_input_parameters(critic.get_params(),channels,32);
                 const nn::MlpSpec old_actor_spec{{32,32,actions},{nn::Activation::Tanh,nn::Activation::Identity}};
@@ -268,6 +311,7 @@ int rate_main(int argc,char** argv) {
                     <<",\"fresh_actor_Adam_age\":"<<aa.fresh_steps()<<",\"fresh_critic_Adam_age\":"<<ca.fresh_steps()
                     <<",\"physics_steps\":0,\"optimizer_updates\":0}\n";
                 if(actor_difference!=0||critic_difference!=0)throw std::runtime_error("Zero-column expansion changed GPU inference");
+                }
 #endif
                 auto sensory=probe.front().state;
                 for(auto& word:sensory.visited)word=0;
