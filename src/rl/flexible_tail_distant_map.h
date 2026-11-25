@@ -1,0 +1,27 @@
+#pragma once
+// Generated geometric sensing cache; no physics steps, policy actions or paths.
+namespace cudarl::flexible_tail::distant_map {
+inline constexpr uint64_t identity=2969561089304108934ULL;
+inline constexpr pond_geometry_v1::Parameters geometry={0.88,0.59999999999999998,0.46000000000000002,0.31,-0.17999999999999999,0.040000000000000001};
+inline constexpr int depth_count=1, words=24;
+inline constexpr float depths[]={-0.0800000131f,};
+inline constexpr uint64_t masks[]={0ULL,0ULL,0ULL,0ULL,0ULL,3848290697216ULL,1073479680ULL,18446673704965439487ULL,2251799276814339ULL,17293822603462434816ULL,18446726481524555775ULL,9007199120523279ULL,17293822706541656064ULL,18446726481524555775ULL,2251799276814351ULL,13835058089641893888ULL,18446462598733103103ULL,70351564308480ULL,29360128ULL,0ULL,0ULL,0ULL,0ULL,0ULL,};
+#if defined(__CUDACC__)
+static __device__ __constant__ uint64_t device_masks[]={0ULL,0ULL,0ULL,0ULL,0ULL,3848290697216ULL,1073479680ULL,18446673704965439487ULL,2251799276814339ULL,17293822603462434816ULL,18446726481524555775ULL,9007199120523279ULL,17293822706541656064ULL,18446726481524555775ULL,2251799276814351ULL,13835058089641893888ULL,18446462598733103103ULL,70351564308480ULL,29360128ULL,0ULL,0ULL,0ULL,0ULL,0ULL,};
+static __device__ __constant__ float device_depths[]={-0.0800000131f,};
+#endif
+CUDARL_HD inline float depth_at(int i){
+#ifdef __CUDA_ARCH__
+return device_depths[i];
+#else
+return depths[i];
+#endif
+}
+CUDARL_HD inline uint64_t word_at(int depth,int word){
+#ifdef __CUDA_ARCH__
+return device_masks[depth*words+word];
+#else
+return masks[depth*words+word];
+#endif
+}
+}

@@ -94,7 +94,8 @@ int rate_main(int argc,char** argv) {
     try {
         if(argc!=9&&argc!=11)throw std::runtime_error("Usage: rate_chooser new|verify|resume|fork|verify-fork GAIT MOTOR STARTS OUT UPDATES WALL MATERIAL [PARENT_CHECKPOINT PARENT_TASK_ID]");
         const std::string mode=argv[1];const bool verify=mode=="verify"||mode=="verify-fork",resume=mode=="resume";
-        const bool fork=mode=="fork"||mode=="verify-fork";
+        const bool inspect=mode=="inspect-fork";
+        const bool fork=mode=="fork"||mode=="verify-fork"||inspect;
         if((mode!="new"&&!verify&&!resume&&!fork)||(fork!=(argc==11)))throw std::runtime_error("Invalid rate session mode/parent arguments");
         output=fs::u8path(argv[5]);const int target=std::stoi(argv[6]);const double wall=std::stod(argv[7]);
         const int material=std::stoi(argv[8]);
@@ -169,6 +170,69 @@ int rate_main(int argc,char** argv) {
                 rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str());
                 const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str());
                 if(parent!=roundtrip) throw std::runtime_error("Parent import did not preserve full state exactly");
+#if defined(CUDARL_DISTANT_COVERAGE)
+                if(!tail::distant::geometry_matches(larger_pond))throw std::runtime_error("Distant map geometry differs");
+                std::vector<Lane> probe(worlds);roll.lanes.copy_to_host(probe.data(),probe.size());
+                observe_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get(),larger_pond,roll.obs.get(),roll.first_fault.get(),roll.fault_code.get());
+                check_launch();require_clear(roll,ledger,stream.value,true);
+                std::vector<float> device_observation(worlds*channels);
+                roll.obs.copy_to_host(device_observation.data(),device_observation.size());
+                observe_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get(),larger_pond,roll.obs.get(),roll.first_fault.get(),roll.fault_code.get(),false);
+                check_launch();require_clear(roll,ledger,stream.value,true);
+                std::vector<float> legacy_device_observation(worlds*channels);
+                roll.obs.copy_to_host(legacy_device_observation.data(),legacy_device_observation.size());
+                float maximum_new_field=0,maximum_legacy=0;bool gpu_unchanged=true;
+                float max_difference=0;int active_probes=0,worst_index=-1;float worst_cpu=0,worst_gpu=0;
+                for(int lane=0;lane<worlds;++lane){
+                    float expected[channels]{};
+                    if(!probe[lane].needs_start){
+                        ++active_probes;chooser::observe(probe[lane].state,larger_pond,expected,true);
+                        float legacy[channels];chooser::observe(probe[lane].state,larger_pond,legacy,false);
+                        for(int i=0;i<channels;++i){
+                            maximum_legacy=std::max(maximum_legacy,std::abs(legacy[i]-legacy_device_observation[lane*channels+i]));
+                            if(i<21||i>23){
+                                if(expected[i]!=legacy[i])throw std::runtime_error("Distant feedback changed another CPU input");
+                                if(device_observation[lane*channels+i]!=legacy_device_observation[lane*channels+i])gpu_unchanged=false;
+                            }
+                        }
+                    }
+                    for(int i=0;i<channels;++i){const float delta=std::abs(expected[i]-device_observation[lane*channels+i]);
+                        if(!std::isfinite(delta))throw std::runtime_error("Nonfinite distant observation");
+                        if(i>=21&&i<=23)maximum_new_field=std::max(maximum_new_field,delta);
+                        if(delta>max_difference){max_difference=delta;worst_index=lane*channels+i;worst_cpu=expected[i];worst_gpu=device_observation[lane*channels+i];}
+                    }
+                }
+                {std::ofstream report(output/"distant-parity.json");report<<std::setprecision(10)
+                    <<"{\"pass\":"<<(maximum_new_field<=1.e-6f&&gpu_unchanged&&active_probes>0?"true":"false")<<",\"max_difference\":"<<max_difference
+                    <<",\"worst_lane\":"<<(worst_index<0?-1:worst_index/channels)<<",\"input\":"<<(worst_index<0?-1:worst_index%channels)
+                    <<",\"cpu\":"<<worst_cpu<<",\"cuda\":"<<worst_gpu<<",\"new_field_maximum\":"<<maximum_new_field
+                    <<",\"legacy_maximum\":"<<maximum_legacy<<",\"other_GPU_inputs_unchanged\":"<<(gpu_unchanged?"true":"false")
+                    <<",\"physics_steps\":0,\"optimizer_updates\":0}\n";}
+                if(maximum_new_field>1.e-6f||!gpu_unchanged||active_probes==0)throw std::runtime_error("New distant input disagreement or legacy GPU input change");
+                auto sensory=probe.front().state;
+                for(auto& word:sensory.visited)word=0;
+                for(auto& visit:sensory.recent)visit={};
+                float fresh[3],known[3],front[3],back[3];
+                const float depth=tail::distant_map::depths[0];
+                tail::distant::observe(sensory,{0,depth,0},{1,0,0},depth,0,fresh);
+                for(float x:fresh)if(x!=1.f)throw std::runtime_error("Fresh sector normalization failed");
+                for(auto& word:sensory.visited)word=~uint64_t{0};
+                tail::distant::observe(sensory,{0,depth,0},{1,0,0},depth,0,known);
+                for(float x:known)if(x!=0.f)throw std::runtime_error("Visited water has false novelty");
+                int target=-1;
+                for(int cell=0;cell<1536;++cell)if((tail::distant_map::word_at(0,cell/64)&(uint64_t{1}<<(cell%64)))&&
+                    cell%48>=31&&cell/48==16){target=cell;break;}
+                if(target<0)throw std::runtime_error("Missing front sensory fixture");
+                sensory.visited[target/64]&=~(uint64_t{1}<<(target%64));
+                tail::distant::observe(sensory,{0,depth,0},{1,0,0},depth,0,front);
+                tail::distant::observe(sensory,{0,depth,0},{-1,0,0},depth,0,back);
+                if(!(front[1]>0&&front[0]==0&&front[2]==0&&back[1]==0&&(back[0]>0||back[2]>0)))
+                    throw std::runtime_error("Distant field is not course-relative");
+                std::ofstream senses(output/"distant-senses.json");
+                senses<<"{\"pass\":true,\"active_worlds\":"<<active_probes<<",\"CPU_CUDA_values\":"<<worlds*channels
+                    <<",\"max_difference\":"<<maximum_new_field<<",\"inherited_legacy_max_difference\":"<<maximum_legacy<<",\"only_inputs_21_23_changed\":true,\"fresh_known_rotation_checks\":true,\"physics_steps\":0,\"optimizer_updates\":0}\n";
+#endif
+                if(inspect)return 0;
                 std::ofstream imported(output/"parent-import.json");
                 imported<<"{\"pass\":true,\"full_state_exact_before_counter_rebase\":true,\"parent_update\":"<<ledger.completed
                     <<",\"parent_checksum\":"<<cudarl::checkpoint::checksum(parent)<<",\"parent_task\":\""<<parent_task

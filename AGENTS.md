@@ -1,5 +1,23 @@
 # Workspace instructions
 
+## Distant visitation feedback — November 25, 2026
+
+User authorized better distant feedback, a separate GPU PPO chooser session,
+conditional Godot adoption and commits. Read DISTANT_COVERAGE_PROTOCOL.md under
+tools/pond-flexible-tail-chooser and the pond-flexible-tail-distant-coverage-v2
+research README. The corrected session is CLOSED at128 updates/1,024 worlds,
+157.555s. Only inputs21–23 change to a338-cell course-relative novelty field;
+version4 models explicitly bind the geometric cache. Full-state import from
+coverage-v1 selected80 and three-update exact resume pass. Initial12+4 is safe,
+but best trained32 scores12+2 and final128 scores3/12. Zero long coverage cases
+ran. No candidate is adopted: Godot stays coverage80, all active10 hashes intact.
+Original preflight/inspections spent zero physics/PPO and are preserved; new
+three inputs agree CPU/CUDA exactly, while unchanged bank input9 differs by
+2.235e−6 as it already does under legacy. Physical tolerances stay unchanged.
+Isolated native old/new model-format replays each match3,750 states. Preserve
+the complete local-observation interface in a proposed next appended-feature
+comparison; do not silently repeat or extend this closed study.
+
 ## Individual coverage continuation — November 25, 2026
 
 The user authorized improving actual whole-pond exploration. Read

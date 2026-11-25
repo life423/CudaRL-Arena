@@ -1,4 +1,4 @@
-param([string]$Output='build/flexible-tail/coverage-v1')
+param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant)
 $ErrorActionPreference='Stop'
 $repository=Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 Set-Location -LiteralPath $repository
@@ -15,8 +15,8 @@ $gait=(Resolve-Path flexible-tail-preview/live_data/fitted-gait.bin).Path
 $motor=(Resolve-Path flexible-tail-preview/live_data/exploration-motor-88.bin).Path
 $starts=(Resolve-Path build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin).Path
 $straight=(Resolve-Path flexible-tail-preview/live_data/straight-evaluation-starts.bin).Path
-$prior=(Resolve-Path build/flexible-tail/reliable-chooser-v1-corrected/stage-06-bank/training).Path
-$parent=Join-Path $prior checkpoints/session-88.bin
+$prior=if($Distant){(Resolve-Path build/flexible-tail/coverage-v1/training).Path}else{(Resolve-Path build/flexible-tail/reliable-chooser-v1-corrected/stage-06-bank/training).Path}
+$parent=Join-Path $prior $(if($Distant){'checkpoints/session-80.bin'}else{'checkpoints/session-88.bin'})
 $parentTask=(Get-Content (Join-Path $prior result.json) -Raw|ConvertFrom-Json).task
 $training=Join-Path $root training
 if(Test-Path -LiteralPath $training){throw 'Coverage training is immutable; no automatic repeat.'}
@@ -24,7 +24,7 @@ if((Get-Content (Join-Path $root baseline/assessment/summary.json) -Raw|ConvertF
 $paths=@(Get-ChildItem src -File -Recurse|Where-Object Extension -in @('.h','.cpp','.cu')|Select-Object -ExpandProperty FullName)
 $paths+=@(Get-ChildItem $PSScriptRoot -File|Select-Object -ExpandProperty FullName)
 $paths+=@($rate,$script:rateEval,$gait,$motor,$starts,$straight,$parent,(Join-Path $prior result.json),
-    'tools/pond-flexible-tail-steering/run-seven-stages.ps1','flexible-tail-preview/live_data/exploration-chooser-88.bin',
+    'tools/pond-flexible-tail-steering/run-seven-stages.ps1','flexible-tail-preview/live_data/exploration-chooser-88.bin','flexible-tail-preview/live_data/exploration-chooser-coverage-80.bin',
     'flexible-tail-preview/addons/flexible_tail_live/bin/flexible_tail_live.dll','flexible-tail-preview/habitat.json')
 $script:bindings=@(Bind-Files $paths)
 Json (Join-Path $root bindings.json) $bindings
@@ -39,6 +39,7 @@ try{
     $proof=Get-Content (Join-Path $verify data/verification.json) -Raw|ConvertFrom-Json
     $import=Get-Content (Join-Path $verify data/parent-import.json) -Raw|ConvertFrom-Json
     if(!$proof.pass -or $proof.physical_updates_executed -ne 3 -or !$import.full_state_exact_before_counter_rebase){throw 'Full-state continuation gate failed.'}
+    if($Distant -and !(Get-Content (Join-Path $verify data/distant-senses.json) -Raw|ConvertFrom-Json).pass){throw 'Distant sensory gate failed.'}
     Assert-Frozen
     $job=Start-Native 'training' $rate @('fork',$gait,$motor,$starts,$training,'128','1200','0',$parent,$parentTask) $root 1800
     $pending=[Collections.Generic.Queue[int]]::new();$scheduled=[Collections.Generic.HashSet[int]]::new()

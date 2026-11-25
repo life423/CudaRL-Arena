@@ -113,6 +113,7 @@ struct FlexibleTailLive::Impl {
     int fault = 0;
     bool loaded = false;
     bool autonomous = false;
+    bool distant_feedback = false;
     std::unique_ptr<nn::CpuMlp<float>> chooser;
     tail::rate_chooser::World pond{};
     tail::steering::Kind motor_kind = tail::steering::Kind::ProgramNonlinear;
@@ -197,7 +198,9 @@ bool FlexibleTailLive::load_autonomous(const String& gait_path, const String& mo
     try {
         auto fitted = tail::read_navigation_weights(gait_path.utf8().get_data(), tail::NavigationMode::Gait);
         auto motor = tail::steering::read_model(motor_path.utf8().get_data());
-        auto policy = tail::rate_chooser::read_weights(chooser_path.utf8().get_data());
+        auto policy = tail::rate_chooser::read_weights(chooser_path.utf8().get_data(),&state.distant_feedback);
+        if(state.distant_feedback&&!tail::distant::geometry_matches(larger_pond))
+            throw std::runtime_error("Distant coverage map does not match pond geometry.");
         const auto starts = tail::read_navigation_worlds(starts_path.utf8().get_data());
         tail::fast::validate_frozen_gait(fitted); tail::steering::validate_model(motor);
         if (starts.size() != 12 || motor.material != tail::Material::Baseline)
@@ -261,7 +264,7 @@ bool FlexibleTailLive::step_control() {
     if (state.autonomous) {
         if (tail::rate_chooser::ready(state.pond)) {
             float obs[tail::rate_chooser::inputs];
-            tail::rate_chooser::observe(state.pond, larger_pond, obs);
+            tail::rate_chooser::observe(state.pond, larger_pond, obs,state.distant_feedback);
             state.chooser->forward(obs, 1);
             const auto* logits = state.chooser->output();
             int choice = 0;

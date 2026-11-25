@@ -1,5 +1,17 @@
 # AI status — November 25, 2026
 
+**Distant-feedback study is closed without adoption.** Three global directional
+novelty inputs replace the three far point probes in a version4 experimental
+chooser. Native CUDA PPO completes128 new updates on1,024 worlds in157.555s,
+with motor88 frozen. Initial observer scores12/12+4/4; best trained checkpoint32
+scores12/12+2/4; final128 scores3/12 with nine guard stops. No trained checkpoint
+qualifies, so zero new30-minute coverage cases run. The working Godot pair stays
+coverage80/motor88 with its10 hashes unchanged. Old/new-format isolated native
+replays each match3,750 states exactly. New sensory CPU/CUDA values agree exactly;
+the failed preflight exposed an inherited bank-input rounding difference, kept
+separately with all zero-physics inspection evidence. No extra run is active.
+[Distant-feedback result and next question](../assets/research-evidence/pond-flexible-tail-distant-coverage-v2/README.md)
+
 **Individual coverage improves; whole-pond exploration remains unfinished.**
 Coverage-v1 completed 128 native CUDA PPO chooser updates on 1,024 worlds in
 141.535s, preserving motor88. Selected80 raises worst/mean individual 30-minute

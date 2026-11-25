@@ -279,15 +279,26 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
     lane.needs_start = false;
 }
 
+#if defined(CUDARL_RATE_CHOOSER)
+constexpr bool collector_distant_default=chooser::default_distant;
+#else
+constexpr bool collector_distant_default=false;
+#endif
 __global__ void observe_lanes(const Lane* lanes, geometry::Parameters pond, float* rows,
-                              int* first_fault, int* fault_code) {
+                              int* first_fault, int* fault_code,bool distant_feedback=collector_distant_default) {
     const int lane_index = blockIdx.x * blockDim.x + threadIdx.x;
     if (lane_index >= worlds) return;
     float obs[channels]{};
     const auto& lane = lanes[lane_index];
     if (!lane.needs_start) {
         if (!chooser::ready(lane.state)) fail(lane_index, 30, first_fault, fault_code);
-        else chooser::observe(lane.state, pond, obs);
+        else {
+#if defined(CUDARL_RATE_CHOOSER)
+            chooser::observe(lane.state, pond, obs,distant_feedback);
+#else
+            chooser::observe(lane.state, pond, obs);
+#endif
+        }
     }
     for (int i = 0; i < channels; ++i) {
         if (!isfinite(obs[i])) {

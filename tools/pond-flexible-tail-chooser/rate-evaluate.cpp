@@ -84,6 +84,7 @@ struct Models {
     tail::steering::Model motor;
     tail::steering::Config config;
     bool old_loader_rejected = false;
+    bool distant_feedback = false;
     std::vector<tail::NavigationWorld> starts;
 
 
@@ -255,7 +256,7 @@ Case run_case(Start start, int horizon_s, int cell_floor, const Models& models,
         }
         if (chooser::ready(world)) {
             float input[chooser::inputs];
-            chooser::observe(world, larger_pond, input);
+            chooser::observe(world, larger_pond, input, models.distant_feedback);
             actor.forward(input, 1);
             const float* logits = actor.output();
             if (!std::all_of(logits, logits + chooser::actions, physics::finite_number)) {
@@ -373,7 +374,7 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
         chooser::World sensory{};const auto& archived=models.starts.front();
         chooser::initialize(sensory,archived,horizontal_place(diagnostic.front(),archived),0.f,models.motor.kind,models.config);
         const auto before=sensory.motor.navigation.motion.body;
-        float observation[chooser::inputs];chooser::observe(sensory,larger_pond,observation);
+        float observation[chooser::inputs];chooser::observe(sensory,larger_pond,observation,models.distant_feedback);
         if(std::memcmp(&before,&sensory.motor.navigation.motion.body,sizeof(before)))throw std::runtime_error("Sensory query changed native body");
         for(float value:observation)if(!physics::finite_number(value))throw std::runtime_error("Nonfinite chooser sensory input");
         cudarl::nn::CpuMlp<float> actor(chooser::actor_spec());actor.params()=models.policy;actor.forward(observation,1);
@@ -381,7 +382,7 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
         std::ofstream metadata(output/"metadata-check.json");
         metadata<<"{\"pass\":true,\"physics_steps\":0,\"optimizer_updates\":0,\"sensory_did_not_change_body\":true,\"old_chooser_loader_rejected\":"
             <<(models.old_loader_rejected?"true":"false")<<",\"chooser_schema\":"<<chooser::schema<<",\"chooser_inputs\":"<<chooser::inputs
-            <<",\"chooser_actions\":"<<chooser::actions<<",\"decision_controls\":"<<chooser::decision_controls
+            <<",\"chooser_actions\":"<<chooser::actions<<",\"distant_feedback\":"<<(models.distant_feedback?"true":"false")<<",\"decision_controls\":"<<chooser::decision_controls
             <<",\"motor_kind\":"<<static_cast<uint32_t>(models.motor.kind)<<",\"motor_feature_schema\":"<<tail::steering::feature_schema(models.motor.kind)
             <<",\"motor_material\":"<<static_cast<uint32_t>(models.motor.material)<<",\"material\":"<<static_cast<uint32_t>(models.config.material)
             <<",\"bank_feature_schema\":"<<tail::bank::schema<<",\"transport_time_is_constant_shape_estimate\":true}\n";
@@ -527,7 +528,8 @@ int main(int argc, char** argv) {
         Models models;
         models.gait=tail::read_navigation_weights(argv[1],tail::NavigationMode::Gait);
         models.motor=tail::steering::read_model(argv[2]);
-        models.policy=chooser::read_weights(argv[3]);
+        models.policy=chooser::read_weights(argv[3],&models.distant_feedback);
+        if(models.distant_feedback&&!tail::distant::geometry_matches(larger_pond))throw std::runtime_error("Coverage map geometry differs");
         models.starts=tail::read_navigation_worlds(argv[4]);
         models.config.study=tail::steering::Study::Rate;
         models.config.material=tail::steering::read_material(argv[6]);

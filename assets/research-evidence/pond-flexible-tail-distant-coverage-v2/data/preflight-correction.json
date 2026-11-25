@@ -1,0 +1,8 @@
+{
+  "optimizer_updates": 0,
+  "inspections": 2,
+  "failed_root": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\distant-coverage-v2",
+  "reason": "new inputs agree exactly; unaffected legacy input9 exposed inherited rounding",
+  "physical_tolerances_changed": false,
+  "physics_steps": 0
+}

@@ -1,5 +1,13 @@
 # Native PPO chooser workflow
 
+The opt-in `CUDARL_DISTANT_COVERAGE` experiment is closed and unqualified.
+It replaced only the three far inputs and lost bank safety during128 updates;
+Godot stays on coverage80. Version4 observation decoding is explicit and keeps
+version3 behavior intact. See [results](../../assets/research-evidence/pond-flexible-tail-distant-coverage-v2/README.md)
+and [protocol](DISTANT_COVERAGE_PROTOCOL.md). `-Distant` selects the explicit
+coverage80 full-state parent; its compiled target must enable both coverage
+options. `inspect-fork` performs zero-physics/zero-PPO input checks only.
+
 The latest coverage continuation is closed at 128 updates. Godot uses its
 selected chooser80 with frozen motor88; individual 30-minute coverage is
 32–45%, not full pond coverage. Read [results](../../assets/research-evidence/pond-flexible-tail-coverage-v1/README.md)

@@ -3,12 +3,18 @@
 #include "rl/flexible_tail_fast_steering.h"
 #include "rl/flexible_tail_chooser.h"
 #include "rl/flexible_tail_bank_observation.h"
+#include "rl/flexible_tail_distant_coverage.h"
 #include "core/checkpoint.h"
 #include <climits>
 
 namespace cudarl::flexible_tail::rate_chooser {
 
 inline constexpr int inputs = 32, decision_controls = 40, cue_limit_controls = 40;
+#if defined(CUDARL_DISTANT_COVERAGE)
+inline constexpr bool default_distant = true;
+#else
+inline constexpr bool default_distant = false;
+#endif
 #if defined(CUDARL_RELIABLE_CHOOSER)
 inline constexpr int rate_count = 5, actions = 15;
 inline constexpr uint32_t schema = 2, model_version = 3;
@@ -90,7 +96,7 @@ CUDARL_HD inline bool accept(World& w, int action) {
 }
 
 CUDARL_HD inline void observe(const World& w, const pond_geometry_v1::Parameters& pond,
-    float (&out)[inputs]) {
+    float (&out)[inputs], bool distant_feedback=default_distant) {
     for (auto& v : out) v = 0;
     const auto sample = fast::feedback_sample(w.motor);
     float bank_features[bank::inputs];
@@ -106,6 +112,10 @@ CUDARL_HD inline void observe(const World& w, const pond_geometry_v1::Parameters
         const auto direction = physics::axis_rotation({0,1,0}, (side - 1) * pi / 4.f).rotate(course);
         out[18 + side] = chooser::novelty_at(w, w.pose.com_m + direction * .08f, nav.motion.controls);
         out[21 + side] = chooser::novelty_at(w, w.pose.com_m + direction * .24f, nav.motion.controls);
+    }
+    if(distant_feedback){
+        float field[3];distant::observe(w,w.pose.com_m,course,nav.motion.request.origin_m.y,nav.motion.controls,field);
+        for(int side=0;side<3;++side)out[21+side]=field[side];
     }
     out[24] = w.pose.com_m.x / float(pond.water_radius_x_m);
     out[25] = w.pose.com_m.z / float(pond.water_radius_z_m);
@@ -162,7 +172,8 @@ CUDARL_HD inline Result advance(World& w, const float* gait, const float* packed
         else { w.stall_s += seconds; out.reward -= seconds * .10f; }
         w.max_stall_s = fmaxf(w.max_stall_s, w.stall_s);
         out.reward += chooser::visit_reward_at(w, w.pose.com_m, motor.navigation.motion.controls, speed);
-        float senses[inputs]; observe(w, pond, senses);
+        float senses[bank::inputs];
+        bank::observe(motor.navigation.motion.body,w.pose,pond,sample.velocity_m_s,sample.reliable,senses);
         // Penalize an approaching loss of clearance, not proximity alone.
         if (senses[bank::TransportTimeValid] > 0.f) {
             const float remaining_s = senses[bank::ConstantTransportTime] * bank::time_scale_s;
@@ -184,15 +195,23 @@ inline void validate_weights(const std::vector<float>& weights) {
 }
 inline void write_weights(const std::string& path, const std::vector<float>& weights) {
     validate_weights(weights); checkpoint::Writer out;
-    out.value<uint32_t>(0x48435446); out.value(model_version); out.value(schema);
-    out.value(inputs); out.value(actions); out.value(decision_controls); out.array(weights);
+    out.value<uint32_t>(0x48435446); out.value(default_distant?uint32_t(4):model_version); out.value(default_distant?uint32_t(3):schema);
+    out.value(inputs); out.value(actions); out.value(decision_controls);
+    if(default_distant)out.value(distant_map::identity);
+    out.array(weights);
     checkpoint::write_atomic(path,out.data);
 }
-inline std::vector<float> read_weights(const std::string& path) {
+inline std::vector<float> read_weights(const std::string& path, bool* distant_feedback=nullptr) {
     auto bytes=checkpoint::read(path); checkpoint::Reader in{bytes};
-    if(in.value<uint32_t>()!=0x48435446 || in.value<uint32_t>()!=model_version || in.value<uint32_t>()!=schema ||
+    if(in.value<uint32_t>()!=0x48435446)throw std::runtime_error("Rate chooser magic mismatch");
+    const auto version=in.value<uint32_t>(),request_schema=in.value<uint32_t>();
+    const bool is_distant=version==4&&request_schema==3&&actions==15;
+    if((!is_distant&&(version!=model_version||request_schema!=schema)) ||
         in.value<int>()!=inputs || in.value<int>()!=actions || in.value<int>()!=decision_controls)
         throw std::runtime_error("Rate chooser schema mismatch");
+    if(is_distant&&in.value<uint64_t>()!=distant_map::identity)throw std::runtime_error("Distant coverage map binding mismatch");
+    if(is_distant&&!distant_feedback&&!default_distant)throw std::runtime_error("Distant chooser needs an observation-mode consumer");
+    if(distant_feedback)*distant_feedback=is_distant;
     auto weights=in.array<float>(actor_spec().num_params()); in.finish(); validate_weights(weights); return weights;
 }
 } // namespace cudarl::flexible_tail::rate_chooser
