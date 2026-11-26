@@ -1,5 +1,22 @@
 # Workspace instructions
 
+## Shoreline-warning audit — November 25, 2026
+
+User authorized checking warning room only, keeping motor safe and no mouse.
+Read tools/pond-shoreline-warning/PROTOCOL.md and the pond-shoreline-warning-v1
+research README. One shared-native CPU diagnostic completed12 outward prefixes,
+36 exact full-state forks and180 branches in24.179s;3794995 attempted substeps,
+zero training or desktop input. All24 qualified±4deg/s branches cued at12s reach
+the clearance guard before sustained inward motion.20/24s helps only some
+moderate turns; fast±8 remains unqualified despite stronger24s outcomes.
+Actual warning speed8.79–11.73mm/s; remaining range105–141mm; moderate90deg
+turns take22.24–23.76s with139–183mm effective radius. Curved-bank sweep and
+0–0.72s decision delay matter. Do not simply change12 to24 or script avoidance.
+Working appended16/motor88 and all11 Godot hashes remain intact; no trainer is
+active. This diagnostic does not invalidate the selected four30-minute runs,
+establish actual terrain contact, or authorize follow-up training/publication.
+Mouse/keyboard takeover still requires explicit permission.
+
 ## User stopping point and frontier reward — November 25, 2026
 
 STOP after the completed frontier-progress-v4 session. User explicitly forbids

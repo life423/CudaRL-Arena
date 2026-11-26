@@ -1,5 +1,16 @@
 # AI status — November 25, 2026
 
+**Warning-room audit:12s is late for the tested outward moderate turns.**
+A frozen native diagnostic completes12 prefixes/36 full-state captures/180
+branches, zero training. At the12s cue, all24±4deg/s branches lose certified
+clearance before sustained inward motion. Earlier20/24s cues help some branches
+but do not qualify both moderate directions. Actual warning speeds8.79–11.73mm/s
+leave105–141mm straight runway; measured90deg turns take22.24–23.76s with139–183mm
+effective path radius. Bank curvature, changed speed during turns and chooser
+delay matter. Working Godot appended16/motor88 remains unchanged, all11 hashes
+intact. No mouse/keyboard input, new training or sensor change was performed.
+[Measured room, limitations and recommendation](../assets/research-evidence/pond-shoreline-warning-v1/README.md)
+
 **Stopping point: frontier reward did not qualify; working Godot stays unchanged.**
 The separate1024-world CUDA PPO chooser run completes128 updates/1048576 main
 transitions in160.735s. It adds discounted progress toward unvisited water while

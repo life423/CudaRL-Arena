@@ -1,0 +1,21 @@
+{
+  "complete": true,
+  "current_12s_moderate_turns_safe": 0,
+  "current_12s_moderate_turns_attempted": 24,
+  "current_12s_moderate_turns_inward": 0,
+  "first_warning_actual_speed_mm_s_min": 8.793956757,
+  "first_warning_actual_speed_mm_s_max": 11.73014355,
+  "first_warning_range_mm_min": 104.9804688,
+  "first_warning_range_mm_max": 140.625,
+  "maximum_decision_delay_s": 0.719999969,
+  "measured_90deg_moderate_turn_time_s_min": 22.23999977,
+  "measured_90deg_moderate_turn_time_s_max": 23.76000023,
+  "measured_effective_radius_mm_min": 138.5407867,
+  "measured_effective_radius_mm_max": 182.5128479,
+  "attempted_substeps": 3794995.0,
+  "accepted_substeps": 3794858.0,
+  "optimizer_updates": 0,
+  "Godot_updated": false,
+  "mouse_keyboard_calls": 0,
+  "interpretation": "The12s soft penalty is too late for these outward capability probes.20/24s helps some turns but is not a reliable universal fix. Constant-shape clearance loss is not measured terrain contact."
+}
