@@ -1,5 +1,22 @@
 # Workspace instructions
 
+## Same-state chooser diagnostic — November 25, 2026
+
+User authorized frozen-state sequence comparison only: no training, scripted
+avoidance in Godot or mouse takeover. Read COUNTERFACTUAL_PROTOCOL.md under
+tools/pond-shoreline-warning and the pond-chooser-counterfactual-v1 research README.
+Three rejected research-policy failures replay exactly:2522 COM samples,251
+actions,max error0m.9 predecision World captures preserve full body/filter/history/
+visit state.234 branches complete in19.143s,2989111 attempted substeps,zero Adam.
+29/216 diagnostic sequences escape for40s across5/9 states; installed chooser
+escapes2/9 off-distribution states; original research policy0/9. Some successful
+sequences use gentler turns and straightening, proving avoidable sequence errors
+with the same motor. None of the tested4s-before-failure sequences escapes;
+finite search does not prove impossibility. Lead labels are retrospective time
+before failure, not sensor TTC. Source requested8mm/s can actually travel23mm/s.
+Godot appended16/motor88 and all11 hashes remain unchanged. No follow-up training
+or publication is authorized by this diagnostic. Keep mouse/keyboard hands off.
+
 ## Shoreline-warning audit — November 25, 2026
 
 User authorized checking warning room only, keeping motor safe and no mouse.

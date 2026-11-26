@@ -1,0 +1,17 @@
+{
+  "complete": true,
+  "exact_prefixes": 3,
+  "exact_fork_states": 9,
+  "branches": 234,
+  "source_escape_cases": 0,
+  "installed_escape_cases": 2,
+  "diagnostic_escape_branches": 29,
+  "states_with_demonstrated_alternative": 5,
+  "safe_but_not_useful": 3,
+  "attempted_substeps": 2989111.0,
+  "accepted_substeps": 2988908.0,
+  "optimizer_updates": 0,
+  "mouse_keyboard_calls": 0,
+  "Godot_updated": false,
+  "warning": "Lead labels are retrospective time before the original failure, not sensor TTC. Successful sequences are finite offline witnesses; an unsuccessful finite library does not prove irrecoverability."
+}

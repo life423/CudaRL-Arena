@@ -1,0 +1,4 @@
+fixture,case,source_policy,COM_samples,decision_actions,max_COM_error_m,attempted,accepted,fault
+0,northwest_diagonal,0,893,89,0,57197,57196,2
+1,east_shelf_tangent,1,1188,118,0,76089,76088,2
+2,northeast_to_center,1,441,44,0,28260,28259,2

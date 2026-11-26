@@ -1,0 +1,8 @@
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-shoreline-warning/CMakeLists.txt
+  compare.cpp
+  checkpoint.cpp
+  Generating Code...
+  pond_chooser_counterfactual.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\chooser-counterfactual-v1\native-build\Release\pond_chooser_counterfactual.exe

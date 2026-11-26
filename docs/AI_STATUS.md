@@ -1,5 +1,16 @@
 # AI status — November 25, 2026
 
+**Same-state comparison finds avoidable chooser sequence failures.**
+Three rejected research-policy prefixes replay exactly (2522 COM samples,251
+actions). From9 exact captured states,the unchanged motor executes29 successful
+40s diagnostic sequences across5 states. Original choosers0/9,installed chooser
+2/9 from those off-distribution states. A gentler turn followed by straightening
+can succeed where continuing+8deg/s fails; some safe sequences even share the
+original first action. No tested sequence escapes the three4s-before-failure
+states,which does not prove no sequence exists. Native execution19.143s,zero
+training,Godot changes or mouse input. All11 active bundle hashes remain intact.
+[Comparison, raw forks and next learning target](../assets/research-evidence/pond-chooser-counterfactual-v1/README.md)
+
 **Warning-room audit:12s is late for the tested outward moderate turns.**
 A frozen native diagnostic completes12 prefixes/36 full-state captures/180
 branches, zero training. At the12s cue, all24±4deg/s branches lose certified
