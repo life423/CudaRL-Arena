@@ -1,5 +1,10 @@
 param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant,[switch]$Appended,
-    [string]$ParentTraining='', [ValidateSet(32,35,39)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier,[switch]$CurvedBank,[switch]$CloseShore,[switch]$EpisodicBank)
+    [string]$ParentTraining='', [ValidateSet(32,35,39)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier,[switch]$CurvedBank,[switch]$CloseShore,[switch]$EpisodicBank,[switch]$Regional,[switch]$ThreeDepths)
+if($ThreeDepths){$Regional=$true}
+if($Regional){
+    if(!$ParentTraining -or $ParentInputs -ne 35 -or $ParentUpdate -ne 16 -or $Frontier -or $CurvedBank -or $CloseShore -or $EpisodicBank){throw 'Regional exploration requires the installed appended-16 parent.'}
+    $Appended=$true
+}
 if($EpisodicBank){$CloseShore=$true}
 if($CloseShore){$CurvedBank=$true;if($ParentInputs -ne 39){throw 'Close shore requires the preserved39-input parent'}}
 if($CurvedBank){$Appended=$true;if($Frontier -or !$ParentTraining -or $ParentInputs -notin @(35,39) -or $ParentUpdate -lt 0){throw 'Curved bank needs explicit qualified parent and excludes frontier reward'}}
@@ -26,6 +31,11 @@ $parent=Join-Path $prior $(if($Distant){'checkpoints/session-80.bin'}else{'check
 if($ParentTraining){$prior=(Resolve-Path -LiteralPath $ParentTraining).Path;if($ParentUpdate -lt 0){throw 'Explicit parent update required'};$parent=Join-Path $prior "checkpoints/session-$ParentUpdate.bin"}
 $parentTask=(Get-Content (Join-Path $prior result.json) -Raw|ConvertFrom-Json).task
 $training=Join-Path $root training
+if($Regional){
+    $installed=(Resolve-Path 'flexible-tail-preview/live_data/exploration-chooser-appended-16.bin').Path
+    $portable=Join-Path $prior "actor-$ParentUpdate.bin"
+    if((Get-FileHash $installed).Hash -ne (Get-FileHash $portable).Hash){throw 'Training parent differs from the installed chooser'}
+}
 if(Test-Path -LiteralPath $training){throw 'Coverage training is immutable; no automatic repeat.'}
 if((Get-Content (Join-Path $root baseline/assessment/summary.json) -Raw|ConvertFrom-Json).physical_passes -ne 4){throw 'Missing completed baseline.'}
 $paths=@(Get-ChildItem src -File -Recurse|Where-Object Extension -in @('.h','.cpp','.cu')|Select-Object -ExpandProperty FullName)
@@ -34,6 +44,7 @@ $paths+=@($rate,$script:rateEval,$gait,$motor,$starts,$straight,$parent,(Join-Pa
     'tools/pond-flexible-tail-steering/run-seven-stages.ps1','flexible-tail-preview/live_data/exploration-chooser-88.bin','flexible-tail-preview/live_data/exploration-chooser-coverage-80.bin',
     'flexible-tail-preview/addons/flexible_tail_live/bin/flexible_tail_live.dll','flexible-tail-preview/habitat.json')
 $script:bindings=@(Bind-Files $paths)
+if($Regional){$script:bindings+=@(Bind-Files @($installed,$portable))}
 Json (Join-Path $root bindings.json) $bindings
 foreach($binding in $bindings|Where-Object {$_.path -like 'src/*' -or $_.path -like 'tools/*'}){
     $copy=Join-Path $root ('source/'+$binding.path);$null=New-Item -Path (Split-Path -Parent $copy) -ItemType Directory -Force
@@ -49,6 +60,25 @@ try{
     if($Distant -and !(Get-Content (Join-Path $verify data/distant-senses.json) -Raw|ConvertFrom-Json).pass){throw 'Distant sensory gate failed.'}
     if($Appended -and $ParentInputs -eq 32 -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Initial controller equivalence failed.'}
     if($Frontier -and !(Get-Content (Join-Path $verify data/frontier-check.json) -Raw|ConvertFrom-Json).pass){throw 'Frontier shaping check failed.'}
+    if($Regional){
+        $initialActor=Join-Path $verify data/actor-0.bin
+        if($ThreeDepths){
+            $senses=Get-Content (Join-Path $verify data/distant-senses.json) -Raw|ConvertFrom-Json
+            if(!$senses.pass -or $senses.tested_depths -ne 3){throw 'Three-depth geometry/sensing verification failed'}
+            $old=[IO.File]::ReadAllBytes($installed)
+            $new=[IO.File]::ReadAllBytes($initialActor)
+            # 24-byte checkpoint envelope followed by six 32-bit schema fields,
+            # the map identity, then the counted array of float parameters.
+            if($old.Length -ne $new.Length -or $new.Length -lt 64 -or
+                [Convert]::ToBase64String($old,24,24) -cne [Convert]::ToBase64String($new,24,24) -or
+                [BitConverter]::ToUInt64($old,48) -eq [BitConverter]::ToUInt64($new,48) -or
+                [Convert]::ToBase64String($old,56,$old.Length-56) -cne [Convert]::ToBase64String($new,56,$new.Length-56)){
+                throw 'Expected the same actor parameters and a distinct depth map binding'
+            }
+        }elseif((Get-FileHash $initialActor).Hash -ne (Get-FileHash $installed).Hash){throw 'Fork did not reproduce installed weights'}
+        if(!(Test-Path (Join-Path $verify data/regions.csv))){throw 'Verification binary lacks regional exploration reward'}
+        $baselineShore=Get-Content assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/summary.json -Raw|ConvertFrom-Json
+    }
     if($CurvedBank){
         if(!(Get-Content (Join-Path $verify data/curved-check.json) -Raw|ConvertFrom-Json).pass){throw 'Curved observation gate failed'}
         if($ParentInputs -lt 39 -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Input equivalence gate failed'}
@@ -74,8 +104,10 @@ try{
     Assert-Frozen
     $job=Start-Native 'training' $rate @('fork',$gait,$motor,$starts,$training,'128','1200','0',$parent,$parentTask,"$ParentInputs") $root 1800
     $pending=[Collections.Generic.Queue[int]]::new();$scheduled=[Collections.Generic.HashSet[int]]::new()
+    $checks=@(0..16|ForEach-Object {8*$_})
+    if($Regional){$checks=@($checks+@(1,2,4)|Sort-Object)}
     while(!$job.finished -or $evalJob -or $pending.Count){
-        for($u=0;$u -le 128;$u+=8){if((Test-Path (Join-Path $training "actor-$u.bin")) -and $scheduled.Add($u)){$pending.Enqueue($u)}}
+        foreach($u in $checks){if((Test-Path (Join-Path $training "actor-$u.bin")) -and $scheduled.Add($u)){$pending.Enqueue($u)}}
         if(!$evalJob -and $pending.Count){
             $u=$pending.Dequeue();$where=Join-Path $root ('evaluations/update-{0:D3}' -f $u)
             $evalJob=Start-Native 'evaluation' $script:rateEval @($gait,$motor,(Join-Path $training "actor-$u.bin"),$straight,(Join-Path $where assessment),'0') $where 30
@@ -87,7 +119,7 @@ try{
             $all+=@{update=$evalJob.update;actor=(Join-Path $training "actor-$($evalJob.update).bin");results=$r;directory=$evalJob.directory}
             Write-Host ("coverage update{0}: safety {1}/12 + {2}/{3}, union {4:P1}" -f $evalJob.update,$r.diagnostic_passes,$r.endurance_passes,$r.endurance_attempts,$r.diagnostic_coverage_fraction)
             Json (Join-Path $root progress.json) $all
-            if($CurvedBank -and ($r.pass -or $CloseShore)){
+            if($Regional -or ($CurvedBank -and ($r.pass -or $CloseShore))){
                 $nearWhere=Join-Path $root ('shore/update-{0:D3}' -f $evalJob.update)
                 Wait-Native (Start-Native 'shore' $script:rateEval @($gait,$motor,(Join-Path $training "actor-$($evalJob.update).bin"),$straight,(Join-Path $nearWhere assessment),'0','--close-shore') $nearWhere 35)
                 $near=Get-Content (Join-Path $nearWhere assessment/summary.json) -Raw|ConvertFrom-Json
@@ -100,8 +132,15 @@ try{
         if(!$job.finished -or $evalJob -or $pending.Count){[Threading.Thread]::Sleep(100)}
     }
     $contenders=@($all|Where-Object {$_.update -gt 0 -and $_.results.pass}|Sort-Object @{Expression={$_.results.diagnostic_coverage_fraction};Descending=$true}|Select-Object -First 4)
-    if($CurvedBank){$eligible=@($shore|Where-Object {$_.results.pass -and $_.results.mean_close_time_s -ge $baselineShore.mean_close_time_s+5}|ForEach-Object update)
+    if($CurvedBank -or $Regional){$eligible=@($shore|Where-Object {$_.results.pass -and $_.results.mean_close_time_s -ge $baselineShore.mean_close_time_s+5}|ForEach-Object update)
         $contenders=@($all|Where-Object {$_.update -gt 0 -and $_.results.pass -and $_.update -in $eligible}|Sort-Object @{Expression={$_.results.diagnostic_coverage_fraction};Descending=$true}|Select-Object -First 4)}
+    if($Regional){
+        # Always measure longitudinal coverage of three prespecified checkpoints,
+        # including unsafe ones. Measurements alone do not authorize publication.
+        $chosen=@(8,32,128)+@($contenders|ForEach-Object update)
+        if($ThreeDepths){$chosen+=0} # Map-only control on the long cases.
+        $contenders=@($all|Where-Object {$_.update -in $chosen}|Sort-Object {[int]$_.update})
+    }
     foreach($candidate in $contenders){
         $where=Join-Path $root ('continuous/update-{0:D3}' -f $candidate.update)
         Wait-Native (Start-Native 'coverage' $script:rateEval @($gait,$motor,$candidate.actor,$straight,(Join-Path $where assessment),'0','--continuous-coverage') $where 65)

@@ -1,0 +1,86 @@
+{
+  "verified": true,
+  "selected_update": 104,
+  "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F",
+  "score_rows": 18,
+  "preregistered_utc": "2026-11-26T05:27:05.2809965Z",
+  "first_trained_checkpoint_utc": "2026-11-26T05:27:20.6484718Z",
+  "preregistered_files": 15,
+  "selection_bound_files": 15,
+  "final_bound_files": 7,
+  "preregistered_files_still_match": true,
+  "freeze_utc": "2026-11-26T05:31:19.0465574Z",
+  "final_bindings_utc": "2026-11-26T05:31:19.0645574Z",
+  "original_fixture_identities": [
+    {
+      "depth_mm": 72,
+      "starts_sha256": "979A4BA232A9758D34282A51D53FBF36294C2AFDD34F784EEDC4994C37737F79"
+    },
+    {
+      "depth_mm": 75,
+      "starts_sha256": "548E2BE55E5CF287E3BB2171376132A7E4F65CF947BB28655C78773E7342EC35"
+    },
+    {
+      "depth_mm": 80,
+      "starts_sha256": "7C30CD9C2795FB6BAED2F5C912557DD3B5C2D983E200ACAF47CD20607A9C2809"
+    }
+  ],
+  "native_receipts": [
+    {
+      "suite": "shore-72",
+      "receipt_utc": "2026-11-26T05:31:20.1852781Z",
+      "exit": 1,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "shore-75",
+      "receipt_utc": "2026-11-26T05:31:21.3420124Z",
+      "exit": 1,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "shore-80",
+      "receipt_utc": "2026-11-26T05:31:22.4574263Z",
+      "exit": 1,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "navigation",
+      "receipt_utc": "2026-11-26T05:31:23.3017369Z",
+      "exit": 1,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "continuous",
+      "receipt_utc": "2026-11-26T05:31:35.3035391Z",
+      "exit": 1,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "original-moving-72",
+      "receipt_utc": "2026-11-26T05:31:44.7963532Z",
+      "exit": 0,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "original-moving-75",
+      "receipt_utc": "2026-11-26T05:31:44.7983529Z",
+      "exit": 0,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    },
+    {
+      "suite": "original-moving-80",
+      "receipt_utc": "2026-11-26T05:31:44.8033530Z",
+      "exit": 0,
+      "timeout": false,
+      "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F"
+    }
+  ]
+}

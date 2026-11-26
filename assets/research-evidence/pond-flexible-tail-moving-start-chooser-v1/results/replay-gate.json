@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "training_unlocked": true,
+  "chooser_sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C",
+  "motor_sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E",
+  "replay_evidence": "build/flexible-tail/moving-start-chooser-v1/recovery-summary.json",
+  "replay_sha256": "C6D0EDECCEDC2AD8EF6F937008B91F42837CF60577E5CB72121F14A23D5BFCF9",
+  "observed": "0 of 12 recovered from the original first decision in the branch set; 6 of 12 recovered with 60 mm additional runway and 12 of 12 with 120 mm."
+}

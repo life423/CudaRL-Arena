@@ -1,0 +1,30 @@
+[
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification/fixtures/shore-72.bin",
+    "sha256": "4E5B86C513DEF4B5AEF955E2896CC87C940DA6970D49EE8B53A4471951687689"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification/fixtures/shore-75.bin",
+    "sha256": "31ECBEDFB9B4F6752044171EADF59AB934DD8EFB407140170C6A961EB15355C4"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection-build/Release/depth_eval.exe",
+    "sha256": "2200C2B6DD3091016A46292A09732373B0F327E29850AA09D7A2C863796B6736"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/training/actor-104.bin",
+    "sha256": "932CCF8E942C25A6901CB07B69E0B87243A3BA571FC559BEE94E189AA365FA93"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+  }
+]

@@ -1,0 +1,5 @@
+# Frozen upstream comparison
+
+After the final selection file exists, score its single hashed chooser on the earlier assay's 24 placements, four moving approaches at 72/75/80 mm with 60 or 120 mm extra horizontal approach room. Replay each for at most 180 seconds through frozen motor 88. Include exactly one ordinary 0.8-second warmup per trajectory, no interventions, no resets, zero optimizer updates. Use the frozen bank safety, transport, tilt, depth and 407-control stall thresholds from the recovery assay. Maximum 3,456,000 physical substeps across 24 cases, 45 seconds internally and 50 seconds externally for each of three processes. Shadow inference of the three old actors uses the same state as the selected chooser until their first action difference, with zero extra physics.
+
+Compare per-start results to archived +104, +112 and parent 128, and to the qualifying branch with the highest minimum clearance for each start, retaining failure where none qualified. These descriptive comparisons do not rank checkpoints or affect any publication criterion.

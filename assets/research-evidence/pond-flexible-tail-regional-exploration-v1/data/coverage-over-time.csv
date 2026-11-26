@@ -1,0 +1,17 @@
+update,case,cells_5min,cells_15min,cells_30min,final_cells,accepted_s,last_action,seconds_on_last_identical_action,final_speed_mm_s
+0,endurance_godot_rest,65,117,151,151,1800,11,17.60000,12.3263216
+0,endurance_northeast,68,118,147,147,1800,11,69.60000,12.8526583
+0,endurance_southwest,62,130,160,160,1800,11,21.60000,12.1451426
+0,endurance_west,69,125,148,148,1800,11,0.80000,11.6024981
+8,endurance_godot_rest,63,145,172,172,1800,11,0.80000,17.0596275
+8,endurance_northeast,75,146,163,163,1800,10,8.80000,15.0226374
+8,endurance_southwest,72,158,193,193,1800,14,2.40000,18.1406822
+8,endurance_west,60,131,,162,1438.28125,10,43.08125,23.7289715
+32,endurance_godot_rest,81,,,103,409.96,9,11.56000,24.4238262
+32,endurance_northeast,80,168,221,221,1800,10,2.40000,13.7490425
+32,endurance_southwest,,,,31,84.75,9,56.75000,6.59115028
+32,endurance_west,80,,,127,543.80375,10,12.60375,17.6295567
+128,endurance_godot_rest,82,161,172,172,1800,7,5.60000,10.4975338
+128,endurance_northeast,69,104,114,114,1800,7,4.00000,10.2220364
+128,endurance_southwest,,,,55,161.5825,9,7.18250,16.0931244
+128,endurance_west,,,,35,92.70875,9,17.50875,12.3094864

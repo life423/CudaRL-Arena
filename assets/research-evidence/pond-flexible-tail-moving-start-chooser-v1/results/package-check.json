@@ -1,0 +1,9 @@
+{
+  "candidate_exit": 1,
+  "eligible_for_staging": false,
+  "candidate_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F",
+  "installed_chooser_sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323",
+  "motor_sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E",
+  "installed_check": "Verified 11 flexible-tail bundle hashes, qualified policy pair, and preserved original motor; zero physics/PPO.",
+  "candidate_godot_runs": 0
+}

@@ -1,0 +1,173 @@
+{
+  "base_commit": "39888fcc4bbb9b2b4ee75c562b952611227748f1",
+  "files": [
+    {
+      "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+      "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+      "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+      "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin",
+      "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323"
+    },
+    {
+      "path": "flexible-tail-preview/habitat.json",
+      "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-episodic-bank-v3/data/training/actor-128.bin",
+      "sha256": "3704F9A98E1CDE33DEE385758DB0BD5B22A884628A498FC234925DF248FC7DF2"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-episodic-bank-v3/data/training/checkpoints/session-128.bin",
+      "sha256": "53C9DDB437751A7804811AFCB0E0A360827D1A54D9B7B1D0DBEA519F9DBDD7AC"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-appended-coverage-v3/data/continuous/update-016/assessment/cases.csv",
+      "sha256": "DE8146F43C3099ADCD2FDF07E3EF0E7923C5E5CDB2031682DF2B26717CEDD1FC"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-appended-coverage-v3/data/continuous/update-016/assessment/coverage.csv",
+      "sha256": "4286CB855E203805E0CEFFD4E9055D321BFA19BC1699DAD82DCB0B7DB0C037C6"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/cases.csv",
+      "sha256": "BB7B67F54227794A423779540CDEC14D12535CC6062B07A525B2A080E28BA6E6"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/protocol.md",
+      "sha256": "26037A6C43D004CCD39E6E31103DE8AFAB409459744022268E49CA20520D5E11"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/CMakeLists.txt",
+      "sha256": "161D93A8EF0F2DEA6CACF14550145CC43AA2D0F242F3C55DFB8B1AC9C605DECB"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+      "sha256": "459A7F910EAEFACE8A369CD799462F25EF7FDF6B95A8BEC8A5338C2A91EAF62F"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/learning_signal_audit.h",
+      "sha256": "C689872BFF4F52556CEE65DF92E166E922173117EF05CE884984A3A25AE9BB78"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/turn_exit_audit.h",
+      "sha256": "6BBA95C66D1F8218C239E22A9372E2026FD9E6DF26A8706C63B538785ECA75D7"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/analyze-coverage.mjs",
+      "sha256": "9197814BBBE73C94A6D83AFE38D3C2CFB6E9152D7D65F69079599190CD3FD20E"
+    },
+    {
+      "path": "build/flexible-tail/turn-exit-map-v1/native/Release/pond_turn_exit_audit.exe",
+      "sha256": "FF0FB72C87E71B207FC7B62328984765D0101D644D50BD4B3267A456C85E3CB0"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-episodic-bank-v3/data/signal-audit/captures/phase8-bank1-direction-1-40.bin",
+      "sha256": "62197C71A1FB7404DAE0E3D76DA81C8CCFF81AAB4A13891A0A02C69626C3D4CB"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-episodic-bank-v3/data/signal-audit/captures/phase9-bank1-direction1-40.bin",
+      "sha256": "7B2864B963A8E3005D66B4BB3EBB58B77B0EBD9BECBE6A362FBDCB445C054462"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-episodic-bank-v3/data/shore/update-128/assessment/traces/phase8-bank1-direction-1.csv",
+      "sha256": "5FFF44F8496D4F899EBEC2445B575DD969C4A7C457252C3828954CF6E88B9B63"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-episodic-bank-v3/data/shore/update-128/assessment/traces/phase9-bank1-direction1.csv",
+      "sha256": "8E93D93090BB50765285C21E80B113B5DAC4A718E3F5F5ADBCEB61F3D54E76BF"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-appended-coverage-v3/data/continuous/update-016/assessment/traces/endurance_godot_rest.csv",
+      "sha256": "3906110BF70F9C613C70F57633B58C3F50702A580AE77993B8BF36316E0C45D4"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-appended-coverage-v3/data/continuous/update-016/assessment/traces/endurance_northeast.csv",
+      "sha256": "2F65CF9925E57206CBB2D149779518B79571D03A7C822CDEAB35EBC3109EBCF2"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-appended-coverage-v3/data/continuous/update-016/assessment/traces/endurance_southwest.csv",
+      "sha256": "3EA7B940A362BD4BE374B6A1C7BDC2AC8D6E795BDF244C181AB86E8DBE97FCCB"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-appended-coverage-v3/data/continuous/update-016/assessment/traces/endurance_west.csv",
+      "sha256": "9DF18835A3D7AB4C064DE5FA91D54D38752054A273AF85614B9FB7EB128131EC"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase8-bank0-direction-1.csv",
+      "sha256": "E32C11CBADF775AA0F3CB33C2FAE8BB5DC67510A3F64C3AF619E90F6805BA9CE"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase8-bank0-direction1.csv",
+      "sha256": "0CB1459E7EDBB81B28DFFF68E549EDC292395BEE012B1300C03B737F512013D1"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase8-bank1-direction-1.csv",
+      "sha256": "33E07C6C6B23C308409B6A3BEEA9CCD1E652FB81472EA1CC6105531673CD8B3D"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase8-bank1-direction1.csv",
+      "sha256": "D1F158C51D211DA290392496218ADEF60874231AD291ED63B64352F5C28B44E4"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase9-bank0-direction-1.csv",
+      "sha256": "1A118F44408530537CBCC0C82EB99A23E5BD81823E79E4D6EC7AC40895EC6A01"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase9-bank0-direction1.csv",
+      "sha256": "F5AED747E6AD1DE070AD60FAFA75F70F7A36F33682A56C2F52E4D752603D29A3"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase9-bank1-direction-1.csv",
+      "sha256": "6EAF23245FFDE02523107C19AA74768B2F0BC0DEC5B970B04EF8AA2D4D84537A"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-curved-bank-v1/data/baseline-shore/assessment/traces/phase9-bank1-direction1.csv",
+      "sha256": "C680020A17B51B169633A582C41FB71DACF14C35A7C0B898AA3F9C5E0BD96862"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/cell-audit.csv",
+      "sha256": "1E9C4DBD8B18D4AD626C2C6B4F35FB4EED28F31B8310F40F07219CC00DC7F684"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/coverage-results.json",
+      "sha256": "212B630E7B507FABAFAA8F384B90C61C40E5C3F274626207E4E0620BC7BBFD8A"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/coverage.png",
+      "sha256": "8E1782BD4C53EC4AC0EBA0250E6004B2005E87BE99E6DAE08BAEAB978AC9DE0E"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/coverage.svg",
+      "sha256": "CFC759437AE61FEDBC3A483660AE15AD5A519404251FCD34C270ACCE4DE75B61"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/decisions.csv",
+      "sha256": "92EB55D45053C4D609A0508F27A56CDB3EB81429E6C8332D5B59374A8FDBB436"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/forks.csv",
+      "sha256": "0D189E6DDC836523F456747E0CC967A86ED9ACA0129B2A54676305D99BBB3ED9"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/geometry.csv",
+      "sha256": "B910238AA70A8AA38DBACE94D5479CB982EE2ECB95AE75130B9A31C7D74C7941"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/prefix.csv",
+      "sha256": "1C8BE64613926D8E8537FDB53FC4C52ED25B4AA8FB00A1F8339287AF031D40BF"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-turn-exit-v1/data/run.json",
+      "sha256": "9C8C64AF08A1F66B5AF59E57B1F7D3ABEEF8B53021010EDCC92276AB68753432"
+    }
+  ]
+}

@@ -1,8 +1,22 @@
 # Verify the shipped native viewer and selected policy pair without physics/PPO.
-param([string]$ProjectPath=(Join-Path $PSScriptRoot '../flexible-tail-preview'))
+param([string]$ProjectPath=(Join-Path $PSScriptRoot '../flexible-tail-preview'),
+    [string]$CandidateActor, [string]$QualificationPath)
 $ErrorActionPreference='Stop'
 $project=(Resolve-Path -LiteralPath $ProjectPath).Path
 $repository=Split-Path -Parent $project
+$gate=Join-Path $PSScriptRoot 'pond-flexible-tail-qualification/publication.mjs'
+if($CandidateActor -or $QualificationPath){
+    if(!$CandidateActor -or !$QualificationPath){throw 'Candidate publication requires both its actor and matched native assessments.'}
+    $study=Split-Path -Parent (Resolve-Path -LiteralPath $QualificationPath).Path
+    if((Test-Path -LiteralPath "$study/selection-preregistered.json") -or
+       (Test-Path -LiteralPath "$QualificationPath/candidate/original-moving-72")){
+        $movingGate=Join-Path $PSScriptRoot 'pond-flexible-tail-qualification/moving-publication.mjs'
+        & node $movingGate $QualificationPath $CandidateActor "$study/selection/selected.json"
+    }else{
+        & node $gate $QualificationPath $CandidateActor
+    }
+    if($LASTEXITCODE -ne 0){throw 'Candidate blocked by the native per-swimmer publication checks.'}
+}
 $manifest=Get-Content -LiteralPath (Join-Path $project 'live_data/exploration-deployment.json') -Raw|ConvertFrom-Json
 if($manifest.schema -ne 1 -or $manifest.motor_update -ne 88 -or
     $manifest.diagnostic_passes -ne 12 -or $manifest.endurance_passes -ne 4 -or $manifest.clearance_stops -ne 0 -or
@@ -11,13 +25,16 @@ $activeChooser='exploration-chooser-88.bin'
 $preservedChoosers=@()
 if($manifest.chooser_study -eq 'appended-coverage-v3'){
     $activeChooser='exploration-chooser-appended-16.bin'
+    $installedEvidence=Join-Path $PSScriptRoot '../assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification'
+    & node $gate $installedEvidence (Join-Path $project "live_data/$activeChooser") --installed-stalls
+    if($LASTEXITCODE -ne 0){throw 'Installed chooser or per-swimmer native stall evidence differs.'}
     $preservedChoosers+= 'flexible-tail-preview/live_data/exploration-chooser-coverage-80.bin'
     if($manifest.chooser_update -ne 16 -or $manifest.active_chooser_file -ne $activeChooser -or
         $manifest.chooser_inputs -ne 35 -or $manifest.chooser_model_version -ne 5 -or
         $manifest.continuous_coverage_cases -ne 4 -or $manifest.continuous_horizon_s -ne 1800 -or
         $manifest.continuous_physical_passes -ne 4 -or $manifest.continuous_faults -ne 0 -or
         $manifest.minimum_individual_coverage -lt .3688405797 -or $manifest.mean_individual_coverage -lt .4289855072 -or
-        $manifest.maximum_slow_interval_s -gt 11.1){throw 'Invalid appended-sensing qualification.'}
+        $null -eq $manifest.maximum_slow_interval_s -or $manifest.maximum_slow_interval_s -gt 8.14){throw 'Invalid appended-sensing qualification.'}
 }elseif($manifest.chooser_study -eq 'coverage-v1'){
     $activeChooser='exploration-chooser-coverage-80.bin'
     if($manifest.chooser_update -ne 80 -or $manifest.active_chooser_file -ne $activeChooser -or

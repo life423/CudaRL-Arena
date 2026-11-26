@@ -1,0 +1,1 @@
+{"pass":true,"paired_placements":1536,"positive_and_negative_sides_each_depth_band":true,"all_pond_quadrants":true,"excluded_pose_indices":[0,11],"max_cpu_cuda_position_difference_m":3.0563e-06,"max_cpu_cuda_runway_difference_m":0.000488281,"physics_steps":0,"optimizer_updates":0}

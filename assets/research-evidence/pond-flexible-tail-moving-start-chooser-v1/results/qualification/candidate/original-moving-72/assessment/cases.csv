@@ -1,0 +1,9 @@
+suite,depth_mm,case,fault,pass,accepted_substeps,min_clearance_mm,max_stall_controls,close_s,unique_cells
+moving,72,moving_a,2,0,3448,-0.003020573104,0,2.48,1
+moving,72,moving_b,2,0,5994,-0.02872183541,0,3.44,2
+moving,72,moving_c,2,0,4013,-0.006314566235,0,2.48,1
+moving,72,moving_d,2,0,3013,-0.002043535915,0,2,1
+tangent,72,tangent_a,0,1,144000,1.946622971,0,9.52,60
+tangent,72,tangent_b,0,1,144000,8.340612054,0,14.16,55
+long,72,explore_rest,0,1,720000,25.68969876,409,0,206
+long,72,explore_moving,0,1,720000,30.55559099,331,0,207

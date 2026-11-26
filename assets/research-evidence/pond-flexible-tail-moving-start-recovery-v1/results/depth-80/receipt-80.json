@@ -1,0 +1,18 @@
+{
+  "exe": "build/flexible-tail/moving-start-recovery-v1/native/Release/depth_eval.exe",
+  "args": [
+    "flexible-tail-preview/live_data/fitted-gait.bin",
+    "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "assets/research-evidence/pond-flexible-tail-open-water-chooser-v1/results/training/actor-104.bin",
+    "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+    "build/flexible-tail/moving-start-recovery-v1/depth-80",
+    "0",
+    "--moving-recovery",
+    "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/actor-112.bin",
+    "build/flexible-tail/three-depth-exploration-v1/training/actor-128.bin",
+    "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-80/assessment"
+  ],
+  "exit": 0,
+  "timeout": false,
+  "wall_s": 12.0779424
+}

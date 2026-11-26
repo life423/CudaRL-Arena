@@ -403,7 +403,7 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
           << "min_clearance_mm,peak_tilt_deg,peak_depth_error_mm,mean_post_launch_speed_mm_s,"
           << "measured_path_mm,unique_cells,qualifying_revisits,outside_reference_cells,"
           << "perimeter_time_s,max_stall_s,decisions,keep,left,right,pass,mean_requested_speed_mm_s,"
-          << "mean_instant_COM_speed_mm_s,perimeter_net_revolutions\n";
+          << "mean_instant_COM_speed_mm_s,perimeter_net_revolutions,max_stall_controls\n";
 
     int attempted = 0, accepted = 0, clearance_stops = 0, other_faults = 0;
     const auto record = [&](const char* suite, const std::vector<Case>& results, std::set<Cell>& visited) {
@@ -422,7 +422,7 @@ int evaluate(const Models& models, const fs::path& output, Clock::time_point beg
                   << ',' << row.keep << ',' << row.left << ',' << row.right << ',' << row.pass
                   << ',' << (row.speed_samples?1000.*row.requested_speed_sum_m_s/row.speed_samples:0)
                   << ',' << (row.speed_samples?1000.*row.actual_speed_sum_m_s/row.speed_samples:0)
-                  << ',' << std::abs(row.perimeter_angle_rad)/(2.*tail::pi) << '\n';
+                  << ',' << std::abs(row.perimeter_angle_rad)/(2.*tail::pi) << ',' << row.max_stall_controls << '\n';
             attempted += row.attempted;
             accepted += row.accepted;
             if (row.fault == 2) ++clearance_stops;
@@ -500,7 +500,7 @@ int evaluate_coverage(const Models& models, const fs::path& output, Clock::time_
     const auto cases = run_parallel(endurance, horizon, 0, models, cells, output, deadline);
     std::ofstream table(output / "cases.csv"), map(output / "coverage.csv"), summary(output / "summary.json");
     for (auto* file : {&table,&map,&summary}) {file->exceptions(std::ios::failbit|std::ios::badbit); *file<<std::setprecision(10);}
-    table<<"case,simulated_s,physical_pass,fault,unique_cells,coverage_fraction,outside_reference_cells,min_clearance_mm,max_stall_s,mean_speed_mm_s,tilt_deg,depth_error_mm,keep,left,right,attempted_substeps,accepted_substeps\n";
+    table<<"case,simulated_s,physical_pass,fault,unique_cells,coverage_fraction,outside_reference_cells,min_clearance_mm,max_stall_s,mean_speed_mm_s,tilt_deg,depth_error_mm,keep,left,right,attempted_substeps,accepted_substeps,max_stall_controls\n";
     map<<"x_m,z_m"; for(const auto& row:cases) map<<','<<row.start.name; map<<'\n';
     int passes=0, coverage_passes=0, attempted=0, accepted=0, faults=0;
     double minimum=1, mean=0; std::set<Cell> all;
@@ -510,7 +510,7 @@ int evaluate_coverage(const Models& models, const fs::path& output, Clock::time_
         passes+=row.pass;coverage_passes+=row.pass&&fraction>=.8;faults+=row.fault!=0;
         attempted+=row.attempted;accepted+=row.accepted;
         const double moving_seconds=double(row.measured_windows)*motion_window_controls/controls_per_second;
-        table<<row.start.name<<','<<double(row.accepted)/samples_per_second<<','<<row.pass<<','<<row.fault<<','<<row.visited.size()<<','<<fraction<<','<<row.outside_reference.size()<<','<<1000.*row.min_gap_m<<','<<double(row.max_stall_controls)/controls_per_second<<','<<(moving_seconds>0?1000.*row.path_m/moving_seconds:0)<<','<<row.max_tilt_deg<<','<<1000.*row.max_depth_error_m<<','<<row.keep<<','<<row.left<<','<<row.right<<','<<row.attempted<<','<<row.accepted<<'\n';
+        table<<row.start.name<<','<<double(row.accepted)/samples_per_second<<','<<row.pass<<','<<row.fault<<','<<row.visited.size()<<','<<fraction<<','<<row.outside_reference.size()<<','<<1000.*row.min_gap_m<<','<<double(row.max_stall_controls)/controls_per_second<<','<<(moving_seconds>0?1000.*row.path_m/moving_seconds:0)<<','<<row.max_tilt_deg<<','<<1000.*row.max_depth_error_m<<','<<row.keep<<','<<row.left<<','<<row.right<<','<<row.attempted<<','<<row.accepted<< ',' << row.max_stall_controls << '\n';
     }
     for(const auto& cell:cells){map<<cell.first*cell_size_m<<','<<cell.second*cell_size_m;for(const auto& row:cases) map<<','<<row.visited.count(cell);map<<'\n';}
     if(attempted>work_limit) throw std::runtime_error("Continuous coverage work cap exceeded");
@@ -521,15 +521,61 @@ int evaluate_coverage(const Models& models, const fs::path& output, Clock::time_
 }
 } // namespace
 
-Start close_shore_fixture(const Models& models,int phase,int bank_side,int direction,const char* name){
-    const float heading=bank_side==0?90.f*direction:(direction>0?0.f:180.f);
+Start place_shore_fixture(const Models& models,int phase,float ray_x,float ray_z,float heading,double gap_m,const char* name){
     Start fixture{name,size_t(phase),0,0,heading,false};float low=0,high=.95f;
     const auto& archived=models.starts.at(phase);
-    for(int k=0;k<22;++k){const float radius=.5f*(low+high);fixture.x_radius=bank_side==0?radius:0;fixture.z_radius=bank_side==1?radius:0;
+    for(int k=0;k<22;++k){const float radius=.5f*(low+high);fixture.x_radius=ray_x*radius;fixture.z_radius=ray_z*radius;
         chooser::World w{};chooser::initialize(w,archived,horizontal_place(fixture,archived),yaw_offset(fixture,archived),models.motor.kind,models.config);
-        const auto gap=tail::submerged_gap_m(larger_pond,w.motor.navigation.motion.body,w.pose);if(gap>=.015)low=radius;else high=radius;}
-    fixture.x_radius=bank_side==0?low:0;fixture.z_radius=bank_side==1?low:0;
+        const auto gap=tail::submerged_gap_m(larger_pond,w.motor.navigation.motion.body,w.pose);if(gap>=gap_m)low=radius;else high=radius;}
+    fixture.x_radius=ray_x*low;fixture.z_radius=ray_z*low;
     return fixture;
+}
+Start close_shore_fixture(const Models& models,int phase,int bank_side,int direction,const char* name){
+    const float heading=bank_side==0?90.f*direction:(direction>0?0.f:180.f);
+    return place_shore_fixture(models,phase,bank_side==0?1.f:0.f,bank_side==1?1.f:0.f,heading,.015,name);
+}
+int north_validation(const Models& models,const fs::path& output,Clock::time_point begin) {
+    if(models.starts.size()!=12 || !fs::create_directory(output))
+        throw std::runtime_error("Expected validation poses and an unused directory");
+    fs::create_directory(output/"traces");
+    const auto reachable=reachable_cells(models.starts.front());
+    std::array<Start,8> shore{};
+    std::array<std::string,8> names;
+    int n=0;
+    for(int phase:{8,9}) for(int side:{-1,1}) for(int sign:{-1,1}) {
+        const float theta=radians(90.f+side*(phase==8?1.5f:2.5f));
+        const float x=std::cos(theta),z=std::sin(theta);
+        const float tangent=std::atan2(x/larger_pond.water_radius_x_m,z/larger_pond.water_radius_z_m);
+        const float heading=tangent*180.f/tail::pi+(sign<0?180.f:0.f);
+        names[n]="validation_"+std::to_string(n);
+        shore[n]=place_shore_fixture(models,phase,x,z,heading,phase==8?.014:.017,names[n].c_str());
+        ++n;
+    }
+    auto open=endurance;
+    for(size_t i=0;i<open.size();++i) {
+        open[i].exact_godot=false;
+        open[i].x_radius+=i%2?.041f:-.041f;
+        open[i].z_radius+=i<2?.037f:-.037f;
+        open[i].heading_deg+=i%2?12.f:-12.f;
+    }
+    std::ofstream starts(output/"starts.csv");
+    starts<<"suite,case,archived_row,com_x_m,com_y_m,com_z_m,relative_yaw_rad,exact_godot_start\n";
+    write_starts(starts,"selection-bank",shore,models);
+    write_starts(starts,"selection-open",open,models);
+    const auto deadline=begin+std::chrono::seconds(runtime_limit_s);
+    const auto banks=run_parallel(shore,180,3,models,reachable,output,deadline);
+    const auto retention=run_parallel(open,endurance_seconds,14,models,reachable,output,deadline);
+    std::ofstream cases(output/"cases.csv");
+    cases<<"suite,case,fault,pass,accepted_substeps,min_clearance_mm,max_stall_controls,close_s,unique_cells\n";
+    for(const auto* suite:{&banks,&retention}) for(const auto& row:*suite) {
+        if(row.fault!=0 && row.fault!=2) throw std::runtime_error("Unexpected native validation fault");
+        if(!row.fault && row.accepted!=row.horizon_s*samples_per_second)
+            throw std::runtime_error("Incomplete validation trajectory");
+        cases<<(suite==&banks?"bank":"open")<<','<<row.start.name<<','<<row.fault<<','<<row.pass
+             <<','<<row.accepted<<','<<row.min_gap_m*1000<<','<<row.max_stall_controls<<','
+             <<double(row.perimeter_controls)/controls_per_second<<','<<row.visited.size()<<'\n';
+    }
+    return 0;
 }
 int evaluate_close_shore(const Models& models,const fs::path& output,Clock::time_point begin){
     if(!fs::create_directory(output))throw std::runtime_error("Close-shore output must be unused");fs::create_directory(output/"traces");
@@ -547,7 +593,7 @@ int evaluate_close_shore(const Models& models,const fs::path& output,Clock::time
         starts<<fixture.name<<','<<phase<<','<<fixture.x_radius<<','<<fixture.z_radius<<','<<fixture.heading_deg<<','<<gap*1000<<'\n';
         pending.push_back(std::async(std::launch::async,[&,fixture]{return run_case(fixture,180,3,models,cells,output,begin+std::chrono::seconds(30));}));
     }
-    std::ofstream table(output/"cases.csv");table<<std::setprecision(10)<<"case,pass,fault,simulated_s,close_time_s,mean_COM_speed_mm_s,min_clearance_mm,max_stall_s,tilt_deg,depth_error_mm,near_revolutions,path_mm,attempted_substeps,accepted_substeps\n";
+    std::ofstream table(output/"cases.csv");table<<std::setprecision(10)<<"case,pass,fault,simulated_s,close_time_s,mean_COM_speed_mm_s,min_clearance_mm,max_stall_s,tilt_deg,depth_error_mm,near_revolutions,path_mm,attempted_substeps,accepted_substeps,max_stall_controls\n";
     int passes=0,near_cases=0,faults=0,work=0,accepted_work=0;double near_total=0,max_stall=0;
     for(auto& future:pending){const auto row=future.get();const double near_seconds=double(row.perimeter_controls)/50;
         if(row.fault==0&&row.accepted!=144000)throw std::runtime_error("Close-shore assessment incomplete");
@@ -556,7 +602,7 @@ int evaluate_close_shore(const Models& models,const fs::path& output,Clock::time
         max_stall=std::max(max_stall,row.max_stall_controls/50.);work+=row.attempted;accepted_work+=row.accepted;
         if(row.fault!=0&&row.fault!=2)throw std::runtime_error("Close-shore native fault");
         table<<row.start.name<<','<<row.pass<<','<<row.fault<<','<<row.accepted/800.<<','<<near_seconds<<','<<mean<<','<<row.min_gap_m*1000<<','<<row.max_stall_controls/50.<<','
-            <<row.max_tilt_deg<<','<<row.max_depth_error_m*1000<<','<<std::abs(row.perimeter_angle_rad)/(2*tail::pi)<<','<<row.path_m*1000<<','<<row.attempted<<','<<row.accepted<<'\n';
+            <<row.max_tilt_deg<<','<<row.max_depth_error_m*1000<<','<<std::abs(row.perimeter_angle_rad)/(2*tail::pi)<<','<<row.path_m*1000<<','<<row.attempted<<','<<row.accepted<< ',' << row.max_stall_controls << '\n';
     }
     if(work>1152000)throw std::runtime_error("Close-shore work cap exceeded");
     const bool pass=passes==8&&near_cases>=4&&max_stall<=8.14;
@@ -565,16 +611,34 @@ int evaluate_close_shore(const Models& models,const fs::path& output,Clock::time
         <<",\"attempted_substeps\":"<<work<<",\"accepted_substeps\":"<<accepted_work<<",\"optimizer_updates\":0,\"resets\":0,\"wall_s\":"<<std::chrono::duration<double>(Clock::now()-begin).count()<<"}\n";
     std::cout<<"close-shore "<<passes<<"/8, near "<<near_cases<<"/8, mean close "<<near_total/8<<"s\n";return pass?0:1;
 }
+#include "open-water-validation.h"
+#include "moving-start-validation.h"
 #include "close_shore_probe.h"
 #include "learning_signal_audit.h"
+#include "open_approach_audit.h"
+#include "moving_start_recovery.h"
+#ifdef CUDARL_TURN_EXIT_AUDIT
+#include "turn_exit_audit.h"
+#endif
 int main(int argc, char** argv) {
     try {
         const auto begin = Clock::now();
         const bool coverage=argc==8&&std::string(argv[7])=="--continuous-coverage";
         const bool shore=argc==8&&std::string(argv[7])=="--close-shore";
+        const bool open_validation=argc==8&&std::string(argv[7])=="--open-validation";
+        const bool moving_validation=argc==8&&std::string(argv[7])=="--moving-start-validation";
+        const bool selection=moving_validation || open_validation || (argc==8&&std::string(argv[7])=="--north-validation");
         const bool probe=argc==9&&std::string(argv[7])=="--close-shore-probe";
         const bool signal=argc==10&&std::string(argv[7])=="--learning-signal";
-        if (argc != 7&&!coverage&&!shore&&!probe&&!signal) throw std::runtime_error("Usage: rate_chooser_eval GAIT MOTOR CHOOSER STARTS NEW_OUT MATERIAL [--continuous-coverage|--close-shore|--close-shore-probe REFERENCE|--learning-signal FULL_CHECKPOINT CAPTURES]");
+        const bool moving_recovery_run=argc==11 && std::string(argv[7])=="--moving-recovery";
+        bool exit_audit=false;
+        const bool long_replay=argc==11 && std::string(argv[7])=="--open-replay-long";
+        const bool refine_replay=long_replay || (argc==10 && std::string(argv[7])=="--open-replay-refine");
+        const bool open_replay=(argc==10 && std::string(argv[7])=="--open-replay") || refine_replay;
+#ifdef CUDARL_TURN_EXIT_AUDIT
+        exit_audit=argc==11 && std::string(argv[7])=="--turn-exit";
+#endif
+        if (argc != 7&&!coverage&&!shore&&!selection&&!probe&&!signal&&!exit_audit&&!open_replay&&!moving_recovery_run) throw std::runtime_error("Usage: rate_chooser_eval GAIT MOTOR CHOOSER STARTS NEW_OUT MATERIAL [--continuous-coverage|--close-shore|--north-validation|--close-shore-probe REFERENCE|--learning-signal FULL_CHECKPOINT CAPTURES|--turn-exit FULL_CHECKPOINT CAPTURES TRACE_DIR|--open-replay PARENT_CHOOSER ARCHIVED_CSV|--moving-recovery CHOOSER112 PARENT128 ARCHIVED_DIR]");
         Models models;
         models.gait=tail::read_navigation_weights(argv[1],tail::NavigationMode::Gait);
         models.motor=tail::steering::read_model(argv[2]);
@@ -591,6 +655,14 @@ int main(int argc, char** argv) {
         try { legacy::read_weights(argv[3]); } catch(const std::exception&) { models.old_loader_rejected=true; }
         if(!models.old_loader_rejected)throw std::runtime_error("Old chooser loader accepted incompatible rate model");
         if(signal)return learning_signal::run(models,argv[5],argv[8],argv[9],begin);
+        if(moving_recovery_run)return moving_recovery::run(models,argv[5],argv[8],argv[9],argv[10],begin);
+        if(open_replay)return open_approach::run(models,argv[5],argv[8],argv[9],begin,refine_replay,long_replay?argv[10]:nullptr);
+        if(open_validation)return open_water_validation::run(models,argv[5],begin);
+        if(moving_validation)return moving_start_validation::run(models,argv[5],begin);
+        if(selection)return north_validation(models,argv[5],begin);
+#ifdef CUDARL_TURN_EXIT_AUDIT
+        if(exit_audit)return turn_exit::run(models,argv[5],argv[8],argv[9],argv[10],begin);
+#endif
         return probe?close_probe::run(models,argv[5],argv[8],begin):(shore?evaluate_close_shore(models,argv[5],begin):(coverage?evaluate_coverage(models,argv[5],begin):evaluate(models, argv[5], begin)));
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

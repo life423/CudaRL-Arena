@@ -1,0 +1,13 @@
+{
+  "update": 104,
+  "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F",
+  "moving": 6,
+  "tangent": 3,
+  "long": 5,
+  "worst_fraction": 0.3333333333333333,
+  "total": 14,
+  "long_retained": 5,
+  "minimum_coverage_ratio": 0.0,
+  "sustained": 0,
+  "long_cells": 1043
+}

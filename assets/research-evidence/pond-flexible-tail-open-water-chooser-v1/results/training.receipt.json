@@ -1,0 +1,20 @@
+{
+  "name": "training",
+  "wall_s": 245.1437979,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\open-water-chooser-v1\\trainer-build\\Release\\pond_flexible_tail_rate_chooser.exe",
+  "arguments": [
+    "fork",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-motor-88.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\open-water-chooser-v1/training",
+    "128",
+    "1200",
+    "0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\assets\\research-evidence\\pond-flexible-tail-north-bank-three-depth-v1\\training\\session-112.bin",
+    "abe0ef8a01ec83b07072781ece54d54288974f92279fda5f83e3a55a65010b43",
+    "35"
+  ]
+}

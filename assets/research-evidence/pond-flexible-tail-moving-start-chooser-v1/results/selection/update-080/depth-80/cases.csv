@@ -1,0 +1,11 @@
+suite,depth_mm,case,fault,pass,accepted_substeps,min_clearance_mm,max_stall_controls,close_s,unique_cells
+moving,80,short_a,2,0,3986,-0.002075040129,0,3.12,2
+moving,80,short_b,2,0,5341,-0.001208791446,0,2.24,1
+moving,80,medium_a,2,0,9258,-0.02515784763,0,6,3
+moving,80,medium_b,2,0,6577,-0.004134358733,0,1.92,3
+moving,80,long_a,0,1,144000,5.418871529,0,5.28,59
+moving,80,long_b,0,1,144000,51.13439634,0,0,55
+tangent,80,parallel_a,2,0,4964,-0.005400144801,0,6.16,2
+tangent,80,parallel_b,0,1,144000,9.386988357,0,3.36,55
+long,80,interior_rest,0,1,720000,27.34223194,407,0,199
+long,80,interior_moving,0,1,720000,27.72253752,0,0,189

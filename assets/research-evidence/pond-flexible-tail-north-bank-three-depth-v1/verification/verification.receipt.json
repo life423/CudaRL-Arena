@@ -1,0 +1,20 @@
+{
+  "name": "verification",
+  "wall_s": 6.2295708,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\north-bank-three-depth-v1\\native-build\\Release\\pond_flexible_tail_rate_chooser.exe",
+  "arguments": [
+    "verify-fork",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-motor-88.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\north-bank-three-depth-v1/verification",
+    "2",
+    "590",
+    "0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\three-depth-exploration-v1\\training\\checkpoints\\session-128.bin",
+    "59305ddc2a6cb27f3a56ca3002b1333c949efbd55801b8bcfa2aff42d56b6cdd",
+    "35"
+  ]
+}

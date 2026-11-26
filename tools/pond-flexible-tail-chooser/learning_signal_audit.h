@@ -1,9 +1,9 @@
 #pragma once
 namespace learning_signal {
 inline constexpr float discount=.994f,trace_lambda=.98f;
-std::vector<float> read_critic(const fs::path& path,const Models& models){
+std::vector<float> read_critic(const fs::path& path,const Models& models,uint32_t expected_format=3){
     const auto bytes=cudarl::checkpoint::read(path.u8string());cudarl::checkpoint::Reader in{bytes};
-    if(in.value<uint32_t>()!=0x52435446||in.value<uint32_t>()!=3)throw std::runtime_error("Audit requires original39-input full checkpoint3");
+    if(in.value<uint32_t>()!=0x52435446||in.value<uint32_t>()!=expected_format)throw std::runtime_error("Unexpected 39-input full checkpoint format");
     const auto task=in.array<char>(64);if(task.size()!=64)throw std::runtime_error("Invalid critic task");
     const int expected[]{1024,8,39,15,1024,4,40,128};for(auto n:expected)if(in.value<int>()!=n)throw std::runtime_error("Critic runtime layout differs");
     in.value<uint32_t>();in.value<uint32_t>(); // Recorded Lane/Counts sizes, not deserialized here.
@@ -14,6 +14,8 @@ std::vector<float> read_critic(const fs::path& path,const Models& models){
     for(auto n:settings)if(in.value<float>()!=n)throw std::runtime_error("Critic PPO settings differ");
     const auto pond=in.value<cudarl::pond_geometry_v1::Parameters>();
     if(std::memcmp(&pond,&larger_pond,sizeof(pond)))throw std::runtime_error("Critic geometry differs");
+    if(expected_format==4 && (in.value<int>()!=3000||in.value<uint32_t>()!=32))
+        throw std::runtime_error("Wrong training episode layout");
     in.value<int>();in.value<int>();in.value<int>();
     const auto actor=in.array<float>(10000),critic=in.array<float>(10000);
     if(actor!=models.policy||critic.size()!=size_t(39*32+32+32+1)||!std::all_of(critic.begin(),critic.end(),physics::finite_number))

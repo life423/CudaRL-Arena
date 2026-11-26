@@ -1,0 +1,102 @@
+[
+  {
+    "path": "build/flexible-tail/moving-start-recovery-v1/native/Release/depth_eval.exe",
+    "sha256": "CE937CDD92D7000EE2D4089DE4982B65B6114FAC56D3D70D2BCC0D8E7A2129F6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-open-water-chooser-v1/results/training/actor-104.bin",
+    "sha256": "932CCF8E942C25A6901CB07B69E0B87243A3BA571FC559BEE94E189AA365FA93"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/actor-112.bin",
+    "sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/actor-128.bin",
+    "sha256": "7A16B85CDF19E98D150510F0D24713B592A2EB7DC5ADB124880B0E4EB30473A4"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-moving-start-recovery-v1/protocol.md",
+    "sha256": "7ABB3BCAFD03FCEEAFAC5B5DF406D0032FA3800A75C71062E9EE17D7D1593C1A"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/moving_start_recovery.h",
+    "sha256": "611F5531856E68B0BE1FD793E9513616A9E15FA0844A6485FBDEE6E69A05D4D7"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/rate-evaluate.cpp",
+    "sha256": "471A11A258A47C358645793E1EC069FE586951B2684443C2D1EA8B2AB85ACC52"
+  },
+  {
+    "path": "flexible-tail-preview/habitat.json",
+    "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification/fixtures/shore-72.bin",
+    "sha256": "4E5B86C513DEF4B5AEF955E2896CC87C940DA6970D49EE8B53A4471951687689"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-72/assessment/traces/moving_a.csv",
+    "sha256": "F209CB886074B5FD7C0D2EF584539196FC08F5A1C6DC3BD8EC48AFD50201D8BB"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-72/assessment/traces/moving_b.csv",
+    "sha256": "66C22138B205BC5C62A488CF3BCF00B1ACEAE7D672865683CFF2373AE8B239A8"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-72/assessment/traces/moving_c.csv",
+    "sha256": "3735B5137E7CE8ED4A929FDFC642741CC69D167600EA63C9C7B05FED23C4349C"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-72/assessment/traces/moving_d.csv",
+    "sha256": "10A4775535474A0694306C1DB1F7C444565BB2DE9B5002BE88713825F008866C"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification/fixtures/shore-75.bin",
+    "sha256": "31ECBEDFB9B4F6752044171EADF59AB934DD8EFB407140170C6A961EB15355C4"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-75/assessment/traces/moving_a.csv",
+    "sha256": "AA86E595186B0FA1C70C23BF97174084B7E4624C196087DD8794090582C23C01"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-75/assessment/traces/moving_b.csv",
+    "sha256": "1DB293EE6EF860825B3F659237E3E7FD68E9143A47B482B105D108BC7974E556"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-75/assessment/traces/moving_c.csv",
+    "sha256": "C28F5D3C1A3EE0830B4FEBD6A56C68B5E5ABE9C4A2D6F958B35E6593BA76B0C5"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-75/assessment/traces/moving_d.csv",
+    "sha256": "542D0FB43E7FC90B657796E5F5EE31108917FC3F6250A5E117571A909AB56CA6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-80/assessment/traces/moving_a.csv",
+    "sha256": "74BBAE940FE018680DE8F34F655F35EA40447C04194F6D363B00949709186A7E"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-80/assessment/traces/moving_b.csv",
+    "sha256": "1A81194444149DB3B866CC1B840B9C5E6BD9F5FAC04B33494A07CE668A13CF3E"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-80/assessment/traces/moving_c.csv",
+    "sha256": "EFDA9BE3B9C2C7AB35108587C6C191F677DDE657DF236D5D9590336640093F78"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/selection/update-104/depth-80/assessment/traces/moving_d.csv",
+    "sha256": "F8FAD7A2B8A6197B4E4E0A6647BB9C4688681A99D1E2F74854903BFC8937C600"
+  }
+]

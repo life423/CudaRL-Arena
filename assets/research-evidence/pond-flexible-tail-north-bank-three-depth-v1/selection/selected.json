@@ -1,0 +1,11 @@
+{
+  "update": 112,
+  "actor_sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C",
+  "bank": 8,
+  "interior": 4,
+  "worst_fraction": 1,
+  "total": 12,
+  "sustained": 2,
+  "min_bank_substeps": 144000.0,
+  "interior_cells": 323.0
+}

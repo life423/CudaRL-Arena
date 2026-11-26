@@ -1,5 +1,9 @@
 #pragma once
 
+#if defined(CUDARL_MOVING_STARTS)
+#include "moving_placement_audit.cuh"
+#endif
+
 // The rate chooser reuses train.cu's CUDA batch collector, categorical PPO,
 // optimized MLP/GEMM and GPU Adam. Only its task/runtime and saved schema differ.
 struct RateIdentity { uint64_t gait=0, motor=0, starts=0; tail::steering::Kind kind{};
@@ -113,6 +117,30 @@ void rate_publish(const fs::path& dir, Rollout& roll,nn::GpuMlp& a,nn::GpuMlp& c
     chooser::write_weights((dir/("actor-"+std::to_string(l.completed)+".bin")).u8string(),a.get_params());
     l.evidence_ms+=elapsed(launch)*1000.;
 }
+#if defined(CUDARL_THREE_DEPTHS)
+// Build independent practice starts from training poses. Translate the complete
+// position history and goals together so the first sample has its original velocity.
+std::vector<tail::NavigationWorld> depth_practice_starts(const std::vector<tail::NavigationWorld>& originals) {
+    std::vector<tail::NavigationWorld> all;
+    all.reserve(originals.size()*tail::distant_map::depth_count);
+    for (const float y : tail::distant_map::depths) {
+        for (auto start : originals) {
+            if (start.leg_count<1 || start.active_leg!=0 || start.motion.controls!=0)
+                throw std::runtime_error("Expected a fresh training pose");
+            const float dy=y-start.legs[0].goal_m.y;
+            start.motion.body.position.y+=dy/cudarl::physics::scale;
+            for(auto& sample:start.motion.history) sample.y+=dy;
+            for(int leg=0;leg<start.leg_count;++leg) start.legs[leg].goal_m.y+=dy;
+            tail::prepare_navigation(start);
+            if(std::abs(tail::snapshot(start.motion.body).com_m.y-y)>1.e-5f)
+                throw std::runtime_error("Translated practice body does not match the requested depth");
+            all.push_back(start);
+        }
+    }
+    return all;
+}
+#endif
+
 void rate_result(const fs::path& dir,const Ledger& l,bool verification) {
     const auto& c=l.counts;std::ofstream out(dir/"result.json");out.exceptions(std::ios::badbit|std::ios::failbit);
     uint64_t samples=0;for(auto x:c.samples)samples+=x;
@@ -133,8 +161,27 @@ void rate_result(const fs::path& dir,const Ledger& l,bool verification) {
        <<",\"wall_s\":"<<l.wall_s<<",\"stage\":\""<<l.stage
        <<"\",\"verification\":"<<(verification?"true":"false")<<",\"action_counts\":[";
     for(int i=0;i<actions;++i){if(i)out<<',';out<<c.samples[i];}out<<"]";
+#if defined(CUDARL_THREE_DEPTHS)
+    out<<",\"depth_samples\":[";
+    for(int i=0;i<tail::distant_map::depth_count;++i) {
+        if(i)out<<',';
+        out<<"{\"mm\":"<<std::lround(-1000*tail::distant_map::depth_at(i))<<",\"transitions\":"<<l.samples_at_depth[i]<<'}';
+    }
+    out<<']';
+#endif
+#if defined(CUDARL_MOVING_STARTS)
+    out<<",\"decisions_by_depth_and_practice\":[";
+    for(int d=0;d<3;++d){
+        if(d)out<<',';
+        const auto& g=l.samples_by_practice[d];
+        out<<"{\"mm\":"<<std::lround(-1000*tail::distant_map::depth_at(d))
+           <<",\"short_moving\":"<<g[0]<<",\"medium_moving\":"<<g[1]<<",\"long_moving\":"<<g[2]
+           <<",\"tangent\":"<<g[3]<<",\"interior\":"<<g[4]<<'}';
+    }
+    out<<"],\"moving_limit_s\":48,\"tangent_limit_s\":24,\"interior_time_limit\":false";
+#endif
 #if defined(CUDARL_EPISODIC_BANK)
-    out<<",\"training_episode_s\":60,\"training_time_limits\":"<<l.time_limits<<",\"near_decisions\":"<<l.near_decisions<<",\"episode_decisions\":"<<l.episode_decisions;
+    out<<",\"training_episode_s\":"<<training_episode_controls*tail::motor_control_s<<",\"training_time_limits\":"<<l.time_limits<<",\"near_decisions\":"<<l.near_decisions<<",\"episode_decisions\":"<<l.episode_decisions;
 #endif
 #if defined(CUDARL_RELIABLE_CHOOSER)
     out<<",\"curriculum_starts\":["<<c.curriculum_starts[0]<<','<<c.curriculum_starts[1]<<','<<c.curriculum_starts[2]
@@ -164,22 +211,71 @@ int rate_main(int argc,char** argv) {
         if(motor.kind<tail::steering::Kind::ProgramScalar || initial.size()!=256 ||
             motor.material!=static_cast<tail::Material>(material))
             throw std::runtime_error("Rate chooser needs declared program motor and training archive");
+#if defined(CUDARL_THREE_DEPTHS)
+        initial=depth_practice_starts(initial);
+#endif
 #if defined(CUDARL_RELIABLE_CHOOSER)
         for(int action=0;action<actions;++action) {
             const float expected[5]{-8,-4,0,4,8};
             if(chooser::action_rate_deg_s(action)!=expected[action%5])throw std::runtime_error("Reliable action mapping differs");
         }
         int checked_starts=0;
+#if defined(CUDARL_OPEN_WATER)
+        int by_depth_cohort[3][3]{};
+        double min_start_speed=1.,max_start_speed=0.;
+#endif
         for(int level=0;level<3;++level)for(int lane=0;lane<worlds;++lane) {
+#if defined(CUDARL_OPEN_WATER)
+            const auto draw=start_episode_seed(lane,level);
+#else
             const auto draw=start_episode_seed(lane,0);
+#endif
+#if defined(CUDARL_THREE_DEPTHS)
+            const auto row=depth_practice_row(lane,draw,int(initial.size()));
+#else
             const auto row=start_source_row(draw,int(initial.size()));
+#endif
             cudarl::physics::V com{};float yaw=0;bank_training::ApproachEvidence proof{};
+#if defined(CUDARL_OPEN_WATER)
+            const auto group=practice_for(lane);
+            if((row%256)<12 || int(row/256)!=practice_depth_index(lane))throw std::runtime_error("Invalid open-water training source");
+            if(group==Practice::Moving){
+                if(!bank_training::moving_start(lane,level,initial[row],larger_pond,com,yaw,proof))throw std::runtime_error("Moving approach preflight failed");
+            }else if(group==Practice::Tangent){
+                if(!bank_training::close_start(lane,level,initial[row],larger_pond,com,yaw,(lane/8)%2==0))throw std::runtime_error("Tangent approach preflight failed");
+            }else place_interior(draw,larger_pond,com,yaw);
+            tail::chooser::World placed{};
+            tail::chooser::initialize(placed,initial[row],com,yaw);
+            const auto speed=cudarl::physics::norm(tail::chooser::horizontal(placed.pose.com_velocity_m_s));
+            if(placed.fault || !(speed>.003f) || !(tail::submerged_gap_m(larger_pond,placed.navigation.motion.body,placed.pose)>0.))
+                throw std::runtime_error("Invalid moving initial body");
+            if(group==Practice::Moving){min_start_speed=std::min(min_start_speed,double(speed));max_start_speed=std::max(max_start_speed,double(speed));}
+            ++by_depth_cohort[practice_depth_index(lane)][int(group)];
+            ++checked_starts;continue;
+#elif defined(CUDARL_NORTH_BANK)
+            if(north_practice_lane(lane)){
+                if(row%256==8 || row%256==9 ||
+                   !bank_training::close_start(lane,level,initial[row],larger_pond,com,yaw,true) ||
+                   com.z<=0.f || fabsf(com.x)<.01f)
+                    throw std::runtime_error("North practice start entered the held-out sector or failed clearance");
+                ++checked_starts;continue;
+            }
+#endif
             if(!bank_training::approach_start(lane,0,initial[row],larger_pond,com,yaw,&proof,level))
                 throw std::runtime_error("Reliable curriculum fixture failed whole-body clearance at level "+std::to_string(level)+" lane "+std::to_string(lane));
             ++checked_starts;
         }
         std::ofstream preflight(output/"curriculum-preflight.json");
-        preflight<<"{\"pass\":true,\"physics_steps\":0,\"actions\":15,\"geometry_starts\":"<<checked_starts<<"}\n";
+        preflight<<"{\"pass\":true,\"physics_steps\":0,\"actions\":15,\"geometry_starts\":"<<checked_starts;
+#if defined(CUDARL_OPEN_WATER)
+        preflight<<",\"minimum_moving_spawn_COM_mm_s\":"<<min_start_speed*1000<<",\"maximum_moving_spawn_COM_mm_s\":"<<max_start_speed*1000
+                 <<",\"first_allowed_training_pose\":12,\"depth_cohort_placements\":[";
+        for(int d=0;d<3;++d){if(d)preflight<<',';preflight<<'[';
+            for(int g=0;g<3;++g){if(by_depth_cohort[d][g]==0)throw std::runtime_error("Missing training cohort/depth");
+                if(g)preflight<<',';preflight<<by_depth_cohort[d][g];}preflight<<']';}
+        preflight<<']';
+#endif
+        preflight<<"}\n";
 #endif
         std::vector<float> packed=motor.weights;packed.insert(packed.end(),motor.frozen_skip.begin(),motor.frozen_skip.end());
         RateIdentity id{cudarl::checkpoint::checksum(cudarl::checkpoint::read(argv[2])),
@@ -192,6 +288,9 @@ int rate_main(int argc,char** argv) {
         device_ptr<tail::NavigationWorld> starts(initial.size());device_ptr<float> gait(fitted.size()),offset(packed.size());
         starts.copy_from_host(initial.data(),initial.size());gait.copy_from_host(fitted.data(),fitted.size());
         offset.copy_from_host(packed.data(),packed.size());
+#if defined(CUDARL_MOVING_STARTS)
+        if(inspect) verify_moving_geometry(initial,starts.get(),stream.value,output);
+#endif
 #if defined(CUDARL_CLOSE_SHORE)
         device_ptr<ClosePlacement> device_placements(worlds);std::vector<ClosePlacement> placements(worlds);
         float position_difference=0,yaw_difference=0;int close_checked=0;
@@ -305,6 +404,18 @@ int rate_main(int argc,char** argv) {
 #if defined(CUDARL_DISTANT_COVERAGE)
                 if(!tail::distant::geometry_matches(larger_pond))throw std::runtime_error("Distant map geometry differs");
                 std::vector<Lane> probe(worlds);roll.lanes.copy_to_host(probe.data(),probe.size());
+#if defined(CUDARL_THREE_DEPTHS)
+                // Probe each sensor plane with the parent's real visit patterns;
+                // these temporary observations never enter an optimizer batch.
+                const auto original_lanes=probe;
+                std::array<int,3> depth_probes{};
+                for(int i=0;i<worlds;++i) {
+                    const int index=practice_depth_index(i);
+                    probe[i].state.motor.navigation.motion.request.origin_m.y=tail::distant_map::depth_at(index);
+                    depth_probes[index]+=!probe[i].needs_start;
+                }
+                roll.lanes.copy_from_host(probe.data(),probe.size());
+#endif
                 observe_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get(),larger_pond,roll.obs.get(),roll.first_fault.get(),roll.fault_code.get());
                 check_launch();require_clear(roll,ledger,stream.value,true);
                 std::vector<float> device_observation(worlds*channels);
@@ -411,18 +522,19 @@ int rate_main(int argc,char** argv) {
                 if(actor_difference!=0||critic_difference!=0)throw std::runtime_error("Zero-column expansion changed GPU inference");
                 }
 #endif
+                for(int map=0;map<tail::distant_map::depth_count;++map){
                 auto sensory=probe.front().state;
                 for(auto& word:sensory.visited)word=0;
                 for(auto& visit:sensory.recent)visit={};
                 float fresh[3],known[3],front[3],back[3];
-                const float depth=tail::distant_map::depths[0];
+                const float depth=tail::distant_map::depth_at(map);
                 tail::distant::observe(sensory,{0,depth,0},{1,0,0},depth,0,fresh);
                 for(float x:fresh)if(x!=1.f)throw std::runtime_error("Fresh sector normalization failed");
                 for(auto& word:sensory.visited)word=~uint64_t{0};
                 tail::distant::observe(sensory,{0,depth,0},{1,0,0},depth,0,known);
                 for(float x:known)if(x!=0.f)throw std::runtime_error("Visited water has false novelty");
                 int target=-1;
-                for(int cell=0;cell<1536;++cell)if((tail::distant_map::word_at(0,cell/64)&(uint64_t{1}<<(cell%64)))&&
+                for(int cell=0;cell<1536;++cell)if((tail::distant_map::word_at(map,cell/64)&(uint64_t{1}<<(cell%64)))&&
                     cell%48>=31&&cell/48==16){target=cell;break;}
                 if(target<0)throw std::runtime_error("Missing front sensory fixture");
                 sensory.visited[target/64]&=~(uint64_t{1}<<(target%64));
@@ -430,20 +542,39 @@ int rate_main(int argc,char** argv) {
                 tail::distant::observe(sensory,{0,depth,0},{-1,0,0},depth,0,back);
                 if(!(front[1]>0&&front[0]==0&&front[2]==0&&back[1]==0&&(back[0]>0||back[2]>0)))
                     throw std::runtime_error("Distant field is not course-relative");
+                }
+#if defined(CUDARL_THREE_DEPTHS)
+                roll.lanes.copy_from_host(original_lanes.data(),original_lanes.size());
+                if(*std::min_element(depth_probes.begin(),depth_probes.end())==0)
+                    throw std::runtime_error("Missing CPU/CUDA probes at a practice depth");
+#endif
                 std::ofstream senses(output/"distant-senses.json");
                 senses<<"{\"pass\":true,\"active_worlds\":"<<active_probes<<",\"CPU_CUDA_values\":"<<worlds*channels
                     <<",\"max_difference\":"<<maximum_new_field<<",\"inherited_legacy_max_difference\":"<<maximum_legacy
                     <<",\"preserved_local_inputs\":"<<(channels>=35?32:29)<<",\"first_distant_input\":"<<(channels>=35?32:21)
+                    <<",\"tested_depths\":"<<tail::distant_map::depth_count
                     <<",\"fresh_known_rotation_checks\":true,\"physics_steps\":0,\"optimizer_updates\":0}\n";
 #endif
-                if(inspect)return 0;
                 std::ofstream imported(output/"parent-import.json");
                 imported<<"{\"pass\":true,\"full_state_exact_before_counter_rebase\":true,\"parent_update\":"<<ledger.completed
                     <<",\"parent_checksum\":"<<cudarl::checkpoint::checksum(parent)<<",\"parent_task\":\""<<parent_task
                     <<"\",\"physics_steps\":0,\"optimizer_updates\":0}\n";
+                if(inspect){
+                    chooser::write_weights((output/"parent-actor.bin").u8string(),actor.get_params());
+                    return 0;
+                }
                 // New study budget and sampling counter; retain learned state.
                 ledger.completed=ledger.started=0; ledger.counts={};
                 zero(roll.counts.get(),roll.counts.size_bytes(),stream.value);
+#if defined(CUDARL_OPEN_WATER)
+                zero(roll.episodes.get(),roll.episodes.size_bytes(),stream.value);
+#endif
+#if defined(CUDARL_THREE_DEPTHS)
+                // Begin each cohort at its assigned depth exactly once, at fork.
+                // A resume uses the saved live world, including visitation history.
+                initialize_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get());
+                check_launch();
+#endif
 #if defined(CUDARL_CLOSE_SHORE)
                 // Explicit new-study initial conditions, only after the exact
                 // parent roundtrip. Never executed on resume or within episodes.
@@ -467,11 +598,26 @@ int rate_main(int argc,char** argv) {
         const auto launch=Clock::now();std::vector<uint8_t> one,expected;
         bool checking=false;int executed_updates=0;
         std::ofstream curve(output/(resume?"resume-updates.csv":"updates.csv"));
+#if defined(CUDARL_REGION_CREDIT)
+        std::ofstream regional_log(output/(resume?"resume-regions.csv":"regions.csv"));
+        regional_log.exceptions(std::ios::badbit|std::ios::failbit);
+        regional_log<<"update,rewarded_transitions,new_regions\n";
+        std::vector<int> region_hits(rows);
+#endif
         curve<<"update,reward,kl,policy_loss,value_loss,entropy,explained_variance,stops,samples,wall_s\n";
         try{while(ledger.completed<target && prior_used+elapsed(launch)<wall && !fs::exists(output/"STOP")) {
             const int update=ledger.completed+1;
             if(!collect(roll,actor,critic,starts,gait,offset,ledger,update,stream.value,events,launch))break;
             const float reward=finite_mean(roll,roll.reward.get(),rows,stream.value);
+#if defined(CUDARL_REGION_CREDIT)
+            roll.region_hits.copy_to_host(region_hits.data(),region_hits.size());
+            int paid=0,regions=0;
+            for(int hits:region_hits){
+                if(hits<0||hits>4)throw std::runtime_error("Invalid regional coverage count");
+                paid+=hits>0;regions+=hits;
+            }
+            regional_log<<update<<','<<paid<<','<<regions<<std::endl;
+#endif
             CUDA_CHECK_THROW(cudaEventRecord(events.start,stream.value));
             const float kl=optimize(roll,batch,actor,critic,aa,ca,ledger,update,stream.value);
             CUDA_CHECK_THROW(cudaEventRecord(events.end,stream.value));CUDA_CHECK_THROW(cudaEventSynchronize(events.end));

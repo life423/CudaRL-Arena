@@ -4,6 +4,9 @@
 #include "rl/flexible_tail_chooser_checkpoint.h"
 #endif
 #include "bank_training_starts.h"
+#if defined(CUDARL_REGION_CREDIT)
+#include "region_credit.h"
+#endif
 #include "core/rng.h"
 #include "habitat_config.h"
 #include "nn/adam.h"
@@ -145,6 +148,12 @@ struct Counts {
 
 struct Ledger {
     Counts counts;
+#if defined(CUDARL_THREE_DEPTHS)
+    std::array<uint64_t,3> samples_at_depth{};
+#if defined(CUDARL_MOVING_STARTS)
+    std::array<std::array<uint64_t,5>,3> samples_by_practice{};
+#endif
+#endif
     bool bank_curriculum = false;
     int started = 0, completed = 0, actor_steps = 0, critic_steps = 0;
     int first_fault_lane = -1, first_fault_code = 0;
@@ -165,10 +174,30 @@ struct Ledger {
 };
 
 #if defined(CUDARL_EPISODIC_BANK)
+#if defined(CUDARL_OPEN_WATER)
+constexpr int training_episode_controls=1200; // Serialized base interval shared with the parent.
+enum class Practice { Moving, Tangent, Interior };
+CUDARL_HD Practice practice_for(int lane) {
+    const int pair_group = (lane / 2) % 4;
+    return pair_group < 2 ? Practice::Moving : pair_group == 2 ? Practice::Tangent : Practice::Interior;
+}
+CUDARL_HD int practice_limit(int lane) {
+    const auto group = practice_for(lane);
+    return group == Practice::Moving ? 2*training_episode_controls
+        : group == Practice::Tangent ? training_episode_controls : 0;
+}
+#elif defined(CUDARL_NORTH_BANK)
+constexpr int training_episode_controls=1200; // 24 s near the bank; other lanes remain continuous.
+CUDARL_HD bool north_practice_lane(int lane){return (lane/2)%2==0;}
+#else
 constexpr int training_episode_controls=3000; // 60 seconds, training only.
+#endif
 struct EpisodeInfo {int first_decision_control=0;uint64_t time_limits=0,near_decisions=0,decisions=0;};
 #endif
 struct Rollout {
+#if defined(CUDARL_REGION_CREDIT)
+    device_ptr<int> region_hits{rows};
+#endif
     device_ptr<Lane> lanes{worlds};
     device_ptr<Counts> counts{worlds};
     device_ptr<int> first_fault{1}, fault_code{worlds};
@@ -225,8 +254,17 @@ CUDARL_HD uint32_t start_episode_seed(uint32_t lane, uint32_t episode) {
     return cudarl::rng::hash_u32(lane ^ cudarl::rng::hash_u32(episode));
 }
 
+CUDARL_HD void place_interior(uint32_t episode_seed, geometry::Parameters pond, cudarl::physics::V& com,float& yaw) {
+    const float radius=.40f*sqrtf(cudarl::rng::uniform(seed,episode_seed,0));
+    const float angle=2.f*tail::pi*cudarl::rng::uniform(seed,episode_seed,1);
+    yaw=2.f*tail::pi*cudarl::rng::uniform(seed,episode_seed,2);
+    com={float(pond.water_radius_x_m)*radius*cosf(angle),0.f,float(pond.water_radius_z_m)*radius*sinf(angle)};
+}
+
 CUDARL_HD uint32_t start_source_row(uint32_t episode_seed, int count) {
-#if defined(CUDARL_CLOSE_SHORE)
+#if defined(CUDARL_OPEN_WATER)
+    return 12u + cudarl::rng::bits(seed,episode_seed,3) % uint32_t(count-12);
+#elif defined(CUDARL_CLOSE_SHORE) || defined(CUDARL_NORTH_BANK)
     const auto row=cudarl::rng::bits(seed,episode_seed,3)%uint32_t(count-2);
     return row>=8?row+2:row;
 #else
@@ -239,6 +277,17 @@ __global__ void close_placement_probe(const tail::NavigationWorld* starts,int co
     const int lane=blockIdx.x*blockDim.x+threadIdx.x;if(lane>=worlds)return;
     const auto row=start_source_row(start_episode_seed(lane,episode),count);auto& out=output[lane];
     out.valid=bank_training::close_start(lane,episode,starts[row],pond,out.position,out.yaw);
+}
+#endif
+
+#if defined(CUDARL_THREE_DEPTHS)
+static_assert(tail::distant_map::depth_count==3);
+CUDARL_HD int practice_depth_index(int lane) {
+    return (lane/2)%tail::distant_map::depth_count;
+}
+CUDARL_HD uint32_t depth_practice_row(int lane, uint32_t draw, int total) {
+    const int poses=total/tail::distant_map::depth_count;
+    return practice_depth_index(lane)*poses+start_source_row(draw,poses);
 }
 #endif
 
@@ -255,13 +304,40 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
     if (!lane.needs_start) return;
 
     const auto episode_seed = start_episode_seed(uint32_t(lane_index), lane.episode);
+#if defined(CUDARL_THREE_DEPTHS)
+    const auto row = depth_practice_row(lane_index, episode_seed, count);
+#else
     const auto row = start_source_row(episode_seed, count);
+#endif
     cudarl::physics::V com;
     float yaw;
     bank_training::ApproachEvidence approach{};
     bool bank_start = bank_curriculum;
 #if defined(CUDARL_SUSTAINED_CHOOSER)
     bank_start = ((uint32_t(lane_index / 2) + lane.episode) % 2) == 0;
+#endif
+#if defined(CUDARL_OPEN_WATER)
+    const auto practice=practice_for(lane_index);
+    bank_start=practice!=Practice::Interior;
+    if (practice==Practice::Moving) {
+        if (!bank_training::moving_start(lane_index,lane.episode,starts[row],pond,com,yaw,approach)) {
+            fail(lane_index,41,first_fault,fault_code);return;
+        }
+    } else if (practice==Practice::Tangent) {
+        approach.inward_side=lane_index%2 ? -1:1;
+        const bool north=(lane_index/8)%2==0;
+        if (!bank_training::close_start(lane_index,lane.episode,starts[row],pond,com,yaw,north)) {
+            fail(lane_index,42,first_fault,fault_code);return;
+        }
+    } else
+#elif defined(CUDARL_NORTH_BANK)
+    if(north_practice_lane(lane_index)){
+        bank_start=true;
+        approach.inward_side=lane_index%2 ? -1:1;
+        if(!bank_training::close_start(lane_index,lane.episode,starts[row],pond,com,yaw,true)){
+            fail(lane_index,42,first_fault,fault_code);return;
+        }
+    }else
 #endif
 #if defined(CUDARL_CLOSE_SHORE)
     const auto start_group=(uint32_t(lane_index/2)+lane.episode)%4;
@@ -271,6 +347,7 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
             fail(lane_index,42,first_fault,fault_code);return;}
     }else
 #endif
+#if !defined(CUDARL_OPEN_WATER)
     if (bank_start) {
         int difficulty = 2;
 #if defined(CUDARL_RELIABLE_CHOOSER)
@@ -280,12 +357,10 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
             fail(lane_index, 41, first_fault, fault_code);
             return;
         }
-    } else {
-        const float radius = .40f * sqrtf(cudarl::rng::uniform(seed, episode_seed, 0));
-        const float angle = 2.f * tail::pi * cudarl::rng::uniform(seed, episode_seed, 1);
-        yaw = 2.f * tail::pi * cudarl::rng::uniform(seed, episode_seed, 2);
-        com = {float(pond.water_radius_x_m) * radius * cosf(angle), 0.f,
-            float(pond.water_radius_z_m) * radius * sinf(angle)};
+    } else
+#endif
+    {
+        place_interior(episode_seed,pond,com,yaw);
     }
 #if defined(CUDARL_RATE_CHOOSER)
     chooser::initialize(lane.state, starts[row], com, yaw, session_motor_kind, session_motor_config);
@@ -355,12 +430,19 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
                            const float* value, const float* gait, const float* offset,
                            geometry::Parameters pond, float* reward, float* done,
                            int* first_fault, int* fault_code
+#if defined(CUDARL_REGION_CREDIT)
+                           ,int* region_hits
+#endif
 #if defined(CUDARL_EPISODIC_BANK)
                            ,EpisodeInfo* episodes,float* truncated
 #endif
                            ) {
     const int lane_index = blockIdx.x * blockDim.x + threadIdx.x;
     if (lane_index >= worlds) return;
+#if defined(CUDARL_REGION_CREDIT)
+    region_hits[lane_index] = 0;
+    const int previous_visits = lanes[lane_index].state.visits;
+#endif
     reward[lane_index] = 0.f;
     done[lane_index] = 1.f;
 #if defined(CUDARL_EPISODIC_BANK)
@@ -374,6 +456,14 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
     if(initial_gap>0&&initial_gap<=.020)++episode.near_decisions;
 #endif
     const int proposed = action[lane_index];
+#if defined(CUDARL_THREE_DEPTHS)
+    const float request_y = lane.state.motor.navigation.motion.request.origin_m.y;
+    const float depth_y = tail::distant_map::depth_at(practice_depth_index(lane_index));
+    if (!isfinite(request_y) || fabsf(request_y-depth_y)>1.e-5f) {
+        fail(lane_index,43,first_fault,fault_code);
+        return;
+    }
+#endif
     if (proposed < 0 || proposed >= actions || !isfinite(old_logp[lane_index]) ||
         !isfinite(value[lane_index]) || !chooser::accept(lane.state, proposed)) {
         fail(lane_index, 32, first_fault, fault_code);
@@ -394,6 +484,16 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
         return;
     }
     reward[lane_index] = result.reward;
+#if defined(CUDARL_REGION_CREDIT)
+    // Each credit needs one second of residence in a cell. A 0.8 s decision
+    // can therefore contain at most one newly credited cell.
+    static_assert(macro_controls * tail::motor_control_s < 1.f);
+    if (!result.fault) {
+        const int hits = tail::regional::new_regions(lane.state, previous_visits);
+        region_hits[lane_index] = hits;
+        reward[lane_index] += tail::regional::reward_per_region * hits;
+    }
+#endif
 #if defined(CUDARL_CURVED_BANK)
     if(!result.fault){
     const auto curved=tail::curved_bank::observe(lane.state.motor,pond);
@@ -427,7 +527,15 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
 #endif
         done[lane_index] = 0.f;
 #if defined(CUDARL_EPISODIC_BANK)
-        if(lane.state.motor.navigation.motion.controls-episode.first_decision_control>=training_episode_controls){
+        const int limit=
+#if defined(CUDARL_OPEN_WATER)
+            practice_limit(lane_index);
+#elif defined(CUDARL_NORTH_BANK)
+            north_practice_lane(lane_index) ? training_episode_controls : 0;
+#else
+            training_episode_controls;
+#endif
+        if(limit && lane.state.motor.navigation.motion.controls-episode.first_decision_control>=limit){
             truncated[lane_index]=done[lane_index]=1;lane.needs_start=true;++episode.time_limits;
         }
 #endif
@@ -511,6 +619,22 @@ void count_work(Rollout& roll, Ledger& ledger, cudaStream_t stream) {
     download(local, roll.counts.get(), stream);
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
     ledger.counts = {};
+#if defined(CUDARL_THREE_DEPTHS)
+    ledger.samples_at_depth.fill(0);
+#if defined(CUDARL_MOVING_STARTS)
+    ledger.samples_by_practice = {};
+#endif
+    for (int lane=0; lane<worlds; ++lane)
+        for (auto samples:local[lane].samples) {
+            ledger.samples_at_depth[practice_depth_index(lane)]+=samples;
+#if defined(CUDARL_MOVING_STARTS)
+            const auto practice=practice_for(lane);
+            const int group=practice==Practice::Moving ? bank_training::moving_runway_band(lane) :
+                practice==Practice::Tangent ? 3 : 4;
+            ledger.samples_by_practice[practice_depth_index(lane)][group]+=samples;
+#endif
+        }
+#endif
     for (const auto& item : local) {
         ledger.counts.attempted += item.attempted;
         ledger.counts.accepted += item.accepted;
@@ -589,6 +713,9 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
         move_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), roll.counts.get(), stored_action, old_logp,
             value, gait.get(), offset.get(), larger_pond, roll.reward.get() + first, roll.done.get() + first,
             roll.first_fault.get(), roll.fault_code.get()
+#if defined(CUDARL_REGION_CREDIT)
+            ,roll.region_hits.get()+first
+#endif
 #if defined(CUDARL_EPISODIC_BANK)
             ,roll.episodes.get(),roll.truncated.get()+first
 #endif

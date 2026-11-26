@@ -1,0 +1,13 @@
+suite,case,fault,pass,accepted_substeps,min_clearance_mm,max_stall_controls,close_s,unique_cells
+bank,validation_0,0,1,144000,6.82855,0,12.96,42
+bank,validation_1,0,1,144000,5.88304,0,7.04,53
+bank,validation_2,0,1,144000,6.81575,0,12.72,44
+bank,validation_3,0,1,144000,5.84782,0,7.12,47
+bank,validation_4,0,1,144000,17.0001,0,1.6,44
+bank,validation_5,0,1,144000,2.33595,0,10.32,49
+bank,validation_6,0,1,144000,17.0002,0,1.2,45
+bank,validation_7,0,1,144000,2.32296,0,10.32,50
+open,endurance_godot_rest,0,1,240000,59.999,0,0,68
+open,endurance_northeast,0,1,240000,25.5275,0,0,77
+open,endurance_west,0,1,240000,32.3266,0,0,76
+open,endurance_southwest,0,1,240000,22.8409,0,0,77

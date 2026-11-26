@@ -1,0 +1,58 @@
+[
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/protocol.md",
+    "sha256": "56F1F65C0AC984D13F29FCD8EF9A63CF48740A5FD14FC2C217EDA30690FEFF52"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/result.json",
+    "sha256": "C0DA25AD0A2D3E0434B4F5A4E489787A9B2E8B284C9F51CB555DEC054F49254F"
+  },
+  {
+    "path": "build/flexible-tail/north-bank-three-depth-v1/native-build/Release/pond_flexible_tail_rate_chooser.exe",
+    "sha256": "71213ED8309040A29E068111C5224608E4AF32152EE4B0F1D321197EF2081A8F"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/actor-128.bin",
+    "sha256": "7A16B85CDF19E98D150510F0D24713B592A2EB7DC5ADB124880B0E4EB30473A4"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/checkpoints/session-128.bin",
+    "sha256": "6362831E113966B6B63A036B4219ED0DCFA89C0350988485504CC5C9AB87D8CC"
+  },
+  {
+    "path": "build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin",
+    "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "9897447B505282D0EF3C3C0F92BA0D39B580A5D34C4435856DF73FCA81D75737"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/rate_session.cuh",
+    "sha256": "EAD98D5F4835C86BB1DE30581DE2E9818DF2B44D7ECF66DBBC370BA6EFE44FAD"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "1AE3FA9979818686D066F0F605E0BE597B3BF67CA82DC6CB52778327F191D5DC"
+  },
+  {
+    "path": "flexible-tail-preview/habitat.json",
+    "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin",
+    "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323"
+  },
+  {
+    "path": "src/rl/flexible_tail_three_depth_map.h",
+    "sha256": "88F7B82C9115AFBCEE259ADEBD0987CD17701D635400D9C220E69823A5C8826F"
+  }
+]

@@ -1,0 +1,13 @@
+suite,case,archived_row,com_x_m,com_y_m,com_z_m,relative_yaw_rad,exact_godot_start
+selection-bank,validation_0,8,0.0160176,-0.075,0.417059,-2.61117,0
+selection-bank,validation_1,8,0.0158008,-0.075,0.411415,0.53042,0
+selection-bank,validation_2,8,-0.0160175,-0.075,0.417058,-2.64688,0
+selection-bank,validation_3,8,-0.0158016,-0.075,0.411434,0.494715,0
+selection-bank,validation_4,9,0.0261792,-0.075,0.408819,2.55878,0
+selection-bank,validation_5,9,0.0265393,-0.075,0.414443,-0.582813,0
+selection-bank,validation_6,9,-0.0261771,-0.075,0.408786,2.49926,0
+selection-bank,validation_7,9,-0.0265394,-0.075,0.414445,-0.642333,0
+selection-open,endurance_godot_rest,0,-0.03608,-0.072,0.0222,0.303128,0
+selection-open,endurance_northeast,11,0.21208,-0.08,-0.1938,1.45172,0
+selection-open,endurance_west,6,-0.34408,-0.075,-0.0582,1.13371,0
+selection-open,endurance_southwest,7,-0.10472,-0.075,0.1518,-2.04278,0

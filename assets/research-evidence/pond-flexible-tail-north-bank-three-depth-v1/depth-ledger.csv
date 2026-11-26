@@ -1,0 +1,4 @@
+depth_mm,initial_worlds,respawns,training_clearance_stops,unique_PPO_decisions,minibatch_presentations,boundary_COM_samples,max_boundary_COM_error_mm,final_fields_changed_when_history_cleared,largest_history_delta,north_training_starts,north_training_stops,north_time_limits,near_decisions
+72,340,8880,3754,348160,1392640,43520,4.351139069e-06,174,1,9039,3743,5132,74617
+75,342,8780,3650,350208,1400832,43776,2.980232239e-06,177,1,8936,3636,5140,74489
+80,342,8847,3632,350208,1400832,43776,1.311302185e-05,171,0.9763809443,9012,3625,5222,73628

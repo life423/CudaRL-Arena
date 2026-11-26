@@ -1,0 +1,11 @@
+{
+  "selected": 104.0,
+  "selected_actor_sha256": "932CCF8E942C25A6901CB07B69E0B87243A3BA571FC559BEE94E189AA365FA93",
+  "qualifying_actor_sha256": "932CCF8E942C25A6901CB07B69E0B87243A3BA571FC559BEE94E189AA365FA93",
+  "selected_utc": "2026-11-26T05:20:42.9423012Z",
+  "final_binding_utc": "2026-11-26T05:20:42.9657631Z",
+  "num_scored_actors": 18,
+  "num_native_validation_receipts": 54,
+  "validation_swims": 432,
+  "max_validation_process_wall_s": 7.3508979
+}

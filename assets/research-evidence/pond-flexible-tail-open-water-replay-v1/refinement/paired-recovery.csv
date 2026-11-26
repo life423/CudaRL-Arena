@@ -1,0 +1,4 @@
+fork_s,state_checksum,initial_gap_mm,initial_actual_horizontal_mm_s,branch,forced_action,forced_decisions,first_action,first_action_on_release,fault,branch_elapsed_s,mean_horizontal_mm_s,whole_path_min_gap_mm,end_gap_mm,whole_path_max_stall_controls,tilt_deg,depth_error_mm,pass,attempted_substeps,accepted_substeps
+27.2,5367963313434757573,59.9989969006,12.7613730729,chooser112,-1,0,14,14,2,15.27375,12.3833159916,-0.00708150810169,-0.00708150789252,0,0,0,0,12220,12219
+27.2,5367963313434757573,59.9989969006,12.7613730729,parent,-1,0,10,10,0,120,12.7317168924,28.2039828598,59.9989969006,58,0,0,1,96000,96000
+27.2,5367963313434757573,59.9989969006,12.7613730729,override_then_112,10,1,10,10,0,120,12.0323056782,27.8286915272,52.6384439288,0,0,0,1,96000,96000

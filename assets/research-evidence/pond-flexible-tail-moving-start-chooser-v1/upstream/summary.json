@@ -1,0 +1,47 @@
+{
+  "update": 104,
+  "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F",
+  "physical_substeps": 2131626,
+  "process_wall_s": 7.258298,
+  "full_raw_cue_hashes_matching": 0,
+  "case_depth_cue_gap_speed_and_all_three_archived_initial_choices_matched": 24,
+  "cases_per_shift": 12,
+  "upstream_60": {
+    "candidate_qualified": 6,
+    "qualified_104": 3,
+    "qualified_112": 5,
+    "qualified_128": 4,
+    "previous_witness": 6
+  },
+  "upstream_120": {
+    "candidate_qualified": 6,
+    "qualified_104": 6,
+    "qualified_112": 7,
+    "qualified_128": 12,
+    "previous_witness": 12
+  },
+  "at_depth": {
+    "72": {
+      "candidate_qualified": 3,
+      "qualified_104": 2,
+      "qualified_112": 3,
+      "qualified_128": 5,
+      "previous_witness": 5
+    },
+    "75": {
+      "candidate_qualified": 4,
+      "qualified_104": 3,
+      "qualified_112": 4,
+      "qualified_128": 5,
+      "previous_witness": 6
+    },
+    "80": {
+      "candidate_qualified": 5,
+      "qualified_104": 4,
+      "qualified_112": 5,
+      "qualified_128": 6,
+      "previous_witness": 7
+    }
+  },
+  "optimizer_updates": 0
+}

@@ -1,0 +1,66 @@
+{
+  "utc": "2026-11-26T05:27:05.2809965Z",
+  "study": "moving-start-chooser-v1",
+  "bindings": [
+    {
+      "path": "build/flexible-tail/moving-start-chooser-v1/selection-build/Release/depth_eval.exe",
+      "sha256": "E3FF184606371BEB8E6C424F909FFDBD451B70EA9978EA27F777BDCBFEF35B8E"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-moving-start-chooser-v1/selection-protocol.md",
+      "sha256": "56EEDD3474FECC2F3345193F1DAD17DF0927599C96676A600A3D5D342AD73465"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/moving-start-validation.h",
+      "sha256": "54CC1D23CAD988B4C2F877BB1F1B235C764DC8C068067492A2F9FB180E7F246D"
+    },
+    {
+      "path": "tools/pond-flexible-tail-chooser/open-water-validation.h",
+      "sha256": "24481A4C27B0BE100ADAF6BAE1A02F27FEBCBB75AD52C2B9F942ED5896F17042"
+    },
+    {
+      "path": "tools/pond-flexible-tail-qualification/select-open-water.ps1",
+      "sha256": "F2B4BDEF5EB4F308300C9D4AE566632F11AF84C23F326C288702F3FA98EC3BCA"
+    },
+    {
+      "path": "tools/pond-flexible-tail-qualification/original-moving-final.ps1",
+      "sha256": "02D2D075FC86044D42F8AAC619B2BB7E092C83E730B870E43F773FD248216748"
+    },
+    {
+      "path": "tools/pond-flexible-tail-qualification/assess.ps1",
+      "sha256": "4B03512A664D526D8E5D9BB55F2CA7237BAE4C7EA58C12C1D9D40BF7E429B0BF"
+    },
+    {
+      "path": "tools/pond-flexible-tail-steering/run-seven-stages.ps1",
+      "sha256": "4DD214CE54A0C9AEE88F981C4E452E64001155F7FCE0C1F76927FDB8E6F9593E"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+      "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+      "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+    },
+    {
+      "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+      "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification/fixtures/shore-72.bin",
+      "sha256": "4E5B86C513DEF4B5AEF955E2896CC87C940DA6970D49EE8B53A4471951687689"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/qualification/fixtures/shore-75.bin",
+      "sha256": "31ECBEDFB9B4F6752044171EADF59AB934DD8EFB407140170C6A961EB15355C4"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/data/training/actor-128.bin",
+      "sha256": "7A16B85CDF19E98D150510F0D24713B592A2EB7DC5ADB124880B0E4EB30473A4"
+    },
+    {
+      "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/actor-112.bin",
+      "sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C"
+    }
+  ]
+}

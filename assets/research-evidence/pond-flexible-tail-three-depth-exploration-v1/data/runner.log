@@ -1,0 +1,66 @@
+verification: 3.823s exit0
+evaluation: 2.567s exit0
+coverage update0: safety 12/12 + 4/4, union 46.4%
+shore: 1.047s exit1
+evaluation: 2.630s exit0
+coverage update1: safety 12/12 + 4/4, union 49.0%
+shore: 1.035s exit1
+evaluation: 2.532s exit0
+coverage update2: safety 12/12 + 4/4, union 47.0%
+shore: 1.210s exit1
+evaluation: 2.645s exit0
+coverage update4: safety 12/12 + 4/4, union 44.9%
+shore: 1.063s exit1
+evaluation: 0.881s exit1
+coverage update8: safety 9/12 + 0/0, union 68.4%
+shore: 1.033s exit1
+evaluation: 0.877s exit1
+coverage update16: safety 3/12 + 0/0, union 69.6%
+shore: 1.030s exit1
+evaluation: 0.761s exit1
+coverage update24: safety 2/12 + 0/0, union 67.8%
+shore: 0.953s exit1
+evaluation: 0.878s exit1
+coverage update32: safety 2/12 + 0/0, union 68.1%
+shore: 0.942s exit1
+evaluation: 0.765s exit1
+coverage update40: safety 4/12 + 0/0, union 69.3%
+shore: 0.985s exit1
+evaluation: 0.884s exit1
+coverage update48: safety 3/12 + 0/0, union 68.7%
+shore: 0.956s exit1
+evaluation: 0.871s exit1
+coverage update56: safety 3/12 + 0/0, union 68.4%
+shore: 1.037s exit1
+evaluation: 0.767s exit1
+coverage update64: safety 2/12 + 0/0, union 68.7%
+shore: 0.963s exit1
+evaluation: 0.762s exit1
+coverage update72: safety 2/12 + 0/0, union 68.4%
+shore: 0.976s exit1
+evaluation: 0.767s exit1
+coverage update80: safety 2/12 + 0/0, union 68.4%
+shore: 0.947s exit1
+evaluation: 0.873s exit1
+coverage update88: safety 2/12 + 0/0, union 68.4%
+shore: 0.959s exit1
+evaluation: 0.988s exit1
+coverage update96: safety 4/12 + 0/0, union 68.1%
+shore: 1.163s exit1
+evaluation: 2.631s exit0
+coverage update104: safety 12/12 + 4/4, union 56.5%
+shore: 1.013s exit1
+evaluation: 2.623s exit0
+coverage update112: safety 12/12 + 4/4, union 63.2%
+shore: 1.123s exit1
+evaluation: 2.634s exit0
+coverage update120: safety 12/12 + 4/4, union 56.8%
+shore: 1.190s exit1
+training: 135.782s exit0
+evaluation: 4.284s exit0
+coverage update128: safety 12/12 + 4/4, union 53.3%
+shore: 1.785s exit1
+coverage: 14.807s exit1
+coverage: 9.204s exit1
+coverage: 4.307s exit1
+coverage: 9.152s exit1

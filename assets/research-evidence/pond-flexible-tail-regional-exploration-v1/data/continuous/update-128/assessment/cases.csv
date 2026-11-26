@@ -1,0 +1,5 @@
+case,simulated_s,physical_pass,fault,unique_cells,coverage_fraction,outside_reference_cells,min_clearance_mm,max_stall_s,mean_speed_mm_s,tilt_deg,depth_error_mm,keep,left,right,attempted_substeps,accepted_substeps
+endurance_godot_rest,1800,1,0,172,0.4985507246,0,35.02180055,3.2,11.6400347,0,0,1384,365,500,1440000,1440000
+endurance_northeast,1800,1,0,114,0.3304347826,0,29.40887585,0,10.19021609,0,0,1678,6,565,1440000,1440000
+endurance_west,92.70875,0,2,35,0.1014492754,0,-0.009777540981,3.34,19.03653198,0,0,0,115,0,74168,74167
+endurance_southwest,161.5825,0,2,55,0.1594202899,0,-0.00360412696,2.3,18.89945393,0,0,11,181,9,129267,129266

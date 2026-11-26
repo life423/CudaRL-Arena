@@ -1,6 +1,10 @@
 #pragma once
 #include "rl/flexible_tail_chooser.h"
+#if defined(CUDARL_THREE_DEPTHS)
+#include "rl/flexible_tail_three_depth_map.h"
+#else
 #include "rl/flexible_tail_distant_map.h"
+#endif
 
 namespace cudarl::flexible_tail::distant {
 inline bool geometry_matches(const pond_geometry_v1::Parameters& pond){

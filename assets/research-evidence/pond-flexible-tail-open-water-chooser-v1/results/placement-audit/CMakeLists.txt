@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.24)
+project(PondOpenWaterSpawnAudit LANGUAGES CXX)
+add_executable(spawn_audit audit.cpp "${REPO}/src/core/checkpoint.cpp")
+target_compile_features(spawn_audit PRIVATE cxx_std_17)
+target_include_directories(spawn_audit PRIVATE "${REPO}/src" "${REPO}/src/nn" "${REPO}/tools/pond-flexible-tail-chooser" "${CMAKE_CURRENT_SOURCE_DIR}/../trainer-build")
+add_executable(validation_range validation_range.cpp "${REPO}/src/core/checkpoint.cpp")
+target_compile_features(validation_range PRIVATE cxx_std_17)
+target_include_directories(validation_range PRIVATE "${REPO}/src" "${REPO}/src/nn" "${REPO}/tools/pond-flexible-tail-chooser" "${CMAKE_CURRENT_SOURCE_DIR}/../trainer-build")

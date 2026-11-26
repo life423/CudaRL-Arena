@@ -1,0 +1,3 @@
+# Longer confirmation at the last recoverable decisions
+
+The chosen brief intervention at 27.2 seconds survived 120 seconds, then stopped at 1,003.11625 seconds on the 1,800-second follow-up. Test the remaining 13 short-horizon successes from that same state and the one continuous parent takeover at 28.8 seconds for 1,800 seconds after the fork. Replay all 53 prefix decisions and compare each branch at its 120-second endpoint to the existing measured path. Keep the prior branch selection and evidence intact. Cap this final supplement at 14 trajectories, 20.2 million attempted substeps and 150 seconds process time. No additional optimizer or policy selection.

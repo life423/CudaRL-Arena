@@ -1,0 +1,7 @@
+"practice","from_update","to_update","clearance_stops","healthy_48s_time_limits","healthy_fraction_of_ended"
+"short_moving","1","32","5880","122","0.02032655781406198"
+"short_moving","97","128","5461","176","0.03122228135533085"
+"medium_moving","1","32","1524","362","0.1919406150583245"
+"medium_moving","97","128","1163","490","0.2964307320024198"
+"long_moving","1","32","160","595","0.7880794701986755"
+"long_moving","97","128","80","698","0.897172236503856"

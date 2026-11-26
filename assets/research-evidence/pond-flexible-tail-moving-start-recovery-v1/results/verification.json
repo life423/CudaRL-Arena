@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "original_cases": 12,
+  "exact_original_branches": 1044,
+  "translated_branches": 360,
+  "physical_attempts": 20070190,
+  "native_process_wall_s": 31.1957769,
+  "ppo_updates": 0,
+  "cases_by_upstream": [
+    {
+      "mm": 0,
+      "count": 12,
+      "qualified": 0,
+      "physically_completed": 0,
+      "qualified_after_handoff": 0,
+      "greedy104": 0.0,
+      "greedy112": 0.0,
+      "greedy128": 0.0
+    },
+    {
+      "mm": 60,
+      "count": 12,
+      "qualified": 6,
+      "physically_completed": 6,
+      "qualified_after_handoff": 4,
+      "greedy104": 3.0,
+      "greedy112": 5.0,
+      "greedy128": 4.0
+    },
+    {
+      "mm": 120,
+      "count": 12,
+      "qualified": 12,
+      "physically_completed": 12,
+      "qualified_after_handoff": 6,
+      "greedy104": 6.0,
+      "greedy112": 7.0,
+      "greedy128": 12.0
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "training_unlocked": true,
+  "replay_evidence": "build/flexible-tail/open-water-replay-v1/assessment/paired-recovery.csv",
+  "replay_sha256": "0EF76DC1D30A80718121A7C81A8EBF30981B93D7E0B4F975A94A5C0C4FF769D4",
+  "chooser_sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C",
+  "motor_sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E",
+  "original_stop_s": 42.47375,
+  "paired_fork_s": 24.0,
+  "forced_decisions": 1,
+  "passed_branch_seconds": 120.0,
+  "long_confirmation": true,
+  "optimizer_updates": 0
+}

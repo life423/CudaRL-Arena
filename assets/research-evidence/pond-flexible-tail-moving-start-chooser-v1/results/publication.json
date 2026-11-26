@@ -1,0 +1,157 @@
+{
+  "actor_sha256": "16B096276A93E43E46EA2A62D2A9AFD9CD81E1E793EBAC43DFBEAB9587B1927F",
+  "motor_sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E",
+  "stall_limit_controls": 407,
+  "control_ms": 20,
+  "longest_80mm_shore_arc_deg": 12.720300849240491,
+  "eligible_for_staging": false,
+  "failures": [
+    "Original navigation requires 12 ordinary and four five-minute passes with zero stops or resets.",
+    "center_west failed navigation or its individual stall limit.",
+    "center_south failed navigation or its individual stall limit.",
+    "east_shelf_tangent failed navigation or its individual stall limit.",
+    "north_shelf_tangent failed navigation or its individual stall limit.",
+    "northeast_to_center failed navigation or its individual stall limit.",
+    "southwest_to_center failed navigation or its individual stall limit.",
+    "northwest_diagonal failed navigation or its individual stall limit.",
+    "72 mm had 1/8 sustained near-bank swims; four required.",
+    "72 mm mean near-bank time 9.34 s; 10.96 s required.",
+    "75 mm had 1/8 sustained near-bank swims; four required.",
+    "75 mm mean near-bank time 9.41 s; 10.96 s required.",
+    "80 mm had 0/8 sustained near-bank swims; four required.",
+    "80 mm mean near-bank time 8.56 s; 10.96 s required.",
+    "endurance_west covered 33 cells; update 128 covered 218.",
+    "endurance_southwest covered 26 cells; update 128 covered 201.",
+    "Continuous trial recorded a reset or native stop.",
+    "endurance_godot_rest failed physical completion at 1158.6875 s, fault 2.",
+    "endurance_northeast failed physical completion at 1403.26625 s, fault 2.",
+    "endurance_west failed physical completion at 82.965 s, fault 2.",
+    "endurance_west fell below installed coverage.",
+    "endurance_southwest failed physical completion at 70.175 s, fault 2.",
+    "endurance_southwest fell below installed coverage.",
+    "Mean coverage did not improve.",
+    "72 mm moving_a failed the original moving approach at 4.31 s (fault 2).",
+    "72 mm moving_b failed the original moving approach at 7.4925 s (fault 2).",
+    "72 mm moving_c failed the original moving approach at 5.01625 s (fault 2).",
+    "72 mm moving_d failed the original moving approach at 3.76625 s (fault 2).",
+    "75 mm moving_a failed the original moving approach at 4.875 s (fault 2).",
+    "75 mm moving_b failed the original moving approach at 6.37375 s (fault 2).",
+    "75 mm moving_c failed the original moving approach at 4.6625 s (fault 2).",
+    "75 mm moving_d failed the original moving approach at 4.23625 s (fault 2).",
+    "80 mm moving_a failed the original moving approach at 5.4775 s (fault 2).",
+    "80 mm moving_b failed the original moving approach at 5.365 s (fault 2).",
+    "80 mm moving_c failed the original moving approach at 4.55125 s (fault 2).",
+    "80 mm moving_d failed the original moving approach at 5.125 s (fault 2)."
+  ],
+  "selected_update": 104,
+  "moving": [
+    {
+      "depth_mm": 72,
+      "case": "moving_a",
+      "passed": false,
+      "fault": 2,
+      "seconds": 4.31,
+      "min_clearance_mm": -0.003020573104,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 72,
+      "case": "moving_b",
+      "passed": false,
+      "fault": 2,
+      "seconds": 7.4925,
+      "min_clearance_mm": -0.02872183541,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 72,
+      "case": "moving_c",
+      "passed": false,
+      "fault": 2,
+      "seconds": 5.01625,
+      "min_clearance_mm": -0.006314566235,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 72,
+      "case": "moving_d",
+      "passed": false,
+      "fault": 2,
+      "seconds": 3.76625,
+      "min_clearance_mm": -0.002043535915,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 75,
+      "case": "moving_a",
+      "passed": false,
+      "fault": 2,
+      "seconds": 4.875,
+      "min_clearance_mm": -0.0002333806037,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 75,
+      "case": "moving_b",
+      "passed": false,
+      "fault": 2,
+      "seconds": 6.37375,
+      "min_clearance_mm": -0.0003413329921,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 75,
+      "case": "moving_c",
+      "passed": false,
+      "fault": 2,
+      "seconds": 4.6625,
+      "min_clearance_mm": -0.001202358021,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 75,
+      "case": "moving_d",
+      "passed": false,
+      "fault": 2,
+      "seconds": 4.23625,
+      "min_clearance_mm": -0.007796941645,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 80,
+      "case": "moving_a",
+      "passed": false,
+      "fault": 2,
+      "seconds": 5.4775,
+      "min_clearance_mm": -0.002372848712,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 80,
+      "case": "moving_b",
+      "passed": false,
+      "fault": 2,
+      "seconds": 5.365,
+      "min_clearance_mm": -0.02050006515,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 80,
+      "case": "moving_c",
+      "passed": false,
+      "fault": 2,
+      "seconds": 4.55125,
+      "min_clearance_mm": -0.007700868991,
+      "max_stall_controls": 0
+    },
+    {
+      "depth_mm": 80,
+      "case": "moving_d",
+      "passed": false,
+      "fault": 2,
+      "seconds": 5.125,
+      "min_clearance_mm": -0.003519291795,
+      "max_stall_controls": 0
+    }
+  ]
+}

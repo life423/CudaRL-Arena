@@ -1,0 +1,2 @@
+fork_s,state_checksum,initial_gap_mm,initial_actual_horizontal_mm_s,branch,forced_action,forced_decisions,first_action,first_action_on_release,fault,branch_elapsed_s,mean_horizontal_mm_s,whole_path_min_gap_mm,end_gap_mm,whole_path_max_stall_controls,tilt_deg,depth_error_mm,pass,attempted_substeps,accepted_substeps
+27.2,5367963313434757573,59.9989969006,12.7613730729,override_then_112,10,1,10,10,2,1003.11625,12.9752676694,-0.0259180778812,0.341110429195,0,0,0,0,802494,802493

@@ -1,0 +1,30 @@
+[
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/qualification/build/Release/installed_eval.exe",
+    "sha256": "C777593817C961AD1ECC38A9F0C92C1D26F13D4569B049478A6AFF838298AA38"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/qualification/fixtures/shore-72.bin",
+    "sha256": "4E5B86C513DEF4B5AEF955E2896CC87C940DA6970D49EE8B53A4471951687689"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/qualification/fixtures/shore-75.bin",
+    "sha256": "31ECBEDFB9B4F6752044171EADF59AB934DD8EFB407140170C6A961EB15355C4"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin",
+    "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+  }
+]

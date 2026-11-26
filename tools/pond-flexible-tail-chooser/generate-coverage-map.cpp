@@ -8,13 +8,22 @@
 #include <vector>
 
 int main(int argc,char** argv){try{
-    if(argc!=4)throw std::runtime_error("Usage: generate_coverage_map STARTS HEADER REPORT");
+    if(argc<4)throw std::runtime_error("Usage: generate_coverage_map STARTS HEADER REPORT [EXTRA_DEPTH_MM ...]");
     namespace t=cudarl::flexible_tail;namespace c=t::chooser;
     const auto starts=t::read_navigation_worlds(argv[1]);
     if(starts.empty())throw std::runtime_error("Missing archived body geometry");
     std::vector<float> depths;
     for(const auto& start:starts){const float depth=start.legs[start.active_leg].goal_m.y;
         if(std::none_of(depths.begin(),depths.end(),[&](float d){return std::abs(d-depth)<1.e-6f;}))depths.push_back(depth);}
+    for(int i=4;i<argc;++i){
+        size_t used=0;
+        const std::string argument=argv[i];
+        const float mm=std::stof(argument,&used);
+        if(used!=argument.size() || !std::isfinite(mm) || mm<=0 || mm>=-1000*larger_pond.floor_y_m)
+            throw std::runtime_error("Depth must lie between surface and floor, in millimetres");
+        const float y=-mm*.001f;
+        if(std::none_of(depths.begin(),depths.end(),[&](float d){return std::abs(d-y)<1.e-6f;}))depths.push_back(y);
+    }
     std::sort(depths.begin(),depths.end());
     std::vector<uint64_t> masks;std::vector<int> counts;
     for(float depth:depths){

@@ -1,0 +1,98 @@
+[
+  {
+    "depth_mm": 72,
+    "upstream_mm": 0,
+    "cases": 4,
+    "demonstrated": [],
+    "branches": 348.0,
+    "raw_sha256": "B42DF75AB16B6F860579ACBC48010E329224DDB474FCFAD160AEA5F44CB19192"
+  },
+  {
+    "depth_mm": 72,
+    "upstream_mm": 60,
+    "cases": 4,
+    "demonstrated": [
+      "moving_b"
+    ],
+    "branches": 60.0,
+    "raw_sha256": "B42DF75AB16B6F860579ACBC48010E329224DDB474FCFAD160AEA5F44CB19192"
+  },
+  {
+    "depth_mm": 72,
+    "upstream_mm": 120,
+    "cases": 4,
+    "demonstrated": [
+      "moving_a",
+      "moving_b",
+      "moving_c",
+      "moving_d"
+    ],
+    "branches": 60.0,
+    "raw_sha256": "B42DF75AB16B6F860579ACBC48010E329224DDB474FCFAD160AEA5F44CB19192"
+  },
+  {
+    "depth_mm": 75,
+    "upstream_mm": 0,
+    "cases": 4,
+    "demonstrated": [],
+    "branches": 348.0,
+    "raw_sha256": "B290F4B55D352DD542A4E4AC601859249731990702037EB09F89F12657B2C53B"
+  },
+  {
+    "depth_mm": 75,
+    "upstream_mm": 60,
+    "cases": 4,
+    "demonstrated": [
+      "moving_a",
+      "moving_b"
+    ],
+    "branches": 60.0,
+    "raw_sha256": "B290F4B55D352DD542A4E4AC601859249731990702037EB09F89F12657B2C53B"
+  },
+  {
+    "depth_mm": 75,
+    "upstream_mm": 120,
+    "cases": 4,
+    "demonstrated": [
+      "moving_a",
+      "moving_b",
+      "moving_c",
+      "moving_d"
+    ],
+    "branches": 60.0,
+    "raw_sha256": "B290F4B55D352DD542A4E4AC601859249731990702037EB09F89F12657B2C53B"
+  },
+  {
+    "depth_mm": 80,
+    "upstream_mm": 0,
+    "cases": 4,
+    "demonstrated": [],
+    "branches": 348.0,
+    "raw_sha256": "76879800B366B378E0A3F3EC3337201D819E849BE5BAA524998752244538E530"
+  },
+  {
+    "depth_mm": 80,
+    "upstream_mm": 60,
+    "cases": 4,
+    "demonstrated": [
+      "moving_a",
+      "moving_b",
+      "moving_d"
+    ],
+    "branches": 60.0,
+    "raw_sha256": "76879800B366B378E0A3F3EC3337201D819E849BE5BAA524998752244538E530"
+  },
+  {
+    "depth_mm": 80,
+    "upstream_mm": 120,
+    "cases": 4,
+    "demonstrated": [
+      "moving_a",
+      "moving_b",
+      "moving_c",
+      "moving_d"
+    ],
+    "branches": 60.0,
+    "raw_sha256": "76879800B366B378E0A3F3EC3337201D819E849BE5BAA524998752244538E530"
+  }
+]

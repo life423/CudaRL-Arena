@@ -1,0 +1,158 @@
+{
+  "swims": [
+    {
+      "case": "endurance_godot_rest",
+      "depth_mm": 72.00001526,
+      "scored": 345,
+      "credited": 151,
+      "crossed_uncredited": 6,
+      "unentered": 188,
+      "interpolated_only": 0,
+      "entered_outside_reference": 0,
+      "clear_at_own_depth": {
+        "cells": 345,
+        "entered": 157,
+        "credited": 151
+      },
+      "scored_without_center_certificate_at_own_depth": 0,
+      "scored_interior": {
+        "cells": 255,
+        "entered": 157,
+        "credited": 151
+      },
+      "credited_at_5_15_30_min": [
+        65,
+        117,
+        151
+      ],
+      "near_s": 0,
+      "near_arc_deg": 0
+    },
+    {
+      "case": "endurance_northeast",
+      "depth_mm": 80.00001526,
+      "scored": 345,
+      "credited": 147,
+      "crossed_uncredited": 5,
+      "unentered": 193,
+      "interpolated_only": 0,
+      "entered_outside_reference": 0,
+      "clear_at_own_depth": {
+        "cells": 341,
+        "entered": 152,
+        "credited": 147
+      },
+      "scored_without_center_certificate_at_own_depth": 4,
+      "scored_interior": {
+        "cells": 235,
+        "entered": 152,
+        "credited": 147
+      },
+      "credited_at_5_15_30_min": [
+        68,
+        118,
+        147
+      ],
+      "near_s": 0,
+      "near_arc_deg": 0
+    },
+    {
+      "case": "endurance_west",
+      "depth_mm": 75.00000763,
+      "scored": 345,
+      "credited": 148,
+      "crossed_uncredited": 4,
+      "unentered": 193,
+      "interpolated_only": 0,
+      "entered_outside_reference": 0,
+      "clear_at_own_depth": {
+        "cells": 345,
+        "entered": 152,
+        "credited": 148
+      },
+      "scored_without_center_certificate_at_own_depth": 0,
+      "scored_interior": {
+        "cells": 247,
+        "entered": 152,
+        "credited": 148
+      },
+      "credited_at_5_15_30_min": [
+        69,
+        125,
+        148
+      ],
+      "near_s": 0,
+      "near_arc_deg": 0
+    },
+    {
+      "case": "endurance_southwest",
+      "depth_mm": 75.00000763,
+      "scored": 345,
+      "credited": 160,
+      "crossed_uncredited": 8,
+      "unentered": 177,
+      "interpolated_only": 0,
+      "entered_outside_reference": 0,
+      "clear_at_own_depth": {
+        "cells": 345,
+        "entered": 168,
+        "credited": 160
+      },
+      "scored_without_center_certificate_at_own_depth": 0,
+      "scored_interior": {
+        "cells": 249,
+        "entered": 165,
+        "credited": 157
+      },
+      "credited_at_5_15_30_min": [
+        62,
+        130,
+        160
+      ],
+      "near_s": 0,
+      "near_arc_deg": 0
+    }
+  ],
+  "shore": [
+    {
+      "case": "phase8-bank0-direction-1",
+      "pass": 1,
+      "near_arc_deg": 11.810541236787712
+    },
+    {
+      "case": "phase8-bank0-direction1",
+      "pass": 1,
+      "near_arc_deg": 0.8929769800919153
+    },
+    {
+      "case": "phase8-bank1-direction-1",
+      "pass": 0,
+      "near_arc_deg": 5.0908319603164065
+    },
+    {
+      "case": "phase8-bank1-direction1",
+      "pass": 1,
+      "near_arc_deg": 1.5632860261387354
+    },
+    {
+      "case": "phase9-bank0-direction-1",
+      "pass": 1,
+      "near_arc_deg": 0.7603750394020539
+    },
+    {
+      "case": "phase9-bank0-direction1",
+      "pass": 1,
+      "near_arc_deg": 8.80927098166971
+    },
+    {
+      "case": "phase9-bank1-direction-1",
+      "pass": 1,
+      "near_arc_deg": 1.4320255045930201
+    },
+    {
+      "case": "phase9-bank1-direction1",
+      "pass": 0,
+      "near_arc_deg": 6.06761727652686
+    }
+  ]
+}

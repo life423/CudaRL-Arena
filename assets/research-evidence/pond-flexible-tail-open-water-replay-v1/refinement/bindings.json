@@ -1,0 +1,42 @@
+[
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-open-water-replay-v1/refinement.md",
+    "sha256": "544FFEE69E416328F8E10F44BA143EA102F96422EB1552DFD7212E80B0A0B9B6"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/actor-112.bin",
+    "sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/data/training/actor-128.bin",
+    "sha256": "7A16B85CDF19E98D150510F0D24713B592A2EB7DC5ADB124880B0E4EB30473A4"
+  },
+  {
+    "path": "build/flexible-tail/north-bank-three-depth-v1/qualification/candidate/continuous/assessment/traces/endurance_godot_rest.csv",
+    "sha256": "F71D2B246787C5D43C26FC680C572E56DD78A7B212821B5BA1F1947D4128EFD5"
+  },
+  {
+    "path": "build/flexible-tail/open-water-replay-v1/refine/native/Release/pond_flexible_tail_rate_evaluate.exe",
+    "sha256": "AB072B1BEE579D1D025C400066F6AC0BD7837FA1AA1E9CED71C412696E067049"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+  },
+  {
+    "path": "tools/pond-flexible-tail-qualification/replay-open-approach.ps1",
+    "sha256": "C121BC89AFB54ECAC8F1BC3CFD8FEC81D09F3EAB9695862951DDEEA431560F11"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/open_approach_audit.h",
+    "sha256": "FDB86036A336214EB1A6319A48626B4AED80262FD04A80E86C91F7C6566C1C40"
+  }
+]

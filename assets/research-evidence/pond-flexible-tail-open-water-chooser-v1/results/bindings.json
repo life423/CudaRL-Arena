@@ -1,0 +1,78 @@
+[
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/result.json",
+    "sha256": "1AA9D36AB39574DED13A6450C468A10FB0376E38BA23E3D09222CA0317CEADF1"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-open-water-chooser-v1/protocol.md",
+    "sha256": "154CF96C7161764C255244635CF573839DB2C7F5C6619E5DD43D07B36989D0EB"
+  },
+  {
+    "path": "build/flexible-tail/open-water-replay-v1/assessment/paired-recovery.csv",
+    "sha256": "0EF76DC1D30A80718121A7C81A8EBF30981B93D7E0B4F975A94A5C0C4FF769D4"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/actor-128.bin",
+    "sha256": "7A16B85CDF19E98D150510F0D24713B592A2EB7DC5ADB124880B0E4EB30473A4"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/checkpoints/session-128.bin",
+    "sha256": "6362831E113966B6B63A036B4219ED0DCFA89C0350988485504CC5C9AB87D8CC"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/actor-112.bin",
+    "sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/session-112.bin",
+    "sha256": "6797224633C5E08F53C5937ECF1D1DF226805CCD9DBCBE2DB5A36AF0DFFA891E"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/replay-gate.json",
+    "sha256": "9085832E6F749CBF3AA13F0A7A4AA5D914F3EA69A1E123B415AB5A3413E71D82"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/trainer-build/Release/pond_flexible_tail_rate_chooser.exe",
+    "sha256": "00E0E7142817C1B75F7DAD6E76DEB081F4EB14BAACEF143508D4C93243FAB887"
+  },
+  {
+    "path": "build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin",
+    "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "1527FD504DFA31B082875B4715242D6AA8172D9ADE7CA4E21726DF1E42D15D00"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/rate_session.cuh",
+    "sha256": "72088F728F5216A1E3C59983D3A703A78AF9AB0A04B711EFCCBF8467FDDAC2B1"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "4A960C20D58C51A89A225BEDA7C6F8DC6971B8503412A00D26CD58358E636B66"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/run-open-water.ps1",
+    "sha256": "86B961A23A6463C7A3A93A6A63CBC766D9E36B008CFD518F0E8A88F9AC944251"
+  },
+  {
+    "path": "flexible-tail-preview/habitat.json",
+    "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin",
+    "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323"
+  },
+  {
+    "path": "src/rl/flexible_tail_three_depth_map.h",
+    "sha256": "88F7B82C9115AFBCEE259ADEBD0987CD17701D635400D9C220E69823A5C8826F"
+  }
+]

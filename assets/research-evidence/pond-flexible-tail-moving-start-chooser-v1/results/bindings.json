@@ -1,0 +1,106 @@
+[
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-moving-start-chooser-v1/protocol.md",
+    "sha256": "BC02D6102D0B817A491E6FA9194302FEA4E1C2E7E50A5F46C254FC51CC58146B"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-moving-start-chooser-v1/selection-protocol.md",
+    "sha256": "56EEDD3474FECC2F3345193F1DAD17DF0927599C96676A600A3D5D342AD73465"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/result.json",
+    "sha256": "1AA9D36AB39574DED13A6450C468A10FB0376E38BA23E3D09222CA0317CEADF1"
+  },
+  {
+    "path": "build/flexible-tail/moving-start-chooser-v1/recovery-summary.json",
+    "sha256": "C6D0EDECCEDC2AD8EF6F937008B91F42837CF60577E5CB72121F14A23D5BFCF9"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/training/actor-104.bin",
+    "sha256": "932CCF8E942C25A6901CB07B69E0B87243A3BA571FC559BEE94E189AA365FA93"
+  },
+  {
+    "path": "build/flexible-tail/open-water-chooser-v1/training/checkpoints/session-104.bin",
+    "sha256": "76BAA03292340D370444A24DE790925B0A56D0213F30D8A22DF37FE76FC32291"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/actor-128.bin",
+    "sha256": "7A16B85CDF19E98D150510F0D24713B592A2EB7DC5ADB124880B0E4EB30473A4"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/training/checkpoints/session-128.bin",
+    "sha256": "6362831E113966B6B63A036B4219ED0DCFA89C0350988485504CC5C9AB87D8CC"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/actor-112.bin",
+    "sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C"
+  },
+  {
+    "path": "assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/training/session-112.bin",
+    "sha256": "6797224633C5E08F53C5937ECF1D1DF226805CCD9DBCBE2DB5A36AF0DFFA891E"
+  },
+  {
+    "path": "build/flexible-tail/moving-start-chooser-v1/preflight/moving-geometry.json",
+    "sha256": "D9BFAB0ED9D2BB1C4547258D75891E01DB98546A437451BA3957E10E9F563588"
+  },
+  {
+    "path": "build/flexible-tail/moving-start-chooser-v1/preflight/moving-placements.csv",
+    "sha256": "26CB2966F62B1D580CC8BF1E0CB5FF39428B1A5A71E825D9465952975AF4F4C2"
+  },
+  {
+    "path": "build/flexible-tail/moving-start-chooser-v1/replay-gate.json",
+    "sha256": "A92B5BC6500F082F58E34E88BF705488B100CAB9A919FC50A190337370789F1F"
+  },
+  {
+    "path": "build/flexible-tail/moving-start-chooser-v1/trainer-build/Release/pond_flexible_tail_rate_chooser.exe",
+    "sha256": "EFDE0081B4B8A74F1F11746602A00C0CB456EE384DB1DB93E8DEFBED7FF0A95C"
+  },
+  {
+    "path": "build/flexible-tail/yaw-beat-v1/capture/train-worlds.bin",
+    "sha256": "75E6AA2504726082E84E286FD5B3ADF2B7B9D4F7D4797116EF8A682F72DEC025"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/bank_training_starts.h",
+    "sha256": "07E71555C80FE0ADDDE5314568271200E36DCE872560B61EAC4C8227FCBFF464"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/CMakeLists.txt",
+    "sha256": "3E60EEFF05EB0F8E1E4E702CBDC2483E6C46E751343DCC57D267B934F7305D7D"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/moving_placement_audit.cuh",
+    "sha256": "036C4FD9751B2DF62149D938D6534741270C889FB1FD75BDE8AEAE09DB72C051"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/rate_session.cuh",
+    "sha256": "139A347E5A8F3643CF85C44B938DF7C606F97FC2381877578986B400E2BA5513"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/train.cu",
+    "sha256": "06FF7507E31E634A8AB9D9C274247780094BEDC00F59B5F13694A5CF0474A741"
+  },
+  {
+    "path": "tools/pond-flexible-tail-chooser/run-open-water.ps1",
+    "sha256": "42B6C2F2EAAA94B8D365D9F71A9B4600C8D089BB0625461129E0300A78AAAAE9"
+  },
+  {
+    "path": "flexible-tail-preview/habitat.json",
+    "sha256": "554E9E0976F22CD6B473EAAB84559C7B9887358C4B620CEF4592D5FFFEC0C7DF"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-chooser-appended-16.bin",
+    "sha256": "3B0B68C1CD89F6FE8CBA2DFCDDE591CDE5A8C145856D36368ECC2E9DA8594323"
+  },
+  {
+    "path": "src/rl/flexible_tail_three_depth_map.h",
+    "sha256": "88F7B82C9115AFBCEE259ADEBD0987CD17701D635400D9C220E69823A5C8826F"
+  }
+]

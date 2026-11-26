@@ -1,5 +1,61 @@
 # AI status — November 25, 2026
 
+**Motor 88 recovered all twelve moving approaches when given 120 mm more room.**
+The frozen diagnostic reproduced all twelve original clearance stops. None of
+1,044 tested original continuations escaped; moving the starts 60 mm upstream
+gave six recoveries. One 128-update CUDA PPO continuation from north-bank +112
+improved independent moving approaches from 4/18 to 6/18. Its selected chooser
+passed all six 125–150 mm approaches and all 24 dedicated shoreline finishes.
+It still failed the twelve original moving starts and all four 30-minute swims.
+Mean individual coverage was 39.93%, below the three-depth parent's 57.90%.
+Godot keeps appended-16 with frozen motor 88.
+[Matched approaches, training and per-swimmer qualification](../assets/research-evidence/pond-flexible-tail-moving-start-chooser-v1/README.md)
+
+**Open-water replay and one conditional GPU PPO continuation completed.** At
+27.2 s, changing only +112’s requested turn from +8°/s to −4°/s for 0.8 s
+allowed another 30 minutes of autonomous swimming. A continuous transfer to
+the three-depth parent also succeeded at 28.8 s. Motor 88 stayed frozen.
+The new chooser (+104, selected among 128 new updates) finished 24/24 shoreline
+swims and extended the Godot start to 850.78 s. It finished only 1/4 long swims
+and 3/12 ordinary tests. At each depth, zero shoreline swimmers accumulated
+the required 15 seconds near the bank. Mean coverage was 37.39%. Godot keeps
+appended-16. [Recovery, selection and per-swimmer evidence](../assets/research-evidence/pond-flexible-tail-open-water-chooser-v1/README.md)
+
+**The new chooser cleared both north-bank failures at all three depths.** A separate
+CUDA PPO session continued the three-depth update-128 checkpoint for 128 updates
+with motor 88 frozen. The selected checkpoint (+112) finished all 24 shoreline
+swims. It stopped on the normal Godot start after 42.47 seconds and lost coverage
+on the west swim. Three of four swimmers completed 30 minutes. Mean coverage fell
+from the parent's 57.90% to 49.78%. Godot keeps its installed appended-16 chooser.
+[Per-swimmer results, training counts and publication decision](../assets/research-evidence/pond-flexible-tail-north-bank-three-depth-v1/README.md)
+
+**Three-depth exploration PPO completed.** With motor 88 frozen, the separate
+chooser trained on 348,160 actual decisions at 72 mm, 350,208 at 75 mm and
+350,208 at 80 mm. Update 128 improved all four 30-minute swims, raising mean
+coverage from 43.91% to 57.90% with zero stops or resets and at most 4.76 s
+stalled. Two north-bank starts still triggered clearance stops at every depth.
+Godot retains appended-16. Its publication check uses each swimmer's native
+stall count and rejected the historical 41.42 s stall.
+[Training, paired banks and publication decision](../assets/research-evidence/pond-flexible-tail-three-depth-exploration-v1/README.md)
+
+**Regional exploration PPO completed.** The chooser trained for 128 updates on
+1,024 CUDA worlds with motor 88 frozen. At update 8 each swimmer reached more
+cells, lifting mean coverage from 43.91% to 50.00%. The west swim stopped at
+23 min 58 s and both held-out north-bank approaches still failed. By update 128
+one of those approaches passed, but only 1/12 ordinary starts passed. Godot
+continues to use appended-16. The distant-water inputs read zero at three of the
+four long-swim starts. [Results, checkpoint comparisons and measured inputs](../assets/research-evidence/pond-flexible-tail-regional-exploration-v1/README.md)
+
+**Exploration and turn-exit diagnostic.** The installed appended-16 chooser entered
+45.58% of the reference cells per 30-minute swim on average and earned credit for
+43.91%. Each track missed 83–98 open-water cells with more than 20 mm clearance
+at all eight tested headings. Separately, the experimental episodic-128 chooser
+returned to +8°/s immediately after one straight decision at the 3.2 s north-bank
+exit. Eight seconds straight or one opposite-turn decision preserved swimming
+for 40 s there. The opposite approach required different timing. The diagnostic
+ran 134 frozen forks with zero optimizer updates. Godot uses appended-16 and motor 88.
+[Four path maps, matched outcomes and critic measurements](../assets/research-evidence/pond-flexible-tail-turn-exit-v1/README.md)
+
 **Learning-signal audit and repeated practice complete; no qualified chooser.**
 The62 matched-continuation audit finds safe reward-only returns positive versus
 failed~-4.4,so reward stays unchanged. Some safe phase9 early GAE-style targets

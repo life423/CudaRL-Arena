@@ -1,0 +1,21 @@
+{
+  "actor_sha256": "F8B2E7D62E4BFA5412F166C70F7A89EE960ECAFE7FBE939D3083ED5DFFB4E10C",
+  "motor_sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E",
+  "stall_limit_controls": 407,
+  "control_ms": 20,
+  "longest_80mm_shore_arc_deg": 12.720300849240491,
+  "eligible_for_staging": false,
+  "failures": [
+    "Original navigation requires 12 ordinary and four five-minute passes with zero stops or resets.",
+    "godot_rest failed navigation or its individual stall limit.",
+    "72 mm had 1/8 sustained near-bank swims; four required.",
+    "72 mm mean near-bank time 10.81 s; 10.96 s required.",
+    "75 mm had 2/8 sustained near-bank swims; four required.",
+    "80 mm had 1/8 sustained near-bank swims; four required.",
+    "endurance_godot_rest covered 10 cells; update 128 covered 185.",
+    "endurance_west covered 186 cells; update 128 covered 218.",
+    "Continuous trial recorded a reset or native stop.",
+    "endurance_godot_rest failed physical completion at 42.47375 s, fault 2.",
+    "endurance_godot_rest fell below installed coverage."
+  ]
+}

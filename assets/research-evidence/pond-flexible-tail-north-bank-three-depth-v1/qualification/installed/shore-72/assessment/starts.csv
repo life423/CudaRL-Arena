@@ -1,0 +1,9 @@
+case,phase,x_radius,z_radius,heading_deg,initial_certified_gap_mm
+phase8-bank0-direction-1,8,0.6998416185,0,-90,15.00007153
+phase8-bank0-direction1,8,0.6889498234,0,90,15.00004387
+phase8-bank1-direction-1,8,0,0.69795084,180,15.00011158
+phase8-bank1-direction1,8,0,0.6885690689,0,15.00016403
+phase9-bank0-direction-1,9,0.6889498234,0,-90,15.0000906
+phase9-bank0-direction1,9,0.6998416185,0,90,15.00007153
+phase9-bank1-direction-1,9,0,0.6885693073,180,15.00012302
+phase9-bank1-direction1,9,0,0.69795084,0,15.00014973

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "build/flexible-tail/regional-exploration-v1/training/actor-8.bin",
+    "sha256": "E17BE9B60BE838166687B690E0FBC0BDB5E20986534133698147B89FD03A9C0C"
+  },
+  {
+    "path": "build/flexible-tail/three-depth-exploration-v1/qualification/build/Release/installed_eval.exe",
+    "sha256": "C777593817C961AD1ECC38A9F0C92C1D26F13D4569B049478A6AFF838298AA38"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/straight-evaluation-starts.bin",
+    "sha256": "4A081CCC3DEA8C7310191902CC094E50FA6C0B341606DC9DBC4E63DD581FFF39"
+  }
+]
