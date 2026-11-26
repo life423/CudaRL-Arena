@@ -1,0 +1,1 @@
+{"pass":true,"CPU_CUDA_max_difference":0,"truncated_advantage":2.975999832,"terminal_advantage":-1,"continuing_advantage":0.0337600708,"propagation_across_reset_blocked":true,"physics_steps":0,"optimizer_updates":0}

@@ -1,0 +1,9 @@
+{
+  "format": 4,
+  "optimizer_updates": 0,
+  "pass": true,
+  "serialized_time_limits": 13095,
+  "physics_steps": 0,
+  "serialized_decisions": 1048576,
+  "checkpoint_sha256": "53C9DDB437751A7804811AFCB0E0A360827D1A54D9B7B1D0DBEA519F9DBDD7AC"
+}

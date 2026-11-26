@@ -1,0 +1,17 @@
+{
+  "Godot_updated": false,
+  "signal_bindings": 98,
+  "portable_actors": 129,
+  "extra_physics_steps": 0,
+  "PowerShell_errors": 0,
+  "active_trainers": 0,
+  "extra_optimizer_updates": 0,
+  "full_local_checkpoints": 129,
+  "sampled_bindings": 14,
+  "package_message": "Verified 11 flexible-tail bundle hashes, qualified policy pair, and preserved original motor; zero physics/PPO.",
+  "archive_files": 1144,
+  "pass": true,
+  "training_bindings": 125,
+  "mouse_keyboard_calls": 0,
+  "full_archived_checkpoints": 4
+}

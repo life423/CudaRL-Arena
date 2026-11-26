@@ -1,0 +1,15 @@
+CMake is re-running because C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/build/flexible-tail/episodic-bank-v3/critic-scan-build/CMakeFiles/generate.stamp is out-of-date.
+  the file 'C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/build/flexible-tail/episodic-bank-v3/critic-scan-source/CMakeLists.txt'
+  is newer than 'C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/build/flexible-tail/episodic-bank-v3/critic-scan-build/CMakeFiles/generate.stamp.depend'
+  result='-1'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26340.
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/build/flexible-tail/episodic-bank-v3/critic-scan-build
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/build/flexible-tail/episodic-bank-v3/critic-scan-source/CMakeLists.txt
+  sampled-check.cpp
+  checkpoint.cpp
+  Generating Code...
+  sampled_check.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\episodic-bank-v3\critic-scan-build\Release\sampled_check.exe

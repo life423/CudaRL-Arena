@@ -1,0 +1,20 @@
+{
+  "name": "final-roundtrip",
+  "wall_s": 0.4375416,
+  "exit": 0,
+  "timeout": false,
+  "executable": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\native-build\\Release\\pond_flexible_tail_rate_chooser.exe",
+  "arguments": [
+    "inspect-fork",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\fitted-gait.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\flexible-tail-preview\\live_data\\exploration-motor-88.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\yaw-beat-v1\\capture\\train-worlds.bin",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\final-roundtrip\\data",
+    "1",
+    "590",
+    "0",
+    "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-128.bin",
+    "c986c479e4ff921a647662d7d17af9d1cb809ba58d5b9ad758728854e95c478f",
+    "39"
+  ]
+}

@@ -1,5 +1,23 @@
 # AI status — November 25, 2026
 
+**Learning-signal audit and repeated practice complete; no qualified chooser.**
+The62 matched-continuation audit finds safe reward-only returns positive versus
+failed~-4.4,so reward stays unchanged. Some safe phase9 early GAE-style targets
+remain weak/negative. Native CUDA PPO128 updates/1024worlds/1048576 transitions
+takes178.147s. Correctly bootstrapped60s training time limits raise starts1178→
+15234,with13095 time limits and44705 near decisions(4.2634%). Fullformat4 clock/
+counters,CPU/CUDA bootstrap,three-update exact resume and final nonzero-counter
+roundtrip pass. Neither original failure recovers; finalclose6/8,original1/12.
+All17fixed+17close checks preserved,no long/Godot parity cases. Godot remains
+appended16/motor88,all11 hashes intact,no mouse input or new rest physical test.
+Critic interpretation corrected: V predicts stochastic policy,not greedy.
+A separate68-case read-only sampling supplement finds0/16 survivors per state
+for both initial/final policies,empirical returns~-4.4 versus final V19.38/25.19.
+This supports poor calibration on those held-out states,not a global critic
+diagnosis. No sampling-based Godot replacement. Session CLOSED,no trainer active;
+next proposed step is frozen-actor critic calibration,not another blind PPO run.
+[Audit, protocol, all results and limitations](../assets/research-evidence/pond-flexible-tail-episodic-bank-v3/README.md)
+
 **Close-shore diagnostic proves safe alternatives; PPO recovers one start but regresses overall.**
 The two original failed prefixes replay exactly.186 frozen-motor branches yield
 46 qualifying40s continuations,with8/7 witnesses from the first two decisions.

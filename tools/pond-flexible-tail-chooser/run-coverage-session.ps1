@@ -1,5 +1,6 @@
 param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant,[switch]$Appended,
-    [string]$ParentTraining='', [ValidateSet(32,35,39)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier,[switch]$CurvedBank,[switch]$CloseShore)
+    [string]$ParentTraining='', [ValidateSet(32,35,39)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier,[switch]$CurvedBank,[switch]$CloseShore,[switch]$EpisodicBank)
+if($EpisodicBank){$CloseShore=$true}
 if($CloseShore){$CurvedBank=$true;if($ParentInputs -ne 39){throw 'Close shore requires the preserved39-input parent'}}
 if($CurvedBank){$Appended=$true;if($Frontier -or !$ParentTraining -or $ParentInputs -notin @(35,39) -or $ParentUpdate -lt 0){throw 'Curved bank needs explicit qualified parent and excludes frontier reward'}}
 if($Frontier){$Appended=$true;if(!$ParentTraining -or $ParentInputs -ne 35 -or $ParentUpdate -lt 0){throw 'Frontier requires explicit 35-input parent and checkpoint.'}}
@@ -52,11 +53,17 @@ try{
         if(!(Get-Content (Join-Path $verify data/curved-check.json) -Raw|ConvertFrom-Json).pass){throw 'Curved observation gate failed'}
         if($ParentInputs -lt 39 -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Input equivalence gate failed'}
         if($CloseShore -and !(Get-Content (Join-Path $verify data/close-placement-check.json) -Raw|ConvertFrom-Json).pass){throw 'Close placement gate failed'}
+        if($EpisodicBank -and !(Get-Content (Join-Path $verify data/time-limit-bootstrap-check.json) -Raw|ConvertFrom-Json).pass){throw 'Time-limit bootstrap gate failed'}
         $active=Get-Content flexible-tail-preview/live_data/exploration-deployment.json -Raw|ConvertFrom-Json
         $working=(Resolve-Path (Join-Path flexible-tail-preview/live_data $active.active_chooser_file)).Path
         if($CloseShore){
-            $probe=Get-Content (Join-Path $root diagnostic/assessment/summary.json) -Raw|ConvertFrom-Json
-            if(!$probe.complete -or $probe.branches -ne 186 -or $probe.first_phase8_witnesses -lt 1 -or $probe.first_phase9_witnesses -lt 1){throw 'Missing two-state recovery evidence'}
+            if($EpisodicBank){
+                $probe=Get-Content (Join-Path $root signal-audit/assessment/summary.json) -Raw|ConvertFrom-Json
+                if(!$probe.complete -or $probe.cases -ne 62 -or $probe.states_safe_return_outranks_failed_policy -ne 2){throw 'Learning signal audit has not justified unchanged reward'}
+            }else{
+                $probe=Get-Content (Join-Path $root diagnostic/assessment/summary.json) -Raw|ConvertFrom-Json
+                if(!$probe.complete -or $probe.branches -ne 186 -or $probe.first_phase8_witnesses -lt 1 -or $probe.first_phase9_witnesses -lt 1){throw 'Missing two-state recovery evidence'}
+            }
             $baselineShore=Get-Content build/flexible-tail/curved-bank-v1/baseline-shore/assessment/summary.json -Raw|ConvertFrom-Json
         }else{
             $where=Join-Path $root baseline-shore

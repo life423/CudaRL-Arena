@@ -566,13 +566,15 @@ int evaluate_close_shore(const Models& models,const fs::path& output,Clock::time
     std::cout<<"close-shore "<<passes<<"/8, near "<<near_cases<<"/8, mean close "<<near_total/8<<"s\n";return pass?0:1;
 }
 #include "close_shore_probe.h"
+#include "learning_signal_audit.h"
 int main(int argc, char** argv) {
     try {
         const auto begin = Clock::now();
         const bool coverage=argc==8&&std::string(argv[7])=="--continuous-coverage";
         const bool shore=argc==8&&std::string(argv[7])=="--close-shore";
         const bool probe=argc==9&&std::string(argv[7])=="--close-shore-probe";
-        if (argc != 7&&!coverage&&!shore&&!probe) throw std::runtime_error("Usage: rate_chooser_eval GAIT MOTOR CHOOSER STARTS NEW_OUT MATERIAL [--continuous-coverage|--close-shore|--close-shore-probe REFERENCE]");
+        const bool signal=argc==10&&std::string(argv[7])=="--learning-signal";
+        if (argc != 7&&!coverage&&!shore&&!probe&&!signal) throw std::runtime_error("Usage: rate_chooser_eval GAIT MOTOR CHOOSER STARTS NEW_OUT MATERIAL [--continuous-coverage|--close-shore|--close-shore-probe REFERENCE|--learning-signal FULL_CHECKPOINT CAPTURES]");
         Models models;
         models.gait=tail::read_navigation_weights(argv[1],tail::NavigationMode::Gait);
         models.motor=tail::steering::read_model(argv[2]);
@@ -588,6 +590,7 @@ int main(int argc, char** argv) {
         tail::fast::validate_frozen_gait(models.gait);
         try { legacy::read_weights(argv[3]); } catch(const std::exception&) { models.old_loader_rejected=true; }
         if(!models.old_loader_rejected)throw std::runtime_error("Old chooser loader accepted incompatible rate model");
+        if(signal)return learning_signal::run(models,argv[5],argv[8],argv[9],begin);
         return probe?close_probe::run(models,argv[5],argv[8],begin):(shore?evaluate_close_shore(models,argv[5],begin):(coverage?evaluate_coverage(models,argv[5],begin):evaluate(models, argv[5], begin)));
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

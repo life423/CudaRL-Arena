@@ -92,6 +92,7 @@ struct Stream {
 struct Events {
     cudaEvent_t start = nullptr, end = nullptr;
     cudaEvent_t after_start = nullptr, after_network = nullptr;
+    cudaEvent_t after_bootstrap = nullptr;
     Events() {
         CUDA_CHECK_THROW(cudaEventCreate(&start));
         const auto status = cudaEventCreate(&end);
@@ -101,8 +102,9 @@ struct Events {
         }
         CUDA_CHECK_THROW(cudaEventCreate(&after_start));
         CUDA_CHECK_THROW(cudaEventCreate(&after_network));
+        CUDA_CHECK_THROW(cudaEventCreate(&after_bootstrap));
     }
-    ~Events() { cudaEventDestroy(after_network); cudaEventDestroy(after_start); cudaEventDestroy(end); cudaEventDestroy(start); }
+    ~Events() { cudaEventDestroy(after_bootstrap); cudaEventDestroy(after_network); cudaEventDestroy(after_start); cudaEventDestroy(end); cudaEventDestroy(start); }
     Events(const Events&) = delete;
     Events& operator=(const Events&) = delete;
 };
@@ -159,8 +161,13 @@ struct Ledger {
     uint64_t executed_attempted = 0, executed_accepted = 0, executed_decisions = 0;
     int executed_actor_steps = 0, executed_critic_steps = 0;
     uint64_t execution_physical_limit = max_substeps;
+    uint64_t time_limits=0,near_decisions=0,episode_decisions=0;
 };
 
+#if defined(CUDARL_EPISODIC_BANK)
+constexpr int training_episode_controls=3000; // 60 seconds, training only.
+struct EpisodeInfo {int first_decision_control=0;uint64_t time_limits=0,near_decisions=0,decisions=0;};
+#endif
 struct Rollout {
     device_ptr<Lane> lanes{worlds};
     device_ptr<Counts> counts{worlds};
@@ -171,6 +178,10 @@ struct Rollout {
     device_ptr<float> zero{rows}, final_value{worlds}, advantage{rows}, target_return{rows};
     device_ptr<float> summary{2}, advantage_stats{2}, kl{rows};
     device_ptr<float> residual{rows};
+#if defined(CUDARL_EPISODIC_BANK)
+    device_ptr<EpisodeInfo> episodes{worlds};
+    device_ptr<float> truncated{rows},terminal_value{rows};
+#endif
 };
 
 struct Batch {
@@ -233,7 +244,11 @@ __global__ void close_placement_probe(const tail::NavigationWorld* starts,int co
 
 __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::NavigationWorld* starts, int count,
                                    const float* gait, const float* offset, geometry::Parameters pond,
-                                   bool bank_curriculum, int* first_fault, int* fault_code) {
+                                   bool bank_curriculum, int* first_fault, int* fault_code
+#if defined(CUDARL_EPISODIC_BANK)
+                                   ,EpisodeInfo* episodes
+#endif
+                                   ) {
     const int lane_index = blockIdx.x * blockDim.x + threadIdx.x;
     if (lane_index >= worlds) return;
     auto& lane = lanes[lane_index];
@@ -289,6 +304,9 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
         return;
     }
     ++counter.starts;
+#if defined(CUDARL_EPISODIC_BANK)
+    episodes[lane_index].first_decision_control=lane.state.motor.navigation.motion.controls;
+#endif
 #if defined(CUDARL_RELIABLE_CHOOSER)
     ++counter.curriculum_starts[lane.curriculum_level];
     lane.curriculum_mark_control = lane.state.motor.navigation.motion.controls;
@@ -336,13 +354,25 @@ __global__ void observe_lanes(const Lane* lanes, geometry::Parameters pond, floa
 __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const float* old_logp,
                            const float* value, const float* gait, const float* offset,
                            geometry::Parameters pond, float* reward, float* done,
-                           int* first_fault, int* fault_code) {
+                           int* first_fault, int* fault_code
+#if defined(CUDARL_EPISODIC_BANK)
+                           ,EpisodeInfo* episodes,float* truncated
+#endif
+                           ) {
     const int lane_index = blockIdx.x * blockDim.x + threadIdx.x;
     if (lane_index >= worlds) return;
     reward[lane_index] = 0.f;
     done[lane_index] = 1.f;
+#if defined(CUDARL_EPISODIC_BANK)
+    truncated[lane_index]=0;
+#endif
     if (*first_fault != INT_MAX) return;
     auto& lane = lanes[lane_index];
+#if defined(CUDARL_EPISODIC_BANK)
+    auto& episode=episodes[lane_index];++episode.decisions;
+    const auto initial_gap=tail::submerged_gap_m(pond,lane.state.motor.navigation.motion.body,lane.state.pose);
+    if(initial_gap>0&&initial_gap<=.020)++episode.near_decisions;
+#endif
     const int proposed = action[lane_index];
     if (proposed < 0 || proposed >= actions || !isfinite(old_logp[lane_index]) ||
         !isfinite(value[lane_index]) || !chooser::accept(lane.state, proposed)) {
@@ -396,6 +426,11 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
         }
 #endif
         done[lane_index] = 0.f;
+#if defined(CUDARL_EPISODIC_BANK)
+        if(lane.state.motor.navigation.motion.controls-episode.first_decision_control>=training_episode_controls){
+            truncated[lane_index]=done[lane_index]=1;lane.needs_start=true;++episode.time_limits;
+        }
+#endif
         return;
     case 2: ++counter.stops; break;
     case 4: ++counter.cue_timeouts; break;
@@ -413,6 +448,15 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
     }
 #endif
 }
+
+#if defined(CUDARL_EPISODIC_BANK)
+__global__ void observe_time_limits(const Lane* lanes,const float* truncated,geometry::Parameters pond,float* rows){
+    const int lane=blockIdx.x*blockDim.x+threadIdx.x;if(lane>=worlds)return;float observation[channels]{};
+    // Use the real pre-reset healthy final state, even though needs_start is set.
+    if(truncated[lane])chooser::observe(lanes[lane].state,pond,observation,chooser::default_observation_mode);
+    for(int i=0;i<channels;++i)rows[lane*channels+i]=observation[i];
+}
+#endif
 
 #if defined(CUDARL_FRONTIER_REWARD)
 __global__ void frontier_probe(const Lane* lanes,float* values) {
@@ -486,6 +530,11 @@ void count_work(Rollout& roll, Ledger& ledger, cudaStream_t stream) {
     }
     if (ledger.counts.attempted + ledger.counts.warmup_attempted > max_substeps)
         throw std::runtime_error("Chooser exceeded the physical work allowance");
+#if defined(CUDARL_EPISODIC_BANK)
+    std::array<EpisodeInfo,worlds> episodes{};download(episodes,roll.episodes.get(),stream);CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
+    ledger.time_limits=ledger.near_decisions=ledger.episode_decisions=0;
+    for(const auto& e:episodes){ledger.time_limits+=e.time_limits;ledger.near_decisions+=e.near_decisions;ledger.episode_decisions+=e.decisions;}
+#endif
 }
 
 float finite_mean(Rollout& roll, const float* in, int count, cudaStream_t stream) {
@@ -520,7 +569,11 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
         CUDA_CHECK_THROW(cudaEventRecord(events.start, stream));
         start_needed_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), roll.counts.get(), starts.get(),
             int(starts.size()), gait.get(), offset.get(), larger_pond, ledger.bank_curriculum,
-            roll.first_fault.get(), roll.fault_code.get());
+            roll.first_fault.get(), roll.fault_code.get()
+#if defined(CUDARL_EPISODIC_BANK)
+            ,roll.episodes.get()
+#endif
+            );
         check_launch();
         CUDA_CHECK_THROW(cudaEventRecord(events.after_start, stream));
         observe_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), larger_pond, observation,
@@ -535,9 +588,19 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
         CUDA_CHECK_THROW(cudaEventRecord(events.after_network, stream));
         move_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), roll.counts.get(), stored_action, old_logp,
             value, gait.get(), offset.get(), larger_pond, roll.reward.get() + first, roll.done.get() + first,
-            roll.first_fault.get(), roll.fault_code.get());
+            roll.first_fault.get(), roll.fault_code.get()
+#if defined(CUDARL_EPISODIC_BANK)
+            ,roll.episodes.get(),roll.truncated.get()+first
+#endif
+            );
         check_launch();
         CUDA_CHECK_THROW(cudaEventRecord(events.end, stream));
+#if defined(CUDARL_EPISODIC_BANK)
+        observe_time_limits<<<blocks,lane_threads,0,stream>>>(roll.lanes.get(),roll.truncated.get()+first,larger_pond,roll.final_obs.get());check_launch();
+        critic.forward(roll.final_obs.get(),worlds,stream);
+        copy_device(roll.terminal_value.get()+first,critic.output(),worlds,stream);
+        CUDA_CHECK_THROW(cudaEventRecord(events.after_bootstrap,stream));
+#endif
         const auto transfer_start = Clock::now();
         count_work(roll, ledger, stream);
         ledger.executed_attempted += ledger.counts.attempted + ledger.counts.warmup_attempted
@@ -559,6 +622,9 @@ bool collect(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic, const device_
         ledger.gpu_physics_ms += ms;
         CUDA_CHECK_THROW(cudaEventElapsedTime(&ms, events.after_start, events.after_network));
         ledger.gpu_inference_ms += ms;
+#if defined(CUDARL_EPISODIC_BANK)
+        CUDA_CHECK_THROW(cudaEventElapsedTime(&ms,events.end,events.after_bootstrap));ledger.gpu_inference_ms+=ms;
+#endif
         ledger.max_wave_s = std::max(ledger.max_wave_s, elapsed(wave_start));
     }
     observe_lanes<<<blocks, lane_threads, 0, stream>>>(roll.lanes.get(), larger_pond, roll.final_obs.get(),
@@ -574,7 +640,11 @@ float optimize(Rollout& roll, Batch& batch, nn::GpuMlp& actor, nn::GpuMlp& criti
                nn::GpuAdam& actor_adam, nn::GpuAdam& critic_adam, Ledger& ledger, int update, cudaStream_t stream) {
     ledger.stage = "ppo";
     rl::compute_gae(decisions, worlds, roll.reward.get(), roll.value.get(), roll.done.get(),
+#if defined(CUDARL_EPISODIC_BANK)
+        roll.truncated.get(),roll.terminal_value.get(),roll.final_value.get(),gamma,lambda,roll.advantage.get(),
+#else
         roll.zero.get(), roll.zero.get(), roll.final_value.get(), gamma, lambda, roll.advantage.get(),
+#endif
         roll.target_return.get(), stream);
     audit(roll.advantage.get(), rows, roll, stream);
     audit(roll.target_return.get(), rows, roll, stream);

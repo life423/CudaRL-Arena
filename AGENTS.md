@@ -1,5 +1,28 @@
 # Workspace instructions
 
+## Episodic bank practice and learning-signal audit — November 25, 2026
+
+User authorized steps1/2/3: safe-vs-failed signal,repeated bank encounters and
+ordinary navigation retention. Read EPISODIC_BANK_PROTOCOL.md and episodic-bank-v3
+research README. Session CLOSED.62 counterfactuals show better safe reward-only
+returns;some safe phase9 early targets weak/negative. Reward unchanged. New60s
+TRAINING time limits use pre-reset final V and stop GAE across reset;physical
+failures bootstrap0. Fullformat4 stores per-world episode metadata while exact
+oldformat3 import remains.1024worlds/128updates/1048576transitions in178.147s;
+15234starts,13095timeouts,44705near decisions(4.2634%). CPU/CUDA bootstrap and
+3-update resume pass;final nonzero-timeout roundtrip passes with zero new steps.
+Finaloriginal1/12,close6/8;neither initial failure recovers.17fixed+17close saved;
+zero newlong/Godotparity. Godot remains appended16/motor88,all11 hashes intact.
+No fresh rest physical suite,mouse/keyboard input or active trainer. Preserve
+129 local full checkpoints and archived0/8/112/128. Critic-vs-greedy gap alone
+is NOT calibration proof:critic predicts stochastic policy. A preregistered
+68-case sampling supplement scores0/16 per state/model;actual returns~-4.4
+versus final V19.38/25.19,supporting poor empirical calibration on these held-out
+states. Not a global value diagnosis or sampling-based deployment qualification.
+Total727559703 attempted substeps includes all diagnostics. Do not extend this
+closed study or start actor updates implicitly. Next proposed correction is
+frozen-actor critic calibration on native on-policy returns. No such run yet.
+
 ## Close-shore continuation — November 25, 2026
 
 Latest user authorized checking two failed starts,chooser GPU PPO,frozen motor,

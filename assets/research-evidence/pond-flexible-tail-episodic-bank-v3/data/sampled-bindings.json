@@ -1,0 +1,58 @@
+[
+  {
+    "path": "build/flexible-tail/close-shore-v2/diagnostic/assessment/captures/phase8-bank1-direction-1-40.bin",
+    "sha256": "62197C71A1FB7404DAE0E3D76DA81C8CCFF81AAB4A13891A0A02C69626C3D4CB"
+  },
+  {
+    "path": "build/flexible-tail/close-shore-v2/diagnostic/assessment/captures/phase9-bank1-direction1-40.bin",
+    "sha256": "7B2864B963A8E3005D66B4BB3EBB58B77B0EBD9BECBE6A362FBDCB445C054462"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/critic-scan-source/CMakeLists.txt",
+    "sha256": "8E4F16C7ADD9DFC4F4468433F977AE374D7EB0E2EFA1A24CC5BDEE38B3A5F636"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/critic-scan-source/sampled-check.cpp",
+    "sha256": "107353141104BDEB661FF0373C9B7345CEDA069AF0259FA263E4DEE4209646DE"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/sampled-policy-protocol.md",
+    "sha256": "209E763FEC024965D269B42FDBEC2F3B1D1930071762E30FF625D58B51498E84"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/critic-scan-build/Release/sampled_check.exe",
+    "sha256": "3E529B93BFE63B2766B72AFBB031C00E02DA85EE10971902A69143CD5645FC9E"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/training/actor-0.bin",
+    "sha256": "825C6BC9B36F635441AD7E8BFDC6A0BD221095C64BD5443DDBB3BF939CE91EE9"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/training/actor-128.bin",
+    "sha256": "3704F9A98E1CDE33DEE385758DB0BD5B22A884628A498FC234925DF248FC7DF2"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/training/checkpoints/session-0.bin",
+    "sha256": "AD4BE2741F0AD967FC184B3F51CBA4998B54D4F0B098B08E6A40E38D577B9EE2"
+  },
+  {
+    "path": "build/flexible-tail/episodic-bank-v3/training/checkpoints/session-128.bin",
+    "sha256": "53C9DDB437751A7804811AFCB0E0A360827D1A54D9B7B1D0DBEA519F9DBDD7AC"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/exploration-motor-88.bin",
+    "sha256": "01B74A18E83933E41734A29E9B6FB9ABDB9951DC2AB306D4F0CF4505015C561E"
+  },
+  {
+    "path": "flexible-tail-preview/live_data/fitted-gait.bin",
+    "sha256": "2192D3A710EE3DE4D4BC24E32891EB6AF9D09D1F81600215927AA38A59D716C6"
+  },
+  {
+    "path": "src/core/rng.h",
+    "sha256": "5D90E29D19C1E16AC963465A575DE3711CBBC5A8910A876A7C69755ABA803627"
+  },
+  {
+    "path": "src/rl/ppo_math.h",
+    "sha256": "D923301361A71130D8B25A088B9CD21BDDFF596FD2267108817FABCA382FEF46"
+  }
+]

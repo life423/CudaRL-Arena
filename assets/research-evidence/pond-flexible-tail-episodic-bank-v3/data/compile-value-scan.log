@@ -1,0 +1,17 @@
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/build/flexible-tail/episodic-bank-v3/critic-scan-source/CMakeLists.txt
+  scan.cpp
+  checkpoint.cpp
+C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\episodic-bank-v3\critic-scan-source\scan.cpp(26,55): error C2664: 'void cudarl::flexible_tail::rate_chooser::observe(const cudarl::flexible_tail::rate_chooser::World &,const cudarl::pond_geometry_v1::Parameters &,float (&)[32],int)': cannot convert argument 3 from 'float [39]' to 'float (&)[32]' [C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\episodic-bank-v3\critic-scan-build\critic_scan.vcxproj]
+      C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\episodic-bank-v3\source\src\rl\flexible_tail_rate_chooser.h(111,23):
+      see declaration of 'cudarl::flexible_tail::rate_chooser::observe'
+      C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\episodic-bank-v3\critic-scan-source\scan.cpp(26,55):
+      while trying to match the argument list '(_Ty, const cudarl::pond_geometry_v1::Parameters, float [39], int)'
+          with
+          [
+              _Ty=cudarl::flexible_tail::rate_chooser::World
+          ]
+  
+  Generating Code...

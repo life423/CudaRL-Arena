@@ -1,0 +1,7 @@
+{
+  "stage": "sampled diagnostic wrapper preparation",
+  "physics_steps": 0,
+  "native_launches": 0,
+  "optimizer_updates": 0,
+  "error": "Missing closing foreach brace in combined launch/summary command"
+}

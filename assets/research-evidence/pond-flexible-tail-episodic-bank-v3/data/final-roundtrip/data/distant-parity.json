@@ -1,0 +1,1 @@
+{"pass":true,"max_difference":2.272427082e-06,"worst_lane":587,"input":9,"cpu":-0.07119885087,"cuda":-0.0712011233,"new_field_maximum":0,"legacy_maximum":2.272427082e-06,"other_GPU_inputs_unchanged":true,"physics_steps":0,"optimizer_updates":0}

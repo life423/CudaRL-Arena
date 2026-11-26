@@ -1,0 +1,325 @@
+[
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-000",
+    "update": 0,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.92,
+      "max_stall_s": 5.76,
+      "faults": 2,
+      "attempted_substeps": 870580,
+      "accepted_substeps": 870578,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9498149
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-008",
+    "update": 8,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.96,
+      "max_stall_s": 3.78,
+      "faults": 2,
+      "attempted_substeps": 870580,
+      "accepted_substeps": 870578,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 1.0493567
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-016",
+    "update": 16,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.96,
+      "max_stall_s": 5.66,
+      "faults": 2,
+      "attempted_substeps": 870580,
+      "accepted_substeps": 870578,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.926065
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-024",
+    "update": 24,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.96,
+      "max_stall_s": 6.88,
+      "faults": 2,
+      "attempted_substeps": 870580,
+      "accepted_substeps": 870578,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9248534
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-032",
+    "update": 32,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 5,
+      "near_cases": 0,
+      "mean_close_time_s": 7.03,
+      "max_stall_s": 5.3,
+      "faults": 3,
+      "attempted_substeps": 769487,
+      "accepted_substeps": 769484,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.96126
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-040",
+    "update": 40,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.97,
+      "max_stall_s": 4.44,
+      "faults": 2,
+      "attempted_substeps": 870580,
+      "accepted_substeps": 870578,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9335084
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-048",
+    "update": 48,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.92,
+      "max_stall_s": 7.86,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9281816
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-056",
+    "update": 56,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.93,
+      "max_stall_s": 7.64,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9669148
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-064",
+    "update": 64,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.93,
+      "max_stall_s": 7.64,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9542969
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-072",
+    "update": 72,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.93,
+      "max_stall_s": 9.04,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9525394
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-080",
+    "update": 80,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 7.15,
+      "max_stall_s": 6.06,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 1.0387031
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-088",
+    "update": 88,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.93,
+      "max_stall_s": 7.64,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9206813
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-096",
+    "update": 96,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.93,
+      "max_stall_s": 4.46,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9349053
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-104",
+    "update": 104,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 5.93,
+      "max_stall_s": 7.58,
+      "faults": 2,
+      "attempted_substeps": 870582,
+      "accepted_substeps": 870580,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 1.8401461
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-112",
+    "update": 112,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 1,
+      "mean_close_time_s": 8.2,
+      "max_stall_s": 6.96,
+      "faults": 2,
+      "attempted_substeps": 870476,
+      "accepted_substeps": 870474,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 1.6838681
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-120",
+    "update": 120,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 6.98,
+      "max_stall_s": 1.96,
+      "faults": 2,
+      "attempted_substeps": 870476,
+      "accepted_substeps": 870474,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9355053
+    }
+  },
+  {
+    "directory": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\shore\\update-128",
+    "update": 128,
+    "results": {
+      "mode": "close-shore",
+      "pass": false,
+      "cases": 8,
+      "passes": 6,
+      "near_cases": 0,
+      "mean_close_time_s": 6.83,
+      "max_stall_s": 7.28,
+      "faults": 2,
+      "attempted_substeps": 870476,
+      "accepted_substeps": 870474,
+      "optimizer_updates": 0,
+      "resets": 0,
+      "wall_s": 0.9296647
+    }
+  }
+]

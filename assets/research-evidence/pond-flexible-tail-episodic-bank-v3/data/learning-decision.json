@@ -1,0 +1,10 @@
+{
+  "decision": "Keep environment reward unchanged; add correctly bootstrapped time limits with unchanged 50/25/25 practice mix",
+  "Godot_updated": false,
+  "worlds": 1024,
+  "based_on": "62 matched continuations, safe returns outrank failed policy in both states; first-eight-control GAE signs distinguish safe and failed examples",
+  "episode_simulated_s": 60,
+  "main_update_cap": 128,
+  "mouse_input": 0,
+  "motor_frozen": true
+}

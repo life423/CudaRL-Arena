@@ -4,9 +4,14 @@
 // optimized MLP/GEMM and GPU Adam. Only its task/runtime and saved schema differ.
 struct RateIdentity { uint64_t gait=0, motor=0, starts=0; tail::steering::Kind kind{};
     tail::steering::Config config{}; };
+#if defined(CUDARL_EPISODIC_BANK)
+inline constexpr bool episodic_session=true;
+#else
+inline constexpr bool episodic_session=false;
+#endif
 
-void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id, const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels) {
-    out.value<uint32_t>(0x52435446); out.value<uint32_t>(input_width==39?3:(input_width==35?2:1)); // FTCR
+void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id, const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels,bool episodic=episodic_session) {
+    out.value<uint32_t>(0x52435446); out.value<uint32_t>(episodic?4:(input_width==39?3:(input_width==35?2:1))); // FTCR
     const std::string task(task_id);
     out.array(std::vector<char>(task.begin(),task.end()));
     for (int x : {worlds,decisions,input_width,actions,batch_size,epochs,macro_controls,max_updates}) out.value(x);
@@ -14,6 +19,9 @@ void rate_header(cudarl::checkpoint::Writer& out, const RateIdentity& id, const 
     out.value(id.gait);out.value(id.motor);out.value(id.starts);out.value(id.kind);out.value(id.config);
     for(float x : {gamma,lambda,max_kl,loss.clip,loss.ent_coef,loss.vf_coef,.0003f,.001f})out.value(x);
     out.value(larger_pond);
+#if defined(CUDARL_EPISODIC_BANK)
+    if(episodic){out.value(training_episode_controls);out.value<uint32_t>(sizeof(EpisodeInfo));}
+#endif
 }
 void rate_save_adam(cudarl::checkpoint::Writer& out,const nn::GpuAdam& adam,int width){
     if(width==channels){adam.save(out);return;}
@@ -34,9 +42,9 @@ void rate_load_adam(cudarl::checkpoint::Reader& in,nn::GpuAdam& adam,int width,i
 }
 std::vector<uint8_t> rate_payload(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic,
     nn::GpuAdam& aa, nn::GpuAdam& ca, const Ledger& l, const RateIdentity& id, cudaStream_t stream,
-    const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels) {
+    const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels,bool episodic=episodic_session) {
     CUDA_CHECK_THROW(cudaStreamSynchronize(stream));
-    cudarl::checkpoint::Writer out;rate_header(out,id,task_id,input_width);
+    cudarl::checkpoint::Writer out;rate_header(out,id,task_id,input_width,episodic);
     out.value(l.completed);out.value(l.actor_steps);out.value(l.critic_steps);
     out.array(chooser::resize_input_parameters(actor.get_params(),channels,input_width));
     out.array(chooser::resize_input_parameters(critic.get_params(),channels,input_width));
@@ -45,12 +53,16 @@ std::vector<uint8_t> rate_payload(Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& 
     if(input_width==39){out.value(aa.fresh_steps(1));out.value(ca.fresh_steps(1));}
     std::vector<Lane> lanes(worlds);std::vector<Counts> counts(worlds);
     roll.lanes.copy_to_host(lanes.data(),lanes.size());roll.counts.copy_to_host(counts.data(),counts.size());
-    out.array(lanes);out.array(counts);return std::move(out.data);
+    out.array(lanes);out.array(counts);
+#if defined(CUDARL_EPISODIC_BANK)
+    if(episodic){std::vector<EpisodeInfo> episodes(worlds);roll.episodes.copy_to_host(episodes.data(),episodes.size());out.array(episodes);}
+#endif
+    return std::move(out.data);
 }
 void rate_restore(const std::vector<uint8_t>& bytes, Rollout& roll, nn::GpuMlp& actor, nn::GpuMlp& critic,
     nn::GpuAdam& aa, nn::GpuAdam& ca, Ledger& l,const RateIdentity& id,cudaStream_t stream,
-    const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels) {
-    cudarl::checkpoint::Writer header;rate_header(header,id,task_id,input_width);
+    const char* task_id=CUDARL_RATE_TASK_ID,int input_width=channels,bool episodic=episodic_session) {
+    cudarl::checkpoint::Writer header;rate_header(header,id,task_id,input_width,episodic);
     if(bytes.size()<header.data.size() || !std::equal(header.data.begin(),header.data.end(),bytes.begin()))
         throw std::runtime_error("Rate chooser task/input/schema identity mismatch");
     cudarl::checkpoint::Reader in{bytes};in.position=header.data.size();
@@ -72,7 +84,15 @@ void rate_restore(const std::vector<uint8_t>& bytes, Rollout& roll, nn::GpuMlp& 
     }
     if(aa.steps()!=as||ca.steps()!=cs||aa.config().lr!=.0003f||ca.config().lr!=.001f)
         throw std::runtime_error("Rate optimizer identity mismatch");
-    auto lanes=in.array<Lane>(worlds);auto counts=in.array<Counts>(worlds);in.finish();
+    auto lanes=in.array<Lane>(worlds);auto counts=in.array<Counts>(worlds);
+#if defined(CUDARL_EPISODIC_BANK)
+    if(episodic){auto episodes=in.array<EpisodeInfo>(worlds);if(episodes.size()!=worlds)throw std::runtime_error("Invalid episode clocks");
+        for(int i=0;i<worlds;++i)if(episodes[i].first_decision_control<0||episodes[i].first_decision_control>lanes.at(i).state.motor.navigation.motion.controls)
+            throw std::runtime_error("Invalid saved episode age");
+        roll.episodes.copy_from_host(episodes.data(),episodes.size());
+    }else zero(roll.episodes.get(),roll.episodes.size_bytes(),stream);
+#endif
+    in.finish();
     if(lanes.size()!=worlds||counts.size()!=worlds)throw std::runtime_error("Invalid rate worlds");
     for(const auto& lane:lanes)if(!lane.needs_start &&
         (!cudarl::physics::finite_body(lane.state.motor.navigation.motion.body)||lane.state.fault||
@@ -113,6 +133,9 @@ void rate_result(const fs::path& dir,const Ledger& l,bool verification) {
        <<",\"wall_s\":"<<l.wall_s<<",\"stage\":\""<<l.stage
        <<"\",\"verification\":"<<(verification?"true":"false")<<",\"action_counts\":[";
     for(int i=0;i<actions;++i){if(i)out<<',';out<<c.samples[i];}out<<"]";
+#if defined(CUDARL_EPISODIC_BANK)
+    out<<",\"training_episode_s\":60,\"training_time_limits\":"<<l.time_limits<<",\"near_decisions\":"<<l.near_decisions<<",\"episode_decisions\":"<<l.episode_decisions;
+#endif
 #if defined(CUDARL_RELIABLE_CHOOSER)
     out<<",\"curriculum_starts\":["<<c.curriculum_starts[0]<<','<<c.curriculum_starts[1]<<','<<c.curriculum_starts[2]
        <<"],\"curriculum_promotions\":"<<c.promotions<<",\"curriculum_demotions\":"<<c.demotions;
@@ -201,6 +224,23 @@ int rate_main(int argc,char** argv) {
         zero(roll.fault_code.get(),roll.fault_code.size_bytes(),stream.value);
         zero(roll.zero.get(),roll.zero.size_bytes(),stream.value);
         zero(roll.lanes.get(),roll.lanes.size_bytes(),stream.value);zero(roll.counts.get(),roll.counts.size_bytes(),stream.value);
+#if defined(CUDARL_EPISODIC_BANK)
+        zero(roll.episodes.get(),roll.episodes.size_bytes(),stream.value);
+        {
+        const std::vector<float> rewards{1,1,1,1000,1,1},values{2,2,2,100,3,3},done{1,1,0,1,1,1},truncated{1,0,0,0,0,0},final_values{4,0,0,0,0,0},last{0,0,0};
+        std::vector<float> expected(6),cpu_returns(6),measured(6);
+        for(int env=0;env<3;++env)rl::gae_one_env(2,3,env,rewards.data(),values.data(),done.data(),truncated.data(),final_values.data(),last.data(),gamma,lambda,expected.data(),cpu_returns.data());
+        device_ptr<float> dr(6),dv(6),dd(6),dt(6),df(6),dl(3),da(6),dret(6);
+        dr.copy_from_host(rewards.data(),6);dv.copy_from_host(values.data(),6);dd.copy_from_host(done.data(),6);dt.copy_from_host(truncated.data(),6);df.copy_from_host(final_values.data(),6);dl.copy_from_host(last.data(),3);
+        rl::compute_gae(2,3,dr.get(),dv.get(),dd.get(),dt.get(),df.get(),dl.get(),gamma,lambda,da.get(),dret.get(),stream.value);
+        CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));da.copy_to_host(measured.data(),6);float difference=0;
+        for(int i=0;i<6;++i)difference=std::max(difference,std::abs(expected[i]-measured[i]));
+        if(difference>1.e-5f||std::abs(measured[0]-(1+gamma*4-2))>1.e-5f||measured[1]!=-1)throw std::runtime_error("Time-limit bootstrap gate failed");
+        std::ofstream bootstrap(output/"time-limit-bootstrap-check.json");bootstrap<<std::setprecision(10)<<"{\"pass\":true,\"CPU_CUDA_max_difference\":"<<difference
+            <<",\"truncated_advantage\":"<<measured[0]<<",\"terminal_advantage\":"<<measured[1]<<",\"continuing_advantage\":"<<measured[2]
+            <<",\"propagation_across_reset_blocked\":true,\"physics_steps\":0,\"optimizer_updates\":0}\n";
+        }
+#endif
         initialize_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get());check_launch();
         double prior_used=0;
         if(resume){
@@ -218,8 +258,9 @@ int rate_main(int argc,char** argv) {
                 if(parent_task.size()!=64||!std::all_of(parent_task.begin(),parent_task.end(),[](char c){return (c>='0'&&c<='9')||(c>='a'&&c<='f');}))
                     throw std::runtime_error("Invalid explicit parent task identity");
                 const auto parent=cudarl::checkpoint::read(argv[9]);
-                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),parent_inputs);
-                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),parent_inputs);
+                cudarl::checkpoint::Reader parent_reader{parent};parent_reader.value<uint32_t>();const bool parent_episodic=parent_reader.value<uint32_t>()==4;
+                rate_restore(parent,roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),parent_inputs,parent_episodic);
+                const auto roundtrip=rate_payload(roll,actor,critic,aa,ca,ledger,id,stream.value,parent_task.c_str(),parent_inputs,parent_episodic);
                 if(parent!=roundtrip) throw std::runtime_error("Parent import did not preserve full state exactly");
 #if defined(CUDARL_FRONTIER_REWARD)
                 {
@@ -407,6 +448,9 @@ int rate_main(int argc,char** argv) {
                 // Explicit new-study initial conditions, only after the exact
                 // parent roundtrip. Never executed on resume or within episodes.
                 zero(roll.lanes.get(),roll.lanes.size_bytes(),stream.value);
+#if defined(CUDARL_EPISODIC_BANK)
+                zero(roll.episodes.get(),roll.episodes.size_bytes(),stream.value);
+#endif
                 initialize_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get());check_launch();
                 std::ofstream initial_change(output/"new-study-initial-worlds.json");initial_change
                     <<"{\"new_worlds\":1024,\"close_tangent_worlds\":512,\"older_approach_worlds\":256,\"interior_worlds\":256,\"motor_unchanged\":true,\"actor_critic_Adam_preserved\":true,\"live_resets\":0}\n";

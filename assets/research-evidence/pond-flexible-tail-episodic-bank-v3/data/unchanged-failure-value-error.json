@@ -1,0 +1,12 @@
+{
+  "phase": 8,
+  "physics_steps": 0,
+  "comparison": "initial vs final128 actual failing prefix, excluding logits",
+  "initial_V": 7.874032974,
+  "final_V": 19.37818336,
+  "optimizer_updates": 0,
+  "pass": true,
+  "measured_discounted_return": -4.350101869,
+  "final_value_overestimate": 23.728285229,
+  "rows": 61
+}

@@ -1,0 +1,647 @@
+[
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-0.bin",
+    "bytes": 4428392,
+    "sha256": "AD4BE2741F0AD967FC184B3F51CBA4998B54D4F0B098B08E6A40E38D577B9EE2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-1.bin",
+    "bytes": 4428392,
+    "sha256": "0AF88E9A697A74F4CD0297AC6764798401D39F83DD0B24030369A540E6D78A02"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-10.bin",
+    "bytes": 4428392,
+    "sha256": "1CF0C4FAEA330D74C698042BC86BD1BDFF93FE9E1C53E5285511A67273F28413"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-100.bin",
+    "bytes": 4428392,
+    "sha256": "30C5C7C75D21A6EB9F3CD1589F133D0DC8A526E6F9315A5228BD9846CA313815"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-101.bin",
+    "bytes": 4428392,
+    "sha256": "0365F1B51116833EB9DFCED11403699C18A8DE9B701EC9C7DB7E6B7B94A63D62"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-102.bin",
+    "bytes": 4428392,
+    "sha256": "7960BB8BAC29B8DF02DB473C96B151A5FB334949144C125C920DCF9518F6108B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-103.bin",
+    "bytes": 4428392,
+    "sha256": "20D8462597D3D89E582FAC4C106A7E9E2A8BC8283BAA4236BFCAED1DE66AA53C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-104.bin",
+    "bytes": 4428392,
+    "sha256": "C66C513A0F9B2060AEB38D937D788A1D081DEAE967545003F822F8D6AB1D3D13"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-105.bin",
+    "bytes": 4428392,
+    "sha256": "384BEA3A93E4BE4E4834986F4268271D08C425D8DE954ABA552385C054372241"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-106.bin",
+    "bytes": 4428392,
+    "sha256": "77F27AEBD65649004D21DEFAD776BCF077A51589A824616545BA531F12202BC3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-107.bin",
+    "bytes": 4428392,
+    "sha256": "25588A5895E12F70F8FDB3ACDE4D15518993794C291833A07C8A76AA0291A655"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-108.bin",
+    "bytes": 4428392,
+    "sha256": "14978D5B28C487E461CB8570A3592D1A59E24F64960E3C43F18415621AA0F42C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-109.bin",
+    "bytes": 4428392,
+    "sha256": "31DE234DB058DD7E9E16F850A40BF7B177B780CBFE75FAEF2C7F2929D8403DA3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-11.bin",
+    "bytes": 4428392,
+    "sha256": "DE619030221A281A5C3A201E0278B04BADAFDDB6CFB2554BC175F0E2849A2D62"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-110.bin",
+    "bytes": 4428392,
+    "sha256": "B58B56B7236F08DE6D504EFCE1B4FFCAD3F3BDC78516940281722DFC02336643"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-111.bin",
+    "bytes": 4428392,
+    "sha256": "C21AC0071F916E26E9B40D927FA712A82C4DEDF8A89E49C028CF5C5B79B1B96F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-112.bin",
+    "bytes": 4428392,
+    "sha256": "2176DBB97AF8D3A78C9777D1CAD50D2D24589DF89663B650F98CF393BCE7785C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-113.bin",
+    "bytes": 4428392,
+    "sha256": "7CBF1E667F142168B6986AB852AE93BAF0B3CFBB364BD30CC2819797B43FCD90"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-114.bin",
+    "bytes": 4428392,
+    "sha256": "D11461DC90B686C4BCF9083511CA7A2FF1BEA488E5D4DCA11F6EE61AA923853D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-115.bin",
+    "bytes": 4428392,
+    "sha256": "56ED39D4711DA1087DA9A54966369CB5D41727CB9DE4C7E075F920BE4E4815BD"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-116.bin",
+    "bytes": 4428392,
+    "sha256": "196C8B1CAC39B2CA4022ABA43266EE6D982E8281F649E085E42BFD0BE38CCBAC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-117.bin",
+    "bytes": 4428392,
+    "sha256": "757619FDD39EA7DFE29B8D76224F6F2AFF4EA9ACDE265BB94A04B57D4932F2DE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-118.bin",
+    "bytes": 4428392,
+    "sha256": "B8FBC4DC6D59BCAF35EFD9082CAA0688935C72A704A040D8DFDAD4C4B1D80A2C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-119.bin",
+    "bytes": 4428392,
+    "sha256": "A820A1978374D995E9E4465FE43BB9D05A2B092001C9CF8401181B5CC4DFB8D2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-12.bin",
+    "bytes": 4428392,
+    "sha256": "6F1D5D1E6BFADD2CBA0887E071A27E698C0CE952DA5DDDBA0A8FE5271161810C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-120.bin",
+    "bytes": 4428392,
+    "sha256": "034C328EBAEA2B1276E592C025C26A47DCB612AC3A26D51CDDE3A0502343869C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-121.bin",
+    "bytes": 4428392,
+    "sha256": "33F115819978248112669849A6D4E173EBFB2FBF1CCDA2A4E0D9FFF8D3D852B0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-122.bin",
+    "bytes": 4428392,
+    "sha256": "F520768F1D61B477B5B3DD5C3F2C6FBB541BCB98E38BCBC15E3FDE8AA5BEDA59"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-123.bin",
+    "bytes": 4428392,
+    "sha256": "BF59132FBF8B2D4A429CD259E9082D4B5D15682A06A36A9E9B0F68B067F86586"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-124.bin",
+    "bytes": 4428392,
+    "sha256": "DC08953DE17BAEDD22A5E8591D47BE98332A14CA48A57610BDD6B294C1BDBAA4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-125.bin",
+    "bytes": 4428392,
+    "sha256": "48F3400605BF40314AD53873F644604CE195DFA47EA0EFE92E75868623909EE3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-126.bin",
+    "bytes": 4428392,
+    "sha256": "76D83D5B1E53EF0EFCEC3372ED3D3A2B7FAE303500791CE40F13E4490786AAF0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-127.bin",
+    "bytes": 4428392,
+    "sha256": "5217E278104EDB3746DDB658135198B97312EB03FBE8F554F4C926EEC4BF8E18"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-128.bin",
+    "bytes": 4428392,
+    "sha256": "53C9DDB437751A7804811AFCB0E0A360827D1A54D9B7B1D0DBEA519F9DBDD7AC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-13.bin",
+    "bytes": 4428392,
+    "sha256": "B0D9B50B8E7E45DE744993E6CDD6682F8FBCA3BF8AEF6871F4D378C577ADF2C8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-14.bin",
+    "bytes": 4428392,
+    "sha256": "C6CBD71299E56912F121E6D071BA6D94B8809BCCB16052D1523E0C1C3DEEB780"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-15.bin",
+    "bytes": 4428392,
+    "sha256": "1BBA8508761D099F90ACD08540ADFAF48675ADB31ECC2F5B4703492B9B6138CE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-16.bin",
+    "bytes": 4428392,
+    "sha256": "BA2B9BEBFD3AF68030CCEF6D5CD38C54D63379A6357E6FEDAE051597236D70FF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-17.bin",
+    "bytes": 4428392,
+    "sha256": "4D313ACE2B27A157984E3E1750162C1A322FF833300BE9B2E69FCDD293703882"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-18.bin",
+    "bytes": 4428392,
+    "sha256": "22730CBB0A79B1DD263882198E87A268C2D9ECA1A69871A1E2AF7329C71E1393"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-19.bin",
+    "bytes": 4428392,
+    "sha256": "F7211AD3FD9AA76B82CFF8BAFC708172BE1ADFBA9B390EEB0B46A53C276353DC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-2.bin",
+    "bytes": 4428392,
+    "sha256": "20135E99FBDBEB1EC7ABC6EB053E5F2FFD07C413F2F2814872EA56944D5B609F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-20.bin",
+    "bytes": 4428392,
+    "sha256": "5B64C7542BFE950652AC98E2EF35AB309E700307BF3DE471927A69EA9FA131F8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-21.bin",
+    "bytes": 4428392,
+    "sha256": "7C5EBDC3399D180A0308243E7C2B384DA754FF2375D6F2A6627FB2C0BF4CEFE0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-22.bin",
+    "bytes": 4428392,
+    "sha256": "D8400291989168A33B1F2CC932270BECD222C0FE70515282B545EB21B703086F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-23.bin",
+    "bytes": 4428392,
+    "sha256": "5F93CFB8C822792FC69FEDAE15B9475A27119956961FC118F8CE5478BB307D89"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-24.bin",
+    "bytes": 4428392,
+    "sha256": "3F23118CBF754831B69956FA0D0CE8990816633A00E153226D265F5A4C8FCA6B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-25.bin",
+    "bytes": 4428392,
+    "sha256": "097670EBD850B69B10121F178FD187196563CABC919C403C4C1793FC25589466"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-26.bin",
+    "bytes": 4428392,
+    "sha256": "4E99C7682143C4E8A6E1BE099B97C072553B10EEFAA96AB8FA382DFAFFCBF194"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-27.bin",
+    "bytes": 4428392,
+    "sha256": "DF6688C4E74DED8CB47E8558269147A9606E6BFFF3C6016AD37F47AD067A4FE7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-28.bin",
+    "bytes": 4428392,
+    "sha256": "6CD8BA9AC3CA9A8340DA5D9BAB113619A40BFD37466BF8CAC8B5EF5B13C375B3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-29.bin",
+    "bytes": 4428392,
+    "sha256": "F7722BD85C8F865F5C30F969E54CCB239DE7DBE60D2217FF714E555EF520CACA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-3.bin",
+    "bytes": 4428392,
+    "sha256": "D111754B03C2F50270B6CA6BA2687F003798EB2ADF44CF883B30C818F1DFC633"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-30.bin",
+    "bytes": 4428392,
+    "sha256": "D9D593E0F5FBC07672DE97AA52302EC889E137A6A2F282604B2241A6121F6385"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-31.bin",
+    "bytes": 4428392,
+    "sha256": "D5466F9C77E6778A662FF46C5B8284A7C76DC29D5859B3686D888D9EA1D75CBF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-32.bin",
+    "bytes": 4428392,
+    "sha256": "AC79EA6118AF0AEE752CAB5636A1163F62DEC91B0CBC13C0D4B835B96C59D8BF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-33.bin",
+    "bytes": 4428392,
+    "sha256": "3757E1C006FCB1BF530B5EB46CBBC28A7180551E68020F1A7688C894E6C752DC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-34.bin",
+    "bytes": 4428392,
+    "sha256": "2C5448F09B0C6BD96FE7CCDB85D2E138EB83EB0758E5A9AEA3CC7403D3F5CB8A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-35.bin",
+    "bytes": 4428392,
+    "sha256": "57DBFF88603BF99A667EDE47D713CD7C5E913A93055188CC79F87B7F65211D94"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-36.bin",
+    "bytes": 4428392,
+    "sha256": "AA3AD963CFD66806A58AE8332F578DE78BE6ECBBD6BE928B61412E24330B076C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-37.bin",
+    "bytes": 4428392,
+    "sha256": "C46B8D434851986FD0A90FC2E47A6E104BD67D5F078C77D36C48FD191BF08974"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-38.bin",
+    "bytes": 4428392,
+    "sha256": "DD5CA693399BB6B178FAB3C1BD2E2EBE6A0C8158A3B5A8A0802FA052205D1D68"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-39.bin",
+    "bytes": 4428392,
+    "sha256": "F8DF4BDA81863064E998FDB7956758A2364C94C7EBC641DD8666C7E9CB418EDB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-4.bin",
+    "bytes": 4428392,
+    "sha256": "18E119F0D6733FAACA8B58DE834D60CEE9A5DC0599A1F12E0CA6E7809FB4A2BD"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-40.bin",
+    "bytes": 4428392,
+    "sha256": "EEF3F5FA64BA310BCB947196B46D801C34A8178CDE69497C2153AC5B930D3878"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-41.bin",
+    "bytes": 4428392,
+    "sha256": "33191DC810FBC3A49A08991CE019AC98A311A96853EBBA4DB4BB8A8D0A199F72"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-42.bin",
+    "bytes": 4428392,
+    "sha256": "AB47BC42AC1EA2E640CF2B7261593B5317AEFC718285AFC2BDD0D9470C880AA7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-43.bin",
+    "bytes": 4428392,
+    "sha256": "D341DC21CFE2428793751A1A7E5FD98E10563F8739A5410234C7584924BA89E3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-44.bin",
+    "bytes": 4428392,
+    "sha256": "EB7A61C1AD43C9EBAE3EEA35A04494319978F96375E9E6AEA5814BAA1E00D1AB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-45.bin",
+    "bytes": 4428392,
+    "sha256": "FEEF9E69149FC07E0D3767EBEE790B6A727AD26B22E90BB85D3E7F568376EB4A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-46.bin",
+    "bytes": 4428392,
+    "sha256": "BD5E1F63152C0E99A999FB07BEF380CF2E99C1C07C45BDE8EC407AAB38889976"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-47.bin",
+    "bytes": 4428392,
+    "sha256": "91EFC7C54F561701612D849AFD5FDE341FAF05AD73A9767AC69DA67605B32905"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-48.bin",
+    "bytes": 4428392,
+    "sha256": "DAC45C85EA1F6CE5EA3368F4D4750356D8D332792504B072C4F13A2F6906B72A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-49.bin",
+    "bytes": 4428392,
+    "sha256": "CCACD3EBDFAC96CDF3528EAEF9CC43D768B8374D8D4387D589542283D4831674"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-5.bin",
+    "bytes": 4428392,
+    "sha256": "45E3DB3F4E9EB33E009A11F5B15C039193AA76E0188BB25C8C8A89A09300E5D4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-50.bin",
+    "bytes": 4428392,
+    "sha256": "732D2DE3C66BD0D745A899091CC985EA3AF3CB8DC4E124B6358D4216340988CC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-51.bin",
+    "bytes": 4428392,
+    "sha256": "BE55718C4731FBFB8B0F4B7BF10FDEBB2E946195B4E2E77DDD45D6F8C0B9E702"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-52.bin",
+    "bytes": 4428392,
+    "sha256": "8B907E5F398AF66502AF3F24EBE4EAD3ACDE73D2BE67D59E495B34A1F64ABA67"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-53.bin",
+    "bytes": 4428392,
+    "sha256": "0A377ED47AAAFDEBC0FFF14573DC3C633105A343233F5BA9881D3CB7E54BAFDE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-54.bin",
+    "bytes": 4428392,
+    "sha256": "5F1629335100E6B1FCC2B65F19346DFBF3D21CFF101734E3E983A1CA0AB79086"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-55.bin",
+    "bytes": 4428392,
+    "sha256": "0B5BF2057778608164B805AD68004CCD7EDA272C883DF08E5C5168D79BCFFA4F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-56.bin",
+    "bytes": 4428392,
+    "sha256": "4CE2BDF852ED63F7F1857B973D84CC6F31D3B86078FC6715EA9FB3EFE550254D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-57.bin",
+    "bytes": 4428392,
+    "sha256": "6D576ADE4D2741F80E84E388ABB4A95D968C5F3C3849760A1B78D6E6C2DD4016"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-58.bin",
+    "bytes": 4428392,
+    "sha256": "CD3C7364F4A26AB8DC88988E38A75BCAE07B49660BEEE4E187741D9FB42D2473"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-59.bin",
+    "bytes": 4428392,
+    "sha256": "7B4D1973C0C67676C53CB69BB3864E96415F8155AE09FC614A2E492ECB886712"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-6.bin",
+    "bytes": 4428392,
+    "sha256": "2F71B6B0CAF65E25A871CABC754EDD68BCE152EE5BEA22924C02A4C24F77D45B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-60.bin",
+    "bytes": 4428392,
+    "sha256": "1DC06976E45D9E885DC2F29546982B65BD3A06353D2E9C90532ADBC76FF62834"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-61.bin",
+    "bytes": 4428392,
+    "sha256": "0F3507A4DD1A6DF6D62CB195B6B46E4F67B5202555FE68AA2949603309A47EA5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-62.bin",
+    "bytes": 4428392,
+    "sha256": "42D307557D08DBAB0899578014CE6F6CDD452EE3F92EF5B2FD16582B513C3503"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-63.bin",
+    "bytes": 4428392,
+    "sha256": "28163874C597C13B0D95B481BF2449C396E88E9210744D02E78C84DD3B86B120"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-64.bin",
+    "bytes": 4428392,
+    "sha256": "980A7485815BB594AAE8656F2DE79B6229B5666D2387421976FDBACABF97B8B2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-65.bin",
+    "bytes": 4428392,
+    "sha256": "DC382807DF69E13E460F46CB740AB7069986A8C3E14F630DEA26EF671E6D6716"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-66.bin",
+    "bytes": 4428392,
+    "sha256": "585959C0AEE91BF4ED861F4C96500605DBA824AB913AD5E8D21836ED7F808681"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-67.bin",
+    "bytes": 4428392,
+    "sha256": "DA6FFF523B0E4C1EFD7B0DFB3F361508EA1715EF0A6D3AC78041A250CFF314FF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-68.bin",
+    "bytes": 4428392,
+    "sha256": "8E9FDC061C52461E9EED0EFD457EE79285B02603F0CD445844B8172E4E29FE15"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-69.bin",
+    "bytes": 4428392,
+    "sha256": "F8217FCF5FCA690483DC50D603082D277BAEA53283E51B21834A633146953DF2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-7.bin",
+    "bytes": 4428392,
+    "sha256": "3A014848E2F0F617E9B7B4BA115E75AA2593756A01631BDDCFBEC3291D839F3E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-70.bin",
+    "bytes": 4428392,
+    "sha256": "9115FBD23BF81412D7FB44E5D028B5DAF2A7BE4621558B5C58F6A647B985CC61"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-71.bin",
+    "bytes": 4428392,
+    "sha256": "DF934E21B583B71C3298EADCABA8E61B0C7EF31F4D092CE4236E7767A7A026C2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-72.bin",
+    "bytes": 4428392,
+    "sha256": "8BC561AFE85374B214E04BBFA7A2748A6BC8640D57D9F44B111D5230B3DAD4A4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-73.bin",
+    "bytes": 4428392,
+    "sha256": "154BF61148DD4A7B8289979AC94717CB782C54E60D5BF79811440BF7641BEE61"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-74.bin",
+    "bytes": 4428392,
+    "sha256": "00CD774DCBE8806BF9524A177177A7F1C47526E808DB57385BB44FEF4AE45F20"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-75.bin",
+    "bytes": 4428392,
+    "sha256": "A7A74A4984C9F5A253021A22B2485FE5E6AA3ACFF3D384112262308CB25D36FD"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-76.bin",
+    "bytes": 4428392,
+    "sha256": "C8D50E0F8B9322BBA89781D35908BE88A40FC8FF8A3CB4DBF566509455DE98E2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-77.bin",
+    "bytes": 4428392,
+    "sha256": "2BBD38706BAD7B5061F568F3E78A94C2C24AA88B40945177A1878AC41580C6ED"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-78.bin",
+    "bytes": 4428392,
+    "sha256": "67147912D7EFC60473670DFF6DC1D7757A6EFE9A2CE489122D6EE3730DF967B1"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-79.bin",
+    "bytes": 4428392,
+    "sha256": "F305AF2B8CF760967636CC6CAB6534F287533C7396717EB1A2645841D60FEE75"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-8.bin",
+    "bytes": 4428392,
+    "sha256": "90AAD1CB175B9EAF5EFF0E9268241E5CA0FE2CAA13E66E05EEC009C2CAF18495"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-80.bin",
+    "bytes": 4428392,
+    "sha256": "4402610B0C679A7AA4AEA1CBEAC410AD7D8A7572576483AB02A98708F14F5BE5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-81.bin",
+    "bytes": 4428392,
+    "sha256": "207FD3DB51E39D320E1085362E62916F2832BF8D574EFF532F3BA405A6DFCC20"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-82.bin",
+    "bytes": 4428392,
+    "sha256": "A60325962F8251DB6C2105E359F01A5E8A231AB30641854B7A5780D11EC6CBD0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-83.bin",
+    "bytes": 4428392,
+    "sha256": "C729A9A1119A557915DBF1049C85C80429D284B0F8248E11390D0CE8BB84853B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-84.bin",
+    "bytes": 4428392,
+    "sha256": "EBE1B47750E80F17B48210E15897964D31F53FA2A9A214EA98BCB513ABDD7894"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-85.bin",
+    "bytes": 4428392,
+    "sha256": "A162D354086BF238381555837BA10F2BDF489A4A036ABC2C0538A3DFA4B7A117"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-86.bin",
+    "bytes": 4428392,
+    "sha256": "C28F3936783E1C00AEC88BC5ECB951F7B2313761AFBCE13E93D3332FD34289A2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-87.bin",
+    "bytes": 4428392,
+    "sha256": "38B061813B629618185D24A059B97DF500A3C686C2FEB14F19AA4C431C214E07"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-88.bin",
+    "bytes": 4428392,
+    "sha256": "F6176ADF9E83E6A9C2DC21772AAAE7E4CEFCA4292B7B922C19B850683582AC18"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-89.bin",
+    "bytes": 4428392,
+    "sha256": "1A6A264A78870BFB5E088416EB62221BCBDB6D178CA4510699889830C177430E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-9.bin",
+    "bytes": 4428392,
+    "sha256": "C4D213E2093D6195846FD2D8DC4D3320A9D95737D179F65A78245A47E9440C37"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-90.bin",
+    "bytes": 4428392,
+    "sha256": "C3838D2E941BBE0E555B898B92F019507148C8A2A2AC76A1509B62FBEA6F1EEB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-91.bin",
+    "bytes": 4428392,
+    "sha256": "B48AA1053E6F59CE4491C879884A0F29012C7744F515893DFEA521DC1824C7F2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-92.bin",
+    "bytes": 4428392,
+    "sha256": "61B8D3445DD7AD43B891AFA81B158892A58E014D6B644D3F7CB17037A2981FA3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-93.bin",
+    "bytes": 4428392,
+    "sha256": "6FCCD4A9C777713F79E010A4E15AC0CB1D89AA1040EF82BD5FFD37697C6DC98E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-94.bin",
+    "bytes": 4428392,
+    "sha256": "7B116BB3B8B0B09AEEA04B5EC27B18FDC93581F553F033ECFBAF5DA116885CEB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-95.bin",
+    "bytes": 4428392,
+    "sha256": "49D087AC55C06787100B9E0F9EA40337DD95E2C4EB3FED975FDC765B616306C6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-96.bin",
+    "bytes": 4428392,
+    "sha256": "3B0CAC99D2002B791194DFF11D43DC441B24D519A4BC223CF39CF446F42E92E6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-97.bin",
+    "bytes": 4428392,
+    "sha256": "7BD09F3239B59F6C153852CAE6E4CE690C605C05337EE5CDB25DE3C62A9260AA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-98.bin",
+    "bytes": 4428392,
+    "sha256": "E7A32CB9AE4D4737B9A39D0B8477D6396E0006B06192994F7AF20037846A0812"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\episodic-bank-v3\\training\\checkpoints\\session-99.bin",
+    "bytes": 4428392,
+    "sha256": "5017F54D1979C87D915E86DE0E406A903CFB284F343E0E434949FCC5D925A041"
+  }
+]
