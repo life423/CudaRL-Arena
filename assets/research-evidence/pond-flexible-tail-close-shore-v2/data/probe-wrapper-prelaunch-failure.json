@@ -1,0 +1,7 @@
+{
+  "stage": "binding preparation",
+  "native_launches": 0,
+  "error": "GetRelativePath relativeTo was empty",
+  "optimizer_updates": 0,
+  "physics_steps": 0
+}

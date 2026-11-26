@@ -99,5 +99,28 @@ CUDARL_HD inline bool approach_start(uint32_t lane, uint32_t episode, const Navi
     return warmup_gap > min_warmup_gap_m;
 }
 
+// Close-tangent TRAINING placement, never an action or live correction. Bank
+// azimuth, gap and gait phase vary independently of the fixed held-out starts.
+CUDARL_HD inline bool close_start(uint32_t lane,uint32_t episode,const NavigationWorld& source,
+    const pond_geometry_v1::Parameters& pond,physics::V& position_m,float& yaw){
+    const uint32_t draw=rng::hash_u32(lane/2)^rng::hash_u32(episode+1);
+    const float azimuth=2*pi*rng::uniform(26112503u,draw,0);
+    const float wanted=.015f+.015f*rng::uniform(26112503u,draw,1);
+    const float x=cosf(azimuth),z=sinf(azimuth);
+    const physics::V radial{float(pond.water_radius_x_m)*x,0,float(pond.water_radius_z_m)*z};
+    auto normal=physics::V{x/float(pond.water_radius_x_m),0,z/float(pond.water_radius_z_m)};
+    normal=normal/physics::norm(normal);
+    const auto tangent=physics::cross({0,1,0},normal)*(lane%2? -1.f:1.f);
+    const auto& first=source.legs[0];const auto course=chooser::horizontal(yaw_offset_turn(first.choice)?source.motion.entry_course:first.heading);
+    yaw=atan2f(physics::cross(course,tangent).y,physics::dot(course,tangent));
+    const auto rotation=physics::axis_rotation({0,1,0},yaw);auto body=source.motion.body;auto pose=snapshot(body);
+    const auto origin=chooser::horizontal(pose.com_m),head=rotation.rotate(body.position*physics::scale-origin);
+    for(auto& point:pose.spine_m)point=rotation.rotate(point-origin);
+    const auto gap=[&](physics::V p){body.position=(head+p)/physics::scale;auto moved=pose;for(auto& point:moved.spine_m)point+=p;return submerged_gap_m(pond,body,moved);};
+    if(gap({})<wanted||gap(radial)>wanted)return false;
+    float low=0,high=1;for(int k=0;k<22;++k){const float mid=.5f*(low+high);if(gap(radial*mid)>=wanted)low=mid;else high=mid;}
+    position_m=radial*low;
+    return gap(position_m)>=wanted&&gap(position_m+tangent*.016f)>.002;
+}
 } // namespace cudarl::flexible_tail::bank_training
 

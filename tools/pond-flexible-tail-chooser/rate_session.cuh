@@ -169,6 +169,25 @@ int rate_main(int argc,char** argv) {
         device_ptr<tail::NavigationWorld> starts(initial.size());device_ptr<float> gait(fitted.size()),offset(packed.size());
         starts.copy_from_host(initial.data(),initial.size());gait.copy_from_host(fitted.data(),fitted.size());
         offset.copy_from_host(packed.data(),packed.size());
+#if defined(CUDARL_CLOSE_SHORE)
+        device_ptr<ClosePlacement> device_placements(worlds);std::vector<ClosePlacement> placements(worlds);
+        float position_difference=0,yaw_difference=0;int close_checked=0;
+        for(int episode=0;episode<4;++episode){
+            close_placement_probe<<<worlds/lane_threads,lane_threads,0,stream.value>>>(starts.get(),int(initial.size()),episode,larger_pond,device_placements.get());
+            check_launch();CUDA_CHECK_THROW(cudaStreamSynchronize(stream.value));device_placements.copy_to_host(placements.data(),placements.size());
+            for(int lane=0;lane<worlds;++lane){cudarl::physics::V position{};float yaw=0;
+                const auto row=start_source_row(start_episode_seed(lane,episode),int(initial.size()));
+                if(row==8||row==9||!bank_training::close_start(lane,episode,initial[row],larger_pond,position,yaw)||!placements[lane].valid)
+                    throw std::runtime_error("Close curriculum placement gate failed");
+                position_difference=std::max(position_difference,cudarl::physics::norm(position-placements[lane].position));
+                yaw_difference=std::max(yaw_difference,std::abs(yaw-placements[lane].yaw));++close_checked;
+            }
+        }
+        if(position_difference>1.e-6f||yaw_difference>1.e-5f)throw std::runtime_error("Close placement CPU/CUDA parity failed");
+        std::ofstream close_check(output/"close-placement-check.json");close_check<<std::setprecision(10)
+            <<"{\"pass\":true,\"placements\":"<<close_checked<<",\"max_position_difference_m\":"<<position_difference
+            <<",\"max_yaw_difference_rad\":"<<yaw_difference<<",\"excluded_rows\":[8,9],\"physics_steps\":0,\"optimizer_updates\":0}\n";
+#endif
         nn::GpuMlp actor(chooser::actor_spec(),batch_size,seed);
         nn::MlpSpec critic_spec{{channels,32,1},{nn::Activation::Tanh,nn::Activation::Identity}};
         nn::GpuMlp critic(critic_spec,batch_size,seed+1);
@@ -309,7 +328,7 @@ int rate_main(int argc,char** argv) {
                         if(straight.loss_s<24&&curve.loss_s==24&&curve.min_gap_m>0)++curve_distinctions;
                         if(std::memcmp(&body_before,&sample.motor.navigation.motion.body,sizeof(body_before)))throw std::runtime_error("Curve query changed physical body");
                     }
-                    if(curved_difference>1.e-4f||valid_curves==0||curve_distinctions==0||aa.fresh_steps(1)!=0||ca.fresh_steps(1)!=0)
+                    if(curved_difference>1.e-4f||valid_curves==0||curve_distinctions==0||(parent_inputs<39&&(aa.fresh_steps(1)!=0||ca.fresh_steps(1)!=0)))
                         throw std::runtime_error("Curved feedback parity/geometry/age gate failed");
                     std::ofstream check(output/"curved-check.json");check<<std::setprecision(10)
                         <<"{\"pass\":true,\"worlds\":"<<worlds<<",\"valid_forecasts\":"<<valid_curves<<",\"max_normalized_CPU_CUDA_difference\":"<<curved_difference
@@ -381,10 +400,17 @@ int rate_main(int argc,char** argv) {
                 imported<<"{\"pass\":true,\"full_state_exact_before_counter_rebase\":true,\"parent_update\":"<<ledger.completed
                     <<",\"parent_checksum\":"<<cudarl::checkpoint::checksum(parent)<<",\"parent_task\":\""<<parent_task
                     <<"\",\"physics_steps\":0,\"optimizer_updates\":0}\n";
-                // New study budget and sampling counter; retain actor, critic,
-                // Adam ages/moments, physical worlds, episode/RNG and visit state.
+                // New study budget and sampling counter; retain learned state.
                 ledger.completed=ledger.started=0; ledger.counts={};
                 zero(roll.counts.get(),roll.counts.size_bytes(),stream.value);
+#if defined(CUDARL_CLOSE_SHORE)
+                // Explicit new-study initial conditions, only after the exact
+                // parent roundtrip. Never executed on resume or within episodes.
+                zero(roll.lanes.get(),roll.lanes.size_bytes(),stream.value);
+                initialize_lanes<<<worlds/lane_threads,lane_threads,0,stream.value>>>(roll.lanes.get());check_launch();
+                std::ofstream initial_change(output/"new-study-initial-worlds.json");initial_change
+                    <<"{\"new_worlds\":1024,\"close_tangent_worlds\":512,\"older_approach_worlds\":256,\"interior_worlds\":256,\"motor_unchanged\":true,\"actor_critic_Adam_preserved\":true,\"live_resets\":0}\n";
+#endif
             }
             rate_publish(output,roll,actor,critic,aa,ca,ledger,id,stream.value);
         }

@@ -1,0 +1,8 @@
+MSBuild version 17.14.19+164abd434 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/aiand/Documents/programming/CudaRL-Arena/.worktrees/minimal-foundation/tools/pond-flexible-tail-chooser/CMakeLists.txt
+  rate-evaluate.cpp
+  checkpoint.cpp
+  Generating Code...
+  pond_flexible_tail_rate_evaluate.vcxproj -> C:\Users\aiand\Documents\programming\CudaRL-Arena\.worktrees\minimal-foundation\build\flexible-tail\close-shore-v2\native-build\Release\pond_flexible_tail_rate_evaluate.exe

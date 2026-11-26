@@ -1,0 +1,53 @@
+verification: 5.113s exit0
+evaluation: 2.344s exit0
+coverage update0: safety 12/12 + 4/4, union 57.1%
+shore: 0.952s exit1
+evaluation: 0.882s exit1
+coverage update8: safety 11/12 + 0/0, union 59.7%
+shore: 0.969s exit1
+evaluation: 0.892s exit1
+coverage update16: safety 8/12 + 0/0, union 69.9%
+shore: 0.957s exit1
+evaluation: 0.885s exit1
+coverage update24: safety 9/12 + 0/0, union 68.1%
+shore: 0.963s exit1
+evaluation: 0.880s exit1
+coverage update32: safety 3/12 + 0/0, union 70.7%
+shore: 0.950s exit1
+evaluation: 0.774s exit1
+coverage update40: safety 3/12 + 0/0, union 70.1%
+shore: 0.938s exit1
+evaluation: 0.774s exit1
+coverage update48: safety 3/12 + 0/0, union 66.7%
+shore: 0.933s exit1
+evaluation: 0.768s exit1
+coverage update56: safety 4/12 + 0/0, union 67.8%
+shore: 0.961s exit1
+evaluation: 0.773s exit1
+coverage update64: safety 2/12 + 0/0, union 67.8%
+shore: 0.959s exit1
+evaluation: 0.767s exit1
+coverage update72: safety 2/12 + 0/0, union 68.4%
+shore: 0.938s exit1
+evaluation: 0.771s exit1
+coverage update80: safety 2/12 + 0/0, union 68.4%
+shore: 0.942s exit1
+evaluation: 0.775s exit1
+coverage update88: safety 2/12 + 0/0, union 68.4%
+shore: 0.947s exit1
+evaluation: 0.662s exit1
+coverage update96: safety 2/12 + 0/0, union 68.4%
+shore: 0.936s exit1
+evaluation: 0.774s exit1
+coverage update104: safety 2/12 + 0/0, union 68.4%
+shore: 0.940s exit1
+evaluation: 0.772s exit1
+coverage update112: safety 2/12 + 0/0, union 68.7%
+shore: 0.944s exit1
+evaluation: 0.772s exit1
+coverage update120: safety 2/12 + 0/0, union 68.7%
+shore: 0.945s exit1
+training: 131.752s exit0
+evaluation: 0.775s exit1
+coverage update128: safety 4/12 + 0/0, union 69.0%
+shore: 0.937s exit1

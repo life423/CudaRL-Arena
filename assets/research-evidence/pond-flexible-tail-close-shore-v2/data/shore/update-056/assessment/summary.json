@@ -1,0 +1,1 @@
+{"mode":"close-shore","pass":false,"cases":8,"passes":4,"near_cases":0,"mean_close_time_s":7.24,"max_stall_s":2.04,"faults":4,"attempted_substeps":663733,"accepted_substeps":663729,"optimizer_updates":0,"resets":0,"wall_s":0.9441176}

@@ -1,0 +1,16 @@
+{
+  "package_message": "Verified 11 flexible-tail bundle hashes, qualified policy pair, and preserved original motor; zero physics/PPO.",
+  "active_trainers": 0,
+  "portable_actors": 129,
+  "pass": true,
+  "verified_archive_files": 1167,
+  "probe_bindings": 90,
+  "Godot_updated": false,
+  "mouse_keyboard_calls": 0,
+  "full_archived_checkpoints": 4,
+  "training_bindings": 123,
+  "extra_physics_steps": 0,
+  "full_local_checkpoints": 129,
+  "extra_optimizer_updates": 0,
+  "PowerShell_errors": 0
+}

@@ -215,8 +215,21 @@ CUDARL_HD uint32_t start_episode_seed(uint32_t lane, uint32_t episode) {
 }
 
 CUDARL_HD uint32_t start_source_row(uint32_t episode_seed, int count) {
+#if defined(CUDARL_CLOSE_SHORE)
+    const auto row=cudarl::rng::bits(seed,episode_seed,3)%uint32_t(count-2);
+    return row>=8?row+2:row;
+#else
     return cudarl::rng::bits(seed, episode_seed, 3) % uint32_t(count);
+#endif
 }
+#if defined(CUDARL_CLOSE_SHORE)
+struct ClosePlacement {cudarl::physics::V position{};float yaw=0;int valid=0;};
+__global__ void close_placement_probe(const tail::NavigationWorld* starts,int count,int episode,geometry::Parameters pond,ClosePlacement* output){
+    const int lane=blockIdx.x*blockDim.x+threadIdx.x;if(lane>=worlds)return;
+    const auto row=start_source_row(start_episode_seed(lane,episode),count);auto& out=output[lane];
+    out.valid=bank_training::close_start(lane,episode,starts[row],pond,out.position,out.yaw);
+}
+#endif
 
 __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::NavigationWorld* starts, int count,
                                    const float* gait, const float* offset, geometry::Parameters pond,
@@ -234,6 +247,14 @@ __global__ void start_needed_lanes(Lane* lanes, Counts* counts, const tail::Navi
     bool bank_start = bank_curriculum;
 #if defined(CUDARL_SUSTAINED_CHOOSER)
     bank_start = ((uint32_t(lane_index / 2) + lane.episode) % 2) == 0;
+#endif
+#if defined(CUDARL_CLOSE_SHORE)
+    const auto start_group=(uint32_t(lane_index/2)+lane.episode)%4;
+    bank_start=start_group==2;
+    if(start_group<2){
+        if(!bank_training::close_start(uint32_t(lane_index),lane.episode,starts[row],pond,com,yaw)){
+            fail(lane_index,42,first_fault,fault_code);return;}
+    }else
 #endif
     if (bank_start) {
         int difficulty = 2;

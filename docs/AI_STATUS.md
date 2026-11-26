@@ -1,5 +1,21 @@
 # AI status — November 25, 2026
 
+**Close-shore diagnostic proves safe alternatives; PPO recovers one start but regresses overall.**
+The two original failed prefixes replay exactly.186 frozen-motor branches yield
+46 qualifying40s continuations,with8/7 witnesses from the first two decisions.
+One new1,024-world CUDA PPO session adds varied15–30mm tangent starts while
+preserving39 inputs,reward,motor and physical limits. Parent80 roundtrip and
+three-update resume pass; new geometry4096 checks agree within0.246um.
+128 updates/1048576 transitions finish in131.419s. Phase8 first recovers at88
+and final128 swims180s,but phase9 still fails; final overallclose4/8,original
+short4/12. No trained candidate retains12+4. All17 fixed+17 close checks remain;
+zero long or Godot parity tests. Godot remains appended16/motor88,all11 hashes
+intact,no mouse input. This session is CLOSED; no trainer remains. Only154
+additional respawns followed the1024 initial worlds,so encounter frequency and
+safe-action advantages need evidence before another run. Rest motor unchanged,
+no fresh standalone rest test. Do not mistake one recovery for a qualified fix.
+[Results, exact-state witnesses and limitations](../assets/research-evidence/pond-flexible-tail-close-shore-v2/README.md)
+
 **Curved bank feedback is implemented; close-shore learning did not qualify.**
 One native CUDA PPO chooser session completes128 updates on1,024 worlds,
 1,048,576 transitions in144.868s. All35 inherited inputs stay intact; four curved

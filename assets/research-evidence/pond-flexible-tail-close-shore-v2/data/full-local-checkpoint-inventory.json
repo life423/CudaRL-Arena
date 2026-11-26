@@ -1,0 +1,647 @@
+[
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-0.bin",
+    "bytes": 4395608,
+    "sha256": "1959D44ACB0A6231DC608EA168C3340DB959B6C6F6502D0F6651DC19164FC11E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-1.bin",
+    "bytes": 4395608,
+    "sha256": "2F6B10F6E950527A892E38DA29AFF84DD0D86B86CA1B185DE24F1795CB3CEE03"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-10.bin",
+    "bytes": 4395608,
+    "sha256": "10639ED0F7C975524981F6C0DED00D2E5BBCB4F65992C21453EC9854FDC81CAE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-100.bin",
+    "bytes": 4395608,
+    "sha256": "14A39D3CDA2D4A1353526DEF8D1E2BEACB99C6F779B73C50E18D852F63F84819"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-101.bin",
+    "bytes": 4395608,
+    "sha256": "BA0DF3BD0A72C6D89F79FF030357420CE906955FE25F5667487E565B6AC1EDB3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-102.bin",
+    "bytes": 4395608,
+    "sha256": "D94B2D7E88C28CD4DC7A0C4D19A96A5944331719099E4ED4B9FF9696D140A6E2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-103.bin",
+    "bytes": 4395608,
+    "sha256": "0F4AD97D9D2BA8B6282584C8A626E6F6EF028817D1411B440E2390557E91A863"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-104.bin",
+    "bytes": 4395608,
+    "sha256": "D519BF3B5F761A08C28CEE63B605F8A3829C10A85F3D5D910BDCC39ADFBB66AF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-105.bin",
+    "bytes": 4395608,
+    "sha256": "5FA8452236200B64F40CE889A00C997AD0A1A9101018A3BB46ECF94DAAB0808D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-106.bin",
+    "bytes": 4395608,
+    "sha256": "E1856B1575B7315A2D10809515CBBA7E5C9E3F69AB4992EEC50B13A10FB0DCC5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-107.bin",
+    "bytes": 4395608,
+    "sha256": "E647629D58957C18131B842978C0A9317F87DE621B23B78889866F5778D233C9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-108.bin",
+    "bytes": 4395608,
+    "sha256": "74EBFA42BCBB1205E81121296FF38F9003F43123C228D34C0909261E68425DA2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-109.bin",
+    "bytes": 4395608,
+    "sha256": "5268A02DADB4F14CA7D3873A8B26A7CF2590BCF17610840F2EC4CEF34BEED677"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-11.bin",
+    "bytes": 4395608,
+    "sha256": "FECE9F3CFCBD3AE5C401691DDE8207D6912D334A196492DDE6077D5363D2C952"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-110.bin",
+    "bytes": 4395608,
+    "sha256": "E477119817978A99367DB5B5A56ADD80C8E7395B3275F56FAD3BC3A349E14E37"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-111.bin",
+    "bytes": 4395608,
+    "sha256": "614985E6C82762A8F3C92B70EFB4CA8AF58A3F008024D12B19777E520990C861"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-112.bin",
+    "bytes": 4395608,
+    "sha256": "1642023C93E16A73E1096A17F3CB336E528EC66BF896B13FE823EC3C059B419F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-113.bin",
+    "bytes": 4395608,
+    "sha256": "AB00893CC72D8AF50D2118F18CC72A00BAF6D6267FB3996F7784BB0B5302DE0A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-114.bin",
+    "bytes": 4395608,
+    "sha256": "94117917476A450A62B16FB8F675E4B7015E3C64ED19422D1D3251E7AFC9C95C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-115.bin",
+    "bytes": 4395608,
+    "sha256": "AC6ABE22B317069B98E70A89D39C018CCD719AB4EE13F6209A5346C502F8ABE8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-116.bin",
+    "bytes": 4395608,
+    "sha256": "A4D425742BB2C77ECCB8858DFD935810F9F25A393BEA6F1982DB8E3F054FACD4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-117.bin",
+    "bytes": 4395608,
+    "sha256": "E08B52B8B5AFE11A63CA910E268436C8E2A8CD71500918D94A7F9BB1C7C1ECE2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-118.bin",
+    "bytes": 4395608,
+    "sha256": "70307567AA10DFC03F2CBDA667A5DA275166FBA35D42357DD1B66582CDB358C1"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-119.bin",
+    "bytes": 4395608,
+    "sha256": "3B7D9955911876BE855C443E28A7A8D51D0514F80290F9F3E989F24187531390"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-12.bin",
+    "bytes": 4395608,
+    "sha256": "A205F29AD79111F38876C15DECF4ACB3E6034A4D81B851E0366939FDD84C5FCA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-120.bin",
+    "bytes": 4395608,
+    "sha256": "9D437CC416F46C8C58F6FFB9A21F823FCCD536C4E2FBBA91DA08CE46197C1698"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-121.bin",
+    "bytes": 4395608,
+    "sha256": "637124FA0FC5FA5A7C51E4114F10278598B455444DD2535105C5B8E22ED06DF6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-122.bin",
+    "bytes": 4395608,
+    "sha256": "3E80815AD155840ABA0CF4C3BD510CE75B2E53925E9E642C9C4821D073196901"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-123.bin",
+    "bytes": 4395608,
+    "sha256": "85D2CFAD38848AF7DECA130DC84811D6AEFCF9DFE6637F0F7E73922A12A78D45"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-124.bin",
+    "bytes": 4395608,
+    "sha256": "22EC1C3263F8A7E05B274B0D3C8315EB4F4316C30AFEE6B44CB7EA197D0FE432"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-125.bin",
+    "bytes": 4395608,
+    "sha256": "83326410CC2234A72EC8D066F258A73ED97DAC664559623D348C94F214F6F0C1"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-126.bin",
+    "bytes": 4395608,
+    "sha256": "E0947661C4DA9DA41A8D6E4FE990B292E82AF35F9132DB1F8522DEDB8A8AD2D6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-127.bin",
+    "bytes": 4395608,
+    "sha256": "62DDAA8839FE6001C3B6F9BC1DF4B5BB565BCE5F9F3EFE4684BB57B6B7532F7E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-128.bin",
+    "bytes": 4395608,
+    "sha256": "A81185E1015A1E8AB17A66948E43899027C5420666CA938FCE4A30FB71377BEC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-13.bin",
+    "bytes": 4395608,
+    "sha256": "46C4E95E73DB941A6B1FC288CE1F8CEDB4EFDD118F563689C4C2D1F65E57F43A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-14.bin",
+    "bytes": 4395608,
+    "sha256": "881C0C93C854D506A2E3B2DB201DAF32D7E2E4AF9B03A8585D3D8FFA75DBB842"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-15.bin",
+    "bytes": 4395608,
+    "sha256": "81A646D50FF360C04FC76F0A66512C8D8E6F4AE7D3FFA092A30DDF5784902A12"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-16.bin",
+    "bytes": 4395608,
+    "sha256": "4A35DD9BE51FD58F795537B0871A88FD0C814CAF5C929C65A8B33E2C21AA4A35"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-17.bin",
+    "bytes": 4395608,
+    "sha256": "FEF8973A8E5EECE67202C03E298D1D29C0095D09CD6ADB62AAFA34E4E122541F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-18.bin",
+    "bytes": 4395608,
+    "sha256": "0BB633B3F2132A0B48F7BD4304C668B9BD41961B3BC7BF3E96992AC1446C8D4E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-19.bin",
+    "bytes": 4395608,
+    "sha256": "0CC95B0B670D786096FACB1C9D14B3482D988DDDA16F0050B1DA1AE55EE2F3FF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-2.bin",
+    "bytes": 4395608,
+    "sha256": "8665FF8A32F8F98C54C9CBDF70B6098C783E53C86BF47EE5D97B1A0580BFE537"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-20.bin",
+    "bytes": 4395608,
+    "sha256": "15AB04BE927E1C22F0F68669078A3FE8FA4B4176E9038DC5E8552577DD9F6581"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-21.bin",
+    "bytes": 4395608,
+    "sha256": "61CAA96BAF15E47E04DA43537EA30DC9BBC1ED9BBF8E6E4A8DCEBDFA99A63DEE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-22.bin",
+    "bytes": 4395608,
+    "sha256": "9C0FA709C2D005988CB3C4B209C7836D54A9C90B8B2FAE8821364D082FC91F84"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-23.bin",
+    "bytes": 4395608,
+    "sha256": "F7881D8844C9BB874FEA375F5C8FA7633DC530052261447BEEE7F370BC0C63EF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-24.bin",
+    "bytes": 4395608,
+    "sha256": "F391D654153CA15EBE8924E63AC5DBE0BF2DEC459E051F4C2EB908140F7DDCE9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-25.bin",
+    "bytes": 4395608,
+    "sha256": "F873E230EE12A8B6E4045BCACA077114A186A2D8741A1FB561F089AA69C2CA27"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-26.bin",
+    "bytes": 4395608,
+    "sha256": "BA8908E64D0669532894B1C5F3226B7F2F63C373E71A10B503BB1DC159C691A7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-27.bin",
+    "bytes": 4395608,
+    "sha256": "86749B7672DE893AA1962F297239B60FFA28B2BEA8C943738CF1712DB76E826E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-28.bin",
+    "bytes": 4395608,
+    "sha256": "2A156780A1C148C26E5215B444B82BAE186E360B49216AEBD95CA95C3543C87A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-29.bin",
+    "bytes": 4395608,
+    "sha256": "51517CFB5894A49D8650DDEC66ACE7A77C2A74F5077CB5F1A15ABC8A544C5C79"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-3.bin",
+    "bytes": 4395608,
+    "sha256": "4EC83623189F886358D77CEFC8579E6F04B04DF453A030208D3D1D58A5869CE3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-30.bin",
+    "bytes": 4395608,
+    "sha256": "B57F547BBAA5B929F9C507D7CF7BFB49F31A18E94C8330171DAC62C36F9C5D16"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-31.bin",
+    "bytes": 4395608,
+    "sha256": "57C596D7F92BB963942B2A225A184C47A87E8CA796F7E77FEFED715139396583"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-32.bin",
+    "bytes": 4395608,
+    "sha256": "D9281E02205348021ED91FEC8D82175C59E449F05EAD3AF4FF8CFD650DCD478F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-33.bin",
+    "bytes": 4395608,
+    "sha256": "DC8EC8A026F2613AF24F7C3109854EF6FE269F09F2FBD77CFAEE9EA44826E3B0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-34.bin",
+    "bytes": 4395608,
+    "sha256": "E2B40395BDC4A99E5001D6C19E95E9754416DC7249FEF5BBEE279962BD7FB084"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-35.bin",
+    "bytes": 4395608,
+    "sha256": "2CB0960D6552DE6B25DE0A90D7C25A00532C49496B4732CA8D4D89AEE3381284"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-36.bin",
+    "bytes": 4395608,
+    "sha256": "304AB11F717247A8BCDAC9ADA5D2509573B362446CEB873FA4FC515B2F22DC4B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-37.bin",
+    "bytes": 4395608,
+    "sha256": "6DFCCFF7C1775C3B82E570B29719DB98CDF6ACCB7410E114C5FB46E72E8B98A7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-38.bin",
+    "bytes": 4395608,
+    "sha256": "8CCEE16782AAC5B9AF4453963F7CB1B6F10B10E0442BFB2FAF5C1FCB17539689"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-39.bin",
+    "bytes": 4395608,
+    "sha256": "66051B2BBCD51BE720AEF0F50778D48A24D5EDAB40FF8D3B0C4EFE050510401F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-4.bin",
+    "bytes": 4395608,
+    "sha256": "E01E8BA1D01D1813EC7789CCBA31013E4960B758FC818B6A94548F075262382F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-40.bin",
+    "bytes": 4395608,
+    "sha256": "7E47BE874512D3292BD3BA10514ADAA199A37397F3FC553E33BFB99DB28E1CCB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-41.bin",
+    "bytes": 4395608,
+    "sha256": "619B5D1B935A9FCDA1B69DA20B3D054D610528C589FDCC4D0A93B014556F9C67"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-42.bin",
+    "bytes": 4395608,
+    "sha256": "24FA02D72AE44A25C779E0151C9A16AA81019FBDADF62446C15A80970CE856B4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-43.bin",
+    "bytes": 4395608,
+    "sha256": "69E7D27085032DB0E12B7711CABE9C4927010C44B1A4CDA021B674C35AE6A626"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-44.bin",
+    "bytes": 4395608,
+    "sha256": "470D5549242B5C405EC874F459C202A0FE096C29042B34C74917464896C6BD57"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-45.bin",
+    "bytes": 4395608,
+    "sha256": "063D1EDCF19757659941FB912542D919336F8B047375FAD7333C8628E1548A0C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-46.bin",
+    "bytes": 4395608,
+    "sha256": "AA52B38C2A20C8B413071FE40EFDD0ACD49A269D8F13FF894F4651CE2B638019"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-47.bin",
+    "bytes": 4395608,
+    "sha256": "46792A4BF2A96E7FF66C299629823716E43A5D2542DD5793C51F7C7F11AF7F56"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-48.bin",
+    "bytes": 4395608,
+    "sha256": "994E62D04C58AE1533140E138164B2D37F3379459E90EE92D9B0E30BDFD2BFFA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-49.bin",
+    "bytes": 4395608,
+    "sha256": "3456F01F0C6DAAD405E3480F369381AAB71660A9BD3B2811265E720A798623E6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-5.bin",
+    "bytes": 4395608,
+    "sha256": "4D4D11400DE93167AE72250F01F9A05C8C6F08C2132DA43312A341EC6A623A32"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-50.bin",
+    "bytes": 4395608,
+    "sha256": "7D71278299F120372D13CB9309377E1A797F9C5D9AA69289AD8341DA3FE9F8E9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-51.bin",
+    "bytes": 4395608,
+    "sha256": "DB3210CE9F7027FA591AAC7D0050A47E7FB06798356B6CF652F5572534B41C27"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-52.bin",
+    "bytes": 4395608,
+    "sha256": "B06D2BF092713EC750BEA4D8C71DC52C11A993ADCF46623419C6931B88B77660"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-53.bin",
+    "bytes": 4395608,
+    "sha256": "7E0533BD96F3299F8F33E1153F98667691E0D93E3174DC2587FAE2B22100E984"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-54.bin",
+    "bytes": 4395608,
+    "sha256": "0D5990B5E78D3DB69E2EBF398DF7D5F537AECDF6EF150F4079FC4E3A77EF5D75"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-55.bin",
+    "bytes": 4395608,
+    "sha256": "3CB5D5F886401C7ABF00E953B77CDC4BA3351220A797645E53BE3762565EBA6B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-56.bin",
+    "bytes": 4395608,
+    "sha256": "52763EEB5611FEA5E14A44325A30000E1168506BDCFFF563F8C21F8FC0C31FD9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-57.bin",
+    "bytes": 4395608,
+    "sha256": "23B4734D32347C1991F0692CFBBEAB4BA9482E5EB299E466CACD2783FC2BDCA9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-58.bin",
+    "bytes": 4395608,
+    "sha256": "1A86E77567439F18E0D8619A00FF26EE21363F9BBC7189A2CF8E9EF0276DA45A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-59.bin",
+    "bytes": 4395608,
+    "sha256": "7A97D7C5AA8265A23140A9BBD9DD5DC86FDE8ECFADB059A8E5108E65247B22EE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-6.bin",
+    "bytes": 4395608,
+    "sha256": "D3B1AFBBE36D9F81C266758D63902C2357B9299458AA93FAF58D4D0D71E5B5BE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-60.bin",
+    "bytes": 4395608,
+    "sha256": "F088797AF1E38C07400C897A61EC8721ACC18354000313B5213820833CEF1B8B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-61.bin",
+    "bytes": 4395608,
+    "sha256": "B953643121ED39B0FDC264DC44D6056C6191922B6942518E3B856CC1D6A86213"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-62.bin",
+    "bytes": 4395608,
+    "sha256": "BC1238946433F12F41073F84A9587A61AB14FB6B7E8CFE834506C7A6E0328154"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-63.bin",
+    "bytes": 4395608,
+    "sha256": "B05E002A87D3798933084FE28A134D3006B7528127290CDE21396A17BCE85354"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-64.bin",
+    "bytes": 4395608,
+    "sha256": "474BD4C031A0A6A58DA6C7DF450FE0E208F730EEBA07566EC05F04A90C7396FD"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-65.bin",
+    "bytes": 4395608,
+    "sha256": "FD4C9AE619A13290C921F52FD482283A83A3D6F3981733E6AD25FA3A2719FE1D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-66.bin",
+    "bytes": 4395608,
+    "sha256": "C045E042C58984652F610239A33ED701E549AA52CEC120D1D33B53478DB8C800"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-67.bin",
+    "bytes": 4395608,
+    "sha256": "297C18F5B3140474A0A8EE2A71C3EECFD6F3DB385FFC8D0F23C624BF2B337BCD"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-68.bin",
+    "bytes": 4395608,
+    "sha256": "9C8F8097BCED6526DC7EA190E7F72F87D5C9A625CDE1306E88E6CD79CB10F223"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-69.bin",
+    "bytes": 4395608,
+    "sha256": "13E742BFCB5A380EC52110ADF329AAC2DBEBCD67FA8A08DBE4A3DACF1D802DCB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-7.bin",
+    "bytes": 4395608,
+    "sha256": "FB5D6D3BF07442CADC1157A23820996FE7A6FAA49283B346332781EE77AC9393"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-70.bin",
+    "bytes": 4395608,
+    "sha256": "5A4BE73EAF6B4C48DD50FC995BDCF1DD52249D85A73FD7F4946F29EE2F452F88"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-71.bin",
+    "bytes": 4395608,
+    "sha256": "DEBD6156045B499EDE5E23F817031379CF05A2EB102C3D5A532179A226408595"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-72.bin",
+    "bytes": 4395608,
+    "sha256": "4ACAB438D008AB8869827E4DD42D4D1CF5EA7F9283CAF558E0B0357691739CCE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-73.bin",
+    "bytes": 4395608,
+    "sha256": "7FDC965383AE4CE4786C9F94ABA9D80A1AAD92F954C39495637F9B3C4BAB430F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-74.bin",
+    "bytes": 4395608,
+    "sha256": "D545857CF3606A9FADDF5A8095246AB09932747B914472193EBF0F4A9740E5EA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-75.bin",
+    "bytes": 4395608,
+    "sha256": "180584410C758B571E0E3E55127EA44D059A131B43D4DE0DD08AF95D1C7BEDB0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-76.bin",
+    "bytes": 4395608,
+    "sha256": "01F666BA96506EE130848CC0E00263460857657865E590DD625F071B7426216D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-77.bin",
+    "bytes": 4395608,
+    "sha256": "FD1FBFC7268164DC0408C8B432F350D6A7791A5EA1D3F25BEAB8E085814C54E6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-78.bin",
+    "bytes": 4395608,
+    "sha256": "190165F4CBFF4D7AF9C42E6B42BECD7B39C8C431DE7FFF7DD17D2ACFBAF9C7B4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-79.bin",
+    "bytes": 4395608,
+    "sha256": "11DA3D7CDC98B730F39CED409216833AF7DA7DAF525D5871E5D51C23741C38A6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-8.bin",
+    "bytes": 4395608,
+    "sha256": "D79A5CD91BB6CF9904DCC31854AF291D075B816E26BB278F57259D59D64C402B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-80.bin",
+    "bytes": 4395608,
+    "sha256": "47192FBC59A4762517866A3EEDA16DB03FC0665E16F29799AD4B678B7702362B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-81.bin",
+    "bytes": 4395608,
+    "sha256": "FAA49F390EC73B190D3A6FBB678A047B234F36E9B14DE3FDD063E9D75E12EA83"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-82.bin",
+    "bytes": 4395608,
+    "sha256": "BEDD39742754EE1FEA166D2669AD8797346803BC68A5BAEB90D5431E2A807DCB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-83.bin",
+    "bytes": 4395608,
+    "sha256": "06D98D162B048BE5D14B073AF5B821CC3160FDAEE1DCFD1CABDA04003157343E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-84.bin",
+    "bytes": 4395608,
+    "sha256": "08329654D9722EB53E871F239A14AE2CBAC7B0AAB124F740F0411388E94A54F9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-85.bin",
+    "bytes": 4395608,
+    "sha256": "706518D49E645BF2FCB61246CF8036C64CF50B9343A140208FDC5E66DD448393"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-86.bin",
+    "bytes": 4395608,
+    "sha256": "F5563971F96D1DC9745F57D3F4825B8B7DC45D0D45C7E19F867DABB473E92226"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-87.bin",
+    "bytes": 4395608,
+    "sha256": "8111045A443DAF5832DCFAEBEA970A15C0F82F9E4FA2BC515D8035A2FBE4B09C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-88.bin",
+    "bytes": 4395608,
+    "sha256": "4EB7974E71AFFA89C4D08B6EF157A8486D15ECFEFF77D0A00471EE62C9D27E07"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-89.bin",
+    "bytes": 4395608,
+    "sha256": "38B26C540B149B86566E19AB273F4CAFE782C87AD20BCC8CFC3AAF2B021454DE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-9.bin",
+    "bytes": 4395608,
+    "sha256": "9A574FEABD6AB74B1F9999E3417C570AB041EAE0F0D2F5449596806D3B1CE6B4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-90.bin",
+    "bytes": 4395608,
+    "sha256": "8FE9EC588F44BC3B7D4DF7867C71750F61A2AED05DC0A0F2687F5EF9835CE783"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-91.bin",
+    "bytes": 4395608,
+    "sha256": "A49B0617A466BCA50D765DFE969296C73DF0641BAD79BBF03238C181C486593C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-92.bin",
+    "bytes": 4395608,
+    "sha256": "277FC339B3F6DDB251D231A26BE6011A3A3DE0212B53DAEEF258F291711192C8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-93.bin",
+    "bytes": 4395608,
+    "sha256": "E1F25C6EE14DEED329FAF9D409DDCF0FC9280EFDE7CAD512D75A1936CE62B4EF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-94.bin",
+    "bytes": 4395608,
+    "sha256": "ED8924E3939CEA3AF1D4DA0904DC041B8F7A97E51CB606BF4C3D219A40F0B93F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-95.bin",
+    "bytes": 4395608,
+    "sha256": "8EB7EE7BE6639071E5F540FB01EFE9644CA7B62305E35CBC5F4E78EE314408C3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-96.bin",
+    "bytes": 4395608,
+    "sha256": "58D4648C0F792EE8CFD8F716E3D31EBE67BFE98AD4665F732F19AFE9B60FC639"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-97.bin",
+    "bytes": 4395608,
+    "sha256": "F783CDD7ED4C32174B5B1FB9486875302E1AE07100FA68103446BD9B791F2D77"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-98.bin",
+    "bytes": 4395608,
+    "sha256": "AD750AAA1162802EDDAEDC6E7439D1D5FD394D0D809851B56D5CD6B3AEEC5E0C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\close-shore-v2\\training\\checkpoints\\session-99.bin",
+    "bytes": 4395608,
+    "sha256": "891141A3E78A611E1626107B40C706E287DB200C0ECB3C6CE414899450F082D2"
+  }
+]

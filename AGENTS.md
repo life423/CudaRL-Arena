@@ -1,5 +1,26 @@
 # Workspace instructions
 
+## Close-shore continuation — November 25, 2026
+
+Latest user authorized checking two failed starts,chooser GPU PPO,frozen motor,
+no scripted live avoidance,conditional Godot adoption and no mouse takeover.
+Read CLOSE_SHORE_PROTOCOL.md and close-shore-v2 research README. This session is
+CLOSED. Two failed prefixes replay exactly;186 branches/14.145s yield46 safe40s
+continuations,8/7 from the first two states. One128-update CUDA session on1024
+worlds/1048576 transitions takes131.419s. Only training initial-state exposure
+changes:512 randomclose tangent,256 olderapproach,256 interior;reward/39inputs/
+motor88/physics unchanged. Parent80 import,new4096placement parity and3-update
+exact resume pass. Phase8recovers from88onward,but phase9doesnot; final128close4/8
+andoriginal4/12. No trained checkpoint retains12+4. All17fixed+17close checks
+saved;zero newlongcoverage/Godotparity. Total718083153attempted substeps counts
+allwork. Godot remains appended16/motor88,all11 hashes intact. No fresh rest
+physical suite. All129full checkpoints preserved locally;0/8/88/128 archived.
+No trainer remains. Only154respawns follow1024initial worlds;do not assume the
+run supplied frequent meaningful close-shore practice. Next proposed learning
+audit is encounterfrequency,safe-action advantages andretention. Do not extend
+this finite session or adopt the regressed candidate. No mouse/keyboard input
+is authorized until the user explicitly allows it.
+
 ## Curved-path bank feedback — November 25, 2026
 
 User authorized curved-bank feedback and one GPU PPO chooser study, preserving
