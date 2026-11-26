@@ -11,7 +11,7 @@ namespace cudarl::flexible_tail {
 // cross sections fit inside 12 mm balls. No force or state change is applied.
 CUDARL_HD inline double submerged_gap_m(const pond_geometry_v1::Parameters& pond,
                                         const physics::BodyState& body,
-                                        const Snapshot& pose) {
+                                        const Snapshot& pose, double query_margin_m = 0.) {
     if (!pond_geometry_v1::valid_parameters(pond)) return -1;
     constexpr double min_shore_radius = 1 - .022 - .014 - .009;
     const double min_flat_radius = fmin(pond.flat_radius_x_m / pond.water_radius_x_m,
@@ -25,8 +25,8 @@ CUDARL_HD inline double submerged_gap_m(const pond_geometry_v1::Parameters& pond
         lowest_y = fmin(lowest_y, center.y - radius);
         highest_y = fmax(highest_y, center.y + radius);
     };
-    include_ball(body.position * physics::scale, .011);
-    for (const auto& point : pose.spine_m) include_ball(point, .012);
+    include_ball(body.position * physics::scale, .011 + query_margin_m);
+    for (const auto& point : pose.spine_m) include_ball(point, .012 + query_margin_m);
     if (far_radius >= min_shore_radius) return -1;
     // Within the shore the slope coordinate increases with radial distance,
     // and decreases with both the flat-bed radius and shoreline radius.

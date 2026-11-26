@@ -1,0 +1,647 @@
+[
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-0.bin",
+    "bytes": 4395608,
+    "sha256": "5D3322F5C07BCD3BD3AA13365540C4D209830E8A4CA0326D6EC49EC5B093F21D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-1.bin",
+    "bytes": 4395608,
+    "sha256": "010C2CAE9E5C5BBCBD6721C400E0427267FA36609A06F194403566B7E74FC842"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-10.bin",
+    "bytes": 4395608,
+    "sha256": "A0AC51579A9F93D3569F6CD1EB45F6D7A79873EC9D3484CDA99BB215CB09151A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-100.bin",
+    "bytes": 4395608,
+    "sha256": "ACFDA31BE4089A9837DD88E020F888FFA6FB2830C65BC44FE52FDCFBC65BA707"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-101.bin",
+    "bytes": 4395608,
+    "sha256": "56F85C8EAB78C867E4C026373612B77543D71DF924AA89C4618CE4B02E0FFB87"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-102.bin",
+    "bytes": 4395608,
+    "sha256": "EDD08E06FB785D2C3845AB4D82C6BAA2AFA35F65C604E480A371B89295E3448C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-103.bin",
+    "bytes": 4395608,
+    "sha256": "EDD12D03BE68BE6ED21FEFD8DB013A3BA208F704B809A50DF906D2CBCADE051C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-104.bin",
+    "bytes": 4395608,
+    "sha256": "2BFA572CC0BC7DF53E94C759C0B36A4ADFD21645271E453E5B7C4F96914AB39A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-105.bin",
+    "bytes": 4395608,
+    "sha256": "428EF3479771253A8850B9D9F39155077943C2347D97374802D33EC460929727"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-106.bin",
+    "bytes": 4395608,
+    "sha256": "DFA5A63A3CACE8F06415FABB276580E51E836CD7BED5C355FE0A8CCC7211E102"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-107.bin",
+    "bytes": 4395608,
+    "sha256": "E0DF64EB392B278870A73C26CD8AD56C229BCE201F43293B2DFF5B196E4FABA5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-108.bin",
+    "bytes": 4395608,
+    "sha256": "ECBBEA64F1C19A83B014A798EC7EDB4F4B1F032159D02CC6BEC54F3E2D8D6FB9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-109.bin",
+    "bytes": 4395608,
+    "sha256": "849D0051FDA79B47E163E44382275FD51648902003DCCD12ED2845D52BC93CB9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-11.bin",
+    "bytes": 4395608,
+    "sha256": "94152312BCCE4C0B145E9C0B7561404B5B327CFCD4072FF6203385BF2A363606"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-110.bin",
+    "bytes": 4395608,
+    "sha256": "31809AD8F62A91AB2D6823753D66373A3C2AB5C2192059462BCA94C5997143C4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-111.bin",
+    "bytes": 4395608,
+    "sha256": "B8C62E1D66BB6FF144B1E27B559FFBFC95CC04971F012BD989F69564B218DCDF"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-112.bin",
+    "bytes": 4395608,
+    "sha256": "5B4D95129F9F4B6C84767048B020598B0F424201E4B5E770A640E1C0758E51E7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-113.bin",
+    "bytes": 4395608,
+    "sha256": "620BCC031F4570839FD69BF3E32C54B4D98312CF708C12E985262CC340480104"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-114.bin",
+    "bytes": 4395608,
+    "sha256": "F031E41B3846BD725569916357D75C2FC28FA7002BFAF45E081E8ED0A820D953"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-115.bin",
+    "bytes": 4395608,
+    "sha256": "5B117C3FF5ABCCA0DD65D080132BF476BC8A09DB2E9B5B34015C456089EF8F33"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-116.bin",
+    "bytes": 4395608,
+    "sha256": "422BBA872068AE7DC7C571B85DEECB53E4701ABF2F88E38CBA430888700AF83C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-117.bin",
+    "bytes": 4395608,
+    "sha256": "692EB25FE7B58069335FFDC763E6408513414EC177A7BF0E532F870177E4EA3F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-118.bin",
+    "bytes": 4395608,
+    "sha256": "18A0BCD80281568BE81E6A87DAFCB652CB90ED0FE27612840793D281EEA1716A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-119.bin",
+    "bytes": 4395608,
+    "sha256": "76F37AB50825F29D8992DD3BA3281428F924C5A8A00B4212DC6E770B49CE9D5A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-12.bin",
+    "bytes": 4395608,
+    "sha256": "7E898D2E76DB23D1F1387AC0E5A61A07F2B0BB25D0B50B90BD5C341E857445BB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-120.bin",
+    "bytes": 4395608,
+    "sha256": "DDA43749F307D5F705B04D235E3B4EB75B0594AA49BBD2EC5321B01810D998F5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-121.bin",
+    "bytes": 4395608,
+    "sha256": "AFCC2CA5970E5C8A1E40DA59FA8D1B4246E0AB326A61C7ED88A22E5B739FD774"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-122.bin",
+    "bytes": 4395608,
+    "sha256": "2CF9591429B4C5747F56F2D64ED5428716B3CFC85295F9BF98BEE4C13CE7ED4F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-123.bin",
+    "bytes": 4395608,
+    "sha256": "B87E144FB1DD51C4151F23A61AB5547602B52F2A2A9A597F745AE59DF6E2A6B1"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-124.bin",
+    "bytes": 4395608,
+    "sha256": "6622C2C40E93515C315C92FF124B6A5F927B966060658B78A0B3A2BA948BA8EA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-125.bin",
+    "bytes": 4395608,
+    "sha256": "055447A5FBF1FBF49E806DD401E71CE059F2AF6F118079D935AA6731CF6D585C"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-126.bin",
+    "bytes": 4395608,
+    "sha256": "CD2F65EEE4363D0669820D34DC26BC06FF9EDD255EDB459EDABDF6535DCAAC6E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-127.bin",
+    "bytes": 4395608,
+    "sha256": "1006E1EAE54D3E5EC994847749B112587BB3E949E4221F32572653301FEDA852"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-128.bin",
+    "bytes": 4395608,
+    "sha256": "CD8A9A903A7D45081C1F4751B5C8A1CE7FCB607397D972628E8C1858E3CFDF1E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-13.bin",
+    "bytes": 4395608,
+    "sha256": "52B0F9443DEB4617767A5AF23ABCDCB1056CE84C1975737EB59481B6B2C1E81F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-14.bin",
+    "bytes": 4395608,
+    "sha256": "F0C2B36C1D4785432C8B3AAF7C97593CBA46D7092AB94231590469D8C32CF8B8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-15.bin",
+    "bytes": 4395608,
+    "sha256": "3098CF3B4BDCAD49284BE95946DEC69E6732996E157E9DDD9895AAD32F4F1A44"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-16.bin",
+    "bytes": 4395608,
+    "sha256": "A6DC8ABADBCEFFED3D81402E7F77926E19BED12039C7AACEE353CF9504DC45BC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-17.bin",
+    "bytes": 4395608,
+    "sha256": "1DBBF9E319B4DF25A7CBE80C7237036175A951A1D17F11503B6EF95408664C9A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-18.bin",
+    "bytes": 4395608,
+    "sha256": "3288244FFDAD8CECDC56474C8E95A527D17041FDD3E0D9566A6468F46E8296BC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-19.bin",
+    "bytes": 4395608,
+    "sha256": "6C4C8E382BB9DE9F5C570C52D8779726A5B511A0067BE1E7A90F35A6BBADAE05"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-2.bin",
+    "bytes": 4395608,
+    "sha256": "E71C8B29B3C7784346BD09A7A79BAF437C2920F71F5380FEAE7176C7D6EA2F54"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-20.bin",
+    "bytes": 4395608,
+    "sha256": "FE8A43067515333F3B27241148831841FDC17279037CC4CAD5A75AEBE55E9FE0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-21.bin",
+    "bytes": 4395608,
+    "sha256": "F9FBA38AAB3189626E33514D4C114928988D8C1A60BCA98B7868EA3D0E4986C0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-22.bin",
+    "bytes": 4395608,
+    "sha256": "5EB006C61697CB2C09D1295C5023105F219D3A7B6FB01D2599503E9E545FD6F1"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-23.bin",
+    "bytes": 4395608,
+    "sha256": "FC15BBF7DEAAC9B72021A9B56E94F56BD32644405E1E07E79E8C947F0F17089A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-24.bin",
+    "bytes": 4395608,
+    "sha256": "66D81603CCB0E45ED76FD1F2ED8877685E87A89847665180AC32810447BAC76B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-25.bin",
+    "bytes": 4395608,
+    "sha256": "D7BCF4FA1A698AEDE60D3E1E9A870868F7217A2D9BBE19E8C3E6839D5352158B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-26.bin",
+    "bytes": 4395608,
+    "sha256": "FE3E692B00C8C3A142BF46DA31678B4AA06DDE7A5AB210695BE73BDEBE6B21B7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-27.bin",
+    "bytes": 4395608,
+    "sha256": "AEE3EDB1A504D909445C380619A6D0B8D318AA4495FBFA027F80A7EE6DC22814"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-28.bin",
+    "bytes": 4395608,
+    "sha256": "E4C190CC03AE300F94A899377BEA741477F30F3CCBAACD6C0D83C456CF643004"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-29.bin",
+    "bytes": 4395608,
+    "sha256": "C76AD43087DC828618C5F7DC4D5B0B68119B069083D99B73383675B0E2970889"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-3.bin",
+    "bytes": 4395608,
+    "sha256": "A5014C675C10F477E05067F4C1038AF52ACCA1E9ACDB6D5CAC2F4AFB0A9FAEC4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-30.bin",
+    "bytes": 4395608,
+    "sha256": "D616419AFAEEC294439FFEA56B8B9D659CD659A7685833E566916CE30BB70BD6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-31.bin",
+    "bytes": 4395608,
+    "sha256": "184343E3F39744D1A7094D19372C581DF8323C5F522157B845449622BB78FA84"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-32.bin",
+    "bytes": 4395608,
+    "sha256": "AED8E22960E92B976DD0F396C5116C327725C3A093578611B93DFF65CD83A92D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-33.bin",
+    "bytes": 4395608,
+    "sha256": "35D8728280837E9EA577FDB5219002A691248FB23A3AE0B682AB41BCAA70BDDC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-34.bin",
+    "bytes": 4395608,
+    "sha256": "C05BA9C8845D9413A183395597FDBA31FB641E565AE78EE876AF4DCB8DA90915"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-35.bin",
+    "bytes": 4395608,
+    "sha256": "A9B60C3B3964B6CE7CE1A99FC18B8A920BA862F9E9794E4E3437F68BF71BA1AE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-36.bin",
+    "bytes": 4395608,
+    "sha256": "6D7A7013C3219C35584B1D9BF936D6CD6E20E090BEFB53F3034068C3C2E4CE2F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-37.bin",
+    "bytes": 4395608,
+    "sha256": "AD159346A7284492D0BE84F38EBB7FFB30C15887BFC0A0E18F37D1056DE233D5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-38.bin",
+    "bytes": 4395608,
+    "sha256": "C6F7717198D1CF14018F031E76C4734C0FB14AAE9CC7974B78CD78FA97F5FC7B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-39.bin",
+    "bytes": 4395608,
+    "sha256": "42B14FDC2354DA927D78BEEDE3D5130956680D0407D9B2B4F1E9A05159DD2FD0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-4.bin",
+    "bytes": 4395608,
+    "sha256": "579D5429445FA39A3E47CD4A4E21DBB2A47B6A38A4DAE99596BD7DDA11B5B2DE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-40.bin",
+    "bytes": 4395608,
+    "sha256": "4E588189B64C486014A1420549963F7C3D30242D339C45B8BC3680EC23A1592F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-41.bin",
+    "bytes": 4395608,
+    "sha256": "9DF58E19470029DE3DAD631A7BAF4BF287C7051128A57782BD2568FC643DC7D5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-42.bin",
+    "bytes": 4395608,
+    "sha256": "9F5FC13E72F349E8921E69F3275E619CC9BEF98167B5A4E188FAC36FB6256078"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-43.bin",
+    "bytes": 4395608,
+    "sha256": "285818B72D8F6B706167A6CD38DBC7E320E9DFF2C1BA7B13630A60C5F31D99D4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-44.bin",
+    "bytes": 4395608,
+    "sha256": "F15A78CCFEDFD08173F099CE7281944782B55EB653F32F04F63681E34E2A89EA"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-45.bin",
+    "bytes": 4395608,
+    "sha256": "92499C625DC014D84332A932DF85F0698AA75900DBEDC869DDFD70CC8EE94EC5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-46.bin",
+    "bytes": 4395608,
+    "sha256": "EF977EC39C4DD5266D8421F3A94036FF8950A0567AD229DD96A5B44EED92958A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-47.bin",
+    "bytes": 4395608,
+    "sha256": "0A9E47945ED9C7A20EE41B92B9DAACC2F0402ECC622C3D75D29B4D0734018A31"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-48.bin",
+    "bytes": 4395608,
+    "sha256": "008AE9784EF09CDAD51B99B6CB1C808BA60DA94EF17AA03C8FC24AE08CA05604"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-49.bin",
+    "bytes": 4395608,
+    "sha256": "4433FC5EFC6F8CF35F1C41BA2DCFAFFD280EB3E3F91A294730D8E4DFC4BCDE91"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-5.bin",
+    "bytes": 4395608,
+    "sha256": "2AD5115F4256626CD512F004BD4CC54918E3D6929C176C27D28E4A2F4BA1AF8B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-50.bin",
+    "bytes": 4395608,
+    "sha256": "37C230CF0A216027E33C353C19BCFD3E319A8C2BE697E03D78B6709F02CE5C1F"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-51.bin",
+    "bytes": 4395608,
+    "sha256": "5D34BD2BC0A44360B17B1AD57B443782BCD3814A6D4E16EA7E2F461E952BFD1D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-52.bin",
+    "bytes": 4395608,
+    "sha256": "B4B19FB7B61C2EFF3ED9F20D5639F559807E98AD49E79BBC70F9704AD89317A5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-53.bin",
+    "bytes": 4395608,
+    "sha256": "DB683EAF1175F7199C008742AB22154CC898D3A956D80A094DD37D01F978FEF4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-54.bin",
+    "bytes": 4395608,
+    "sha256": "E0BFFDC4CAB07E408FD1D60D2B6BA625D335EC35093A816C1F436CB4C21C2B39"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-55.bin",
+    "bytes": 4395608,
+    "sha256": "A0A32D353E570095462AE8CA44BE44F08051E090274CBAF461AE627508FEEE3E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-56.bin",
+    "bytes": 4395608,
+    "sha256": "B5C4C5A8911B45D7748AB7916467D355CC35635B374E47EBBB529EBF77C44B4A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-57.bin",
+    "bytes": 4395608,
+    "sha256": "4B4B6C28166499CC7149D7B52967D45F75081C60C2EBA2478B89E25572ADD712"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-58.bin",
+    "bytes": 4395608,
+    "sha256": "2AA106B4B9785C0CBFB9F8A6CFBEB8E7652D551726047F7925A707FF3CCAA0C2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-59.bin",
+    "bytes": 4395608,
+    "sha256": "06AA8CB53E42B142DA874C0CAEFD4A5866F70EB7064EE882103C348F22AD7A4B"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-6.bin",
+    "bytes": 4395608,
+    "sha256": "73D170B247A46127D20DECAD0C3B4813EF8A883FD751D9A39656AB3217F74AB9"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-60.bin",
+    "bytes": 4395608,
+    "sha256": "21F6DC262045A90704342069D772343B4B5EB226E5A810FAC202C30FA2C3B595"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-61.bin",
+    "bytes": 4395608,
+    "sha256": "C42CB35F5E8F3C4EB73BBACE8E6B588349C9AB44DF7045DC1B297AF585E4C32E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-62.bin",
+    "bytes": 4395608,
+    "sha256": "829AB9E5424599D80334CACB54544AC503DCC71FEE69E3FE1C9C9CB7BA85E5B5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-63.bin",
+    "bytes": 4395608,
+    "sha256": "BC5815FDD3F9287E03138671F2F1AF081BB2429AEBA4C63CA9CF5C874E0A8AFB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-64.bin",
+    "bytes": 4395608,
+    "sha256": "DE4AD13AD8756D1B5BD5440700DE0853A1ED8CA0A0363A9EA9E3CECAEFB4A476"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-65.bin",
+    "bytes": 4395608,
+    "sha256": "FB56382D79BFFD73270B4C04A87AC248644F86F61C823F1C37C1427B7F7C99C5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-66.bin",
+    "bytes": 4395608,
+    "sha256": "C1EFF7C5622B56B72A8FF1D1615FB48ABF36B9052C44746A62871FF21D605DF6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-67.bin",
+    "bytes": 4395608,
+    "sha256": "E85EC2CE24C81EB8FED6FB246DC93BDB607E670EB87982F7C89B5C6DF5BF7929"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-68.bin",
+    "bytes": 4395608,
+    "sha256": "8F9E7BAE3A4CD9C25172CB9DB34EFF97A759D269A057F5B16B4F6C13CDFF0DA3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-69.bin",
+    "bytes": 4395608,
+    "sha256": "225E50095031F1F6141BBDF5CC3643220330AA309069180788FE8B942D5458B3"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-7.bin",
+    "bytes": 4395608,
+    "sha256": "700C05A40ACA4DEF720AA4610109083CA8E71335578BBA45F80B1F92B0D205D1"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-70.bin",
+    "bytes": 4395608,
+    "sha256": "3DCC0C3433F1B161587BE0A0BA92466BB937D8CDF6C70B902BB1ACCB97C7A14D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-71.bin",
+    "bytes": 4395608,
+    "sha256": "DCC2ACB16E0BA0E3298E646793E564DB304B4B944AE90D9A28EE5DE69B84A262"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-72.bin",
+    "bytes": 4395608,
+    "sha256": "4EBF18E868E57F852293B5E2EF7E731E3AF80E4AC46AACF224A6F754BCEC4184"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-73.bin",
+    "bytes": 4395608,
+    "sha256": "FBEFA9ED57B903C110DAEC61065FB9474BFE1E76BF06EF724DF69F24D7C6563D"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-74.bin",
+    "bytes": 4395608,
+    "sha256": "2C21B550DB676A74AE4C895811182568533862F69BD80C3A749731727C0CF9FE"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-75.bin",
+    "bytes": 4395608,
+    "sha256": "C8D0F66597DF0680122D0CCCBF0097B4EDCF069641A6800E92E07CB6D59E60EB"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-76.bin",
+    "bytes": 4395608,
+    "sha256": "8B1A883ACE069D15961701D333244944D178F3A089768A5EE4E2CD646DF96ED2"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-77.bin",
+    "bytes": 4395608,
+    "sha256": "5B7E5A76B0786AC45F462FD34222FD87666041ABB39B131794BDF89BDAC78153"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-78.bin",
+    "bytes": 4395608,
+    "sha256": "76D3C97602FD2874F7A2086F7D1823B1F68EBAB05686A59BAF2EBE5BA3C555B7"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-79.bin",
+    "bytes": 4395608,
+    "sha256": "CC3551D5DAC1A778DCE201F2D737A675E711697D84B31F6A7185CA0AFD258864"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-8.bin",
+    "bytes": 4395608,
+    "sha256": "8DA7A4BF2E7BDB3C457A0CA7092CD7CC17242FB8179CC865EDEB88B019744F47"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-80.bin",
+    "bytes": 4395608,
+    "sha256": "884AD5A01CAF3D66CFCA5EC741323722C58F1E74B457A3A1639FBEBB51F67F85"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-81.bin",
+    "bytes": 4395608,
+    "sha256": "C2E1A55F2883FB11B2D7C0892F57246892503DC04BA2C24859588CEBABC21EA6"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-82.bin",
+    "bytes": 4395608,
+    "sha256": "85AE9063BFE65BEE2D0A6BC143410AA6D95BD0496D1D10F68363266271CBB367"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-83.bin",
+    "bytes": 4395608,
+    "sha256": "54723F7D97A4CAAF91509645CFA9787A18918F1E007D989FCD0FFBCAC8D62ED4"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-84.bin",
+    "bytes": 4395608,
+    "sha256": "30C88CFDA07710F8751C6AD845E91F55B2406FA927317297ACCF2E2842D665E8"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-85.bin",
+    "bytes": 4395608,
+    "sha256": "815C5A9ED9427F7761220EB23B1A7105FB29BD644E2A95914FC1F7889A27083A"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-86.bin",
+    "bytes": 4395608,
+    "sha256": "E82FECF3AD279C0A141A082EDB8F843BFF42EBC1712D8C7A485B762F1BBB5B66"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-87.bin",
+    "bytes": 4395608,
+    "sha256": "EBEC86C7F1726A5CE67576113273C6E9219954AD78CDF741D0EC366C2D8BFCCC"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-88.bin",
+    "bytes": 4395608,
+    "sha256": "BE7F1ADC04F697B17C7E78F6F30B21A1B1F21B363B637308C1239FC7662D2F47"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-89.bin",
+    "bytes": 4395608,
+    "sha256": "37B0B7F989A297C7E135CE607B7C26119C35B4D2650080149C49D8FEE854E89E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-9.bin",
+    "bytes": 4395608,
+    "sha256": "753B022D5BDEC2DF24275966B3628CF48E9F32F32C217F013D81FE472DA8A917"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-90.bin",
+    "bytes": 4395608,
+    "sha256": "5187651F84C5D5C0ECDE5DB8C42AC62067CC59F81C2D75C413E187FA1825D977"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-91.bin",
+    "bytes": 4395608,
+    "sha256": "115CF0D492A0D04A2CB3EB51772CD14B4B7F065FB06B67531548900186D9AC43"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-92.bin",
+    "bytes": 4395608,
+    "sha256": "5C0E6410550E2445490AB0046055CFB1E8B8F8FDFC5504EBE7F0961E72D7A387"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-93.bin",
+    "bytes": 4395608,
+    "sha256": "D50ABCC67C50B03B607F6E5FF89D45CF4FD1583EC56D89999601BF8A638DA030"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-94.bin",
+    "bytes": 4395608,
+    "sha256": "4CF71AD85410AF52F8CB907BE605951D8576A203B8E4F888185BE683C9AE9000"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-95.bin",
+    "bytes": 4395608,
+    "sha256": "4C515DD8615EE9D0563FC0007F23F84E8995BC0CCDC811975BD47E94C342846E"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-96.bin",
+    "bytes": 4395608,
+    "sha256": "33F85BFC4323D3D5B2291E40BEBFF9DBA0981777B36FF62AF724216B190DAC26"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-97.bin",
+    "bytes": 4395608,
+    "sha256": "F412B0BA29062D0FD346439EAECA25A5C9478856835EBC33CA676180A9FC77E0"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-98.bin",
+    "bytes": 4395608,
+    "sha256": "90A4D3FE285C121EC9C46DF7CDB19A86A7FF8FFEAB729B910E51193E91FB61A5"
+  },
+  {
+    "path": "C:\\Users\\aiand\\Documents\\programming\\CudaRL-Arena\\.worktrees\\minimal-foundation\\build\\flexible-tail\\curved-bank-v1\\training\\checkpoints\\session-99.bin",
+    "bytes": 4395608,
+    "sha256": "B119A93E4FCB41B3941820A056CD944BF48763171CCEE9DC151A9465E384A05D"
+  }
+]

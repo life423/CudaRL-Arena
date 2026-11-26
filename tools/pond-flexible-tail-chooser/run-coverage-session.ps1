@@ -1,5 +1,6 @@
 param([string]$Output='build/flexible-tail/coverage-v1',[switch]$Distant,[switch]$Appended,
-    [string]$ParentTraining='', [ValidateSet(32,35)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier)
+    [string]$ParentTraining='', [ValidateSet(32,35,39)][int]$ParentInputs=32,[int]$ParentUpdate=-1,[switch]$Frontier,[switch]$CurvedBank)
+if($CurvedBank){$Appended=$true;if($Frontier -or !$ParentTraining -or $ParentInputs -ne 35 -or $ParentUpdate -lt 0){throw 'Curved bank needs explicit qualified35-input parent and excludes frontier reward'}}
 if($Frontier){$Appended=$true;if(!$ParentTraining -or $ParentInputs -ne 35 -or $ParentUpdate -lt 0){throw 'Frontier requires explicit 35-input parent and checkpoint.'}}
 if($Appended){$Distant=$true}
 $ErrorActionPreference='Stop'
@@ -36,7 +37,7 @@ foreach($binding in $bindings|Where-Object {$_.path -like 'src/*' -or $_.path -l
     $copy=Join-Path $root ('source/'+$binding.path);$null=New-Item -Path (Split-Path -Parent $copy) -ItemType Directory -Force
     Copy-Item -LiteralPath $binding.path -Destination $copy
 }
-$all=@();$coverage=@();$evalJob=$null;$job=$null
+$all=@();$coverage=@();$shore=@();$evalJob=$null;$job=$null
 try{
     $verify=Join-Path $root verification
     Wait-Native (Start-Native 'verification' $rate @('verify-fork',$gait,$motor,$starts,(Join-Path $verify data),'2','590','0',$parent,$parentTask,"$ParentInputs") $verify 600)
@@ -46,6 +47,14 @@ try{
     if($Distant -and !(Get-Content (Join-Path $verify data/distant-senses.json) -Raw|ConvertFrom-Json).pass){throw 'Distant sensory gate failed.'}
     if($Appended -and $ParentInputs -eq 32 -and !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Initial controller equivalence failed.'}
     if($Frontier -and !(Get-Content (Join-Path $verify data/frontier-check.json) -Raw|ConvertFrom-Json).pass){throw 'Frontier shaping check failed.'}
+    if($CurvedBank){
+        if(!(Get-Content (Join-Path $verify data/curved-check.json) -Raw|ConvertFrom-Json).pass -or !(Get-Content (Join-Path $verify data/input-expansion.json) -Raw|ConvertFrom-Json).pass){throw 'Curved observation/equivalence gate failed'}
+        $active=Get-Content flexible-tail-preview/live_data/exploration-deployment.json -Raw|ConvertFrom-Json
+        $working=(Resolve-Path (Join-Path flexible-tail-preview/live_data $active.active_chooser_file)).Path
+        $where=Join-Path $root baseline-shore
+        Wait-Native (Start-Native 'shore' $script:rateEval @($gait,$motor,$working,$straight,(Join-Path $where assessment),'0','--close-shore') $where 35)
+        $baselineShore=Get-Content (Join-Path $where assessment/summary.json) -Raw|ConvertFrom-Json
+    }
     Assert-Frozen
     $job=Start-Native 'training' $rate @('fork',$gait,$motor,$starts,$training,'128','1200','0',$parent,$parentTask,"$ParentInputs") $root 1800
     $pending=[Collections.Generic.Queue[int]]::new();$scheduled=[Collections.Generic.HashSet[int]]::new()
@@ -62,12 +71,21 @@ try{
             $all+=@{update=$evalJob.update;actor=(Join-Path $training "actor-$($evalJob.update).bin");results=$r;directory=$evalJob.directory}
             Write-Host ("coverage update{0}: safety {1}/12 + {2}/{3}, union {4:P1}" -f $evalJob.update,$r.diagnostic_passes,$r.endurance_passes,$r.endurance_attempts,$r.diagnostic_coverage_fraction)
             Json (Join-Path $root progress.json) $all
+            if($CurvedBank -and $r.pass){
+                $nearWhere=Join-Path $root ('shore/update-{0:D3}' -f $evalJob.update)
+                Wait-Native (Start-Native 'shore' $script:rateEval @($gait,$motor,(Join-Path $training "actor-$($evalJob.update).bin"),$straight,(Join-Path $nearWhere assessment),'0','--close-shore') $nearWhere 35)
+                $near=Get-Content (Join-Path $nearWhere assessment/summary.json) -Raw|ConvertFrom-Json
+                $shore+=@{update=$evalJob.update;results=$near;directory=$nearWhere}
+                Json (Join-Path $root shore-progress.json) $shore
+            }
             $evalJob=$null
         }
         if(!$job.finished -and ($job.process.HasExited -or $job.watch.Elapsed.TotalSeconds -ge $job.limit)){Finish-Native $job}
         if(!$job.finished -or $evalJob -or $pending.Count){[Threading.Thread]::Sleep(100)}
     }
     $contenders=@($all|Where-Object {$_.update -gt 0 -and $_.results.pass}|Sort-Object @{Expression={$_.results.diagnostic_coverage_fraction};Descending=$true}|Select-Object -First 4)
+    if($CurvedBank){$eligible=@($shore|Where-Object {$_.results.pass -and $_.results.mean_close_time_s -ge $baselineShore.mean_close_time_s+5}|ForEach-Object update)
+        $contenders=@($all|Where-Object {$_.update -gt 0 -and $_.results.pass -and $_.update -in $eligible}|Sort-Object @{Expression={$_.results.diagnostic_coverage_fraction};Descending=$true}|Select-Object -First 4)}
     foreach($candidate in $contenders){
         $where=Join-Path $root ('continuous/update-{0:D3}' -f $candidate.update)
         Wait-Native (Start-Native 'coverage' $script:rateEval @($gait,$motor,$candidate.actor,$straight,(Join-Path $where assessment),'0','--continuous-coverage') $where 65)
@@ -76,7 +94,7 @@ try{
         Json (Join-Path $root continuous-results.json) $coverage
     }
     Assert-Frozen
-    Json (Join-Path $root result.json) @{complete=$true;training=(Get-Content (Join-Path $training result.json) -Raw|ConvertFrom-Json);fixed=$all;continuous=$coverage;motor_frozen=$true;godot_adopted=$false}
+    Json (Join-Path $root result.json) @{complete=$true;training=(Get-Content (Join-Path $training result.json) -Raw|ConvertFrom-Json);fixed=$all;continuous=$coverage;shore=$shore;motor_frozen=$true;godot_adopted=$false}
 }finally{
     foreach($owned in $children){if(!$owned.finished){
         if(!$owned.process.HasExited -and $owned.name -eq 'training'){

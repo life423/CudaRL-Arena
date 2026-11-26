@@ -343,6 +343,15 @@ __global__ void move_lanes(Lane* lanes, Counts* counts, const int* action, const
         return;
     }
     reward[lane_index] = result.reward;
+#if defined(CUDARL_CURVED_BANK)
+    if(!result.fault){
+    const auto curved=tail::curved_bank::observe(lane.state.motor,pond);
+    const auto movement=tail::fast::feedback_sample(lane.state.motor);
+    const float gap=float(tail::submerged_gap_m(pond,lane.state.motor.navigation.motion.body,lane.state.pose));
+    reward[lane_index]+=tail::curved_bank::reward(curved,gap,cudarl::physics::norm(movement.velocity_m_s),result.controls*tail::motor_control_s);
+    if(!isfinite(reward[lane_index])){fail(lane_index,33,first_fault,fault_code);return;}
+    }
+#endif
 #if defined(CUDARL_FRONTIER_REWARD)
     const float potential_after=tail::frontier::potential(lane.state,lane.state.pose.com_m,
         lane.state.motor.navigation.motion.request.origin_m.y);

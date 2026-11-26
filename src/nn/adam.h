@@ -23,12 +23,18 @@ public:
     int steps() const { return t_; }
     // New input coordinates may have a younger Adam age than inherited weights.
     // The versioned owner stores these three fields separately from legacy save().
-    void set_fresh_column(int stride, int rows, int age, int width = 1) {
-        if (stride < 1 || rows < 1 || stride * rows > n_ || age < 0 || age > t_ || width < 1 || width > stride)
+    void set_fresh_column(int stride, int rows, int age, int width = 1, int first = -1) {
+        if(first<0)first=stride-width;
+        if (stride < 1 || rows < 1 || stride * rows > n_ || age < 0 || age > t_ || width < 1 || first<0 || first+width>stride)
             throw std::invalid_argument("Invalid fresh Adam column");
-        fresh_stride_ = stride; fresh_rows_ = rows; fresh_t_ = age; fresh_width_ = width;
+        fresh_stride_ = stride; fresh_rows_ = rows; fresh_t_ = age; fresh_width_ = width;fresh_first_=first;
     }
-    int fresh_steps() const { return fresh_t_; }
+    void set_secondary_fresh_column(int stride,int rows,int age,int width,int first){
+        if(stride<1||rows<1||stride*rows>n_||age<0||age>t_||width<1||first<0||first+width>stride)
+            throw std::invalid_argument("Invalid secondary Adam columns");
+        second_stride_=stride;second_rows_=rows;second_t_=age;second_width_=width;second_first_=first;
+    }
+    int fresh_steps(int group=0) const { return group?second_t_:fresh_t_; }
     const AdamConfig& config() const { return cfg_; }
     void set_learning_rate(float lr) { cfg_.lr = lr; }   // e.g. for annealing schedules
     // Norm of the gradients seen by the last step (before clipping). Synchronizes;
@@ -44,6 +50,7 @@ private:
     int               n_;
     int               t_ = 0;
     int               fresh_stride_ = 0, fresh_rows_ = 0, fresh_t_ = 0, fresh_width_ = 1;
+    int               fresh_first_=0,second_stride_=0,second_rows_=0,second_t_=0,second_width_=0,second_first_=0;
     device_ptr<float> m_, v_;
     device_ptr<float> norm_partial_;
     device_ptr<float> norm_;

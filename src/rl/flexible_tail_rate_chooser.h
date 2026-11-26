@@ -4,13 +4,16 @@
 #include "rl/flexible_tail_chooser.h"
 #include "rl/flexible_tail_bank_observation.h"
 #include "rl/flexible_tail_distant_coverage.h"
+#include "rl/flexible_tail_curved_bank.h"
 #include "core/checkpoint.h"
 #include <climits>
 
 namespace cudarl::flexible_tail::rate_chooser {
 
 inline constexpr int local_inputs=32, decision_controls = 40, cue_limit_controls = 40;
-#if defined(CUDARL_APPENDED_COVERAGE)
+#if defined(CUDARL_CURVED_BANK)
+inline constexpr int inputs=39, default_observation_mode=3;
+#elif defined(CUDARL_APPENDED_COVERAGE)
 inline constexpr int inputs=35, default_observation_mode=2;
 #else
 inline constexpr int inputs=32;
@@ -123,10 +126,10 @@ CUDARL_HD inline void observe(const World& w, const pond_geometry_v1::Parameters
         out[18 + side] = chooser::novelty_at(w, w.pose.com_m + direction * .08f, nav.motion.controls);
         out[21 + side] = chooser::novelty_at(w, w.pose.com_m + direction * .24f, nav.motion.controls);
     }
-    if(observation_mode==1||(observation_mode==2&&inputs==35)){
+    if(observation_mode==1||((observation_mode==2||observation_mode==3)&&inputs>=35)){
         float field[3];distant::observe(w,w.pose.com_m,course,nav.motion.request.origin_m.y,nav.motion.controls,field);
         if(observation_mode==1){for(int side=0;side<3;++side)out[21+side]=field[side];}
-        if constexpr(inputs==35){if(observation_mode==2){for(int side=0;side<3;++side)out[32+side]=field[side];}}
+        if constexpr(inputs>=35){if(observation_mode>=2){for(int side=0;side<3;++side)out[32+side]=field[side];}}
     }
     out[24] = w.pose.com_m.x / float(pond.water_radius_x_m);
     out[25] = w.pose.com_m.z / float(pond.water_radius_z_m);
@@ -136,6 +139,9 @@ CUDARL_HD inline void observe(const World& w, const pond_geometry_v1::Parameters
     out[29] = chooser::novelty_at(w, w.pose.com_m, nav.motion.controls);
     out[30] = body.angle[2] / .2f;
     out[31] = physics::clamp(w.stall_s / 2.f, 0.f, 1.f);
+    if constexpr(inputs==39){if(observation_mode==3){const auto curve=curved_bank::observe(w.motor,pond);
+        if(curve.valid){out[35]=curve.loss_s/curved_bank::horizon_s;out[36]=physics::clamp(curve.min_gap_m/.05f,-1.f,1.f);
+            out[37]=curve.rate_rad_s/(8*pi/180.f);out[38]=1;}}}
 }
 
 // packed_motor contains the model's parameters, followed by its frozen skip.
@@ -183,6 +189,7 @@ CUDARL_HD inline Result advance(World& w, const float* gait, const float* packed
         else { w.stall_s += seconds; out.reward -= seconds * .10f; }
         w.max_stall_s = fmaxf(w.max_stall_s, w.stall_s);
         out.reward += chooser::visit_reward_at(w, w.pose.com_m, motor.navigation.motion.controls, speed);
+#if !defined(CUDARL_CURVED_BANK)
         float senses[bank::inputs];
         bank::observe(motor.navigation.motion.body,w.pose,pond,sample.velocity_m_s,sample.reliable,senses);
         // Penalize an approaching loss of clearance, not proximity alone.
@@ -190,6 +197,7 @@ CUDARL_HD inline Result advance(World& w, const float* gait, const float* packed
             const float remaining_s = senses[bank::ConstantTransportTime] * bank::time_scale_s;
             out.reward -= seconds * .10f * physics::clamp((12.f - remaining_s) / 12.f, 0.f, 1.f);
         }
+#endif
         if (step.controls == 0) { w.fault = InvalidUse; break; }
     }
     w.attempted_substeps += out.attempted_substeps;
@@ -204,7 +212,7 @@ inline nn::MlpSpec actor_spec() { return {{inputs,32,actions},{nn::Activation::T
 // their exact bits; newly appended columns (including Adam moments) are zero.
 inline std::vector<float> resize_input_parameters(const std::vector<float>& p,int from,int to){
     if(from==to)return p;
-    if((from!=32&&from!=35)||(to!=32&&to!=35)||p.size()<size_t(from*32))
+    if((from!=32&&from!=35&&from!=39)||(to!=32&&to!=35&&to!=39)||p.size()<size_t(from*32))
         throw std::runtime_error("Unsupported chooser input migration");
     std::vector<float> result(size_t(int64_t(p.size())+32*(to-from)),0.f);
     for(int row=0;row<32;++row){
@@ -221,9 +229,10 @@ inline void validate_weights(const std::vector<float>& weights) {
 }
 inline void write_weights(const std::string& path, const std::vector<float>& weights) {
     validate_weights(weights); checkpoint::Writer out;
-    out.value<uint32_t>(0x48435446); out.value(inputs==35?uint32_t(5):(default_distant?uint32_t(4):model_version)); out.value(inputs==35?uint32_t(4):(default_distant?uint32_t(3):schema));
+    out.value<uint32_t>(0x48435446); out.value(inputs==39?uint32_t(6):(inputs==35?uint32_t(5):(default_distant?uint32_t(4):model_version))); out.value(inputs==39?uint32_t(5):(inputs==35?uint32_t(4):(default_distant?uint32_t(3):schema)));
     out.value(inputs); out.value(actions); out.value(decision_controls);
-    if constexpr(default_distant||inputs==35)out.value(distant_map::identity);
+    if constexpr(default_distant||inputs>=35)out.value(distant_map::identity);
+    if constexpr(inputs==39)out.value(curved_bank::identity);
     out.array(weights);
     checkpoint::write_atomic(path,out.data);
 }
@@ -233,13 +242,15 @@ inline std::vector<float> read_weights(const std::string& path, int* observation
     const auto version=in.value<uint32_t>(),request_schema=in.value<uint32_t>();
     const bool is_distant=version==4&&request_schema==3&&actions==15;
     const bool is_appended=version==5&&request_schema==4&&actions==15;
+    const bool is_curved=version==6&&request_schema==5&&actions==15;
     const int saved_inputs=in.value<int>();
-    if((!is_distant&&!is_appended&&(version!=model_version||request_schema!=schema)) ||
-        saved_inputs!=(is_appended?35:32) || saved_inputs>inputs || in.value<int>()!=actions || in.value<int>()!=decision_controls)
+    if((!is_distant&&!is_appended&&!is_curved&&(version!=model_version||request_schema!=schema)) ||
+        saved_inputs!=(is_curved?39:(is_appended?35:32)) || saved_inputs>inputs || in.value<int>()!=actions || in.value<int>()!=decision_controls)
         throw std::runtime_error("Rate chooser schema mismatch");
-    if((is_distant||is_appended)&&in.value<uint64_t>()!=distant_map::identity)throw std::runtime_error("Distant coverage map binding mismatch");
-    if((is_distant||is_appended)&&!observation_mode&&!default_distant)throw std::runtime_error("Distant chooser needs an observation-mode consumer");
-    if(observation_mode)*observation_mode=is_appended?2:(is_distant?1:0);
+    if((is_distant||is_appended||is_curved)&&in.value<uint64_t>()!=distant_map::identity)throw std::runtime_error("Distant coverage map binding mismatch");
+    if(is_curved&&in.value<uint64_t>()!=curved_bank::identity)throw std::runtime_error("Curved forecast binding mismatch");
+    if((is_distant||is_appended||is_curved)&&!observation_mode&&!default_distant)throw std::runtime_error("Chooser needs an observation-mode consumer");
+    if(observation_mode)*observation_mode=is_curved?3:(is_appended?2:(is_distant?1:0));
     auto weights=in.array<float>(actor_spec().num_params()); in.finish();
     const nn::MlpSpec saved_spec{{saved_inputs,32,actions},{nn::Activation::Tanh,nn::Activation::Identity}};
     if(weights.size()!=size_t(saved_spec.num_params()))throw std::runtime_error("Saved chooser parameter count differs");

@@ -37,8 +37,9 @@ __global__ void norm_finish_kernel(const float* __restrict__ partial, float* __r
 __global__ void adam_kernel(float* __restrict__ p, const float* __restrict__ g, float* __restrict__ m,
                             float* __restrict__ v, int n, float lr, float beta1, float beta2, float eps,
                             float bias_corr1, float bias_corr2, const float* __restrict__ norm,
-                            float max_grad_norm, int fresh_stride, int fresh_rows, int fresh_width,
-                            float fresh_bc1, float fresh_bc2) {
+                            float max_grad_norm, int fresh_stride, int fresh_rows, int fresh_width,int fresh_first,
+                            float fresh_bc1, float fresh_bc2,int second_stride,int second_rows,int second_width,int second_first,
+                            float second_bc1,float second_bc2) {
     const float scale = max_grad_norm > 0.f ? fminf(1.f, max_grad_norm / (*norm + 1e-6f)) : 1.f;
     for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < n; i += gridDim.x * blockDim.x) {
         const float gi = g[i] * scale;
@@ -47,9 +48,10 @@ __global__ void adam_kernel(float* __restrict__ p, const float* __restrict__ g, 
         m[i] = mi;
         v[i] = vi;
         const bool fresh = fresh_stride > 0 && i < fresh_stride * fresh_rows &&
-                           i % fresh_stride >= fresh_stride - fresh_width;
-        const float bc1 = fresh ? fresh_bc1 : bias_corr1;
-        const float bc2 = fresh ? fresh_bc2 : bias_corr2;
+                           i % fresh_stride >= fresh_first&&i%fresh_stride<fresh_first+fresh_width;
+        const bool second=second_stride>0&&i<second_stride*second_rows&&i%second_stride>=second_first&&i%second_stride<second_first+second_width;
+        const float bc1 = second?second_bc1:(fresh ? fresh_bc1 : bias_corr1);
+        const float bc2 = second?second_bc2:(fresh ? fresh_bc2 : bias_corr2);
         p[i] -= lr * (mi / bc1) / (sqrtf(vi / bc2) + eps);
     }
 }
@@ -73,6 +75,7 @@ GpuAdam::GpuAdam(int num_params, AdamConfig cfg)
 void GpuAdam::step(float* d_params, const float* d_grads, cudaStream_t stream) {
     ++t_;
     if (fresh_stride_) ++fresh_t_;
+    if(second_stride_)++second_t_;
     if (cfg_.max_grad_norm > 0.f) {
         sum_squares_partial_kernel<<<kNormBlocks, kThreads, 0, stream>>>(d_grads, n_, norm_partial_.get());
         norm_finish_kernel<<<1, kThreads, 0, stream>>>(norm_partial_.get(), norm_.get());
@@ -82,9 +85,12 @@ void GpuAdam::step(float* d_params, const float* d_grads, cudaStream_t stream) {
     const float bc2 = static_cast<float>(1.0 - std::pow(static_cast<double>(cfg_.beta2), t_));
     adam_kernel<<<blocks_for(n_), kThreads, 0, stream>>>(d_params, d_grads, m_.get(), v_.get(), n_, cfg_.lr,
                                                          cfg_.beta1, cfg_.beta2, cfg_.eps, bc1, bc2, norm_.get(),
-                                                         cfg_.max_grad_norm, fresh_stride_, fresh_rows_, fresh_width_,
+                                                         cfg_.max_grad_norm, fresh_stride_, fresh_rows_, fresh_width_,fresh_first_,
                                                          fresh_stride_ ? static_cast<float>(1.0 - std::pow(static_cast<double>(cfg_.beta1), fresh_t_)) : 1.f,
-                                                         fresh_stride_ ? static_cast<float>(1.0 - std::pow(static_cast<double>(cfg_.beta2), fresh_t_)) : 1.f);
+                                                         fresh_stride_ ? static_cast<float>(1.0 - std::pow(static_cast<double>(cfg_.beta2), fresh_t_)) : 1.f,
+                                                         second_stride_,second_rows_,second_width_,second_first_,
+                                                         second_stride_?static_cast<float>(1.-std::pow(double(cfg_.beta1),second_t_)):1.f,
+                                                         second_stride_?static_cast<float>(1.-std::pow(double(cfg_.beta2),second_t_)):1.f);
     CUDA_CHECK_THROW(cudaGetLastError());
 }
 
@@ -109,6 +115,7 @@ void GpuAdam::load(checkpoint::Reader& in) {
     for(size_t i=0;i<m.size();++i) if(!std::isfinite(m[i]) || !std::isfinite(v[i]) || v[i]<0) throw std::runtime_error("Invalid Adam moments");
     CUDA_CHECK_THROW(cudaDeviceSynchronize());
     cfg_=cfg;t_=steps;fresh_stride_=0;fresh_rows_=0;fresh_t_=0;fresh_width_=1;
+    fresh_first_=0;second_stride_=second_rows_=second_t_=second_width_=second_first_=0;
     m_.copy_from_host(m.data(),m.size());v_.copy_from_host(v.data(),v.size());
     CUDA_CHECK_THROW(cudaDeviceSynchronize());
 }

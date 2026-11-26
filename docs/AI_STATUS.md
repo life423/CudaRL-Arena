@@ -1,5 +1,19 @@
 # AI status — November 25, 2026
 
+**Curved bank feedback is implemented; close-shore learning did not qualify.**
+One native CUDA PPO chooser session completes128 updates on1,024 worlds,
+1,048,576 transitions in144.868s. All35 inherited inputs stay intact; four curved
+forecast inputs start with zero columns and independent fresh Adam ages.
+Parent roundtrip, initial GPU equivalence, CPU/CUDA feedback and three-update
+exact resume pass. Expanded0 reproduces all16 original traces byte for byte.
+Checkpoints64/72/80 retain12/12 short+4/4 five-minute navigation gates, but all
+score6/8 close-shore and zero cases reach15s near shore. Final128 regresses2/12.
+No30-minute coverage or Godot adoption follows. All11 active Godot hashes and
+motor88 remain unchanged; no mouse/keyboard input ran. The finite session is
+closed, with all attempts counted and no trainer active. No new rest physical
+suite ran; the frozen motor and previous retention evidence are preserved.
+[Full results, limitations and evidence](../assets/research-evidence/pond-flexible-tail-curved-bank-v1/README.md)
+
 **Same-state comparison finds avoidable chooser sequence failures.**
 Three rejected research-policy prefixes replay exactly (2522 COM samples,251
 actions). From9 exact captured states,the unchanged motor executes29 successful

@@ -1,0 +1,15 @@
+{
+  "pass": true,
+  "verified_archive_files": 724,
+  "verified_executed_bindings": 121,
+  "portable_actors": 129,
+  "full_archived_checkpoints": 5,
+  "full_local_checkpoints": 129,
+  "package_message": "Verified 11 flexible-tail bundle hashes, qualified policy pair, and preserved original motor; zero physics/PPO.",
+  "PowerShell_parse_errors": 0,
+  "active_trainers": 0,
+  "Godot_updated": false,
+  "mouse_keyboard_calls": 0,
+  "extra_physics_steps": 0,
+  "extra_optimizer_updates": 0
+}

@@ -1,5 +1,26 @@
 # Workspace instructions
 
+## Curved-path bank feedback — November 25, 2026
+
+User authorized curved-bank feedback and one GPU PPO chooser study, preserving
+motor and conditional Godot adoption, with no mouse/keyboard takeover. Read
+CURVED_BANK_PROTOCOL.md under the chooser tool and the curved-bank-v1 research
+README. The session is CLOSED at128 updates/1,024 CUDA worlds/1,048,576 macro
+transitions in144.868s. Four zero-initialized curved inputs append to all35
+inherited observations; motor88 and physics stay frozen. Parent roundtrip,
+initial GPU equivalence, CPU/CUDA parity and3-update exact resume pass. All16
+original expanded0 traces match the preserved parent byte for byte.64/72/80
+pass12+4 original tests but all6/8 close-shore,zero15s near cases; final1282/12.
+Five close-shore and17 fixed assessments ran; zero new long coverage/Godot parity
+runs. Total712944309 attempted substeps includes diagnostics and all evaluations.
+Godot stays appended16/motor88,all11 hashes intact. No fresh rest physical suite
+ran. Preserve all129 local full checkpoints and archived selected states. Do not
+repeat/extend this closed study or adopt an unqualified39-input model. Forecast
+is a rigid constant-curvature sensory estimate,not guaranteed future dynamics.
+Next proposed investigation is exact-state escape at the two near-bank failures;
+do not assume contact or physical impossibility. No trainer is active. Continue
+to honor the user's ban on mouse/keyboard takeover until permission is given.
+
 ## Same-state chooser diagnostic — November 25, 2026
 
 User authorized frozen-state sequence comparison only: no training, scripted

@@ -77,6 +77,10 @@ option(CUDARL_COVERAGE_CHOOSER "Novelty-weighted safe transport reward for cover
 option(CUDARL_DISTANT_COVERAGE "Full-circle distant visitation sensory field" OFF)
 option(CUDARL_APPENDED_COVERAGE "Append distant sensing after all 32 legacy inputs" OFF)
 option(CUDARL_FRONTIER_REWARD "Discount-consistent potential for progress to unvisited water" OFF)
+option(CUDARL_CURVED_BANK "Append measured curved-body risk feedback and replace straight risk reward" OFF)
+if(CUDARL_CURVED_BANK AND (NOT CUDARL_APPENDED_COVERAGE OR CUDARL_FRONTIER_REWARD))
+    message(FATAL_ERROR "Curved bank requires appended observations and excludes the failed frontier reward")
+endif()
 if(CUDARL_FRONTIER_REWARD AND NOT CUDARL_APPENDED_COVERAGE)
     message(FATAL_ERROR "Frontier reward requires the preserved 35-input observer")
 endif()
@@ -89,10 +93,10 @@ endif()
 if(CUDARL_COVERAGE_CHOOSER AND NOT CUDARL_RELIABLE_CHOOSER)
     message(FATAL_ERROR "Coverage continuation requires the fifteen-action chooser")
 endif()
-set(rate_identity "rate-chooser-v1;reliable_${CUDARL_RELIABLE_CHOOSER};coverage_${CUDARL_COVERAGE_CHOOSER};distant_${CUDARL_DISTANT_COVERAGE};appended_${CUDARL_APPENDED_COVERAGE};frontier_${CUDARL_FRONTIER_REWARD};sm_${CMAKE_CUDA_ARCHITECTURES};fmad=false")
+set(rate_identity "rate-chooser-v1;reliable_${CUDARL_RELIABLE_CHOOSER};coverage_${CUDARL_COVERAGE_CHOOSER};distant_${CUDARL_DISTANT_COVERAGE};appended_${CUDARL_APPENDED_COVERAGE};frontier_${CUDARL_FRONTIER_REWARD};curved_${CUDARL_CURVED_BANK};sm_${CMAKE_CUDA_ARCHITECTURES};fmad=false")
 foreach(path IN ITEMS train.cu rate_session.cuh bank_training_starts.h
     ../../src/rl/flexible_tail_distant_coverage.h ../../src/rl/flexible_tail_distant_map.h ../../src/rl/flexible_tail_frontier_reward.h
-    ../../src/rl/flexible_tail_rate_chooser.h ../../src/rl/flexible_tail_bank_observation.h
+    ../../src/rl/flexible_tail_rate_chooser.h ../../src/rl/flexible_tail_bank_observation.h ../../src/rl/flexible_tail_curved_bank.h
     ../../src/rl/flexible_tail_chooser.h ../../src/rl/flexible_tail_fast_steering.h
     ../../src/rl/flexible_tail_steering_policy.h ../../src/rl/flexible_tail_stroke_metrics.h
     ../../src/rl/flexible_tail_transition.h ../../src/physics/flexible_tail.h
@@ -123,6 +127,10 @@ endif()
 if(CUDARL_APPENDED_COVERAGE)
     target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_APPENDED_COVERAGE=1)
     target_compile_definitions(pond_flexible_tail_rate_evaluate PRIVATE CUDARL_APPENDED_COVERAGE=1)
+endif()
+if(CUDARL_CURVED_BANK)
+    target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_CURVED_BANK=1)
+    target_compile_definitions(pond_flexible_tail_rate_evaluate PRIVATE CUDARL_CURVED_BANK=1)
 endif()
 if(CUDARL_COVERAGE_CHOOSER)
     target_compile_definitions(pond_flexible_tail_rate_chooser PRIVATE CUDARL_COVERAGE_CHOOSER=1)
